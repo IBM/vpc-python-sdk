@@ -25,3 +25,19 @@ install:
 - pip install tox-travis
 
 script: tox
+
+before_deploy:
+- pip install bump2version
+- nvm install 12
+- npm install @semantic-release/changelog
+- npm install @semantic-release/exec
+- npm install @semantic-release/git
+- npm install @semantic-release/github
+
+deploy:
+- provider: script
+  script: npx semantic-release
+  skip_cleanup: true
+  on:
+    python: '3.5'
+    branch: master
