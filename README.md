@@ -23,8 +23,8 @@ Python client library to interact with various [IBM Cloud Virtual Private Cloud 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Using the SDK](#using-the-sdk)
-- [Example set up for VPC](#example-set-up-for-vpc)
-- [Example set up for VPC on Classic](#example-set-up-for-vpc-on-classic)
+- [Setting up VPC service](#setting-up-vpc-service)
+- [Setting up VPC on classic service](#setting-up-vpc-on-classic-service)
 - [Questions](#questions)
 - [Issues](#issues)
 - [Open source @ IBM](#open-source--ibm)
@@ -68,7 +68,7 @@ easy_install --upgrade "ibm-vpc>=0.0.0"
 ## Using the SDK
 For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md)
 
-## Example set up for VPC
+## Setting up VPC service
 ```python
 from ibm_vpc import VpcV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
@@ -122,7 +122,7 @@ print(instance['id'], "\t",  instance['name'])
 ```
 
 
-## Example set up for VPC on Classic
+## Setting up VPC on classic service
 ```python
 from ibm_vpc import VpcClassicV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
