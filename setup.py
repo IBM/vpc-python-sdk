@@ -19,7 +19,7 @@ import os
 import sys
 import pkg_resources
 
-__version__ = '0.0.0'
+__version__ = '0.0.1'
 PACKAGE_NAME = 'ibm_vpc'
 PACKAGE_DESC = 'Python client library for IBM Cloud VPC Services'
 
@@ -68,10 +68,10 @@ setup(name=PACKAGE_NAME.replace('_', '-'),
       tests_require=tests_require,
       cmdclass={'test': PyTest, 'test_unit': PyTestUnit, 'test_integration': PyTestIntegration},
       author='IBM',
-      author_email='devexdev@us.ibm.com',
+      author_email='vpcui@us.ibm.com',
       long_description=readme,
       long_description_content_type='text/markdown',
-      url='https://github.com/vpc/python-sdk',
+      url='https://github.com/IBM/vpc-python-sdk',
       packages=[PACKAGE_NAME],
       include_package_data=True,
       keywords=PACKAGE_NAME,
