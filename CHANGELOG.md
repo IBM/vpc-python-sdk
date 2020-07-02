@@ -1,3 +1,10 @@
+## [0.0.3](https://github.com/IBM/vpc-python-sdk/compare/v0.0.2...v0.0.3) (2020-07-02)
+
+
+### Bug Fixes
+
+* **pypi:** Add Manifest.in and fix readme ([#7](https://github.com/IBM/vpc-python-sdk/issues/7)) ([4966c62](https://github.com/IBM/vpc-python-sdk/commit/4966c62f723c77eb40d20c464209bf672cb5d770))
+
 ## [0.0.2](https://github.com/IBM/vpc-python-sdk/compare/v0.0.1...v0.0.2) (2020-06-30)
 
 
