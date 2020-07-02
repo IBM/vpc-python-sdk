@@ -4,7 +4,7 @@
 
 # IBM Cloud Virtual Private Cloud (VPC) Python SDK Version 0.0.2
 
-Python client library to interact with various [IBM Cloud Virtual Private Cloud (VPC) Service APIs](https://cloud.ibm.com/apidocs?category=vpc).
+Python client library to interact with various [IBM Cloud Virtual Private Cloud (VPC) Service APIs](https://cloud.ibm.com/apidocs/vpc).
 
 ## Table of Contents
 
@@ -185,16 +185,16 @@ please ask a question
 
 ## Issues
 If you encounter an issue with the project, you are welcome to submit a
-[bug report](<https://github.com/IBM/vpc-python-sdk/issues).
+[bug report](https://github.com/IBM/vpc-python-sdk/issues).
 Before that, please search for similar issues. It's possible that someone has already reported the problem.
 
 ## Open source @ IBM
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 ## Contributing
-See [CONTRIBUTING](CONTRIBUTING.md).
+See [CONTRIBUTING](https://github.com/IBM/vpc-python-sdk/blob/master/CONTRIBUTING.md).
 
 ## License
 
 This SDK is released under the Apache 2.0 license.
-The license's full text can be found in [LICENSE](LICENSE).
+The license's full text can be found in [LICENSE](https://github.com/IBM/vpc-python-sdk/blob/master/LICENSE).
