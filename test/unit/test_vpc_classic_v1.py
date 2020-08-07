@@ -363,15 +363,15 @@ class TestUpdateFloatingIp():
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a NetworkInterfaceIdentityById model
-        network_interface_identity_model = {}
-        network_interface_identity_model[
+        # Construct a dict representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
+        floating_ip_patch_target_network_interface_identity_model = {}
+        floating_ip_patch_target_network_interface_identity_model[
             'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
 
         # Set up parameter values
         id = 'testString'
         name = 'my-floating-ip'
-        target = network_interface_identity_model
+        target = {"id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"}
 
         # Invoke method
         response = service.update_floating_ip(id,
@@ -385,7 +385,9 @@ class TestUpdateFloatingIp():
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body['name'] == 'my-floating-ip'
-        assert req_body['target'] == network_interface_identity_model
+        assert req_body['target'] == {
+            "id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"
+        }
 
     #--------------------------------------------------------
     # test_update_floating_ip_value_error()
@@ -401,15 +403,15 @@ class TestUpdateFloatingIp():
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a NetworkInterfaceIdentityById model
-        network_interface_identity_model = {}
-        network_interface_identity_model[
+        # Construct a dict representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
+        floating_ip_patch_target_network_interface_identity_model = {}
+        floating_ip_patch_target_network_interface_identity_model[
             'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
 
         # Set up parameter values
         id = 'testString'
         name = 'my-floating-ip'
-        target = network_interface_identity_model
+        target = {"id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"}
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -854,7 +856,14 @@ class TestCreateImage():
             'operating_system'] = operating_system_identity_model
 
         # Set up parameter values
-        image_prototype = image_prototype_model
+        image_prototype = {
+            "file": {
+                "href": "cos://us-south/my-bucket/my-image.vhd"
+            },
+            "operating_system": {
+                "name": "debian-9-amd64"
+            }
+        }
 
         # Invoke method
         response = service.create_image(image_prototype, headers={})
@@ -902,7 +911,14 @@ class TestCreateImage():
             'operating_system'] = operating_system_identity_model
 
         # Set up parameter values
-        image_prototype = image_prototype_model
+        image_prototype = {
+            "file": {
+                "href": "cos://us-south/my-bucket/my-image.vhd"
+            },
+            "operating_system": {
+                "name": "debian-9-amd64"
+            }
+        }
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -1588,8 +1604,9 @@ class TestCreateInstance():
             'iops'] = 10000
         volume_attachment_prototype_instance_context_volume_model[
             'name'] = 'my-volume'
-        volume_attachment_prototype_instance_context_volume_model[
-            'profile'] = volume_profile_identity_model
+        volume_attachment_prototype_instance_context_volume_model['profile'] = {
+            "name": "general-purpose"
+        }
         volume_attachment_prototype_instance_context_volume_model[
             'capacity'] = 100
 
@@ -1600,8 +1617,9 @@ class TestCreateInstance():
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['iops'] = 10000
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model[
-            'profile'] = volume_profile_identity_model
+        volume_prototype_instance_by_image_context_model['profile'] = {
+            "name": "general-purpose"
+        }
 
         # Construct a dict representation of a ImageIdentityById model
         image_identity_model = {}
@@ -1622,7 +1640,9 @@ class TestCreateInstance():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = subnet_identity_model
+        network_interface_prototype_model['subnet'] = {
+            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
+        }
 
         # Construct a dict representation of a ResourceGroupIdentityById model
         resource_group_identity_model = {}
@@ -1661,23 +1681,41 @@ class TestCreateInstance():
         instance_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_prototype_model['profile'] = instance_profile_identity_model
+        instance_prototype_model['profile'] = {"name": "cc1-16x32"}
         instance_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_prototype_model['user_data'] = 'testString'
         instance_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_prototype_model['vpc'] = vpc_identity_model
+        instance_prototype_model['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         instance_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_model['image'] = image_identity_model
+        instance_prototype_model['image'] = {
+            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
+        }
         instance_prototype_model[
             'primary_network_interface'] = network_interface_prototype_model
         instance_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        instance_prototype = instance_prototype_model
+        instance_prototype = {
+            "image": {
+                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
+            },
+            "keys": [{
+                "fingerprint":
+                    "SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E"
+            }],
+            "profile": {
+                "name": "gc.balanced.4x16"
+            },
+            "vpc": {
+                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+            }
+        }
 
         # Invoke method
         response = service.create_instance(instance_prototype, headers={})
@@ -1729,8 +1767,9 @@ class TestCreateInstance():
             'iops'] = 10000
         volume_attachment_prototype_instance_context_volume_model[
             'name'] = 'my-volume'
-        volume_attachment_prototype_instance_context_volume_model[
-            'profile'] = volume_profile_identity_model
+        volume_attachment_prototype_instance_context_volume_model['profile'] = {
+            "name": "general-purpose"
+        }
         volume_attachment_prototype_instance_context_volume_model[
             'capacity'] = 100
 
@@ -1741,8 +1780,9 @@ class TestCreateInstance():
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['iops'] = 10000
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model[
-            'profile'] = volume_profile_identity_model
+        volume_prototype_instance_by_image_context_model['profile'] = {
+            "name": "general-purpose"
+        }
 
         # Construct a dict representation of a ImageIdentityById model
         image_identity_model = {}
@@ -1763,7 +1803,9 @@ class TestCreateInstance():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = subnet_identity_model
+        network_interface_prototype_model['subnet'] = {
+            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
+        }
 
         # Construct a dict representation of a ResourceGroupIdentityById model
         resource_group_identity_model = {}
@@ -1802,23 +1844,41 @@ class TestCreateInstance():
         instance_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_prototype_model['profile'] = instance_profile_identity_model
+        instance_prototype_model['profile'] = {"name": "cc1-16x32"}
         instance_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_prototype_model['user_data'] = 'testString'
         instance_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_prototype_model['vpc'] = vpc_identity_model
+        instance_prototype_model['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         instance_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_model['image'] = image_identity_model
+        instance_prototype_model['image'] = {
+            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
+        }
         instance_prototype_model[
             'primary_network_interface'] = network_interface_prototype_model
         instance_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        instance_prototype = instance_prototype_model
+        instance_prototype = {
+            "image": {
+                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
+            },
+            "keys": [{
+                "fingerprint":
+                    "SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E"
+            }],
+            "profile": {
+                "name": "gc.balanced.4x16"
+            },
+            "vpc": {
+                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+            }
+        }
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -6082,36 +6142,18 @@ class TestCreateNetworkAcl():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a NetworkACLRuleReference model
-        network_acl_rule_reference_model = {}
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
         # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP model
         network_acl_rule_prototype_network_acl_context_model = {}
         network_acl_rule_prototype_network_acl_context_model['action'] = 'allow'
         network_acl_rule_prototype_network_acl_context_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_network_acl_context_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_context_model[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_model[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_context_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_model[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_context_model[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_context_model['protocol'] = 'udp'
         network_acl_rule_prototype_network_acl_context_model[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_model['port_max'] = 22
         network_acl_rule_prototype_network_acl_context_model['port_min'] = 22
         network_acl_rule_prototype_network_acl_context_model[
@@ -6127,7 +6169,7 @@ class TestCreateNetworkAcl():
         ]
 
         # Set up parameter values
-        network_acl_prototype = network_acl_prototype_model
+        network_acl_prototype = {"name": "my-network-acl"}
 
         # Invoke method
         response = service.create_network_acl(
@@ -6501,38 +6543,29 @@ class TestCreateNetworkAclRule():
     def test_create_network_acl_rule_all_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/network_acls/testString/rules')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a NetworkACLRuleReference model
-        network_acl_rule_reference_model = {}
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        # Construct a dict representation of a NetworkACLRuleIdentityById model
+        network_acl_rule_identity_model = {}
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
         network_acl_rule_prototype_model = {}
         network_acl_rule_prototype_model['action'] = 'allow'
-        network_acl_rule_prototype_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_model['destination'] = '192.168.3.0/24'
+        network_acl_rule_prototype_model['before'] = {
+            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+        }
+        network_acl_rule_prototype_model['destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['direction'] = 'inbound'
-        network_acl_rule_prototype_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_model['ip_version'] = 'ipv4'
         network_acl_rule_prototype_model['name'] = 'my-rule-2'
         network_acl_rule_prototype_model['protocol'] = 'icmp'
-        network_acl_rule_prototype_model['source'] = '192.168.3.0/24'
+        network_acl_rule_prototype_model['source'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['code'] = 0
         network_acl_rule_prototype_model['type'] = 8
 
@@ -6559,38 +6592,29 @@ class TestCreateNetworkAclRule():
     def test_create_network_acl_rule_value_error(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/network_acls/testString/rules')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a NetworkACLRuleReference model
-        network_acl_rule_reference_model = {}
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        # Construct a dict representation of a NetworkACLRuleIdentityById model
+        network_acl_rule_identity_model = {}
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
         network_acl_rule_prototype_model = {}
         network_acl_rule_prototype_model['action'] = 'allow'
-        network_acl_rule_prototype_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_model['destination'] = '192.168.3.0/24'
+        network_acl_rule_prototype_model['before'] = {
+            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+        }
+        network_acl_rule_prototype_model['destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['direction'] = 'inbound'
-        network_acl_rule_prototype_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_model['ip_version'] = 'ipv4'
         network_acl_rule_prototype_model['name'] = 'my-rule-2'
         network_acl_rule_prototype_model['protocol'] = 'icmp'
-        network_acl_rule_prototype_model['source'] = '192.168.3.0/24'
+        network_acl_rule_prototype_model['source'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['code'] = 0
         network_acl_rule_prototype_model['type'] = 8
 
@@ -6695,7 +6719,7 @@ class TestGetNetworkAclRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/network_acls/testString/rules/testString')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -6721,7 +6745,7 @@ class TestGetNetworkAclRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/network_acls/testString/rules/testString')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -6766,38 +6790,29 @@ class TestUpdateNetworkAclRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/network_acls/testString/rules/testString')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a NetworkACLRuleReference model
-        network_acl_rule_reference_model = {}
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        # Construct a dict representation of a NetworkACLRuleIdentityById model
+        network_acl_rule_identity_model = {}
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a dict representation of a NetworkACLRulePatchNetworkACLRuleProtocolICMP model
         network_acl_rule_patch_model = {}
         network_acl_rule_patch_model['action'] = 'allow'
-        network_acl_rule_patch_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_patch_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_patch_model['destination'] = '192.168.3.0/24'
+        network_acl_rule_patch_model['before'] = {
+            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+        }
+        network_acl_rule_patch_model['destination'] = '192.168.3.2/32'
         network_acl_rule_patch_model['direction'] = 'inbound'
-        network_acl_rule_patch_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_model['ip_version'] = 'ipv4'
         network_acl_rule_patch_model['name'] = 'my-rule-2'
         network_acl_rule_patch_model['protocol'] = 'icmp'
-        network_acl_rule_patch_model['source'] = '192.168.3.0/24'
+        network_acl_rule_patch_model['source'] = '192.168.3.2/32'
         network_acl_rule_patch_model['code'] = 0
         network_acl_rule_patch_model['type'] = 8
 
@@ -6827,38 +6842,29 @@ class TestUpdateNetworkAclRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/network_acls/testString/rules/testString')
-        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "udp", "source": "192.168.3.0/24", "port_max": 22, "port_min": 22, "source_port_max": 65535, "source_port_min": 49152}'
+        mock_response = '{"action": "allow", "before": {"href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "name": "my-rule-1"}, "created_at": "2019-01-01T12:00:00", "destination": "192.168.3.0/24", "direction": "inbound", "href": "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9", "id": "8daca77a-4980-4d33-8f3e-7038797be8f9", "ip_version": "ipv4", "name": "my-rule-2", "protocol": "all", "source": "192.168.3.0/24"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a NetworkACLRuleReference model
-        network_acl_rule_reference_model = {}
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        # Construct a dict representation of a NetworkACLRuleIdentityById model
+        network_acl_rule_identity_model = {}
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a dict representation of a NetworkACLRulePatchNetworkACLRuleProtocolICMP model
         network_acl_rule_patch_model = {}
         network_acl_rule_patch_model['action'] = 'allow'
-        network_acl_rule_patch_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_patch_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_patch_model['destination'] = '192.168.3.0/24'
+        network_acl_rule_patch_model['before'] = {
+            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+        }
+        network_acl_rule_patch_model['destination'] = '192.168.3.2/32'
         network_acl_rule_patch_model['direction'] = 'inbound'
-        network_acl_rule_patch_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_model['ip_version'] = 'ipv4'
         network_acl_rule_patch_model['name'] = 'my-rule-2'
         network_acl_rule_patch_model['protocol'] = 'icmp'
-        network_acl_rule_patch_model['source'] = '192.168.3.0/24'
+        network_acl_rule_patch_model['source'] = '192.168.3.2/32'
         network_acl_rule_patch_model['code'] = 0
         network_acl_rule_patch_model['type'] = 8
 
@@ -7699,7 +7705,7 @@ class TestListSecurityGroups():
     def test_list_security_groups_all_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups')
-        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
+        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -7734,7 +7740,7 @@ class TestListSecurityGroups():
     def test_list_security_groups_required_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups')
-        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
+        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -7755,7 +7761,7 @@ class TestListSecurityGroups():
     def test_list_security_groups_value_error(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups')
-        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
+        mock_response = '{"security_groups": [{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -7792,7 +7798,7 @@ class TestCreateSecurityGroup():
     def test_create_security_group_all_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -7807,10 +7813,9 @@ class TestCreateSecurityGroup():
         resource_group_identity_model = {}
         resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-        # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePrototypeRemoteIP model
+        security_group_rule_prototype_remote_model = {}
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
         security_group_rule_prototype_model = {}
@@ -7818,12 +7823,12 @@ class TestCreateSecurityGroup():
         security_group_rule_prototype_model['ip_version'] = 'ipv4'
         security_group_rule_prototype_model['protocol'] = 'icmp'
         security_group_rule_prototype_model[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_model['code'] = 0
         security_group_rule_prototype_model['type'] = 8
 
         # Set up parameter values
-        vpc = vpc_identity_model
+        vpc = {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
         name = 'my-security-group'
         resource_group = resource_group_identity_model
         rules = [security_group_rule_prototype_model]
@@ -7840,7 +7845,7 @@ class TestCreateSecurityGroup():
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['vpc'] == vpc_identity_model
+        assert req_body['vpc'] == {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
         assert req_body['name'] == 'my-security-group'
         assert req_body['resource_group'] == resource_group_identity_model
         assert req_body['rules'] == [security_group_rule_prototype_model]
@@ -7852,7 +7857,7 @@ class TestCreateSecurityGroup():
     def test_create_security_group_value_error(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -7867,10 +7872,9 @@ class TestCreateSecurityGroup():
         resource_group_identity_model = {}
         resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-        # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePrototypeRemoteIP model
+        security_group_rule_prototype_remote_model = {}
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
         security_group_rule_prototype_model = {}
@@ -7878,12 +7882,12 @@ class TestCreateSecurityGroup():
         security_group_rule_prototype_model['ip_version'] = 'ipv4'
         security_group_rule_prototype_model['protocol'] = 'icmp'
         security_group_rule_prototype_model[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_model['code'] = 0
         security_group_rule_prototype_model['type'] = 8
 
         # Set up parameter values
-        vpc = vpc_identity_model
+        vpc = {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
         name = 'my-security-group'
         resource_group = resource_group_identity_model
         rules = [security_group_rule_prototype_model]
@@ -7976,7 +7980,7 @@ class TestGetSecurityGroup():
     def test_get_security_group_all_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8000,7 +8004,7 @@ class TestGetSecurityGroup():
     def test_get_security_group_value_error(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8042,7 +8046,7 @@ class TestUpdateSecurityGroup():
     def test_update_security_group_all_params(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -8070,7 +8074,7 @@ class TestUpdateSecurityGroup():
     def test_update_security_group_value_error(self):
         # Set up mock
         url = self.preprocess_url(base_url + '/security_groups/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group", "network_interfaces": [{"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345"}, "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -8395,7 +8399,7 @@ class TestListSecurityGroupRules():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/security_groups/testString/rules')
-        mock_response = '{"rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}]}'
+        mock_response = '{"rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8421,7 +8425,7 @@ class TestListSecurityGroupRules():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/security_groups/testString/rules')
-        mock_response = '{"rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}]}'
+        mock_response = '{"rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8464,17 +8468,16 @@ class TestCreateSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/security_groups/testString/rules')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePrototypeRemoteIP model
+        security_group_rule_prototype_remote_model = {}
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
         security_group_rule_prototype_model = {}
@@ -8482,7 +8485,7 @@ class TestCreateSecurityGroupRule():
         security_group_rule_prototype_model['ip_version'] = 'ipv4'
         security_group_rule_prototype_model['protocol'] = 'icmp'
         security_group_rule_prototype_model[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_model['code'] = 0
         security_group_rule_prototype_model['type'] = 8
 
@@ -8509,17 +8512,16 @@ class TestCreateSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/security_groups/testString/rules')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePrototypeRemoteIP model
+        security_group_rule_prototype_remote_model = {}
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
         security_group_rule_prototype_model = {}
@@ -8527,7 +8529,7 @@ class TestCreateSecurityGroupRule():
         security_group_rule_prototype_model['ip_version'] = 'ipv4'
         security_group_rule_prototype_model['protocol'] = 'icmp'
         security_group_rule_prototype_model[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_model['code'] = 0
         security_group_rule_prototype_model['type'] = 8
 
@@ -8632,7 +8634,7 @@ class TestGetSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/security_groups/testString/rules/testString')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8660,7 +8662,7 @@ class TestGetSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/security_groups/testString/rules/testString')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -8705,17 +8707,16 @@ class TestUpdateSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/security_groups/testString/rules/testString')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePatchRemoteIP model
+        security_group_rule_patch_remote_model = {}
+        security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP model
         security_group_rule_patch_model = {}
@@ -8723,7 +8724,7 @@ class TestUpdateSecurityGroupRule():
         security_group_rule_patch_model['ip_version'] = 'ipv4'
         security_group_rule_patch_model['protocol'] = 'icmp'
         security_group_rule_patch_model[
-            'remote'] = security_group_rule_patch_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_patch_remote_model
         security_group_rule_patch_model['code'] = 0
         security_group_rule_patch_model['type'] = 8
 
@@ -8753,17 +8754,16 @@ class TestUpdateSecurityGroupRule():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/security_groups/testString/rules/testString')
-        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}'
+        mock_response = '{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        # Construct a dict representation of a SecurityGroupRulePatchRemoteIP model
+        security_group_rule_patch_remote_model = {}
+        security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP model
         security_group_rule_patch_model = {}
@@ -8771,7 +8771,7 @@ class TestUpdateSecurityGroupRule():
         security_group_rule_patch_model['ip_version'] = 'ipv4'
         security_group_rule_patch_model['protocol'] = 'icmp'
         security_group_rule_patch_model[
-            'remote'] = security_group_rule_patch_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_patch_remote_model
         security_group_rule_patch_model['code'] = 0
         security_group_rule_patch_model['type'] = 8
 
@@ -8941,14 +8941,26 @@ class TestCreateSubnet():
         # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_model = {}
         subnet_prototype_model['name'] = 'my-subnet'
-        subnet_prototype_model['network_acl'] = network_acl_identity_model
+        subnet_prototype_model['network_acl'] = {
+            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+        }
         subnet_prototype_model['public_gateway'] = public_gateway_identity_model
-        subnet_prototype_model['vpc'] = vpc_identity_model
+        subnet_prototype_model['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         subnet_prototype_model['total_ipv4_address_count'] = 256
         subnet_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        subnet_prototype = subnet_prototype_model
+        subnet_prototype = {
+            "total_ipv4_address_count": 256,
+            "vpc": {
+                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+            },
+            "zone": {
+                "name": "us-south-1"
+            }
+        }
 
         # Invoke method
         response = service.create_subnet(subnet_prototype, headers={})
@@ -8995,14 +9007,26 @@ class TestCreateSubnet():
         # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_model = {}
         subnet_prototype_model['name'] = 'my-subnet'
-        subnet_prototype_model['network_acl'] = network_acl_identity_model
+        subnet_prototype_model['network_acl'] = {
+            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+        }
         subnet_prototype_model['public_gateway'] = public_gateway_identity_model
-        subnet_prototype_model['vpc'] = vpc_identity_model
+        subnet_prototype_model['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         subnet_prototype_model['total_ipv4_address_count'] = 256
         subnet_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        subnet_prototype = subnet_prototype_model
+        subnet_prototype = {
+            "total_ipv4_address_count": 256,
+            "vpc": {
+                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+            },
+            "zone": {
+                "name": "us-south-1"
+            }
+        }
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -9178,7 +9202,7 @@ class TestUpdateSubnet():
         # Set up parameter values
         id = 'testString'
         name = 'my-subnet'
-        network_acl = network_acl_identity_model
+        network_acl = {"id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"}
         public_gateway = public_gateway_identity_model
 
         # Invoke method
@@ -9194,7 +9218,9 @@ class TestUpdateSubnet():
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body['name'] == 'my-subnet'
-        assert req_body['network_acl'] == network_acl_identity_model
+        assert req_body['network_acl'] == {
+            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+        }
         assert req_body['public_gateway'] == public_gateway_identity_model
 
     #--------------------------------------------------------
@@ -9224,7 +9250,7 @@ class TestUpdateSubnet():
         # Set up parameter values
         id = 'testString'
         name = 'my-subnet'
-        network_acl = network_acl_identity_model
+        network_acl = {"id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"}
         public_gateway = public_gateway_identity_model
 
         # Pass in all but one required param and check for a ValueError
@@ -10020,7 +10046,7 @@ class TestGetVpcDefaultSecurityGroup():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpcs/testString/default_security_group')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "observant-chip-emphatic-engraver", "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "observant-chip-emphatic-engraver", "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -10045,7 +10071,7 @@ class TestGetVpcDefaultSecurityGroup():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpcs/testString/default_security_group')
-        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "observant-chip-emphatic-engraver", "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "all", "remote": {"anyKey": "anyValue"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "observant-chip-emphatic-engraver", "rules": [{"direction": "inbound", "id": "6f2a6efe-21e2-401c-b237-620aa26ba16a", "ip_version": "ipv4", "protocol": "icmp", "remote": {"address": "192.168.3.4"}, "code": 0, "type": 8}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -10606,27 +10632,27 @@ class TestCreateVpcRoute():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a ZoneIdentityByName model
-        zone_identity_model = {}
-        zone_identity_model['name'] = 'us-south-1'
-
         # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
         route_next_hop_prototype_model = {}
         route_next_hop_prototype_model['address'] = '192.168.3.4'
 
+        # Construct a dict representation of a ZoneIdentityByName model
+        zone_identity_model = {}
+        zone_identity_model['name'] = 'us-south-1'
+
         # Set up parameter values
         vpc_id = 'testString'
         destination = '192.168.3.0/24'
+        next_hop = route_next_hop_prototype_model
         zone = zone_identity_model
         name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
 
         # Invoke method
         response = service.create_vpc_route(vpc_id,
                                             destination,
+                                            next_hop,
                                             zone,
                                             name=name,
-                                            next_hop=next_hop,
                                             headers={})
 
         # Check for correct operation
@@ -10635,9 +10661,9 @@ class TestCreateVpcRoute():
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body['destination'] == '192.168.3.0/24'
+        assert req_body['next_hop'] == route_next_hop_prototype_model
         assert req_body['zone'] == zone_identity_model
         assert req_body['name'] == 'my-route-2'
-        assert req_body['next_hop'] == route_next_hop_prototype_model
 
     #--------------------------------------------------------
     # test_create_vpc_route_value_error()
@@ -10653,25 +10679,26 @@ class TestCreateVpcRoute():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a ZoneIdentityByName model
-        zone_identity_model = {}
-        zone_identity_model['name'] = 'us-south-1'
-
         # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
         route_next_hop_prototype_model = {}
         route_next_hop_prototype_model['address'] = '192.168.3.4'
 
+        # Construct a dict representation of a ZoneIdentityByName model
+        zone_identity_model = {}
+        zone_identity_model['name'] = 'us-south-1'
+
         # Set up parameter values
         vpc_id = 'testString'
         destination = '192.168.3.0/24'
+        next_hop = route_next_hop_prototype_model
         zone = zone_identity_model
         name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "vpc_id": vpc_id,
             "destination": destination,
+            "next_hop": next_hop,
             "zone": zone,
         }
         for param in req_param_dict.keys():
@@ -11333,7 +11360,7 @@ class TestListIkePolicyConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/ike_policies/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11358,7 +11385,7 @@ class TestListIkePolicyConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/ike_policies/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11803,7 +11830,7 @@ class TestListIpsecPolicyConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/ipsec_policies/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11828,7 +11855,7 @@ class TestListIpsecPolicyConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/ipsec_policies/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12252,7 +12279,7 @@ class TestListVpnGatewayConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpn_gateways/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12284,7 +12311,7 @@ class TestListVpnGatewayConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpn_gateways/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12310,7 +12337,7 @@ class TestListVpnGatewayConnections():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpn_gateways/testString/connections')
-        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
+        mock_response = '{"connections": [{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12353,7 +12380,7 @@ class TestCreateVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpn_gateways/testString/connections')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -12425,7 +12452,7 @@ class TestCreateVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/vpn_gateways/testString/connections')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -12557,7 +12584,7 @@ class TestGetVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/vpn_gateways/testString/connections/testString')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12585,7 +12612,7 @@ class TestGetVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/vpn_gateways/testString/connections/testString')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12630,7 +12657,7 @@ class TestUpdateVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/vpn_gateways/testString/connections/testString')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -12698,7 +12725,7 @@ class TestUpdateVpnGatewayConnection():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/vpn_gateways/testString/connections/testString')
-        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "ipsec_policy": {"id": "ddf51bec-3424-11e8-b467-0ed5f89f718b"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
+        mock_response = '{"admin_state_up": true, "authentication_mode": "psk", "created_at": "2019-01-01T12:00:00", "dead_peer_detection": {"action": "restart", "interval": 30, "timeout": 120}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b", "id": "a10a5771-dc23-442c-8460-c3601d8542f7", "ike_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ike-policy"}, "ipsec_policy": {"href": "https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-ipsec-policy"}, "local_cidrs": ["192.168.1.0/24"], "name": "my-vpn-connection", "peer_address": "169.21.50.5", "peer_cidrs": ["10.45.1.0/24"], "psk": "lkj14b1oi0alcniejkso", "route_mode": "policy", "status": "down"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -13642,13 +13669,13 @@ class TestCreateVolume():
         volume_prototype_model['encryption_key'] = encryption_key_identity_model
         volume_prototype_model['iops'] = 10000
         volume_prototype_model['name'] = 'my-volume'
-        volume_prototype_model['profile'] = volume_profile_identity_model
+        volume_prototype_model['profile'] = {"name": "general-purpose"}
         volume_prototype_model['resource_group'] = resource_group_identity_model
         volume_prototype_model['zone'] = zone_identity_model
         volume_prototype_model['capacity'] = 100
 
         # Set up parameter values
-        volume_prototype = volume_prototype_model
+        volume_prototype = {"capacity": 100, "zone": {"name": "us-south-1"}}
 
         # Invoke method
         response = service.create_volume(volume_prototype, headers={})
@@ -13696,13 +13723,13 @@ class TestCreateVolume():
         volume_prototype_model['encryption_key'] = encryption_key_identity_model
         volume_prototype_model['iops'] = 10000
         volume_prototype_model['name'] = 'my-volume'
-        volume_prototype_model['profile'] = volume_profile_identity_model
+        volume_prototype_model['profile'] = {"name": "general-purpose"}
         volume_prototype_model['resource_group'] = resource_group_identity_model
         volume_prototype_model['zone'] = zone_identity_model
         volume_prototype_model['capacity'] = 100
 
         # Set up parameter values
-        volume_prototype = volume_prototype_model
+        volume_prototype = {"capacity": 100, "zone": {"name": "us-south-1"}}
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -14143,63 +14170,70 @@ class TestCertificateInstanceReference():
 #-----------------------------------------------------------------------------
 # Test Class for DefaultSecurityGroup
 #-----------------------------------------------------------------------------
-class TestDefaultSecurityGroup():
+# class TestDefaultSecurityGroup():
 
     #--------------------------------------------------------
     # Test serialization/deserialization for DefaultSecurityGroup
     #--------------------------------------------------------
-    def test_default_security_group_serialization(self):
+    # def test_default_security_group_serialization(self):
 
-        # Construct dict forms of any model objects needed in order to build this model.
+    #     # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_model = {}  # SecurityGroupRule
-        security_group_rule_model['direction'] = 'inbound'
-        security_group_rule_model['id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
-        security_group_rule_model['ip_version'] = 'ipv4'
-        security_group_rule_model['protocol'] = 'all'
-        security_group_rule_model['remote'] = {'foo': 'bar'}
+    #     security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+    #     security_group_rule_remote_model['address'] = '192.168.3.4'
 
-        vpc_reference_model = {}  # VPCReference
-        vpc_reference_model[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
-        vpc_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b'
-        vpc_reference_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
-        vpc_reference_model['name'] = 'my-vpc'
+    #     security_group_rule_model = {}  # SecurityGroupRule
+    #     security_group_rule_model['direction'] = 'inbound'
+    #     security_group_rule_model['id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
+    #     security_group_rule_model['ip_version'] = 'ipv4'
+    #     security_group_rule_model['protocol'] = 'icmp'
+    #     security_group_rule_model['remote'] = security_group_rule_remote_model
+    #     security_group_rule_model['code'] = 0
+    #     security_group_rule_model['type'] = 8
 
-        # Construct a json representation of a DefaultSecurityGroup model
-        default_security_group_model_json = {}
-        default_security_group_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        default_security_group_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        default_security_group_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        default_security_group_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        default_security_group_model_json[
-            'name'] = 'observant-chip-emphatic-engraver'
-        default_security_group_model_json['rules'] = [security_group_rule_model]
-        default_security_group_model_json['vpc'] = vpc_reference_model
+    #     vpc_reference_model = {}  # VPCReference
+    #     vpc_reference_model[
+    #         'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
+    #     vpc_reference_model[
+    #         'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b'
+    #     vpc_reference_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+    #     vpc_reference_model['name'] = 'my-vpc'
 
-        # Construct a model instance of DefaultSecurityGroup by calling from_dict on the json representation
-        default_security_group_model = DefaultSecurityGroup.from_dict(
-            default_security_group_model_json)
-        assert default_security_group_model != False
+    #     # Construct a json representation of a DefaultSecurityGroup model
+    #     default_security_group_model_json = {}
+    #     default_security_group_model_json[
+    #         'created_at'] = '2020-01-28T18:40:40.123456Z'
+    #     default_security_group_model_json[
+    #         'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+    #     default_security_group_model_json[
+    #         'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+    #     default_security_group_model_json[
+    #         'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+    #     default_security_group_model_json[
+    #         'name'] = 'observant-chip-emphatic-engraver'
+    #     default_security_group_model_json['rules'] = [security_group_rule_model]
+    #     default_security_group_model_json['vpc'] = {
+    #         "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+    #     }
 
-        # Construct a model instance of DefaultSecurityGroup by calling from_dict on the json representation
-        default_security_group_model_dict = DefaultSecurityGroup.from_dict(
-            default_security_group_model_json).__dict__
-        default_security_group_model2 = DefaultSecurityGroup(
-            **default_security_group_model_dict)
+    #     # Construct a model instance of DefaultSecurityGroup by calling from_dict on the json representation
+    #     default_security_group_model = DefaultSecurityGroup.from_dict(
+    #         default_security_group_model_json)
+    #     assert default_security_group_model != False
 
-        # Verify the model instances are equivalent
-        assert default_security_group_model == default_security_group_model2
+    #     # Construct a model instance of DefaultSecurityGroup by calling from_dict on the json representation
+    #     default_security_group_model_dict = DefaultSecurityGroup.from_dict(
+    #         default_security_group_model_json).__dict__
+    #     default_security_group_model2 = DefaultSecurityGroup(
+    #         **default_security_group_model_dict)
 
-        # Convert model instance back to dict and verify no loss of data
-        default_security_group_model_json2 = default_security_group_model.to_dict(
-        )
-        assert default_security_group_model_json2 == default_security_group_model_json
+    #     # Verify the model instances are equivalent
+    #     assert default_security_group_model == default_security_group_model2
+
+    #     # Convert model instance back to dict and verify no loss of data
+    #     default_security_group_model_json2 = default_security_group_model.to_dict(
+    #     )
+    #     assert default_security_group_model_json2 == default_security_group_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -14756,6 +14790,43 @@ class TestIKEPolicyCollectionNext():
 
 
 #-----------------------------------------------------------------------------
+# Test Class for IKEPolicyReference
+#-----------------------------------------------------------------------------
+class TestIKEPolicyReference():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for IKEPolicyReference
+    #--------------------------------------------------------
+    def test_ike_policy_reference_serialization(self):
+
+        # Construct a json representation of a IKEPolicyReference model
+        ike_policy_reference_model_json = {}
+        ike_policy_reference_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model_json[
+            'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model_json['name'] = 'my-ike-policy'
+
+        # Construct a model instance of IKEPolicyReference by calling from_dict on the json representation
+        ike_policy_reference_model = IKEPolicyReference.from_dict(
+            ike_policy_reference_model_json)
+        assert ike_policy_reference_model != False
+
+        # Construct a model instance of IKEPolicyReference by calling from_dict on the json representation
+        ike_policy_reference_model_dict = IKEPolicyReference.from_dict(
+            ike_policy_reference_model_json).__dict__
+        ike_policy_reference_model2 = IKEPolicyReference(
+            **ike_policy_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert ike_policy_reference_model == ike_policy_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        ike_policy_reference_model_json2 = ike_policy_reference_model.to_dict()
+        assert ike_policy_reference_model_json2 == ike_policy_reference_model_json
+
+
+#-----------------------------------------------------------------------------
 # Test Class for IP
 #-----------------------------------------------------------------------------
 class TestIP():
@@ -14998,6 +15069,44 @@ class TestIPsecPolicyCollectionNext():
         i_psec_policy_collection_next_model_json2 = i_psec_policy_collection_next_model.to_dict(
         )
         assert i_psec_policy_collection_next_model_json2 == i_psec_policy_collection_next_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for IPsecPolicyReference
+#-----------------------------------------------------------------------------
+class TestIPsecPolicyReference():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for IPsecPolicyReference
+    #--------------------------------------------------------
+    def test_i_psec_policy_reference_serialization(self):
+
+        # Construct a json representation of a IPsecPolicyReference model
+        i_psec_policy_reference_model_json = {}
+        i_psec_policy_reference_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model_json[
+            'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model_json['name'] = 'my-ipsec-policy'
+
+        # Construct a model instance of IPsecPolicyReference by calling from_dict on the json representation
+        i_psec_policy_reference_model = IPsecPolicyReference.from_dict(
+            i_psec_policy_reference_model_json)
+        assert i_psec_policy_reference_model != False
+
+        # Construct a model instance of IPsecPolicyReference by calling from_dict on the json representation
+        i_psec_policy_reference_model_dict = IPsecPolicyReference.from_dict(
+            i_psec_policy_reference_model_json).__dict__
+        i_psec_policy_reference_model2 = IPsecPolicyReference(
+            **i_psec_policy_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert i_psec_policy_reference_model == i_psec_policy_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        i_psec_policy_reference_model_json2 = i_psec_policy_reference_model.to_dict(
+        )
+        assert i_psec_policy_reference_model_json2 == i_psec_policy_reference_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -15731,63 +15840,63 @@ class TestInstanceCollectionNext():
         assert instance_collection_next_model_json2 == instance_collection_next_model_json
 
 
-# #-----------------------------------------------------------------------------
-# # Test Class for InstanceInitialization
-# #-----------------------------------------------------------------------------
-# class TestInstanceInitialization():
+#-----------------------------------------------------------------------------
+# Test Class for InstanceInitialization
+#-----------------------------------------------------------------------------
+class TestInstanceInitialization():
 
-#     #--------------------------------------------------------
-#     # Test serialization/deserialization for InstanceInitialization
-#     #--------------------------------------------------------
-#     def test_instance_initialization_serialization(self):
+    #--------------------------------------------------------
+    # Test serialization/deserialization for InstanceInitialization
+    #--------------------------------------------------------
+    def test_instance_initialization_serialization(self):
 
-#         # Construct dict forms of any model objects needed in order to build this model.
+        # Construct dict forms of any model objects needed in order to build this model.
 
-#         key_reference_instance_initialization_context_model = {
-#         }  # KeyReferenceInstanceInitializationContext
-#         key_reference_instance_initialization_context_model[
-#             'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803'
-#         key_reference_instance_initialization_context_model[
-#             'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
-#         key_reference_instance_initialization_context_model[
-#             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803'
-#         key_reference_instance_initialization_context_model[
-#             'id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
-#         key_reference_instance_initialization_context_model['name'] = 'my-key'
+        key_reference_instance_initialization_context_model = {
+        }  # KeyReferenceInstanceInitializationContext
+        key_reference_instance_initialization_context_model[
+            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_reference_instance_initialization_context_model[
+            'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
+        key_reference_instance_initialization_context_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_reference_instance_initialization_context_model[
+            'id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_reference_instance_initialization_context_model['name'] = 'my-key'
 
-#         instance_initialization_password_model = {
-#         }  # InstanceInitializationPassword
-#         instance_initialization_password_model[
-#             'encrypted_password'] = 'VGhpcyBpcyBhIG1vY2sgYnl0ZSBhcnJheSB2YWx1ZS4='
-#         instance_initialization_password_model[
-#             'encryption_key'] = key_reference_instance_initialization_context_model
+        instance_initialization_password_model = {
+        }  # InstanceInitializationPassword
+        instance_initialization_password_model[
+            'encrypted_password'] = 'VGhpcyBpcyBhIG1vY2sgYnl0ZSBhcnJheSB2YWx1ZS4='
+        instance_initialization_password_model[
+            'encryption_key'] = key_reference_instance_initialization_context_model
 
-#         # Construct a json representation of a InstanceInitialization model
-#         instance_initialization_model_json = {}
-#         instance_initialization_model_json['keys'] = [
-#             key_reference_instance_initialization_context_model
-#         ]
-#         instance_initialization_model_json[
-#             'password'] = instance_initialization_password_model
+        # Construct a json representation of a InstanceInitialization model
+        instance_initialization_model_json = {}
+        instance_initialization_model_json['keys'] = [
+            key_reference_instance_initialization_context_model
+        ]
+        instance_initialization_model_json[
+            'password'] = instance_initialization_password_model
 
-#         # Construct a model instance of InstanceInitialization by calling from_dict on the json representation
-#         instance_initialization_model = InstanceInitialization.from_dict(
-#             instance_initialization_model_json)
-#         assert instance_initialization_model != False
+        # Construct a model instance of InstanceInitialization by calling from_dict on the json representation
+        instance_initialization_model = InstanceInitialization.from_dict(
+            instance_initialization_model_json)
+        assert instance_initialization_model != False
 
-#         # Construct a model instance of InstanceInitialization by calling from_dict on the json representation
-#         instance_initialization_model_dict = InstanceInitialization.from_dict(
-#             instance_initialization_model_json).__dict__
-#         instance_initialization_model2 = InstanceInitialization(
-#             **instance_initialization_model_dict)
+        # Construct a model instance of InstanceInitialization by calling from_dict on the json representation
+        instance_initialization_model_dict = InstanceInitialization.from_dict(
+            instance_initialization_model_json).__dict__
+        instance_initialization_model2 = InstanceInitialization(
+            **instance_initialization_model_dict)
 
-#         # Verify the model instances are equivalent
-#         assert instance_initialization_model == instance_initialization_model2
+        # Verify the model instances are equivalent
+        assert instance_initialization_model == instance_initialization_model2
 
-#         # Convert model instance back to dict and verify no loss of data
-#         instance_initialization_model_json2 = instance_initialization_model.to_dict(
-#         )
-#         assert instance_initialization_model_json2 == instance_initialization_model_json
+        # Convert model instance back to dict and verify no loss of data
+        instance_initialization_model_json2 = instance_initialization_model.to_dict(
+        )
+        assert instance_initialization_model_json2 == instance_initialization_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -17912,7 +18021,14 @@ class TestNetworkACL():
 
         network_acl_rule_item_model = {}  # NetworkACLRuleItem
         network_acl_rule_item_model['action'] = 'allow'
-        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
+        network_acl_rule_item_model['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
@@ -17986,7 +18102,14 @@ class TestNetworkACLCollection():
 
         network_acl_rule_item_model = {}  # NetworkACLRuleItem
         network_acl_rule_item_model['action'] = 'allow'
-        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
+        network_acl_rule_item_model['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
@@ -18197,7 +18320,14 @@ class TestNetworkACLRuleCollection():
 
         network_acl_rule_item_model = {}  # NetworkACLRuleItem
         network_acl_rule_item_model['action'] = 'allow'
-        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
+        network_acl_rule_item_model['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
@@ -18571,53 +18701,55 @@ class TestNetworkInterfaceInstanceContextReference():
         assert network_interface_instance_context_reference_model_json2 == network_interface_instance_context_reference_model_json
 
 
-# #-----------------------------------------------------------------------------
-# # Test Class for NetworkInterfacePrototype
-# #-----------------------------------------------------------------------------
-# class TestNetworkInterfacePrototype():
+#-----------------------------------------------------------------------------
+# Test Class for NetworkInterfacePrototype
+#-----------------------------------------------------------------------------
+class TestNetworkInterfacePrototype():
 
-#     #--------------------------------------------------------
-#     # Test serialization/deserialization for NetworkInterfacePrototype
-#     #--------------------------------------------------------
-#     def test_network_interface_prototype_serialization(self):
+    #--------------------------------------------------------
+    # Test serialization/deserialization for NetworkInterfacePrototype
+    #--------------------------------------------------------
+    def test_network_interface_prototype_serialization(self):
 
-#         # Construct dict forms of any model objects needed in order to build this model.
+        # Construct dict forms of any model objects needed in order to build this model.
 
-#         security_group_identity_model = {}  # SecurityGroupIdentity
-#         security_group_identity_model[
-#             'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_identity_model = {}  # SecurityGroupIdentity
+        security_group_identity_model[
+            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
 
-#         subnet_identity_model = {}  # SubnetIdentity
-#         subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_identity_model = {}  # SubnetIdentity
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
 
-#         # Construct a json representation of a NetworkInterfacePrototype model
-#         network_interface_prototype_model_json = {}
-#         network_interface_prototype_model_json['name'] = 'my-network-interface'
-#         network_interface_prototype_model_json[
-#             'primary_ipv4_address'] = '10.0.0.5'
-#         network_interface_prototype_model_json['security_groups'] = [
-#             security_group_identity_model
-#         ]
-#         network_interface_prototype_model_json['subnet'] = subnet_identity_model
+        # Construct a json representation of a NetworkInterfacePrototype model
+        network_interface_prototype_model_json = {}
+        network_interface_prototype_model_json['name'] = 'my-network-interface'
+        network_interface_prototype_model_json[
+            'primary_ipv4_address'] = '10.0.0.5'
+        network_interface_prototype_model_json['security_groups'] = [
+            security_group_identity_model
+        ]
+        network_interface_prototype_model_json['subnet'] = {
+            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
+        }
 
-#         # Construct a model instance of NetworkInterfacePrototype by calling from_dict on the json representation
-#         network_interface_prototype_model = NetworkInterfacePrototype.from_dict(
-#             network_interface_prototype_model_json)
-#         assert network_interface_prototype_model != False
+        # Construct a model instance of NetworkInterfacePrototype by calling from_dict on the json representation
+        network_interface_prototype_model = NetworkInterfacePrototype.from_dict(
+            network_interface_prototype_model_json)
+        assert network_interface_prototype_model != False
 
-#         # Construct a model instance of NetworkInterfacePrototype by calling from_dict on the json representation
-#         network_interface_prototype_model_dict = NetworkInterfacePrototype.from_dict(
-#             network_interface_prototype_model_json).__dict__
-#         network_interface_prototype_model2 = NetworkInterfacePrototype(
-#             **network_interface_prototype_model_dict)
+        # Construct a model instance of NetworkInterfacePrototype by calling from_dict on the json representation
+        network_interface_prototype_model_dict = NetworkInterfacePrototype.from_dict(
+            network_interface_prototype_model_json).__dict__
+        network_interface_prototype_model2 = NetworkInterfacePrototype(
+            **network_interface_prototype_model_dict)
 
-#         # Verify the model instances are equivalent
-#         assert network_interface_prototype_model == network_interface_prototype_model2
+        # Verify the model instances are equivalent
+        assert network_interface_prototype_model == network_interface_prototype_model2
 
-#         # Convert model instance back to dict and verify no loss of data
-#         network_interface_prototype_model_json2 = network_interface_prototype_model.to_dict(
-#         )
-#         assert network_interface_prototype_model_json2 == network_interface_prototype_model_json
+        # Convert model instance back to dict and verify no loss of data
+        network_interface_prototype_model_json2 = network_interface_prototype_model.to_dict(
+        )
+        assert network_interface_prototype_model_json2 == network_interface_prototype_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -18660,6 +18792,87 @@ class TestNetworkInterfaceReference():
         network_interface_reference_model_json2 = network_interface_reference_model.to_dict(
         )
         assert network_interface_reference_model_json2 == network_interface_reference_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for NetworkInterfaceUnpaginatedCollection
+#-----------------------------------------------------------------------------
+class TestNetworkInterfaceUnpaginatedCollection():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for NetworkInterfaceUnpaginatedCollection
+    #--------------------------------------------------------
+    def test_network_interface_unpaginated_collection_serialization(self):
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        floating_ip_reference_model = {}  # FloatingIPReference
+        floating_ip_reference_model['address'] = '203.0.113.1'
+        floating_ip_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model[
+            'id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model['name'] = 'my-floating-ip'
+
+        security_group_reference_model = {}  # SecurityGroupReference
+        security_group_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model[
+            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['name'] = 'my-security-group'
+
+        subnet_reference_model = {}  # SubnetReference
+        subnet_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['name'] = 'my-subnet'
+
+        network_interface_model = {}  # NetworkInterface
+        network_interface_model['created_at'] = '2020-01-28T18:40:40.123456Z'
+        network_interface_model['floating_ips'] = [floating_ip_reference_model]
+        network_interface_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
+        network_interface_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+        network_interface_model['name'] = 'my-network-interface'
+        network_interface_model['port_speed'] = 1000
+        network_interface_model['primary_ipv4_address'] = '192.168.3.4'
+        network_interface_model['resource_type'] = 'network_interface'
+        network_interface_model['security_groups'] = [
+            security_group_reference_model
+        ]
+        network_interface_model['status'] = 'available'
+        network_interface_model['subnet'] = subnet_reference_model
+        network_interface_model['type'] = 'primary'
+
+        # Construct a json representation of a NetworkInterfaceUnpaginatedCollection model
+        network_interface_unpaginated_collection_model_json = {}
+        network_interface_unpaginated_collection_model_json[
+            'network_interfaces'] = [network_interface_model]
+
+        # Construct a model instance of NetworkInterfaceUnpaginatedCollection by calling from_dict on the json representation
+        network_interface_unpaginated_collection_model = NetworkInterfaceUnpaginatedCollection.from_dict(
+            network_interface_unpaginated_collection_model_json)
+        assert network_interface_unpaginated_collection_model != False
+
+        # Construct a model instance of NetworkInterfaceUnpaginatedCollection by calling from_dict on the json representation
+        network_interface_unpaginated_collection_model_dict = NetworkInterfaceUnpaginatedCollection.from_dict(
+            network_interface_unpaginated_collection_model_json).__dict__
+        network_interface_unpaginated_collection_model2 = NetworkInterfaceUnpaginatedCollection(
+            **network_interface_unpaginated_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_interface_unpaginated_collection_model == network_interface_unpaginated_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_interface_unpaginated_collection_model_json2 = network_interface_unpaginated_collection_model.to_dict(
+        )
+        assert network_interface_unpaginated_collection_model_json2 == network_interface_unpaginated_collection_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -19405,6 +19618,9 @@ class TestSecurityGroup():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
         network_interface_reference_model = {}  # NetworkInterfaceReference
         network_interface_reference_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
@@ -19425,8 +19641,10 @@ class TestSecurityGroup():
         security_group_rule_model['direction'] = 'inbound'
         security_group_rule_model['id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
         security_group_rule_model['ip_version'] = 'ipv4'
-        security_group_rule_model['protocol'] = 'all'
-        security_group_rule_model['remote'] = {'foo': 'bar'}
+        security_group_rule_model['protocol'] = 'icmp'
+        security_group_rule_model['remote'] = security_group_rule_remote_model
+        security_group_rule_model['code'] = 0
+        security_group_rule_model['type'] = 8
 
         vpc_reference_model = {}  # VPCReference
         vpc_reference_model[
@@ -19483,6 +19701,9 @@ class TestSecurityGroupCollection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
         network_interface_reference_model = {}  # NetworkInterfaceReference
         network_interface_reference_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
@@ -19503,8 +19724,10 @@ class TestSecurityGroupCollection():
         security_group_rule_model['direction'] = 'inbound'
         security_group_rule_model['id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
         security_group_rule_model['ip_version'] = 'ipv4'
-        security_group_rule_model['protocol'] = 'all'
-        security_group_rule_model['remote'] = {'foo': 'bar'}
+        security_group_rule_model['protocol'] = 'icmp'
+        security_group_rule_model['remote'] = security_group_rule_remote_model
+        security_group_rule_model['code'] = 0
+        security_group_rule_model['type'] = 8
 
         vpc_reference_model = {}  # VPCReference
         vpc_reference_model[
@@ -19607,12 +19830,17 @@ class TestSecurityGroupRuleCollection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
         security_group_rule_model = {}  # SecurityGroupRule
         security_group_rule_model['direction'] = 'inbound'
         security_group_rule_model['id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
         security_group_rule_model['ip_version'] = 'ipv4'
-        security_group_rule_model['protocol'] = 'all'
-        security_group_rule_model['remote'] = {'foo': 'bar'}
+        security_group_rule_model['protocol'] = 'icmp'
+        security_group_rule_model['remote'] = security_group_rule_remote_model
+        security_group_rule_model['code'] = 0
+        security_group_rule_model['type'] = 8
 
         # Construct a json representation of a SecurityGroupRuleCollection model
         security_group_rule_collection_model_json = {}
@@ -20482,12 +20710,19 @@ class TestVPNGatewayConnection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        ike_policy_identity_model = {}  # IKEPolicyIdentity
-        ike_policy_identity_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
-        i_psec_policy_identity_model = {}  # IPsecPolicyIdentity
-        i_psec_policy_identity_model[
+        ike_policy_reference_model = {}  # IKEPolicyReference
+        ike_policy_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model[
             'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model['name'] = 'my-ike-policy'
+
+        i_psec_policy_reference_model = {}  # IPsecPolicyReference
+        i_psec_policy_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model[
+            'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model['name'] = 'my-ipsec-policy'
 
         vpn_gateway_connection_dpd_model = {}  # VPNGatewayConnectionDPD
         vpn_gateway_connection_dpd_model['action'] = 'restart'
@@ -20507,9 +20742,9 @@ class TestVPNGatewayConnection():
         vpn_gateway_connection_model_json[
             'id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
         vpn_gateway_connection_model_json[
-            'ike_policy'] = ike_policy_identity_model
+            'ike_policy'] = ike_policy_reference_model
         vpn_gateway_connection_model_json[
-            'ipsec_policy'] = i_psec_policy_identity_model
+            'ipsec_policy'] = i_psec_policy_reference_model
         vpn_gateway_connection_model_json['local_cidrs'] = ['192.168.1.0/24']
         vpn_gateway_connection_model_json['name'] = 'my-vpn-connection'
         vpn_gateway_connection_model_json['peer_address'] = '169.21.50.5'
@@ -20550,12 +20785,19 @@ class TestVPNGatewayConnectionCollection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        ike_policy_identity_model = {}  # IKEPolicyIdentity
-        ike_policy_identity_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
-        i_psec_policy_identity_model = {}  # IPsecPolicyIdentity
-        i_psec_policy_identity_model[
+        ike_policy_reference_model = {}  # IKEPolicyReference
+        ike_policy_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model[
             'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        ike_policy_reference_model['name'] = 'my-ike-policy'
+
+        i_psec_policy_reference_model = {}  # IPsecPolicyReference
+        i_psec_policy_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model[
+            'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        i_psec_policy_reference_model['name'] = 'my-ipsec-policy'
 
         vpn_gateway_connection_dpd_model = {}  # VPNGatewayConnectionDPD
         vpn_gateway_connection_dpd_model['action'] = 'restart'
@@ -20573,9 +20815,9 @@ class TestVPNGatewayConnectionCollection():
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
         vpn_gateway_connection_model[
             'id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
-        vpn_gateway_connection_model['ike_policy'] = ike_policy_identity_model
+        vpn_gateway_connection_model['ike_policy'] = ike_policy_reference_model
         vpn_gateway_connection_model[
-            'ipsec_policy'] = i_psec_policy_identity_model
+            'ipsec_policy'] = i_psec_policy_reference_model
         vpn_gateway_connection_model['local_cidrs'] = ['192.168.1.0/24']
         vpn_gateway_connection_model['name'] = 'my-vpn-connection'
         vpn_gateway_connection_model['peer_address'] = '169.21.50.5'
@@ -21104,8 +21346,9 @@ class TestVolumeAttachmentPrototypeInstanceByImageContext():
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['iops'] = 10000
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model[
-            'profile'] = volume_profile_identity_model
+        volume_prototype_instance_by_image_context_model['profile'] = {
+            "name": "general-purpose"
+        }
 
         # Construct a json representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model_json = {}
@@ -21164,8 +21407,9 @@ class TestVolumeAttachmentPrototypeInstanceContext():
             'iops'] = 10000
         volume_attachment_prototype_instance_context_volume_model[
             'name'] = 'my-volume'
-        volume_attachment_prototype_instance_context_volume_model[
-            'profile'] = volume_profile_identity_model
+        volume_attachment_prototype_instance_context_volume_model['profile'] = {
+            "name": "general-purpose"
+        }
         volume_attachment_prototype_instance_context_volume_model[
             'capacity'] = 100
 
@@ -21722,8 +21966,9 @@ class TestVolumePrototypeInstanceByImageContext():
         volume_prototype_instance_by_image_context_model_json['iops'] = 10000
         volume_prototype_instance_by_image_context_model_json[
             'name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model_json[
-            'profile'] = volume_profile_identity_model
+        volume_prototype_instance_by_image_context_model_json['profile'] = {
+            "name": "general-purpose"
+        }
 
         # Construct a model instance of VolumePrototypeInstanceByImageContext by calling from_dict on the json representation
         volume_prototype_instance_by_image_context_model = VolumePrototypeInstanceByImageContext.from_dict(
@@ -21975,6 +22220,168 @@ class TestEncryptionKeyIdentityByCRN():
 
 
 #-----------------------------------------------------------------------------
+# Test Class for FloatingIPByTargetTargetNetworkInterfaceIdentityByHref
+#-----------------------------------------------------------------------------
+class TestFloatingIPByTargetTargetNetworkInterfaceIdentityByHref():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for FloatingIPByTargetTargetNetworkInterfaceIdentityByHref
+    #--------------------------------------------------------
+    def test_floating_ip_by_target_target_network_interface_identity_by_href_serialization(
+            self):
+
+        # Construct a json representation of a FloatingIPByTargetTargetNetworkInterfaceIdentityByHref model
+        floating_ip_by_target_target_network_interface_identity_by_href_model_json = {}
+        floating_ip_by_target_target_network_interface_identity_by_href_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
+
+        # Construct a model instance of FloatingIPByTargetTargetNetworkInterfaceIdentityByHref by calling from_dict on the json representation
+        floating_ip_by_target_target_network_interface_identity_by_href_model = FloatingIPByTargetTargetNetworkInterfaceIdentityByHref.from_dict(
+            floating_ip_by_target_target_network_interface_identity_by_href_model_json
+        )
+        assert floating_ip_by_target_target_network_interface_identity_by_href_model != False
+
+        # Construct a model instance of FloatingIPByTargetTargetNetworkInterfaceIdentityByHref by calling from_dict on the json representation
+        floating_ip_by_target_target_network_interface_identity_by_href_model_dict = FloatingIPByTargetTargetNetworkInterfaceIdentityByHref.from_dict(
+            floating_ip_by_target_target_network_interface_identity_by_href_model_json
+        ).__dict__
+        floating_ip_by_target_target_network_interface_identity_by_href_model2 = FloatingIPByTargetTargetNetworkInterfaceIdentityByHref(
+            **
+            floating_ip_by_target_target_network_interface_identity_by_href_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert floating_ip_by_target_target_network_interface_identity_by_href_model == floating_ip_by_target_target_network_interface_identity_by_href_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        floating_ip_by_target_target_network_interface_identity_by_href_model_json2 = floating_ip_by_target_target_network_interface_identity_by_href_model.to_dict(
+        )
+        assert floating_ip_by_target_target_network_interface_identity_by_href_model_json2 == floating_ip_by_target_target_network_interface_identity_by_href_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for FloatingIPByTargetTargetNetworkInterfaceIdentityById
+#-----------------------------------------------------------------------------
+class TestFloatingIPByTargetTargetNetworkInterfaceIdentityById():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for FloatingIPByTargetTargetNetworkInterfaceIdentityById
+    #--------------------------------------------------------
+    def test_floating_ip_by_target_target_network_interface_identity_by_id_serialization(
+            self):
+
+        # Construct a json representation of a FloatingIPByTargetTargetNetworkInterfaceIdentityById model
+        floating_ip_by_target_target_network_interface_identity_by_id_model_json = {}
+        floating_ip_by_target_target_network_interface_identity_by_id_model_json[
+            'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+
+        # Construct a model instance of FloatingIPByTargetTargetNetworkInterfaceIdentityById by calling from_dict on the json representation
+        floating_ip_by_target_target_network_interface_identity_by_id_model = FloatingIPByTargetTargetNetworkInterfaceIdentityById.from_dict(
+            floating_ip_by_target_target_network_interface_identity_by_id_model_json
+        )
+        assert floating_ip_by_target_target_network_interface_identity_by_id_model != False
+
+        # Construct a model instance of FloatingIPByTargetTargetNetworkInterfaceIdentityById by calling from_dict on the json representation
+        floating_ip_by_target_target_network_interface_identity_by_id_model_dict = FloatingIPByTargetTargetNetworkInterfaceIdentityById.from_dict(
+            floating_ip_by_target_target_network_interface_identity_by_id_model_json
+        ).__dict__
+        floating_ip_by_target_target_network_interface_identity_by_id_model2 = FloatingIPByTargetTargetNetworkInterfaceIdentityById(
+            **
+            floating_ip_by_target_target_network_interface_identity_by_id_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert floating_ip_by_target_target_network_interface_identity_by_id_model == floating_ip_by_target_target_network_interface_identity_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        floating_ip_by_target_target_network_interface_identity_by_id_model_json2 = floating_ip_by_target_target_network_interface_identity_by_id_model.to_dict(
+        )
+        assert floating_ip_by_target_target_network_interface_identity_by_id_model_json2 == floating_ip_by_target_target_network_interface_identity_by_id_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref
+#-----------------------------------------------------------------------------
+class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref(
+):
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref
+    #--------------------------------------------------------
+    def test_floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_serialization(
+            self):
+
+        # Construct a json representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref model
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json = {}
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
+
+        # Construct a model instance of FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref by calling from_dict on the json representation
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref.from_dict(
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json
+        )
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model != False
+
+        # Construct a model instance of FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref by calling from_dict on the json representation
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_dict = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref.from_dict(
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json
+        ).__dict__
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model2 = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref(
+            **
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json2 = floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model.to_dict(
+        )
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json2 == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
+#-----------------------------------------------------------------------------
+class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById(
+):
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
+    #--------------------------------------------------------
+    def test_floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_serialization(
+            self):
+
+        # Construct a json representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json = {}
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json[
+            'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+
+        # Construct a model instance of FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById by calling from_dict on the json representation
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById.from_dict(
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json
+        )
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model != False
+
+        # Construct a model instance of FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById by calling from_dict on the json representation
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_dict = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById.from_dict(
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json
+        ).__dict__
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model2 = FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById(
+            **
+            floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json2 = floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model.to_dict(
+        )
+        assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json2 == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json
+
+
+#-----------------------------------------------------------------------------
 # Test Class for FloatingIPPrototypeFloatingIPByTarget
 #-----------------------------------------------------------------------------
 class TestFloatingIPPrototypeFloatingIPByTarget():
@@ -21986,8 +22393,8 @@ class TestFloatingIPPrototypeFloatingIPByTarget():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_interface_identity_model = {}  # NetworkInterfaceIdentity
-        network_interface_identity_model[
+        floating_ip_by_target_target_model = {}  # FloatingIPByTargetTarget
+        floating_ip_by_target_target_model[
             'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
 
         # Construct a json representation of a FloatingIPPrototypeFloatingIPByTarget model
@@ -21995,7 +22402,7 @@ class TestFloatingIPPrototypeFloatingIPByTarget():
         floating_ip_prototype_floating_ip_by_target_model_json[
             'name'] = 'my-floating-ip'
         floating_ip_prototype_floating_ip_by_target_model_json[
-            'target'] = network_interface_identity_model
+            'target'] = floating_ip_by_target_target_model
 
         # Construct a model instance of FloatingIPPrototypeFloatingIPByTarget by calling from_dict on the json representation
         floating_ip_prototype_floating_ip_by_target_model = FloatingIPPrototypeFloatingIPByTarget.from_dict(
@@ -22757,146 +23164,153 @@ class TestInstanceProfilePortSpeedFixed():
         assert instance_profile_port_speed_fixed_model_json2 == instance_profile_port_speed_fixed_model_json
 
 
-# #-----------------------------------------------------------------------------
-# # Test Class for InstancePrototypeInstanceByImage
-# #-----------------------------------------------------------------------------
-# class TestInstancePrototypeInstanceByImage():
+#-----------------------------------------------------------------------------
+# Test Class for InstancePrototypeInstanceByImage
+#-----------------------------------------------------------------------------
+class TestInstancePrototypeInstanceByImage():
 
-#     #--------------------------------------------------------
-#     # Test serialization/deserialization for InstancePrototypeInstanceByImage
-#     #--------------------------------------------------------
-#     def test_instance_prototype_instance_by_image_serialization(self):
+    #--------------------------------------------------------
+    # Test serialization/deserialization for InstancePrototypeInstanceByImage
+    #--------------------------------------------------------
+    def test_instance_prototype_instance_by_image_serialization(self):
 
-#         # Construct dict forms of any model objects needed in order to build this model.
+        # Construct dict forms of any model objects needed in order to build this model.
 
-#         encryption_key_identity_model = {}  # EncryptionKeyIdentity
-#         encryption_key_identity_model[
-#             'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+        encryption_key_identity_model = {}  # EncryptionKeyIdentity
+        encryption_key_identity_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
-#         volume_profile_identity_model = {}  # VolumeProfileIdentity
-#         volume_profile_identity_model['name'] = 'general-purpose'
+        volume_profile_identity_model = {}  # VolumeProfileIdentity
+        volume_profile_identity_model['name'] = 'general-purpose'
 
-#         security_group_identity_model = {}  # SecurityGroupIdentity
-#         security_group_identity_model[
-#             'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_identity_model = {}  # SecurityGroupIdentity
+        security_group_identity_model[
+            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
 
-#         subnet_identity_model = {}  # SubnetIdentity
-#         subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_identity_model = {}  # SubnetIdentity
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
 
-#         volume_attachment_prototype_instance_context_volume_model = {
-#         }  # VolumeAttachmentPrototypeInstanceContextVolume
-#         volume_attachment_prototype_instance_context_volume_model[
-#             'encryption_key'] = encryption_key_identity_model
-#         volume_attachment_prototype_instance_context_volume_model[
-#             'iops'] = 10000
-#         volume_attachment_prototype_instance_context_volume_model[
-#             'name'] = 'my-volume'
-#         volume_attachment_prototype_instance_context_volume_model[
-#             'profile'] = volume_profile_identity_model
-#         volume_attachment_prototype_instance_context_volume_model[
-#             'capacity'] = 100
+        volume_attachment_prototype_instance_context_volume_model = {
+        }  # VolumeAttachmentPrototypeInstanceContextVolume
+        volume_attachment_prototype_instance_context_volume_model[
+            'encryption_key'] = encryption_key_identity_model
+        volume_attachment_prototype_instance_context_volume_model[
+            'iops'] = 10000
+        volume_attachment_prototype_instance_context_volume_model[
+            'name'] = 'my-volume'
+        volume_attachment_prototype_instance_context_volume_model['profile'] = {
+            "name": "general-purpose"
+        }
+        volume_attachment_prototype_instance_context_volume_model[
+            'capacity'] = 100
 
-#         volume_prototype_instance_by_image_context_model = {
-#         }  # VolumePrototypeInstanceByImageContext
-#         volume_prototype_instance_by_image_context_model['capacity'] = 100
-#         volume_prototype_instance_by_image_context_model[
-#             'encryption_key'] = encryption_key_identity_model
-#         volume_prototype_instance_by_image_context_model['iops'] = 10000
-#         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-#         volume_prototype_instance_by_image_context_model[
-#             'profile'] = volume_profile_identity_model
+        volume_prototype_instance_by_image_context_model = {
+        }  # VolumePrototypeInstanceByImageContext
+        volume_prototype_instance_by_image_context_model['capacity'] = 100
+        volume_prototype_instance_by_image_context_model[
+            'encryption_key'] = encryption_key_identity_model
+        volume_prototype_instance_by_image_context_model['iops'] = 10000
+        volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
+        volume_prototype_instance_by_image_context_model['profile'] = {
+            "name": "general-purpose"
+        }
 
-#         image_identity_model = {}  # ImageIdentity
-#         image_identity_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_identity_model = {}  # ImageIdentity
+        image_identity_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
 
-#         instance_profile_identity_model = {}  # InstanceProfileIdentity
-#         instance_profile_identity_model['name'] = 'bc1-4x16'
+        instance_profile_identity_model = {}  # InstanceProfileIdentity
+        instance_profile_identity_model['name'] = 'bc1-4x16'
 
-#         key_identity_model = {}  # KeyIdentity
-#         key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_identity_model = {}  # KeyIdentity
+        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
 
-#         network_interface_prototype_model = {}  # NetworkInterfacePrototype
-#         network_interface_prototype_model['name'] = 'my-network-interface'
-#         network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
-#         network_interface_prototype_model['security_groups'] = [
-#             security_group_identity_model
-#         ]
-#         network_interface_prototype_model['subnet'] = subnet_identity_model
+        network_interface_prototype_model = {}  # NetworkInterfacePrototype
+        network_interface_prototype_model['name'] = 'my-network-interface'
+        network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
+        network_interface_prototype_model['security_groups'] = [
+            security_group_identity_model
+        ]
+        network_interface_prototype_model['subnet'] = {
+            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
+        }
 
-#         resource_group_identity_model = {}  # ResourceGroupIdentity
-#         resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_identity_model = {}  # ResourceGroupIdentity
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-#         vpc_identity_model = {}  # VPCIdentity
-#         vpc_identity_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_identity_model = {}  # VPCIdentity
+        vpc_identity_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
 
-#         volume_attachment_prototype_instance_by_image_context_model = {
-#         }  # VolumeAttachmentPrototypeInstanceByImageContext
-#         volume_attachment_prototype_instance_by_image_context_model[
-#             'delete_volume_on_instance_delete'] = True
-#         volume_attachment_prototype_instance_by_image_context_model[
-#             'name'] = 'my-volume-attachment'
-#         volume_attachment_prototype_instance_by_image_context_model[
-#             'volume'] = volume_prototype_instance_by_image_context_model
+        volume_attachment_prototype_instance_by_image_context_model = {
+        }  # VolumeAttachmentPrototypeInstanceByImageContext
+        volume_attachment_prototype_instance_by_image_context_model[
+            'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_by_image_context_model[
+            'volume'] = volume_prototype_instance_by_image_context_model
 
-#         volume_attachment_prototype_instance_context_model = {
-#         }  # VolumeAttachmentPrototypeInstanceContext
-#         volume_attachment_prototype_instance_context_model[
-#             'delete_volume_on_instance_delete'] = True
-#         volume_attachment_prototype_instance_context_model[
-#             'name'] = 'my-volume-attachment'
-#         volume_attachment_prototype_instance_context_model[
-#             'volume'] = volume_attachment_prototype_instance_context_volume_model
+        volume_attachment_prototype_instance_context_model = {
+        }  # VolumeAttachmentPrototypeInstanceContext
+        volume_attachment_prototype_instance_context_model[
+            'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_context_model[
+            'volume'] = volume_attachment_prototype_instance_context_volume_model
 
-#         zone_identity_model = {}  # ZoneIdentity
-#         zone_identity_model['name'] = 'us-south-1'
+        zone_identity_model = {}  # ZoneIdentity
+        zone_identity_model['name'] = 'us-south-1'
 
-#         # Construct a json representation of a InstancePrototypeInstanceByImage model
-#         instance_prototype_instance_by_image_model_json = {}
-#         instance_prototype_instance_by_image_model_json['keys'] = [
-#             key_identity_model
-#         ]
-#         instance_prototype_instance_by_image_model_json['name'] = 'my-instance'
-#         instance_prototype_instance_by_image_model_json[
-#             'network_interfaces'] = [network_interface_prototype_model]
-#         instance_prototype_instance_by_image_model_json[
-#             'profile'] = instance_profile_identity_model
-#         instance_prototype_instance_by_image_model_json[
-#             'resource_group'] = resource_group_identity_model
-#         instance_prototype_instance_by_image_model_json[
-#             'user_data'] = 'testString'
-#         instance_prototype_instance_by_image_model_json[
-#             'volume_attachments'] = [
-#                 volume_attachment_prototype_instance_context_model
-#             ]
-#         instance_prototype_instance_by_image_model_json[
-#             'vpc'] = vpc_identity_model
-#         instance_prototype_instance_by_image_model_json[
-#             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-#         instance_prototype_instance_by_image_model_json[
-#             'image'] = image_identity_model
-#         instance_prototype_instance_by_image_model_json[
-#             'primary_network_interface'] = network_interface_prototype_model
-#         instance_prototype_instance_by_image_model_json[
-#             'zone'] = zone_identity_model
+        # Construct a json representation of a InstancePrototypeInstanceByImage model
+        instance_prototype_instance_by_image_model_json = {}
+        instance_prototype_instance_by_image_model_json['keys'] = [
+            key_identity_model
+        ]
+        instance_prototype_instance_by_image_model_json['name'] = 'my-instance'
+        instance_prototype_instance_by_image_model_json[
+            'network_interfaces'] = [network_interface_prototype_model]
+        instance_prototype_instance_by_image_model_json['profile'] = {
+            "name": "cc1-16x32"
+        }
+        instance_prototype_instance_by_image_model_json[
+            'resource_group'] = resource_group_identity_model
+        instance_prototype_instance_by_image_model_json[
+            'user_data'] = 'testString'
+        instance_prototype_instance_by_image_model_json[
+            'volume_attachments'] = [
+                volume_attachment_prototype_instance_context_model
+            ]
+        instance_prototype_instance_by_image_model_json['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
+        instance_prototype_instance_by_image_model_json[
+            'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
+        instance_prototype_instance_by_image_model_json['image'] = {
+            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
+        }
+        instance_prototype_instance_by_image_model_json[
+            'primary_network_interface'] = network_interface_prototype_model
+        instance_prototype_instance_by_image_model_json[
+            'zone'] = zone_identity_model
 
-#         # Construct a model instance of InstancePrototypeInstanceByImage by calling from_dict on the json representation
-#         instance_prototype_instance_by_image_model = InstancePrototypeInstanceByImage.from_dict(
-#             instance_prototype_instance_by_image_model_json)
-#         assert instance_prototype_instance_by_image_model != False
+        # Construct a model instance of InstancePrototypeInstanceByImage by calling from_dict on the json representation
+        instance_prototype_instance_by_image_model = InstancePrototypeInstanceByImage.from_dict(
+            instance_prototype_instance_by_image_model_json)
+        assert instance_prototype_instance_by_image_model != False
 
-#         # Construct a model instance of InstancePrototypeInstanceByImage by calling from_dict on the json representation
-#         instance_prototype_instance_by_image_model_dict = InstancePrototypeInstanceByImage.from_dict(
-#             instance_prototype_instance_by_image_model_json).__dict__
-#         instance_prototype_instance_by_image_model2 = InstancePrototypeInstanceByImage(
-#             **instance_prototype_instance_by_image_model_dict)
+        # Construct a model instance of InstancePrototypeInstanceByImage by calling from_dict on the json representation
+        instance_prototype_instance_by_image_model_dict = InstancePrototypeInstanceByImage.from_dict(
+            instance_prototype_instance_by_image_model_json).__dict__
+        instance_prototype_instance_by_image_model2 = InstancePrototypeInstanceByImage(
+            **instance_prototype_instance_by_image_model_dict)
 
-#         # Verify the model instances are equivalent
-#         assert instance_prototype_instance_by_image_model == instance_prototype_instance_by_image_model2
+        # Verify the model instances are equivalent
+        assert instance_prototype_instance_by_image_model == instance_prototype_instance_by_image_model2
 
-#         # Convert model instance back to dict and verify no loss of data
-#         instance_prototype_instance_by_image_model_json2 = instance_prototype_instance_by_image_model.to_dict(
-#         )
-#         assert instance_prototype_instance_by_image_model_json2 == instance_prototype_instance_by_image_model_json
+        # Convert model instance back to dict and verify no loss of data
+        instance_prototype_instance_by_image_model_json2 = instance_prototype_instance_by_image_model.to_dict(
+        )
+        assert instance_prototype_instance_by_image_model_json2 == instance_prototype_instance_by_image_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -22931,41 +23345,6 @@ class TestKeyIdentityByCRN():
         # Convert model instance back to dict and verify no loss of data
         key_identity_by_crn_model_json2 = key_identity_by_crn_model.to_dict()
         assert key_identity_by_crn_model_json2 == key_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for KeyIdentityByFingerprint
-#-----------------------------------------------------------------------------
-class TestKeyIdentityByFingerprint():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for KeyIdentityByFingerprint
-    #--------------------------------------------------------
-    def test_key_identity_by_fingerprint_serialization(self):
-
-        # Construct a json representation of a KeyIdentityByFingerprint model
-        key_identity_by_fingerprint_model_json = {}
-        key_identity_by_fingerprint_model_json[
-            'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
-
-        # Construct a model instance of KeyIdentityByFingerprint by calling from_dict on the json representation
-        key_identity_by_fingerprint_model = KeyIdentityByFingerprint.from_dict(
-            key_identity_by_fingerprint_model_json)
-        assert key_identity_by_fingerprint_model != False
-
-        # Construct a model instance of KeyIdentityByFingerprint by calling from_dict on the json representation
-        key_identity_by_fingerprint_model_dict = KeyIdentityByFingerprint.from_dict(
-            key_identity_by_fingerprint_model_json).__dict__
-        key_identity_by_fingerprint_model2 = KeyIdentityByFingerprint(
-            **key_identity_by_fingerprint_model_dict)
-
-        # Verify the model instances are equivalent
-        assert key_identity_by_fingerprint_model == key_identity_by_fingerprint_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        key_identity_by_fingerprint_model_json2 = key_identity_by_fingerprint_model.to_dict(
-        )
-        assert key_identity_by_fingerprint_model_json2 == key_identity_by_fingerprint_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -23034,6 +23413,41 @@ class TestKeyIdentityById():
         # Convert model instance back to dict and verify no loss of data
         key_identity_by_id_model_json2 = key_identity_by_id_model.to_dict()
         assert key_identity_by_id_model_json2 == key_identity_by_id_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for KeyIdentityKeyIdentityByFingerprint
+#-----------------------------------------------------------------------------
+class TestKeyIdentityKeyIdentityByFingerprint():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for KeyIdentityKeyIdentityByFingerprint
+    #--------------------------------------------------------
+    def test_key_identity_key_identity_by_fingerprint_serialization(self):
+
+        # Construct a json representation of a KeyIdentityKeyIdentityByFingerprint model
+        key_identity_key_identity_by_fingerprint_model_json = {}
+        key_identity_key_identity_by_fingerprint_model_json[
+            'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
+
+        # Construct a model instance of KeyIdentityKeyIdentityByFingerprint by calling from_dict on the json representation
+        key_identity_key_identity_by_fingerprint_model = KeyIdentityKeyIdentityByFingerprint.from_dict(
+            key_identity_key_identity_by_fingerprint_model_json)
+        assert key_identity_key_identity_by_fingerprint_model != False
+
+        # Construct a model instance of KeyIdentityKeyIdentityByFingerprint by calling from_dict on the json representation
+        key_identity_key_identity_by_fingerprint_model_dict = KeyIdentityKeyIdentityByFingerprint.from_dict(
+            key_identity_key_identity_by_fingerprint_model_json).__dict__
+        key_identity_key_identity_by_fingerprint_model2 = KeyIdentityKeyIdentityByFingerprint(
+            **key_identity_key_identity_by_fingerprint_model_dict)
+
+        # Verify the model instances are equivalent
+        assert key_identity_key_identity_by_fingerprint_model == key_identity_key_identity_by_fingerprint_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        key_identity_key_identity_by_fingerprint_model_json2 = key_identity_key_identity_by_fingerprint_model.to_dict(
+        )
+        assert key_identity_key_identity_by_fingerprint_model_json2 == key_identity_key_identity_by_fingerprint_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -23519,35 +23933,18 @@ class TestNetworkACLPrototypeNetworkACLByRules():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
         network_acl_rule_prototype_network_acl_context_model = {
         }  # NetworkACLRulePrototypeNetworkACLContext
         network_acl_rule_prototype_network_acl_context_model['action'] = 'allow'
         network_acl_rule_prototype_network_acl_context_model[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_network_acl_context_model[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_context_model[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_model[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_context_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_model[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_context_model[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_context_model['protocol'] = 'udp'
         network_acl_rule_prototype_network_acl_context_model[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_model['port_max'] = 22
         network_acl_rule_prototype_network_acl_context_model['port_min'] = 22
         network_acl_rule_prototype_network_acl_context_model[
@@ -23605,7 +24002,9 @@ class TestNetworkACLPrototypeNetworkACLBySourceNetworkACL():
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
             'name'] = 'my-network-acl'
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
-            'source_network_acl'] = network_acl_identity_model
+            'source_network_acl'] = {
+                "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+            }
 
         # Construct a model instance of NetworkACLPrototypeNetworkACLBySourceNetworkACL by calling from_dict on the json representation
         network_acl_prototype_network_acl_by_source_network_acl_model = NetworkACLPrototypeNetworkACLBySourceNetworkACL.from_dict(
@@ -23627,6 +24026,76 @@ class TestNetworkACLPrototypeNetworkACLBySourceNetworkACL():
         network_acl_prototype_network_acl_by_source_network_acl_model_json2 = network_acl_prototype_network_acl_by_source_network_acl_model.to_dict(
         )
         assert network_acl_prototype_network_acl_by_source_network_acl_model_json2 == network_acl_prototype_network_acl_by_source_network_acl_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for NetworkACLRuleIdentityByHref
+#-----------------------------------------------------------------------------
+class TestNetworkACLRuleIdentityByHref():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for NetworkACLRuleIdentityByHref
+    #--------------------------------------------------------
+    def test_network_acl_rule_identity_by_href_serialization(self):
+
+        # Construct a json representation of a NetworkACLRuleIdentityByHref model
+        network_acl_rule_identity_by_href_model_json = {}
+        network_acl_rule_identity_by_href_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+
+        # Construct a model instance of NetworkACLRuleIdentityByHref by calling from_dict on the json representation
+        network_acl_rule_identity_by_href_model = NetworkACLRuleIdentityByHref.from_dict(
+            network_acl_rule_identity_by_href_model_json)
+        assert network_acl_rule_identity_by_href_model != False
+
+        # Construct a model instance of NetworkACLRuleIdentityByHref by calling from_dict on the json representation
+        network_acl_rule_identity_by_href_model_dict = NetworkACLRuleIdentityByHref.from_dict(
+            network_acl_rule_identity_by_href_model_json).__dict__
+        network_acl_rule_identity_by_href_model2 = NetworkACLRuleIdentityByHref(
+            **network_acl_rule_identity_by_href_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_acl_rule_identity_by_href_model == network_acl_rule_identity_by_href_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_acl_rule_identity_by_href_model_json2 = network_acl_rule_identity_by_href_model.to_dict(
+        )
+        assert network_acl_rule_identity_by_href_model_json2 == network_acl_rule_identity_by_href_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for NetworkACLRuleIdentityById
+#-----------------------------------------------------------------------------
+class TestNetworkACLRuleIdentityById():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for NetworkACLRuleIdentityById
+    #--------------------------------------------------------
+    def test_network_acl_rule_identity_by_id_serialization(self):
+
+        # Construct a json representation of a NetworkACLRuleIdentityById model
+        network_acl_rule_identity_by_id_model_json = {}
+        network_acl_rule_identity_by_id_model_json[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+
+        # Construct a model instance of NetworkACLRuleIdentityById by calling from_dict on the json representation
+        network_acl_rule_identity_by_id_model = NetworkACLRuleIdentityById.from_dict(
+            network_acl_rule_identity_by_id_model_json)
+        assert network_acl_rule_identity_by_id_model != False
+
+        # Construct a model instance of NetworkACLRuleIdentityById by calling from_dict on the json representation
+        network_acl_rule_identity_by_id_model_dict = NetworkACLRuleIdentityById.from_dict(
+            network_acl_rule_identity_by_id_model_json).__dict__
+        network_acl_rule_identity_by_id_model2 = NetworkACLRuleIdentityById(
+            **network_acl_rule_identity_by_id_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_acl_rule_identity_by_id_model == network_acl_rule_identity_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_acl_rule_identity_by_id_model_json2 = network_acl_rule_identity_by_id_model.to_dict(
+        )
+        assert network_acl_rule_identity_by_id_model_json2 == network_acl_rule_identity_by_id_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -23653,8 +24122,14 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolAll():
         network_acl_rule_item_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
             'action'] = 'allow'
-        network_acl_rule_item_network_acl_rule_protocol_all_model_json[
-            'before'] = network_acl_rule_reference_model
+        network_acl_rule_item_network_acl_rule_protocol_all_model_json['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
@@ -23719,8 +24194,14 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolICMP():
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
             'action'] = 'allow'
-        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
-            'before'] = network_acl_rule_reference_model
+        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
@@ -23790,7 +24271,14 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
             'action'] = 'allow'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "href":
+                    "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+                "id":
+                    "8daca77a-4980-4d33-8f3e-7038797be8f9",
+                "name":
+                    "my-rule-1"
+            }
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
@@ -23840,86 +24328,6 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
 
 
 #-----------------------------------------------------------------------------
-# Test Class for NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref
-#-----------------------------------------------------------------------------
-class TestNetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref
-    #--------------------------------------------------------
-    def test_network_acl_rule_patch_before_network_acl_rule_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref model
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json = {}
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-
-        # Construct a model instance of NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref by calling from_dict on the json representation
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model = NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref.from_dict(
-            network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json
-        )
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_href_model != False
-
-        # Construct a model instance of NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref by calling from_dict on the json representation
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_dict = NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref.from_dict(
-            network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json
-        ).__dict__
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model2 = NetworkACLRulePatchBeforeNetworkACLRuleIdentityByHref(
-            **
-            network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_href_model == network_acl_rule_patch_before_network_acl_rule_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json2 = network_acl_rule_patch_before_network_acl_rule_identity_by_href_model.to_dict(
-        )
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json2 == network_acl_rule_patch_before_network_acl_rule_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for NetworkACLRulePatchBeforeNetworkACLRuleIdentityById
-#-----------------------------------------------------------------------------
-class TestNetworkACLRulePatchBeforeNetworkACLRuleIdentityById():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRulePatchBeforeNetworkACLRuleIdentityById
-    #--------------------------------------------------------
-    def test_network_acl_rule_patch_before_network_acl_rule_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a NetworkACLRulePatchBeforeNetworkACLRuleIdentityById model
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json = {}
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-
-        # Construct a model instance of NetworkACLRulePatchBeforeNetworkACLRuleIdentityById by calling from_dict on the json representation
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model = NetworkACLRulePatchBeforeNetworkACLRuleIdentityById.from_dict(
-            network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json
-        )
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_id_model != False
-
-        # Construct a model instance of NetworkACLRulePatchBeforeNetworkACLRuleIdentityById by calling from_dict on the json representation
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_dict = NetworkACLRulePatchBeforeNetworkACLRuleIdentityById.from_dict(
-            network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json
-        ).__dict__
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model2 = NetworkACLRulePatchBeforeNetworkACLRuleIdentityById(
-            **
-            network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_id_model == network_acl_rule_patch_before_network_acl_rule_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json2 = network_acl_rule_patch_before_network_acl_rule_identity_by_id_model.to_dict(
-        )
-        assert network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json2 == network_acl_rule_patch_before_network_acl_rule_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for NetworkACLRulePatchNetworkACLRuleProtocolAll
 #-----------------------------------------------------------------------------
 class TestNetworkACLRulePatchNetworkACLRuleProtocolAll():
@@ -23932,37 +24340,28 @@ class TestNetworkACLRulePatchNetworkACLRuleProtocolAll():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePatchNetworkACLRuleProtocolAll model
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
             'action'] = 'allow'
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
         network_acl_rule_patch_network_acl_rule_protocol_all_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
 
         # Construct a model instance of NetworkACLRulePatchNetworkACLRuleProtocolAll by calling from_dict on the json representation
         network_acl_rule_patch_network_acl_rule_protocol_all_model = NetworkACLRulePatchNetworkACLRuleProtocolAll.from_dict(
@@ -23998,37 +24397,28 @@ class TestNetworkACLRulePatchNetworkACLRuleProtocolICMP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePatchNetworkACLRuleProtocolICMP model
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
             'action'] = 'allow'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
             'code'] = 0
         network_acl_rule_patch_network_acl_rule_protocol_icmp_model_json[
@@ -24068,37 +24458,28 @@ class TestNetworkACLRulePatchNetworkACLRuleProtocolTCPUDP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP model
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json = {}
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
             'action'] = 'allow'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
             'port_max'] = 22
         network_acl_rule_patch_network_acl_rule_protocol_tcpudp_model_json[
@@ -24131,266 +24512,6 @@ class TestNetworkACLRulePatchNetworkACLRuleProtocolTCPUDP():
 
 
 #-----------------------------------------------------------------------------
-# Test Class for NetworkACLRuleProtocolAll
-#-----------------------------------------------------------------------------
-class TestNetworkACLRuleProtocolAll():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRuleProtocolAll
-    #--------------------------------------------------------
-    def test_network_acl_rule_protocol_all_serialization(self):
-
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
-        # Construct a json representation of a NetworkACLRuleProtocolAll model
-        network_acl_rule_protocol_all_model_json = {}
-        network_acl_rule_protocol_all_model_json['action'] = 'allow'
-        network_acl_rule_protocol_all_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_protocol_all_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_protocol_all_model_json[
-            'destination'] = '192.168.3.0/24'
-        network_acl_rule_protocol_all_model_json['direction'] = 'inbound'
-        network_acl_rule_protocol_all_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_all_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_all_model_json['ip_version'] = 'ipv4'
-        network_acl_rule_protocol_all_model_json['name'] = 'my-rule-2'
-        network_acl_rule_protocol_all_model_json['protocol'] = 'all'
-        network_acl_rule_protocol_all_model_json['source'] = '192.168.3.0/24'
-
-        # Construct a model instance of NetworkACLRuleProtocolAll by calling from_dict on the json representation
-        network_acl_rule_protocol_all_model = NetworkACLRuleProtocolAll.from_dict(
-            network_acl_rule_protocol_all_model_json)
-        assert network_acl_rule_protocol_all_model != False
-
-        # Construct a model instance of NetworkACLRuleProtocolAll by calling from_dict on the json representation
-        network_acl_rule_protocol_all_model_dict = NetworkACLRuleProtocolAll.from_dict(
-            network_acl_rule_protocol_all_model_json).__dict__
-        network_acl_rule_protocol_all_model2 = NetworkACLRuleProtocolAll(
-            **network_acl_rule_protocol_all_model_dict)
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_protocol_all_model == network_acl_rule_protocol_all_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_protocol_all_model_json2 = network_acl_rule_protocol_all_model.to_dict(
-        )
-        assert network_acl_rule_protocol_all_model_json2 == network_acl_rule_protocol_all_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for NetworkACLRuleProtocolICMP
-#-----------------------------------------------------------------------------
-class TestNetworkACLRuleProtocolICMP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRuleProtocolICMP
-    #--------------------------------------------------------
-    def test_network_acl_rule_protocol_icmp_serialization(self):
-
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
-        # Construct a json representation of a NetworkACLRuleProtocolICMP model
-        network_acl_rule_protocol_icmp_model_json = {}
-        network_acl_rule_protocol_icmp_model_json['action'] = 'allow'
-        network_acl_rule_protocol_icmp_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_protocol_icmp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_protocol_icmp_model_json[
-            'destination'] = '192.168.3.0/24'
-        network_acl_rule_protocol_icmp_model_json['direction'] = 'inbound'
-        network_acl_rule_protocol_icmp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_icmp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_icmp_model_json['ip_version'] = 'ipv4'
-        network_acl_rule_protocol_icmp_model_json['name'] = 'my-rule-2'
-        network_acl_rule_protocol_icmp_model_json['protocol'] = 'icmp'
-        network_acl_rule_protocol_icmp_model_json['source'] = '192.168.3.0/24'
-        network_acl_rule_protocol_icmp_model_json['code'] = 0
-        network_acl_rule_protocol_icmp_model_json['type'] = 8
-
-        # Construct a model instance of NetworkACLRuleProtocolICMP by calling from_dict on the json representation
-        network_acl_rule_protocol_icmp_model = NetworkACLRuleProtocolICMP.from_dict(
-            network_acl_rule_protocol_icmp_model_json)
-        assert network_acl_rule_protocol_icmp_model != False
-
-        # Construct a model instance of NetworkACLRuleProtocolICMP by calling from_dict on the json representation
-        network_acl_rule_protocol_icmp_model_dict = NetworkACLRuleProtocolICMP.from_dict(
-            network_acl_rule_protocol_icmp_model_json).__dict__
-        network_acl_rule_protocol_icmp_model2 = NetworkACLRuleProtocolICMP(
-            **network_acl_rule_protocol_icmp_model_dict)
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_protocol_icmp_model == network_acl_rule_protocol_icmp_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_protocol_icmp_model.to_dict(
-        )
-        assert network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_protocol_icmp_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for NetworkACLRuleProtocolTCPUDP
-#-----------------------------------------------------------------------------
-class TestNetworkACLRuleProtocolTCPUDP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRuleProtocolTCPUDP
-    #--------------------------------------------------------
-    def test_network_acl_rule_protocol_tcpudp_serialization(self):
-
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
-        # Construct a json representation of a NetworkACLRuleProtocolTCPUDP model
-        network_acl_rule_protocol_tcpudp_model_json = {}
-        network_acl_rule_protocol_tcpudp_model_json['action'] = 'allow'
-        network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_protocol_tcpudp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_protocol_tcpudp_model_json[
-            'destination'] = '192.168.3.0/24'
-        network_acl_rule_protocol_tcpudp_model_json['direction'] = 'inbound'
-        network_acl_rule_protocol_tcpudp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_tcpudp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_protocol_tcpudp_model_json['ip_version'] = 'ipv4'
-        network_acl_rule_protocol_tcpudp_model_json['name'] = 'my-rule-2'
-        network_acl_rule_protocol_tcpudp_model_json['protocol'] = 'udp'
-        network_acl_rule_protocol_tcpudp_model_json['source'] = '192.168.3.0/24'
-        network_acl_rule_protocol_tcpudp_model_json['port_max'] = 22
-        network_acl_rule_protocol_tcpudp_model_json['port_min'] = 22
-        network_acl_rule_protocol_tcpudp_model_json['source_port_max'] = 65535
-        network_acl_rule_protocol_tcpudp_model_json['source_port_min'] = 49152
-
-        # Construct a model instance of NetworkACLRuleProtocolTCPUDP by calling from_dict on the json representation
-        network_acl_rule_protocol_tcpudp_model = NetworkACLRuleProtocolTCPUDP.from_dict(
-            network_acl_rule_protocol_tcpudp_model_json)
-        assert network_acl_rule_protocol_tcpudp_model != False
-
-        # Construct a model instance of NetworkACLRuleProtocolTCPUDP by calling from_dict on the json representation
-        network_acl_rule_protocol_tcpudp_model_dict = NetworkACLRuleProtocolTCPUDP.from_dict(
-            network_acl_rule_protocol_tcpudp_model_json).__dict__
-        network_acl_rule_protocol_tcpudp_model2 = NetworkACLRuleProtocolTCPUDP(
-            **network_acl_rule_protocol_tcpudp_model_dict)
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_protocol_tcpudp_model == network_acl_rule_protocol_tcpudp_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_protocol_tcpudp_model.to_dict(
-        )
-        assert network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_protocol_tcpudp_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref
-#-----------------------------------------------------------------------------
-class TestNetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref
-    #--------------------------------------------------------
-    def test_network_acl_rule_prototype_before_network_acl_rule_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref model
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json = {}
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-
-        # Construct a model instance of NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref by calling from_dict on the json representation
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref.from_dict(
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json
-        )
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model != False
-
-        # Construct a model instance of NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref by calling from_dict on the json representation
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_dict = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref.from_dict(
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json
-        ).__dict__
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model2 = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityByHref(
-            **
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model == network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json2 = network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model.to_dict(
-        )
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json2 == network_acl_rule_prototype_before_network_acl_rule_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById
-#-----------------------------------------------------------------------------
-class TestNetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById
-    #--------------------------------------------------------
-    def test_network_acl_rule_prototype_before_network_acl_rule_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById model
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json = {}
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-
-        # Construct a model instance of NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById by calling from_dict on the json representation
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById.from_dict(
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json
-        )
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model != False
-
-        # Construct a model instance of NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById by calling from_dict on the json representation
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_dict = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById.from_dict(
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json
-        ).__dict__
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model2 = NetworkACLRulePrototypeBeforeNetworkACLRuleIdentityById(
-            **
-            network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model == network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json2 = network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model.to_dict(
-        )
-        assert network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json2 == network_acl_rule_prototype_before_network_acl_rule_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll
 #-----------------------------------------------------------------------------
 class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll():
@@ -24401,39 +24522,20 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll():
     def test_network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_serialization(
             self):
 
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll model
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
 
         # Construct a model instance of NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll by calling from_dict on the json representation
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model = NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll.from_dict(
@@ -24470,39 +24572,20 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP():
     def test_network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_serialization(
             self):
 
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP model
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
             'code'] = 0
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json[
@@ -24544,39 +24627,20 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
     def test_network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_serialization(
             self):
 
-        # Construct dict forms of any model objects needed in order to build this model.
-
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
-
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP model
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json = {}
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = network_acl_rule_reference_model
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
             'port_max'] = 22
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json[
@@ -24623,37 +24687,28 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolAll():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolAll model
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
 
         # Construct a model instance of NetworkACLRulePrototypeNetworkACLRuleProtocolAll by calling from_dict on the json representation
         network_acl_rule_prototype_network_acl_rule_protocol_all_model = NetworkACLRulePrototypeNetworkACLRuleProtocolAll.from_dict(
@@ -24690,37 +24745,28 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolICMP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'code'] = 0
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
@@ -24763,37 +24809,28 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
-        network_acl_rule_reference_model[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model[
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentity
+        network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
         # Construct a json representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP model
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json = {}
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'action'] = 'allow'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = network_acl_rule_reference_model
+            'before'] = {
+                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
+            }
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'created_at'] = '2020-01-28T18:40:40.123456Z'
-        network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'destination'] = '192.168.3.0/24'
+            'destination'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'direction'] = 'inbound'
-        network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-        network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'ip_version'] = 'ipv4'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'name'] = 'my-rule-2'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'source'] = '192.168.3.0/24'
+            'source'] = '192.168.3.2/32'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'port_max'] = 22
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
@@ -24828,73 +24865,226 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
 
 
 #-----------------------------------------------------------------------------
-# Test Class for NetworkInterfaceIdentityByHref
+# Test Class for NetworkACLRuleNetworkACLRuleProtocolAll
 #-----------------------------------------------------------------------------
-class TestNetworkInterfaceIdentityByHref():
+class TestNetworkACLRuleNetworkACLRuleProtocolAll():
 
     #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkInterfaceIdentityByHref
+    # Test serialization/deserialization for NetworkACLRuleNetworkACLRuleProtocolAll
     #--------------------------------------------------------
-    def test_network_interface_identity_by_href_serialization(self):
+    def test_network_acl_rule_network_acl_rule_protocol_all_serialization(self):
 
-        # Construct a json representation of a NetworkInterfaceIdentityByHref model
-        network_interface_identity_by_href_model_json = {}
-        network_interface_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
+        # Construct dict forms of any model objects needed in order to build this model.
 
-        # Construct a model instance of NetworkInterfaceIdentityByHref by calling from_dict on the json representation
-        network_interface_identity_by_href_model = NetworkInterfaceIdentityByHref.from_dict(
-            network_interface_identity_by_href_model_json)
-        assert network_interface_identity_by_href_model != False
+        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
+        network_acl_rule_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
-        # Construct a model instance of NetworkInterfaceIdentityByHref by calling from_dict on the json representation
-        network_interface_identity_by_href_model_dict = NetworkInterfaceIdentityByHref.from_dict(
-            network_interface_identity_by_href_model_json).__dict__
-        network_interface_identity_by_href_model2 = NetworkInterfaceIdentityByHref(
-            **network_interface_identity_by_href_model_dict)
+        # Construct a json representation of a NetworkACLRuleNetworkACLRuleProtocolAll model
+        network_acl_rule_network_acl_rule_protocol_all_model_json = {}
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'action'] = 'allow'
+        network_acl_rule_network_acl_rule_protocol_all_model_json['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'created_at'] = '2020-01-28T18:40:40.123456Z'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'destination'] = '192.168.3.0/24'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'direction'] = 'inbound'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'ip_version'] = 'ipv4'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'name'] = 'my-rule-2'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'protocol'] = 'all'
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'source'] = '192.168.3.0/24'
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolAll by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_all_model = NetworkACLRuleNetworkACLRuleProtocolAll.from_dict(
+            network_acl_rule_network_acl_rule_protocol_all_model_json)
+        assert network_acl_rule_network_acl_rule_protocol_all_model != False
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolAll by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_all_model_dict = NetworkACLRuleNetworkACLRuleProtocolAll.from_dict(
+            network_acl_rule_network_acl_rule_protocol_all_model_json).__dict__
+        network_acl_rule_network_acl_rule_protocol_all_model2 = NetworkACLRuleNetworkACLRuleProtocolAll(
+            **network_acl_rule_network_acl_rule_protocol_all_model_dict)
 
         # Verify the model instances are equivalent
-        assert network_interface_identity_by_href_model == network_interface_identity_by_href_model2
+        assert network_acl_rule_network_acl_rule_protocol_all_model == network_acl_rule_network_acl_rule_protocol_all_model2
 
         # Convert model instance back to dict and verify no loss of data
-        network_interface_identity_by_href_model_json2 = network_interface_identity_by_href_model.to_dict(
+        network_acl_rule_network_acl_rule_protocol_all_model_json2 = network_acl_rule_network_acl_rule_protocol_all_model.to_dict(
         )
-        assert network_interface_identity_by_href_model_json2 == network_interface_identity_by_href_model_json
+        assert network_acl_rule_network_acl_rule_protocol_all_model_json2 == network_acl_rule_network_acl_rule_protocol_all_model_json
 
 
 #-----------------------------------------------------------------------------
-# Test Class for NetworkInterfaceIdentityById
+# Test Class for NetworkACLRuleNetworkACLRuleProtocolICMP
 #-----------------------------------------------------------------------------
-class TestNetworkInterfaceIdentityById():
+class TestNetworkACLRuleNetworkACLRuleProtocolICMP():
 
     #--------------------------------------------------------
-    # Test serialization/deserialization for NetworkInterfaceIdentityById
+    # Test serialization/deserialization for NetworkACLRuleNetworkACLRuleProtocolICMP
     #--------------------------------------------------------
-    def test_network_interface_identity_by_id_serialization(self):
+    def test_network_acl_rule_network_acl_rule_protocol_icmp_serialization(
+            self):
 
-        # Construct a json representation of a NetworkInterfaceIdentityById model
-        network_interface_identity_by_id_model_json = {}
-        network_interface_identity_by_id_model_json[
-            'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+        # Construct dict forms of any model objects needed in order to build this model.
 
-        # Construct a model instance of NetworkInterfaceIdentityById by calling from_dict on the json representation
-        network_interface_identity_by_id_model = NetworkInterfaceIdentityById.from_dict(
-            network_interface_identity_by_id_model_json)
-        assert network_interface_identity_by_id_model != False
+        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
+        network_acl_rule_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model['name'] = 'my-rule-1'
 
-        # Construct a model instance of NetworkInterfaceIdentityById by calling from_dict on the json representation
-        network_interface_identity_by_id_model_dict = NetworkInterfaceIdentityById.from_dict(
-            network_interface_identity_by_id_model_json).__dict__
-        network_interface_identity_by_id_model2 = NetworkInterfaceIdentityById(
-            **network_interface_identity_by_id_model_dict)
+        # Construct a json representation of a NetworkACLRuleNetworkACLRuleProtocolICMP model
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json = {}
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'action'] = 'allow'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'created_at'] = '2020-01-28T18:40:40.123456Z'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'destination'] = '192.168.3.0/24'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'direction'] = 'inbound'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'ip_version'] = 'ipv4'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'name'] = 'my-rule-2'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'protocol'] = 'icmp'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'source'] = '192.168.3.0/24'
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json['code'] = 0
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json['type'] = 8
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolICMP by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_icmp_model = NetworkACLRuleNetworkACLRuleProtocolICMP.from_dict(
+            network_acl_rule_network_acl_rule_protocol_icmp_model_json)
+        assert network_acl_rule_network_acl_rule_protocol_icmp_model != False
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolICMP by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_icmp_model_dict = NetworkACLRuleNetworkACLRuleProtocolICMP.from_dict(
+            network_acl_rule_network_acl_rule_protocol_icmp_model_json).__dict__
+        network_acl_rule_network_acl_rule_protocol_icmp_model2 = NetworkACLRuleNetworkACLRuleProtocolICMP(
+            **network_acl_rule_network_acl_rule_protocol_icmp_model_dict)
 
         # Verify the model instances are equivalent
-        assert network_interface_identity_by_id_model == network_interface_identity_by_id_model2
+        assert network_acl_rule_network_acl_rule_protocol_icmp_model == network_acl_rule_network_acl_rule_protocol_icmp_model2
 
         # Convert model instance back to dict and verify no loss of data
-        network_interface_identity_by_id_model_json2 = network_interface_identity_by_id_model.to_dict(
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_network_acl_rule_protocol_icmp_model.to_dict(
         )
-        assert network_interface_identity_by_id_model_json2 == network_interface_identity_by_id_model_json
+        assert network_acl_rule_network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_network_acl_rule_protocol_icmp_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for NetworkACLRuleNetworkACLRuleProtocolTCPUDP
+#-----------------------------------------------------------------------------
+class TestNetworkACLRuleNetworkACLRuleProtocolTCPUDP():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for NetworkACLRuleNetworkACLRuleProtocolTCPUDP
+    #--------------------------------------------------------
+    def test_network_acl_rule_network_acl_rule_protocol_tcpudp_serialization(
+            self):
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        network_acl_rule_reference_model = {}  # NetworkACLRuleReference
+        network_acl_rule_reference_model[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_reference_model['name'] = 'my-rule-1'
+
+        # Construct a json representation of a NetworkACLRuleNetworkACLRuleProtocolTCPUDP model
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json = {}
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'action'] = 'allow'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['before'] = {
+            "href":
+                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "id":
+                "8daca77a-4980-4d33-8f3e-7038797be8f9",
+            "name":
+                "my-rule-1"
+        }
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'created_at'] = '2020-01-28T18:40:40.123456Z'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'destination'] = '192.168.3.0/24'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'direction'] = 'inbound'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'ip_version'] = 'ipv4'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'name'] = 'my-rule-2'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'protocol'] = 'udp'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'source'] = '192.168.3.0/24'
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'port_max'] = 22
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'port_min'] = 22
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'source_port_max'] = 65535
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'source_port_min'] = 49152
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolTCPUDP by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model = NetworkACLRuleNetworkACLRuleProtocolTCPUDP.from_dict(
+            network_acl_rule_network_acl_rule_protocol_tcpudp_model_json)
+        assert network_acl_rule_network_acl_rule_protocol_tcpudp_model != False
+
+        # Construct a model instance of NetworkACLRuleNetworkACLRuleProtocolTCPUDP by calling from_dict on the json representation
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_dict = NetworkACLRuleNetworkACLRuleProtocolTCPUDP.from_dict(
+            network_acl_rule_network_acl_rule_protocol_tcpudp_model_json
+        ).__dict__
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model2 = NetworkACLRuleNetworkACLRuleProtocolTCPUDP(
+            **network_acl_rule_network_acl_rule_protocol_tcpudp_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_acl_rule_network_acl_rule_protocol_tcpudp_model == network_acl_rule_network_acl_rule_protocol_tcpudp_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_network_acl_rule_protocol_tcpudp_model.to_dict(
+        )
+        assert network_acl_rule_network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_network_acl_rule_protocol_tcpudp_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -25390,246 +25580,6 @@ class TestSecurityGroupRulePatchRemoteIP():
 
 
 #-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR model
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteCIDR(
-            **
-            security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model == security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json2 = security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json2 == security_group_rule_patch_security_group_rule_protocol_all_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_all_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP model
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteIP(
-            **
-            security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model == security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json2 = security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json2 == security_group_rule_patch_security_group_rule_protocol_all_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteCIDR(
-            **
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model == security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json2 = security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json2 == security_group_rule_patch_security_group_rule_protocol_icmp_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP(
-            **
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model == security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json2 = security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json2 == security_group_rule_patch_security_group_rule_protocol_icmp_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR model
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteCIDR(
-            **
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP model
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteIP(
-            **
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAll
 #-----------------------------------------------------------------------------
 class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAll():
@@ -25642,10 +25592,9 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAll():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_patch_security_group_rule_protocol_all_remote_model = {
-        }  # SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemote
-        security_group_rule_patch_security_group_rule_protocol_all_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_patch_remote_model = {
+        }  # SecurityGroupRulePatchRemote
+        security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAll model
         security_group_rule_patch_security_group_rule_protocol_all_model_json = {}
@@ -25656,7 +25605,7 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAll():
         security_group_rule_patch_security_group_rule_protocol_all_model_json[
             'protocol'] = 'all'
         security_group_rule_patch_security_group_rule_protocol_all_model_json[
-            'remote'] = security_group_rule_patch_security_group_rule_protocol_all_remote_model
+            'remote'] = security_group_rule_patch_remote_model
 
         # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAll by calling from_dict on the json representation
         security_group_rule_patch_security_group_rule_protocol_all_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAll.from_dict(
@@ -25695,10 +25644,9 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model = {
-        }  # SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemote
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_patch_remote_model = {
+        }  # SecurityGroupRulePatchRemote
+        security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP model
         security_group_rule_patch_security_group_rule_protocol_icmp_model_json = {}
@@ -25709,7 +25657,7 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMP():
         security_group_rule_patch_security_group_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         security_group_rule_patch_security_group_rule_protocol_icmp_model_json[
-            'remote'] = security_group_rule_patch_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_patch_remote_model
         security_group_rule_patch_security_group_rule_protocol_icmp_model_json[
             'code'] = 0
         security_group_rule_patch_security_group_rule_protocol_icmp_model_json[
@@ -25752,10 +25700,9 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_model = {
-        }  # SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemote
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_patch_remote_model = {
+        }  # SecurityGroupRulePatchRemote
+        security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP model
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json = {}
@@ -25766,7 +25713,7 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP():
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json[
-            'remote'] = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_model
+            'remote'] = security_group_rule_patch_remote_model
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json[
             'port_max'] = 22
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json[
@@ -25794,129 +25741,6 @@ class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP():
         security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_model.to_dict(
         )
         assert security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRuleProtocolAll
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRuleProtocolAll():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRuleProtocolAll
-    #--------------------------------------------------------
-    def test_security_group_rule_protocol_all_serialization(self):
-
-        # Construct a json representation of a SecurityGroupRuleProtocolAll model
-        security_group_rule_protocol_all_model_json = {}
-        security_group_rule_protocol_all_model_json['direction'] = 'inbound'
-        security_group_rule_protocol_all_model_json[
-            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
-        security_group_rule_protocol_all_model_json['ip_version'] = 'ipv4'
-        security_group_rule_protocol_all_model_json['protocol'] = 'all'
-        security_group_rule_protocol_all_model_json['remote'] = {'foo': 'bar'}
-
-        # Construct a model instance of SecurityGroupRuleProtocolAll by calling from_dict on the json representation
-        security_group_rule_protocol_all_model = SecurityGroupRuleProtocolAll.from_dict(
-            security_group_rule_protocol_all_model_json)
-        assert security_group_rule_protocol_all_model != False
-
-        # Construct a model instance of SecurityGroupRuleProtocolAll by calling from_dict on the json representation
-        security_group_rule_protocol_all_model_dict = SecurityGroupRuleProtocolAll.from_dict(
-            security_group_rule_protocol_all_model_json).__dict__
-        security_group_rule_protocol_all_model2 = SecurityGroupRuleProtocolAll(
-            **security_group_rule_protocol_all_model_dict)
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_protocol_all_model == security_group_rule_protocol_all_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_protocol_all_model_json2 = security_group_rule_protocol_all_model.to_dict(
-        )
-        assert security_group_rule_protocol_all_model_json2 == security_group_rule_protocol_all_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRuleProtocolICMP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRuleProtocolICMP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRuleProtocolICMP
-    #--------------------------------------------------------
-    def test_security_group_rule_protocol_icmp_serialization(self):
-
-        # Construct a json representation of a SecurityGroupRuleProtocolICMP model
-        security_group_rule_protocol_icmp_model_json = {}
-        security_group_rule_protocol_icmp_model_json['direction'] = 'inbound'
-        security_group_rule_protocol_icmp_model_json[
-            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
-        security_group_rule_protocol_icmp_model_json['ip_version'] = 'ipv4'
-        security_group_rule_protocol_icmp_model_json['protocol'] = 'icmp'
-        security_group_rule_protocol_icmp_model_json['remote'] = {'foo': 'bar'}
-        security_group_rule_protocol_icmp_model_json['code'] = 0
-        security_group_rule_protocol_icmp_model_json['type'] = 8
-
-        # Construct a model instance of SecurityGroupRuleProtocolICMP by calling from_dict on the json representation
-        security_group_rule_protocol_icmp_model = SecurityGroupRuleProtocolICMP.from_dict(
-            security_group_rule_protocol_icmp_model_json)
-        assert security_group_rule_protocol_icmp_model != False
-
-        # Construct a model instance of SecurityGroupRuleProtocolICMP by calling from_dict on the json representation
-        security_group_rule_protocol_icmp_model_dict = SecurityGroupRuleProtocolICMP.from_dict(
-            security_group_rule_protocol_icmp_model_json).__dict__
-        security_group_rule_protocol_icmp_model2 = SecurityGroupRuleProtocolICMP(
-            **security_group_rule_protocol_icmp_model_dict)
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_protocol_icmp_model == security_group_rule_protocol_icmp_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_protocol_icmp_model_json2 = security_group_rule_protocol_icmp_model.to_dict(
-        )
-        assert security_group_rule_protocol_icmp_model_json2 == security_group_rule_protocol_icmp_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRuleProtocolTCPUDP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRuleProtocolTCPUDP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRuleProtocolTCPUDP
-    #--------------------------------------------------------
-    def test_security_group_rule_protocol_tcpudp_serialization(self):
-
-        # Construct a json representation of a SecurityGroupRuleProtocolTCPUDP model
-        security_group_rule_protocol_tcpudp_model_json = {}
-        security_group_rule_protocol_tcpudp_model_json['direction'] = 'inbound'
-        security_group_rule_protocol_tcpudp_model_json[
-            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
-        security_group_rule_protocol_tcpudp_model_json['ip_version'] = 'ipv4'
-        security_group_rule_protocol_tcpudp_model_json['protocol'] = 'udp'
-        security_group_rule_protocol_tcpudp_model_json['remote'] = {
-            'foo': 'bar'
-        }
-        security_group_rule_protocol_tcpudp_model_json['port_max'] = 22
-        security_group_rule_protocol_tcpudp_model_json['port_min'] = 22
-
-        # Construct a model instance of SecurityGroupRuleProtocolTCPUDP by calling from_dict on the json representation
-        security_group_rule_protocol_tcpudp_model = SecurityGroupRuleProtocolTCPUDP.from_dict(
-            security_group_rule_protocol_tcpudp_model_json)
-        assert security_group_rule_protocol_tcpudp_model != False
-
-        # Construct a model instance of SecurityGroupRuleProtocolTCPUDP by calling from_dict on the json representation
-        security_group_rule_protocol_tcpudp_model_dict = SecurityGroupRuleProtocolTCPUDP.from_dict(
-            security_group_rule_protocol_tcpudp_model_json).__dict__
-        security_group_rule_protocol_tcpudp_model2 = SecurityGroupRuleProtocolTCPUDP(
-            **security_group_rule_protocol_tcpudp_model_dict)
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_protocol_tcpudp_model == security_group_rule_protocol_tcpudp_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_protocol_tcpudp_model_json2 = security_group_rule_protocol_tcpudp_model.to_dict(
-        )
-        assert security_group_rule_protocol_tcpudp_model_json2 == security_group_rule_protocol_tcpudp_model_json
 
 
 #-----------------------------------------------------------------------------
@@ -25990,246 +25814,6 @@ class TestSecurityGroupRulePrototypeRemoteIP():
 
 
 #-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR model
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteCIDR(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model == security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteIP(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model == security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteCIDR(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR model
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json[
-            'cidr_block'] = '192.168.3.0/24'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteCIDR(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_cidr_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP():
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP model
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json[
-            'address'] = '192.168.3.4'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteIP(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_ip_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll
 #-----------------------------------------------------------------------------
 class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
@@ -26242,10 +25826,9 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_model = {
-        }  # SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemote
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_prototype_remote_model = {
+        }  # SecurityGroupRulePrototypeRemote
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll model
         security_group_rule_prototype_security_group_rule_protocol_all_model_json = {}
@@ -26256,7 +25839,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
         security_group_rule_prototype_security_group_rule_protocol_all_model_json[
             'protocol'] = 'all'
         security_group_rule_prototype_security_group_rule_protocol_all_model_json[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_all_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
 
         # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll by calling from_dict on the json representation
         security_group_rule_prototype_security_group_rule_protocol_all_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll.from_dict(
@@ -26295,10 +25878,9 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {
-        }  # SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemote
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_prototype_remote_model = {
+        }  # SecurityGroupRulePrototypeRemote
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json = {}
@@ -26309,7 +25891,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP():
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json[
             'code'] = 0
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json[
@@ -26352,10 +25934,9 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_model = {
-        }  # SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemote
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_model[
-            'address'] = '192.168.3.4'
+        security_group_rule_prototype_remote_model = {
+        }  # SecurityGroupRulePrototypeRemote
+        security_group_rule_prototype_remote_model['address'] = '192.168.3.4'
 
         # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP model
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json = {}
@@ -26366,7 +25947,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP():
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json[
-            'remote'] = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_model
+            'remote'] = security_group_rule_prototype_remote_model
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json[
             'port_max'] = 22
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json[
@@ -26509,6 +26090,165 @@ class TestSecurityGroupRuleRemoteSecurityGroupReference():
 
 
 #-----------------------------------------------------------------------------
+# Test Class for SecurityGroupRuleSecurityGroupRuleProtocolAll
+#-----------------------------------------------------------------------------
+class TestSecurityGroupRuleSecurityGroupRuleProtocolAll():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for SecurityGroupRuleSecurityGroupRuleProtocolAll
+    #--------------------------------------------------------
+    def test_security_group_rule_security_group_rule_protocol_all_serialization(
+            self):
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
+        # Construct a json representation of a SecurityGroupRuleSecurityGroupRuleProtocolAll model
+        security_group_rule_security_group_rule_protocol_all_model_json = {}
+        security_group_rule_security_group_rule_protocol_all_model_json[
+            'direction'] = 'inbound'
+        security_group_rule_security_group_rule_protocol_all_model_json[
+            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
+        security_group_rule_security_group_rule_protocol_all_model_json[
+            'ip_version'] = 'ipv4'
+        security_group_rule_security_group_rule_protocol_all_model_json[
+            'protocol'] = 'all'
+        security_group_rule_security_group_rule_protocol_all_model_json[
+            'remote'] = security_group_rule_remote_model
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolAll by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_all_model = SecurityGroupRuleSecurityGroupRuleProtocolAll.from_dict(
+            security_group_rule_security_group_rule_protocol_all_model_json)
+        assert security_group_rule_security_group_rule_protocol_all_model != False
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolAll by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_all_model_dict = SecurityGroupRuleSecurityGroupRuleProtocolAll.from_dict(
+            security_group_rule_security_group_rule_protocol_all_model_json
+        ).__dict__
+        security_group_rule_security_group_rule_protocol_all_model2 = SecurityGroupRuleSecurityGroupRuleProtocolAll(
+            **security_group_rule_security_group_rule_protocol_all_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_rule_security_group_rule_protocol_all_model == security_group_rule_security_group_rule_protocol_all_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_rule_security_group_rule_protocol_all_model_json2 = security_group_rule_security_group_rule_protocol_all_model.to_dict(
+        )
+        assert security_group_rule_security_group_rule_protocol_all_model_json2 == security_group_rule_security_group_rule_protocol_all_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for SecurityGroupRuleSecurityGroupRuleProtocolICMP
+#-----------------------------------------------------------------------------
+class TestSecurityGroupRuleSecurityGroupRuleProtocolICMP():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for SecurityGroupRuleSecurityGroupRuleProtocolICMP
+    #--------------------------------------------------------
+    def test_security_group_rule_security_group_rule_protocol_icmp_serialization(
+            self):
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
+        # Construct a json representation of a SecurityGroupRuleSecurityGroupRuleProtocolICMP model
+        security_group_rule_security_group_rule_protocol_icmp_model_json = {}
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'direction'] = 'inbound'
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'ip_version'] = 'ipv4'
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'protocol'] = 'icmp'
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'remote'] = security_group_rule_remote_model
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'code'] = 0
+        security_group_rule_security_group_rule_protocol_icmp_model_json[
+            'type'] = 8
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolICMP by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_icmp_model = SecurityGroupRuleSecurityGroupRuleProtocolICMP.from_dict(
+            security_group_rule_security_group_rule_protocol_icmp_model_json)
+        assert security_group_rule_security_group_rule_protocol_icmp_model != False
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolICMP by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_icmp_model_dict = SecurityGroupRuleSecurityGroupRuleProtocolICMP.from_dict(
+            security_group_rule_security_group_rule_protocol_icmp_model_json
+        ).__dict__
+        security_group_rule_security_group_rule_protocol_icmp_model2 = SecurityGroupRuleSecurityGroupRuleProtocolICMP(
+            **security_group_rule_security_group_rule_protocol_icmp_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_rule_security_group_rule_protocol_icmp_model == security_group_rule_security_group_rule_protocol_icmp_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_rule_security_group_rule_protocol_icmp_model_json2 = security_group_rule_security_group_rule_protocol_icmp_model.to_dict(
+        )
+        assert security_group_rule_security_group_rule_protocol_icmp_model_json2 == security_group_rule_security_group_rule_protocol_icmp_model_json
+
+
+#-----------------------------------------------------------------------------
+# Test Class for SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP
+#-----------------------------------------------------------------------------
+class TestSecurityGroupRuleSecurityGroupRuleProtocolTCPUDP():
+
+    #--------------------------------------------------------
+    # Test serialization/deserialization for SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP
+    #--------------------------------------------------------
+    def test_security_group_rule_security_group_rule_protocol_tcpudp_serialization(
+            self):
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        security_group_rule_remote_model = {}  # SecurityGroupRuleRemote
+        security_group_rule_remote_model['address'] = '192.168.3.4'
+
+        # Construct a json representation of a SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP model
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json = {}
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'direction'] = 'inbound'
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'id'] = '6f2a6efe-21e2-401c-b237-620aa26ba16a'
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'ip_version'] = 'ipv4'
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'protocol'] = 'udp'
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'remote'] = security_group_rule_remote_model
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'port_max'] = 22
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json[
+            'port_min'] = 22
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_tcpudp_model = SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP.from_dict(
+            security_group_rule_security_group_rule_protocol_tcpudp_model_json)
+        assert security_group_rule_security_group_rule_protocol_tcpudp_model != False
+
+        # Construct a model instance of SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP by calling from_dict on the json representation
+        security_group_rule_security_group_rule_protocol_tcpudp_model_dict = SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP.from_dict(
+            security_group_rule_security_group_rule_protocol_tcpudp_model_json
+        ).__dict__
+        security_group_rule_security_group_rule_protocol_tcpudp_model2 = SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(
+            **
+            security_group_rule_security_group_rule_protocol_tcpudp_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_rule_security_group_rule_protocol_tcpudp_model == security_group_rule_security_group_rule_protocol_tcpudp_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_rule_security_group_rule_protocol_tcpudp_model_json2 = security_group_rule_security_group_rule_protocol_tcpudp_model.to_dict(
+        )
+        assert security_group_rule_security_group_rule_protocol_tcpudp_model_json2 == security_group_rule_security_group_rule_protocol_tcpudp_model_json
+
+
+#-----------------------------------------------------------------------------
 # Test Class for SubnetIdentityByCRN
 #-----------------------------------------------------------------------------
 class TestSubnetIdentityByCRN():
@@ -26642,11 +26382,14 @@ class TestSubnetPrototypeSubnetByCIDR():
         # Construct a json representation of a SubnetPrototypeSubnetByCIDR model
         subnet_prototype_subnet_by_cidr_model_json = {}
         subnet_prototype_subnet_by_cidr_model_json['name'] = 'my-subnet'
-        subnet_prototype_subnet_by_cidr_model_json[
-            'network_acl'] = network_acl_identity_model
+        subnet_prototype_subnet_by_cidr_model_json['network_acl'] = {
+            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+        }
         subnet_prototype_subnet_by_cidr_model_json[
             'public_gateway'] = public_gateway_identity_model
-        subnet_prototype_subnet_by_cidr_model_json['vpc'] = vpc_identity_model
+        subnet_prototype_subnet_by_cidr_model_json['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         subnet_prototype_subnet_by_cidr_model_json[
             'ipv4_cidr_block'] = '10.0.0.0/24'
         subnet_prototype_subnet_by_cidr_model_json['zone'] = zone_identity_model
@@ -26700,12 +26443,14 @@ class TestSubnetPrototypeSubnetByTotalCount():
         # Construct a json representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_subnet_by_total_count_model_json = {}
         subnet_prototype_subnet_by_total_count_model_json['name'] = 'my-subnet'
-        subnet_prototype_subnet_by_total_count_model_json[
-            'network_acl'] = network_acl_identity_model
+        subnet_prototype_subnet_by_total_count_model_json['network_acl'] = {
+            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
+        }
         subnet_prototype_subnet_by_total_count_model_json[
             'public_gateway'] = public_gateway_identity_model
-        subnet_prototype_subnet_by_total_count_model_json[
-            'vpc'] = vpc_identity_model
+        subnet_prototype_subnet_by_total_count_model_json['vpc'] = {
+            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
+        }
         subnet_prototype_subnet_by_total_count_model_json[
             'total_ipv4_address_count'] = 256
         subnet_prototype_subnet_by_total_count_model_json[
@@ -27038,8 +26783,9 @@ class TestVolumePrototypeVolumeByCapacity():
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_volume_by_capacity_model_json['iops'] = 10000
         volume_prototype_volume_by_capacity_model_json['name'] = 'my-volume'
-        volume_prototype_volume_by_capacity_model_json[
-            'profile'] = volume_profile_identity_model
+        volume_prototype_volume_by_capacity_model_json['profile'] = {
+            "name": "general-purpose"
+        }
         volume_prototype_volume_by_capacity_model_json[
             'resource_group'] = resource_group_identity_model
         volume_prototype_volume_by_capacity_model_json[
@@ -27587,375 +27333,6 @@ class TestSecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentity
 
 
 #-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_patch_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_patch_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_patch_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
 #-----------------------------------------------------------------------------
 class TestSecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
@@ -28079,375 +27456,6 @@ class TestSecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIden
 
 
 #-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolAllRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN model
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json[
-            'crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_crn_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref model
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json[
-            'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_href_model_json
-
-
-#-----------------------------------------------------------------------------
-# Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-#-----------------------------------------------------------------------------
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-):
-
-    #--------------------------------------------------------
-    # Test serialization/deserialization for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById
-    #--------------------------------------------------------
-    def test_security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_serialization(
-            self):
-
-        # Construct a json representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById model
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json = {}
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json[
-            'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model != False
-
-        # Construct a model instance of SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById by calling from_dict on the json representation
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_dict = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById.from_dict(
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-        ).__dict__
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model2 = SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDPRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-            **
-            security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_dict
-        )
-
-        # Verify the model instances are equivalent
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model.to_dict(
-        )
-        assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_remote_security_group_identity_security_group_identity_by_id_model_json
-
-
-#-----------------------------------------------------------------------------
 # Test Class for VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity
 #-----------------------------------------------------------------------------
 class TestVolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity(
@@ -28477,7 +27485,9 @@ class TestVolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceC
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
             'name'] = 'my-volume'
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
-            'profile'] = volume_profile_identity_model
+            'profile'] = {
+                "name": "general-purpose"
+            }
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
             'capacity'] = 100
 

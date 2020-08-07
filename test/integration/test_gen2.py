@@ -394,7 +394,7 @@ class TestVPCRoutes():
         assertCreateResponse(route)
         store['created_route'] = route.get_result()['id']
     def test_list_routes(self, createGen2Service):
-        routes = list_vpc_routes(createGen2Service, store['created_vpc'])
+        routes = list_vpc_routes(createGen2Service, store['created_vpc'], store['zone'])
         assertListResponse(routes, 'routes')
     def test_get_route(self, createGen2Service):
         route = get_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
@@ -2642,15 +2642,6 @@ def list_vpc_routes(service, vpc_id, zone_name):
     response = service.list_vpc_routes(vpc_id, zone_name=zone_name)
     return response
 
-#--------------------------------------------------------
-# list_vpc_routes()
-#--------------------------------------------------------
-
-
-def list_vpc_routes(service, vpc_id):
-    response = service.list_vpc_routes(vpc_id)
-    return response
-
 
 #--------------------------------------------------------
 # create_vpc_route()
@@ -2663,21 +2654,19 @@ def create_vpc_route(service, vpc_id, zone):
 
     # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
     route_next_hop_prototype_model = {}
-    route_next_hop_prototype_model['address'] = '192.168.3.4'
+    route_next_hop_prototype_model['address'] = '10.5.0.25'
 
-
-    destination = '10.168.10.0/24'
+    destination = '10.168.10.0/28'
     zone = zone_identity_model
     name = generate_name('route')
     next_hop = route_next_hop_prototype_model
 
-
     response = service.create_vpc_route(
         vpc_id,
         destination,
+        next_hop,
         zone,
         name=name,
-        next_hop=next_hop,
     )
     return response
 

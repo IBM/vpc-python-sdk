@@ -13,6 +13,9 @@ dev_deps:
 install_project:
 	pip install -e .
 
+unit-test:
+	pytest -v test/unit
+
 test-int-gen1:
 	pytest -v test/integration/test_gen1.py --capture=tee-sys
 
