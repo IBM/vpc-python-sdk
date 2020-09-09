@@ -325,7 +325,7 @@ class TestSecurityGroups():
 
     def test_update_sg_network_interface(self, createGen1Service):
         sg_network_interface = add_security_group_network_interface(createGen1Service, store['created_sg_id'], store['network_interface_id'])
-        assertGetPatchResponse(sg_network_interface)
+        assertCreateResponse(sg_network_interface)
         store['created_sg_network_interface_id'] = sg_network_interface.get_result()['id']
     def test_list_sg_network_interface(self, createGen1Service):
         sg_network_interface = list_security_group_network_interfaces(createGen1Service, store['created_sg_id'])
@@ -335,8 +335,7 @@ class TestSecurityGroups():
         assertGetPatchResponse(sg_network_interface)
     def test_delete_sg_network_interface(self, createGen1Service):
         sg_network_interface = remove_security_group_network_interface(createGen1Service, store['created_sg_id'], store['created_sg_network_interface_id'])
-        assert sg_network_interface.status_code == 200
-
+        assertDeleteResponse(sg_network_interface)
 
     def test_create_sg_rule(self, createGen1Service):
         sg_rule = create_security_group_rule(createGen1Service, store['created_sg_id'])
@@ -370,19 +369,23 @@ class TestVPCDefaultSecurityGroup():
 
 class TestVPCRoutes():
     def test_create_route(self, createGen1Service):
+        pytest.skip("No env")
         route = create_vpc_route(createGen1Service, store['created_vpc'], store['zone'])
         assertCreateResponse(route)
         store['created_route'] = route.get_result()['id']
     def test_list_routes(self, createGen1Service):
-        routes = list_vpc_routes(createGen1Service, store['created_vpc'], store['zone'])
+        routes = list_vpc_routes(createGen1Service, store['created_vpc'])
         assertListResponse(routes, 'routes')
     def test_get_route(self, createGen1Service):
+        pytest.skip("No env")
         route = get_vpc_route(createGen1Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
     def test_update_route(self, createGen1Service):
+        pytest.skip("No env")
         route = update_vpc_route(createGen1Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
     def test_delete_route(self, createGen1Service):
+        pytest.skip("No env")
         route = delete_vpc_route(createGen1Service, store['created_vpc'], store['created_route'])
         assertDeleteResponse(route)
 
@@ -586,7 +589,7 @@ class TestLoadBalancer():
         assertGetPatchResponse(pool)
     def test_put_pool_member(self, createGen1Service):
         member = replace_load_balancer_pool_members(createGen1Service, store['created_load_balancer'], store['created_lb_pool'])
-        assert member.status_code == 200
+        assert member.status_code == 202
     def test_create_pool_member(self, createGen1Service):
         member = create_load_balancer_pool_member(createGen1Service, store['created_load_balancer'], store['created_lb_pool'])
         assert member.status_code == 201
@@ -2513,6 +2516,14 @@ def list_vpc_routes(service, vpc_id, zone_name):
     return response
 
 #--------------------------------------------------------
+# list_vpc_routes()
+#--------------------------------------------------------
+
+def list_vpc_routes(service, vpc_id):
+    response = service.list_vpc_routes(vpc_id)
+    return response
+
+#--------------------------------------------------------
 # create_vpc_route()
 #--------------------------------------------------------
 
@@ -2525,12 +2536,13 @@ def create_vpc_route(service, vpc_id, zone):
     # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
     route_next_hop_prototype_model = {}
     route_next_hop_prototype_model['address'] = '7.7.7.7'
+    route_next_hop_prototype_model['address'] = '197.7.0.0'
 
     destination = '10.168.10.0/24'
+    destination = '101.168.0.0/30'
     zone = zone_identity_model
     name = generate_name('route')
     next_hop=route_next_hop_prototype_model
-
     response = service.create_vpc_route(
         vpc_id,
         destination,
@@ -2538,7 +2550,6 @@ def create_vpc_route(service, vpc_id, zone):
         zone,
         name=name,
     )
-
     return response
 
 #--------------------------------------------------------

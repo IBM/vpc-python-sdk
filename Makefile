@@ -2,7 +2,7 @@
 # to be ready for development work in the local sandbox.
 # example: "make setup"
 
-setup: deps dev_deps install_project
+setup: deps dev_deps install
 
 deps:
 	pip install -r requirements.txt
@@ -10,7 +10,7 @@ deps:
 dev_deps:
 	pip install -r requirements-dev.txt
 
-install_project:
+install:
 	pip install -e .
 
 unit-test:
