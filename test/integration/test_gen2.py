@@ -205,7 +205,6 @@ class TestSubnet():
 
 class TestPublicGateways():
     def test_create_pgw(self, createGen2Service):
-        print(store['zone'])
         pgw = create_public_gateway(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(pgw)
         store['created_pgw'] = pgw.get_result()['id']
@@ -273,7 +272,7 @@ class TestInstances():
     # create nic
     def test_create_instance_network_interface(self, createGen2Service):
         nic = create_instance_network_interface(createGen2Service, store['created_instance_id'], store['created_subnet'])
-        assertGetPatchResponse(nic)
+        assertCreateResponse(nic)
         store['created_nic'] = nic.get_result()['id']
     # update
     def test_update_instance_network_interface(self, createGen2Service):
@@ -303,8 +302,6 @@ class TestInstances():
         assertDeleteResponse(nics)
 
     def test_create_instance_vol_attachment(self, createGen2Service):
-        print(store['created_instance_id'])
-        print(store['created_vol'])
         vol_attach = create_instance_volume_attachment(createGen2Service, store['created_instance_id'], store['created_vol'])
         assertCreateResponse(vol_attach)
         store['created_vol_atchmt'] = vol_attach.get_result()['id']
@@ -339,7 +336,7 @@ class TestSecurityGroups():
 
     def test_update_sg_network_interface(self, createGen2Service):
         sg_network_interface = add_security_group_network_interface(createGen2Service, store['created_sg_id'], store['network_interface_id'])
-        assertGetPatchResponse(sg_network_interface)
+        assertCreateResponse(sg_network_interface)
         store['created_sg_network_interface_id'] = sg_network_interface.get_result()['id']
     def test_list_sg_network_interface(self, createGen2Service):
         sg_network_interface = list_security_group_network_interfaces(createGen2Service, store['created_sg_id'])
@@ -349,7 +346,7 @@ class TestSecurityGroups():
         assertGetPatchResponse(sg_network_interface)
     def test_delete_sg_network_interface(self, createGen2Service):
         sg_network_interface = remove_security_group_network_interface(createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
-        assert sg_network_interface.status_code == 200
+        assert sg_network_interface.status_code == 204
 
 
     def test_create_sg_rule(self, createGen2Service):
@@ -390,19 +387,24 @@ class TestVPCDefaultACL():
 
 class TestVPCRoutes():
     def test_create_route(self, createGen2Service):
+        pytest.skip("no env")
         route = create_vpc_route(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(route)
         store['created_route'] = route.get_result()['id']
     def test_list_routes(self, createGen2Service):
-        routes = list_vpc_routes(createGen2Service, store['created_vpc'], store['zone'])
+        pytest.skip("no env")
+        routes = list_vpc_routes(createGen2Service, store['created_vpc'])
         assertListResponse(routes, 'routes')
     def test_get_route(self, createGen2Service):
+        pytest.skip("no env")
         route = get_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
     def test_update_route(self, createGen2Service):
+        pytest.skip("no env")
         route = update_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
     def test_delete_route(self, createGen2Service):
+        pytest.skip("no env")
         route = delete_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertDeleteResponse(route)
 
@@ -517,6 +519,12 @@ class TestVPNGateways():
 
 
 class TestLoadBalancer():
+    def test_list_load_balancer_profiles(self, createGen2Service):
+        profiles = list_load_balancer_profiles(createGen2Service)
+        assertListResponse(profiles, 'profiles')
+    def test_get_load_balancer(self, createGen2Service):
+        profile = get_load_balancer_profile(createGen2Service)
+        assertGetPatchResponse(profile)
     def test_list_load_balancer(self, createGen2Service):
         load_balancers = list_load_balancers(createGen2Service)
         assertListResponse(load_balancers, 'load_balancers')
@@ -544,7 +552,6 @@ class TestLoadBalancer():
         listener = create_load_balancer_listener(createGen2Service, store['created_load_balancer'])
         assertCreateResponse(listener)
         store['created_listener'] = listener.get_result()['id']
-        print('created_listener: ' + store['created_listener'])
     def test_get_load_balancer_listener(self, createGen2Service):
         listener = get_load_balancer_listener(createGen2Service, store['created_load_balancer'], store['created_listener'])
         assertGetPatchResponse(listener)
@@ -578,7 +585,6 @@ class TestLoadBalancer():
         res = rule.get_result()
         assert res['id'] is not None
         store['created_listener_policy_rule'] = rule.get_result()['id']
-        print('created_listener_policy_rule : ' + store['created_listener_policy_rule'])
     def test_get_listener_policy_rule(self, createGen2Service):
         rule = get_load_balancer_listener_policy_rule(createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'],  store['created_listener_policy_rule'])
         assert rule.status_code == 200
@@ -594,7 +600,6 @@ class TestLoadBalancer():
         pool = create_load_balancer_pool(createGen2Service, store['created_load_balancer'])
         assertCreateResponse(pool)
         store['created_lb_pool'] = pool.get_result()['id']
-        print('created_lb_pool: ' + store['created_lb_pool'])
     def test_list_lb_pools(self, createGen2Service):
         pools = list_load_balancer_pools(createGen2Service, store['created_load_balancer'])
         assertListResponse(pools, 'pools')
@@ -606,14 +611,13 @@ class TestLoadBalancer():
         assertGetPatchResponse(pool)
     def test_put_pool_member(self, createGen2Service):
         member = replace_load_balancer_pool_members(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
-        assert member.status_code == 200
+        assert member.status_code == 202
     def test_create_pool_member(self, createGen2Service):
         member = create_load_balancer_pool_member(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
         assert member.status_code == 201
         res = member.get_result()
         assert res['id'] is not None
         store['created_lb_pool_member'] = res['id']
-        print('created_lb_pool_member: ' + store['created_lb_pool_member'])
     def test_list_lb_pool_member(self, createGen2Service):
         members = list_load_balancer_pool_members(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
         assertListResponse(members, 'members')
@@ -665,8 +669,8 @@ class TestVPCFlowLogs():
         fls = list_flow_log_collectors(createGen2Service)
         assertListResponse(fls, 'flow_log_collectors')
     def test_get_flow_log_collector(self, createGen2Service):
-        route = get_flow_log_collector(createGen2Service, store['created_fl'])
-        assertGetPatchResponse(route)
+        fl = get_flow_log_collector(createGen2Service, store['created_fl'])
+        assertGetPatchResponse(fl)
     def test_update_flow_log_collector(self, createGen2Service):
         fl = update_flow_log_collector(createGen2Service, store['created_fl'])
         assertGetPatchResponse(fl)
@@ -674,7 +678,94 @@ class TestVPCFlowLogs():
         fl = delete_flow_log_collector(createGen2Service, store['created_fl'])
         assertDeleteResponse(fl)
 
+class TestVPCInstanceTemplates():
+    def test_create_instance_template(self, createGen2Service):
+        it = create_instance_template(createGen2Service, store['created_vpc'], store['instance_profile'], store['zone'], store['image_id'], store['created_subnet'])
+        assertCreateResponse(it)
+        store['created_it'] = it.get_result()['id']
+    def test_list_instance_templates(self, createGen2Service):
+        its = list_instance_templates(createGen2Service)
+        assertListResponse(its, 'instance_templates')
+    def test_get_instance_template(self, createGen2Service):
+        it = get_instance_template(createGen2Service, store['created_it'])
+        assertGetPatchResponse(it)
+    def test_update_instance_template(self, createGen2Service):
+        it = update_instance_template(createGen2Service, store['created_it'])
+        assertGetPatchResponse(it)
+
+class TestVPCInstanceGroups():
+    def test_create_instance_groups(self, createGen2Service):
+        ig = create_instance_group(createGen2Service, store['created_it'], store['created_subnet'])
+        assertCreateResponse(ig)
+        store['created_ig'] = ig.get_result()['id']
+    def test_list_instance_groups(self, createGen2Service):
+        igs = list_instance_groups(createGen2Service)
+        assertListResponse(igs, 'instance_groups')
+    def test_get_instance_group(self, createGen2Service):
+        ig = get_instance_group(createGen2Service, store['created_ig'])
+        assertGetPatchResponse(ig)
+    def test_update_instance_group(self, createGen2Service):
+        ig = update_instance_group(createGen2Service, store['created_ig'])
+        assertGetPatchResponse(ig)
+
+    def test_create_instance_group_manager(self, createGen2Service):
+        igm = create_instance_group_manager(createGen2Service,store['created_ig'] )
+        assertCreateResponse(igm)
+        store['created_igm'] = igm.get_result()['id']
+    def test_list_instance_group_managers(self, createGen2Service):
+        igm = list_instance_group_managers(createGen2Service, store['created_ig'])
+        assertListResponse(igm, 'managers')
+    def test_get_instance_group_manager(self, createGen2Service):
+        igm = get_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
+        assertGetPatchResponse(igm)
+    def test_update_instance_group_manager(self, createGen2Service):
+        igm = update_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
+        assertGetPatchResponse(igm)
+
+    def test_create_instance_group_manager_policy(self, createGen2Service):
+        igmp = create_instance_group_manager_policy(createGen2Service,store['created_ig'],store['created_igm'])
+        assertCreateResponse(igmp)
+        store['created_igmp'] = igmp.get_result()['id']
+    def test_list_instance_group_manager_policies(self, createGen2Service):
+        igmps = list_instance_group_manager_policies(createGen2Service, store['created_ig'], store['created_igm'])
+        assertListResponse(igmps, 'policies')
+    def test_get_instance_group_manager_policy(self, createGen2Service):
+        igmp = get_instance_group_manager_policy(createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+        assertGetPatchResponse(igmp)
+    def test_update_instance_group_manager_policy(self, createGen2Service):
+        igmp = update_instance_group_manager_policy(createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+        assert igmp.status_code == 200
+
+    def test_list_instance_group_memberships(self, createGen2Service):
+        igm = list_instance_group_memberships(createGen2Service, store['created_ig'])
+        assertListResponse(igm, 'memberships')
+        store['created_mbr'] = igm.get_result()['memberships'][0]['id']
+    def test_get_instance_group_membership(self, createGen2Service):
+        igm = get_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
+        assert igm.status_code == 200
+    def test_update_instance_group_membership(self, createGen2Service):
+        igm = update_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
+        assertGetPatchResponse(igm)
+    def test_delete_instance_group_membership(self, createGen2Service):
+        igm = delete_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
+        assertDeleteResponse(igm)
+    def test_delete_instance_group_memberships(self, createGen2Service):
+        igm = delete_instance_group_memberships(createGen2Service, store['created_ig'])
+        assertDeleteResponse(igm)
+
 class TestTeardown():
+    def test_delete_instance_group_manager_policy(self, createGen2Service):
+        igmp = delete_instance_group_manager_policy(createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+        assertDeleteResponse(igmp)
+    def test_delete_instance_group_manager(self, createGen2Service):
+        igm = delete_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
+        assertDeleteResponse(igm)
+    def test_delete_instance_group(self, createGen2Service):
+        ig = delete_instance_group(createGen2Service, store['created_ig'])
+        assertDeleteResponse(ig)
+    def test_delete_instance_template(self, createGen2Service):
+        it = delete_instance_template(createGen2Service, store['created_it'])
+        assertDeleteResponse(it)
     def test_delete_ipsec_policy(self, createGen2Service):
         ipsec_policy = delete_ipsec_policy(createGen2Service, store['created_ipsec_policy_id'])
         assertDeleteResponse(ipsec_policy)
@@ -1216,6 +1307,19 @@ def update_instance_volume_attachment(service, instance_id, id):
     )
     return response
 
+#--------------------------------------------------------
+# test_list_load_balancer_profiles_()
+#--------------------------------------------------------
+def list_load_balancer_profiles(service):
+    response = service.list_load_balancer_profiles()
+    return response
+#--------------------------------------------------------
+# test_get_load_balancer_profile_()
+#--------------------------------------------------------
+def get_load_balancer_profile(service):
+    name = 'network-small'
+    response = service.get_load_balancer_profile(name)
+    return response
 #--------------------------------------------------------
 # list_load_balancers()
 #--------------------------------------------------------
@@ -2642,12 +2746,20 @@ def list_vpc_routes(service, vpc_id, zone_name):
     response = service.list_vpc_routes(vpc_id, zone_name=zone_name)
     return response
 
+#--------------------------------------------------------
+# list_vpc_routes()
+#--------------------------------------------------------
+
+
+def list_vpc_routes(service, vpc_id):
+    response = service.list_vpc_routes(vpc_id)
+    return response
+
 
 #--------------------------------------------------------
 # create_vpc_route()
 #--------------------------------------------------------
 def create_vpc_route(service, vpc_id, zone):
-
     # Construct a dict representation of a ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
@@ -3243,7 +3355,7 @@ def get_flow_log_collector(service, id):
     return response
 
 #--------------------------------------------------------
-# test_update_flow_log_collector()
+# update_flow_log_collector()
 #--------------------------------------------------------
 def update_flow_log_collector(service, id):
     # active = True
@@ -3253,6 +3365,331 @@ def update_flow_log_collector(service, id):
                                                     name=name)
     return response
 
+#--------------------------------------------------------
+# list_instance_templates()
+#--------------------------------------------------------
+def list_instance_templates(service):
+    response = service.list_instance_templates()
+    return response
+
+#--------------------------------------------------------
+# create_instance_template()
+#--------------------------------------------------------
+def create_instance_template(service, vpc, profile, zone, image, subnet):
+    # Construct a dict representation of a SubnetIdentityById model
+    subnet_identity_model = {}
+    subnet_identity_model['id'] = subnet
+
+    # Construct a dict representation of a ImageIdentityById model
+    image_identity_model = {}
+    image_identity_model['id'] = image
+
+    # Construct a dict representation of a InstanceProfileIdentityByName model
+    instance_profile_identity_model = {}
+    instance_profile_identity_model['name'] = profile
+
+    # Construct a dict representation of a NetworkInterfacePrototype model
+    network_interface_prototype_model = {}
+
+    network_interface_prototype_model['subnet'] = subnet_identity_model
+
+
+    # Construct a dict representation of a VPCIdentityById model
+    vpc_identity_model = {}
+    vpc_identity_model['id'] = vpc
+
+
+    # Construct a dict representation of a ZoneIdentityByName model
+    zone_identity_model = {}
+    zone_identity_model['name'] = zone
+
+    instance_template_prototype_model = {}
+    instance_template_prototype_model['name'] = generate_name('template')
+
+    instance_template_prototype_model['profile'] = instance_profile_identity_model
+
+    instance_template_prototype_model['vpc'] = vpc_identity_model
+
+    instance_template_prototype_model['image'] = image_identity_model
+    instance_template_prototype_model[
+        'primary_network_interface'] = network_interface_prototype_model
+    instance_template_prototype_model['zone'] = zone_identity_model
+
+    instance_template_prototype = instance_template_prototype_model
+
+    # Invoke method
+    response = service.create_instance_template(instance_template_prototype)
+    return response
+
+#--------------------------------------------------------
+# delete_instance_template()
+#--------------------------------------------------------
+def delete_instance_template(service, id):
+        response = service.delete_instance_template(id)
+        return response
+
+#--------------------------------------------------------
+# get_instance_template()
+#--------------------------------------------------------
+def get_instance_template(service, id):
+        response = service.get_instance_template(id)
+        return response
+
+#--------------------------------------------------------
+# update_instance_template()
+#--------------------------------------------------------
+def update_instance_template(service, id):
+    name = generate_name("template")
+    response = service.update_instance_template(id, name=name)
+    return response
+
+#--------------------------------------------------------
+# list_instance_groups()
+#--------------------------------------------------------
+def list_instance_groups(service):
+    response = service.list_instance_groups()
+    return response
+
+def create_instance_group(service, instance_template, subnet):
+
+    # Construct a dict representation of a InstanceTemplateIdentityById model
+    instance_template_identity_model = {}
+    instance_template_identity_model[
+        'id'] = instance_template
+
+    # Construct a dict representation of a SubnetIdentityById model
+    subnet_identity_model = {}
+    subnet_identity_model['id'] = subnet
+
+    # # Construct a dict representation of a LoadBalancerIdentityById model
+    # load_balancer_identity_model = {}
+    # load_balancer_identity_model[
+    #     'id'] = 'dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
+
+    # # Construct a dict representation of a LoadBalancerPoolIdentityById model
+    # load_balancer_pool_identity_model = {}
+    # load_balancer_pool_identity_model[
+    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
+
+    # Construct a dict representation of a ResourceGroupIdentityById model
+    # resource_group_identity_model = {}
+    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+    # Set up parameter values
+    instance_template = instance_template_identity_model
+    subnets = [subnet_identity_model]
+    name = generate_name("instance-group")
+    membership_count = 2
+    # application_port = 22
+    # load_balancer = load_balancer_identity_model
+    # load_balancer_pool = load_balancer_pool_identity_model
+    # resource_group = resource_group_identity_model
+
+    # Invoke method
+    response = service.create_instance_group(
+        instance_template,
+        subnets,
+        name=name,
+        membership_count=membership_count,
+        # application_port=application_port,
+        # load_balancer=load_balancer,
+        # load_balancer_pool=load_balancer_pool,
+        # resource_group=resource_group,
+        )
+    return response
+#--------------------------------------------------------
+# delete_instance_group)
+#--------------------------------------------------------
+def delete_instance_group(service, id):
+        response = service.delete_instance_group(id)
+        return response
+
+#--------------------------------------------------------
+# get_instance_group()
+#--------------------------------------------------------
+def get_instance_group(service, id):
+        response = service.get_instance_group(id)
+        return response
+
+#--------------------------------------------------------
+# update_instance_group()
+#--------------------------------------------------------
+def update_instance_group(service, id):
+    name = generate_name("instance-group")
+    response = service.update_instance_group(id, name=name)
+    return response
+#--------------------------------------------------------
+# delete_instance_group_load_balancer()
+#--------------------------------------------------------
+def delete_instance_group_load_balancer(service, instance_group_id):
+    response = service.delete_instance_group_load_balancer(
+        instance_group_id)
+    return response
+#--------------------------------------------------------
+# list_instance_group_managers()
+#--------------------------------------------------------
+def list_instance_group_managers(service, instance_group_id):
+    response = service.list_instance_group_managers(instance_group_id)
+    return response
+#--------------------------------------------------------
+# create_instance_group_manager()
+#--------------------------------------------------------
+def create_instance_group_manager(service, id):
+    # Construct a dict representation of a InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype model
+    instance_group_manager_prototype_model = {}
+    instance_group_manager_prototype_model[
+        'name'] = generate_name("manager")
+    instance_group_manager_prototype_model['management_enabled'] = True
+    instance_group_manager_prototype_model['aggregation_window'] = 120
+    instance_group_manager_prototype_model['cooldown'] = 300
+    instance_group_manager_prototype_model['max_membership_count'] = 2
+    instance_group_manager_prototype_model['min_membership_count'] = 1
+    instance_group_manager_prototype_model['manager_type'] = 'autoscale'
+
+    # Set up parameter values
+    instance_group_id = id
+    instance_group_manager_prototype = instance_group_manager_prototype_model
+
+    # Invoke method
+    response = service.create_instance_group_manager(
+        instance_group_id, instance_group_manager_prototype)
+    return response
+#--------------------------------------------------------
+# delete_instance_group_manager()
+#--------------------------------------------------------
+def delete_instance_group_manager(service, instance_group_id, id):
+    response = service.delete_instance_group_manager(instance_group_id,
+        id)
+    return response
+#--------------------------------------------------------
+# get_instance_group_manager()
+#--------------------------------------------------------
+def get_instance_group_manager(service, instance_group_id, id):
+    response = service.get_instance_group_manager(instance_group_id,
+                                                    id)
+    return response
+#--------------------------------------------------------
+# update_instance_group_manager()
+#--------------------------------------------------------
+def update_instance_group_manager(service, instance_group_id, id):
+
+    # Set up parameter values
+    # management_enabled = True
+    # aggregation_window = 120
+    # cooldown = 360
+    # max_membership_count = 10
+    min_membership_count = 1
+
+    # Invoke method
+    response = service.update_instance_group_manager(
+        instance_group_id,
+        id,
+        # name=name,
+        # management_enabled=management_enabled,
+        # aggregation_window=aggregation_window,
+        # cooldown=cooldown
+        # max_membership_count=max_membership_count,
+        min_membership_count=min_membership_count,
+        )
+    return response
+#--------------------------------------------------------
+# list_instance_group_manager_policies()
+#--------------------------------------------------------
+def list_instance_group_manager_policies(service,
+    instance_group_id, instance_group_manager_id):
+
+    # Invoke method
+    response = service.list_instance_group_manager_policies(
+        instance_group_id, instance_group_manager_id)
+    return response
+#--------------------------------------------------------
+# create_instance_group_manager_policy()
+#--------------------------------------------------------
+def create_instance_group_manager_policy(service, instance_group_id,
+    instance_group_manager_id):
+
+    instance_group_manager_policy_prototype_model = {}
+    instance_group_manager_policy_prototype_model['name'] = generate_name("mpolicy")
+    instance_group_manager_policy_prototype_model['metric_type'] = 'cpu'
+    instance_group_manager_policy_prototype_model['metric_value'] = 38
+    instance_group_manager_policy_prototype_model['policy_type'] = 'target'
+
+    # Set up parameter values
+    instance_group_manager_policy_prototype = instance_group_manager_policy_prototype_model
+
+    # Invoke method
+    response = service.create_instance_group_manager_policy(
+        instance_group_id,
+        instance_group_manager_id,
+        instance_group_manager_policy_prototype)
+    return response
+#--------------------------------------------------------
+# delete_instance_group_manager_policy()
+#--------------------------------------------------------
+def delete_instance_group_manager_policy(service,instance_group_id, instance_group_manager_id, id ):
+    response = service.delete_instance_group_manager_policy(
+        instance_group_id, instance_group_manager_id, id)
+    return response
+#--------------------------------------------------------
+# get_instance_group_manager_policy()
+#--------------------------------------------------------
+def get_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
+    # Invoke method
+    response = service.get_instance_group_manager_policy(
+        instance_group_id, instance_group_manager_id, id)
+    return response
+#--------------------------------------------------------
+# update_instance_group_manager_policy()
+#--------------------------------------------------------
+def update_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
+
+    metric_value = 60
+
+    # Invoke method
+    response = service.update_instance_group_manager_policy(
+        instance_group_id,
+        instance_group_manager_id,
+        id,
+        # name=name,
+        # metric_type=metric_type,
+        metric_value=metric_value)
+    return response
+#--------------------------------------------------------
+# delete_instance_group_memberships()
+#--------------------------------------------------------
+def delete_instance_group_memberships(service, instance_group_id):
+    # Invoke method
+    response = service.delete_instance_group_memberships(instance_group_id)
+    return response
+#--------------------------------------------------------
+# list_instance_group_memberships()
+#--------------------------------------------------------
+def list_instance_group_memberships(service, instance_group_id):
+    response = service.list_instance_group_memberships(instance_group_id)
+    return response
+#--------------------------------------------------------
+# delete_instance_group_membership()
+#--------------------------------------------------------
+def delete_instance_group_membership(service, instance_group_id, id):
+    response = service.delete_instance_group_membership(instance_group_id,
+                                                        id)
+    return response
+#--------------------------------------------------------
+# get_instance_group_membership()
+#--------------------------------------------------------
+def get_instance_group_membership(service, instance_group_id, id):
+    response = service.get_instance_group_membership(instance_group_id,
+                                                        id)
+    return response
+#--------------------------------------------------------
+# update_instance_group_membership()
+#--------------------------------------------------------
+def update_instance_group_membership(service, instance_group_id, id):
+    name = generate_name("member")
+    response = service.update_instance_group_membership(instance_group_id,
+                                                        id,
+                                                        name=name)
+    return response
 
 #--------------------------------------------------------
 # Utils
@@ -3261,10 +3698,7 @@ def generate_name(r_type):
     return "psdk-" + namegenerator.gen() + "-" + r_type
 
 def assertListResponse(output, rType):
-    # print(type(output))
     response = output.get_result()
-    # print(type(response))
-    # print(json.dumps(response, indent=2))
     assert output.status_code == 200
     assert response[rType] is not None
 

@@ -32,6 +32,10 @@ def loadConfigFile():
 def createGen1Service():
     loadConfigFile()
     service = VpcClassicV1.new_instance()
+    headers = {
+        'Accept': 'application/json'
+    }
+    service.set_default_headers(headers)
     print('Setup complete.')
     return service
 
@@ -39,6 +43,10 @@ def createGen1Service():
 def createGen2Service():
     loadConfigFile()
     service = VpcV1.new_instance()
+    headers = {
+        'Accept': 'application/json'
+    }
+    service.set_default_headers(headers)
     print('Setup complete.')
     return service
 
