@@ -1,3 +1,10 @@
+# [0.1.0](https://github.com/IBM/vpc-python-sdk/compare/v0.0.3...v0.1.0) (2020-09-09)
+
+
+### Features
+
+* **Autoscale:** Update VPC SDK adding Autoscale and NLB features ([#10](https://github.com/IBM/vpc-python-sdk/issues/10)) ([a7c3831](https://github.com/IBM/vpc-python-sdk/commit/a7c383146e3aaa56b77de9766aef44f1effa670e))
+
 ## [0.0.3](https://github.com/IBM/vpc-python-sdk/compare/v0.0.2...v0.0.3) (2020-07-02)
 
 
