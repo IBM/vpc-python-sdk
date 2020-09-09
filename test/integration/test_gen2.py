@@ -3690,6 +3690,7 @@ def update_instance_group_membership(service, instance_group_id, id):
                                                         id,
                                                         name=name)
     return response
+
 #--------------------------------------------------------
 # Utils
 #--------------------------------------------------------
