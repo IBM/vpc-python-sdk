@@ -6,6 +6,8 @@
 
 Python client library to interact with various [IBM Cloud Virtual Private Cloud (VPC) Service APIs](https://cloud.ibm.com/apidocs/vpc).
 
+**Note** As IBM continues to invest and innovate on the IBM Cloud Virtual Private Cloud (gen 2 compute) infrastructure, we're focusing on delivering maximum value in a single VPC Infrastructure platform. To support this effort, generation 1 compute infrastructure is being deprecated. The end of service date is 26 February 2021. For more information, see the [Start your migration](https://www.ibm.com/cloud/blog/announcements/start-your-vpc-gen1-to-vpc-gen2-migration) blog.
+
 ## Table of Contents
 
 <!--
