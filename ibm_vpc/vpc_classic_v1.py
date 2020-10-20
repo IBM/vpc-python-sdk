@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.12.0-64fe8d3f-20200820-144050
+# IBM OpenAPI SDK Code Generator Version: 3.12.3-81ed37e0-20200929-215851
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage infrastructure resources, including virtual server instances, subnets, volumes,
@@ -49,7 +49,7 @@ class VpcClassicV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-08-25',
+        version: str = '2020-10-06',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 1,
     ) -> 'VpcClassicV1':
@@ -61,6 +61,8 @@ class VpcClassicV1(BaseService):
                format `YYYY-MM-DD`. Any date up to the current date may be provided.
                Specify the current date to request the latest version.
         """
+        if version is None:
+            raise ValueError('version must be provided')
 
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -73,7 +75,7 @@ class VpcClassicV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-08-25',
+        version: str = '2020-10-06',
         authenticator: Authenticator = None,
         generation: int = 1,
     ) -> None:
@@ -88,6 +90,8 @@ class VpcClassicV1(BaseService):
                Get up to date information from https://github.com/IBM/python-sdk-core/blob/master/README.md
                about initializing the authenticator of your choice.
         """
+        if version is None:
+            raise ValueError('version must be provided')
 
         BaseService.__init__(self,
                              service_url=self.DEFAULT_SERVICE_URL,
@@ -248,7 +252,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpcs/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -283,7 +290,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -292,10 +302,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_vpc(self,
-                   id: str,
-                   *,
-                   name: str = None,
+    def update_vpc(self, id: str, vpc_patch: 'VPCPatch',
                    **kwargs) -> DetailedResponse:
         """
         Update specified VPC.
@@ -303,7 +310,7 @@ class VpcClassicV1(BaseService):
         This request updates a VPC's name.
 
         :param str id: The VPC identifier.
-        :param str name: (optional) The unique user-defined name for this VPC.
+        :param VPCPatch vpc_patch: The VPC patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPC` object
@@ -311,6 +318,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if vpc_patch is None:
+            raise ValueError('vpc_patch must be provided')
+        if isinstance(vpc_patch, VPCPatch):
+            vpc_patch = convert_model(vpc_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -319,16 +330,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(vpc_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -368,8 +380,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/default_security_group'.format(
-            *self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{id}/default_security_group'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -417,8 +431,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/address_prefixes'.format(
-            *self.encode_path_vars(vpc_id))
+        path_param_keys = ['vpc_id']
+        path_param_values = self.encode_path_vars(vpc_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/address_prefixes'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -488,8 +504,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/address_prefixes'.format(
-            *self.encode_path_vars(vpc_id))
+        path_param_keys = ['vpc_id']
+        path_param_values = self.encode_path_vars(vpc_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/address_prefixes'.format(**path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -529,8 +547,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpcs/{0}/address_prefixes/{1}'.format(
-            *self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/address_prefixes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -569,8 +589,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/address_prefixes/{1}'.format(
-            *self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/address_prefixes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -579,12 +601,8 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_vpc_address_prefix(self,
-                                  vpc_id: str,
-                                  id: str,
-                                  *,
-                                  name: str = None,
-                                  is_default: bool = None,
+    def update_vpc_address_prefix(self, vpc_id: str, id: str,
+                                  address_prefix_patch: 'AddressPrefixPatch',
                                   **kwargs) -> DetailedResponse:
         """
         Update an address pool prefix.
@@ -595,13 +613,7 @@ class VpcClassicV1(BaseService):
 
         :param str vpc_id: The VPC identifier.
         :param str id: The prefix identifier.
-        :param str name: (optional) The user-defined name for this address prefix.
-               Names must be unique within the VPC the address prefix resides in.
-        :param bool is_default: (optional) Indicates whether this is the default
-               prefix for this zone in this VPC. Updating to true makes this prefix the
-               default prefix for this zone in this VPC, provided the VPC currently has no
-               default address prefix for this zone. Updating to false removes the default
-               prefix for this zone in this VPC.
+        :param AddressPrefixPatch address_prefix_patch: The prefix patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `AddressPrefix` object
@@ -611,6 +623,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('vpc_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
+        if address_prefix_patch is None:
+            raise ValueError('address_prefix_patch must be provided')
+        if isinstance(address_prefix_patch, AddressPrefixPatch):
+            address_prefix_patch = convert_model(address_prefix_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -619,17 +635,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name, 'is_default': is_default}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(address_prefix_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/address_prefixes/{1}'.format(
-            *self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/address_prefixes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -647,12 +663,11 @@ class VpcClassicV1(BaseService):
         """
         List all routes in the VPC's default routing table.
 
-        This request retrieves routes in the VPC's default routing table. For
-        compatibility, routes with `action` values other than `deliver` are omitted. Each
-        route is zone-specific and directs any packets matching its destination CIDR block
-        to a `next_hop` IP address. The most specific route matching a packet's
-        destination will be used. If multiple equally-specific routes exist, traffic will
-        be distributed across them.
+        This request retrieves routes in the VPC's default routing table. Each route is
+        zone-specific and directs any packets matching its destination CIDR block to a
+        `next_hop` IP address. The most specific route matching a packet's destination
+        will be used. If multiple equally-specific routes exist, traffic will be
+        distributed across them.
 
         :param str vpc_id: The VPC identifier.
         :param str zone_name: (optional) Filters the collection to resources in the
@@ -680,7 +695,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/routes'.format(*self.encode_path_vars(vpc_id))
+        path_param_keys = ['vpc_id']
+        path_param_values = self.encode_path_vars(vpc_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/routes'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -755,7 +773,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/routes'.format(*self.encode_path_vars(vpc_id))
+        path_param_keys = ['vpc_id']
+        path_param_values = self.encode_path_vars(vpc_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/routes'.format(**path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -794,7 +815,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpcs/{0}/routes/{1}'.format(*self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/routes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -832,7 +856,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/routes/{1}'.format(*self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/routes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -841,11 +868,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_vpc_route(self,
-                         vpc_id: str,
-                         id: str,
-                         *,
-                         name: str = None,
+    def update_vpc_route(self, vpc_id: str, id: str, route_patch: 'RoutePatch',
                          **kwargs) -> DetailedResponse:
         """
         Update the specified route in the VPC's default routing table.
@@ -856,8 +879,7 @@ class VpcClassicV1(BaseService):
 
         :param str vpc_id: The VPC identifier.
         :param str id: The route identifier.
-        :param str name: (optional) The user-defined name for this route. Names
-               must be unique within the VPC routing table the route resides in.
+        :param RoutePatch route_patch: The route patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Route` object
@@ -867,6 +889,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('vpc_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
+        if route_patch is None:
+            raise ValueError('route_patch must be provided')
+        if isinstance(route_patch, RoutePatch):
+            route_patch = convert_model(route_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -875,16 +901,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(route_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpcs/{0}/routes/{1}'.format(*self.encode_path_vars(vpc_id, id))
+        path_param_keys = ['vpc_id', 'id']
+        path_param_values = self.encode_path_vars(vpc_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpcs/{vpc_id}/routes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -1020,7 +1047,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/subnets/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -1055,7 +1085,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1064,12 +1097,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_subnet(self,
-                      id: str,
-                      *,
-                      name: str = None,
-                      network_acl: 'NetworkACLIdentity' = None,
-                      public_gateway: 'PublicGatewayIdentity' = None,
+    def update_subnet(self, id: str, subnet_patch: 'SubnetPatch',
                       **kwargs) -> DetailedResponse:
         """
         Update specified subnet.
@@ -1079,12 +1107,7 @@ class VpcClassicV1(BaseService):
         contains only the information to be updated.
 
         :param str id: The subnet identifier.
-        :param str name: (optional) The user-defined name for this subnet. Names
-               must be unique within the VPC the subnet resides in.
-        :param NetworkACLIdentity network_acl: (optional) The network ACL to use
-               for this subnet.
-        :param PublicGatewayIdentity public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+        :param SubnetPatch subnet_patch: The subnet patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Subnet` object
@@ -1092,10 +1115,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
-        if network_acl is not None:
-            network_acl = convert_model(network_acl)
-        if public_gateway is not None:
-            public_gateway = convert_model(public_gateway)
+        if subnet_patch is None:
+            raise ValueError('subnet_patch must be provided')
+        if isinstance(subnet_patch, SubnetPatch):
+            subnet_patch = convert_model(subnet_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -1104,20 +1127,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'name': name,
-            'network_acl': network_acl,
-            'public_gateway': public_gateway
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(subnet_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -1154,7 +1174,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}/network_acl'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}/network_acl'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1199,7 +1222,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}/network_acl'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}/network_acl'.format(**path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -1237,7 +1263,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/subnets/{0}/public_gateway'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}/public_gateway'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -1273,7 +1302,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}/public_gateway'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}/public_gateway'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1319,7 +1351,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/subnets/{0}/public_gateway'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/subnets/{id}/public_gateway'.format(**path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -1347,6 +1382,9 @@ class VpcClassicV1(BaseService):
         This request lists all provisionable images available in the region. An image
         provides source data for a volume. Images are either system-provided, or created
         from another source, such as importing from object storage.
+        The images will be sorted by their `created_at` property values, with the newest
+        first. Images with identical `created_at` values will be secondarily sorted by
+        ascending `id` property values.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -1464,7 +1502,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/images/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/images/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -1499,7 +1540,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/images/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/images/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1508,10 +1552,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_image(self,
-                     id: str,
-                     *,
-                     name: str = None,
+    def update_image(self, id: str, image_patch: 'ImagePatch',
                      **kwargs) -> DetailedResponse:
         """
         Update specified image.
@@ -1522,8 +1563,7 @@ class VpcClassicV1(BaseService):
         updated. An image with a `status` of `deleting` cannot be updated.
 
         :param str id: The image identifier.
-        :param str name: (optional) The unique user-defined name for this image.
-               Names starting with "ibm-" are not allowed.
+        :param ImagePatch image_patch: The image patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Image` object
@@ -1531,6 +1571,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if image_patch is None:
+            raise ValueError('image_patch must be provided')
+        if isinstance(image_patch, ImagePatch):
+            image_patch = convert_model(image_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -1539,16 +1583,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(image_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/images/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/images/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -1628,7 +1673,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/operating_systems/{0}'.format(*self.encode_path_vars(name))
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/operating_systems/{name}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1775,7 +1823,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/keys/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/keys/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -1810,7 +1861,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/keys/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/keys/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -1819,10 +1873,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_key(self,
-                   id: str,
-                   *,
-                   name: str = None,
+    def update_key(self, id: str, key_patch: 'KeyPatch',
                    **kwargs) -> DetailedResponse:
         """
         Update specified key.
@@ -1830,7 +1881,7 @@ class VpcClassicV1(BaseService):
         This request updates a key's name.
 
         :param str id: The key identifier.
-        :param str name: (optional) The user-defined name for this key.
+        :param KeyPatch key_patch: The key patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Key` object
@@ -1838,6 +1889,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if key_patch is None:
+            raise ValueError('key_patch must be provided')
+        if isinstance(key_patch, KeyPatch):
+            key_patch = convert_model(key_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -1846,16 +1901,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(key_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/keys/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/keys/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -1876,10 +1932,6 @@ class VpcClassicV1(BaseService):
                                **kwargs) -> DetailedResponse:
         """
         List all instance profiles.
-
-        This request lists all instance profiles available in the region. An instance
-        profile specifies the performance characteristics and pricing model for an
-        instance.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -1941,7 +1993,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instance/profiles/{0}'.format(*self.encode_path_vars(name))
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance/profiles/{name}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2079,7 +2134,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/instances/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -2114,7 +2172,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2123,10 +2184,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_instance(self,
-                        id: str,
-                        *,
-                        name: str = None,
+    def update_instance(self, id: str, instance_patch: 'InstancePatch',
                         **kwargs) -> DetailedResponse:
         """
         Update specified instance.
@@ -2136,8 +2194,7 @@ class VpcClassicV1(BaseService):
         instance and contains only the information to be updated.
 
         :param str id: The instance identifier.
-        :param str name: (optional) The user-defined name for this virtual server
-               instance (and default system hostname).
+        :param InstancePatch instance_patch: The instance patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Instance` object
@@ -2145,6 +2202,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if instance_patch is None:
+            raise ValueError('instance_patch must be provided')
+        if isinstance(instance_patch, InstancePatch):
+            instance_patch = convert_model(instance_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -2153,16 +2214,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(instance_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -2201,7 +2263,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/initialization'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{id}/initialization'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2246,8 +2311,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/actions'.format(
-            *self.encode_path_vars(instance_id))
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/actions'.format(**path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -2289,8 +2356,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/network_interfaces'.format(
-            *self.encode_path_vars(instance_id))
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2331,8 +2401,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/network_interfaces/{1}'.format(
-            *self.encode_path_vars(instance_id, id))
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2373,8 +2446,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/network_interfaces/{1}/floating_ips'.format(
-            *self.encode_path_vars(instance_id, network_interface_id))
+        path_param_keys = ['instance_id', 'network_interface_id']
+        path_param_values = self.encode_path_vars(instance_id,
+                                                  network_interface_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/floating_ips'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2418,8 +2495,12 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/instances/{0}/network_interfaces/{1}/floating_ips/{2}'.format(
-            *self.encode_path_vars(instance_id, network_interface_id, id))
+        path_param_keys = ['instance_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id,
+                                                  network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -2464,8 +2545,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/network_interfaces/{1}/floating_ips/{2}'.format(
-            *self.encode_path_vars(instance_id, network_interface_id, id))
+        path_param_keys = ['instance_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id,
+                                                  network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2512,8 +2597,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/network_interfaces/{1}/floating_ips/{2}'.format(
-            *self.encode_path_vars(instance_id, network_interface_id, id))
+        path_param_keys = ['instance_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id,
+                                                  network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -2552,8 +2641,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/volume_attachments'.format(
-            *self.encode_path_vars(instance_id))
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/volume_attachments'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2567,8 +2659,8 @@ class VpcClassicV1(BaseService):
             instance_id: str,
             volume: 'VolumeIdentity',
             *,
-            name: str = None,
             delete_volume_on_instance_delete: bool = None,
+            name: str = None,
             **kwargs) -> DetailedResponse:
         """
         Create a volume attachment, connecting a volume to an instance.
@@ -2582,11 +2674,11 @@ class VpcClassicV1(BaseService):
         :param str instance_id: The instance identifier.
         :param VolumeIdentity volume: The identity of the volume to attach to the
                instance.
+        :param bool delete_volume_on_instance_delete: (optional) If set to true,
+               when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
                attachment. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
-        :param bool delete_volume_on_instance_delete: (optional) If set to true,
-               when deleting the instance the volume will also be deleted.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VolumeAttachment` object
@@ -2607,9 +2699,12 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = {
-            'volume': volume,
-            'name': name,
-            'delete_volume_on_instance_delete': delete_volume_on_instance_delete
+            'volume':
+                volume,
+            'delete_volume_on_instance_delete':
+                delete_volume_on_instance_delete,
+            'name':
+                name
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -2619,8 +2714,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/volume_attachments'.format(
-            *self.encode_path_vars(instance_id))
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/volume_attachments'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -2661,8 +2759,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/instances/{0}/volume_attachments/{1}'.format(
-            *self.encode_path_vars(instance_id, id))
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/volume_attachments/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -2703,8 +2804,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/volume_attachments/{1}'.format(
-            *self.encode_path_vars(instance_id, id))
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/volume_attachments/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2714,12 +2818,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_instance_volume_attachment(
-            self,
-            instance_id: str,
-            id: str,
-            *,
-            name: str = None,
-            delete_volume_on_instance_delete: bool = None,
+            self, instance_id: str, id: str,
+            volume_attachment_patch: 'VolumeAttachmentPatch',
             **kwargs) -> DetailedResponse:
         """
         Update a volume attachment.
@@ -2730,10 +2830,8 @@ class VpcClassicV1(BaseService):
 
         :param str instance_id: The instance identifier.
         :param str id: The volume attachment identifier.
-        :param str name: (optional) The user-defined name for this volume
-               attachment.
-        :param bool delete_volume_on_instance_delete: (optional) If set to true,
-               when deleting the instance the volume will also be deleted.
+        :param VolumeAttachmentPatch volume_attachment_patch: The volume attachment
+               patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VolumeAttachment` object
@@ -2743,6 +2841,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('instance_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
+        if volume_attachment_patch is None:
+            raise ValueError('volume_attachment_patch must be provided')
+        if isinstance(volume_attachment_patch, VolumeAttachmentPatch):
+            volume_attachment_patch = convert_model(volume_attachment_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -2752,20 +2854,18 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'name': name,
-            'delete_volume_on_instance_delete': delete_volume_on_instance_delete
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(volume_attachment_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances/{0}/volume_attachments/{1}'.format(
-            *self.encode_path_vars(instance_id, id))
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/volume_attachments/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -2850,7 +2950,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/volume/profiles/{0}'.format(*self.encode_path_vars(name))
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volume/profiles/{name}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2982,7 +3085,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/volumes/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -3017,7 +3123,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/volumes/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3026,10 +3135,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_volume(self,
-                      id: str,
-                      *,
-                      name: str = None,
+    def update_volume(self, id: str, volume_patch: 'VolumePatch',
                       **kwargs) -> DetailedResponse:
         """
         Update specified volume.
@@ -3039,7 +3145,7 @@ class VpcClassicV1(BaseService):
         contains only the information to be updated.
 
         :param str id: The volume identifier.
-        :param str name: (optional) The unique user-defined name for this volume.
+        :param VolumePatch volume_patch: The volume patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Volume` object
@@ -3047,6 +3153,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if volume_patch is None:
+            raise ValueError('volume_patch must be provided')
+        if isinstance(volume_patch, VolumePatch):
+            volume_patch = convert_model(volume_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -3055,16 +3165,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(volume_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/volumes/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -3141,7 +3252,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/regions/{0}'.format(*self.encode_path_vars(name))
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/regions/{name}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3178,7 +3292,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/regions/{0}/zones'.format(*self.encode_path_vars(region_name))
+        path_param_keys = ['region_name']
+        path_param_values = self.encode_path_vars(region_name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/regions/{region_name}/zones'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3218,8 +3335,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/regions/{0}/zones/{1}'.format(
-            *self.encode_path_vars(region_name, zone_name))
+        path_param_keys = ['region_name', 'zone_name']
+        path_param_values = self.encode_path_vars(region_name, zone_name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/regions/{region_name}/zones/{zone_name}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3377,7 +3497,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/public_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/public_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -3413,7 +3536,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/public_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/public_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3422,10 +3548,8 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_public_gateway(self,
-                              id: str,
-                              *,
-                              name: str = None,
+    def update_public_gateway(self, id: str,
+                              public_gateway_patch: 'PublicGatewayPatch',
                               **kwargs) -> DetailedResponse:
         """
         Update a public gateway's name.
@@ -3433,8 +3557,7 @@ class VpcClassicV1(BaseService):
         This request updates a public gateway's name.
 
         :param str id: The public gateway identifier.
-        :param str name: (optional) The user-defined name for this public gateway.
-               Names must be unique within the VPC the public gateway resides in.
+        :param PublicGatewayPatch public_gateway_patch: The public gateway patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `PublicGateway` object
@@ -3442,6 +3565,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if public_gateway_patch is None:
+            raise ValueError('public_gateway_patch must be provided')
+        if isinstance(public_gateway_patch, PublicGatewayPatch):
+            public_gateway_patch = convert_model(public_gateway_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -3450,16 +3577,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(public_gateway_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/public_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/public_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -3588,7 +3716,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/floating_ips/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/floating_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -3624,7 +3755,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/floating_ips/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/floating_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3633,27 +3767,15 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_floating_ip(
-            self,
-            id: str,
-            *,
-            name: str = None,
-            target: 'FloatingIPPatchTargetNetworkInterfaceIdentity' = None,
-            **kwargs) -> DetailedResponse:
+    def update_floating_ip(self, id: str, floating_ip_patch: 'FloatingIPPatch',
+                           **kwargs) -> DetailedResponse:
         """
         Update the specified floating IP.
 
         This request updates a floating IP's name and/or target.
 
         :param str id: The floating IP identifier.
-        :param str name: (optional) The unique user-defined name for this floating
-               IP.
-        :param FloatingIPPatchTargetNetworkInterfaceIdentity target: (optional) A
-               new network interface to bind this floating IP to, replacing any existing
-               binding.
-               For this request to succeed, the existing floating IP must not be required
-               by another
-               resource, such as a public gateway.
+        :param FloatingIPPatch floating_ip_patch: The floating IP patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `FloatingIP` object
@@ -3661,8 +3783,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
-        if target is not None:
-            target = convert_model(target)
+        if floating_ip_patch is None:
+            raise ValueError('floating_ip_patch must be provided')
+        if isinstance(floating_ip_patch, FloatingIPPatch):
+            floating_ip_patch = convert_model(floating_ip_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -3671,16 +3795,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name, 'target': target}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(floating_ip_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/floating_ips/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/floating_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -3814,7 +3939,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/network_acls/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -3850,7 +3978,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3859,10 +3990,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_network_acl(self,
-                           id: str,
-                           *,
-                           name: str = None,
+    def update_network_acl(self, id: str, network_acl_patch: 'NetworkACLPatch',
                            **kwargs) -> DetailedResponse:
         """
         Update a network ACL.
@@ -3870,8 +3998,7 @@ class VpcClassicV1(BaseService):
         This request updates a network ACL's name.
 
         :param str id: The network ACL identifier.
-        :param str name: (optional) The unique user-defined name for this network
-               ACL.
+        :param NetworkACLPatch network_acl_patch: The network ACL patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `NetworkACL` object
@@ -3879,6 +4006,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if network_acl_patch is None:
+            raise ValueError('network_acl_patch must be provided')
+        if isinstance(network_acl_patch, NetworkACLPatch):
+            network_acl_patch = convert_model(network_acl_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -3887,16 +4018,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(network_acl_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -3951,8 +4083,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}/rules'.format(
-            *self.encode_path_vars(network_acl_id))
+        path_param_keys = ['network_acl_id']
+        path_param_values = self.encode_path_vars(network_acl_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{network_acl_id}/rules'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4002,8 +4136,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}/rules'.format(
-            *self.encode_path_vars(network_acl_id))
+        path_param_keys = ['network_acl_id']
+        path_param_values = self.encode_path_vars(network_acl_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{network_acl_id}/rules'.format(**path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -4042,8 +4178,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/network_acls/{0}/rules/{1}'.format(
-            *self.encode_path_vars(network_acl_id, id))
+        path_param_keys = ['network_acl_id', 'id']
+        path_param_values = self.encode_path_vars(network_acl_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{network_acl_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -4082,8 +4221,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}/rules/{1}'.format(
-            *self.encode_path_vars(network_acl_id, id))
+        path_param_keys = ['network_acl_id', 'id']
+        path_param_values = self.encode_path_vars(network_acl_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{network_acl_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4104,7 +4246,8 @@ class VpcClassicV1(BaseService):
 
         :param str network_acl_id: The network ACL identifier.
         :param str id: The rule identifier.
-        :param NetworkACLRulePatch network_acl_rule_patch: The rule patch.
+        :param NetworkACLRulePatch network_acl_rule_patch: The network ACL rule
+               patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `NetworkACLRule` object
@@ -4127,14 +4270,17 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = json.dumps(network_acl_rule_patch)
-        headers['content-type'] = 'application/json'
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/network_acls/{0}/rules/{1}'.format(
-            *self.encode_path_vars(network_acl_id, id))
+        path_param_keys = ['network_acl_id', 'id']
+        path_param_values = self.encode_path_vars(network_acl_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/network_acls/{network_acl_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -4303,7 +4449,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/security_groups/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -4339,7 +4488,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4348,10 +4500,8 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_security_group(self,
-                              id: str,
-                              *,
-                              name: str = None,
+    def update_security_group(self, id: str,
+                              security_group_patch: 'SecurityGroupPatch',
                               **kwargs) -> DetailedResponse:
         """
         Update a security group.
@@ -4361,8 +4511,7 @@ class VpcClassicV1(BaseService):
         as a retrieved security group and contains only the information to be updated.
 
         :param str id: The security group identifier.
-        :param str name: (optional) The user-defined name for this security group.
-               Security group names must be unique, within the scope of an account.
+        :param SecurityGroupPatch security_group_patch: The security group patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `SecurityGroup` object
@@ -4370,6 +4519,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if security_group_patch is None:
+            raise ValueError('security_group_patch must be provided')
+        if isinstance(security_group_patch, SecurityGroupPatch):
+            security_group_patch = convert_model(security_group_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -4378,16 +4531,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(security_group_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -4426,8 +4580,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/network_interfaces'.format(
-            *self.encode_path_vars(security_group_id))
+        path_param_keys = ['security_group_id']
+        path_param_values = self.encode_path_vars(security_group_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/network_interfaces'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4471,8 +4628,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/security_groups/{0}/network_interfaces/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -4515,8 +4675,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/network_interfaces/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4560,8 +4723,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/network_interfaces/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -4600,8 +4766,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/rules'.format(
-            *self.encode_path_vars(security_group_id))
+        path_param_keys = ['security_group_id']
+        path_param_values = self.encode_path_vars(security_group_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/rules'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4658,8 +4827,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/rules'.format(
-            *self.encode_path_vars(security_group_id))
+        path_param_keys = ['security_group_id']
+        path_param_values = self.encode_path_vars(security_group_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/rules'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -4700,8 +4872,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/security_groups/{0}/rules/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -4741,8 +4916,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/rules/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4788,14 +4966,17 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = json.dumps(security_group_rule_patch)
-        headers['content-type'] = 'application/json'
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/security_groups/{0}/rules/{1}'.format(
-            *self.encode_path_vars(security_group_id, id))
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -4954,7 +5135,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/ike_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ike_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -4989,7 +5173,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ike_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ike_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -4998,15 +5185,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_ike_policy(self,
-                          id: str,
-                          *,
-                          name: str = None,
-                          authentication_algorithm: str = None,
-                          dh_group: int = None,
-                          encryption_algorithm: str = None,
-                          ike_version: int = None,
-                          key_lifetime: int = None,
+    def update_ike_policy(self, id: str, ike_policy_patch: 'IKEPolicyPatch',
                           **kwargs) -> DetailedResponse:
         """
         Update an IKE policy.
@@ -5014,13 +5193,7 @@ class VpcClassicV1(BaseService):
         This request updates the properties of an existing IKE policy.
 
         :param str id: The IKE policy identifier.
-        :param str name: (optional) The user-defined name for this IKE policy.
-        :param str authentication_algorithm: (optional) The authentication
-               algorithm.
-        :param int dh_group: (optional) The Diffie-Hellman group.
-        :param str encryption_algorithm: (optional) The encryption algorithm.
-        :param int ike_version: (optional) The IKE protocol version.
-        :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param IKEPolicyPatch ike_policy_patch: The IKE policy patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `IKEPolicy` object
@@ -5028,6 +5201,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if ike_policy_patch is None:
+            raise ValueError('ike_policy_patch must be provided')
+        if isinstance(ike_policy_patch, IKEPolicyPatch):
+            ike_policy_patch = convert_model(ike_policy_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -5036,23 +5213,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'name': name,
-            'authentication_algorithm': authentication_algorithm,
-            'dh_group': dh_group,
-            'encryption_algorithm': encryption_algorithm,
-            'ike_version': ike_version,
-            'key_lifetime': key_lifetime
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(ike_policy_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ike_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ike_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -5090,7 +5261,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ike_policies/{0}/connections'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ike_policies/{id}/connections'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5239,7 +5413,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/ipsec_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ipsec_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -5275,7 +5452,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ipsec_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ipsec_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5284,14 +5464,8 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_ipsec_policy(self,
-                            id: str,
-                            *,
-                            name: str = None,
-                            authentication_algorithm: str = None,
-                            encryption_algorithm: str = None,
-                            key_lifetime: int = None,
-                            pfs: str = None,
+    def update_ipsec_policy(self, id: str,
+                            i_psec_policy_patch: 'IPsecPolicyPatch',
                             **kwargs) -> DetailedResponse:
         """
         Update an IPsec policy.
@@ -5299,12 +5473,7 @@ class VpcClassicV1(BaseService):
         This request updates the properties of an existing IPsec policy.
 
         :param str id: The IPsec policy identifier.
-        :param str name: (optional) The user-defined name for this IPsec policy.
-        :param str authentication_algorithm: (optional) The authentication
-               algorithm.
-        :param str encryption_algorithm: (optional) The encryption algorithm.
-        :param int key_lifetime: (optional) The key lifetime in seconds.
-        :param str pfs: (optional) Perfect Forward Secrecy.
+        :param IPsecPolicyPatch i_psec_policy_patch: The IPsec policy patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `IPsecPolicy` object
@@ -5312,6 +5481,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if i_psec_policy_patch is None:
+            raise ValueError('i_psec_policy_patch must be provided')
+        if isinstance(i_psec_policy_patch, IPsecPolicyPatch):
+            i_psec_policy_patch = convert_model(i_psec_policy_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -5320,22 +5493,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'name': name,
-            'authentication_algorithm': authentication_algorithm,
-            'encryption_algorithm': encryption_algorithm,
-            'key_lifetime': key_lifetime,
-            'pfs': pfs
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(i_psec_policy_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ipsec_policies/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ipsec_policies/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -5373,8 +5541,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/ipsec_policies/{0}/connections'.format(
-            *self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/ipsec_policies/{id}/connections'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5518,7 +5688,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -5554,7 +5727,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5563,10 +5739,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_vpn_gateway(self,
-                           id: str,
-                           *,
-                           name: str = None,
+    def update_vpn_gateway(self, id: str, vpn_gateway_patch: 'VPNGatewayPatch',
                            **kwargs) -> DetailedResponse:
         """
         Update a VPN gateway.
@@ -5574,7 +5747,7 @@ class VpcClassicV1(BaseService):
         This request updates the properties of an existing VPN gateway.
 
         :param str id: The VPN gateway identifier.
-        :param str name: (optional) The user-defined name for this VPN gateway.
+        :param VPNGatewayPatch vpn_gateway_patch: The VPN gateway patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPNGateway` object
@@ -5582,6 +5755,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if vpn_gateway_patch is None:
+            raise ValueError('vpn_gateway_patch must be provided')
+        if isinstance(vpn_gateway_patch, VPNGatewayPatch):
+            vpn_gateway_patch = convert_model(vpn_gateway_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -5590,16 +5767,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(vpn_gateway_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -5646,8 +5824,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections'.format(
-            *self.encode_path_vars(vpn_gateway_id))
+        path_param_keys = ['vpn_gateway_id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5738,8 +5919,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections'.format(
-            *self.encode_path_vars(vpn_gateway_id))
+        path_param_keys = ['vpn_gateway_id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -5779,8 +5963,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id))
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -5820,8 +6007,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections/{1}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id))
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5831,17 +6021,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_vpn_gateway_connection(
-            self,
-            vpn_gateway_id: str,
-            id: str,
-            *,
-            admin_state_up: bool = None,
-            peer_address: str = None,
-            name: str = None,
-            psk: str = None,
-            dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-            ike_policy: 'IKEPolicyIdentity' = None,
-            ipsec_policy: 'IPsecPolicyIdentity' = None,
+            self, vpn_gateway_id: str, id: str,
+            vpn_gateway_connection_patch: 'VPNGatewayConnectionPatch',
             **kwargs) -> DetailedResponse:
         """
         Update a VPN gateway connection.
@@ -5850,19 +6031,8 @@ class VpcClassicV1(BaseService):
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
-        :param bool admin_state_up: (optional) If set to false, the VPN connection
-               is shut down.
-        :param str peer_address: (optional) The IP address of the peer VPN gateway.
-        :param str name: (optional) The user-defined name for this VPN gateway
-               connection.
-        :param str psk: (optional) The preshared key.
-        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
-               Dead Peer Detection settings.
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates
-               autonegotiation.
+        :param VPNGatewayConnectionPatch vpn_gateway_connection_patch: The VPN
+               gateway connection patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPNGatewayConnection` object
@@ -5872,12 +6042,11 @@ class VpcClassicV1(BaseService):
             raise ValueError('vpn_gateway_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        if dead_peer_detection is not None:
-            dead_peer_detection = convert_model(dead_peer_detection)
-        if ike_policy is not None:
-            ike_policy = convert_model(ike_policy)
-        if ipsec_policy is not None:
-            ipsec_policy = convert_model(ipsec_policy)
+        if vpn_gateway_connection_patch is None:
+            raise ValueError('vpn_gateway_connection_patch must be provided')
+        if isinstance(vpn_gateway_connection_patch, VPNGatewayConnectionPatch):
+            vpn_gateway_connection_patch = convert_model(
+                vpn_gateway_connection_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -5887,25 +6056,18 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'admin_state_up': admin_state_up,
-            'peer_address': peer_address,
-            'name': name,
-            'psk': psk,
-            'dead_peer_detection': dead_peer_detection,
-            'ike_policy': ike_policy,
-            'ipsec_policy': ipsec_policy
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(vpn_gateway_connection_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections/{1}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id))
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -5948,8 +6110,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections/{1}/local_cidrs'.format(
-            *self.encode_path_vars(vpn_gateway_id, id))
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/local_cidrs'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -5996,9 +6161,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/local_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/local_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -6046,9 +6216,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/local_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/local_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6097,9 +6272,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/local_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/local_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -6141,8 +6321,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/vpn_gateways/{0}/connections/{1}/peer_cidrs'.format(
-            *self.encode_path_vars(vpn_gateway_id, id))
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/peer_cidrs'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6189,9 +6372,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/peer_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/peer_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -6239,9 +6427,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/peer_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/peer_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6290,9 +6483,14 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/vpn_gateways/{0}/connections/{1}/peer_cidrs/{2}/{3}'.format(
-            *self.encode_path_vars(vpn_gateway_id, id, cidr_prefix,
-                                   prefix_length))
+        path_param_keys = [
+            'vpn_gateway_id', 'id', 'cidr_prefix', 'prefix_length'
+        ]
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id,
+                                                  cidr_prefix, prefix_length)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/connections/{id}/peer_cidrs/{cidr_prefix}/{prefix_length}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -6443,7 +6641,10 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -6479,7 +6680,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6488,10 +6692,8 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_load_balancer(self,
-                             id: str,
-                             *,
-                             name: str = None,
+    def update_load_balancer(self, id: str,
+                             load_balancer_patch: 'LoadBalancerPatch',
                              **kwargs) -> DetailedResponse:
         """
         Update a load balancer.
@@ -6499,8 +6701,7 @@ class VpcClassicV1(BaseService):
         This request updates a load balancer.
 
         :param str id: The load balancer identifier.
-        :param str name: (optional) The unique user-defined name for this load
-               balancer.
+        :param LoadBalancerPatch load_balancer_patch: The load balancer patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancer` object
@@ -6508,6 +6709,10 @@ class VpcClassicV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
+        if load_balancer_patch is None:
+            raise ValueError('load_balancer_patch must be provided')
+        if isinstance(load_balancer_patch, LoadBalancerPatch):
+            load_balancer_patch = convert_model(load_balancer_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -6516,16 +6721,17 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}'.format(*self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -6564,8 +6770,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/statistics'.format(
-            *self.encode_path_vars(id))
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{id}/statistics'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6602,8 +6810,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners'.format(
-            *self.encode_path_vars(load_balancer_id))
+        path_param_keys = ['load_balancer_id']
+        path_param_values = self.encode_path_vars(load_balancer_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6683,8 +6894,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners'.format(
-            *self.encode_path_vars(load_balancer_id))
+        path_param_keys = ['load_balancer_id']
+        path_param_values = self.encode_path_vars(load_balancer_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -6724,8 +6938,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}/listeners/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -6765,8 +6982,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6776,15 +6996,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_listener(
-            self,
-            load_balancer_id: str,
-            id: str,
-            *,
-            connection_limit: int = None,
-            port: int = None,
-            protocol: str = None,
-            certificate_instance: 'CertificateInstanceIdentity' = None,
-            default_pool: 'LoadBalancerPoolIdentity' = None,
+            self, load_balancer_id: str, id: str,
+            load_balancer_listener_patch: 'LoadBalancerListenerPatch',
             **kwargs) -> DetailedResponse:
         """
         Update a listener.
@@ -6793,16 +7006,8 @@ class VpcClassicV1(BaseService):
 
         :param str load_balancer_id: The load balancer identifier.
         :param str id: The listener identifier.
-        :param int connection_limit: (optional) The connection limit of the
-               listener.
-        :param int port: (optional) The listener port number.
-        :param str protocol: (optional) The listener protocol.
-        :param CertificateInstanceIdentity certificate_instance: (optional) The
-               certificate instance used for SSL termination. It is applicable only to
-               `https`
-               protocol.
-        :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
-               associated with the listener.
+        :param LoadBalancerListenerPatch load_balancer_listener_patch: The load
+               balancer listener patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListener` object
@@ -6812,10 +7017,11 @@ class VpcClassicV1(BaseService):
             raise ValueError('load_balancer_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        if certificate_instance is not None:
-            certificate_instance = convert_model(certificate_instance)
-        if default_pool is not None:
-            default_pool = convert_model(default_pool)
+        if load_balancer_listener_patch is None:
+            raise ValueError('load_balancer_listener_patch must be provided')
+        if isinstance(load_balancer_listener_patch, LoadBalancerListenerPatch):
+            load_balancer_listener_patch = convert_model(
+                load_balancer_listener_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -6825,23 +7031,18 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'connection_limit': connection_limit,
-            'port': port,
-            'protocol': protocol,
-            'certificate_instance': certificate_instance,
-            'default_pool': default_pool
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_listener_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -6883,8 +7084,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id))
+        path_param_keys = ['load_balancer_id', 'listener_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -6967,8 +7171,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id))
+        path_param_keys = ['load_balancer_id', 'listener_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -7012,8 +7219,12 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -7057,8 +7268,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7068,15 +7283,9 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy(
-            self,
-            load_balancer_id: str,
-            listener_id: str,
-            id: str,
-            *,
-            name: str = None,
-            priority: int = None,
-            target: 'LoadBalancerListenerPolicyPatchTarget' = None,
-            **kwargs) -> DetailedResponse:
+            self, load_balancer_id: str, listener_id: str, id: str,
+            load_balancer_listener_policy_patch:
+        'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
         """
         Update a policy of the load balancer listener.
 
@@ -7085,16 +7294,8 @@ class VpcClassicV1(BaseService):
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
         :param str id: The policy identifier.
-        :param str name: (optional) The user-defined name for this policy. Names
-               must be unique within the load balancer listener the policy resides in.
-        :param int priority: (optional) Priority of the policy. Lower value
-               indicates higher priority.
-        :param LoadBalancerListenerPolicyPatchTarget target: (optional) When
-               `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the
-               load
-               balancer forwards the traffic to. When `action` is `redirect`,
-               `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
-               status code used in the redirect response.
+        :param LoadBalancerListenerPolicyPatch load_balancer_listener_policy_patch:
+               The listener policy patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListenerPolicy` object
@@ -7106,8 +7307,13 @@ class VpcClassicV1(BaseService):
             raise ValueError('listener_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        if target is not None:
-            target = convert_model(target)
+        if load_balancer_listener_policy_patch is None:
+            raise ValueError(
+                'load_balancer_listener_policy_patch must be provided')
+        if isinstance(load_balancer_listener_policy_patch,
+                      LoadBalancerListenerPolicyPatch):
+            load_balancer_listener_policy_patch = convert_model(
+                load_balancer_listener_policy_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -7117,17 +7323,19 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'name': name, 'priority': priority, 'target': target}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_listener_policy_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -7173,8 +7381,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}/rules'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, policy_id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{policy_id}/rules'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7246,8 +7458,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}/rules'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, policy_id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{policy_id}/rules'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -7296,9 +7512,12 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}/rules/{3}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, policy_id,
-                                   id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{policy_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -7346,9 +7565,12 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}/rules/{3}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, policy_id,
-                                   id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{policy_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7357,17 +7579,10 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def update_load_balancer_listener_policy_rule(self,
-                                                  load_balancer_id: str,
-                                                  listener_id: str,
-                                                  policy_id: str,
-                                                  id: str,
-                                                  *,
-                                                  condition: str = None,
-                                                  field: str = None,
-                                                  type: str = None,
-                                                  value: str = None,
-                                                  **kwargs) -> DetailedResponse:
+    def update_load_balancer_listener_policy_rule(
+            self, load_balancer_id: str, listener_id: str, policy_id: str,
+            id: str, load_balancer_listener_policy_rule_patch:
+        'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
         """
         Update a rule of the load balancer listener policy.
 
@@ -7377,11 +7592,8 @@ class VpcClassicV1(BaseService):
         :param str listener_id: The listener identifier.
         :param str policy_id: The policy identifier.
         :param str id: The rule identifier.
-        :param str condition: (optional) The condition of the rule.
-        :param str field: (optional) HTTP header field. This is only applicable to
-               "header" rule type.
-        :param str type: (optional) The type of the rule.
-        :param str value: (optional) Value to be matched for rule condition.
+        :param LoadBalancerListenerPolicyRulePatch
+               load_balancer_listener_policy_rule_patch: The listener policy rule patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListenerPolicyRule` object
@@ -7395,6 +7607,13 @@ class VpcClassicV1(BaseService):
             raise ValueError('policy_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
+        if load_balancer_listener_policy_rule_patch is None:
+            raise ValueError(
+                'load_balancer_listener_policy_rule_patch must be provided')
+        if isinstance(load_balancer_listener_policy_rule_patch,
+                      LoadBalancerListenerPolicyRulePatch):
+            load_balancer_listener_policy_rule_patch = convert_model(
+                load_balancer_listener_policy_rule_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -7404,23 +7623,19 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'condition': condition,
-            'field': field,
-            'type': type,
-            'value': value
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_listener_policy_rule_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/listeners/{1}/policies/{2}/rules/{3}'.format(
-            *self.encode_path_vars(load_balancer_id, listener_id, policy_id,
-                                   id))
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
+                                                  policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies/{policy_id}/rules/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -7457,8 +7672,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools'.format(
-            *self.encode_path_vars(load_balancer_id))
+        path_param_keys = ['load_balancer_id']
+        path_param_values = self.encode_path_vars(load_balancer_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7544,8 +7762,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools'.format(
-            *self.encode_path_vars(load_balancer_id))
+        path_param_keys = ['load_balancer_id']
+        path_param_values = self.encode_path_vars(load_balancer_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -7584,8 +7805,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}/pools/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -7624,8 +7848,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7635,16 +7862,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_pool(
-            self,
-            load_balancer_id: str,
-            id: str,
-            *,
-            name: str = None,
-            algorithm: str = None,
-            protocol: str = None,
-            health_monitor: 'LoadBalancerPoolHealthMonitorPatch' = None,
-            session_persistence:
-        'LoadBalancerPoolSessionPersistencePatch' = None,
+            self, load_balancer_id: str, id: str,
+            load_balancer_pool_patch: 'LoadBalancerPoolPatch',
             **kwargs) -> DetailedResponse:
         """
         Update a load balancer pool.
@@ -7653,19 +7872,8 @@ class VpcClassicV1(BaseService):
 
         :param str load_balancer_id: The load balancer identifier.
         :param str id: The pool identifier.
-        :param str name: (optional) The user-defined name for this load balancer
-               pool.
-        :param str algorithm: (optional) The load balancing algorithm.
-        :param str protocol: (optional) The protocol used for this load balancer
-               pool.
-               The enumerated values for this property are expected to expand in the
-               future. When processing this property, check for and log unknown values.
-               Optionally halt processing and surface the error, or bypass the pool on
-               which the unexpected property value was encountered.
-        :param LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The
-               health monitor of this pool.
-        :param LoadBalancerPoolSessionPersistencePatch session_persistence:
-               (optional) The session persistence of this pool.
+        :param LoadBalancerPoolPatch load_balancer_pool_patch: The load balancer
+               pool patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerPool` object
@@ -7675,10 +7883,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('load_balancer_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        if health_monitor is not None:
-            health_monitor = convert_model(health_monitor)
-        if session_persistence is not None:
-            session_persistence = convert_model(session_persistence)
+        if load_balancer_pool_patch is None:
+            raise ValueError('load_balancer_pool_patch must be provided')
+        if isinstance(load_balancer_pool_patch, LoadBalancerPoolPatch):
+            load_balancer_pool_patch = convert_model(load_balancer_pool_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -7687,23 +7895,18 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'name': name,
-            'algorithm': algorithm,
-            'protocol': protocol,
-            'health_monitor': health_monitor,
-            'session_persistence': session_persistence
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_pool_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}'.format(
-            *self.encode_path_vars(load_balancer_id, id))
+        path_param_keys = ['load_balancer_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -7745,8 +7948,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}/members'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id))
+        path_param_keys = ['load_balancer_id', 'pool_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7810,8 +8016,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}/members'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id))
+        path_param_keys = ['load_balancer_id', 'pool_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members'.format(
+            **path_param_dict)
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
@@ -7865,8 +8074,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}/members'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id))
+        path_param_keys = ['load_balancer_id', 'pool_id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PUT',
                                        url=url,
                                        headers=headers,
@@ -7910,8 +8122,11 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        url = '/load_balancers/{0}/pools/{1}/members/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id, id))
+        path_param_keys = ['load_balancer_id', 'pool_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -7955,8 +8170,11 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}/members/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id, id))
+        path_param_keys = ['load_balancer_id', 'pool_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -7966,14 +8184,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_pool_member(
-            self,
-            load_balancer_id: str,
-            pool_id: str,
-            id: str,
-            *,
-            port: int = None,
-            weight: int = None,
-            target: 'LoadBalancerPoolMemberTargetPrototype' = None,
+            self, load_balancer_id: str, pool_id: str, id: str,
+            load_balancer_pool_member_patch: 'LoadBalancerPoolMemberPatch',
             **kwargs) -> DetailedResponse:
         """
         Update a member in the load balancer pool.
@@ -7983,13 +8195,8 @@ class VpcClassicV1(BaseService):
         :param str load_balancer_id: The load balancer identifier.
         :param str pool_id: The pool identifier.
         :param str id: The member identifier.
-        :param int port: (optional) The port number of the application running in
-               the server member.
-        :param int weight: (optional) Weight of the server member. This takes
-               effect only when the load balancing algorithm of its belonging pool is
-               `weighted_round_robin`.
-        :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
-               member target.
+        :param LoadBalancerPoolMemberPatch load_balancer_pool_member_patch: The
+               load balancer pool member patch.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerPoolMember` object
@@ -8001,8 +8208,12 @@ class VpcClassicV1(BaseService):
             raise ValueError('pool_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        if target is not None:
-            target = convert_model(target)
+        if load_balancer_pool_member_patch is None:
+            raise ValueError('load_balancer_pool_member_patch must be provided')
+        if isinstance(load_balancer_pool_member_patch,
+                      LoadBalancerPoolMemberPatch):
+            load_balancer_pool_member_patch = convert_model(
+                load_balancer_pool_member_patch)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -8012,17 +8223,18 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {'port': port, 'weight': weight, 'target': target}
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
+        data = json.dumps(load_balancer_pool_member_patch)
+        headers['content-type'] = 'application/merge-patch+json'
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/load_balancers/{0}/pools/{1}/members/{2}'.format(
-            *self.encode_path_vars(load_balancer_id, pool_id, id))
+        path_param_keys = ['load_balancer_id', 'pool_id', 'id']
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -8429,6 +8641,77 @@ class AddressPrefixCollectionNext():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'AddressPrefixCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AddressPrefixPatch():
+    """
+    AddressPrefixPatch.
+
+    :attr str name: (optional) The user-defined name for this address prefix. Names
+          must be unique within the VPC the address prefix resides in.
+    :attr bool is_default: (optional) Indicates whether this is the default prefix
+          for this zone in this VPC. Updating to true makes this prefix the default prefix
+          for this zone in this VPC, provided the VPC currently has no default address
+          prefix for this zone. Updating to false removes the default prefix for this zone
+          in this VPC.
+    """
+
+    def __init__(self, *, name: str = None, is_default: bool = None) -> None:
+        """
+        Initialize a AddressPrefixPatch object.
+
+        :param str name: (optional) The user-defined name for this address prefix.
+               Names must be unique within the VPC the address prefix resides in.
+        :param bool is_default: (optional) Indicates whether this is the default
+               prefix for this zone in this VPC. Updating to true makes this prefix the
+               default prefix for this zone in this VPC, provided the VPC currently has no
+               default address prefix for this zone. Updating to false removes the default
+               prefix for this zone in this VPC.
+        """
+        self.name = name
+        self.is_default = is_default
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AddressPrefixPatch':
+        """Initialize a AddressPrefixPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'is_default' in _dict:
+            args['is_default'] = _dict.get('is_default')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AddressPrefixPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'is_default') and self.is_default is not None:
+            _dict['is_default'] = self.is_default
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AddressPrefixPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AddressPrefixPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AddressPrefixPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -9123,6 +9406,85 @@ class FloatingIPCollectionNext():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'FloatingIPCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class FloatingIPPatch():
+    """
+    FloatingIPPatch.
+
+    :attr str name: (optional) The unique user-defined name for this floating IP.
+    :attr FloatingIPPatchTargetNetworkInterfaceIdentity target: (optional) A new
+          network interface to bind this floating IP to, replacing any existing binding.
+          For this request to succeed, the existing floating IP must not be required by
+          another
+          resource, such as a public gateway.
+    """
+
+    def __init__(
+            self,
+            *,
+            name: str = None,
+            target: 'FloatingIPPatchTargetNetworkInterfaceIdentity' = None
+    ) -> None:
+        """
+        Initialize a FloatingIPPatch object.
+
+        :param str name: (optional) The unique user-defined name for this floating
+               IP.
+        :param FloatingIPPatchTargetNetworkInterfaceIdentity target: (optional) A
+               new network interface to bind this floating IP to, replacing any existing
+               binding.
+               For this request to succeed, the existing floating IP must not be required
+               by another
+               resource, such as a public gateway.
+        """
+        self.name = name
+        self.target = target
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'FloatingIPPatch':
+        """Initialize a FloatingIPPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'target' in _dict:
+            args['target'] = _dict.get('target')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a FloatingIPPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this FloatingIPPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'FloatingIPPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'FloatingIPPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -9835,6 +10197,122 @@ class IKEPolicyIdentity():
         raise Exception(msg)
 
 
+class IKEPolicyPatch():
+    """
+    IKEPolicyPatch.
+
+    :attr str name: (optional) The user-defined name for this IKE policy.
+    :attr str authentication_algorithm: (optional) The authentication algorithm.
+    :attr int dh_group: (optional) The Diffie-Hellman group.
+    :attr str encryption_algorithm: (optional) The encryption algorithm.
+    :attr int ike_version: (optional) The IKE protocol version.
+    :attr int key_lifetime: (optional) The key lifetime in seconds.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 authentication_algorithm: str = None,
+                 dh_group: int = None,
+                 encryption_algorithm: str = None,
+                 ike_version: int = None,
+                 key_lifetime: int = None) -> None:
+        """
+        Initialize a IKEPolicyPatch object.
+
+        :param str name: (optional) The user-defined name for this IKE policy.
+        :param str authentication_algorithm: (optional) The authentication
+               algorithm.
+        :param int dh_group: (optional) The Diffie-Hellman group.
+        :param str encryption_algorithm: (optional) The encryption algorithm.
+        :param int ike_version: (optional) The IKE protocol version.
+        :param int key_lifetime: (optional) The key lifetime in seconds.
+        """
+        self.name = name
+        self.authentication_algorithm = authentication_algorithm
+        self.dh_group = dh_group
+        self.encryption_algorithm = encryption_algorithm
+        self.ike_version = ike_version
+        self.key_lifetime = key_lifetime
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IKEPolicyPatch':
+        """Initialize a IKEPolicyPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'authentication_algorithm' in _dict:
+            args['authentication_algorithm'] = _dict.get(
+                'authentication_algorithm')
+        if 'dh_group' in _dict:
+            args['dh_group'] = _dict.get('dh_group')
+        if 'encryption_algorithm' in _dict:
+            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
+        if 'ike_version' in _dict:
+            args['ike_version'] = _dict.get('ike_version')
+        if 'key_lifetime' in _dict:
+            args['key_lifetime'] = _dict.get('key_lifetime')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IKEPolicyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'authentication_algorithm'
+                  ) and self.authentication_algorithm is not None:
+            _dict['authentication_algorithm'] = self.authentication_algorithm
+        if hasattr(self, 'dh_group') and self.dh_group is not None:
+            _dict['dh_group'] = self.dh_group
+        if hasattr(self, 'encryption_algorithm'
+                  ) and self.encryption_algorithm is not None:
+            _dict['encryption_algorithm'] = self.encryption_algorithm
+        if hasattr(self, 'ike_version') and self.ike_version is not None:
+            _dict['ike_version'] = self.ike_version
+        if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
+            _dict['key_lifetime'] = self.key_lifetime
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IKEPolicyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IKEPolicyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IKEPolicyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AuthenticationAlgorithmEnum(str, Enum):
+        """
+        The authentication algorithm.
+        """
+        MD5 = 'md5'
+        SHA1 = 'sha1'
+        SHA256 = 'sha256'
+
+    class EncryptionAlgorithmEnum(str, Enum):
+        """
+        The encryption algorithm.
+        """
+        TRIPLE_DES = 'triple_des'
+        AES128 = 'aes128'
+        AES256 = 'aes256'
+
+
 class IKEPolicyReference():
     """
     IKEPolicyReference.
@@ -10502,6 +10980,123 @@ class IPsecPolicyIdentity():
         raise Exception(msg)
 
 
+class IPsecPolicyPatch():
+    """
+    IPsecPolicyPatch.
+
+    :attr str name: (optional) The user-defined name for this IPsec policy.
+    :attr str authentication_algorithm: (optional) The authentication algorithm.
+    :attr str encryption_algorithm: (optional) The encryption algorithm.
+    :attr int key_lifetime: (optional) The key lifetime in seconds.
+    :attr str pfs: (optional) Perfect Forward Secrecy.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 authentication_algorithm: str = None,
+                 encryption_algorithm: str = None,
+                 key_lifetime: int = None,
+                 pfs: str = None) -> None:
+        """
+        Initialize a IPsecPolicyPatch object.
+
+        :param str name: (optional) The user-defined name for this IPsec policy.
+        :param str authentication_algorithm: (optional) The authentication
+               algorithm.
+        :param str encryption_algorithm: (optional) The encryption algorithm.
+        :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param str pfs: (optional) Perfect Forward Secrecy.
+        """
+        self.name = name
+        self.authentication_algorithm = authentication_algorithm
+        self.encryption_algorithm = encryption_algorithm
+        self.key_lifetime = key_lifetime
+        self.pfs = pfs
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IPsecPolicyPatch':
+        """Initialize a IPsecPolicyPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'authentication_algorithm' in _dict:
+            args['authentication_algorithm'] = _dict.get(
+                'authentication_algorithm')
+        if 'encryption_algorithm' in _dict:
+            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
+        if 'key_lifetime' in _dict:
+            args['key_lifetime'] = _dict.get('key_lifetime')
+        if 'pfs' in _dict:
+            args['pfs'] = _dict.get('pfs')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IPsecPolicyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'authentication_algorithm'
+                  ) and self.authentication_algorithm is not None:
+            _dict['authentication_algorithm'] = self.authentication_algorithm
+        if hasattr(self, 'encryption_algorithm'
+                  ) and self.encryption_algorithm is not None:
+            _dict['encryption_algorithm'] = self.encryption_algorithm
+        if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
+            _dict['key_lifetime'] = self.key_lifetime
+        if hasattr(self, 'pfs') and self.pfs is not None:
+            _dict['pfs'] = self.pfs
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IPsecPolicyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IPsecPolicyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IPsecPolicyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AuthenticationAlgorithmEnum(str, Enum):
+        """
+        The authentication algorithm.
+        """
+        MD5 = 'md5'
+        SHA1 = 'sha1'
+        SHA256 = 'sha256'
+
+    class EncryptionAlgorithmEnum(str, Enum):
+        """
+        The encryption algorithm.
+        """
+        TRIPLE_DES = 'triple_des'
+        AES128 = 'aes128'
+        AES256 = 'aes256'
+
+    class PfsEnum(str, Enum):
+        """
+        Perfect Forward Secrecy.
+        """
+        DISABLED = 'disabled'
+        GROUP_14 = 'group_14'
+        GROUP_2 = 'group_2'
+        GROUP_5 = 'group_5'
+
+
 class IPsecPolicyReference():
     """
     IPsecPolicyReference.
@@ -11152,6 +11747,62 @@ class ImageIdentity():
                 'ImageIdentityById', 'ImageIdentityByCRN', 'ImageIdentityByHref'
             ]))
         raise Exception(msg)
+
+
+class ImagePatch():
+    """
+    ImagePatch.
+
+    :attr str name: (optional) The unique user-defined name for this image. Names
+          starting with "ibm-" are not allowed.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a ImagePatch object.
+
+        :param str name: (optional) The unique user-defined name for this image.
+               Names starting with "ibm-" are not allowed.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ImagePatch':
+        """Initialize a ImagePatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ImagePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ImagePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ImagePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ImagePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class ImagePrototype():
@@ -12121,6 +12772,62 @@ class InstanceInitializationPassword():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceInitializationPassword') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePatch():
+    """
+    InstancePatch.
+
+    :attr str name: (optional) The user-defined name for this virtual server
+          instance (and default system hostname).
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a InstancePatch object.
+
+        :param str name: (optional) The user-defined name for this virtual server
+               instance (and default system hostname).
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePatch':
+        """Initialize a InstancePatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -13264,6 +13971,60 @@ class KeyIdentity():
         raise Exception(msg)
 
 
+class KeyPatch():
+    """
+    KeyPatch.
+
+    :attr str name: (optional) The user-defined name for this key.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a KeyPatch object.
+
+        :param str name: (optional) The user-defined name for this key.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'KeyPatch':
+        """Initialize a KeyPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a KeyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this KeyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'KeyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'KeyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class KeyReferenceInstanceInitializationContext():
     """
     KeyReferenceInstanceInitializationContext.
@@ -13861,6 +14622,120 @@ class LoadBalancerListenerCollection():
         return not self == other
 
 
+class LoadBalancerListenerPatch():
+    """
+    LoadBalancerListenerPatch.
+
+    :attr int connection_limit: (optional) The connection limit of the listener.
+    :attr int port: (optional) The listener port number.
+    :attr str protocol: (optional) The listener protocol.
+    :attr CertificateInstanceIdentity certificate_instance: (optional) The
+          certificate instance used for SSL termination. It is applicable only to `https`
+          protocol.
+    :attr LoadBalancerPoolIdentity default_pool: (optional) The default pool
+          associated with the listener.
+    """
+
+    def __init__(self,
+                 *,
+                 connection_limit: int = None,
+                 port: int = None,
+                 protocol: str = None,
+                 certificate_instance: 'CertificateInstanceIdentity' = None,
+                 default_pool: 'LoadBalancerPoolIdentity' = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPatch object.
+
+        :param int connection_limit: (optional) The connection limit of the
+               listener.
+        :param int port: (optional) The listener port number.
+        :param str protocol: (optional) The listener protocol.
+        :param CertificateInstanceIdentity certificate_instance: (optional) The
+               certificate instance used for SSL termination. It is applicable only to
+               `https`
+               protocol.
+        :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
+               associated with the listener.
+        """
+        self.connection_limit = connection_limit
+        self.port = port
+        self.protocol = protocol
+        self.certificate_instance = certificate_instance
+        self.default_pool = default_pool
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPatch':
+        """Initialize a LoadBalancerListenerPatch object from a json dictionary."""
+        args = {}
+        if 'connection_limit' in _dict:
+            args['connection_limit'] = _dict.get('connection_limit')
+        if 'port' in _dict:
+            args['port'] = _dict.get('port')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        if 'certificate_instance' in _dict:
+            args['certificate_instance'] = _dict.get('certificate_instance')
+        if 'default_pool' in _dict:
+            args['default_pool'] = _dict.get('default_pool')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'connection_limit') and self.connection_limit is not None:
+            _dict['connection_limit'] = self.connection_limit
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'certificate_instance'
+                  ) and self.certificate_instance is not None:
+            if isinstance(self.certificate_instance, dict):
+                _dict['certificate_instance'] = self.certificate_instance
+            else:
+                _dict[
+                    'certificate_instance'] = self.certificate_instance.to_dict(
+                    )
+        if hasattr(self, 'default_pool') and self.default_pool is not None:
+            if isinstance(self.default_pool, dict):
+                _dict['default_pool'] = self.default_pool
+            else:
+                _dict['default_pool'] = self.default_pool.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ProtocolEnum(str, Enum):
+        """
+        The listener protocol.
+        """
+        HTTP = 'http'
+        HTTPS = 'https'
+        TCP = 'tcp'
+
+
 class LoadBalancerListenerPolicy():
     """
     LoadBalancerListenerPolicy.
@@ -13875,24 +14750,23 @@ class LoadBalancerListenerPolicy():
     :attr str provisioning_status: The provisioning status of this policy.
     :attr List[LoadBalancerListenerPolicyRuleReference] rules: The rules of this
           policy.
-    :attr LoadBalancerListenerPolicyTargetReference target: (optional)
+    :attr LoadBalancerListenerPolicyTarget target: (optional)
           `LoadBalancerPoolReference` is in the response if `action` is `forward`.
           `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is
           `redirect`.
     """
 
-    def __init__(
-            self,
-            id: str,
-            href: str,
-            name: str,
-            priority: int,
-            action: str,
-            created_at: datetime,
-            provisioning_status: str,
-            rules: List['LoadBalancerListenerPolicyRuleReference'],
-            *,
-            target: 'LoadBalancerListenerPolicyTargetReference' = None) -> None:
+    def __init__(self,
+                 id: str,
+                 href: str,
+                 name: str,
+                 priority: int,
+                 action: str,
+                 created_at: datetime,
+                 provisioning_status: str,
+                 rules: List['LoadBalancerListenerPolicyRuleReference'],
+                 *,
+                 target: 'LoadBalancerListenerPolicyTarget' = None) -> None:
         """
         Initialize a LoadBalancerListenerPolicy object.
 
@@ -13906,7 +14780,7 @@ class LoadBalancerListenerPolicy():
         :param str provisioning_status: The provisioning status of this policy.
         :param List[LoadBalancerListenerPolicyRuleReference] rules: The rules of
                this policy.
-        :param LoadBalancerListenerPolicyTargetReference target: (optional)
+        :param LoadBalancerListenerPolicyTarget target: (optional)
                `LoadBalancerPoolReference` is in the response if `action` is `forward`.
                `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is
                `redirect`.
@@ -14108,6 +14982,95 @@ class LoadBalancerListenerPolicyCollection():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'LoadBalancerListenerPolicyCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LoadBalancerListenerPolicyPatch():
+    """
+    LoadBalancerListenerPolicyPatch.
+
+    :attr str name: (optional) The user-defined name for this policy. Names must be
+          unique within the load balancer listener the policy resides in.
+    :attr int priority: (optional) Priority of the policy. Lower value indicates
+          higher priority.
+    :attr LoadBalancerListenerPolicyPatchTarget target: (optional) When `action` is
+          `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
+          balancer forwards the traffic to. When `action` is `redirect`,
+          `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
+          status code used in the redirect response.
+    """
+
+    def __init__(
+            self,
+            *,
+            name: str = None,
+            priority: int = None,
+            target: 'LoadBalancerListenerPolicyPatchTarget' = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyPatch object.
+
+        :param str name: (optional) The user-defined name for this policy. Names
+               must be unique within the load balancer listener the policy resides in.
+        :param int priority: (optional) Priority of the policy. Lower value
+               indicates higher priority.
+        :param LoadBalancerListenerPolicyPatchTarget target: (optional) When
+               `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the
+               load
+               balancer forwards the traffic to. When `action` is `redirect`,
+               `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
+               status code used in the redirect response.
+        """
+        self.name = name
+        self.priority = priority
+        self.target = target
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyPatch':
+        """Initialize a LoadBalancerListenerPolicyPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'priority' in _dict:
+            args['priority'] = _dict.get('priority')
+        if 'target' in _dict:
+            args['target'] = _dict.get('target')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPolicyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'priority') and self.priority is not None:
+            _dict['priority'] = self.priority
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPolicyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPolicyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPolicyPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -14587,6 +15550,104 @@ class LoadBalancerListenerPolicyRuleCollection():
         return not self == other
 
 
+class LoadBalancerListenerPolicyRulePatch():
+    """
+    LoadBalancerListenerPolicyRulePatch.
+
+    :attr str condition: (optional) The condition of the rule.
+    :attr str field: (optional) HTTP header field. This is only applicable to
+          "header" rule type.
+    :attr str type: (optional) The type of the rule.
+    :attr str value: (optional) Value to be matched for rule condition.
+    """
+
+    def __init__(self,
+                 *,
+                 condition: str = None,
+                 field: str = None,
+                 type: str = None,
+                 value: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyRulePatch object.
+
+        :param str condition: (optional) The condition of the rule.
+        :param str field: (optional) HTTP header field. This is only applicable to
+               "header" rule type.
+        :param str type: (optional) The type of the rule.
+        :param str value: (optional) Value to be matched for rule condition.
+        """
+        self.condition = condition
+        self.field = field
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyRulePatch':
+        """Initialize a LoadBalancerListenerPolicyRulePatch object from a json dictionary."""
+        args = {}
+        if 'condition' in _dict:
+            args['condition'] = _dict.get('condition')
+        if 'field' in _dict:
+            args['field'] = _dict.get('field')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPolicyRulePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'condition') and self.condition is not None:
+            _dict['condition'] = self.condition
+        if hasattr(self, 'field') and self.field is not None:
+            _dict['field'] = self.field
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPolicyRulePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPolicyRulePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPolicyRulePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ConditionEnum(str, Enum):
+        """
+        The condition of the rule.
+        """
+        CONTAINS = 'contains'
+        EQUALS = 'equals'
+        MATCHES_REGEX = 'matches_regex'
+
+    class TypeEnum(str, Enum):
+        """
+        The type of the rule.
+        """
+        HEADER = 'header'
+        HOSTNAME = 'hostname'
+        PATH = 'path'
+
+
 class LoadBalancerListenerPolicyRulePrototype():
     """
     LoadBalancerListenerPolicyRulePrototype.
@@ -14768,7 +15829,7 @@ class LoadBalancerListenerPolicyRuleReference():
         return not self == other
 
 
-class LoadBalancerListenerPolicyTargetReference():
+class LoadBalancerListenerPolicyTarget():
     """
     `LoadBalancerPoolReference` is in the response if `action` is `forward`.
     `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is `redirect`.
@@ -14777,13 +15838,13 @@ class LoadBalancerListenerPolicyTargetReference():
 
     def __init__(self) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyTargetReference object.
+        Initialize a LoadBalancerListenerPolicyTarget object.
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference',
-                'LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL'
+                'LoadBalancerListenerPolicyTargetLoadBalancerPoolReference',
+                'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL'
             ]))
         raise Exception(msg)
 
@@ -14960,6 +16021,61 @@ class LoadBalancerListenerReference():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'LoadBalancerListenerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LoadBalancerPatch():
+    """
+    LoadBalancerPatch.
+
+    :attr str name: (optional) The unique user-defined name for this load balancer.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a LoadBalancerPatch object.
+
+        :param str name: (optional) The unique user-defined name for this load
+               balancer.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerPatch':
+        """Initialize a LoadBalancerPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -15941,6 +17057,90 @@ class LoadBalancerPoolMemberCollection():
         return not self == other
 
 
+class LoadBalancerPoolMemberPatch():
+    """
+    LoadBalancerPoolMemberPatch.
+
+    :attr int port: (optional) The port number of the application running in the
+          server member.
+    :attr int weight: (optional) Weight of the server member. This takes effect only
+          when the load balancing algorithm of its belonging pool is
+          `weighted_round_robin`.
+    :attr LoadBalancerPoolMemberTargetPrototype target: (optional) The pool member
+          target.
+    """
+
+    def __init__(
+            self,
+            *,
+            port: int = None,
+            weight: int = None,
+            target: 'LoadBalancerPoolMemberTargetPrototype' = None) -> None:
+        """
+        Initialize a LoadBalancerPoolMemberPatch object.
+
+        :param int port: (optional) The port number of the application running in
+               the server member.
+        :param int weight: (optional) Weight of the server member. This takes
+               effect only when the load balancing algorithm of its belonging pool is
+               `weighted_round_robin`.
+        :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
+               member target.
+        """
+        self.port = port
+        self.weight = weight
+        self.target = target
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolMemberPatch':
+        """Initialize a LoadBalancerPoolMemberPatch object from a json dictionary."""
+        args = {}
+        if 'port' in _dict:
+            args['port'] = _dict.get('port')
+        if 'weight' in _dict:
+            args['weight'] = _dict.get('weight')
+        if 'target' in _dict:
+            args['target'] = _dict.get('target')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerPoolMemberPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'weight') and self.weight is not None:
+            _dict['weight'] = self.weight
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerPoolMemberPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerPoolMemberPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerPoolMemberPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class LoadBalancerPoolMemberPrototype():
     """
     LoadBalancerPoolMemberPrototype.
@@ -16129,6 +17329,136 @@ class LoadBalancerPoolMemberTargetPrototype():
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(['LoadBalancerPoolMemberTargetPrototypeIP']))
         raise Exception(msg)
+
+
+class LoadBalancerPoolPatch():
+    """
+    LoadBalancerPoolPatch.
+
+    :attr str name: (optional) The user-defined name for this load balancer pool.
+    :attr str algorithm: (optional) The load balancing algorithm.
+    :attr str protocol: (optional) The protocol used for this load balancer pool.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the pool on which the unexpected
+          property value was encountered.
+    :attr LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The health
+          monitor of this pool.
+    :attr LoadBalancerPoolSessionPersistencePatch session_persistence: (optional)
+          The session persistence of this pool.
+    """
+
+    def __init__(
+        self,
+        *,
+        name: str = None,
+        algorithm: str = None,
+        protocol: str = None,
+        health_monitor: 'LoadBalancerPoolHealthMonitorPatch' = None,
+        session_persistence: 'LoadBalancerPoolSessionPersistencePatch' = None
+    ) -> None:
+        """
+        Initialize a LoadBalancerPoolPatch object.
+
+        :param str name: (optional) The user-defined name for this load balancer
+               pool.
+        :param str algorithm: (optional) The load balancing algorithm.
+        :param str protocol: (optional) The protocol used for this load balancer
+               pool.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the pool on
+               which the unexpected property value was encountered.
+        :param LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The
+               health monitor of this pool.
+        :param LoadBalancerPoolSessionPersistencePatch session_persistence:
+               (optional) The session persistence of this pool.
+        """
+        self.name = name
+        self.algorithm = algorithm
+        self.protocol = protocol
+        self.health_monitor = health_monitor
+        self.session_persistence = session_persistence
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolPatch':
+        """Initialize a LoadBalancerPoolPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'algorithm' in _dict:
+            args['algorithm'] = _dict.get('algorithm')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        if 'health_monitor' in _dict:
+            args[
+                'health_monitor'] = LoadBalancerPoolHealthMonitorPatch.from_dict(
+                    _dict.get('health_monitor'))
+        if 'session_persistence' in _dict:
+            args[
+                'session_persistence'] = LoadBalancerPoolSessionPersistencePatch.from_dict(
+                    _dict.get('session_persistence'))
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerPoolPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'algorithm') and self.algorithm is not None:
+            _dict['algorithm'] = self.algorithm
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'health_monitor') and self.health_monitor is not None:
+            _dict['health_monitor'] = self.health_monitor.to_dict()
+        if hasattr(
+                self,
+                'session_persistence') and self.session_persistence is not None:
+            _dict['session_persistence'] = self.session_persistence.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerPoolPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerPoolPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerPoolPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AlgorithmEnum(str, Enum):
+        """
+        The load balancing algorithm.
+        """
+        LEAST_CONNECTIONS = 'least_connections'
+        ROUND_ROBIN = 'round_robin'
+        WEIGHTED_ROUND_ROBIN = 'weighted_round_robin'
+
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol used for this load balancer pool.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the pool on which the unexpected
+        property value was encountered.
+        """
+        HTTP = 'http'
+        TCP = 'tcp'
+        HTTPS = 'https'
 
 
 class LoadBalancerPoolPrototype():
@@ -17023,6 +18353,61 @@ class NetworkACLIdentity():
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(['NetworkACLIdentityById', 'NetworkACLIdentityByHref']))
         raise Exception(msg)
+
+
+class NetworkACLPatch():
+    """
+    NetworkACLPatch.
+
+    :attr str name: (optional) The unique user-defined name for this network ACL.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a NetworkACLPatch object.
+
+        :param str name: (optional) The unique user-defined name for this network
+               ACL.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkACLPatch':
+        """Initialize a NetworkACLPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkACLPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkACLPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkACLPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkACLPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class NetworkACLPrototype():
@@ -19684,6 +21069,62 @@ class PublicGatewayIdentity():
         raise Exception(msg)
 
 
+class PublicGatewayPatch():
+    """
+    PublicGatewayPatch.
+
+    :attr str name: (optional) The user-defined name for this public gateway. Names
+          must be unique within the VPC the public gateway resides in.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a PublicGatewayPatch object.
+
+        :param str name: (optional) The user-defined name for this public gateway.
+               Names must be unique within the VPC the public gateway resides in.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PublicGatewayPatch':
+        """Initialize a PublicGatewayPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PublicGatewayPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PublicGatewayPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PublicGatewayPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PublicGatewayPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class PublicGatewayPrototypeFloatingIp():
     """
     PublicGatewayPrototypeFloatingIp.
@@ -20364,6 +21805,62 @@ class RouteNextHopPrototype():
         raise Exception(msg)
 
 
+class RoutePatch():
+    """
+    RoutePatch.
+
+    :attr str name: (optional) The user-defined name for this route. Names must be
+          unique within the VPC routing table the route resides in.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a RoutePatch object.
+
+        :param str name: (optional) The user-defined name for this route. Names
+               must be unique within the VPC routing table the route resides in.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoutePatch':
+        """Initialize a RoutePatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoutePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoutePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoutePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoutePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class SecurityGroup():
     """
     SecurityGroup.
@@ -20607,6 +22104,62 @@ class SecurityGroupIdentity():
                 'SecurityGroupIdentityByHref'
             ]))
         raise Exception(msg)
+
+
+class SecurityGroupPatch():
+    """
+    SecurityGroupPatch.
+
+    :attr str name: (optional) The user-defined name for this security group.
+          Security group names must be unique, within the scope of an account.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a SecurityGroupPatch object.
+
+        :param str name: (optional) The user-defined name for this security group.
+               Security group names must be unique, within the scope of an account.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupPatch':
+        """Initialize a SecurityGroupPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class SecurityGroupReference():
@@ -21663,6 +23216,90 @@ class SubnetIdentity():
         raise Exception(msg)
 
 
+class SubnetPatch():
+    """
+    SubnetPatch.
+
+    :attr str name: (optional) The user-defined name for this subnet. Names must be
+          unique within the VPC the subnet resides in.
+    :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
+          subnet.
+    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
+          handle internet bound traffic for this subnet.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 network_acl: 'NetworkACLIdentity' = None,
+                 public_gateway: 'PublicGatewayIdentity' = None) -> None:
+        """
+        Initialize a SubnetPatch object.
+
+        :param str name: (optional) The user-defined name for this subnet. Names
+               must be unique within the VPC the subnet resides in.
+        :param NetworkACLIdentity network_acl: (optional) The network ACL to use
+               for this subnet.
+        :param PublicGatewayIdentity public_gateway: (optional) The public gateway
+               to handle internet bound traffic for this subnet.
+        """
+        self.name = name
+        self.network_acl = network_acl
+        self.public_gateway = public_gateway
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SubnetPatch':
+        """Initialize a SubnetPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'network_acl' in _dict:
+            args['network_acl'] = _dict.get('network_acl')
+        if 'public_gateway' in _dict:
+            args['public_gateway'] = _dict.get('public_gateway')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SubnetPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'network_acl') and self.network_acl is not None:
+            if isinstance(self.network_acl, dict):
+                _dict['network_acl'] = self.network_acl
+            else:
+                _dict['network_acl'] = self.network_acl.to_dict()
+        if hasattr(self, 'public_gateway') and self.public_gateway is not None:
+            if isinstance(self.public_gateway, dict):
+                _dict['public_gateway'] = self.public_gateway
+            else:
+                _dict['public_gateway'] = self.public_gateway.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SubnetPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SubnetPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SubnetPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class SubnetPrototype():
     """
     SubnetPrototype.
@@ -22296,6 +23933,60 @@ class VPCIdentity():
             ", ".join(
                 ['VPCIdentityById', 'VPCIdentityByCRN', 'VPCIdentityByHref']))
         raise Exception(msg)
+
+
+class VPCPatch():
+    """
+    VPCPatch.
+
+    :attr str name: (optional) The unique user-defined name for this VPC.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a VPCPatch object.
+
+        :param str name: (optional) The unique user-defined name for this VPC.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPCPatch':
+        """Initialize a VPCPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPCPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPCPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPCPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPCPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class VPCReference():
@@ -23382,6 +25073,132 @@ class VPNGatewayConnectionLocalCIDRs():
         return not self == other
 
 
+class VPNGatewayConnectionPatch():
+    """
+    VPNGatewayConnectionPatch.
+
+    :attr bool admin_state_up: (optional) If set to false, the VPN connection is
+          shut down.
+    :attr str peer_address: (optional) The IP address of the peer VPN gateway.
+    :attr str name: (optional) The user-defined name for this VPN gateway
+          connection.
+    :attr str psk: (optional) The preshared key.
+    :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The Dead
+          Peer Detection settings.
+    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+          configuration. The absence of a policy indicates
+          autonegotiation.
+    """
+
+    def __init__(self,
+                 *,
+                 admin_state_up: bool = None,
+                 peer_address: str = None,
+                 name: str = None,
+                 psk: str = None,
+                 dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
+                 ike_policy: 'IKEPolicyIdentity' = None,
+                 ipsec_policy: 'IPsecPolicyIdentity' = None) -> None:
+        """
+        Initialize a VPNGatewayConnectionPatch object.
+
+        :param bool admin_state_up: (optional) If set to false, the VPN connection
+               is shut down.
+        :param str peer_address: (optional) The IP address of the peer VPN gateway.
+        :param str name: (optional) The user-defined name for this VPN gateway
+               connection.
+        :param str psk: (optional) The preshared key.
+        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
+               Dead Peer Detection settings.
+        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+               configuration. The absence of a policy indicates autonegotiation.
+        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+               configuration. The absence of a policy indicates
+               autonegotiation.
+        """
+        self.admin_state_up = admin_state_up
+        self.peer_address = peer_address
+        self.name = name
+        self.psk = psk
+        self.dead_peer_detection = dead_peer_detection
+        self.ike_policy = ike_policy
+        self.ipsec_policy = ipsec_policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionPatch':
+        """Initialize a VPNGatewayConnectionPatch object from a json dictionary."""
+        args = {}
+        if 'admin_state_up' in _dict:
+            args['admin_state_up'] = _dict.get('admin_state_up')
+        if 'peer_address' in _dict:
+            args['peer_address'] = _dict.get('peer_address')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'psk' in _dict:
+            args['psk'] = _dict.get('psk')
+        if 'dead_peer_detection' in _dict:
+            args[
+                'dead_peer_detection'] = VPNGatewayConnectionDPDPrototype.from_dict(
+                    _dict.get('dead_peer_detection'))
+        if 'ike_policy' in _dict:
+            args['ike_policy'] = _dict.get('ike_policy')
+        if 'ipsec_policy' in _dict:
+            args['ipsec_policy'] = _dict.get('ipsec_policy')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'admin_state_up') and self.admin_state_up is not None:
+            _dict['admin_state_up'] = self.admin_state_up
+        if hasattr(self, 'peer_address') and self.peer_address is not None:
+            _dict['peer_address'] = self.peer_address
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'psk') and self.psk is not None:
+            _dict['psk'] = self.psk
+        if hasattr(
+                self,
+                'dead_peer_detection') and self.dead_peer_detection is not None:
+            _dict['dead_peer_detection'] = self.dead_peer_detection.to_dict()
+        if hasattr(self, 'ike_policy') and self.ike_policy is not None:
+            if isinstance(self.ike_policy, dict):
+                _dict['ike_policy'] = self.ike_policy
+            else:
+                _dict['ike_policy'] = self.ike_policy.to_dict()
+        if hasattr(self, 'ipsec_policy') and self.ipsec_policy is not None:
+            if isinstance(self.ipsec_policy, dict):
+                _dict['ipsec_policy'] = self.ipsec_policy
+            else:
+                _dict['ipsec_policy'] = self.ipsec_policy.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class VPNGatewayConnectionPeerCIDRs():
     """
     VPNGatewayConnectionPeerCIDRs.
@@ -23534,6 +25351,60 @@ class VPNGatewayConnectionReference():
         The resource type.
         """
         VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
+
+
+class VPNGatewayPatch():
+    """
+    VPNGatewayPatch.
+
+    :attr str name: (optional) The user-defined name for this VPN gateway.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a VPNGatewayPatch object.
+
+        :param str name: (optional) The user-defined name for this VPN gateway.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPatch':
+        """Initialize a VPNGatewayPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class VPNGatewayPublicIp():
@@ -23847,9 +25718,9 @@ class VolumeAttachment():
     """
     VolumeAttachment.
 
-    :attr str name: The user-defined name for this volume attachment.
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
+    :attr str name: The user-defined name for this volume attachment.
     :attr str id: The unique identifier for this volume attachment.
     :attr str href: The URL for this volume attachment.
     :attr VolumeAttachmentDevice device: (optional) Information about how the volume
@@ -23890,8 +25761,8 @@ class VolumeAttachment():
                This property may be absent if the volume attachment's `status` is not
                `attached`.
         """
-        self.name = name
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
+        self.name = name
         self.id = id
         self.href = href
         self.device = device
@@ -23904,15 +25775,15 @@ class VolumeAttachment():
     def from_dict(cls, _dict: Dict) -> 'VolumeAttachment':
         """Initialize a VolumeAttachment object from a json dictionary."""
         args = {}
+        if 'delete_volume_on_instance_delete' in _dict:
+            args['delete_volume_on_instance_delete'] = _dict.get(
+                'delete_volume_on_instance_delete')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError(
                 'Required property \'name\' not present in VolumeAttachment JSON'
             )
-        if 'delete_volume_on_instance_delete' in _dict:
-            args['delete_volume_on_instance_delete'] = _dict.get(
-                'delete_volume_on_instance_delete')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
@@ -23961,12 +25832,12 @@ class VolumeAttachment():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'delete_volume_on_instance_delete'
                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
@@ -24140,36 +26011,104 @@ class VolumeAttachmentDevice():
         return not self == other
 
 
+class VolumeAttachmentPatch():
+    """
+    VolumeAttachmentPatch.
+
+    :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
+          deleting the instance the volume will also be deleted.
+    :attr str name: (optional) The user-defined name for this volume attachment.
+    """
+
+    def __init__(self,
+                 *,
+                 delete_volume_on_instance_delete: bool = None,
+                 name: str = None) -> None:
+        """
+        Initialize a VolumeAttachmentPatch object.
+
+        :param bool delete_volume_on_instance_delete: (optional) If set to true,
+               when deleting the instance the volume will also be deleted.
+        :param str name: (optional) The user-defined name for this volume
+               attachment.
+        """
+        self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentPatch':
+        """Initialize a VolumeAttachmentPatch object from a json dictionary."""
+        args = {}
+        if 'delete_volume_on_instance_delete' in _dict:
+            args['delete_volume_on_instance_delete'] = _dict.get(
+                'delete_volume_on_instance_delete')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeAttachmentPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'delete_volume_on_instance_delete'
+                  ) and self.delete_volume_on_instance_delete is not None:
+            _dict[
+                'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeAttachmentPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeAttachmentPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeAttachmentPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class VolumeAttachmentPrototypeInstanceByImageContext():
     """
     VolumeAttachmentPrototypeInstanceByImageContext.
 
-    :attr str name: (optional) The user-defined name for this volume attachment.
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
-    :attr VolumePrototypeInstanceByImageContext volume: The identity of the volume
-          to attach to the instance, or a prototype object for a
-          new volume.
+    :attr str name: (optional) The user-defined name for this volume attachment.
+    :attr VolumePrototypeInstanceByImageContext volume: A prototype object for a new
+          volume.
     """
 
     def __init__(self,
                  volume: 'VolumePrototypeInstanceByImageContext',
                  *,
-                 name: str = None,
-                 delete_volume_on_instance_delete: bool = None) -> None:
+                 delete_volume_on_instance_delete: bool = None,
+                 name: str = None) -> None:
         """
         Initialize a VolumeAttachmentPrototypeInstanceByImageContext object.
 
-        :param VolumePrototypeInstanceByImageContext volume: The identity of the
-               volume to attach to the instance, or a prototype object for a
-               new volume.
-        :param str name: (optional) The user-defined name for this volume
-               attachment.
+        :param VolumePrototypeInstanceByImageContext volume: A prototype object for
+               a new volume.
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
+        :param str name: (optional) The user-defined name for this volume
+               attachment.
         """
-        self.name = name
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
+        self.name = name
         self.volume = volume
 
     @classmethod
@@ -24178,11 +26117,11 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
             _dict: Dict) -> 'VolumeAttachmentPrototypeInstanceByImageContext':
         """Initialize a VolumeAttachmentPrototypeInstanceByImageContext object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'delete_volume_on_instance_delete' in _dict:
             args['delete_volume_on_instance_delete'] = _dict.get(
                 'delete_volume_on_instance_delete')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'volume' in _dict:
             args['volume'] = VolumePrototypeInstanceByImageContext.from_dict(
                 _dict.get('volume'))
@@ -24200,12 +26139,12 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'delete_volume_on_instance_delete'
                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'volume') and self.volume is not None:
             _dict['volume'] = self.volume.to_dict()
         return _dict
@@ -24237,9 +26176,9 @@ class VolumeAttachmentPrototypeInstanceContext():
     """
     VolumeAttachmentPrototypeInstanceContext.
 
-    :attr str name: (optional) The user-defined name for this volume attachment.
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
+    :attr str name: (optional) The user-defined name for this volume attachment.
     :attr VolumeAttachmentPrototypeInstanceContextVolume volume: The identity of the
           volume to attach to the instance, or a prototype object for a new
           volume.
@@ -24248,21 +26187,21 @@ class VolumeAttachmentPrototypeInstanceContext():
     def __init__(self,
                  volume: 'VolumeAttachmentPrototypeInstanceContextVolume',
                  *,
-                 name: str = None,
-                 delete_volume_on_instance_delete: bool = None) -> None:
+                 delete_volume_on_instance_delete: bool = None,
+                 name: str = None) -> None:
         """
         Initialize a VolumeAttachmentPrototypeInstanceContext object.
 
         :param VolumeAttachmentPrototypeInstanceContextVolume volume: The identity
                of the volume to attach to the instance, or a prototype object for a new
                volume.
-        :param str name: (optional) The user-defined name for this volume
-               attachment.
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
+        :param str name: (optional) The user-defined name for this volume
+               attachment.
         """
-        self.name = name
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
+        self.name = name
         self.volume = volume
 
     @classmethod
@@ -24270,11 +26209,11 @@ class VolumeAttachmentPrototypeInstanceContext():
                   _dict: Dict) -> 'VolumeAttachmentPrototypeInstanceContext':
         """Initialize a VolumeAttachmentPrototypeInstanceContext object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'delete_volume_on_instance_delete' in _dict:
             args['delete_volume_on_instance_delete'] = _dict.get(
                 'delete_volume_on_instance_delete')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'volume' in _dict:
             args['volume'] = _dict.get('volume')
         else:
@@ -24291,12 +26230,12 @@ class VolumeAttachmentPrototypeInstanceContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'delete_volume_on_instance_delete'
                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'volume') and self.volume is not None:
             if isinstance(self.volume, dict):
                 _dict['volume'] = self.volume
@@ -24820,6 +26759,60 @@ class VolumeIdentity():
                 'VolumeIdentityByHref'
             ]))
         raise Exception(msg)
+
+
+class VolumePatch():
+    """
+    VolumePatch.
+
+    :attr str name: (optional) The unique user-defined name for this volume.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a VolumePatch object.
+
+        :param str name: (optional) The unique user-defined name for this volume.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumePatch':
+        """Initialize a VolumePatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class VolumeProfile():
@@ -26886,9 +28879,7 @@ class ImagePrototypeImageByFile(ImagePrototype):
     :attr str name: (optional) The unique user-defined name for this image. Names
           starting with "ibm-" are not allowed. If unspecified, the name will be a
           hyphenated list of randomly-selected words.
-    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
-          use. If unspecified, the account's [default resource
-          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr ResourceGroupIdentity resource_group: (optional)
     :attr ImageFilePrototype file: The file from which to create the image.
     :attr OperatingSystemIdentity operating_system: The identity of the [supported
           operating
@@ -26915,10 +28906,7 @@ class ImagePrototypeImageByFile(ImagePrototype):
         :param str name: (optional) The unique user-defined name for this image.
                Names starting with "ibm-" are not allowed. If unspecified, the name will
                be a hyphenated list of randomly-selected words.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
+        :param ResourceGroupIdentity resource_group: (optional)
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -27678,11 +29666,9 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) Collection of volume attachments.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the
-          VPC tied to the subnets of the instance's network interfaces.
-    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
-          use. If unspecified, the account's [default resource
-          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+          part of. If provided, must match the VPC tied to the subnets of the instance's
+          network interfaces.
+    :attr ResourceGroupIdentity resource_group: (optional)
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
           interface.
     :attr ZoneIdentity zone: The identity of the zone to provision the virtual
@@ -27741,12 +29727,9 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) Collection of volume attachments.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the
-               VPC tied to the subnets of the instance's network interfaces.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
+               to be a part of. If provided, must match the VPC tied to the subnets of the
+               instance's network interfaces.
+        :param ResourceGroupIdentity resource_group: (optional)
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -28527,10 +30510,10 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity(
         raise Exception(msg)
 
 
-class LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL(
-        LoadBalancerListenerPolicyTargetReference):
+class LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(
+        LoadBalancerListenerPolicyTarget):
     """
-    LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL.
+    LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL.
 
     :attr int http_status_code: The http status code in the redirect response.
     :attr str url: The redirect target URL.
@@ -28538,7 +30521,7 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirec
 
     def __init__(self, http_status_code: int, url: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL object.
+        Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL object.
 
         :param int http_status_code: The http status code in the redirect response.
         :param str url: The redirect target URL.
@@ -28550,26 +30533,26 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirec
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL':
-        """Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL':
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL object from a json dictionary."""
         args = {}
         if 'http_status_code' in _dict:
             args['http_status_code'] = _dict.get('http_status_code')
         else:
             raise ValueError(
-                'Required property \'http_status_code\' not present in LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL JSON'
+                'Required property \'http_status_code\' not present in LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL JSON'
             )
         if 'url' in _dict:
             args['url'] = _dict.get('url')
         else:
             raise ValueError(
-                'Required property \'url\' not present in LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL JSON'
+                'Required property \'url\' not present in LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -28587,12 +30570,12 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirec
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL'
+        'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -28601,16 +30584,16 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirec
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL'
+        'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
-        LoadBalancerListenerPolicyTargetReference):
+class LoadBalancerListenerPolicyTargetLoadBalancerPoolReference(
+        LoadBalancerListenerPolicyTarget):
     """
-    LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference.
+    LoadBalancerListenerPolicyTargetLoadBalancerPoolReference.
 
     :attr str id: The unique identifier for this load balancer pool.
     :attr str href: The pool's canonical URL.
@@ -28619,7 +30602,7 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
 
     def __init__(self, id: str, href: str, name: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference object.
+        Initialize a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object.
 
         :param str id: The unique identifier for this load balancer pool.
         :param str href: The pool's canonical URL.
@@ -28633,32 +30616,32 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference':
-        """Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetLoadBalancerPoolReference':
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference JSON'
+                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
             )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference JSON'
+                'Required property \'href\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'name\' not present in LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference JSON'
+                'Required property \'name\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -28677,12 +30660,11 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
-        self, other:
-        'LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference'
+        self, other: 'LoadBalancerListenerPolicyTargetLoadBalancerPoolReference'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -28690,8 +30672,7 @@ class LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
         return self.__dict__ == other.__dict__
 
     def __ne__(
-        self, other:
-        'LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference'
+        self, other: 'LoadBalancerListenerPolicyTargetLoadBalancerPoolReference'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
@@ -29366,8 +31347,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
           all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. In a rule collection, this always
-          refers to the next item in the collection. If absent, this is the last rule.
+          immediately before. In a rule collection, this always refers to the next item in
+          the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
     :attr str ip_version: The IP version for this rule.
     """
@@ -29404,9 +31385,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
         :param datetime created_at: The date and time that the rule was created.
         :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
-               is immediately before. In a rule collection, this always
-               refers to the next item in the collection. If absent, this is the last
-               rule.
+               is immediately before. In a rule collection, this always refers to the next
+               item in the collection. If absent, this is the last rule.
         """
         # pylint: disable=super-init-not-called
         self.id = id
@@ -29425,71 +31405,7 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
     def from_dict(cls,
                   _dict: Dict) -> 'NetworkACLRuleItemNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRuleItemNetworkACLRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'destination' in _dict:
-            args['destination'] = _dict.get('destination')
-        else:
-            raise ValueError(
-                'Required property \'destination\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
-        else:
-            raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        if 'ip_version' in _dict:
-            args['ip_version'] = _dict.get('ip_version')
-        else:
-            raise ValueError(
-                'Required property \'ip_version\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
-            )
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -29498,30 +31414,7 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'before') and self.before is not None:
-            _dict['before'] = self.before.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -29592,8 +31485,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
           all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. In a rule collection, this always
-          refers to the next item in the collection. If absent, this is the last rule.
+          immediately before. In a rule collection, this always refers to the next item in
+          the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
     :attr str ip_version: The IP version for this rule.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
@@ -29636,9 +31529,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
         :param datetime created_at: The date and time that the rule was created.
         :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
-               is immediately before. In a rule collection, this always
-               refers to the next item in the collection. If absent, this is the last
-               rule.
+               is immediately before. In a rule collection, this always refers to the next
+               item in the collection. If absent, this is the last rule.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
                all codes are allowed. This can only be specified if type is also
                specified.
@@ -29839,8 +31731,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
           all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. In a rule collection, this always
-          refers to the next item in the collection. If absent, this is the last rule.
+          immediately before. In a rule collection, this always refers to the next item in
+          the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
     :attr str ip_version: The IP version for this rule.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
@@ -29889,9 +31781,8 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         :param datetime created_at: The date and time that the rule was created.
         :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
-               is immediately before. In a rule collection, this always
-               refers to the next item in the collection. If absent, this is the last
-               rule.
+               is immediately before. In a rule collection, this always refers to the next
+               item in the collection. If absent, this is the last rule.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
                destination port range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -30105,8 +31996,7 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
           block `0.0.0.0/0` applies to all addresses.
     :attr str protocol: (optional) The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after
-          all existing rules.
+          immediately before. Specify `null` to move this rule after all existing rules.
     """
 
     def __init__(self,
@@ -30132,8 +32022,8 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
                CIDR block `0.0.0.0/0` applies to all addresses.
         :param str protocol: (optional) The protocol to enforce.
         :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after
-               all existing rules.
+               immediately before. Specify `null` to move this rule after all existing
+               rules.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -30148,22 +32038,7 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
     def from_dict(
             cls, _dict: Dict) -> 'NetworkACLRulePatchNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePatchNetworkACLRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        if 'destination' in _dict:
-            args['destination'] = _dict.get('destination')
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -30172,25 +32047,7 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'before') and self.before is not None:
-            if isinstance(self.before, dict):
-                _dict['before'] = self.before
-            else:
-                _dict['before'] = self.before.to_dict()
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -30251,8 +32108,7 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
           block `0.0.0.0/0` applies to all addresses.
     :attr str protocol: (optional) The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after
-          all existing rules.
+          immediately before. Specify `null` to move this rule after all existing rules.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
@@ -30284,8 +32140,8 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
                CIDR block `0.0.0.0/0` applies to all addresses.
         :param str protocol: (optional) The protocol to enforce.
         :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after
-               all existing rules.
+               immediately before. Specify `null` to move this rule after all existing
+               rules.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
                all codes are allowed. This can only be specified if type is also
                specified.
@@ -30419,8 +32275,7 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
           block `0.0.0.0/0` applies to all addresses.
     :attr str protocol: (optional) The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after
-          all existing rules.
+          immediately before. Specify `null` to move this rule after all existing rules.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
@@ -30458,8 +32313,8 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
                CIDR block `0.0.0.0/0` applies to all addresses.
         :param str protocol: (optional) The protocol to enforce.
         :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after
-               all existing rules.
+               immediately before. Specify `null` to move this rule after all existing
+               rules.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
                destination port range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -30649,40 +32504,7 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
         cls, _dict: Dict
     ) -> 'NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
-            )
-        if 'destination' in _dict:
-            args['destination'] = _dict.get('destination')
-        else:
-            raise ValueError(
-                'Required property \'destination\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
-            )
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
-            )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
-        else:
-            raise ValueError(
-                'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
-            )
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -30691,20 +32513,7 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -31151,8 +32960,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
           `0.0.0.0/0` applies to all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be
-          inserted after all existing rules.
+          immediately before. If omitted, this rule will be inserted after all existing
+          rules.
     """
 
     def __init__(self,
@@ -31179,8 +32988,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
         :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be
-               inserted after all existing rules.
+               rule immediately before. If omitted, this rule will be inserted after all
+               existing rules.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -31196,42 +33005,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
             cls,
             _dict: Dict) -> 'NetworkACLRulePrototypeNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePrototypeNetworkACLRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
-            )
-        if 'destination' in _dict:
-            args['destination'] = _dict.get('destination')
-        else:
-            raise ValueError(
-                'Required property \'destination\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
-            )
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
-            )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
-        else:
-            raise ValueError(
-                'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -31240,25 +33014,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'before') and self.before is not None:
-            if isinstance(self.before, dict):
-                _dict['before'] = self.before
-            else:
-                _dict['before'] = self.before.to_dict()
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -31323,8 +33079,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
           `0.0.0.0/0` applies to all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be
-          inserted after all existing rules.
+          immediately before. If omitted, this rule will be inserted after all existing
+          rules.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
@@ -31357,8 +33113,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
         :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be
-               inserted after all existing rules.
+               rule immediately before. If omitted, this rule will be inserted after all
+               existing rules.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
                all codes are allowed. This can only be specified if type is also
                specified.
@@ -31516,8 +33272,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
           `0.0.0.0/0` applies to all addresses.
     :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be
-          inserted after all existing rules.
+          immediately before. If omitted, this rule will be inserted after all existing
+          rules.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
@@ -31556,8 +33312,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
         :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be
-               inserted after all existing rules.
+               rule immediately before. If omitted, this rule will be inserted after all
+               existing rules.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
                destination port range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -31787,71 +33543,7 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
     def from_dict(cls,
                   _dict: Dict) -> 'NetworkACLRuleNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRuleNetworkACLRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'destination' in _dict:
-            args['destination'] = _dict.get('destination')
-        else:
-            raise ValueError(
-                'Required property \'destination\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
-        else:
-            raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        if 'ip_version' in _dict:
-            args['ip_version'] = _dict.get('ip_version')
-        else:
-            raise ValueError(
-                'Required property \'ip_version\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
-            )
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -31860,30 +33552,7 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'before') and self.before is not None:
-            _dict['before'] = self.before.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -33359,13 +35028,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
     or
     `code`.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -33385,13 +35048,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolAll object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-               security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePatchRemote remote: (optional)
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -33412,16 +35069,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
             cls, _dict: Dict
     ) -> 'SecurityGroupRulePatchSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        if 'ip_version' in _dict:
-            args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -33430,19 +35078,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'remote') and self.remote is not None:
-            if isinstance(self.remote, dict):
-                _dict['remote'] = self.remote
-            else:
-                _dict['remote'] = self.remote.to_dict()
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -33501,13 +35137,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
     specified and code is not specified, then traffic is allowed with the specified type
     for all codes.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -33531,13 +35161,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-               security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePatchRemote remote: (optional)
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -33657,13 +35281,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
     `port_max`. Either both should be set, or neither. When neither is set then traffic is
     allowed on all ports. For a single port, set both to the same value.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -33687,13 +35305,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-               security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePatchRemote remote: (optional)
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -33979,13 +35591,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePrototypeRemote remote: (optional)
     """
 
     def __init__(self,
@@ -34005,13 +35611,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses
-               or security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePrototypeRemote remote: (optional)
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
@@ -34024,20 +35624,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
         cls, _dict: Dict
     ) -> 'SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll JSON'
-            )
-        if 'ip_version' in _dict:
-            args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -34046,19 +35633,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'remote') and self.remote is not None:
-            if isinstance(self.remote, dict):
-                _dict['remote'] = self.remote
-            else:
-                _dict['remote'] = self.remote.to_dict()
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -34125,13 +35700,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePrototypeRemote remote: (optional)
     :attr int code: (optional) The ICMP traffic code to allow.
     :attr int type: (optional) The ICMP traffic type to allow.
     """
@@ -34155,13 +35724,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses
-               or security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePrototypeRemote remote: (optional)
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
@@ -34285,13 +35848,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
+    :attr SecurityGroupRulePrototypeRemote remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
     """
@@ -34315,13 +35872,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses
-               or security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
+        :param SecurityGroupRulePrototypeRemote remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
@@ -34679,12 +36230,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRuleRemote remote: (optional) The IP addresses or security
-          groups from which this rule allows traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic is allowed from any source (or to any
-          source, for outbound rules).
+    :attr SecurityGroupRuleRemote remote: (optional)
     """
 
     def __init__(self,
@@ -34706,13 +36252,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRuleRemote remote: (optional) The IP addresses or
-               security groups from which this rule allows traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic is allowed from any source (or to
-               any
-               source, for outbound rules).
+        :param SecurityGroupRuleRemote remote: (optional)
         """
         # pylint: disable=super-init-not-called
         self.id = id
@@ -34726,26 +36266,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
             cls,
             _dict: Dict) -> 'SecurityGroupRuleSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRuleSecurityGroupRuleProtocolAll object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON'
-            )
-        if 'direction' in _dict:
-            args['direction'] = _dict.get('direction')
-        else:
-            raise ValueError(
-                'Required property \'direction\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON'
-            )
-        if 'ip_version' in _dict:
-            args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
-        return cls(**args)
+        return cls(**_dict)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -34754,21 +36275,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
-        if hasattr(self, 'remote') and self.remote is not None:
-            if isinstance(self.remote, dict):
-                _dict['remote'] = self.remote
-            else:
-                _dict['remote'] = self.remote.to_dict()
-        return _dict
+        return vars(self)
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -34833,12 +36340,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRuleRemote remote: (optional) The IP addresses or security
-          groups from which this rule allows traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic is allowed from any source (or to any
-          source, for outbound rules).
+    :attr SecurityGroupRuleRemote remote: (optional)
     :attr int code: (optional) The ICMP traffic code to allow.
     :attr int type: (optional) The ICMP traffic type to allow.
     """
@@ -34864,13 +36366,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRuleRemote remote: (optional) The IP addresses or
-               security groups from which this rule allows traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic is allowed from any source (or to
-               any
-               source, for outbound rules).
+        :param SecurityGroupRuleRemote remote: (optional)
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
@@ -35001,12 +36497,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRuleRemote remote: (optional) The IP addresses or security
-          groups from which this rule allows traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic is allowed from any source (or to any
-          source, for outbound rules).
+    :attr SecurityGroupRuleRemote remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
     """
@@ -35032,13 +36523,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRuleRemote remote: (optional) The IP addresses or
-               security groups from which this rule allows traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic is allowed from any source (or to
-               any
-               source, for outbound rules).
+        :param SecurityGroupRuleRemote remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
@@ -35343,7 +36828,7 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
           unique within the VPC the subnet resides in. If unspecified, the name will be a
           hyphenated list of randomly-selected words.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
-          subnet.
+          subnet. If unspecified, the default network ACL for the VPC is used.
     :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
           handle internet bound traffic for this subnet.
     :attr VPCIdentity vpc: The VPC the subnet is to be a part of.
@@ -35380,7 +36865,8 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
                must be unique within the VPC the subnet resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
         :param NetworkACLIdentity network_acl: (optional) The network ACL to use
-               for this subnet.
+               for this subnet. If unspecified, the default network ACL for the VPC is
+               used.
         :param PublicGatewayIdentity public_gateway: (optional) The public gateway
                to handle internet bound traffic for this subnet.
         :param ZoneIdentity zone: (optional) The zone the subnet is to reside in.
@@ -35481,7 +36967,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
           unique within the VPC the subnet resides in. If unspecified, the name will be a
           hyphenated list of randomly-selected words.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
-          subnet.
+          subnet. If unspecified, the default network ACL for the VPC is used.
     :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
           handle internet bound traffic for this subnet.
     :attr VPCIdentity vpc: The VPC the subnet is to be a part of.
@@ -35513,7 +36999,8 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
                must be unique within the VPC the subnet resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
         :param NetworkACLIdentity network_acl: (optional) The network ACL to use
-               for this subnet.
+               for this subnet. If unspecified, the default network ACL for the VPC is
+               used.
         :param PublicGatewayIdentity public_gateway: (optional) The public gateway
                to handle internet bound traffic for this subnet.
         """
@@ -36132,9 +37619,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
-    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
-          use. If unspecified, the account's [default resource
-          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr ResourceGroupIdentity resource_group: (optional)
     :attr ZoneIdentity zone: The location of the volume.
     :attr int capacity: The capacity of the volume in gigabytes. Note that the
           specified minimum and maximum capacity values for creating or updating volumes
@@ -36165,10 +37650,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                be
                `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
+        :param ResourceGroupIdentity resource_group: (optional)
         """
         # pylint: disable=super-init-not-called
         self.name = name
