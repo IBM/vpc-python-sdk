@@ -51,7 +51,6 @@ class TestListVpcs():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -151,7 +150,6 @@ class TestCreateVpc():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -254,7 +252,6 @@ class TestDeleteVpc():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -313,7 +310,6 @@ class TestGetVpc():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -382,7 +378,6 @@ class TestUpdateVpc():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -402,19 +397,23 @@ class TestUpdateVpc():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VPCPatch model
+        vpc_patch_model = {}
+        vpc_patch_model['name'] = 'my-vpc'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-vpc'
+        vpc_patch = vpc_patch_model
 
         # Invoke method
-        response = service.update_vpc(id, name=name, headers={})
+        response = service.update_vpc(id, vpc_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-vpc'
+        assert req_body == vpc_patch
 
     @responses.activate
     def test_update_vpc_value_error(self):
@@ -430,13 +429,18 @@ class TestUpdateVpc():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VPCPatch model
+        vpc_patch_model = {}
+        vpc_patch_model['name'] = 'my-vpc'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-vpc'
+        vpc_patch = vpc_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "vpc_patch": vpc_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -456,7 +460,6 @@ class TestGetVpcDefaultNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -527,7 +530,6 @@ class TestGetVpcDefaultSecurityGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -598,7 +600,6 @@ class TestListVpcAddressPrefixes():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -704,7 +705,6 @@ class TestCreateVpcAddressPrefix():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -804,7 +804,6 @@ class TestDeleteVpcAddressPrefix():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -868,7 +867,6 @@ class TestGetVpcAddressPrefix():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -942,7 +940,6 @@ class TestUpdateVpcAddressPrefix():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -963,17 +960,20 @@ class TestUpdateVpcAddressPrefix():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a AddressPrefixPatch model
+        address_prefix_patch_model = {}
+        address_prefix_patch_model['name'] = 'my-address-prefix-2'
+        address_prefix_patch_model['is_default'] = False
+
         # Set up parameter values
         vpc_id = 'testString'
         id = 'testString'
-        name = 'my-address-prefix-2'
-        is_default = False
+        address_prefix_patch = address_prefix_patch_model
 
         # Invoke method
         response = service.update_vpc_address_prefix(vpc_id,
                                                      id,
-                                                     name=name,
-                                                     is_default=is_default,
+                                                     address_prefix_patch,
                                                      headers={})
 
         # Check for correct operation
@@ -981,8 +981,7 @@ class TestUpdateVpcAddressPrefix():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-address-prefix-2'
-        assert req_body['is_default'] == False
+        assert req_body == address_prefix_patch
 
     @responses.activate
     def test_update_vpc_address_prefix_value_error(self):
@@ -999,16 +998,21 @@ class TestUpdateVpcAddressPrefix():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a AddressPrefixPatch model
+        address_prefix_patch_model = {}
+        address_prefix_patch_model['name'] = 'my-address-prefix-2'
+        address_prefix_patch_model['is_default'] = False
+
         # Set up parameter values
         vpc_id = 'testString'
         id = 'testString'
-        name = 'my-address-prefix-2'
-        is_default = False
+        address_prefix_patch = address_prefix_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "vpc_id": vpc_id,
             "id": id,
+            "address_prefix_patch": address_prefix_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -1028,7 +1032,6 @@ class TestListVpcRoutes():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1128,7 +1131,6 @@ class TestCreateVpcRoute():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1235,7 +1237,6 @@ class TestDeleteVpcRoute():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1299,7 +1300,6 @@ class TestGetVpcRoute():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1373,7 +1373,6 @@ class TestUpdateVpcRoute():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1394,20 +1393,24 @@ class TestUpdateVpcRoute():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a RoutePatch model
+        route_patch_model = {}
+        route_patch_model['name'] = 'my-route-2'
+
         # Set up parameter values
         vpc_id = 'testString'
         id = 'testString'
-        name = 'my-route-2'
+        route_patch = route_patch_model
 
         # Invoke method
-        response = service.update_vpc_route(vpc_id, id, name=name, headers={})
+        response = service.update_vpc_route(vpc_id, id, route_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-route-2'
+        assert req_body == route_patch
 
     @responses.activate
     def test_update_vpc_route_value_error(self):
@@ -1424,15 +1427,20 @@ class TestUpdateVpcRoute():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a RoutePatch model
+        route_patch_model = {}
+        route_patch_model['name'] = 'my-route-2'
+
         # Set up parameter values
         vpc_id = 'testString'
         id = 'testString'
-        name = 'my-route-2'
+        route_patch = route_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "vpc_id": vpc_id,
             "id": id,
+            "route_patch": route_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -1463,7 +1471,6 @@ class TestListSubnets():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1559,7 +1566,6 @@ class TestCreateSubnet():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1604,28 +1610,16 @@ class TestCreateSubnet():
         # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_model = {}
         subnet_prototype_model['name'] = 'my-subnet'
-        subnet_prototype_model['network_acl'] = {
-            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-        }
+        subnet_prototype_model['network_acl'] = network_acl_identity_model
         subnet_prototype_model['public_gateway'] = public_gateway_identity_model
         subnet_prototype_model['ip_version'] = 'ipv4'
         subnet_prototype_model['resource_group'] = resource_group_identity_model
-        subnet_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        subnet_prototype_model['vpc'] = vpc_identity_model
         subnet_prototype_model['total_ipv4_address_count'] = 256
         subnet_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        subnet_prototype = {
-            "total_ipv4_address_count": 256,
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            },
-            "zone": {
-                "name": "us-south-1"
-            }
-        }
+        subnet_prototype = subnet_prototype_model
 
         # Invoke method
         response = service.create_subnet(subnet_prototype, headers={})
@@ -1676,28 +1670,16 @@ class TestCreateSubnet():
         # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_model = {}
         subnet_prototype_model['name'] = 'my-subnet'
-        subnet_prototype_model['network_acl'] = {
-            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-        }
+        subnet_prototype_model['network_acl'] = network_acl_identity_model
         subnet_prototype_model['public_gateway'] = public_gateway_identity_model
         subnet_prototype_model['ip_version'] = 'ipv4'
         subnet_prototype_model['resource_group'] = resource_group_identity_model
-        subnet_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        subnet_prototype_model['vpc'] = vpc_identity_model
         subnet_prototype_model['total_ipv4_address_count'] = 256
         subnet_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
-        subnet_prototype = {
-            "total_ipv4_address_count": 256,
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            },
-            "zone": {
-                "name": "us-south-1"
-            }
-        }
+        subnet_prototype = subnet_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -1721,7 +1703,6 @@ class TestDeleteSubnet():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1780,7 +1761,6 @@ class TestGetSubnet():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1849,7 +1829,6 @@ class TestUpdateSubnet():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -1879,29 +1858,25 @@ class TestUpdateSubnet():
         public_gateway_identity_model[
             'id'] = 'dc5431ef-1fc6-4861-adc9-a59d077d1241'
 
+        # Construct a dict representation of a SubnetPatch model
+        subnet_patch_model = {}
+        subnet_patch_model['name'] = 'my-subnet'
+        subnet_patch_model['network_acl'] = network_acl_identity_model
+        subnet_patch_model['public_gateway'] = public_gateway_identity_model
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-subnet'
-        network_acl = {"id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"}
-        public_gateway = public_gateway_identity_model
+        subnet_patch = subnet_patch_model
 
         # Invoke method
-        response = service.update_subnet(id,
-                                         name=name,
-                                         network_acl=network_acl,
-                                         public_gateway=public_gateway,
-                                         headers={})
+        response = service.update_subnet(id, subnet_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-subnet'
-        assert req_body['network_acl'] == {
-            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-        }
-        assert req_body['public_gateway'] == public_gateway_identity_model
+        assert req_body == subnet_patch
 
     @responses.activate
     def test_update_subnet_value_error(self):
@@ -1927,15 +1902,20 @@ class TestUpdateSubnet():
         public_gateway_identity_model[
             'id'] = 'dc5431ef-1fc6-4861-adc9-a59d077d1241'
 
+        # Construct a dict representation of a SubnetPatch model
+        subnet_patch_model = {}
+        subnet_patch_model['name'] = 'my-subnet'
+        subnet_patch_model['network_acl'] = network_acl_identity_model
+        subnet_patch_model['public_gateway'] = public_gateway_identity_model
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-subnet'
-        network_acl = {"id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"}
-        public_gateway = public_gateway_identity_model
+        subnet_patch = subnet_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "subnet_patch": subnet_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -1955,7 +1935,6 @@ class TestGetSubnetNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2024,7 +2003,6 @@ class TestReplaceSubnetNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2111,7 +2089,6 @@ class TestUnsetSubnetPublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2172,7 +2149,6 @@ class TestGetSubnetPublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2243,7 +2219,6 @@ class TestSetSubnetPublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2343,7 +2318,6 @@ class TestListImages():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2356,7 +2330,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2397,7 +2371,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2418,7 +2392,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "images": [{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2445,7 +2419,6 @@ class TestCreateImage():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2458,12 +2431,17 @@ class TestCreateImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
+
+        # Construct a dict representation of a EncryptionKeyReference model
+        encryption_key_reference_model = {}
+        encryption_key_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
         # Construct a dict representation of a ResourceGroupIdentityById model
         resource_group_identity_model = {}
@@ -2472,29 +2450,24 @@ class TestCreateImage():
         # Construct a dict representation of a ImageFilePrototype model
         image_file_prototype_model = {}
         image_file_prototype_model[
-            'href'] = 'cos://us-south/custom-image-vpc-bucket/customImage-0.vhd'
+            'href'] = 'cos://us-south/my-bucket/my-image.qcow2'
 
         # Construct a dict representation of a OperatingSystemIdentityByName model
         operating_system_identity_model = {}
-        operating_system_identity_model['name'] = 'ubuntu-16-amd64'
+        operating_system_identity_model['name'] = 'debian-9-amd64'
 
         # Construct a dict representation of a ImagePrototypeImageByFile model
         image_prototype_model = {}
         image_prototype_model['name'] = 'my-image'
+        image_prototype_model['encrypted_data_key'] = 'testString'
+        image_prototype_model['encryption_key'] = encryption_key_reference_model
         image_prototype_model['resource_group'] = resource_group_identity_model
         image_prototype_model['file'] = image_file_prototype_model
         image_prototype_model[
             'operating_system'] = operating_system_identity_model
 
         # Set up parameter values
-        image_prototype = {
-            "file": {
-                "href": "cos://us-south/my-bucket/my-image.qcow2"
-            },
-            "operating_system": {
-                "name": "debian-9-amd64"
-            }
-        }
+        image_prototype = image_prototype_model
 
         # Invoke method
         response = service.create_image(image_prototype, headers={})
@@ -2513,12 +2486,17 @@ class TestCreateImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
+
+        # Construct a dict representation of a EncryptionKeyReference model
+        encryption_key_reference_model = {}
+        encryption_key_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
         # Construct a dict representation of a ResourceGroupIdentityById model
         resource_group_identity_model = {}
@@ -2527,29 +2505,24 @@ class TestCreateImage():
         # Construct a dict representation of a ImageFilePrototype model
         image_file_prototype_model = {}
         image_file_prototype_model[
-            'href'] = 'cos://us-south/custom-image-vpc-bucket/customImage-0.vhd'
+            'href'] = 'cos://us-south/my-bucket/my-image.qcow2'
 
         # Construct a dict representation of a OperatingSystemIdentityByName model
         operating_system_identity_model = {}
-        operating_system_identity_model['name'] = 'ubuntu-16-amd64'
+        operating_system_identity_model['name'] = 'debian-9-amd64'
 
         # Construct a dict representation of a ImagePrototypeImageByFile model
         image_prototype_model = {}
         image_prototype_model['name'] = 'my-image'
+        image_prototype_model['encrypted_data_key'] = 'testString'
+        image_prototype_model['encryption_key'] = encryption_key_reference_model
         image_prototype_model['resource_group'] = resource_group_identity_model
         image_prototype_model['file'] = image_file_prototype_model
         image_prototype_model[
             'operating_system'] = operating_system_identity_model
 
         # Set up parameter values
-        image_prototype = {
-            "file": {
-                "href": "cos://us-south/my-bucket/my-image.qcow2"
-            },
-            "operating_system": {
-                "name": "debian-9-amd64"
-            }
-        }
+        image_prototype = image_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -2573,7 +2546,6 @@ class TestDeleteImage():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2632,7 +2604,6 @@ class TestGetImage():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2645,7 +2616,7 @@ class TestGetImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images/testString')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2669,7 +2640,7 @@ class TestGetImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images/testString')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2701,7 +2672,6 @@ class TestUpdateImage():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2714,26 +2684,30 @@ class TestUpdateImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images/testString')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a ImagePatch model
+        image_patch_model = {}
+        image_patch_model['name'] = 'my-image'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-image'
+        image_patch = image_patch_model
 
         # Invoke method
-        response = service.update_image(id, name=name, headers={})
+        response = service.update_image(id, image_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-image'
+        assert req_body == image_patch
 
     @responses.activate
     def test_update_image_value_error(self):
@@ -2742,20 +2716,25 @@ class TestUpdateImage():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/images/testString')
-        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
+        mock_response = '{"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image", "minimum_provisioned_size": 24, "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "created_at": "2019-01-01T12:00:00", "file": {"size": 1}, "operating_system": {"name": "ubuntu-16-amd64", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "architecture": "amd64", "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "vendor": "Canonical", "version": "16.04 LTS"}, "status": "available", "visibility": "private"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a ImagePatch model
+        image_patch_model = {}
+        image_patch_model['name'] = 'my-image'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-image'
+        image_patch = image_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "image_patch": image_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -2775,7 +2754,6 @@ class TestListOperatingSystems():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2868,7 +2846,6 @@ class TestGetOperatingSystem():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -2948,7 +2925,6 @@ class TestListKeys():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3038,7 +3014,6 @@ class TestCreateKey():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3132,7 +3107,6 @@ class TestDeleteKey():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3191,7 +3165,6 @@ class TestGetKey():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3260,7 +3233,6 @@ class TestUpdateKey():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3280,19 +3252,23 @@ class TestUpdateKey():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a KeyPatch model
+        key_patch_model = {}
+        key_patch_model['name'] = 'my-key'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-key'
+        key_patch = key_patch_model
 
         # Invoke method
-        response = service.update_key(id, name=name, headers={})
+        response = service.update_key(id, key_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-key'
+        assert req_body == key_patch
 
     @responses.activate
     def test_update_key_value_error(self):
@@ -3308,13 +3284,18 @@ class TestUpdateKey():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a KeyPatch model
+        key_patch_model = {}
+        key_patch_model['name'] = 'my-key'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-key'
+        key_patch = key_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "key_patch": key_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -3345,7 +3326,6 @@ class TestListInstanceProfiles():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3406,7 +3386,6 @@ class TestGetInstanceProfile():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3475,7 +3454,6 @@ class TestListInstanceTemplates():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3488,7 +3466,7 @@ class TestListInstanceTemplates():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132, "templates": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132, "templates": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3509,7 +3487,7 @@ class TestListInstanceTemplates():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132, "templates": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132, "templates": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3536,7 +3514,6 @@ class TestCreateInstanceTemplate():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3549,16 +3526,17 @@ class TestCreateInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a KeyIdentityById model
+        # Construct a dict representation of a KeyIdentityKeyIdentityByFingerprint model
         key_identity_model = {}
-        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_identity_model[
+            'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
 
         # Construct a dict representation of a SecurityGroupIdentityById model
         security_group_identity_model = {}
@@ -3576,13 +3554,11 @@ class TestCreateInstanceTemplate():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         # Construct a dict representation of a InstanceProfileIdentityByName model
         instance_profile_identity_model = {}
-        instance_profile_identity_model['name'] = 'cc1-16x32'
+        instance_profile_identity_model['name'] = 'gc.balanced.4x16'
 
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContextVolumeVolumeIdentityVolumeIdentityById model
         volume_attachment_prototype_instance_context_volume_model = {}
@@ -3592,9 +3568,9 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContext model
         volume_attachment_prototype_instance_context_model = {}
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -3622,9 +3598,8 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumePrototypeInstanceByImageContext model
         volume_prototype_instance_by_image_context_model = {}
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -3633,9 +3608,9 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model = {}
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -3650,14 +3625,13 @@ class TestCreateInstanceTemplate():
         instance_template_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_template_prototype_model['profile'] = {"name": "cc1-16x32"}
+        instance_template_prototype_model[
+            'profile'] = instance_profile_identity_model
         instance_template_prototype_model['user_data'] = 'testString'
         instance_template_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_template_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_prototype_model['vpc'] = vpc_identity_model
         instance_template_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_template_prototype_model[
@@ -3665,26 +3639,10 @@ class TestCreateInstanceTemplate():
         instance_template_prototype_model['zone'] = zone_identity_model
         instance_template_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_prototype_model['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_prototype_model['image'] = image_identity_model
 
         # Set up parameter values
-        instance_template_prototype = {
-            "image": {
-                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-            },
-            "keys": [{
-                "fingerprint":
-                    "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY"
-            }],
-            "profile": {
-                "name": "gc.balanced.4x16"
-            },
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            }
-        }
+        instance_template_prototype = instance_template_prototype_model
 
         # Invoke method
         response = service.create_instance_template(instance_template_prototype,
@@ -3704,16 +3662,17 @@ class TestCreateInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a KeyIdentityById model
+        # Construct a dict representation of a KeyIdentityKeyIdentityByFingerprint model
         key_identity_model = {}
-        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_identity_model[
+            'fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
 
         # Construct a dict representation of a SecurityGroupIdentityById model
         security_group_identity_model = {}
@@ -3731,13 +3690,11 @@ class TestCreateInstanceTemplate():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         # Construct a dict representation of a InstanceProfileIdentityByName model
         instance_profile_identity_model = {}
-        instance_profile_identity_model['name'] = 'cc1-16x32'
+        instance_profile_identity_model['name'] = 'gc.balanced.4x16'
 
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContextVolumeVolumeIdentityVolumeIdentityById model
         volume_attachment_prototype_instance_context_volume_model = {}
@@ -3747,9 +3704,9 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContext model
         volume_attachment_prototype_instance_context_model = {}
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -3777,9 +3734,8 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumePrototypeInstanceByImageContext model
         volume_prototype_instance_by_image_context_model = {}
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -3788,9 +3744,9 @@ class TestCreateInstanceTemplate():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model = {}
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -3805,14 +3761,13 @@ class TestCreateInstanceTemplate():
         instance_template_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_template_prototype_model['profile'] = {"name": "cc1-16x32"}
+        instance_template_prototype_model[
+            'profile'] = instance_profile_identity_model
         instance_template_prototype_model['user_data'] = 'testString'
         instance_template_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_template_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_prototype_model['vpc'] = vpc_identity_model
         instance_template_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_template_prototype_model[
@@ -3820,26 +3775,10 @@ class TestCreateInstanceTemplate():
         instance_template_prototype_model['zone'] = zone_identity_model
         instance_template_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_prototype_model['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_prototype_model['image'] = image_identity_model
 
         # Set up parameter values
-        instance_template_prototype = {
-            "image": {
-                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-            },
-            "keys": [{
-                "fingerprint":
-                    "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY"
-            }],
-            "profile": {
-                "name": "gc.balanced.4x16"
-            },
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            }
-        }
+        instance_template_prototype = instance_template_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -3863,7 +3802,6 @@ class TestDeleteInstanceTemplate():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3922,7 +3860,6 @@ class TestGetInstanceTemplate():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -3935,7 +3872,7 @@ class TestGetInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates/testString')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3959,7 +3896,7 @@ class TestGetInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates/testString')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3991,7 +3928,6 @@ class TestUpdateInstanceTemplate():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4004,26 +3940,32 @@ class TestUpdateInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates/testString')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceTemplatePatch model
+        instance_template_patch_model = {}
+        instance_template_patch_model['name'] = 'my-instance-template'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance-template'
+        instance_template_patch = instance_template_patch_model
 
         # Invoke method
-        response = service.update_instance_template(id, name=name, headers={})
+        response = service.update_instance_template(id,
+                                                    instance_template_patch,
+                                                    headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance-template'
+        assert req_body == instance_template_patch
 
     @responses.activate
     def test_update_instance_template_value_error(self):
@@ -4032,20 +3974,25 @@ class TestUpdateInstanceTemplate():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/instance/templates/testString')
-        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
+        mock_response = '{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-template", "keys": [{"id": "a6b1a881-2ce8-41a3-80fc-36316a73f803"}], "network_interfaces": [{"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}], "profile": {"name": "bc1-4x16"}, "user_data": "user_data", "volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5"}}], "vpc": {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}, "created_at": "2019-01-01T12:00:00", "resource_group": {"id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group", "href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345"}, "primary_network_interface": {"name": "my-network-interface", "primary_ipv4_address": "10.0.0.5", "security_groups": [{"id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271"}], "subnet": {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}}, "zone": {"name": "us-south-1"}, "boot_volume_attachment": {"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "volume": {"name": "my-volume", "profile": {"name": "general-purpose"}, "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "capacity": 100, "iops": 10000}}, "image": {"id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceTemplatePatch model
+        instance_template_patch_model = {}
+        instance_template_patch_model['name'] = 'my-instance-template'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance-template'
+        instance_template_patch = instance_template_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "instance_template_patch": instance_template_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -4065,7 +4012,6 @@ class TestListInstances():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4173,7 +4119,6 @@ class TestCreateInstance():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4193,9 +4138,10 @@ class TestCreateInstance():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a KeyIdentityById model
+        # Construct a dict representation of a KeyIdentityKeyIdentityByFingerprint model
         key_identity_model = {}
-        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_identity_model[
+            'fingerprint'] = 'SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E'
 
         # Construct a dict representation of a SecurityGroupIdentityById model
         security_group_identity_model = {}
@@ -4213,13 +4159,11 @@ class TestCreateInstance():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         # Construct a dict representation of a InstanceProfileIdentityByName model
         instance_profile_identity_model = {}
-        instance_profile_identity_model['name'] = 'cc1-16x32'
+        instance_profile_identity_model['name'] = 'gc.balanced.4x16'
 
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContextVolumeVolumeIdentityVolumeIdentityById model
         volume_attachment_prototype_instance_context_volume_model = {}
@@ -4229,9 +4173,9 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContext model
         volume_attachment_prototype_instance_context_model = {}
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -4259,9 +4203,8 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumePrototypeInstanceByImageContext model
         volume_prototype_instance_by_image_context_model = {}
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -4270,9 +4213,9 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model = {}
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -4287,14 +4230,12 @@ class TestCreateInstance():
         instance_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_prototype_model['profile'] = {"name": "cc1-16x32"}
+        instance_prototype_model['profile'] = instance_profile_identity_model
         instance_prototype_model['user_data'] = 'testString'
         instance_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_prototype_model['vpc'] = vpc_identity_model
         instance_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_prototype_model[
@@ -4302,26 +4243,10 @@ class TestCreateInstance():
         instance_prototype_model['zone'] = zone_identity_model
         instance_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_model['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_prototype_model['image'] = image_identity_model
 
         # Set up parameter values
-        instance_prototype = {
-            "image": {
-                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-            },
-            "keys": [{
-                "fingerprint":
-                    "SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E"
-            }],
-            "profile": {
-                "name": "gc.balanced.4x16"
-            },
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            }
-        }
+        instance_prototype = instance_prototype_model
 
         # Invoke method
         response = service.create_instance(instance_prototype, headers={})
@@ -4347,9 +4272,10 @@ class TestCreateInstance():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a KeyIdentityById model
+        # Construct a dict representation of a KeyIdentityKeyIdentityByFingerprint model
         key_identity_model = {}
-        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_identity_model[
+            'fingerprint'] = 'SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E'
 
         # Construct a dict representation of a SecurityGroupIdentityById model
         security_group_identity_model = {}
@@ -4367,13 +4293,11 @@ class TestCreateInstance():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         # Construct a dict representation of a InstanceProfileIdentityByName model
         instance_profile_identity_model = {}
-        instance_profile_identity_model['name'] = 'cc1-16x32'
+        instance_profile_identity_model['name'] = 'gc.balanced.4x16'
 
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContextVolumeVolumeIdentityVolumeIdentityById model
         volume_attachment_prototype_instance_context_volume_model = {}
@@ -4383,9 +4307,9 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContext model
         volume_attachment_prototype_instance_context_model = {}
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -4413,9 +4337,8 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumePrototypeInstanceByImageContext model
         volume_prototype_instance_by_image_context_model = {}
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -4424,9 +4347,9 @@ class TestCreateInstance():
         # Construct a dict representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model = {}
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -4441,14 +4364,12 @@ class TestCreateInstance():
         instance_prototype_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_prototype_model['profile'] = {"name": "cc1-16x32"}
+        instance_prototype_model['profile'] = instance_profile_identity_model
         instance_prototype_model['user_data'] = 'testString'
         instance_prototype_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_prototype_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_prototype_model['vpc'] = vpc_identity_model
         instance_prototype_model[
             'resource_group'] = resource_group_identity_model
         instance_prototype_model[
@@ -4456,26 +4377,10 @@ class TestCreateInstance():
         instance_prototype_model['zone'] = zone_identity_model
         instance_prototype_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_model['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_prototype_model['image'] = image_identity_model
 
         # Set up parameter values
-        instance_prototype = {
-            "image": {
-                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-            },
-            "keys": [{
-                "fingerprint":
-                    "SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E"
-            }],
-            "profile": {
-                "name": "gc.balanced.4x16"
-            },
-            "vpc": {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            }
-        }
+        instance_prototype = instance_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -4499,7 +4404,6 @@ class TestDeleteInstance():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4558,7 +4462,6 @@ class TestGetInstance():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4627,7 +4530,6 @@ class TestUpdateInstance():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4647,19 +4549,23 @@ class TestUpdateInstance():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstancePatch model
+        instance_patch_model = {}
+        instance_patch_model['name'] = 'my-instance'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance'
+        instance_patch = instance_patch_model
 
         # Invoke method
-        response = service.update_instance(id, name=name, headers={})
+        response = service.update_instance(id, instance_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance'
+        assert req_body == instance_patch
 
     @responses.activate
     def test_update_instance_value_error(self):
@@ -4675,13 +4581,18 @@ class TestUpdateInstance():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstancePatch model
+        instance_patch_model = {}
+        instance_patch_model['name'] = 'my-instance'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance'
+        instance_patch = instance_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "instance_patch": instance_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -4701,7 +4612,6 @@ class TestGetInstanceInitialization():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4772,7 +4682,6 @@ class TestCreateInstanceAction():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4853,7 +4762,6 @@ class TestListInstanceNetworkInterfaces():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4925,7 +4833,6 @@ class TestCreateInstanceNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -4957,7 +4864,7 @@ class TestCreateInstanceNetworkInterface():
 
         # Set up parameter values
         instance_id = 'testString'
-        subnet = {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}
+        subnet = subnet_identity_model
         name = 'my-network-interface'
         primary_ipv4_address = '10.0.0.5'
         security_groups = [security_group_identity_model]
@@ -4976,9 +4883,7 @@ class TestCreateInstanceNetworkInterface():
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['subnet'] == {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        assert req_body['subnet'] == subnet_identity_model
         assert req_body['name'] == 'my-network-interface'
         assert req_body['primary_ipv4_address'] == '10.0.0.5'
         assert req_body['security_groups'] == [security_group_identity_model]
@@ -5009,7 +4914,7 @@ class TestCreateInstanceNetworkInterface():
 
         # Set up parameter values
         instance_id = 'testString'
-        subnet = {"id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"}
+        subnet = subnet_identity_model
         name = 'my-network-interface'
         primary_ipv4_address = '10.0.0.5'
         security_groups = [security_group_identity_model]
@@ -5037,7 +4942,6 @@ class TestDeleteInstanceNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5103,7 +5007,6 @@ class TestGetInstanceNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5179,7 +5082,6 @@ class TestUpdateInstanceNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5200,23 +5102,25 @@ class TestUpdateInstanceNetworkInterface():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a NetworkInterfacePatch model
+        network_interface_patch_model = {}
+        network_interface_patch_model['name'] = 'my-network-interface'
+
         # Set up parameter values
         instance_id = 'testString'
         id = 'testString'
-        name = 'my-network-interface'
+        network_interface_patch = network_interface_patch_model
 
         # Invoke method
-        response = service.update_instance_network_interface(instance_id,
-                                                             id,
-                                                             name=name,
-                                                             headers={})
+        response = service.update_instance_network_interface(
+            instance_id, id, network_interface_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-network-interface'
+        assert req_body == network_interface_patch
 
     @responses.activate
     def test_update_instance_network_interface_value_error(self):
@@ -5233,15 +5137,20 @@ class TestUpdateInstanceNetworkInterface():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a NetworkInterfacePatch model
+        network_interface_patch_model = {}
+        network_interface_patch_model['name'] = 'my-network-interface'
+
         # Set up parameter values
         instance_id = 'testString'
         id = 'testString'
-        name = 'my-network-interface'
+        network_interface_patch = network_interface_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "instance_id": instance_id,
             "id": id,
+            "network_interface_patch": network_interface_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -5261,7 +5170,6 @@ class TestListInstanceNetworkInterfaceFloatingIps():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5338,7 +5246,6 @@ class TestRemoveInstanceNetworkInterfaceFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5411,7 +5318,6 @@ class TestGetInstanceNetworkInterfaceFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5493,7 +5399,6 @@ class TestAddInstanceNetworkInterfaceFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5575,7 +5480,6 @@ class TestListInstanceVolumeAttachments():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5589,7 +5493,7 @@ class TestListInstanceVolumeAttachments():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/instances/testString/volume_attachments')
-        mock_response = '{"volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}]}'
+        mock_response = '{"volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5615,7 +5519,7 @@ class TestListInstanceVolumeAttachments():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/instances/testString/volume_attachments')
-        mock_response = '{"volume_attachments": [{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}]}'
+        mock_response = '{"volume_attachments": [{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5647,7 +5551,6 @@ class TestCreateInstanceVolumeAttachment():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5661,7 +5564,7 @@ class TestCreateInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/instances/testString/volume_attachments')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -5675,15 +5578,15 @@ class TestCreateInstanceVolumeAttachment():
         # Set up parameter values
         instance_id = 'testString'
         volume = volume_identity_model
-        name = 'my-volume-attachment'
         delete_volume_on_instance_delete = True
+        name = 'my-volume-attachment'
 
         # Invoke method
         response = service.create_instance_volume_attachment(
             instance_id,
             volume,
-            name=name,
             delete_volume_on_instance_delete=delete_volume_on_instance_delete,
+            name=name,
             headers={})
 
         # Check for correct operation
@@ -5692,8 +5595,8 @@ class TestCreateInstanceVolumeAttachment():
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body['volume'] == volume_identity_model
-        assert req_body['name'] == 'my-volume-attachment'
         assert req_body['delete_volume_on_instance_delete'] == True
+        assert req_body['name'] == 'my-volume-attachment'
 
     @responses.activate
     def test_create_instance_volume_attachment_value_error(self):
@@ -5703,7 +5606,7 @@ class TestCreateInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(base_url +
                                   '/instances/testString/volume_attachments')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -5717,8 +5620,8 @@ class TestCreateInstanceVolumeAttachment():
         # Set up parameter values
         instance_id = 'testString'
         volume = volume_identity_model
-        name = 'my-volume-attachment'
         delete_volume_on_instance_delete = True
+        name = 'my-volume-attachment'
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -5743,7 +5646,6 @@ class TestDeleteInstanceVolumeAttachment():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5809,7 +5711,6 @@ class TestGetInstanceVolumeAttachment():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5823,7 +5724,7 @@ class TestGetInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/instances/testString/volume_attachments/testString')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5851,7 +5752,7 @@ class TestGetInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/instances/testString/volume_attachments/testString')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5885,7 +5786,6 @@ class TestUpdateInstanceVolumeAttachment():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -5899,34 +5799,33 @@ class TestUpdateInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/instances/testString/volume_attachments/testString')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VolumeAttachmentPatch model
+        volume_attachment_patch_model = {}
+        volume_attachment_patch_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_patch_model['name'] = 'my-volume-attachment'
+
         # Set up parameter values
         instance_id = 'testString'
         id = 'testString'
-        name = 'my-volume-attachment'
-        delete_volume_on_instance_delete = True
+        volume_attachment_patch = volume_attachment_patch_model
 
         # Invoke method
         response = service.update_instance_volume_attachment(
-            instance_id,
-            id,
-            name=name,
-            delete_volume_on_instance_delete=delete_volume_on_instance_delete,
-            headers={})
+            instance_id, id, volume_attachment_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-volume-attachment'
-        assert req_body['delete_volume_on_instance_delete'] == True
+        assert req_body == volume_attachment_patch
 
     @responses.activate
     def test_update_instance_volume_attachment_value_error(self):
@@ -5936,23 +5835,28 @@ class TestUpdateInstanceVolumeAttachment():
         # Set up mock
         url = self.preprocess_url(
             base_url + '/instances/testString/volume_attachments/testString')
-        mock_response = '{"name": "my-volume-attachment", "delete_volume_on_instance_delete": true, "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
+        mock_response = '{"delete_volume_on_instance_delete": true, "name": "my-volume-attachment", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "volume": {"id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "created_at": "2019-01-01T12:00:00", "status": "attached", "type": "boot"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VolumeAttachmentPatch model
+        volume_attachment_patch_model = {}
+        volume_attachment_patch_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_patch_model['name'] = 'my-volume-attachment'
+
         # Set up parameter values
         instance_id = 'testString'
         id = 'testString'
-        name = 'my-volume-attachment'
-        delete_volume_on_instance_delete = True
+        volume_attachment_patch = volume_attachment_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "instance_id": instance_id,
             "id": id,
+            "volume_attachment_patch": volume_attachment_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -5983,7 +5887,6 @@ class TestListInstanceGroups():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6076,7 +5979,6 @@ class TestCreateInstanceGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6226,7 +6128,6 @@ class TestDeleteInstanceGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6285,7 +6186,6 @@ class TestGetInstanceGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6354,7 +6254,6 @@ class TestUpdateInstanceGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6393,41 +6292,34 @@ class TestUpdateInstanceGroup():
         load_balancer_pool_identity_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a InstanceGroupPatch model
+        instance_group_patch_model = {}
+        instance_group_patch_model['name'] = 'my-instance-group'
+        instance_group_patch_model['membership_count'] = 10
+        instance_group_patch_model[
+            'instance_template'] = instance_template_identity_model
+        instance_group_patch_model['subnets'] = [subnet_identity_model]
+        instance_group_patch_model['application_port'] = 22
+        instance_group_patch_model[
+            'load_balancer'] = load_balancer_identity_model
+        instance_group_patch_model[
+            'load_balancer_pool'] = load_balancer_pool_identity_model
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance-group'
-        membership_count = 10
-        instance_template = instance_template_identity_model
-        subnets = [subnet_identity_model]
-        application_port = 22
-        load_balancer = load_balancer_identity_model
-        load_balancer_pool = load_balancer_pool_identity_model
+        instance_group_patch = instance_group_patch_model
 
         # Invoke method
-        response = service.update_instance_group(
-            id,
-            name=name,
-            membership_count=membership_count,
-            instance_template=instance_template,
-            subnets=subnets,
-            application_port=application_port,
-            load_balancer=load_balancer,
-            load_balancer_pool=load_balancer_pool,
-            headers={})
+        response = service.update_instance_group(id,
+                                                 instance_group_patch,
+                                                 headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance-group'
-        assert req_body['membership_count'] == 10
-        assert req_body['instance_template'] == instance_template_identity_model
-        assert req_body['subnets'] == [subnet_identity_model]
-        assert req_body['application_port'] == 22
-        assert req_body['load_balancer'] == load_balancer_identity_model
-        assert req_body[
-            'load_balancer_pool'] == load_balancer_pool_identity_model
+        assert req_body == instance_group_patch
 
     @responses.activate
     def test_update_instance_group_value_error(self):
@@ -6462,19 +6354,27 @@ class TestUpdateInstanceGroup():
         load_balancer_pool_identity_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a InstanceGroupPatch model
+        instance_group_patch_model = {}
+        instance_group_patch_model['name'] = 'my-instance-group'
+        instance_group_patch_model['membership_count'] = 10
+        instance_group_patch_model[
+            'instance_template'] = instance_template_identity_model
+        instance_group_patch_model['subnets'] = [subnet_identity_model]
+        instance_group_patch_model['application_port'] = 22
+        instance_group_patch_model[
+            'load_balancer'] = load_balancer_identity_model
+        instance_group_patch_model[
+            'load_balancer_pool'] = load_balancer_pool_identity_model
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-instance-group'
-        membership_count = 10
-        instance_template = instance_template_identity_model
-        subnets = [subnet_identity_model]
-        application_port = 22
-        load_balancer = load_balancer_identity_model
-        load_balancer_pool = load_balancer_pool_identity_model
+        instance_group_patch = instance_group_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "instance_group_patch": instance_group_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -6494,7 +6394,6 @@ class TestDeleteInstanceGroupLoadBalancer():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6556,7 +6455,6 @@ class TestListInstanceGroupManagers():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6628,7 +6526,6 @@ class TestCreateInstanceGroupManager():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6730,7 +6627,6 @@ class TestDeleteInstanceGroupManager():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6796,7 +6692,6 @@ class TestGetInstanceGroupManager():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6872,7 +6767,6 @@ class TestUpdateInstanceGroupManager():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -6893,39 +6787,30 @@ class TestUpdateInstanceGroupManager():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupManagerPatch model
+        instance_group_manager_patch_model = {}
+        instance_group_manager_patch_model['name'] = 'my-instance-group-manager'
+        instance_group_manager_patch_model['management_enabled'] = True
+        instance_group_manager_patch_model['aggregation_window'] = 120
+        instance_group_manager_patch_model['cooldown'] = 210
+        instance_group_manager_patch_model['max_membership_count'] = 10
+        instance_group_manager_patch_model['min_membership_count'] = 10
+
         # Set up parameter values
         instance_group_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-manager'
-        management_enabled = True
-        aggregation_window = 120
-        cooldown = 210
-        max_membership_count = 10
-        min_membership_count = 10
+        instance_group_manager_patch = instance_group_manager_patch_model
 
         # Invoke method
         response = service.update_instance_group_manager(
-            instance_group_id,
-            id,
-            name=name,
-            management_enabled=management_enabled,
-            aggregation_window=aggregation_window,
-            cooldown=cooldown,
-            max_membership_count=max_membership_count,
-            min_membership_count=min_membership_count,
-            headers={})
+            instance_group_id, id, instance_group_manager_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance-group-manager'
-        assert req_body['management_enabled'] == True
-        assert req_body['aggregation_window'] == 120
-        assert req_body['cooldown'] == 210
-        assert req_body['max_membership_count'] == 10
-        assert req_body['min_membership_count'] == 10
+        assert req_body == instance_group_manager_patch
 
     @responses.activate
     def test_update_instance_group_manager_value_error(self):
@@ -6942,20 +6827,25 @@ class TestUpdateInstanceGroupManager():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupManagerPatch model
+        instance_group_manager_patch_model = {}
+        instance_group_manager_patch_model['name'] = 'my-instance-group-manager'
+        instance_group_manager_patch_model['management_enabled'] = True
+        instance_group_manager_patch_model['aggregation_window'] = 120
+        instance_group_manager_patch_model['cooldown'] = 210
+        instance_group_manager_patch_model['max_membership_count'] = 10
+        instance_group_manager_patch_model['min_membership_count'] = 10
+
         # Set up parameter values
         instance_group_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-manager'
-        management_enabled = True
-        aggregation_window = 120
-        cooldown = 210
-        max_membership_count = 10
-        min_membership_count = 10
+        instance_group_manager_patch = instance_group_manager_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "instance_group_id": instance_group_id,
             "id": id,
+            "instance_group_manager_patch": instance_group_manager_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -6975,7 +6865,6 @@ class TestListInstanceGroupManagerPolicies():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7052,7 +6941,6 @@ class TestCreateInstanceGroupManagerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7157,7 +7045,6 @@ class TestDeleteInstanceGroupManagerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7229,7 +7116,6 @@ class TestGetInstanceGroupManagerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7311,7 +7197,6 @@ class TestUpdateInstanceGroupManagerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7334,22 +7219,25 @@ class TestUpdateInstanceGroupManagerPolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupManagerPolicyPatch model
+        instance_group_manager_policy_patch_model = {}
+        instance_group_manager_policy_patch_model[
+            'name'] = 'my-instance-group-manager-policy'
+        instance_group_manager_policy_patch_model['metric_type'] = 'cpu'
+        instance_group_manager_policy_patch_model['metric_value'] = 38
+
         # Set up parameter values
         instance_group_id = 'testString'
         instance_group_manager_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-manager-policy'
-        metric_type = 'cpu'
-        metric_value = 38
+        instance_group_manager_policy_patch = instance_group_manager_policy_patch_model
 
         # Invoke method
         response = service.update_instance_group_manager_policy(
             instance_group_id,
             instance_group_manager_id,
             id,
-            name=name,
-            metric_type=metric_type,
-            metric_value=metric_value,
+            instance_group_manager_policy_patch,
             headers={})
 
         # Check for correct operation
@@ -7357,9 +7245,7 @@ class TestUpdateInstanceGroupManagerPolicy():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance-group-manager-policy'
-        assert req_body['metric_type'] == 'cpu'
-        assert req_body['metric_value'] == 38
+        assert req_body == instance_group_manager_policy_patch
 
     @responses.activate
     def test_update_instance_group_manager_policy_value_error(self):
@@ -7378,19 +7264,29 @@ class TestUpdateInstanceGroupManagerPolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupManagerPolicyPatch model
+        instance_group_manager_policy_patch_model = {}
+        instance_group_manager_policy_patch_model[
+            'name'] = 'my-instance-group-manager-policy'
+        instance_group_manager_policy_patch_model['metric_type'] = 'cpu'
+        instance_group_manager_policy_patch_model['metric_value'] = 38
+
         # Set up parameter values
         instance_group_id = 'testString'
         instance_group_manager_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-manager-policy'
-        metric_type = 'cpu'
-        metric_value = 38
+        instance_group_manager_policy_patch = instance_group_manager_policy_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
-            "instance_group_id": instance_group_id,
-            "instance_group_manager_id": instance_group_manager_id,
-            "id": id,
+            "instance_group_id":
+                instance_group_id,
+            "instance_group_manager_id":
+                instance_group_manager_id,
+            "id":
+                id,
+            "instance_group_manager_policy_patch":
+                instance_group_manager_policy_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -7410,7 +7306,6 @@ class TestDeleteInstanceGroupMemberships():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7472,7 +7367,6 @@ class TestListInstanceGroupMemberships():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7544,7 +7438,6 @@ class TestDeleteInstanceGroupMembership():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7610,7 +7503,6 @@ class TestGetInstanceGroupMembership():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7686,7 +7578,6 @@ class TestUpdateInstanceGroupMembership():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7707,23 +7598,26 @@ class TestUpdateInstanceGroupMembership():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupMembershipPatch model
+        instance_group_membership_patch_model = {}
+        instance_group_membership_patch_model[
+            'name'] = 'my-instance-group-membership'
+
         # Set up parameter values
         instance_group_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-membership'
+        instance_group_membership_patch = instance_group_membership_patch_model
 
         # Invoke method
-        response = service.update_instance_group_membership(instance_group_id,
-                                                            id,
-                                                            name=name,
-                                                            headers={})
+        response = service.update_instance_group_membership(
+            instance_group_id, id, instance_group_membership_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-instance-group-membership'
+        assert req_body == instance_group_membership_patch
 
     @responses.activate
     def test_update_instance_group_membership_value_error(self):
@@ -7740,15 +7634,21 @@ class TestUpdateInstanceGroupMembership():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a InstanceGroupMembershipPatch model
+        instance_group_membership_patch_model = {}
+        instance_group_membership_patch_model[
+            'name'] = 'my-instance-group-membership'
+
         # Set up parameter values
         instance_group_id = 'testString'
         id = 'testString'
-        name = 'my-instance-group-membership'
+        instance_group_membership_patch = instance_group_membership_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "instance_group_id": instance_group_id,
             "id": id,
+            "instance_group_membership_patch": instance_group_membership_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -7779,7 +7679,6 @@ class TestListVolumeProfiles():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7872,7 +7771,6 @@ class TestGetVolumeProfile():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -7941,7 +7839,6 @@ class TestListVolumes():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8040,7 +7937,6 @@ class TestCreateVolume():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8080,7 +7976,7 @@ class TestCreateVolume():
         # Construct a dict representation of a VolumePrototypeVolumeByCapacity model
         volume_prototype_model = {}
         volume_prototype_model['name'] = 'my-volume'
-        volume_prototype_model['profile'] = {"name": "general-purpose"}
+        volume_prototype_model['profile'] = volume_profile_identity_model
         volume_prototype_model['encryption_key'] = encryption_key_identity_model
         volume_prototype_model['iops'] = 10000
         volume_prototype_model['resource_group'] = resource_group_identity_model
@@ -8088,7 +7984,7 @@ class TestCreateVolume():
         volume_prototype_model['capacity'] = 100
 
         # Set up parameter values
-        volume_prototype = {"capacity": 100, "zone": {"name": "us-south-1"}}
+        volume_prototype = volume_prototype_model
 
         # Invoke method
         response = service.create_volume(volume_prototype, headers={})
@@ -8134,7 +8030,7 @@ class TestCreateVolume():
         # Construct a dict representation of a VolumePrototypeVolumeByCapacity model
         volume_prototype_model = {}
         volume_prototype_model['name'] = 'my-volume'
-        volume_prototype_model['profile'] = {"name": "general-purpose"}
+        volume_prototype_model['profile'] = volume_profile_identity_model
         volume_prototype_model['encryption_key'] = encryption_key_identity_model
         volume_prototype_model['iops'] = 10000
         volume_prototype_model['resource_group'] = resource_group_identity_model
@@ -8142,7 +8038,7 @@ class TestCreateVolume():
         volume_prototype_model['capacity'] = 100
 
         # Set up parameter values
-        volume_prototype = {"capacity": 100, "zone": {"name": "us-south-1"}}
+        volume_prototype = volume_prototype_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -8166,7 +8062,6 @@ class TestDeleteVolume():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8225,7 +8120,6 @@ class TestGetVolume():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8294,7 +8188,6 @@ class TestUpdateVolume():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8314,19 +8207,23 @@ class TestUpdateVolume():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VolumePatch model
+        volume_patch_model = {}
+        volume_patch_model['name'] = 'my-volume'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-volume'
+        volume_patch = volume_patch_model
 
         # Invoke method
-        response = service.update_volume(id, name=name, headers={})
+        response = service.update_volume(id, volume_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-volume'
+        assert req_body == volume_patch
 
     @responses.activate
     def test_update_volume_value_error(self):
@@ -8342,13 +8239,18 @@ class TestUpdateVolume():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VolumePatch model
+        volume_patch_model = {}
+        volume_patch_model['name'] = 'my-volume'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-volume'
+        volume_patch = volume_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "volume_patch": volume_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -8379,7 +8281,6 @@ class TestListRegions():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8440,7 +8341,6 @@ class TestGetRegion():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8509,7 +8409,6 @@ class TestListRegionZones():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8578,7 +8477,6 @@ class TestGetRegionZone():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8663,7 +8561,6 @@ class TestListPublicGateways():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8760,7 +8657,6 @@ class TestCreatePublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8885,7 +8781,6 @@ class TestDeletePublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -8944,7 +8839,6 @@ class TestGetPublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9013,7 +8907,6 @@ class TestUpdatePublicGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9033,19 +8926,25 @@ class TestUpdatePublicGateway():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a PublicGatewayPatch model
+        public_gateway_patch_model = {}
+        public_gateway_patch_model['name'] = 'my-public-gateway'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-public-gateway'
+        public_gateway_patch = public_gateway_patch_model
 
         # Invoke method
-        response = service.update_public_gateway(id, name=name, headers={})
+        response = service.update_public_gateway(id,
+                                                 public_gateway_patch,
+                                                 headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-public-gateway'
+        assert req_body == public_gateway_patch
 
     @responses.activate
     def test_update_public_gateway_value_error(self):
@@ -9061,13 +8960,18 @@ class TestUpdatePublicGateway():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a PublicGatewayPatch model
+        public_gateway_patch_model = {}
+        public_gateway_patch_model['name'] = 'my-public-gateway'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-public-gateway'
+        public_gateway_patch = public_gateway_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "public_gateway_patch": public_gateway_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -9098,7 +9002,6 @@ class TestListFloatingIps():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9195,7 +9098,6 @@ class TestCreateFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9297,7 +9199,6 @@ class TestDeleteFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9356,7 +9257,6 @@ class TestGetFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9425,7 +9325,6 @@ class TestUpdateFloatingIp():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9448,28 +9347,27 @@ class TestUpdateFloatingIp():
         # Construct a dict representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
         floating_ip_patch_target_network_interface_identity_model = {}
         floating_ip_patch_target_network_interface_identity_model[
-            'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+            'id'] = '69e55145-cc7d-4d8e-9e1f-cc3fb60b1793'
+
+        # Construct a dict representation of a FloatingIPPatch model
+        floating_ip_patch_model = {}
+        floating_ip_patch_model['name'] = 'my-floating-ip'
+        floating_ip_patch_model[
+            'target'] = floating_ip_patch_target_network_interface_identity_model
 
         # Set up parameter values
         id = 'testString'
-        name = 'my-floating-ip'
-        target = {"id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"}
+        floating_ip_patch = floating_ip_patch_model
 
         # Invoke method
-        response = service.update_floating_ip(id,
-                                              name=name,
-                                              target=target,
-                                              headers={})
+        response = service.update_floating_ip(id, floating_ip_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-floating-ip'
-        assert req_body['target'] == {
-            "id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"
-        }
+        assert req_body == floating_ip_patch
 
     @responses.activate
     def test_update_floating_ip_value_error(self):
@@ -9488,16 +9386,22 @@ class TestUpdateFloatingIp():
         # Construct a dict representation of a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
         floating_ip_patch_target_network_interface_identity_model = {}
         floating_ip_patch_target_network_interface_identity_model[
-            'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+            'id'] = '69e55145-cc7d-4d8e-9e1f-cc3fb60b1793'
+
+        # Construct a dict representation of a FloatingIPPatch model
+        floating_ip_patch_model = {}
+        floating_ip_patch_model['name'] = 'my-floating-ip'
+        floating_ip_patch_model[
+            'target'] = floating_ip_patch_target_network_interface_identity_model
 
         # Set up parameter values
         id = 'testString'
-        name = 'my-floating-ip'
-        target = {"id": "69e55145-cc7d-4d8e-9e1f-cc3fb60b1793"}
+        floating_ip_patch = floating_ip_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "floating_ip_patch": floating_ip_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -9528,7 +9432,6 @@ class TestListNetworkAcls():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9625,7 +9528,6 @@ class TestCreateNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9669,9 +9571,7 @@ class TestCreateNetworkAcl():
         # Construct a dict representation of a NetworkACLPrototypeNetworkACLByRules model
         network_acl_prototype_model = {}
         network_acl_prototype_model['name'] = 'my-network-acl'
-        network_acl_prototype_model['vpc'] = {
-            "id": "cf7cd5a-2f30-4336-a495-6addc820cd61"
-        }
+        network_acl_prototype_model['vpc'] = vpc_identity_model
         network_acl_prototype_model[
             'resource_group'] = resource_group_identity_model
         network_acl_prototype_model['rules'] = [
@@ -9679,7 +9579,7 @@ class TestCreateNetworkAcl():
         ]
 
         # Set up parameter values
-        network_acl_prototype = {"name": "my-network-acl"}
+        network_acl_prototype = network_acl_prototype_model
 
         # Invoke method
         response = service.create_network_acl(
@@ -9747,7 +9647,6 @@ class TestDeleteNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9806,7 +9705,6 @@ class TestGetNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9875,7 +9773,6 @@ class TestUpdateNetworkAcl():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -9895,19 +9792,23 @@ class TestUpdateNetworkAcl():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a NetworkACLPatch model
+        network_acl_patch_model = {}
+        network_acl_patch_model['name'] = 'my-network-acl'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-network-acl'
+        network_acl_patch = network_acl_patch_model
 
         # Invoke method
-        response = service.update_network_acl(id, name=name, headers={})
+        response = service.update_network_acl(id, network_acl_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-network-acl'
+        assert req_body == network_acl_patch
 
     @responses.activate
     def test_update_network_acl_value_error(self):
@@ -9923,13 +9824,18 @@ class TestUpdateNetworkAcl():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a NetworkACLPatch model
+        network_acl_patch_model = {}
+        network_acl_patch_model['name'] = 'my-network-acl'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-network-acl'
+        network_acl_patch = network_acl_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "network_acl_patch": network_acl_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -9949,7 +9855,6 @@ class TestListNetworkAclRules():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10055,7 +9960,6 @@ class TestCreateNetworkAclRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10088,9 +9992,8 @@ class TestCreateNetworkAclRule():
         network_acl_rule_prototype_model['direction'] = 'inbound'
         network_acl_rule_prototype_model['source'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['protocol'] = 'icmp'
-        network_acl_rule_prototype_model['before'] = {
-            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-        }
+        network_acl_rule_prototype_model[
+            'before'] = network_acl_rule_identity_model
         network_acl_rule_prototype_model['code'] = 0
         network_acl_rule_prototype_model['type'] = 8
 
@@ -10137,9 +10040,8 @@ class TestCreateNetworkAclRule():
         network_acl_rule_prototype_model['direction'] = 'inbound'
         network_acl_rule_prototype_model['source'] = '192.168.3.2/32'
         network_acl_rule_prototype_model['protocol'] = 'icmp'
-        network_acl_rule_prototype_model['before'] = {
-            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-        }
+        network_acl_rule_prototype_model[
+            'before'] = network_acl_rule_identity_model
         network_acl_rule_prototype_model['code'] = 0
         network_acl_rule_prototype_model['type'] = 8
 
@@ -10170,7 +10072,6 @@ class TestDeleteNetworkAclRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10236,7 +10137,6 @@ class TestGetNetworkAclRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10310,7 +10210,6 @@ class TestUpdateNetworkAclRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10336,59 +10235,38 @@ class TestUpdateNetworkAclRule():
         network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
 
+        # Construct a dict representation of a NetworkACLRulePatch model
+        network_acl_rule_patch_model = {}
+        network_acl_rule_patch_model['name'] = 'my-rule-2'
+        network_acl_rule_patch_model['action'] = 'allow'
+        network_acl_rule_patch_model['destination'] = '192.168.3.2/32'
+        network_acl_rule_patch_model['direction'] = 'inbound'
+        network_acl_rule_patch_model['source'] = '192.168.3.2/32'
+        network_acl_rule_patch_model['destination_port_max'] = 22
+        network_acl_rule_patch_model['destination_port_min'] = 22
+        network_acl_rule_patch_model['source_port_max'] = 65535
+        network_acl_rule_patch_model['source_port_min'] = 49152
+        network_acl_rule_patch_model['code'] = 0
+        network_acl_rule_patch_model['type'] = 8
+        network_acl_rule_patch_model['before'] = network_acl_rule_identity_model
+
         # Set up parameter values
         network_acl_id = 'testString'
         id = 'testString'
-        name = 'my-rule-2'
-        action = 'allow'
-        destination = '192.168.3.2/32'
-        direction = 'inbound'
-        source = '192.168.3.2/32'
-        destination_port_max = 22
-        destination_port_min = 22
-        source_port_max = 65535
-        source_port_min = 49152
-        code = 0
-        type = 8
-        before = {"id": "8daca77a-4980-4d33-8f3e-7038797be8f9"}
+        network_acl_rule_patch = network_acl_rule_patch_model
 
         # Invoke method
-        response = service.update_network_acl_rule(
-            network_acl_id,
-            id,
-            name=name,
-            action=action,
-            destination=destination,
-            direction=direction,
-            source=source,
-            destination_port_max=destination_port_max,
-            destination_port_min=destination_port_min,
-            source_port_max=source_port_max,
-            source_port_min=source_port_min,
-            code=code,
-            type=type,
-            before=before,
-            headers={})
+        response = service.update_network_acl_rule(network_acl_id,
+                                                   id,
+                                                   network_acl_rule_patch,
+                                                   headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-rule-2'
-        assert req_body['action'] == 'allow'
-        assert req_body['destination'] == '192.168.3.2/32'
-        assert req_body['direction'] == 'inbound'
-        assert req_body['source'] == '192.168.3.2/32'
-        assert req_body['destination_port_max'] == 22
-        assert req_body['destination_port_min'] == 22
-        assert req_body['source_port_max'] == 65535
-        assert req_body['source_port_min'] == 49152
-        assert req_body['code'] == 0
-        assert req_body['type'] == 8
-        assert req_body['before'] == {
-            "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-        }
+        assert req_body == network_acl_rule_patch
 
     @responses.activate
     def test_update_network_acl_rule_value_error(self):
@@ -10410,26 +10288,31 @@ class TestUpdateNetworkAclRule():
         network_acl_rule_identity_model[
             'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
 
+        # Construct a dict representation of a NetworkACLRulePatch model
+        network_acl_rule_patch_model = {}
+        network_acl_rule_patch_model['name'] = 'my-rule-2'
+        network_acl_rule_patch_model['action'] = 'allow'
+        network_acl_rule_patch_model['destination'] = '192.168.3.2/32'
+        network_acl_rule_patch_model['direction'] = 'inbound'
+        network_acl_rule_patch_model['source'] = '192.168.3.2/32'
+        network_acl_rule_patch_model['destination_port_max'] = 22
+        network_acl_rule_patch_model['destination_port_min'] = 22
+        network_acl_rule_patch_model['source_port_max'] = 65535
+        network_acl_rule_patch_model['source_port_min'] = 49152
+        network_acl_rule_patch_model['code'] = 0
+        network_acl_rule_patch_model['type'] = 8
+        network_acl_rule_patch_model['before'] = network_acl_rule_identity_model
+
         # Set up parameter values
         network_acl_id = 'testString'
         id = 'testString'
-        name = 'my-rule-2'
-        action = 'allow'
-        destination = '192.168.3.2/32'
-        direction = 'inbound'
-        source = '192.168.3.2/32'
-        destination_port_max = 22
-        destination_port_min = 22
-        source_port_max = 65535
-        source_port_min = 49152
-        code = 0
-        type = 8
-        before = {"id": "8daca77a-4980-4d33-8f3e-7038797be8f9"}
+        network_acl_rule_patch = network_acl_rule_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "network_acl_id": network_acl_id,
             "id": id,
+            "network_acl_rule_patch": network_acl_rule_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -10460,7 +10343,6 @@ class TestListSecurityGroups():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10566,7 +10448,6 @@ class TestCreateSecurityGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10609,7 +10490,7 @@ class TestCreateSecurityGroup():
         security_group_rule_prototype_model['type'] = 8
 
         # Set up parameter values
-        vpc = {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
+        vpc = vpc_identity_model
         name = 'my-security-group'
         resource_group = resource_group_identity_model
         rules = [security_group_rule_prototype_model]
@@ -10626,7 +10507,7 @@ class TestCreateSecurityGroup():
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['vpc'] == {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
+        assert req_body['vpc'] == vpc_identity_model
         assert req_body['name'] == 'my-security-group'
         assert req_body['resource_group'] == resource_group_identity_model
         assert req_body['rules'] == [security_group_rule_prototype_model]
@@ -10668,7 +10549,7 @@ class TestCreateSecurityGroup():
         security_group_rule_prototype_model['type'] = 8
 
         # Set up parameter values
-        vpc = {"id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"}
+        vpc = vpc_identity_model
         name = 'my-security-group'
         resource_group = resource_group_identity_model
         rules = [security_group_rule_prototype_model]
@@ -10695,7 +10576,6 @@ class TestDeleteSecurityGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10754,7 +10634,6 @@ class TestGetSecurityGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10823,7 +10702,6 @@ class TestUpdateSecurityGroup():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -10843,19 +10721,25 @@ class TestUpdateSecurityGroup():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a SecurityGroupPatch model
+        security_group_patch_model = {}
+        security_group_patch_model['name'] = 'my-security-group'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-security-group'
+        security_group_patch = security_group_patch_model
 
         # Invoke method
-        response = service.update_security_group(id, name=name, headers={})
+        response = service.update_security_group(id,
+                                                 security_group_patch,
+                                                 headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-security-group'
+        assert req_body == security_group_patch
 
     @responses.activate
     def test_update_security_group_value_error(self):
@@ -10871,13 +10755,18 @@ class TestUpdateSecurityGroup():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a SecurityGroupPatch model
+        security_group_patch_model = {}
+        security_group_patch_model['name'] = 'my-security-group'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-security-group'
+        security_group_patch = security_group_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "security_group_patch": security_group_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -10897,7 +10786,6 @@ class TestListSecurityGroupNetworkInterfaces():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11002,7 +10890,6 @@ class TestRemoveSecurityGroupNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11069,7 +10956,6 @@ class TestGetSecurityGroupNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11146,7 +11032,6 @@ class TestAddSecurityGroupNetworkInterface():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11223,7 +11108,6 @@ class TestListSecurityGroupRules():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11295,7 +11179,6 @@ class TestCreateSecurityGroupRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11401,7 +11284,6 @@ class TestDeleteSecurityGroupRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11467,7 +11349,6 @@ class TestGetSecurityGroupRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11543,7 +11424,6 @@ class TestUpdateSecurityGroupRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11568,27 +11448,26 @@ class TestUpdateSecurityGroupRule():
         security_group_rule_patch_remote_model = {}
         security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
+        # Construct a dict representation of a SecurityGroupRulePatch model
+        security_group_rule_patch_model = {}
+        security_group_rule_patch_model[
+            'remote'] = security_group_rule_patch_remote_model
+        security_group_rule_patch_model['direction'] = 'inbound'
+        security_group_rule_patch_model['ip_version'] = 'ipv4'
+        security_group_rule_patch_model['code'] = 0
+        security_group_rule_patch_model['port_max'] = 22
+        security_group_rule_patch_model['port_min'] = 22
+        security_group_rule_patch_model['type'] = 8
+
         # Set up parameter values
         security_group_id = 'testString'
         id = 'testString'
-        remote = security_group_rule_patch_remote_model
-        direction = 'inbound'
-        ip_version = 'ipv4'
-        code = 0
-        port_max = 22
-        port_min = 22
-        type = 8
+        security_group_rule_patch = security_group_rule_patch_model
 
         # Invoke method
         response = service.update_security_group_rule(security_group_id,
                                                       id,
-                                                      remote=remote,
-                                                      direction=direction,
-                                                      ip_version=ip_version,
-                                                      code=code,
-                                                      port_max=port_max,
-                                                      port_min=port_min,
-                                                      type=type,
+                                                      security_group_rule_patch,
                                                       headers={})
 
         # Check for correct operation
@@ -11596,13 +11475,7 @@ class TestUpdateSecurityGroupRule():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['remote'] == security_group_rule_patch_remote_model
-        assert req_body['direction'] == 'inbound'
-        assert req_body['ip_version'] == 'ipv4'
-        assert req_body['code'] == 0
-        assert req_body['port_max'] == 22
-        assert req_body['port_min'] == 22
-        assert req_body['type'] == 8
+        assert req_body == security_group_rule_patch
 
     @responses.activate
     def test_update_security_group_rule_value_error(self):
@@ -11623,21 +11496,27 @@ class TestUpdateSecurityGroupRule():
         security_group_rule_patch_remote_model = {}
         security_group_rule_patch_remote_model['address'] = '192.168.3.4'
 
+        # Construct a dict representation of a SecurityGroupRulePatch model
+        security_group_rule_patch_model = {}
+        security_group_rule_patch_model[
+            'remote'] = security_group_rule_patch_remote_model
+        security_group_rule_patch_model['direction'] = 'inbound'
+        security_group_rule_patch_model['ip_version'] = 'ipv4'
+        security_group_rule_patch_model['code'] = 0
+        security_group_rule_patch_model['port_max'] = 22
+        security_group_rule_patch_model['port_min'] = 22
+        security_group_rule_patch_model['type'] = 8
+
         # Set up parameter values
         security_group_id = 'testString'
         id = 'testString'
-        remote = security_group_rule_patch_remote_model
-        direction = 'inbound'
-        ip_version = 'ipv4'
-        code = 0
-        port_max = 22
-        port_min = 22
-        type = 8
+        security_group_rule_patch = security_group_rule_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "security_group_id": security_group_id,
             "id": id,
+            "security_group_rule_patch": security_group_rule_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -11668,7 +11547,6 @@ class TestListIkePolicies():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11761,7 +11639,6 @@ class TestCreateIkePolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11869,7 +11746,6 @@ class TestDeleteIkePolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11928,7 +11804,6 @@ class TestGetIkePolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -11997,7 +11872,6 @@ class TestUpdateIkePolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12017,37 +11891,28 @@ class TestUpdateIkePolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a IKEPolicyPatch model
+        ike_policy_patch_model = {}
+        ike_policy_patch_model['name'] = 'my-ike-policy'
+        ike_policy_patch_model['authentication_algorithm'] = 'md5'
+        ike_policy_patch_model['dh_group'] = 2
+        ike_policy_patch_model['encryption_algorithm'] = 'triple_des'
+        ike_policy_patch_model['ike_version'] = 1
+        ike_policy_patch_model['key_lifetime'] = 28800
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-ike-policy'
-        authentication_algorithm = 'md5'
-        dh_group = 2
-        encryption_algorithm = 'triple_des'
-        ike_version = 1
-        key_lifetime = 28800
+        ike_policy_patch = ike_policy_patch_model
 
         # Invoke method
-        response = service.update_ike_policy(
-            id,
-            name=name,
-            authentication_algorithm=authentication_algorithm,
-            dh_group=dh_group,
-            encryption_algorithm=encryption_algorithm,
-            ike_version=ike_version,
-            key_lifetime=key_lifetime,
-            headers={})
+        response = service.update_ike_policy(id, ike_policy_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-ike-policy'
-        assert req_body['authentication_algorithm'] == 'md5'
-        assert req_body['dh_group'] == 2
-        assert req_body['encryption_algorithm'] == 'triple_des'
-        assert req_body['ike_version'] == 1
-        assert req_body['key_lifetime'] == 28800
+        assert req_body == ike_policy_patch
 
     @responses.activate
     def test_update_ike_policy_value_error(self):
@@ -12063,18 +11928,23 @@ class TestUpdateIkePolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a IKEPolicyPatch model
+        ike_policy_patch_model = {}
+        ike_policy_patch_model['name'] = 'my-ike-policy'
+        ike_policy_patch_model['authentication_algorithm'] = 'md5'
+        ike_policy_patch_model['dh_group'] = 2
+        ike_policy_patch_model['encryption_algorithm'] = 'triple_des'
+        ike_policy_patch_model['ike_version'] = 1
+        ike_policy_patch_model['key_lifetime'] = 28800
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-ike-policy'
-        authentication_algorithm = 'md5'
-        dh_group = 2
-        encryption_algorithm = 'triple_des'
-        ike_version = 1
-        key_lifetime = 28800
+        ike_policy_patch = ike_policy_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "ike_policy_patch": ike_policy_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -12094,7 +11964,6 @@ class TestListIkePolicyConnections():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12165,7 +12034,6 @@ class TestListIpsecPolicies():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12258,7 +12126,6 @@ class TestCreateIpsecPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12361,7 +12228,6 @@ class TestDeleteIpsecPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12420,7 +12286,6 @@ class TestGetIpsecPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12489,7 +12354,6 @@ class TestUpdateIpsecPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12509,34 +12373,29 @@ class TestUpdateIpsecPolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a IPsecPolicyPatch model
+        i_psec_policy_patch_model = {}
+        i_psec_policy_patch_model['name'] = 'my-ipsec-policy'
+        i_psec_policy_patch_model['authentication_algorithm'] = 'md5'
+        i_psec_policy_patch_model['encryption_algorithm'] = 'triple_des'
+        i_psec_policy_patch_model['key_lifetime'] = 3600
+        i_psec_policy_patch_model['pfs'] = 'disabled'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-ipsec-policy'
-        authentication_algorithm = 'md5'
-        encryption_algorithm = 'triple_des'
-        key_lifetime = 3600
-        pfs = 'disabled'
+        i_psec_policy_patch = i_psec_policy_patch_model
 
         # Invoke method
-        response = service.update_ipsec_policy(
-            id,
-            name=name,
-            authentication_algorithm=authentication_algorithm,
-            encryption_algorithm=encryption_algorithm,
-            key_lifetime=key_lifetime,
-            pfs=pfs,
-            headers={})
+        response = service.update_ipsec_policy(id,
+                                               i_psec_policy_patch,
+                                               headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-ipsec-policy'
-        assert req_body['authentication_algorithm'] == 'md5'
-        assert req_body['encryption_algorithm'] == 'triple_des'
-        assert req_body['key_lifetime'] == 3600
-        assert req_body['pfs'] == 'disabled'
+        assert req_body == i_psec_policy_patch
 
     @responses.activate
     def test_update_ipsec_policy_value_error(self):
@@ -12552,17 +12411,22 @@ class TestUpdateIpsecPolicy():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a IPsecPolicyPatch model
+        i_psec_policy_patch_model = {}
+        i_psec_policy_patch_model['name'] = 'my-ipsec-policy'
+        i_psec_policy_patch_model['authentication_algorithm'] = 'md5'
+        i_psec_policy_patch_model['encryption_algorithm'] = 'triple_des'
+        i_psec_policy_patch_model['key_lifetime'] = 3600
+        i_psec_policy_patch_model['pfs'] = 'disabled'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-ipsec-policy'
-        authentication_algorithm = 'md5'
-        encryption_algorithm = 'triple_des'
-        key_lifetime = 3600
-        pfs = 'disabled'
+        i_psec_policy_patch = i_psec_policy_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "i_psec_policy_patch": i_psec_policy_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -12582,7 +12446,6 @@ class TestListIpsecPolicyConnections():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12653,7 +12516,6 @@ class TestListVpnGateways():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12750,7 +12612,6 @@ class TestCreateVpnGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12847,7 +12708,6 @@ class TestDeleteVpnGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12906,7 +12766,6 @@ class TestGetVpnGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12975,7 +12834,6 @@ class TestUpdateVpnGateway():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -12995,19 +12853,23 @@ class TestUpdateVpnGateway():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VPNGatewayPatch model
+        vpn_gateway_patch_model = {}
+        vpn_gateway_patch_model['name'] = 'my-vpn-gateway'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-vpn-gateway'
+        vpn_gateway_patch = vpn_gateway_patch_model
 
         # Invoke method
-        response = service.update_vpn_gateway(id, name=name, headers={})
+        response = service.update_vpn_gateway(id, vpn_gateway_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-vpn-gateway'
+        assert req_body == vpn_gateway_patch
 
     @responses.activate
     def test_update_vpn_gateway_value_error(self):
@@ -13023,13 +12885,18 @@ class TestUpdateVpnGateway():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a VPNGatewayPatch model
+        vpn_gateway_patch_model = {}
+        vpn_gateway_patch_model['name'] = 'my-vpn-gateway'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-vpn-gateway'
+        vpn_gateway_patch = vpn_gateway_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "vpn_gateway_patch": vpn_gateway_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -13049,7 +12916,6 @@ class TestListVpnGatewayConnections():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13153,7 +13019,6 @@ class TestCreateVpnGatewayConnection():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13297,7 +13162,6 @@ class TestDeleteVpnGatewayConnection():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13363,7 +13227,6 @@ class TestGetVpnGatewayConnection():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13439,7 +13302,6 @@ class TestUpdateVpnGatewayConnection():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13475,43 +13337,34 @@ class TestUpdateVpnGatewayConnection():
         i_psec_policy_identity_model[
             'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
 
+        # Construct a dict representation of a VPNGatewayConnectionPatch model
+        vpn_gateway_connection_patch_model = {}
+        vpn_gateway_connection_patch_model['admin_state_up'] = True
+        vpn_gateway_connection_patch_model['peer_address'] = '169.21.50.5'
+        vpn_gateway_connection_patch_model['name'] = 'my-vpn-connection'
+        vpn_gateway_connection_patch_model['psk'] = 'lkj14b1oi0alcniejkso'
+        vpn_gateway_connection_patch_model[
+            'dead_peer_detection'] = vpn_gateway_connection_dpd_prototype_model
+        vpn_gateway_connection_patch_model[
+            'ike_policy'] = ike_policy_identity_model
+        vpn_gateway_connection_patch_model[
+            'ipsec_policy'] = i_psec_policy_identity_model
+
         # Set up parameter values
         vpn_gateway_id = 'testString'
         id = 'testString'
-        admin_state_up = True
-        peer_address = '169.21.50.5'
-        name = 'my-vpn-connection'
-        psk = 'lkj14b1oi0alcniejkso'
-        dead_peer_detection = vpn_gateway_connection_dpd_prototype_model
-        ike_policy = ike_policy_identity_model
-        ipsec_policy = i_psec_policy_identity_model
+        vpn_gateway_connection_patch = vpn_gateway_connection_patch_model
 
         # Invoke method
         response = service.update_vpn_gateway_connection(
-            vpn_gateway_id,
-            id,
-            admin_state_up=admin_state_up,
-            peer_address=peer_address,
-            name=name,
-            psk=psk,
-            dead_peer_detection=dead_peer_detection,
-            ike_policy=ike_policy,
-            ipsec_policy=ipsec_policy,
-            headers={})
+            vpn_gateway_id, id, vpn_gateway_connection_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['admin_state_up'] == True
-        assert req_body['peer_address'] == '169.21.50.5'
-        assert req_body['name'] == 'my-vpn-connection'
-        assert req_body['psk'] == 'lkj14b1oi0alcniejkso'
-        assert req_body[
-            'dead_peer_detection'] == vpn_gateway_connection_dpd_prototype_model
-        assert req_body['ike_policy'] == ike_policy_identity_model
-        assert req_body['ipsec_policy'] == i_psec_policy_identity_model
+        assert req_body == vpn_gateway_connection_patch
 
     @responses.activate
     def test_update_vpn_gateway_connection_value_error(self):
@@ -13543,21 +13396,29 @@ class TestUpdateVpnGatewayConnection():
         i_psec_policy_identity_model[
             'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
 
+        # Construct a dict representation of a VPNGatewayConnectionPatch model
+        vpn_gateway_connection_patch_model = {}
+        vpn_gateway_connection_patch_model['admin_state_up'] = True
+        vpn_gateway_connection_patch_model['peer_address'] = '169.21.50.5'
+        vpn_gateway_connection_patch_model['name'] = 'my-vpn-connection'
+        vpn_gateway_connection_patch_model['psk'] = 'lkj14b1oi0alcniejkso'
+        vpn_gateway_connection_patch_model[
+            'dead_peer_detection'] = vpn_gateway_connection_dpd_prototype_model
+        vpn_gateway_connection_patch_model[
+            'ike_policy'] = ike_policy_identity_model
+        vpn_gateway_connection_patch_model[
+            'ipsec_policy'] = i_psec_policy_identity_model
+
         # Set up parameter values
         vpn_gateway_id = 'testString'
         id = 'testString'
-        admin_state_up = True
-        peer_address = '169.21.50.5'
-        name = 'my-vpn-connection'
-        psk = 'lkj14b1oi0alcniejkso'
-        dead_peer_detection = vpn_gateway_connection_dpd_prototype_model
-        ike_policy = ike_policy_identity_model
-        ipsec_policy = i_psec_policy_identity_model
+        vpn_gateway_connection_patch = vpn_gateway_connection_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "vpn_gateway_id": vpn_gateway_id,
             "id": id,
+            "vpn_gateway_connection_patch": vpn_gateway_connection_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -13577,7 +13438,6 @@ class TestListVpnGatewayConnectionLocalCidrs():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13654,7 +13514,6 @@ class TestRemoveVpnGatewayConnectionLocalCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13729,7 +13588,6 @@ class TestCheckVpnGatewayConnectionLocalCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13804,7 +13662,6 @@ class TestAddVpnGatewayConnectionLocalCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13882,7 +13739,6 @@ class TestListVpnGatewayConnectionPeerCidrs():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -13959,7 +13815,6 @@ class TestRemoveVpnGatewayConnectionPeerCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14034,7 +13889,6 @@ class TestCheckVpnGatewayConnectionPeerCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14109,7 +13963,6 @@ class TestAddVpnGatewayConnectionPeerCidr():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14198,7 +14051,6 @@ class TestListLoadBalancerProfiles():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14291,7 +14143,6 @@ class TestGetLoadBalancerProfile():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14362,7 +14213,6 @@ class TestListLoadBalancers():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14423,7 +14273,6 @@ class TestCreateLoadBalancer():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14661,7 +14510,6 @@ class TestDeleteLoadBalancer():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14720,7 +14568,6 @@ class TestGetLoadBalancer():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14789,7 +14636,6 @@ class TestUpdateLoadBalancer():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14809,19 +14655,25 @@ class TestUpdateLoadBalancer():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a LoadBalancerPatch model
+        load_balancer_patch_model = {}
+        load_balancer_patch_model['name'] = 'my-load-balancer'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-load-balancer'
+        load_balancer_patch = load_balancer_patch_model
 
         # Invoke method
-        response = service.update_load_balancer(id, name=name, headers={})
+        response = service.update_load_balancer(id,
+                                                load_balancer_patch,
+                                                headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-load-balancer'
+        assert req_body == load_balancer_patch
 
     @responses.activate
     def test_update_load_balancer_value_error(self):
@@ -14837,13 +14689,18 @@ class TestUpdateLoadBalancer():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a LoadBalancerPatch model
+        load_balancer_patch_model = {}
+        load_balancer_patch_model['name'] = 'my-load-balancer'
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-load-balancer'
+        load_balancer_patch = load_balancer_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "load_balancer_patch": load_balancer_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -14863,7 +14720,6 @@ class TestGetLoadBalancerStatistics():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -14934,7 +14790,6 @@ class TestListLoadBalancerListeners():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15006,7 +14861,6 @@ class TestCreateLoadBalancerListener():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15182,7 +15036,6 @@ class TestDeleteLoadBalancerListener():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15248,7 +15101,6 @@ class TestGetLoadBalancerListener():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15324,7 +15176,6 @@ class TestUpdateLoadBalancerListener():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15355,37 +15206,31 @@ class TestUpdateLoadBalancerListener():
         load_balancer_pool_identity_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a LoadBalancerListenerPatch model
+        load_balancer_listener_patch_model = {}
+        load_balancer_listener_patch_model['connection_limit'] = 2000
+        load_balancer_listener_patch_model['port'] = 443
+        load_balancer_listener_patch_model['protocol'] = 'http'
+        load_balancer_listener_patch_model[
+            'certificate_instance'] = certificate_instance_identity_model
+        load_balancer_listener_patch_model[
+            'default_pool'] = load_balancer_pool_identity_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         id = 'testString'
-        connection_limit = 2000
-        port = 443
-        protocol = 'http'
-        certificate_instance = certificate_instance_identity_model
-        default_pool = load_balancer_pool_identity_model
+        load_balancer_listener_patch = load_balancer_listener_patch_model
 
         # Invoke method
         response = service.update_load_balancer_listener(
-            load_balancer_id,
-            id,
-            connection_limit=connection_limit,
-            port=port,
-            protocol=protocol,
-            certificate_instance=certificate_instance,
-            default_pool=default_pool,
-            headers={})
+            load_balancer_id, id, load_balancer_listener_patch, headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['connection_limit'] == 2000
-        assert req_body['port'] == 443
-        assert req_body['protocol'] == 'http'
-        assert req_body[
-            'certificate_instance'] == certificate_instance_identity_model
-        assert req_body['default_pool'] == load_balancer_pool_identity_model
+        assert req_body == load_balancer_listener_patch
 
     @responses.activate
     def test_update_load_balancer_listener_value_error(self):
@@ -15412,19 +15257,26 @@ class TestUpdateLoadBalancerListener():
         load_balancer_pool_identity_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a LoadBalancerListenerPatch model
+        load_balancer_listener_patch_model = {}
+        load_balancer_listener_patch_model['connection_limit'] = 2000
+        load_balancer_listener_patch_model['port'] = 443
+        load_balancer_listener_patch_model['protocol'] = 'http'
+        load_balancer_listener_patch_model[
+            'certificate_instance'] = certificate_instance_identity_model
+        load_balancer_listener_patch_model[
+            'default_pool'] = load_balancer_pool_identity_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         id = 'testString'
-        connection_limit = 2000
-        port = 443
-        protocol = 'http'
-        certificate_instance = certificate_instance_identity_model
-        default_pool = load_balancer_pool_identity_model
+        load_balancer_listener_patch = load_balancer_listener_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "load_balancer_id": load_balancer_id,
             "id": id,
+            "load_balancer_listener_patch": load_balancer_listener_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -15444,7 +15296,6 @@ class TestListLoadBalancerListenerPolicies():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15521,7 +15372,6 @@ class TestCreateLoadBalancerListenerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15657,7 +15507,6 @@ class TestDeleteLoadBalancerListenerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15729,7 +15578,6 @@ class TestGetLoadBalancerListenerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15813,7 +15661,6 @@ class TestUpdateLoadBalancerListenerPolicy():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -15841,22 +15688,25 @@ class TestUpdateLoadBalancerListenerPolicy():
         load_balancer_listener_policy_patch_target_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a LoadBalancerListenerPolicyPatch model
+        load_balancer_listener_policy_patch_model = {}
+        load_balancer_listener_policy_patch_model['name'] = 'my-policy'
+        load_balancer_listener_policy_patch_model['priority'] = 5
+        load_balancer_listener_policy_patch_model[
+            'target'] = load_balancer_listener_policy_patch_target_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         listener_id = 'testString'
         id = 'testString'
-        name = 'my-policy'
-        priority = 5
-        target = load_balancer_listener_policy_patch_target_model
+        load_balancer_listener_policy_patch = load_balancer_listener_policy_patch_model
 
         # Invoke method
         response = service.update_load_balancer_listener_policy(
             load_balancer_id,
             listener_id,
             id,
-            name=name,
-            priority=priority,
-            target=target,
+            load_balancer_listener_policy_patch,
             headers={})
 
         # Check for correct operation
@@ -15864,10 +15714,7 @@ class TestUpdateLoadBalancerListenerPolicy():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-policy'
-        assert req_body['priority'] == 5
-        assert req_body[
-            'target'] == load_balancer_listener_policy_patch_target_model
+        assert req_body == load_balancer_listener_policy_patch
 
     @responses.activate
     def test_update_load_balancer_listener_policy_value_error(self):
@@ -15891,19 +15738,29 @@ class TestUpdateLoadBalancerListenerPolicy():
         load_balancer_listener_policy_patch_target_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
+        # Construct a dict representation of a LoadBalancerListenerPolicyPatch model
+        load_balancer_listener_policy_patch_model = {}
+        load_balancer_listener_policy_patch_model['name'] = 'my-policy'
+        load_balancer_listener_policy_patch_model['priority'] = 5
+        load_balancer_listener_policy_patch_model[
+            'target'] = load_balancer_listener_policy_patch_target_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         listener_id = 'testString'
         id = 'testString'
-        name = 'my-policy'
-        priority = 5
-        target = load_balancer_listener_policy_patch_target_model
+        load_balancer_listener_policy_patch = load_balancer_listener_policy_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
-            "load_balancer_id": load_balancer_id,
-            "listener_id": listener_id,
-            "id": id,
+            "load_balancer_id":
+                load_balancer_id,
+            "listener_id":
+                listener_id,
+            "id":
+                id,
+            "load_balancer_listener_policy_patch":
+                load_balancer_listener_policy_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -15923,7 +15780,6 @@ class TestListLoadBalancerListenerPolicyRules():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16005,7 +15861,6 @@ class TestCreateLoadBalancerListenerPolicyRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16111,7 +15966,6 @@ class TestDeleteLoadBalancerListenerPolicyRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16186,7 +16040,6 @@ class TestGetLoadBalancerListenerPolicyRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16271,7 +16124,6 @@ class TestUpdateLoadBalancerListenerPolicyRule():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16294,15 +16146,20 @@ class TestUpdateLoadBalancerListenerPolicyRule():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a LoadBalancerListenerPolicyRulePatch model
+        load_balancer_listener_policy_rule_patch_model = {}
+        load_balancer_listener_policy_rule_patch_model['condition'] = 'contains'
+        load_balancer_listener_policy_rule_patch_model[
+            'field'] = 'MY-APP-HEADER'
+        load_balancer_listener_policy_rule_patch_model['type'] = 'header'
+        load_balancer_listener_policy_rule_patch_model['value'] = 'testString'
+
         # Set up parameter values
         load_balancer_id = 'testString'
         listener_id = 'testString'
         policy_id = 'testString'
         id = 'testString'
-        condition = 'contains'
-        field = 'MY-APP-HEADER'
-        type = 'header'
-        value = 'testString'
+        load_balancer_listener_policy_rule_patch = load_balancer_listener_policy_rule_patch_model
 
         # Invoke method
         response = service.update_load_balancer_listener_policy_rule(
@@ -16310,10 +16167,7 @@ class TestUpdateLoadBalancerListenerPolicyRule():
             listener_id,
             policy_id,
             id,
-            condition=condition,
-            field=field,
-            type=type,
-            value=value,
+            load_balancer_listener_policy_rule_patch,
             headers={})
 
         # Check for correct operation
@@ -16321,10 +16175,7 @@ class TestUpdateLoadBalancerListenerPolicyRule():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['condition'] == 'contains'
-        assert req_body['field'] == 'MY-APP-HEADER'
-        assert req_body['type'] == 'header'
-        assert req_body['value'] == 'testString'
+        assert req_body == load_balancer_listener_policy_rule_patch
 
     @responses.activate
     def test_update_load_balancer_listener_policy_rule_value_error(self):
@@ -16343,22 +16194,33 @@ class TestUpdateLoadBalancerListenerPolicyRule():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a LoadBalancerListenerPolicyRulePatch model
+        load_balancer_listener_policy_rule_patch_model = {}
+        load_balancer_listener_policy_rule_patch_model['condition'] = 'contains'
+        load_balancer_listener_policy_rule_patch_model[
+            'field'] = 'MY-APP-HEADER'
+        load_balancer_listener_policy_rule_patch_model['type'] = 'header'
+        load_balancer_listener_policy_rule_patch_model['value'] = 'testString'
+
         # Set up parameter values
         load_balancer_id = 'testString'
         listener_id = 'testString'
         policy_id = 'testString'
         id = 'testString'
-        condition = 'contains'
-        field = 'MY-APP-HEADER'
-        type = 'header'
-        value = 'testString'
+        load_balancer_listener_policy_rule_patch = load_balancer_listener_policy_rule_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
-            "load_balancer_id": load_balancer_id,
-            "listener_id": listener_id,
-            "policy_id": policy_id,
-            "id": id,
+            "load_balancer_id":
+                load_balancer_id,
+            "listener_id":
+                listener_id,
+            "policy_id":
+                policy_id,
+            "id":
+                id,
+            "load_balancer_listener_policy_rule_patch":
+                load_balancer_listener_policy_rule_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -16378,7 +16240,6 @@ class TestListLoadBalancerPools():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16448,7 +16309,6 @@ class TestCreateLoadBalancerPool():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16604,7 +16464,6 @@ class TestDeleteLoadBalancerPool():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16670,7 +16529,6 @@ class TestGetLoadBalancerPool():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16746,7 +16604,6 @@ class TestUpdateLoadBalancerPool():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16780,38 +16637,33 @@ class TestUpdateLoadBalancerPool():
         load_balancer_pool_session_persistence_patch_model = {}
         load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
 
+        # Construct a dict representation of a LoadBalancerPoolPatch model
+        load_balancer_pool_patch_model = {}
+        load_balancer_pool_patch_model['name'] = 'my-load-balancer-pool'
+        load_balancer_pool_patch_model['algorithm'] = 'least_connections'
+        load_balancer_pool_patch_model['protocol'] = 'http'
+        load_balancer_pool_patch_model[
+            'health_monitor'] = load_balancer_pool_health_monitor_patch_model
+        load_balancer_pool_patch_model[
+            'session_persistence'] = load_balancer_pool_session_persistence_patch_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         id = 'testString'
-        name = 'my-load-balancer-pool'
-        algorithm = 'least_connections'
-        protocol = 'http'
-        health_monitor = load_balancer_pool_health_monitor_patch_model
-        session_persistence = load_balancer_pool_session_persistence_patch_model
+        load_balancer_pool_patch = load_balancer_pool_patch_model
 
         # Invoke method
-        response = service.update_load_balancer_pool(
-            load_balancer_id,
-            id,
-            name=name,
-            algorithm=algorithm,
-            protocol=protocol,
-            health_monitor=health_monitor,
-            session_persistence=session_persistence,
-            headers={})
+        response = service.update_load_balancer_pool(load_balancer_id,
+                                                     id,
+                                                     load_balancer_pool_patch,
+                                                     headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-load-balancer-pool'
-        assert req_body['algorithm'] == 'least_connections'
-        assert req_body['protocol'] == 'http'
-        assert req_body[
-            'health_monitor'] == load_balancer_pool_health_monitor_patch_model
-        assert req_body[
-            'session_persistence'] == load_balancer_pool_session_persistence_patch_model
+        assert req_body == load_balancer_pool_patch
 
     @responses.activate
     def test_update_load_balancer_pool_value_error(self):
@@ -16841,19 +16693,26 @@ class TestUpdateLoadBalancerPool():
         load_balancer_pool_session_persistence_patch_model = {}
         load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
 
+        # Construct a dict representation of a LoadBalancerPoolPatch model
+        load_balancer_pool_patch_model = {}
+        load_balancer_pool_patch_model['name'] = 'my-load-balancer-pool'
+        load_balancer_pool_patch_model['algorithm'] = 'least_connections'
+        load_balancer_pool_patch_model['protocol'] = 'http'
+        load_balancer_pool_patch_model[
+            'health_monitor'] = load_balancer_pool_health_monitor_patch_model
+        load_balancer_pool_patch_model[
+            'session_persistence'] = load_balancer_pool_session_persistence_patch_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         id = 'testString'
-        name = 'my-load-balancer-pool'
-        algorithm = 'least_connections'
-        protocol = 'http'
-        health_monitor = load_balancer_pool_health_monitor_patch_model
-        session_persistence = load_balancer_pool_session_persistence_patch_model
+        load_balancer_pool_patch = load_balancer_pool_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "load_balancer_id": load_balancer_id,
             "id": id,
+            "load_balancer_pool_patch": load_balancer_pool_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -16873,7 +16732,6 @@ class TestListLoadBalancerPoolMembers():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -16949,7 +16807,6 @@ class TestCreateLoadBalancerPoolMember():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17052,7 +16909,6 @@ class TestReplaceLoadBalancerPoolMembers():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17161,7 +17017,6 @@ class TestDeleteLoadBalancerPoolMember():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17233,7 +17088,6 @@ class TestGetLoadBalancerPoolMember():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17315,7 +17169,6 @@ class TestUpdateLoadBalancerPoolMember():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17342,32 +17195,33 @@ class TestUpdateLoadBalancerPoolMember():
         load_balancer_pool_member_target_prototype_model[
             'id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
 
+        # Construct a dict representation of a LoadBalancerPoolMemberPatch model
+        load_balancer_pool_member_patch_model = {}
+        load_balancer_pool_member_patch_model['port'] = 80
+        load_balancer_pool_member_patch_model['weight'] = 50
+        load_balancer_pool_member_patch_model[
+            'target'] = load_balancer_pool_member_target_prototype_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         pool_id = 'testString'
         id = 'testString'
-        port = 80
-        weight = 50
-        target = load_balancer_pool_member_target_prototype_model
+        load_balancer_pool_member_patch = load_balancer_pool_member_patch_model
 
         # Invoke method
-        response = service.update_load_balancer_pool_member(load_balancer_id,
-                                                            pool_id,
-                                                            id,
-                                                            port=port,
-                                                            weight=weight,
-                                                            target=target,
-                                                            headers={})
+        response = service.update_load_balancer_pool_member(
+            load_balancer_id,
+            pool_id,
+            id,
+            load_balancer_pool_member_patch,
+            headers={})
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['port'] == 80
-        assert req_body['weight'] == 50
-        assert req_body[
-            'target'] == load_balancer_pool_member_target_prototype_model
+        assert req_body == load_balancer_pool_member_patch
 
     @responses.activate
     def test_update_load_balancer_pool_member_value_error(self):
@@ -17390,19 +17244,25 @@ class TestUpdateLoadBalancerPoolMember():
         load_balancer_pool_member_target_prototype_model[
             'id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
 
+        # Construct a dict representation of a LoadBalancerPoolMemberPatch model
+        load_balancer_pool_member_patch_model = {}
+        load_balancer_pool_member_patch_model['port'] = 80
+        load_balancer_pool_member_patch_model['weight'] = 50
+        load_balancer_pool_member_patch_model[
+            'target'] = load_balancer_pool_member_target_prototype_model
+
         # Set up parameter values
         load_balancer_id = 'testString'
         pool_id = 'testString'
         id = 'testString'
-        port = 80
-        weight = 50
-        target = load_balancer_pool_member_target_prototype_model
+        load_balancer_pool_member_patch = load_balancer_pool_member_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "load_balancer_id": load_balancer_id,
             "pool_id": pool_id,
             "id": id,
+            "load_balancer_pool_member_patch": load_balancer_pool_member_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -17433,7 +17293,6 @@ class TestListFlowLogCollectors():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17549,7 +17408,6 @@ class TestCreateFlowLogCollector():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17669,7 +17527,6 @@ class TestDeleteFlowLogCollector():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17728,7 +17585,6 @@ class TestGetFlowLogCollector():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17797,7 +17653,6 @@ class TestUpdateFlowLogCollector():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -17817,15 +17672,18 @@ class TestUpdateFlowLogCollector():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a FlowLogCollectorPatch model
+        flow_log_collector_patch_model = {}
+        flow_log_collector_patch_model['name'] = 'my-flow-log-collector'
+        flow_log_collector_patch_model['active'] = True
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-flow-log-collector'
-        active = True
+        flow_log_collector_patch = flow_log_collector_patch_model
 
         # Invoke method
         response = service.update_flow_log_collector(id,
-                                                     name=name,
-                                                     active=active,
+                                                     flow_log_collector_patch,
                                                      headers={})
 
         # Check for correct operation
@@ -17833,8 +17691,7 @@ class TestUpdateFlowLogCollector():
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-flow-log-collector'
-        assert req_body['active'] == True
+        assert req_body == flow_log_collector_patch
 
     @responses.activate
     def test_update_flow_log_collector_value_error(self):
@@ -17850,14 +17707,19 @@ class TestUpdateFlowLogCollector():
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a FlowLogCollectorPatch model
+        flow_log_collector_patch_model = {}
+        flow_log_collector_patch_model['name'] = 'my-flow-log-collector'
+        flow_log_collector_patch_model['active'] = True
+
         # Set up parameter values
         id = 'testString'
-        name = 'my-flow-log-collector'
-        active = True
+        flow_log_collector_patch = flow_log_collector_patch_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "id": id,
+            "flow_log_collector_patch": flow_log_collector_patch,
         }
         for param in req_param_dict.keys():
             req_copy = {
@@ -18064,6 +17926,40 @@ class TestAddressPrefixCollectionNext():
         assert address_prefix_collection_next_model_json2 == address_prefix_collection_next_model_json
 
 
+class TestAddressPrefixPatch():
+    """
+    Test Class for AddressPrefixPatch
+    """
+
+    def test_address_prefix_patch_serialization(self):
+        """
+        Test serialization/deserialization for AddressPrefixPatch
+        """
+
+        # Construct a json representation of a AddressPrefixPatch model
+        address_prefix_patch_model_json = {}
+        address_prefix_patch_model_json['name'] = 'my-address-prefix-2'
+        address_prefix_patch_model_json['is_default'] = False
+
+        # Construct a model instance of AddressPrefixPatch by calling from_dict on the json representation
+        address_prefix_patch_model = AddressPrefixPatch.from_dict(
+            address_prefix_patch_model_json)
+        assert address_prefix_patch_model != False
+
+        # Construct a model instance of AddressPrefixPatch by calling from_dict on the json representation
+        address_prefix_patch_model_dict = AddressPrefixPatch.from_dict(
+            address_prefix_patch_model_json).__dict__
+        address_prefix_patch_model2 = AddressPrefixPatch(
+            **address_prefix_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert address_prefix_patch_model == address_prefix_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        address_prefix_patch_model_json2 = address_prefix_patch_model.to_dict()
+        assert address_prefix_patch_model_json2 == address_prefix_patch_model_json
+
+
 class TestCertificateInstanceReference():
     """
     Test Class for CertificateInstanceReference
@@ -18180,14 +18076,7 @@ class TestDefaultNetworkACL():
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['source'] = '192.168.3.0/24'
         network_acl_rule_item_model['protocol'] = 'udp'
-        network_acl_rule_item_model['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['ip_version'] = 'ipv4'
@@ -18576,6 +18465,48 @@ class TestFloatingIPCollectionNext():
         assert floating_ip_collection_next_model_json2 == floating_ip_collection_next_model_json
 
 
+class TestFloatingIPPatch():
+    """
+    Test Class for FloatingIPPatch
+    """
+
+    def test_floating_ip_patch_serialization(self):
+        """
+        Test serialization/deserialization for FloatingIPPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        floating_ip_patch_target_network_interface_identity_model = {
+        }  # FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
+        floating_ip_patch_target_network_interface_identity_model[
+            'id'] = '69e55145-cc7d-4d8e-9e1f-cc3fb60b1793'
+
+        # Construct a json representation of a FloatingIPPatch model
+        floating_ip_patch_model_json = {}
+        floating_ip_patch_model_json['name'] = 'my-floating-ip'
+        floating_ip_patch_model_json[
+            'target'] = floating_ip_patch_target_network_interface_identity_model
+
+        # Construct a model instance of FloatingIPPatch by calling from_dict on the json representation
+        floating_ip_patch_model = FloatingIPPatch.from_dict(
+            floating_ip_patch_model_json)
+        assert floating_ip_patch_model != False
+
+        # Construct a model instance of FloatingIPPatch by calling from_dict on the json representation
+        floating_ip_patch_model_dict = FloatingIPPatch.from_dict(
+            floating_ip_patch_model_json).__dict__
+        floating_ip_patch_model2 = FloatingIPPatch(
+            **floating_ip_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert floating_ip_patch_model == floating_ip_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        floating_ip_patch_model_json2 = floating_ip_patch_model.to_dict()
+        assert floating_ip_patch_model_json2 == floating_ip_patch_model_json
+
+
 class TestFloatingIPReference():
     """
     Test Class for FloatingIPReference
@@ -18943,6 +18874,41 @@ class TestFlowLogCollectorCollectionNext():
         assert flow_log_collector_collection_next_model_json2 == flow_log_collector_collection_next_model_json
 
 
+class TestFlowLogCollectorPatch():
+    """
+    Test Class for FlowLogCollectorPatch
+    """
+
+    def test_flow_log_collector_patch_serialization(self):
+        """
+        Test serialization/deserialization for FlowLogCollectorPatch
+        """
+
+        # Construct a json representation of a FlowLogCollectorPatch model
+        flow_log_collector_patch_model_json = {}
+        flow_log_collector_patch_model_json['name'] = 'my-flow-log-collector'
+        flow_log_collector_patch_model_json['active'] = True
+
+        # Construct a model instance of FlowLogCollectorPatch by calling from_dict on the json representation
+        flow_log_collector_patch_model = FlowLogCollectorPatch.from_dict(
+            flow_log_collector_patch_model_json)
+        assert flow_log_collector_patch_model != False
+
+        # Construct a model instance of FlowLogCollectorPatch by calling from_dict on the json representation
+        flow_log_collector_patch_model_dict = FlowLogCollectorPatch.from_dict(
+            flow_log_collector_patch_model_json).__dict__
+        flow_log_collector_patch_model2 = FlowLogCollectorPatch(
+            **flow_log_collector_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert flow_log_collector_patch_model == flow_log_collector_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        flow_log_collector_patch_model_json2 = flow_log_collector_patch_model.to_dict(
+        )
+        assert flow_log_collector_patch_model_json2 == flow_log_collector_patch_model_json
+
+
 class TestIKEPolicy():
     """
     Test Class for IKEPolicy
@@ -19161,6 +19127,43 @@ class TestIKEPolicyCollectionNext():
         ike_policy_collection_next_model_json2 = ike_policy_collection_next_model.to_dict(
         )
         assert ike_policy_collection_next_model_json2 == ike_policy_collection_next_model_json
+
+
+class TestIKEPolicyPatch():
+    """
+    Test Class for IKEPolicyPatch
+    """
+
+    def test_ike_policy_patch_serialization(self):
+        """
+        Test serialization/deserialization for IKEPolicyPatch
+        """
+
+        # Construct a json representation of a IKEPolicyPatch model
+        ike_policy_patch_model_json = {}
+        ike_policy_patch_model_json['name'] = 'my-ike-policy'
+        ike_policy_patch_model_json['authentication_algorithm'] = 'md5'
+        ike_policy_patch_model_json['dh_group'] = 2
+        ike_policy_patch_model_json['encryption_algorithm'] = 'triple_des'
+        ike_policy_patch_model_json['ike_version'] = 1
+        ike_policy_patch_model_json['key_lifetime'] = 28800
+
+        # Construct a model instance of IKEPolicyPatch by calling from_dict on the json representation
+        ike_policy_patch_model = IKEPolicyPatch.from_dict(
+            ike_policy_patch_model_json)
+        assert ike_policy_patch_model != False
+
+        # Construct a model instance of IKEPolicyPatch by calling from_dict on the json representation
+        ike_policy_patch_model_dict = IKEPolicyPatch.from_dict(
+            ike_policy_patch_model_json).__dict__
+        ike_policy_patch_model2 = IKEPolicyPatch(**ike_policy_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert ike_policy_patch_model == ike_policy_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        ike_policy_patch_model_json2 = ike_policy_patch_model.to_dict()
+        assert ike_policy_patch_model_json2 == ike_policy_patch_model_json
 
 
 class TestIKEPolicyReference():
@@ -19454,6 +19457,43 @@ class TestIPsecPolicyCollectionNext():
         assert i_psec_policy_collection_next_model_json2 == i_psec_policy_collection_next_model_json
 
 
+class TestIPsecPolicyPatch():
+    """
+    Test Class for IPsecPolicyPatch
+    """
+
+    def test_i_psec_policy_patch_serialization(self):
+        """
+        Test serialization/deserialization for IPsecPolicyPatch
+        """
+
+        # Construct a json representation of a IPsecPolicyPatch model
+        i_psec_policy_patch_model_json = {}
+        i_psec_policy_patch_model_json['name'] = 'my-ipsec-policy'
+        i_psec_policy_patch_model_json['authentication_algorithm'] = 'md5'
+        i_psec_policy_patch_model_json['encryption_algorithm'] = 'triple_des'
+        i_psec_policy_patch_model_json['key_lifetime'] = 3600
+        i_psec_policy_patch_model_json['pfs'] = 'disabled'
+
+        # Construct a model instance of IPsecPolicyPatch by calling from_dict on the json representation
+        i_psec_policy_patch_model = IPsecPolicyPatch.from_dict(
+            i_psec_policy_patch_model_json)
+        assert i_psec_policy_patch_model != False
+
+        # Construct a model instance of IPsecPolicyPatch by calling from_dict on the json representation
+        i_psec_policy_patch_model_dict = IPsecPolicyPatch.from_dict(
+            i_psec_policy_patch_model_json).__dict__
+        i_psec_policy_patch_model2 = IPsecPolicyPatch(
+            **i_psec_policy_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert i_psec_policy_patch_model == i_psec_policy_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        i_psec_policy_patch_model_json2 = i_psec_policy_patch_model.to_dict()
+        assert i_psec_policy_patch_model_json2 == i_psec_policy_patch_model_json
+
+
 class TestIPsecPolicyReference():
     """
     Test Class for IPsecPolicyReference
@@ -19512,6 +19552,10 @@ class TestImage():
         resource_group_reference_model[
             'href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
 
+        encryption_key_reference_model = {}  # EncryptionKeyReference
+        encryption_key_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
         image_file_model = {}  # ImageFile
         image_file_model['size'] = 1
 
@@ -19535,6 +19579,8 @@ class TestImage():
         image_model_json['name'] = 'my-image'
         image_model_json['minimum_provisioned_size'] = 38
         image_model_json['resource_group'] = resource_group_reference_model
+        image_model_json['encryption'] = 'user_managed'
+        image_model_json['encryption_key'] = encryption_key_reference_model
         image_model_json['created_at'] = '2020-01-28T18:40:40.123456Z'
         image_model_json['file'] = image_file_model
         image_model_json['operating_system'] = operating_system_model
@@ -19584,6 +19630,10 @@ class TestImageCollection():
         resource_group_reference_model[
             'href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
 
+        encryption_key_reference_model = {}  # EncryptionKeyReference
+        encryption_key_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
         image_file_model = {}  # ImageFile
         image_file_model['size'] = 1
 
@@ -19606,6 +19656,8 @@ class TestImageCollection():
         image_model['name'] = 'my-image'
         image_model['minimum_provisioned_size'] = 38
         image_model['resource_group'] = resource_group_reference_model
+        image_model['encryption'] = 'user_managed'
+        image_model['encryption_key'] = encryption_key_reference_model
         image_model['created_at'] = '2020-01-28T18:40:40.123456Z'
         image_model['file'] = image_file_model
         image_model['operating_system'] = operating_system_model
@@ -19770,6 +19822,37 @@ class TestImageFilePrototype():
         # Convert model instance back to dict and verify no loss of data
         image_file_prototype_model_json2 = image_file_prototype_model.to_dict()
         assert image_file_prototype_model_json2 == image_file_prototype_model_json
+
+
+class TestImagePatch():
+    """
+    Test Class for ImagePatch
+    """
+
+    def test_image_patch_serialization(self):
+        """
+        Test serialization/deserialization for ImagePatch
+        """
+
+        # Construct a json representation of a ImagePatch model
+        image_patch_model_json = {}
+        image_patch_model_json['name'] = 'my-image'
+
+        # Construct a model instance of ImagePatch by calling from_dict on the json representation
+        image_patch_model = ImagePatch.from_dict(image_patch_model_json)
+        assert image_patch_model != False
+
+        # Construct a model instance of ImagePatch by calling from_dict on the json representation
+        image_patch_model_dict = ImagePatch.from_dict(
+            image_patch_model_json).__dict__
+        image_patch_model2 = ImagePatch(**image_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert image_patch_model == image_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        image_patch_model_json2 = image_patch_model.to_dict()
+        assert image_patch_model_json2 == image_patch_model_json
 
 
 class TestImageReference():
@@ -20773,6 +20856,46 @@ class TestInstanceGroupManagerCollectionNext():
         assert instance_group_manager_collection_next_model_json2 == instance_group_manager_collection_next_model_json
 
 
+class TestInstanceGroupManagerPatch():
+    """
+    Test Class for InstanceGroupManagerPatch
+    """
+
+    def test_instance_group_manager_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerPatch
+        """
+
+        # Construct a json representation of a InstanceGroupManagerPatch model
+        instance_group_manager_patch_model_json = {}
+        instance_group_manager_patch_model_json[
+            'name'] = 'my-instance-group-manager'
+        instance_group_manager_patch_model_json['management_enabled'] = True
+        instance_group_manager_patch_model_json['aggregation_window'] = 120
+        instance_group_manager_patch_model_json['cooldown'] = 210
+        instance_group_manager_patch_model_json['max_membership_count'] = 10
+        instance_group_manager_patch_model_json['min_membership_count'] = 10
+
+        # Construct a model instance of InstanceGroupManagerPatch by calling from_dict on the json representation
+        instance_group_manager_patch_model = InstanceGroupManagerPatch.from_dict(
+            instance_group_manager_patch_model_json)
+        assert instance_group_manager_patch_model != False
+
+        # Construct a model instance of InstanceGroupManagerPatch by calling from_dict on the json representation
+        instance_group_manager_patch_model_dict = InstanceGroupManagerPatch.from_dict(
+            instance_group_manager_patch_model_json).__dict__
+        instance_group_manager_patch_model2 = InstanceGroupManagerPatch(
+            **instance_group_manager_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_patch_model == instance_group_manager_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_patch_model_json2 = instance_group_manager_patch_model.to_dict(
+        )
+        assert instance_group_manager_patch_model_json2 == instance_group_manager_patch_model_json
+
+
 class TestInstanceGroupManagerPolicyCollection():
     """
     Test Class for InstanceGroupManagerPolicyCollection
@@ -20907,6 +21030,43 @@ class TestInstanceGroupManagerPolicyCollectionNext():
         instance_group_manager_policy_collection_next_model_json2 = instance_group_manager_policy_collection_next_model.to_dict(
         )
         assert instance_group_manager_policy_collection_next_model_json2 == instance_group_manager_policy_collection_next_model_json
+
+
+class TestInstanceGroupManagerPolicyPatch():
+    """
+    Test Class for InstanceGroupManagerPolicyPatch
+    """
+
+    def test_instance_group_manager_policy_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerPolicyPatch
+        """
+
+        # Construct a json representation of a InstanceGroupManagerPolicyPatch model
+        instance_group_manager_policy_patch_model_json = {}
+        instance_group_manager_policy_patch_model_json[
+            'name'] = 'my-instance-group-manager-policy'
+        instance_group_manager_policy_patch_model_json['metric_type'] = 'cpu'
+        instance_group_manager_policy_patch_model_json['metric_value'] = 38
+
+        # Construct a model instance of InstanceGroupManagerPolicyPatch by calling from_dict on the json representation
+        instance_group_manager_policy_patch_model = InstanceGroupManagerPolicyPatch.from_dict(
+            instance_group_manager_policy_patch_model_json)
+        assert instance_group_manager_policy_patch_model != False
+
+        # Construct a model instance of InstanceGroupManagerPolicyPatch by calling from_dict on the json representation
+        instance_group_manager_policy_patch_model_dict = InstanceGroupManagerPolicyPatch.from_dict(
+            instance_group_manager_policy_patch_model_json).__dict__
+        instance_group_manager_policy_patch_model2 = InstanceGroupManagerPolicyPatch(
+            **instance_group_manager_policy_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_policy_patch_model == instance_group_manager_policy_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_policy_patch_model_json2 = instance_group_manager_policy_patch_model.to_dict(
+        )
+        assert instance_group_manager_policy_patch_model_json2 == instance_group_manager_policy_patch_model_json
 
 
 class TestInstanceGroupManagerPolicyReference():
@@ -21222,6 +21382,100 @@ class TestInstanceGroupMembershipCollectionNext():
         assert instance_group_membership_collection_next_model_json2 == instance_group_membership_collection_next_model_json
 
 
+class TestInstanceGroupMembershipPatch():
+    """
+    Test Class for InstanceGroupMembershipPatch
+    """
+
+    def test_instance_group_membership_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupMembershipPatch
+        """
+
+        # Construct a json representation of a InstanceGroupMembershipPatch model
+        instance_group_membership_patch_model_json = {}
+        instance_group_membership_patch_model_json[
+            'name'] = 'my-instance-group-membership'
+
+        # Construct a model instance of InstanceGroupMembershipPatch by calling from_dict on the json representation
+        instance_group_membership_patch_model = InstanceGroupMembershipPatch.from_dict(
+            instance_group_membership_patch_model_json)
+        assert instance_group_membership_patch_model != False
+
+        # Construct a model instance of InstanceGroupMembershipPatch by calling from_dict on the json representation
+        instance_group_membership_patch_model_dict = InstanceGroupMembershipPatch.from_dict(
+            instance_group_membership_patch_model_json).__dict__
+        instance_group_membership_patch_model2 = InstanceGroupMembershipPatch(
+            **instance_group_membership_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_membership_patch_model == instance_group_membership_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_membership_patch_model_json2 = instance_group_membership_patch_model.to_dict(
+        )
+        assert instance_group_membership_patch_model_json2 == instance_group_membership_patch_model_json
+
+
+class TestInstanceGroupPatch():
+    """
+    Test Class for InstanceGroupPatch
+    """
+
+    def test_instance_group_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        instance_template_identity_model = {}  # InstanceTemplateIdentityById
+        instance_template_identity_model[
+            'id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+
+        subnet_identity_model = {}  # SubnetIdentityById
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        load_balancer_identity_model = {}  # LoadBalancerIdentityById
+        load_balancer_identity_model[
+            'id'] = 'dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
+
+        load_balancer_pool_identity_model = {}  # LoadBalancerPoolIdentityById
+        load_balancer_pool_identity_model[
+            'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
+
+        # Construct a json representation of a InstanceGroupPatch model
+        instance_group_patch_model_json = {}
+        instance_group_patch_model_json['name'] = 'my-instance-group'
+        instance_group_patch_model_json['membership_count'] = 10
+        instance_group_patch_model_json[
+            'instance_template'] = instance_template_identity_model
+        instance_group_patch_model_json['subnets'] = [subnet_identity_model]
+        instance_group_patch_model_json['application_port'] = 22
+        instance_group_patch_model_json[
+            'load_balancer'] = load_balancer_identity_model
+        instance_group_patch_model_json[
+            'load_balancer_pool'] = load_balancer_pool_identity_model
+
+        # Construct a model instance of InstanceGroupPatch by calling from_dict on the json representation
+        instance_group_patch_model = InstanceGroupPatch.from_dict(
+            instance_group_patch_model_json)
+        assert instance_group_patch_model != False
+
+        # Construct a model instance of InstanceGroupPatch by calling from_dict on the json representation
+        instance_group_patch_model_dict = InstanceGroupPatch.from_dict(
+            instance_group_patch_model_json).__dict__
+        instance_group_patch_model2 = InstanceGroupPatch(
+            **instance_group_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_patch_model == instance_group_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_patch_model_json2 = instance_group_patch_model.to_dict()
+        assert instance_group_patch_model_json2 == instance_group_patch_model_json
+
+
 class TestInstanceGroupReference():
     """
     Test Class for InstanceGroupReference
@@ -21370,6 +21624,38 @@ class TestInstanceInitializationPassword():
         instance_initialization_password_model_json2 = instance_initialization_password_model.to_dict(
         )
         assert instance_initialization_password_model_json2 == instance_initialization_password_model_json
+
+
+class TestInstancePatch():
+    """
+    Test Class for InstancePatch
+    """
+
+    def test_instance_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstancePatch
+        """
+
+        # Construct a json representation of a InstancePatch model
+        instance_patch_model_json = {}
+        instance_patch_model_json['name'] = 'my-instance'
+
+        # Construct a model instance of InstancePatch by calling from_dict on the json representation
+        instance_patch_model = InstancePatch.from_dict(
+            instance_patch_model_json)
+        assert instance_patch_model != False
+
+        # Construct a model instance of InstancePatch by calling from_dict on the json representation
+        instance_patch_model_dict = InstancePatch.from_dict(
+            instance_patch_model_json).__dict__
+        instance_patch_model2 = InstancePatch(**instance_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_patch_model == instance_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_patch_model_json2 = instance_patch_model.to_dict()
+        assert instance_patch_model_json2 == instance_patch_model_json
 
 
 class TestInstanceProfile():
@@ -21712,9 +21998,7 @@ class TestInstanceTemplateCollection():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -21727,9 +22011,9 @@ class TestInstanceTemplateCollection():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -21756,9 +22040,8 @@ class TestInstanceTemplateCollection():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -21767,9 +22050,9 @@ class TestInstanceTemplateCollection():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -21787,14 +22070,12 @@ class TestInstanceTemplateCollection():
         instance_template_model['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_template_model['profile'] = {"name": "cc1-16x32"}
+        instance_template_model['profile'] = instance_profile_identity_model
         instance_template_model['user_data'] = 'testString'
         instance_template_model['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_template_model['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_model['vpc'] = vpc_identity_model
         instance_template_model['created_at'] = '2020-01-28T18:40:40.123456Z'
         instance_template_model[
             'resource_group'] = resource_group_reference_model
@@ -21803,9 +22084,7 @@ class TestInstanceTemplateCollection():
         instance_template_model['zone'] = zone_identity_model
         instance_template_model[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_model['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_model['image'] = image_identity_model
 
         # Construct a json representation of a InstanceTemplateCollection model
         instance_template_collection_model_json = {}
@@ -21907,6 +22186,40 @@ class TestInstanceTemplateCollectionNext():
         instance_template_collection_next_model_json2 = instance_template_collection_next_model.to_dict(
         )
         assert instance_template_collection_next_model_json2 == instance_template_collection_next_model_json
+
+
+class TestInstanceTemplatePatch():
+    """
+    Test Class for InstanceTemplatePatch
+    """
+
+    def test_instance_template_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceTemplatePatch
+        """
+
+        # Construct a json representation of a InstanceTemplatePatch model
+        instance_template_patch_model_json = {}
+        instance_template_patch_model_json['name'] = 'my-instance-template'
+
+        # Construct a model instance of InstanceTemplatePatch by calling from_dict on the json representation
+        instance_template_patch_model = InstanceTemplatePatch.from_dict(
+            instance_template_patch_model_json)
+        assert instance_template_patch_model != False
+
+        # Construct a model instance of InstanceTemplatePatch by calling from_dict on the json representation
+        instance_template_patch_model_dict = InstanceTemplatePatch.from_dict(
+            instance_template_patch_model_json).__dict__
+        instance_template_patch_model2 = InstanceTemplatePatch(
+            **instance_template_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_template_patch_model == instance_template_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_template_patch_model_json2 = instance_template_patch_model.to_dict(
+        )
+        assert instance_template_patch_model_json2 == instance_template_patch_model_json
 
 
 class TestInstanceTemplateReference():
@@ -22087,6 +22400,36 @@ class TestKeyCollection():
         # Convert model instance back to dict and verify no loss of data
         key_collection_model_json2 = key_collection_model.to_dict()
         assert key_collection_model_json2 == key_collection_model_json
+
+
+class TestKeyPatch():
+    """
+    Test Class for KeyPatch
+    """
+
+    def test_key_patch_serialization(self):
+        """
+        Test serialization/deserialization for KeyPatch
+        """
+
+        # Construct a json representation of a KeyPatch model
+        key_patch_model_json = {}
+        key_patch_model_json['name'] = 'my-key'
+
+        # Construct a model instance of KeyPatch by calling from_dict on the json representation
+        key_patch_model = KeyPatch.from_dict(key_patch_model_json)
+        assert key_patch_model != False
+
+        # Construct a model instance of KeyPatch by calling from_dict on the json representation
+        key_patch_model_dict = KeyPatch.from_dict(key_patch_model_json).__dict__
+        key_patch_model2 = KeyPatch(**key_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert key_patch_model == key_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        key_patch_model_json2 = key_patch_model.to_dict()
+        assert key_patch_model_json2 == key_patch_model_json
 
 
 class TestLoadBalancer():
@@ -22430,6 +22773,57 @@ class TestLoadBalancerListenerCollection():
         assert load_balancer_listener_collection_model_json2 == load_balancer_listener_collection_model_json
 
 
+class TestLoadBalancerListenerPatch():
+    """
+    Test Class for LoadBalancerListenerPatch
+    """
+
+    def test_load_balancer_listener_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerListenerPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        certificate_instance_identity_model = {
+        }  # CertificateInstanceIdentityByCRN
+        certificate_instance_identity_model[
+            'crn'] = 'crn:v1:bluemix:public:cloudcerts:us-south:a/123456:b8866ea4-b8df-467e-801a-da1db7e020bf:certificate:78ff9c4c97d013fb2a95b21dddde7758'
+
+        load_balancer_pool_identity_model = {}  # LoadBalancerPoolIdentityById
+        load_balancer_pool_identity_model[
+            'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
+
+        # Construct a json representation of a LoadBalancerListenerPatch model
+        load_balancer_listener_patch_model_json = {}
+        load_balancer_listener_patch_model_json['connection_limit'] = 2000
+        load_balancer_listener_patch_model_json['port'] = 443
+        load_balancer_listener_patch_model_json['protocol'] = 'http'
+        load_balancer_listener_patch_model_json[
+            'certificate_instance'] = certificate_instance_identity_model
+        load_balancer_listener_patch_model_json[
+            'default_pool'] = load_balancer_pool_identity_model
+
+        # Construct a model instance of LoadBalancerListenerPatch by calling from_dict on the json representation
+        load_balancer_listener_patch_model = LoadBalancerListenerPatch.from_dict(
+            load_balancer_listener_patch_model_json)
+        assert load_balancer_listener_patch_model != False
+
+        # Construct a model instance of LoadBalancerListenerPatch by calling from_dict on the json representation
+        load_balancer_listener_patch_model_dict = LoadBalancerListenerPatch.from_dict(
+            load_balancer_listener_patch_model_json).__dict__
+        load_balancer_listener_patch_model2 = LoadBalancerListenerPatch(
+            **load_balancer_listener_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_listener_patch_model == load_balancer_listener_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_listener_patch_model_json2 = load_balancer_listener_patch_model.to_dict(
+        )
+        assert load_balancer_listener_patch_model_json2 == load_balancer_listener_patch_model_json
+
+
 class TestLoadBalancerListenerPolicy():
     """
     Test Class for LoadBalancerListenerPolicy
@@ -22449,13 +22843,13 @@ class TestLoadBalancerListenerPolicy():
         load_balancer_listener_policy_rule_reference_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278/rules/873a84b0-84d6-49c6-8948-1fa527b25762'
 
-        load_balancer_listener_policy_target_reference_model = {
-        }  # LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model = {
+        }  # LoadBalancerListenerPolicyTargetLoadBalancerPoolReference
+        load_balancer_listener_policy_target_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model[
             'name'] = 'my-load-balancer-pool'
 
         # Construct a json representation of a LoadBalancerListenerPolicy model
@@ -22475,7 +22869,7 @@ class TestLoadBalancerListenerPolicy():
             load_balancer_listener_policy_rule_reference_model
         ]
         load_balancer_listener_policy_model_json[
-            'target'] = load_balancer_listener_policy_target_reference_model
+            'target'] = load_balancer_listener_policy_target_model
 
         # Construct a model instance of LoadBalancerListenerPolicy by calling from_dict on the json representation
         load_balancer_listener_policy_model = LoadBalancerListenerPolicy.from_dict(
@@ -22516,13 +22910,13 @@ class TestLoadBalancerListenerPolicyCollection():
         load_balancer_listener_policy_rule_reference_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278/rules/873a84b0-84d6-49c6-8948-1fa527b25762'
 
-        load_balancer_listener_policy_target_reference_model = {
-        }  # LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model = {
+        }  # LoadBalancerListenerPolicyTargetLoadBalancerPoolReference
+        load_balancer_listener_policy_target_model[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_model[
+        load_balancer_listener_policy_target_model[
             'name'] = 'my-load-balancer-pool'
 
         load_balancer_listener_policy_model = {}  # LoadBalancerListenerPolicy
@@ -22540,7 +22934,7 @@ class TestLoadBalancerListenerPolicyCollection():
             load_balancer_listener_policy_rule_reference_model
         ]
         load_balancer_listener_policy_model[
-            'target'] = load_balancer_listener_policy_target_reference_model
+            'target'] = load_balancer_listener_policy_target_model
 
         # Construct a json representation of a LoadBalancerListenerPolicyCollection model
         load_balancer_listener_policy_collection_model_json = {}
@@ -22566,6 +22960,50 @@ class TestLoadBalancerListenerPolicyCollection():
         load_balancer_listener_policy_collection_model_json2 = load_balancer_listener_policy_collection_model.to_dict(
         )
         assert load_balancer_listener_policy_collection_model_json2 == load_balancer_listener_policy_collection_model_json
+
+
+class TestLoadBalancerListenerPolicyPatch():
+    """
+    Test Class for LoadBalancerListenerPolicyPatch
+    """
+
+    def test_load_balancer_listener_policy_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerListenerPolicyPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        load_balancer_listener_policy_patch_target_model = {
+        }  # LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById
+        load_balancer_listener_policy_patch_target_model[
+            'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
+
+        # Construct a json representation of a LoadBalancerListenerPolicyPatch model
+        load_balancer_listener_policy_patch_model_json = {}
+        load_balancer_listener_policy_patch_model_json['name'] = 'my-policy'
+        load_balancer_listener_policy_patch_model_json['priority'] = 5
+        load_balancer_listener_policy_patch_model_json[
+            'target'] = load_balancer_listener_policy_patch_target_model
+
+        # Construct a model instance of LoadBalancerListenerPolicyPatch by calling from_dict on the json representation
+        load_balancer_listener_policy_patch_model = LoadBalancerListenerPolicyPatch.from_dict(
+            load_balancer_listener_policy_patch_model_json)
+        assert load_balancer_listener_policy_patch_model != False
+
+        # Construct a model instance of LoadBalancerListenerPolicyPatch by calling from_dict on the json representation
+        load_balancer_listener_policy_patch_model_dict = LoadBalancerListenerPolicyPatch.from_dict(
+            load_balancer_listener_policy_patch_model_json).__dict__
+        load_balancer_listener_policy_patch_model2 = LoadBalancerListenerPolicyPatch(
+            **load_balancer_listener_policy_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_listener_policy_patch_model == load_balancer_listener_policy_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_listener_policy_patch_model_json2 = load_balancer_listener_policy_patch_model.to_dict(
+        )
+        assert load_balancer_listener_policy_patch_model_json2 == load_balancer_listener_policy_patch_model_json
 
 
 class TestLoadBalancerListenerPolicyPrototype():
@@ -22761,6 +23199,46 @@ class TestLoadBalancerListenerPolicyRuleCollection():
         assert load_balancer_listener_policy_rule_collection_model_json2 == load_balancer_listener_policy_rule_collection_model_json
 
 
+class TestLoadBalancerListenerPolicyRulePatch():
+    """
+    Test Class for LoadBalancerListenerPolicyRulePatch
+    """
+
+    def test_load_balancer_listener_policy_rule_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerListenerPolicyRulePatch
+        """
+
+        # Construct a json representation of a LoadBalancerListenerPolicyRulePatch model
+        load_balancer_listener_policy_rule_patch_model_json = {}
+        load_balancer_listener_policy_rule_patch_model_json[
+            'condition'] = 'contains'
+        load_balancer_listener_policy_rule_patch_model_json[
+            'field'] = 'MY-APP-HEADER'
+        load_balancer_listener_policy_rule_patch_model_json['type'] = 'header'
+        load_balancer_listener_policy_rule_patch_model_json[
+            'value'] = 'testString'
+
+        # Construct a model instance of LoadBalancerListenerPolicyRulePatch by calling from_dict on the json representation
+        load_balancer_listener_policy_rule_patch_model = LoadBalancerListenerPolicyRulePatch.from_dict(
+            load_balancer_listener_policy_rule_patch_model_json)
+        assert load_balancer_listener_policy_rule_patch_model != False
+
+        # Construct a model instance of LoadBalancerListenerPolicyRulePatch by calling from_dict on the json representation
+        load_balancer_listener_policy_rule_patch_model_dict = LoadBalancerListenerPolicyRulePatch.from_dict(
+            load_balancer_listener_policy_rule_patch_model_json).__dict__
+        load_balancer_listener_policy_rule_patch_model2 = LoadBalancerListenerPolicyRulePatch(
+            **load_balancer_listener_policy_rule_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_listener_policy_rule_patch_model == load_balancer_listener_policy_rule_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_listener_policy_rule_patch_model_json2 = load_balancer_listener_policy_rule_patch_model.to_dict(
+        )
+        assert load_balancer_listener_policy_rule_patch_model_json2 == load_balancer_listener_policy_rule_patch_model_json
+
+
 class TestLoadBalancerListenerPolicyRulePrototype():
     """
     Test Class for LoadBalancerListenerPolicyRulePrototype
@@ -22924,6 +23402,39 @@ class TestLoadBalancerListenerReference():
         load_balancer_listener_reference_model_json2 = load_balancer_listener_reference_model.to_dict(
         )
         assert load_balancer_listener_reference_model_json2 == load_balancer_listener_reference_model_json
+
+
+class TestLoadBalancerPatch():
+    """
+    Test Class for LoadBalancerPatch
+    """
+
+    def test_load_balancer_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerPatch
+        """
+
+        # Construct a json representation of a LoadBalancerPatch model
+        load_balancer_patch_model_json = {}
+        load_balancer_patch_model_json['name'] = 'my-load-balancer'
+
+        # Construct a model instance of LoadBalancerPatch by calling from_dict on the json representation
+        load_balancer_patch_model = LoadBalancerPatch.from_dict(
+            load_balancer_patch_model_json)
+        assert load_balancer_patch_model != False
+
+        # Construct a model instance of LoadBalancerPatch by calling from_dict on the json representation
+        load_balancer_patch_model_dict = LoadBalancerPatch.from_dict(
+            load_balancer_patch_model_json).__dict__
+        load_balancer_patch_model2 = LoadBalancerPatch(
+            **load_balancer_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_patch_model == load_balancer_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_patch_model_json2 = load_balancer_patch_model.to_dict()
+        assert load_balancer_patch_model_json2 == load_balancer_patch_model_json
 
 
 class TestLoadBalancerPool():
@@ -23366,6 +23877,50 @@ class TestLoadBalancerPoolMemberCollection():
         assert load_balancer_pool_member_collection_model_json2 == load_balancer_pool_member_collection_model_json
 
 
+class TestLoadBalancerPoolMemberPatch():
+    """
+    Test Class for LoadBalancerPoolMemberPatch
+    """
+
+    def test_load_balancer_pool_member_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerPoolMemberPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        load_balancer_pool_member_target_prototype_model = {
+        }  # LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityById
+        load_balancer_pool_member_target_prototype_model[
+            'id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+
+        # Construct a json representation of a LoadBalancerPoolMemberPatch model
+        load_balancer_pool_member_patch_model_json = {}
+        load_balancer_pool_member_patch_model_json['port'] = 80
+        load_balancer_pool_member_patch_model_json['weight'] = 50
+        load_balancer_pool_member_patch_model_json[
+            'target'] = load_balancer_pool_member_target_prototype_model
+
+        # Construct a model instance of LoadBalancerPoolMemberPatch by calling from_dict on the json representation
+        load_balancer_pool_member_patch_model = LoadBalancerPoolMemberPatch.from_dict(
+            load_balancer_pool_member_patch_model_json)
+        assert load_balancer_pool_member_patch_model != False
+
+        # Construct a model instance of LoadBalancerPoolMemberPatch by calling from_dict on the json representation
+        load_balancer_pool_member_patch_model_dict = LoadBalancerPoolMemberPatch.from_dict(
+            load_balancer_pool_member_patch_model_json).__dict__
+        load_balancer_pool_member_patch_model2 = LoadBalancerPoolMemberPatch(
+            **load_balancer_pool_member_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_pool_member_patch_model == load_balancer_pool_member_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_pool_member_patch_model_json2 = load_balancer_pool_member_patch_model.to_dict(
+        )
+        assert load_balancer_pool_member_patch_model_json2 == load_balancer_pool_member_patch_model_json
+
+
 class TestLoadBalancerPoolMemberPrototype():
     """
     Test Class for LoadBalancerPoolMemberPrototype
@@ -23445,6 +24000,61 @@ class TestLoadBalancerPoolMemberReference():
         load_balancer_pool_member_reference_model_json2 = load_balancer_pool_member_reference_model.to_dict(
         )
         assert load_balancer_pool_member_reference_model_json2 == load_balancer_pool_member_reference_model_json
+
+
+class TestLoadBalancerPoolPatch():
+    """
+    Test Class for LoadBalancerPoolPatch
+    """
+
+    def test_load_balancer_pool_patch_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerPoolPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        load_balancer_pool_health_monitor_patch_model = {
+        }  # LoadBalancerPoolHealthMonitorPatch
+        load_balancer_pool_health_monitor_patch_model['delay'] = 5
+        load_balancer_pool_health_monitor_patch_model['max_retries'] = 2
+        load_balancer_pool_health_monitor_patch_model['port'] = 22
+        load_balancer_pool_health_monitor_patch_model['timeout'] = 2
+        load_balancer_pool_health_monitor_patch_model['type'] = 'http'
+        load_balancer_pool_health_monitor_patch_model['url_path'] = '/'
+
+        load_balancer_pool_session_persistence_patch_model = {
+        }  # LoadBalancerPoolSessionPersistencePatch
+        load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
+
+        # Construct a json representation of a LoadBalancerPoolPatch model
+        load_balancer_pool_patch_model_json = {}
+        load_balancer_pool_patch_model_json['name'] = 'my-load-balancer-pool'
+        load_balancer_pool_patch_model_json['algorithm'] = 'least_connections'
+        load_balancer_pool_patch_model_json['protocol'] = 'http'
+        load_balancer_pool_patch_model_json[
+            'health_monitor'] = load_balancer_pool_health_monitor_patch_model
+        load_balancer_pool_patch_model_json[
+            'session_persistence'] = load_balancer_pool_session_persistence_patch_model
+
+        # Construct a model instance of LoadBalancerPoolPatch by calling from_dict on the json representation
+        load_balancer_pool_patch_model = LoadBalancerPoolPatch.from_dict(
+            load_balancer_pool_patch_model_json)
+        assert load_balancer_pool_patch_model != False
+
+        # Construct a model instance of LoadBalancerPoolPatch by calling from_dict on the json representation
+        load_balancer_pool_patch_model_dict = LoadBalancerPoolPatch.from_dict(
+            load_balancer_pool_patch_model_json).__dict__
+        load_balancer_pool_patch_model2 = LoadBalancerPoolPatch(
+            **load_balancer_pool_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_pool_patch_model == load_balancer_pool_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_pool_patch_model_json2 = load_balancer_pool_patch_model.to_dict(
+        )
+        assert load_balancer_pool_patch_model_json2 == load_balancer_pool_patch_model_json
 
 
 class TestLoadBalancerPoolPrototype():
@@ -23953,14 +24563,7 @@ class TestNetworkACL():
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['source'] = '192.168.3.0/24'
         network_acl_rule_item_model['protocol'] = 'udp'
-        network_acl_rule_item_model['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['ip_version'] = 'ipv4'
@@ -24063,14 +24666,7 @@ class TestNetworkACLCollection():
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['source'] = '192.168.3.0/24'
         network_acl_rule_item_model['protocol'] = 'udp'
-        network_acl_rule_item_model['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['ip_version'] = 'ipv4'
@@ -24200,6 +24796,39 @@ class TestNetworkACLCollectionNext():
         assert network_acl_collection_next_model_json2 == network_acl_collection_next_model_json
 
 
+class TestNetworkACLPatch():
+    """
+    Test Class for NetworkACLPatch
+    """
+
+    def test_network_acl_patch_serialization(self):
+        """
+        Test serialization/deserialization for NetworkACLPatch
+        """
+
+        # Construct a json representation of a NetworkACLPatch model
+        network_acl_patch_model_json = {}
+        network_acl_patch_model_json['name'] = 'my-network-acl'
+
+        # Construct a model instance of NetworkACLPatch by calling from_dict on the json representation
+        network_acl_patch_model = NetworkACLPatch.from_dict(
+            network_acl_patch_model_json)
+        assert network_acl_patch_model != False
+
+        # Construct a model instance of NetworkACLPatch by calling from_dict on the json representation
+        network_acl_patch_model_dict = NetworkACLPatch.from_dict(
+            network_acl_patch_model_json).__dict__
+        network_acl_patch_model2 = NetworkACLPatch(
+            **network_acl_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_acl_patch_model == network_acl_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_acl_patch_model_json2 = network_acl_patch_model.to_dict()
+        assert network_acl_patch_model_json2 == network_acl_patch_model_json
+
+
 class TestNetworkACLReference():
     """
     Test Class for NetworkACLReference
@@ -24281,14 +24910,7 @@ class TestNetworkACLRuleCollection():
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['source'] = '192.168.3.0/24'
         network_acl_rule_item_model['protocol'] = 'udp'
-        network_acl_rule_item_model['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_model['before'] = network_acl_rule_reference_model
         network_acl_rule_item_model[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_model['ip_version'] = 'ipv4'
@@ -24397,6 +25019,58 @@ class TestNetworkACLRuleCollectionNext():
         network_acl_rule_collection_next_model_json2 = network_acl_rule_collection_next_model.to_dict(
         )
         assert network_acl_rule_collection_next_model_json2 == network_acl_rule_collection_next_model_json
+
+
+class TestNetworkACLRulePatch():
+    """
+    Test Class for NetworkACLRulePatch
+    """
+
+    def test_network_acl_rule_patch_serialization(self):
+        """
+        Test serialization/deserialization for NetworkACLRulePatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        network_acl_rule_identity_model = {}  # NetworkACLRuleIdentityById
+        network_acl_rule_identity_model[
+            'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
+
+        # Construct a json representation of a NetworkACLRulePatch model
+        network_acl_rule_patch_model_json = {}
+        network_acl_rule_patch_model_json['name'] = 'my-rule-2'
+        network_acl_rule_patch_model_json['action'] = 'allow'
+        network_acl_rule_patch_model_json['destination'] = '192.168.3.2/32'
+        network_acl_rule_patch_model_json['direction'] = 'inbound'
+        network_acl_rule_patch_model_json['source'] = '192.168.3.2/32'
+        network_acl_rule_patch_model_json['destination_port_max'] = 22
+        network_acl_rule_patch_model_json['destination_port_min'] = 22
+        network_acl_rule_patch_model_json['source_port_max'] = 65535
+        network_acl_rule_patch_model_json['source_port_min'] = 49152
+        network_acl_rule_patch_model_json['code'] = 0
+        network_acl_rule_patch_model_json['type'] = 8
+        network_acl_rule_patch_model_json[
+            'before'] = network_acl_rule_identity_model
+
+        # Construct a model instance of NetworkACLRulePatch by calling from_dict on the json representation
+        network_acl_rule_patch_model = NetworkACLRulePatch.from_dict(
+            network_acl_rule_patch_model_json)
+        assert network_acl_rule_patch_model != False
+
+        # Construct a model instance of NetworkACLRulePatch by calling from_dict on the json representation
+        network_acl_rule_patch_model_dict = NetworkACLRulePatch.from_dict(
+            network_acl_rule_patch_model_json).__dict__
+        network_acl_rule_patch_model2 = NetworkACLRulePatch(
+            **network_acl_rule_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_acl_rule_patch_model == network_acl_rule_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_acl_rule_patch_model_json2 = network_acl_rule_patch_model.to_dict(
+        )
+        assert network_acl_rule_patch_model_json2 == network_acl_rule_patch_model_json
 
 
 class TestNetworkACLRuleReference():
@@ -24740,6 +25414,40 @@ class TestNetworkInterfaceInstanceContextReference():
         assert network_interface_instance_context_reference_model_json2 == network_interface_instance_context_reference_model_json
 
 
+class TestNetworkInterfacePatch():
+    """
+    Test Class for NetworkInterfacePatch
+    """
+
+    def test_network_interface_patch_serialization(self):
+        """
+        Test serialization/deserialization for NetworkInterfacePatch
+        """
+
+        # Construct a json representation of a NetworkInterfacePatch model
+        network_interface_patch_model_json = {}
+        network_interface_patch_model_json['name'] = 'my-network-interface'
+
+        # Construct a model instance of NetworkInterfacePatch by calling from_dict on the json representation
+        network_interface_patch_model = NetworkInterfacePatch.from_dict(
+            network_interface_patch_model_json)
+        assert network_interface_patch_model != False
+
+        # Construct a model instance of NetworkInterfacePatch by calling from_dict on the json representation
+        network_interface_patch_model_dict = NetworkInterfacePatch.from_dict(
+            network_interface_patch_model_json).__dict__
+        network_interface_patch_model2 = NetworkInterfacePatch(
+            **network_interface_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert network_interface_patch_model == network_interface_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        network_interface_patch_model_json2 = network_interface_patch_model.to_dict(
+        )
+        assert network_interface_patch_model_json2 == network_interface_patch_model_json
+
+
 class TestNetworkInterfacePrototype():
     """
     Test Class for NetworkInterfacePrototype
@@ -24767,9 +25475,7 @@ class TestNetworkInterfacePrototype():
         network_interface_prototype_model_json['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model_json['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model_json['subnet'] = subnet_identity_model
 
         # Construct a model instance of NetworkInterfacePrototype by calling from_dict on the json representation
         network_interface_prototype_model = NetworkInterfacePrototype.from_dict(
@@ -25374,6 +26080,39 @@ class TestPublicGatewayFloatingIp():
         assert public_gateway_floating_ip_model_json2 == public_gateway_floating_ip_model_json
 
 
+class TestPublicGatewayPatch():
+    """
+    Test Class for PublicGatewayPatch
+    """
+
+    def test_public_gateway_patch_serialization(self):
+        """
+        Test serialization/deserialization for PublicGatewayPatch
+        """
+
+        # Construct a json representation of a PublicGatewayPatch model
+        public_gateway_patch_model_json = {}
+        public_gateway_patch_model_json['name'] = 'my-public-gateway'
+
+        # Construct a model instance of PublicGatewayPatch by calling from_dict on the json representation
+        public_gateway_patch_model = PublicGatewayPatch.from_dict(
+            public_gateway_patch_model_json)
+        assert public_gateway_patch_model != False
+
+        # Construct a model instance of PublicGatewayPatch by calling from_dict on the json representation
+        public_gateway_patch_model_dict = PublicGatewayPatch.from_dict(
+            public_gateway_patch_model_json).__dict__
+        public_gateway_patch_model2 = PublicGatewayPatch(
+            **public_gateway_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert public_gateway_patch_model == public_gateway_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        public_gateway_patch_model_json2 = public_gateway_patch_model.to_dict()
+        assert public_gateway_patch_model_json2 == public_gateway_patch_model_json
+
+
 class TestPublicGatewayReference():
     """
     Test Class for PublicGatewayReference
@@ -25664,6 +26403,37 @@ class TestRouteCollection():
         assert route_collection_model_json2 == route_collection_model_json
 
 
+class TestRoutePatch():
+    """
+    Test Class for RoutePatch
+    """
+
+    def test_route_patch_serialization(self):
+        """
+        Test serialization/deserialization for RoutePatch
+        """
+
+        # Construct a json representation of a RoutePatch model
+        route_patch_model_json = {}
+        route_patch_model_json['name'] = 'my-route-2'
+
+        # Construct a model instance of RoutePatch by calling from_dict on the json representation
+        route_patch_model = RoutePatch.from_dict(route_patch_model_json)
+        assert route_patch_model != False
+
+        # Construct a model instance of RoutePatch by calling from_dict on the json representation
+        route_patch_model_dict = RoutePatch.from_dict(
+            route_patch_model_json).__dict__
+        route_patch_model2 = RoutePatch(**route_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert route_patch_model == route_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        route_patch_model_json2 = route_patch_model.to_dict()
+        assert route_patch_model_json2 == route_patch_model_json
+
+
 class TestSecurityGroup():
     """
     Test Class for SecurityGroup
@@ -25929,6 +26699,39 @@ class TestSecurityGroupCollectionNext():
         assert security_group_collection_next_model_json2 == security_group_collection_next_model_json
 
 
+class TestSecurityGroupPatch():
+    """
+    Test Class for SecurityGroupPatch
+    """
+
+    def test_security_group_patch_serialization(self):
+        """
+        Test serialization/deserialization for SecurityGroupPatch
+        """
+
+        # Construct a json representation of a SecurityGroupPatch model
+        security_group_patch_model_json = {}
+        security_group_patch_model_json['name'] = 'my-security-group'
+
+        # Construct a model instance of SecurityGroupPatch by calling from_dict on the json representation
+        security_group_patch_model = SecurityGroupPatch.from_dict(
+            security_group_patch_model_json)
+        assert security_group_patch_model != False
+
+        # Construct a model instance of SecurityGroupPatch by calling from_dict on the json representation
+        security_group_patch_model_dict = SecurityGroupPatch.from_dict(
+            security_group_patch_model_json).__dict__
+        security_group_patch_model2 = SecurityGroupPatch(
+            **security_group_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_patch_model == security_group_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_patch_model_json2 = security_group_patch_model.to_dict()
+        assert security_group_patch_model_json2 == security_group_patch_model_json
+
+
 class TestSecurityGroupReference():
     """
     Test Class for SecurityGroupReference
@@ -26020,6 +26823,53 @@ class TestSecurityGroupRuleCollection():
         security_group_rule_collection_model_json2 = security_group_rule_collection_model.to_dict(
         )
         assert security_group_rule_collection_model_json2 == security_group_rule_collection_model_json
+
+
+class TestSecurityGroupRulePatch():
+    """
+    Test Class for SecurityGroupRulePatch
+    """
+
+    def test_security_group_rule_patch_serialization(self):
+        """
+        Test serialization/deserialization for SecurityGroupRulePatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        security_group_rule_patch_remote_model = {
+        }  # SecurityGroupRulePatchRemoteCIDR
+        security_group_rule_patch_remote_model['cidr_block'] = '10.0.0.0/16'
+
+        # Construct a json representation of a SecurityGroupRulePatch model
+        security_group_rule_patch_model_json = {}
+        security_group_rule_patch_model_json[
+            'remote'] = security_group_rule_patch_remote_model
+        security_group_rule_patch_model_json['direction'] = 'inbound'
+        security_group_rule_patch_model_json['ip_version'] = 'ipv4'
+        security_group_rule_patch_model_json['code'] = 0
+        security_group_rule_patch_model_json['port_max'] = 22
+        security_group_rule_patch_model_json['port_min'] = 22
+        security_group_rule_patch_model_json['type'] = 8
+
+        # Construct a model instance of SecurityGroupRulePatch by calling from_dict on the json representation
+        security_group_rule_patch_model = SecurityGroupRulePatch.from_dict(
+            security_group_rule_patch_model_json)
+        assert security_group_rule_patch_model != False
+
+        # Construct a model instance of SecurityGroupRulePatch by calling from_dict on the json representation
+        security_group_rule_patch_model_dict = SecurityGroupRulePatch.from_dict(
+            security_group_rule_patch_model_json).__dict__
+        security_group_rule_patch_model2 = SecurityGroupRulePatch(
+            **security_group_rule_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_rule_patch_model == security_group_rule_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_rule_patch_model_json2 = security_group_rule_patch_model.to_dict(
+        )
+        assert security_group_rule_patch_model_json2 == security_group_rule_patch_model_json
 
 
 class TestSubnet():
@@ -26282,6 +27132,50 @@ class TestSubnetCollectionNext():
         subnet_collection_next_model_json2 = subnet_collection_next_model.to_dict(
         )
         assert subnet_collection_next_model_json2 == subnet_collection_next_model_json
+
+
+class TestSubnetPatch():
+    """
+    Test Class for SubnetPatch
+    """
+
+    def test_subnet_patch_serialization(self):
+        """
+        Test serialization/deserialization for SubnetPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        network_acl_identity_model = {}  # NetworkACLIdentityById
+        network_acl_identity_model[
+            'id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
+
+        public_gateway_identity_model = {}  # PublicGatewayIdentityById
+        public_gateway_identity_model[
+            'id'] = 'dc5431ef-1fc6-4861-adc9-a59d077d1241'
+
+        # Construct a json representation of a SubnetPatch model
+        subnet_patch_model_json = {}
+        subnet_patch_model_json['name'] = 'my-subnet'
+        subnet_patch_model_json['network_acl'] = network_acl_identity_model
+        subnet_patch_model_json[
+            'public_gateway'] = public_gateway_identity_model
+
+        # Construct a model instance of SubnetPatch by calling from_dict on the json representation
+        subnet_patch_model = SubnetPatch.from_dict(subnet_patch_model_json)
+        assert subnet_patch_model != False
+
+        # Construct a model instance of SubnetPatch by calling from_dict on the json representation
+        subnet_patch_model_dict = SubnetPatch.from_dict(
+            subnet_patch_model_json).__dict__
+        subnet_patch_model2 = SubnetPatch(**subnet_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert subnet_patch_model == subnet_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        subnet_patch_model_json2 = subnet_patch_model.to_dict()
+        assert subnet_patch_model_json2 == subnet_patch_model_json
 
 
 class TestSubnetReference():
@@ -26611,6 +27505,36 @@ class TestVPCCollectionNext():
         # Convert model instance back to dict and verify no loss of data
         vpc_collection_next_model_json2 = vpc_collection_next_model.to_dict()
         assert vpc_collection_next_model_json2 == vpc_collection_next_model_json
+
+
+class TestVPCPatch():
+    """
+    Test Class for VPCPatch
+    """
+
+    def test_vpc_patch_serialization(self):
+        """
+        Test serialization/deserialization for VPCPatch
+        """
+
+        # Construct a json representation of a VPCPatch model
+        vpc_patch_model_json = {}
+        vpc_patch_model_json['name'] = 'my-vpc'
+
+        # Construct a model instance of VPCPatch by calling from_dict on the json representation
+        vpc_patch_model = VPCPatch.from_dict(vpc_patch_model_json)
+        assert vpc_patch_model != False
+
+        # Construct a model instance of VPCPatch by calling from_dict on the json representation
+        vpc_patch_model_dict = VPCPatch.from_dict(vpc_patch_model_json).__dict__
+        vpc_patch_model2 = VPCPatch(**vpc_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpc_patch_model == vpc_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpc_patch_model_json2 = vpc_patch_model.to_dict()
+        assert vpc_patch_model_json2 == vpc_patch_model_json
 
 
 class TestVPCReference():
@@ -27159,6 +28083,64 @@ class TestVPNGatewayConnectionLocalCIDRs():
         assert vpn_gateway_connection_local_cid_rs_model_json2 == vpn_gateway_connection_local_cid_rs_model_json
 
 
+class TestVPNGatewayConnectionPatch():
+    """
+    Test Class for VPNGatewayConnectionPatch
+    """
+
+    def test_vpn_gateway_connection_patch_serialization(self):
+        """
+        Test serialization/deserialization for VPNGatewayConnectionPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_gateway_connection_dpd_prototype_model = {
+        }  # VPNGatewayConnectionDPDPrototype
+        vpn_gateway_connection_dpd_prototype_model['action'] = 'restart'
+        vpn_gateway_connection_dpd_prototype_model['interval'] = 30
+        vpn_gateway_connection_dpd_prototype_model['timeout'] = 120
+
+        ike_policy_identity_model = {}  # IKEPolicyIdentityById
+        ike_policy_identity_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+
+        i_psec_policy_identity_model = {}  # IPsecPolicyIdentityById
+        i_psec_policy_identity_model[
+            'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+
+        # Construct a json representation of a VPNGatewayConnectionPatch model
+        vpn_gateway_connection_patch_model_json = {}
+        vpn_gateway_connection_patch_model_json['admin_state_up'] = True
+        vpn_gateway_connection_patch_model_json['peer_address'] = '169.21.50.5'
+        vpn_gateway_connection_patch_model_json['name'] = 'my-vpn-connection'
+        vpn_gateway_connection_patch_model_json['psk'] = 'lkj14b1oi0alcniejkso'
+        vpn_gateway_connection_patch_model_json[
+            'dead_peer_detection'] = vpn_gateway_connection_dpd_prototype_model
+        vpn_gateway_connection_patch_model_json[
+            'ike_policy'] = ike_policy_identity_model
+        vpn_gateway_connection_patch_model_json[
+            'ipsec_policy'] = i_psec_policy_identity_model
+
+        # Construct a model instance of VPNGatewayConnectionPatch by calling from_dict on the json representation
+        vpn_gateway_connection_patch_model = VPNGatewayConnectionPatch.from_dict(
+            vpn_gateway_connection_patch_model_json)
+        assert vpn_gateway_connection_patch_model != False
+
+        # Construct a model instance of VPNGatewayConnectionPatch by calling from_dict on the json representation
+        vpn_gateway_connection_patch_model_dict = VPNGatewayConnectionPatch.from_dict(
+            vpn_gateway_connection_patch_model_json).__dict__
+        vpn_gateway_connection_patch_model2 = VPNGatewayConnectionPatch(
+            **vpn_gateway_connection_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_gateway_connection_patch_model == vpn_gateway_connection_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_gateway_connection_patch_model_json2 = vpn_gateway_connection_patch_model.to_dict(
+        )
+        assert vpn_gateway_connection_patch_model_json2 == vpn_gateway_connection_patch_model_json
+
+
 class TestVPNGatewayConnectionPeerCIDRs():
     """
     Test Class for VPNGatewayConnectionPeerCIDRs
@@ -27234,6 +28216,39 @@ class TestVPNGatewayConnectionReference():
         vpn_gateway_connection_reference_model_json2 = vpn_gateway_connection_reference_model.to_dict(
         )
         assert vpn_gateway_connection_reference_model_json2 == vpn_gateway_connection_reference_model_json
+
+
+class TestVPNGatewayPatch():
+    """
+    Test Class for VPNGatewayPatch
+    """
+
+    def test_vpn_gateway_patch_serialization(self):
+        """
+        Test serialization/deserialization for VPNGatewayPatch
+        """
+
+        # Construct a json representation of a VPNGatewayPatch model
+        vpn_gateway_patch_model_json = {}
+        vpn_gateway_patch_model_json['name'] = 'my-vpn-gateway'
+
+        # Construct a model instance of VPNGatewayPatch by calling from_dict on the json representation
+        vpn_gateway_patch_model = VPNGatewayPatch.from_dict(
+            vpn_gateway_patch_model_json)
+        assert vpn_gateway_patch_model != False
+
+        # Construct a model instance of VPNGatewayPatch by calling from_dict on the json representation
+        vpn_gateway_patch_model_dict = VPNGatewayPatch.from_dict(
+            vpn_gateway_patch_model_json).__dict__
+        vpn_gateway_patch_model2 = VPNGatewayPatch(
+            **vpn_gateway_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_gateway_patch_model == vpn_gateway_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_gateway_patch_model_json2 = vpn_gateway_patch_model.to_dict()
+        assert vpn_gateway_patch_model_json2 == vpn_gateway_patch_model_json
 
 
 class TestVPNGatewayPublicIp():
@@ -27394,8 +28409,8 @@ class TestVolumeAttachment():
 
         # Construct a json representation of a VolumeAttachment model
         volume_attachment_model_json = {}
-        volume_attachment_model_json['name'] = 'my-volume-attachment'
         volume_attachment_model_json['delete_volume_on_instance_delete'] = True
+        volume_attachment_model_json['name'] = 'my-volume-attachment'
         volume_attachment_model_json[
             'id'] = '82cbf856-9cbb-45fb-b62f-d7bcef32399a'
         volume_attachment_model_json[
@@ -27451,8 +28466,8 @@ class TestVolumeAttachmentCollection():
         volume_reference_model['name'] = 'my-volume'
 
         volume_attachment_model = {}  # VolumeAttachment
-        volume_attachment_model['name'] = 'my-volume-attachment'
         volume_attachment_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_model['name'] = 'my-volume-attachment'
         volume_attachment_model['id'] = '82cbf856-9cbb-45fb-b62f-d7bcef32399a'
         volume_attachment_model[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a'
@@ -27523,6 +28538,42 @@ class TestVolumeAttachmentDevice():
         assert volume_attachment_device_model_json2 == volume_attachment_device_model_json
 
 
+class TestVolumeAttachmentPatch():
+    """
+    Test Class for VolumeAttachmentPatch
+    """
+
+    def test_volume_attachment_patch_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPatch
+        """
+
+        # Construct a json representation of a VolumeAttachmentPatch model
+        volume_attachment_patch_model_json = {}
+        volume_attachment_patch_model_json[
+            'delete_volume_on_instance_delete'] = True
+        volume_attachment_patch_model_json['name'] = 'my-volume-attachment'
+
+        # Construct a model instance of VolumeAttachmentPatch by calling from_dict on the json representation
+        volume_attachment_patch_model = VolumeAttachmentPatch.from_dict(
+            volume_attachment_patch_model_json)
+        assert volume_attachment_patch_model != False
+
+        # Construct a model instance of VolumeAttachmentPatch by calling from_dict on the json representation
+        volume_attachment_patch_model_dict = VolumeAttachmentPatch.from_dict(
+            volume_attachment_patch_model_json).__dict__
+        volume_attachment_patch_model2 = VolumeAttachmentPatch(
+            **volume_attachment_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_patch_model == volume_attachment_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_patch_model_json2 = volume_attachment_patch_model.to_dict(
+        )
+        assert volume_attachment_patch_model_json2 == volume_attachment_patch_model_json
+
+
 class TestVolumeAttachmentPrototypeInstanceByImageContext():
     """
     Test Class for VolumeAttachmentPrototypeInstanceByImageContext
@@ -27546,9 +28597,8 @@ class TestVolumeAttachmentPrototypeInstanceByImageContext():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -27557,9 +28607,9 @@ class TestVolumeAttachmentPrototypeInstanceByImageContext():
         # Construct a json representation of a VolumeAttachmentPrototypeInstanceByImageContext model
         volume_attachment_prototype_instance_by_image_context_model_json = {}
         volume_attachment_prototype_instance_by_image_context_model_json[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model_json[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model_json[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model_json[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -27604,9 +28654,9 @@ class TestVolumeAttachmentPrototypeInstanceContext():
         # Construct a json representation of a VolumeAttachmentPrototypeInstanceContext model
         volume_attachment_prototype_instance_context_model_json = {}
         volume_attachment_prototype_instance_context_model_json[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model_json[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model_json[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model_json[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -27932,6 +28982,37 @@ class TestVolumeCollectionNext():
         assert volume_collection_next_model_json2 == volume_collection_next_model_json
 
 
+class TestVolumePatch():
+    """
+    Test Class for VolumePatch
+    """
+
+    def test_volume_patch_serialization(self):
+        """
+        Test serialization/deserialization for VolumePatch
+        """
+
+        # Construct a json representation of a VolumePatch model
+        volume_patch_model_json = {}
+        volume_patch_model_json['name'] = 'my-volume'
+
+        # Construct a model instance of VolumePatch by calling from_dict on the json representation
+        volume_patch_model = VolumePatch.from_dict(volume_patch_model_json)
+        assert volume_patch_model != False
+
+        # Construct a model instance of VolumePatch by calling from_dict on the json representation
+        volume_patch_model_dict = VolumePatch.from_dict(
+            volume_patch_model_json).__dict__
+        volume_patch_model2 = VolumePatch(**volume_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_patch_model == volume_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_patch_model_json2 = volume_patch_model.to_dict()
+        assert volume_patch_model_json2 == volume_patch_model_json
+
+
 class TestVolumeProfile():
     """
     Test Class for VolumeProfile
@@ -28155,9 +29236,8 @@ class TestVolumePrototypeInstanceByImageContext():
         volume_prototype_instance_by_image_context_model_json = {}
         volume_prototype_instance_by_image_context_model_json[
             'name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model_json['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model_json[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model_json[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model_json['capacity'] = 100
@@ -29215,6 +30295,10 @@ class TestImagePrototypeImageByFile():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        encryption_key_reference_model = {}  # EncryptionKeyReference
+        encryption_key_reference_model[
+            'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
         resource_group_identity_model = {}  # ResourceGroupIdentityById
         resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
@@ -29228,6 +30312,10 @@ class TestImagePrototypeImageByFile():
         # Construct a json representation of a ImagePrototypeImageByFile model
         image_prototype_image_by_file_model_json = {}
         image_prototype_image_by_file_model_json['name'] = 'my-image'
+        image_prototype_image_by_file_model_json[
+            'encrypted_data_key'] = 'testString'
+        image_prototype_image_by_file_model_json[
+            'encryption_key'] = encryption_key_reference_model
         image_prototype_image_by_file_model_json[
             'resource_group'] = resource_group_identity_model
         image_prototype_image_by_file_model_json[
@@ -29999,9 +31087,7 @@ class TestInstancePrototypeInstanceByImage():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30014,9 +31100,9 @@ class TestInstancePrototypeInstanceByImage():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30039,9 +31125,8 @@ class TestInstancePrototypeInstanceByImage():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30050,9 +31135,9 @@ class TestInstancePrototypeInstanceByImage():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30067,18 +31152,16 @@ class TestInstancePrototypeInstanceByImage():
         ]
         instance_prototype_instance_by_image_model_json[
             'network_interfaces'] = [network_interface_prototype_model]
-        instance_prototype_instance_by_image_model_json['profile'] = {
-            "name": "cc1-16x32"
-        }
+        instance_prototype_instance_by_image_model_json[
+            'profile'] = instance_profile_identity_model
         instance_prototype_instance_by_image_model_json[
             'user_data'] = 'testString'
         instance_prototype_instance_by_image_model_json[
             'volume_attachments'] = [
                 volume_attachment_prototype_instance_context_model
             ]
-        instance_prototype_instance_by_image_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_prototype_instance_by_image_model_json[
+            'vpc'] = vpc_identity_model
         instance_prototype_instance_by_image_model_json[
             'resource_group'] = resource_group_identity_model
         instance_prototype_instance_by_image_model_json[
@@ -30087,9 +31170,8 @@ class TestInstancePrototypeInstanceByImage():
             'zone'] = zone_identity_model
         instance_prototype_instance_by_image_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_instance_by_image_model_json['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_prototype_instance_by_image_model_json[
+            'image'] = image_identity_model
 
         # Construct a model instance of InstancePrototypeInstanceByImage by calling from_dict on the json representation
         instance_prototype_instance_by_image_model = InstancePrototypeInstanceByImage.from_dict(
@@ -30139,9 +31221,7 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30154,9 +31234,9 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30179,9 +31259,8 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30190,9 +31269,9 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30212,18 +31291,16 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         ]
         instance_prototype_instance_by_source_template_model_json[
             'network_interfaces'] = [network_interface_prototype_model]
-        instance_prototype_instance_by_source_template_model_json['profile'] = {
-            "name": "cc1-16x32"
-        }
+        instance_prototype_instance_by_source_template_model_json[
+            'profile'] = instance_profile_identity_model
         instance_prototype_instance_by_source_template_model_json[
             'user_data'] = 'testString'
         instance_prototype_instance_by_source_template_model_json[
             'volume_attachments'] = [
                 volume_attachment_prototype_instance_context_model
             ]
-        instance_prototype_instance_by_source_template_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_prototype_instance_by_source_template_model_json[
+            'vpc'] = vpc_identity_model
         instance_prototype_instance_by_source_template_model_json[
             'resource_group'] = resource_group_identity_model
         instance_prototype_instance_by_source_template_model_json[
@@ -30232,9 +31309,8 @@ class TestInstancePrototypeInstanceBySourceTemplate():
             'zone'] = zone_identity_model
         instance_prototype_instance_by_source_template_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_prototype_instance_by_source_template_model_json['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_prototype_instance_by_source_template_model_json[
+            'image'] = image_identity_model
         instance_prototype_instance_by_source_template_model_json[
             'source_template'] = instance_template_identity_model
 
@@ -30391,9 +31467,7 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30406,9 +31480,9 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30431,9 +31505,8 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30442,9 +31515,9 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30460,18 +31533,16 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         ]
         instance_template_prototype_instance_by_image_model_json[
             'network_interfaces'] = [network_interface_prototype_model]
-        instance_template_prototype_instance_by_image_model_json['profile'] = {
-            "name": "cc1-16x32"
-        }
+        instance_template_prototype_instance_by_image_model_json[
+            'profile'] = instance_profile_identity_model
         instance_template_prototype_instance_by_image_model_json[
             'user_data'] = 'testString'
         instance_template_prototype_instance_by_image_model_json[
             'volume_attachments'] = [
                 volume_attachment_prototype_instance_context_model
             ]
-        instance_template_prototype_instance_by_image_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_prototype_instance_by_image_model_json[
+            'vpc'] = vpc_identity_model
         instance_template_prototype_instance_by_image_model_json[
             'resource_group'] = resource_group_identity_model
         instance_template_prototype_instance_by_image_model_json[
@@ -30480,9 +31551,8 @@ class TestInstanceTemplatePrototypeInstanceByImage():
             'zone'] = zone_identity_model
         instance_template_prototype_instance_by_image_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_prototype_instance_by_image_model_json['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_prototype_instance_by_image_model_json[
+            'image'] = image_identity_model
 
         # Construct a model instance of InstanceTemplatePrototypeInstanceByImage by calling from_dict on the json representation
         instance_template_prototype_instance_by_image_model = InstanceTemplatePrototypeInstanceByImage.from_dict(
@@ -30533,9 +31603,7 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30548,9 +31616,9 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30573,9 +31641,8 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30584,9 +31651,9 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30606,9 +31673,7 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         instance_template_prototype_instance_by_source_template_model_json[
             'network_interfaces'] = [network_interface_prototype_model]
         instance_template_prototype_instance_by_source_template_model_json[
-            'profile'] = {
-                "name": "cc1-16x32"
-            }
+            'profile'] = instance_profile_identity_model
         instance_template_prototype_instance_by_source_template_model_json[
             'user_data'] = 'testString'
         instance_template_prototype_instance_by_source_template_model_json[
@@ -30616,9 +31681,7 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
                 volume_attachment_prototype_instance_context_model
             ]
         instance_template_prototype_instance_by_source_template_model_json[
-            'vpc'] = {
-                "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-            }
+            'vpc'] = vpc_identity_model
         instance_template_prototype_instance_by_source_template_model_json[
             'resource_group'] = resource_group_identity_model
         instance_template_prototype_instance_by_source_template_model_json[
@@ -30628,9 +31691,7 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         instance_template_prototype_instance_by_source_template_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
         instance_template_prototype_instance_by_source_template_model_json[
-            'image'] = {
-                "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-            }
+            'image'] = image_identity_model
         instance_template_prototype_instance_by_source_template_model_json[
             'source_template'] = instance_template_identity_model
 
@@ -30684,9 +31745,7 @@ class TestInstanceTemplateInstanceByImage():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30699,9 +31758,9 @@ class TestInstanceTemplateInstanceByImage():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30728,9 +31787,8 @@ class TestInstanceTemplateInstanceByImage():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30739,9 +31797,9 @@ class TestInstanceTemplateInstanceByImage():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30764,17 +31822,15 @@ class TestInstanceTemplateInstanceByImage():
         instance_template_instance_by_image_model_json['network_interfaces'] = [
             network_interface_prototype_model
         ]
-        instance_template_instance_by_image_model_json['profile'] = {
-            "name": "cc1-16x32"
-        }
+        instance_template_instance_by_image_model_json[
+            'profile'] = instance_profile_identity_model
         instance_template_instance_by_image_model_json[
             'user_data'] = 'testString'
         instance_template_instance_by_image_model_json['volume_attachments'] = [
             volume_attachment_prototype_instance_context_model
         ]
-        instance_template_instance_by_image_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_instance_by_image_model_json[
+            'vpc'] = vpc_identity_model
         instance_template_instance_by_image_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         instance_template_instance_by_image_model_json[
@@ -30785,9 +31841,8 @@ class TestInstanceTemplateInstanceByImage():
             'zone'] = zone_identity_model
         instance_template_instance_by_image_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_instance_by_image_model_json['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_instance_by_image_model_json[
+            'image'] = image_identity_model
 
         # Construct a model instance of InstanceTemplateInstanceByImage by calling from_dict on the json representation
         instance_template_instance_by_image_model = InstanceTemplateInstanceByImage.from_dict(
@@ -30837,9 +31892,7 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         network_interface_prototype_model['security_groups'] = [
             security_group_identity_model
         ]
-        network_interface_prototype_model['subnet'] = {
-            "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e"
-        }
+        network_interface_prototype_model['subnet'] = subnet_identity_model
 
         instance_profile_identity_model = {}  # InstanceProfileIdentityByName
         instance_profile_identity_model['name'] = 'cc1-16x32'
@@ -30852,9 +31905,9 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         volume_attachment_prototype_instance_context_model = {
         }  # VolumeAttachmentPrototypeInstanceContext
         volume_attachment_prototype_instance_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_context_model[
             'volume'] = volume_attachment_prototype_instance_context_volume_model
 
@@ -30881,9 +31934,8 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         volume_prototype_instance_by_image_context_model = {
         }  # VolumePrototypeInstanceByImageContext
         volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-        volume_prototype_instance_by_image_context_model['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_instance_by_image_context_model[
+            'profile'] = volume_profile_identity_model
         volume_prototype_instance_by_image_context_model[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_instance_by_image_context_model['capacity'] = 100
@@ -30892,9 +31944,9 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         volume_attachment_prototype_instance_by_image_context_model = {
         }  # VolumeAttachmentPrototypeInstanceByImageContext
         volume_attachment_prototype_instance_by_image_context_model[
-            'name'] = 'my-volume-attachment'
-        volume_attachment_prototype_instance_by_image_context_model[
             'delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_image_context_model[
+            'name'] = 'my-volume-attachment'
         volume_attachment_prototype_instance_by_image_context_model[
             'volume'] = volume_prototype_instance_by_image_context_model
 
@@ -30920,18 +31972,16 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         ]
         instance_template_instance_by_source_template_model_json[
             'network_interfaces'] = [network_interface_prototype_model]
-        instance_template_instance_by_source_template_model_json['profile'] = {
-            "name": "cc1-16x32"
-        }
+        instance_template_instance_by_source_template_model_json[
+            'profile'] = instance_profile_identity_model
         instance_template_instance_by_source_template_model_json[
             'user_data'] = 'testString'
         instance_template_instance_by_source_template_model_json[
             'volume_attachments'] = [
                 volume_attachment_prototype_instance_context_model
             ]
-        instance_template_instance_by_source_template_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        instance_template_instance_by_source_template_model_json[
+            'vpc'] = vpc_identity_model
         instance_template_instance_by_source_template_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         instance_template_instance_by_source_template_model_json[
@@ -30942,9 +31992,8 @@ class TestInstanceTemplateInstanceBySourceTemplate():
             'zone'] = zone_identity_model
         instance_template_instance_by_source_template_model_json[
             'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
-        instance_template_instance_by_source_template_model_json['image'] = {
-            "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8"
-        }
+        instance_template_instance_by_source_template_model_json[
+            'image'] = image_identity_model
         instance_template_instance_by_source_template_model_json[
             'source_template'] = instance_template_identity_model
 
@@ -31384,91 +32433,91 @@ class TestLoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRed
         assert load_balancer_listener_policy_prototype_target_load_balancer_listener_policy_redirect_url_prototype_model_json2 == load_balancer_listener_policy_prototype_target_load_balancer_listener_policy_redirect_url_prototype_model_json
 
 
-class TestLoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL(
+class TestLoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(
 ):
     """
-    Test Class for LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL
+    Test Class for LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL
     """
 
-    def test_load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_serialization(
+    def test_load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_serialization(
             self):
         """
-        Test serialization/deserialization for LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL
+        Test serialization/deserialization for LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL
         """
 
-        # Construct a json representation of a LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL model
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json = {}
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json[
+        # Construct a json representation of a LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL model
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json = {}
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json[
             'http_status_code'] = 301
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json[
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json[
             'url'] = 'https://www.redirect.com'
 
-        # Construct a model instance of LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL by calling from_dict on the json representation
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model = LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL.from_dict(
-            load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json
+        # Construct a model instance of LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL by calling from_dict on the json representation
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model = LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL.from_dict(
+            load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json
         )
-        assert load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model != False
+        assert load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model != False
 
-        # Construct a model instance of LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL by calling from_dict on the json representation
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_dict = LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL.from_dict(
-            load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json
+        # Construct a model instance of LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL by calling from_dict on the json representation
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_dict = LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL.from_dict(
+            load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json
         ).__dict__
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model2 = LoadBalancerListenerPolicyTargetReferenceLoadBalancerListenerPolicyRedirectURL(
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model2 = LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(
             **
-            load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_dict
+            load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_dict
         )
 
         # Verify the model instances are equivalent
-        assert load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model == load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model2
+        assert load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model == load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model2
 
         # Convert model instance back to dict and verify no loss of data
-        load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json2 = load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model.to_dict(
+        load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json2 = load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model.to_dict(
         )
-        assert load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json2 == load_balancer_listener_policy_target_reference_load_balancer_listener_policy_redirect_url_model_json
+        assert load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json2 == load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json
 
 
-class TestLoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference():
+class TestLoadBalancerListenerPolicyTargetLoadBalancerPoolReference():
     """
-    Test Class for LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference
+    Test Class for LoadBalancerListenerPolicyTargetLoadBalancerPoolReference
     """
 
-    def test_load_balancer_listener_policy_target_reference_load_balancer_pool_reference_serialization(
+    def test_load_balancer_listener_policy_target_load_balancer_pool_reference_serialization(
             self):
         """
-        Test serialization/deserialization for LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference
+        Test serialization/deserialization for LoadBalancerListenerPolicyTargetLoadBalancerPoolReference
         """
 
-        # Construct a json representation of a LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference model
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json = {}
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json[
+        # Construct a json representation of a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference model
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_json = {}
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_json[
             'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json[
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_json[
             'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004'
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json[
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_json[
             'name'] = 'my-load-balancer-pool'
 
-        # Construct a model instance of LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference by calling from_dict on the json representation
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model = LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference.from_dict(
-            load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json
+        # Construct a model instance of LoadBalancerListenerPolicyTargetLoadBalancerPoolReference by calling from_dict on the json representation
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model = LoadBalancerListenerPolicyTargetLoadBalancerPoolReference.from_dict(
+            load_balancer_listener_policy_target_load_balancer_pool_reference_model_json
         )
-        assert load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model != False
+        assert load_balancer_listener_policy_target_load_balancer_pool_reference_model != False
 
-        # Construct a model instance of LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference by calling from_dict on the json representation
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_dict = LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference.from_dict(
-            load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json
+        # Construct a model instance of LoadBalancerListenerPolicyTargetLoadBalancerPoolReference by calling from_dict on the json representation
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_dict = LoadBalancerListenerPolicyTargetLoadBalancerPoolReference.from_dict(
+            load_balancer_listener_policy_target_load_balancer_pool_reference_model_json
         ).__dict__
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model2 = LoadBalancerListenerPolicyTargetReferenceLoadBalancerPoolReference(
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model2 = LoadBalancerListenerPolicyTargetLoadBalancerPoolReference(
             **
-            load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_dict
+            load_balancer_listener_policy_target_load_balancer_pool_reference_model_dict
         )
 
         # Verify the model instances are equivalent
-        assert load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model == load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model2
+        assert load_balancer_listener_policy_target_load_balancer_pool_reference_model == load_balancer_listener_policy_target_load_balancer_pool_reference_model2
 
         # Convert model instance back to dict and verify no loss of data
-        load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json2 = load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model.to_dict(
+        load_balancer_listener_policy_target_load_balancer_pool_reference_model_json2 = load_balancer_listener_policy_target_load_balancer_pool_reference_model.to_dict(
         )
-        assert load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json2 == load_balancer_listener_policy_target_reference_load_balancer_pool_reference_model_json
+        assert load_balancer_listener_policy_target_load_balancer_pool_reference_model_json2 == load_balancer_listener_policy_target_load_balancer_pool_reference_model_json
 
 
 class TestLoadBalancerPoolIdentityByHref():
@@ -31864,9 +32913,8 @@ class TestNetworkACLPrototypeNetworkACLByRules():
         network_acl_prototype_network_acl_by_rules_model_json = {}
         network_acl_prototype_network_acl_by_rules_model_json[
             'name'] = 'my-network-acl'
-        network_acl_prototype_network_acl_by_rules_model_json['vpc'] = {
-            "id": "cf7cd5a-2f30-4336-a495-6addc820cd61"
-        }
+        network_acl_prototype_network_acl_by_rules_model_json[
+            'vpc'] = vpc_identity_model
         network_acl_prototype_network_acl_by_rules_model_json[
             'resource_group'] = resource_group_identity_model
         network_acl_prototype_network_acl_by_rules_model_json['rules'] = [
@@ -31921,15 +32969,11 @@ class TestNetworkACLPrototypeNetworkACLBySourceNetworkACL():
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
             'name'] = 'my-network-acl'
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
-            'vpc'] = {
-                "id": "cf7cd5a-2f30-4336-a495-6addc820cd61"
-            }
+            'vpc'] = vpc_identity_model
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
             'resource_group'] = resource_group_identity_model
         network_acl_prototype_network_acl_by_source_network_acl_model_json[
-            'source_network_acl'] = {
-                "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-            }
+            'source_network_acl'] = network_acl_identity_model
 
         # Construct a model instance of NetworkACLPrototypeNetworkACLBySourceNetworkACL by calling from_dict on the json representation
         network_acl_prototype_network_acl_by_source_network_acl_model = NetworkACLPrototypeNetworkACLBySourceNetworkACL.from_dict(
@@ -32061,14 +33105,8 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolAll():
             'source'] = '192.168.3.0/24'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
-        network_acl_rule_item_network_acl_rule_protocol_all_model_json['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_network_acl_rule_protocol_all_model_json[
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json[
@@ -32133,14 +33171,8 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolICMP():
             'source'] = '192.168.3.0/24'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
-        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json[
@@ -32210,14 +33242,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = {
-                "href":
-                    "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-                "id":
-                    "8daca77a-4980-4d33-8f3e-7038797be8f9",
-                "name":
-                    "my-rule-1"
-            }
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json[
@@ -32447,9 +33472,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolAll():
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json[
-            'before'] = {
-                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-            }
+            'before'] = network_acl_rule_identity_model
 
         # Construct a model instance of NetworkACLRulePrototypeNetworkACLRuleProtocolAll by calling from_dict on the json representation
         network_acl_rule_prototype_network_acl_rule_protocol_all_model = NetworkACLRulePrototypeNetworkACLRuleProtocolAll.from_dict(
@@ -32505,9 +33528,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolICMP():
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
-            'before'] = {
-                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-            }
+            'before'] = network_acl_rule_identity_model
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
             'code'] = 0
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json[
@@ -32569,9 +33590,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
-            'before'] = {
-                "id": "8daca77a-4980-4d33-8f3e-7038797be8f9"
-            }
+            'before'] = network_acl_rule_identity_model
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
             'destination_port_max'] = 22
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json[
@@ -32642,14 +33661,8 @@ class TestNetworkACLRuleNetworkACLRuleProtocolAll():
             'source'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_all_model_json[
             'protocol'] = 'all'
-        network_acl_rule_network_acl_rule_protocol_all_model_json['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_network_acl_rule_protocol_all_model_json[
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_network_acl_rule_protocol_all_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_network_acl_rule_protocol_all_model_json[
@@ -32713,14 +33726,8 @@ class TestNetworkACLRuleNetworkACLRuleProtocolICMP():
             'source'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_icmp_model_json[
             'protocol'] = 'icmp'
-        network_acl_rule_network_acl_rule_protocol_icmp_model_json['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json[
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_network_acl_rule_protocol_icmp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_network_acl_rule_protocol_icmp_model_json[
@@ -32786,14 +33793,8 @@ class TestNetworkACLRuleNetworkACLRuleProtocolTCPUDP():
             'source'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
             'protocol'] = 'udp'
-        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['before'] = {
-            "href":
-                "https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "id":
-                "8daca77a-4980-4d33-8f3e-7038797be8f9",
-            "name":
-                "my-rule-1"
-        }
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
+            'before'] = network_acl_rule_reference_model
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
             'created_at'] = '2020-01-28T18:40:40.123456Z'
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json[
@@ -33975,17 +34976,14 @@ class TestSubnetPrototypeSubnetByCIDR():
         # Construct a json representation of a SubnetPrototypeSubnetByCIDR model
         subnet_prototype_subnet_by_cidr_model_json = {}
         subnet_prototype_subnet_by_cidr_model_json['name'] = 'my-subnet'
-        subnet_prototype_subnet_by_cidr_model_json['network_acl'] = {
-            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-        }
+        subnet_prototype_subnet_by_cidr_model_json[
+            'network_acl'] = network_acl_identity_model
         subnet_prototype_subnet_by_cidr_model_json[
             'public_gateway'] = public_gateway_identity_model
         subnet_prototype_subnet_by_cidr_model_json['ip_version'] = 'ipv4'
         subnet_prototype_subnet_by_cidr_model_json[
             'resource_group'] = resource_group_identity_model
-        subnet_prototype_subnet_by_cidr_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        subnet_prototype_subnet_by_cidr_model_json['vpc'] = vpc_identity_model
         subnet_prototype_subnet_by_cidr_model_json[
             'ipv4_cidr_block'] = '10.0.0.0/24'
         subnet_prototype_subnet_by_cidr_model_json['zone'] = zone_identity_model
@@ -34042,17 +35040,15 @@ class TestSubnetPrototypeSubnetByTotalCount():
         # Construct a json representation of a SubnetPrototypeSubnetByTotalCount model
         subnet_prototype_subnet_by_total_count_model_json = {}
         subnet_prototype_subnet_by_total_count_model_json['name'] = 'my-subnet'
-        subnet_prototype_subnet_by_total_count_model_json['network_acl'] = {
-            "id": "a4e28308-8ee7-46ab-8108-9f881f22bdbf"
-        }
+        subnet_prototype_subnet_by_total_count_model_json[
+            'network_acl'] = network_acl_identity_model
         subnet_prototype_subnet_by_total_count_model_json[
             'public_gateway'] = public_gateway_identity_model
         subnet_prototype_subnet_by_total_count_model_json['ip_version'] = 'ipv4'
         subnet_prototype_subnet_by_total_count_model_json[
             'resource_group'] = resource_group_identity_model
-        subnet_prototype_subnet_by_total_count_model_json['vpc'] = {
-            "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b"
-        }
+        subnet_prototype_subnet_by_total_count_model_json[
+            'vpc'] = vpc_identity_model
         subnet_prototype_subnet_by_total_count_model_json[
             'total_ipv4_address_count'] = 256
         subnet_prototype_subnet_by_total_count_model_json[
@@ -34382,9 +35378,8 @@ class TestVolumePrototypeVolumeByCapacity():
         # Construct a json representation of a VolumePrototypeVolumeByCapacity model
         volume_prototype_volume_by_capacity_model_json = {}
         volume_prototype_volume_by_capacity_model_json['name'] = 'my-volume'
-        volume_prototype_volume_by_capacity_model_json['profile'] = {
-            "name": "general-purpose"
-        }
+        volume_prototype_volume_by_capacity_model_json[
+            'profile'] = volume_profile_identity_model
         volume_prototype_volume_by_capacity_model_json[
             'encryption_key'] = encryption_key_identity_model
         volume_prototype_volume_by_capacity_model_json['iops'] = 10000
@@ -35773,9 +36768,7 @@ class TestVolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceC
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
             'name'] = 'my-volume'
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
-            'profile'] = {
-                "name": "general-purpose"
-            }
+            'profile'] = volume_profile_identity_model
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[
             'encryption_key'] = encryption_key_identity_model
         volume_attachment_prototype_instance_context_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json[

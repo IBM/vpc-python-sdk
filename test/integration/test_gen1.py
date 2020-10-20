@@ -723,17 +723,11 @@ def get_floating_ip(service, id):
 #--------------------------------------------------------
 
 def update_floating_ip(service, id):
-    # Construct a dict representation of a NetworkInterfaceIdentityById model
-    # network_interface_identity_model = {}
-    # network_interface_identity_model[
-    #     'id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
-    # target = network_interface_identity_model
-
-    name = generate_name('fip')
+    floating_ip_patch = {}
+    floating_ip_patch['name'] = generate_name('fip')
     response = service.update_floating_ip(
         id,
-        name=name,
-        # target=target,
+        floating_ip_patch,
     )
     return response
 #--------------------------------------------------------
@@ -818,11 +812,13 @@ def get_image(service, id):
 #--------------------------------------------------------
 
 def update_image(service, id):
-    name = generate_name('image')
+    image_patch = {}
+    image_patch['name'] = generate_name('image')
     response = service.update_image(
         id,
-        name=name,
+        image_patch,
     )
+
     return response
 
 #--------------------------------------------------------
@@ -869,46 +865,9 @@ def list_instances(service):
 #--------------------------------------------------------
 
 def create_instance(service, vpc, profile, zone, image, subnet):
-    # Construct a dict representation of a EncryptionKeyIdentityByCRN model
-    # encryption_key_identity_model = {}
-    # encryption_key_identity_model[
-    #     'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
-
-    # Construct a dict representation of a VolumeProfileIdentityByName model
-    # volume_profile_identity_model = {}
-    # volume_profile_identity_model['name'] = 'general-purpose'
-
-    # Construct a dict representation of a SecurityGroupIdentityById model
-    # security_group_identity_model = {}
-    # security_group_identity_model[
-    #     'id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-
     # Construct a dict representation of a SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
-
-    # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity model
-    # volume_attachment_prototype_instance_context_volume_model = {}
-    # volume_attachment_prototype_instance_context_volume_model[
-    #     'encryption_key'] = encryption_key_identity_model
-    # volume_attachment_prototype_instance_context_volume_model[
-    #     'iops'] = 10000
-    # volume_attachment_prototype_instance_context_volume_model[
-    #     'name'] = 'my-volume'
-    # volume_attachment_prototype_instance_context_volume_model[
-    #     'profile'] = volume_profile_identity_model
-    # volume_attachment_prototype_instance_context_volume_model[
-    #     'capacity'] = 100
-
-    # Construct a dict representation of a VolumePrototypeInstanceByImageContext model
-    # volume_prototype_instance_by_image_context_model = {}
-    # volume_prototype_instance_by_image_context_model['capacity'] = 100
-    # volume_prototype_instance_by_image_context_model[
-    #     'encryption_key'] = encryption_key_identity_model
-    # volume_prototype_instance_by_image_context_model['iops'] = 10000
-    # volume_prototype_instance_by_image_context_model['name'] = 'my-volume'
-    # volume_prototype_instance_by_image_context_model[
-    #     'profile'] = volume_profile_identity_model
 
     # Construct a dict representation of a ImageIdentityById model
     image_identity_model = {}
@@ -918,44 +877,14 @@ def create_instance(service, vpc, profile, zone, image, subnet):
     instance_profile_identity_model = {}
     instance_profile_identity_model['name'] = profile
 
-    # Construct a dict representation of a KeyIdentityById model
-    # key_identity_model = {}
-    # key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
-
     # Construct a dict representation of a NetworkInterfacePrototype model
     network_interface_prototype_model = {}
     network_interface_prototype_model['name'] = generate_name('nic')
-    # network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
-    # network_interface_prototype_model['security_groups'] = [
-    #     security_group_identity_model
-    # ]
     network_interface_prototype_model['subnet'] = subnet_identity_model
-
-    # # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
     # Construct a dict representation of a VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
-
-    # # Construct a dict representation of a VolumeAttachmentPrototypeInstanceByImageContext model
-    # volume_attachment_prototype_instance_by_image_context_model = {}
-    # volume_attachment_prototype_instance_by_image_context_model[
-    #     'delete_volume_on_instance_delete'] = True
-    # volume_attachment_prototype_instance_by_image_context_model[
-    #     'name'] = 'my-volume-attachment'
-    # volume_attachment_prototype_instance_by_image_context_model[
-    #     'volume'] = volume_prototype_instance_by_image_context_model
-
-    # # Construct a dict representation of a VolumeAttachmentPrototypeInstanceContext model
-    # volume_attachment_prototype_instance_context_model = {}
-    # volume_attachment_prototype_instance_context_model[
-    #     'delete_volume_on_instance_delete'] = True
-    # volume_attachment_prototype_instance_context_model[
-    #     'name'] = 'my-volume-attachment'
-    # volume_attachment_prototype_instance_context_model[
-    #     'volume'] = volume_attachment_prototype_instance_context_volume_model
 
     # Construct a dict representation of a ZoneIdentityByName model
     zone_identity_model = {}
@@ -969,15 +898,7 @@ def create_instance(service, vpc, profile, zone, image, subnet):
         network_interface_prototype_model
     ]
     instance_prototype_model['profile'] = instance_profile_identity_model
-    # instance_prototype_model[
-    #     'resource_group'] = resource_group_identity_model
-    # instance_prototype_model['user_data'] = 'testString'
-    # instance_prototype_model['volume_attachments'] = [
-    #     volume_attachment_prototype_instance_context_model
-    # ]
     instance_prototype_model['vpc'] = vpc_identity_model
-    # instance_prototype_model[
-    #     'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
     instance_prototype_model['image'] = image_identity_model
     instance_prototype_model[
         'primary_network_interface'] = network_interface_prototype_model
@@ -1007,10 +928,11 @@ def get_instance(service, id):
 #--------------------------------------------------------
 
 def update_instance(service, id):
-    name = generate_name('instance')
+    instance_patch = {}
+    instance_patch['name'] = generate_name('instance')
     response = service.update_instance(
         id,
-        name=name,
+        instance_patch,
     )
     return response
 
@@ -1128,13 +1050,13 @@ def get_instance_volume_attachment(service, instance_id, id):
 # update_instance_volume_attachment()
 #--------------------------------------------------------
 def update_instance_volume_attachment(service, instance_id, id):
-    delete_volume_on_instance_delete = True
-    name = generate_name('vol-att')
+    volume_attachment_patch = {}
+    volume_attachment_patch['delete_volume_on_instance_delete'] = True
+    volume_attachment_patch['name'] = generate_name('vol-att')
     response = service.update_instance_volume_attachment(
         instance_id,
         id,
-        delete_volume_on_instance_delete=delete_volume_on_instance_delete,
-        name=name,
+        volume_attachment_patch,
     )
     return response
 
@@ -1154,84 +1076,14 @@ def create_load_balancer(service, subnet):
     # Construct a dict representation of a SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
-
-    # Construct a dict representation of a LoadBalancerPoolIdentityByName model
-    # load_balancer_pool_identity_by_name_model = {}
-    # load_balancer_pool_identity_by_name_model[
-    #     'name'] = 'my-load-balancer-pool'
-
-    # Construct a dict representation of a LoadBalancerListenerPrototypeLoadBalancerContext model
-    # load_balancer_listener_prototype_load_balancer_context_model = {}
-    # load_balancer_listener_prototype_load_balancer_context_model[
-    #     'connection_limit'] = 2000
-    # load_balancer_listener_prototype_load_balancer_context_model[
-    #     'default_pool'] = load_balancer_pool_identity_by_name_model
-    # load_balancer_listener_prototype_load_balancer_context_model[
-    #     'port'] = 443
-    # load_balancer_listener_prototype_load_balancer_context_model[
-    #     'protocol'] = 'http'
-
-    # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
-    # load_balancer_pool_member_target_prototype_model = {}
-    # load_balancer_pool_member_target_prototype_model[
-    #     'address'] = '192.168.3.4'
-
-    # Construct a dict representation of a LoadBalancerPoolHealthMonitorPrototype model
-    # load_balancer_pool_health_monitor_prototype_model = {}
-    # load_balancer_pool_health_monitor_prototype_model['delay'] = 5
-    # load_balancer_pool_health_monitor_prototype_model['max_retries'] = 2
-    # load_balancer_pool_health_monitor_prototype_model['port'] = 22
-    # load_balancer_pool_health_monitor_prototype_model['timeout'] = 2
-    # load_balancer_pool_health_monitor_prototype_model['type'] = 'http'
-    # load_balancer_pool_health_monitor_prototype_model['url_path'] = '/'
-
-    # Construct a dict representation of a LoadBalancerPoolMemberPrototype model
-    # load_balancer_pool_member_prototype_model = {}
-    # load_balancer_pool_member_prototype_model['port'] = 80
-    # # load_balancer_pool_member_prototype_model[
-    # #     'target'] = load_balancer_pool_member_target_prototype_model
-    # load_balancer_pool_member_prototype_model['weight'] = 50
-
-    # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
-    # load_balancer_pool_session_persistence_prototype_model = {}
-    # load_balancer_pool_session_persistence_prototype_model[
-    #     'type'] = 'source_ip'
-
-    # Construct a dict representation of a LoadBalancerPoolPrototype model
-    # load_balancer_pool_prototype_model = {}
-    # load_balancer_pool_prototype_model['algorithm'] = 'least_connections'
-    # load_balancer_pool_prototype_model[
-    #     'health_monitor'] = load_balancer_pool_health_monitor_prototype_model
-    # load_balancer_pool_prototype_model['members'] = [
-    #     load_balancer_pool_member_prototype_model
-    # ]
-    # load_balancer_pool_prototype_model['name'] = 'my-load-balancer-pool'
-    # load_balancer_pool_prototype_model['protocol'] = 'http'
-    # load_balancer_pool_prototype_model[
-    #     'session_persistence'] = load_balancer_pool_session_persistence_prototype_model
-
-    # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
-
     is_public = True
     subnets = [subnet_identity_model]
-    # listeners = [
-    #     load_balancer_listener_prototype_load_balancer_context_model
-    # ]
     name = generate_name('lb')
-    # pools = [load_balancer_pool_prototype_model]
-    # resource_group = resource_group_identity_model
-
 
     response = service.create_load_balancer(
         is_public,
         subnets,
-        # listeners=listeners,
         name=name,
-        # pools=pools,
-        # resource_group=resource_group,
     )
     return response
 
@@ -1253,10 +1105,11 @@ def get_load_balancer(service, id):
 # update_load_balancer()
 #--------------------------------------------------------
 def update_load_balancer(service, id):
-    name = generate_name('lb')
+    load_balancer_patch = {}
+    load_balancer_patch['name'] = generate_name('lb')
     response = service.update_load_balancer(
         id,
-        name=name,
+        load_balancer_patch,
     )
     return response
 
@@ -1278,58 +1131,13 @@ def list_load_balancer_listeners(service, load_balancer_id):
 #--------------------------------------------------------
 
 def create_load_balancer_listener(service, load_balancer_id):
-    # Construct a dict representation of a CertificateInstanceIdentityByCRN model
-    # certificate_instance_identity_model = {}
-    # certificate_instance_identity_model[
-    #     'crn'] = 'crn:v1:bluemix:public:cloudcerts:us-south:a/123456:b8866ea4-b8df-467e-801a-da1db7e020bf:certificate:78ff9c4c97d013fb2a95b21dddde7758'
-
-    # Construct a dict representation of a LoadBalancerPoolIdentityById model
-    # load_balancer_pool_identity_model = {}
-    # load_balancer_pool_identity_model[
-    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById model
-    # load_balancer_listener_policy_prototype_target_model = {}
-    # load_balancer_listener_policy_prototype_target_model[
-    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyRulePrototype model
-    # load_balancer_listener_policy_rule_prototype_model = {}
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'condition'] = 'contains'
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'field'] = 'MY-APP-HEADER'
-    # load_balancer_listener_policy_rule_prototype_model['type'] = 'header'
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'value'] = 'testString'
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyPrototype model
-    # load_balancer_listener_policy_prototype_model = {}
-    # load_balancer_listener_policy_prototype_model['action'] = 'forward'
-    # load_balancer_listener_policy_prototype_model['name'] = 'my-policy'
-    # load_balancer_listener_policy_prototype_model['priority'] = 5
-    # load_balancer_listener_policy_prototype_model['rules'] = [
-    #     load_balancer_listener_policy_rule_prototype_model
-    # ]
-    # load_balancer_listener_policy_prototype_model[
-    #     'target'] = load_balancer_listener_policy_prototype_target_model
-
     port = 443
     protocol = 'http'
-    # certificate_instance = certificate_instance_identity_model
-    # connection_limit = 2000
-    # default_pool = load_balancer_pool_identity_model
-    # policies = [load_balancer_listener_policy_prototype_model]
-
 
     response = service.create_load_balancer_listener(
         load_balancer_id,
         port,
         protocol,
-    #     certificate_instance=certificate_instance,
-    #     connection_limit=connection_limit,
-    #     default_pool=default_pool,
-    #     policies=policies,
     )
     return response
 #--------------------------------------------------------
@@ -1353,31 +1161,13 @@ def get_load_balancer_listener(service, load_balancer_id, id):
 #--------------------------------------------------------
 
 def update_load_balancer_listener(service, load_balancer_id, id):
-
-    # Construct a dict representation of a CertificateInstanceIdentityByCRN model
-    # certificate_instance_identity_model = {}
-    # certificate_instance_identity_model[
-    #     'crn'] = 'crn:v1:bluemix:public:cloudcerts:us-south:a/123456:b8866ea4-b8df-467e-801a-da1db7e020bf:certificate:78ff9c4c97d013fb2a95b21dddde7758'
-
-    # # Construct a dict representation of a LoadBalancerPoolIdentityById model
-    # load_balancer_pool_identity_model = {}
-    # load_balancer_pool_identity_model[
-    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-
-    # certificate_instance = certificate_instance_identity_model
-    connection_limit = 2500
-    # default_pool = load_balancer_pool_identity_model
-    # port = 443
-    # protocol = 'http'
+    load_balancer_listener_patch_model = {}
+    load_balancer_listener_patch_model['connection_limit'] = 2000
 
     response = service.update_load_balancer_listener(
         load_balancer_id,
         id,
-        # certificate_instance=certificate_instance,
-        connection_limit=connection_limit,
-    #     default_pool=default_pool,
-    #     port=port,
-    #     protocol=protocol,
+        load_balancer_listener_patch=load_balancer_listener_patch_model,
     )
     return response
 
@@ -1394,37 +1184,15 @@ def list_load_balancer_listener_policies(service, load_balancer_id, listener_id)
 #--------------------------------------------------------
 
 def create_load_balancer_listener_policy(service, load_balancer_id, listener_id):
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyRulePrototype model
-    # load_balancer_listener_policy_rule_prototype_model = {}
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'condition'] = 'contains'
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'field'] = 'MY-APP-HEADER'
-    # load_balancer_listener_policy_rule_prototype_model['type'] = 'header'
-    # load_balancer_listener_policy_rule_prototype_model[
-    #     'value'] = 'testString'
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById model
-    # load_balancer_listener_policy_prototype_target_model = {}
-    # load_balancer_listener_policy_prototype_target_model[
-    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-
     action = 'forward'
     priority = 5
     name = generate_name('list-pol')
-    # rules = [load_balancer_listener_policy_rule_prototype_model]
-    # target = load_balancer_listener_policy_prototype_target_model
-
-
     response = service.create_load_balancer_listener_policy(
         load_balancer_id,
         listener_id,
         action,
         priority,
         name=name,
-        # rules=rules,
-        # target=target,
     )
     return response
 
@@ -1448,24 +1216,15 @@ def get_load_balancer_listener_policy(service, load_balancer_id, listener_id, id
 #--------------------------------------------------------
 
 def update_load_balancer_listener_policy(service, load_balancer_id, listener_id, id):
-
-    # Construct a dict representation of a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById model
-    # load_balancer_listener_policy_patch_target_model = {}
-    # load_balancer_listener_policy_patch_target_model[
-    #     'id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
-
-    name = generate_name('list-pol')
-    priority = 6
-    # target = load_balancer_listener_policy_patch_target_model
-
+    load_balancer_listener_policy_patch_model = {}
+    load_balancer_listener_policy_patch_model['name'] =generate_name('list-pol')
+    load_balancer_listener_policy_patch_model['priority'] = 5
 
     response = service.update_load_balancer_listener_policy(
         load_balancer_id,
         listener_id,
         id,
-        name=name,
-        priority=priority,
-        # target=target,
+        load_balancer_listener_policy_patch=load_balancer_listener_policy_patch_model,
     )
 
     return response
@@ -1522,21 +1281,19 @@ def get_load_balancer_listener_policy_rule(service, load_balancer_id, listener_i
 #--------------------------------------------------------
 
 def update_load_balancer_listener_policy_rule(service, load_balancer_id, listener_id, policy_id, id):
-    condition = 'contains'
-    field = 'MY-APP-HEADER'
-    type = 'header'
-    value = 'testValue'
-
-
+    load_balancer_listener_policy_rule_patch_model = {}
+    load_balancer_listener_policy_rule_patch_model['condition'] = 'contains'
+    load_balancer_listener_policy_rule_patch_model[
+        'field'] = 'MY-APP-HEADER'
+    load_balancer_listener_policy_rule_patch_model['type'] = 'header'
+    load_balancer_listener_policy_rule_patch_model['value'] = 'some-value'
+    load_balancer_listener_policy_rule_patch = load_balancer_listener_policy_rule_patch_model
     response = service.update_load_balancer_listener_policy_rule(
         load_balancer_id,
         listener_id,
         policy_id,
         id,
-        condition=condition,
-        field=field,
-        type=type,
-        value=value,
+        load_balancer_listener_policy_rule_patch,
     )
 
     return response
@@ -1569,13 +1326,6 @@ def create_load_balancer_pool(service, load_balancer_id):
     load_balancer_pool_member_target_prototype_model[
         'address'] = '192.168.3.4'
 
-    # Construct a dict representation of a LoadBalancerPoolMemberPrototype model
-    # load_balancer_pool_member_prototype_model = {}
-    # load_balancer_pool_member_prototype_model['port'] = 80
-    # load_balancer_pool_member_prototype_model[
-    #     'target'] = load_balancer_pool_member_target_prototype_model
-    # load_balancer_pool_member_prototype_model['weight'] = 50
-
     # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
     load_balancer_pool_session_persistence_prototype_model = {}
     load_balancer_pool_session_persistence_prototype_model[
@@ -1594,9 +1344,7 @@ def create_load_balancer_pool(service, load_balancer_id):
         algorithm,
         health_monitor,
         protocol,
-        # members=members,
         name=name,
-        # session_persistence=session_persistence,
     )
     return response
 #--------------------------------------------------------
@@ -1618,34 +1366,13 @@ def get_load_balancer_pool(service, load_balancer_id, id):
 #--------------------------------------------------------
 
 def update_load_balancer_pool(service, load_balancer_id, id):
-    # Construct a dict representation of a LoadBalancerPoolHealthMonitorPatch model
-    # load_balancer_pool_health_monitor_patch_model = {}
-    # load_balancer_pool_health_monitor_patch_model['delay'] = 5
-    # load_balancer_pool_health_monitor_patch_model['max_retries'] = 2
-    # load_balancer_pool_health_monitor_patch_model['port'] = 22
-    # load_balancer_pool_health_monitor_patch_model['timeout'] = 2
-    # load_balancer_pool_health_monitor_patch_model['type'] = 'http'
-    # load_balancer_pool_health_monitor_patch_model['url_path'] = '/'
-
-    # Construct a dict representation of a LoadBalancerPoolSessionPersistencePatch model
-    # load_balancer_pool_session_persistence_patch_model = {}
-    # load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
-
-    # algorithm = 'least_connections'
-    # health_monitor = load_balancer_pool_health_monitor_patch_model
-    name = generate_name('lb-pool')
-    # protocol = 'http'
-    # session_persistence = load_balancer_pool_session_persistence_patch_model
-
+    load_balancer_pool_patch_model = {}
+    load_balancer_pool_patch_model['name'] = generate_name('lb-pool')
 
     response = service.update_load_balancer_pool(
         load_balancer_id,
         id,
-        # algorithm=algorithm,
-        # health_monitor=health_monitor,
-        name=name,
-        # protocol=protocol,
-        # session_persistence=session_persistence,
+        load_balancer_pool_patch=load_balancer_pool_patch_model,
     )
     return response
 #--------------------------------------------------------
@@ -1684,20 +1411,10 @@ def create_load_balancer_pool_member(service, load_balancer_id, pool_id):
 #--------------------------------------------------------
 
 def replace_load_balancer_pool_members(service, load_balancer_id, pool_id):
-    # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
-    # load_balancer_pool_member_target_prototype_model = {}
-    # load_balancer_pool_member_target_prototype_model[
-    #     'address'] = '192.168.3.4'
-
-    # Construct a dict representation of a LoadBalancerPoolMemberPrototype model
     load_balancer_pool_member_prototype_model = {}
     load_balancer_pool_member_prototype_model['port'] = 82
-    # load_balancer_pool_member_prototype_model[
-    #     'target'] = load_balancer_pool_member_target_prototype_model
-    # load_balancer_pool_member_prototype_model['weight'] = 50
 
     members = [load_balancer_pool_member_prototype_model]
-
 
     response = service.replace_load_balancer_pool_members(
         load_balancer_id,
@@ -1728,23 +1445,15 @@ def get_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
 #--------------------------------------------------------
 
 def update_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
-
-    # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
-    # load_balancer_pool_member_target_prototype_model = {}
-    # load_balancer_pool_member_target_prototype_model[
-    #     'address'] = '192.168.3.4'
-    # port = 81
-    # target = load_balancer_pool_member_target_prototype_model
-    weight = 52
-
+    load_balancer_pool_member_patch_model = {}
+    load_balancer_pool_member_patch_model['port'] = 80
+    load_balancer_pool_member_patch_model['weight'] = 50
 
     response = service.update_load_balancer_pool_member(
         load_balancer_id,
         pool_id,
         id,
-        # port=port,
-        # target=target,
-        weight=weight,
+        load_balancer_pool_member_patch=load_balancer_pool_member_patch_model,
     )
     return response
 
@@ -1759,53 +1468,12 @@ def list_network_acls(service, ):
 # create_network_acl()
 #--------------------------------------------------------
 def create_network_acl(service, source_nacl_id):
-
-    # # Construct a dict representation of a NetworkACLRuleReference model
-    # network_acl_rule_reference_model = {}
-    # network_acl_rule_reference_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model['name'] = 'my-rule-1'
-
-    # # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP model
-    # network_acl_rule_prototype_network_acl_context_model = {}
-    # network_acl_rule_prototype_network_acl_context_model['action'] = 'allow'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'before'] = network_acl_rule_reference_model
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'created_at'] = '2020-01-28T18:40:40.123456Z'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'destination'] = '192.168.3.0/24'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'direction'] = 'inbound'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'ip_version'] = 'ipv4'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'name'] = 'my-rule-2'
-    # network_acl_rule_prototype_network_acl_context_model['protocol'] = 'udp'
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'source'] = '192.168.3.0/24'
-    # network_acl_rule_prototype_network_acl_context_model['port_max'] = 22
-    # network_acl_rule_prototype_network_acl_context_model['port_min'] = 22
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'source_port_max'] = 65535
-    # network_acl_rule_prototype_network_acl_context_model[
-    #     'source_port_min'] = 49152
-
     # Construct a dict representation of a NetworkACLPrototypeNetworkACLByRules model
     network_acl_prototype_model = {}
     network_acl_prototype_model['name'] = generate_name('nacl')
     network_acl_reference_model = {}
     network_acl_reference_model['id'] = source_nacl_id
     network_acl_prototype_model['source_network_acl'] = network_acl_reference_model
-    # network_acl_prototype_model['rules'] = [
-    #     network_acl_rule_prototype_network_acl_context_model
-    # ]
 
     network_acl_prototype = network_acl_prototype_model
 
@@ -1831,10 +1499,12 @@ def get_network_acl(service, id):
 # update_network_acl()
 #--------------------------------------------------------
 def update_network_acl(service, id):
-    name = generate_name('nacl')
+    network_acl_patch_model = {}
+    network_acl_patch_model['name'] = generate_name('nacl')
+    network_acl_patch = network_acl_patch_model
     response = service.update_network_acl(
         id,
-        name=name,
+        network_acl_patch,
     )
     return response
 
@@ -1850,27 +1520,11 @@ def list_network_acl_rules(service, network_acl_id):
 # create_network_acl_rule()
 #--------------------------------------------------------
 def create_network_acl_rule(service, network_acl_id):
-
-    # Construct a dict representation of a NetworkACLRuleReference model
-    # network_acl_rule_reference_model = {}
-    # network_acl_rule_reference_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model['name'] = 'my-rule-1'
-
     # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
     network_acl_rule_prototype_model = {}
     network_acl_rule_prototype_model['action'] = 'allow'
-    # network_acl_rule_prototype_model[
-    #     'before'] = network_acl_rule_reference_model
     network_acl_rule_prototype_model['destination'] = '192.168.3.0/24'
     network_acl_rule_prototype_model['direction'] = 'inbound'
-    # network_acl_rule_prototype_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_prototype_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_prototype_model['ip_version'] = 'ipv4'
     network_acl_rule_prototype_model['name'] = generate_name('naclrule')
     network_acl_rule_prototype_model['protocol'] = 'icmp'
     network_acl_rule_prototype_model['source'] = '192.168.3.0/24'
@@ -1904,31 +1558,10 @@ def get_network_acl_rule(service, network_acl_id, id):
 #--------------------------------------------------------
 
 def update_network_acl_rule(service, network_acl_id, id):
-    # Construct a dict representation of a NetworkACLRuleReference model
-    # network_acl_rule_reference_model = {}
-    # network_acl_rule_reference_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_reference_model['name'] = 'my-rule-1'
-
     # Construct a dict representation of a NetworkACLRulePatchNetworkACLRuleProtocolICMP model
     network_acl_rule_patch_model = {}
     network_acl_rule_patch_model['action'] = 'allow'
-    # network_acl_rule_patch_model[
-    #     'before'] = network_acl_rule_reference_model
-    # network_acl_rule_patch_model['destination'] = '192.168.3.0/24'
-    # network_acl_rule_patch_model['direction'] = 'inbound'
-    # network_acl_rule_patch_model[
-    #     'href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_patch_model[
-    #     'id'] = '8daca77a-4980-4d33-8f3e-7038797be8f9'
-    # network_acl_rule_patch_model['ip_version'] = 'ipv4'
     network_acl_rule_patch_model['name'] = generate_name('nacl-rule')
-    # network_acl_rule_patch_model['protocol'] = 'icmp'
-    # network_acl_rule_patch_model['source'] = '192.168.3.0/24'
-    # network_acl_rule_patch_model['code'] = 0
-    # network_acl_rule_patch_model['type'] = 8
 
     network_acl_rule_patch = network_acl_rule_patch_model
 
@@ -1959,11 +1592,6 @@ def create_public_gateway(service, vpc, zone):
     # Construct a dict representation of a ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
-
-    # # Construct a dict representation of a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById model
-    # public_gateway_prototype_floating_ip_model = {}
-    # public_gateway_prototype_floating_ip_model[
-    #     'id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
 
     vpc = vpc_identity_model
     zone = zone_identity_model
@@ -1996,10 +1624,11 @@ def get_public_gateway(service, id):
 # update_public_gateway()
 #--------------------------------------------------------
 def update_public_gateway(service, id):
-    name = generate_name('pgw')
+    public_gateway_patch = {}
+    public_gateway_patch['name'] = generate_name('pgw')
     response = service.update_public_gateway(
         id,
-        name=name,
+        public_gateway_patch,
     )
     return response
 
@@ -2014,11 +1643,6 @@ def list_keys(service):
 # create_key()
 #--------------------------------------------------------
 def create_key(service):
-    # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-    # resource_group = resource_group_identity_model
-
     public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcPJwUpNQr0MplO6UM5mfV4vlvY0RpD6gcXqodzZIjsoG31+hQxoJVU9yQcSjahktHFs7Fk2Mo79jUT3wVC8Pg6A3//IDFkLjVrg/mQVpIf6+GxIYEtVg6Tk4pP3YNoksrugGlpJ4LCR3HMe3fBQTQqTzObbb0cSF6xhW5UBq8vhqIkhYKd3KLGJnnrwsIGcwb5BRk68ZFYhreAomvx4jWjaBFlH98HhE4wUEVvJLRy/qR/0w3XVjTSgOlhXywaAOEkmwye7kgSglegCpHWwYNly+NxLONjqbX9rHbFHUVRShnFKh2+M6XKE3HowT/3Y1lDd2PiVQpJY0oQmebiRxB astha.jain@ibm.com'
     name = generate_name('key')
     type = 'rsa'
@@ -2026,7 +1650,6 @@ def create_key(service):
     response = service.create_key(
         public_key,
         name=name,
-        # resource_group=resource_group,
         type=type,
     )
     return response
@@ -2050,10 +1673,11 @@ def get_key(service, id):
 # update_key()
 #--------------------------------------------------------
 def update_key(service, id):
-    name = generate_name('key')
+    key_patch = {}
+    key_patch['name'] = generate_name('key')
     response = service.update_key(
         id,
-        name=name,
+        key_patch,
     )
     return response
 
@@ -2073,31 +1697,8 @@ def create_security_group(service, vpc):
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
 
-    # # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
-    # # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-    # security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-    # security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-    #     'address'] = '192.168.3.4'
-
-    # # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
-    # security_group_rule_prototype_model = {}
-    # security_group_rule_prototype_model['direction'] = 'inbound'
-    # security_group_rule_prototype_model['ip_version'] = 'ipv4'
-    # security_group_rule_prototype_model['protocol'] = 'icmp'
-    # security_group_rule_prototype_model[
-    #     'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
-    # security_group_rule_prototype_model['code'] = 0
-    # security_group_rule_prototype_model['type'] = 8
-
-
     vpc = vpc_identity_model
     name = generate_name('sg')
-    # resource_group = resource_group_identity_model
-    # rules = [security_group_rule_prototype_model]
-
 
     response = service.create_security_group(
         vpc,
@@ -2125,10 +1726,12 @@ def get_security_group(service, id):
 # update_security_group()
 #--------------------------------------------------------
 def update_security_group(service, id):
-    name = generate_name('sg')
+    patch_model = {}
+    patch_model['name'] = generate_name('sg')
+    security_group_patch = patch_model
     response = service.update_security_group(
         id,
-        name=name,
+        security_group_patch,
     )
     return response
 
@@ -2178,20 +1781,9 @@ def list_security_group_rules(service, security_group_id):
 #--------------------------------------------------------
 
 def create_security_group_rule(service, sg_id):
-    # # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMPRemoteIP model
-    # security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model = {}
-    # security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model[
-    #     'address'] = '192.168.3.4'
-
     # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
     security_group_rule_prototype_model = {}
     security_group_rule_prototype_model['direction'] = 'inbound'
-    # security_group_rule_prototype_model['ip_version'] = 'ipv4'
-    # security_group_rule_prototype_model['protocol'] = 'icmp'
-    # security_group_rule_prototype_model[
-    #     'remote'] = security_group_rule_prototype_security_group_rule_protocol_icmp_remote_model
-    # security_group_rule_prototype_model['code'] = 0
-    # security_group_rule_prototype_model['type'] = 8
 
     security_group_id = sg_id
     security_group_rule_prototype = security_group_rule_prototype_model
@@ -2218,18 +1810,7 @@ def get_security_group_rule(service, security_group_id, id):
 # update_security_group_rule()
 #--------------------------------------------------------
 def update_security_group_rule(service, security_group_id, id):
-    # # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMPRemoteIP model
-    # security_group_rule_patch_security_group_rule_protocol_icmp_remote_model = {}
-    # security_group_rule_patch_security_group_rule_protocol_icmp_remote_model[
-    #     'address'] = '192.168.3.4'
-
-    # Construct a dict representation of a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP model
     security_group_rule_patch_model = {}
-    # security_group_rule_patch_model['direction'] = 'inbound'
-    # security_group_rule_patch_model['ip_version'] = 'ipv4'
-    # security_group_rule_patch_model['protocol'] = 'icmp'
-    # security_group_rule_patch_model[
-    #     'remote'] = security_group_rule_patch_security_group_rule_protocol_icmp_remote_model
     security_group_rule_patch_model['code'] = 0
     security_group_rule_patch_model['type'] = 8
 
@@ -2250,17 +1831,6 @@ def list_subnets(service):
 # create_subnet()
 #--------------------------------------------------------
 def create_subnet(service, vpc, zone):
-
-    # # Construct a dict representation of a NetworkACLIdentityById model
-    # network_acl_identity_model = {}
-    # network_acl_identity_model[
-    #     'id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
-
-    # # Construct a dict representation of a PublicGatewayIdentityById model
-    # public_gateway_identity_model = {}
-    # public_gateway_identity_model[
-    #     'id'] = 'dc5431ef-1fc6-4861-adc9-a59d077d1241'
-
     # Construct a dict representation of a VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
@@ -2272,10 +1842,7 @@ def create_subnet(service, vpc, zone):
     # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
     subnet_prototype_model = {}
     subnet_prototype_model['name'] = generate_name('subnet')
-    # subnet_prototype_model['network_acl'] = network_acl_identity_model
-    # subnet_prototype_model['public_gateway'] = public_gateway_identity_model
     subnet_prototype_model['vpc'] = vpc_identity_model
-    # subnet_prototype_model['total_ipv4_address_count'] = 256
     subnet_prototype_model['ipv4_cidr_block'] = '10.240.0.0/24'
     subnet_prototype_model['zone'] = zone_identity_model
 
@@ -2304,26 +1871,12 @@ def get_subnet(service, id):
 #--------------------------------------------------------
 
 def update_subnet(service, id):
-    # Construct a dict representation of a NetworkACLIdentityById model
-    # network_acl_identity_model = {}
-    # network_acl_identity_model[
-    #     'id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
-
-    # Construct a dict representation of a PublicGatewayIdentityById model
-    public_gateway_identity_model = {}
-    # public_gateway_identity_model[
-    #     'id'] = 'dc5431ef-1fc6-4861-adc9-a59d077d1241'
-
-
-    name = generate_name('subnet')
-    # network_acl = network_acl_identity_model
-    # public_gateway = public_gateway_identity_model
+    subnet_patch = {}
+    subnet_patch['name'] = generate_name('subnet')
 
     response = service.update_subnet(
         id,
-        name=name,
-        # network_acl=network_acl,
-        # public_gateway=public_gateway,
+        subnet_patch,
     )
     return response
 
@@ -2396,20 +1949,14 @@ def list_vpcs(service):
 #--------------------------------------------------------
 
 def create_vpc(service):
-    # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
     address_prefix_management = 'manual'
     classic_access = False
     name = generate_name('vpc')
-    # resource_group = resource_group_identity_model
 
     response = service.create_vpc(
         address_prefix_management=address_prefix_management,
         classic_access=classic_access,
         name=name,
-        # resource_group=resource_group,
     )
     return response
 
@@ -2434,10 +1981,12 @@ def get_vpc(service, id):
 #--------------------------------------------------------
 
 def update_vpc(service, id):
-    name = generate_name('vpc')
+    vpc_patch_model = {}
+    vpc_patch_model['name'] = generate_name('vpc')
+    vpc_patch = vpc_patch_model
     response = service.update_vpc(
         id,
-        name=name,
+        vpc_patch,
     )
     return response
 
@@ -2498,13 +2047,13 @@ def get_vpc_address_prefix(service, vpc_id, id):
 #--------------------------------------------------------
 
 def update_vpc_address_prefix(service, vpc_id, id):
-    is_default = False
-    name = 'my-address-prefix-2'
+    address_prefix_patch_model = {}
+    address_prefix_patch_model['name'] = generate_name('addr-prefix')
+    address_prefix_patch_model['is_default'] = False
     response = service.update_vpc_address_prefix(
         vpc_id,
         id,
-        is_default=is_default,
-        name=name,
+        address_prefix_patch= address_prefix_patch_model,
     )
     return response
 
@@ -2572,11 +2121,12 @@ def get_vpc_route(service, vpc_id, id):
 # update_vpc_route()
 #--------------------------------------------------------
 def update_vpc_route(service, vpc_id, id):
-    name = generate_name('route')
+    route_patch_model = {}
+    route_patch_model['name'] = generate_name('route')
     response = service.update_vpc_route(
         vpc_id,
         id,
-        name=name,
+        route_patch=route_patch_model,
     )
     return response
 
@@ -2593,9 +2143,6 @@ def list_ike_policies(service):
 #--------------------------------------------------------
 
 def create_ike_policy(service):
-    # # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
     authentication_algorithm = 'md5'
     dh_group = 5
@@ -2613,7 +2160,6 @@ def create_ike_policy(service):
         ike_version,
         key_lifetime=key_lifetime,
         name=name,
-        # resource_group=resource_group,
     )
     return response
 
@@ -2638,21 +2184,15 @@ def get_ike_policy(service, id):
 #--------------------------------------------------------
 def update_ike_policy(service, id):
 
-    authentication_algorithm = 'md5'
-    dh_group = 2
-    encryption_algorithm = 'triple_des'
-    ike_version = 1
-    key_lifetime = 28800
-    name = generate_name('ike')
+    ike_policy_patch_model = {}
+    ike_policy_patch_model['name'] = generate_name('ike')
+    ike_policy_patch_model['authentication_algorithm'] = 'md5'
+
+    ike_policy_patch = ike_policy_patch_model
 
     response = service.update_ike_policy(
         id,
-        authentication_algorithm=authentication_algorithm,
-        dh_group=dh_group,
-        encryption_algorithm=encryption_algorithm,
-        ike_version=ike_version,
-        key_lifetime=key_lifetime,
-        name=name,
+        ike_policy_patch,
     )
     return response
 
@@ -2677,18 +2217,11 @@ def list_ipsec_policies(service):
 #--------------------------------------------------------
 
 def create_ipsec_policy(service):
-
-    # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
     authentication_algorithm = 'md5'
     encryption_algorithm = 'triple_des'
     pfs = 'disabled'
     key_lifetime = 3600
     name = generate_name('ipsec')
-    # resource_group = resource_group_identity_model
-
 
     response = service.create_ipsec_policy(
         authentication_algorithm,
@@ -2696,7 +2229,6 @@ def create_ipsec_policy(service):
         pfs,
         key_lifetime=key_lifetime,
         name=name,
-        # resource_group=resource_group,
     )
     return response
 
@@ -2723,19 +2255,15 @@ def get_ipsec_policy(service, id):
 
 def update_ipsec_policy(service, id):
 
-    authentication_algorithm = 'md5'
-    encryption_algorithm = 'triple_des'
-    key_lifetime = 3600
-    name = generate_name('ipsec')
-    pfs = 'disabled'
+    i_psec_policy_patch_model = {}
+    i_psec_policy_patch_model['name'] = generate_name('ipsec')
+    i_psec_policy_patch_model['authentication_algorithm'] = 'md5'
+
+    i_psec_policy_patch = i_psec_policy_patch_model
 
     response = service.update_ipsec_policy(
         id,
-        authentication_algorithm=authentication_algorithm,
-        encryption_algorithm=encryption_algorithm,
-        key_lifetime=key_lifetime,
-        name=name,
-        pfs=pfs,
+        i_psec_policy_patch,
     )
     return response
 
@@ -2763,11 +2291,6 @@ def create_vpn_gateway(service, subnet):
     # Construct a dict representation of a SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
-
-    # # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
 
     subnet = subnet_identity_model
     name = generate_name('vpng')
@@ -2799,10 +2322,11 @@ def get_vpn_gateway(service, id):
 # update_vpn_gateway()
 #--------------------------------------------------------
 def update_vpn_gateway(service, id):
-    name = generate_name('vpng')
+    vpn_gateway_patch_model = {}
+    vpn_gateway_patch_model['name'] = generate_name('vpng')
     response = service.update_vpn_gateway(
         id,
-        name=name,
+        vpn_gateway_patch=vpn_gateway_patch_model,
     )
     return response
 
@@ -2818,28 +2342,8 @@ def list_vpn_gateway_connections(service, vpn_gateway_id):
 #--------------------------------------------------------
 
 def create_vpn_gateway_connection(service, vpn_gateway_id):
-
-    # Construct a dict representation of a VPNGatewayConnectionDPDPrototype model
-    # vpn_gateway_connection_dpd_prototype_model = {}
-    # vpn_gateway_connection_dpd_prototype_model['action'] = 'restart'
-    # vpn_gateway_connection_dpd_prototype_model['interval'] = 30
-    # vpn_gateway_connection_dpd_prototype_model['timeout'] = 120
-
-    # Construct a dict representation of a IKEPolicyIdentityById model
-    # ike_policy_identity_model = {}
-    # ike_policy_identity_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
-    # Construct a dict representation of a IPsecPolicyIdentityById model
-    # i_psec_policy_identity_model = {}
-    # i_psec_policy_identity_model[
-    #     'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
     peer_address = '169.21.50.5'
     psk = 'somepassword'
-    # admin_state_up = True
-    # dead_peer_detection = vpn_gateway_connection_dpd_prototype_model
-    # ike_policy = ike_policy_identity_model
-    # ipsec_policy = i_psec_policy_identity_model
     local_cidrs = ['192.168.1.0/24']
     name = 'my-vpn-connection'
     peer_cidrs = ['10.45.1.0/24']
@@ -2849,10 +2353,6 @@ def create_vpn_gateway_connection(service, vpn_gateway_id):
         vpn_gateway_id,
         peer_address,
         psk,
-        # admin_state_up=admin_state_up,
-        # dead_peer_detection=dead_peer_detection,
-        # ike_policy=ike_policy,
-        # ipsec_policy=ipsec_policy,
         local_cidrs=local_cidrs,
         name=name,
         peer_cidrs=peer_cidrs,
@@ -2877,42 +2377,13 @@ def get_vpn_gateway_connection(service, vpn_gateway_id, id):
 # update_vpn_gateway_connection()
 #--------------------------------------------------------
 def update_vpn_gateway_connection(service, vpn_gateway_id, id):
-
-    # Construct a dict representation of a VPNGatewayConnectionDPDPrototype model
-    # vpn_gateway_connection_dpd_prototype_model = {}
-    # vpn_gateway_connection_dpd_prototype_model['action'] = 'restart'
-    # vpn_gateway_connection_dpd_prototype_model['interval'] = 30
-    # vpn_gateway_connection_dpd_prototype_model['timeout'] = 120
-
-    # Construct a dict representation of a IKEPolicyIdentityById model
-    # ike_policy_identity_model = {}
-    # ike_policy_identity_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
-    # Construct a dict representation of a IPsecPolicyIdentityById model
-    # i_psec_policy_identity_model = {}
-    # i_psec_policy_identity_model[
-    #     'id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
-
-
-    # admin_state_up = True
-    # dead_peer_detection = vpn_gateway_connection_dpd_prototype_model
-    # ike_policy = ike_policy_identity_model
-    # ipsec_policy = i_psec_policy_identity_model
-    name = generate_name('vpn-con')
-    # peer_address = '169.21.50.5'
-    # psk = 'lkj14b1oi0alcniejkso'
-
+    vpn_gateway_connection_patch_model = {}
+    vpn_gateway_connection_patch_model['name'] = generate_name('vpn-con')
 
     response = service.update_vpn_gateway_connection(
         vpn_gateway_id,
         id,
-        # admin_state_up=admin_state_up,
-        # dead_peer_detection=dead_peer_detection,
-        # ike_policy=ike_policy,
-        # ipsec_policy=ipsec_policy,
-        name=name,
-        # peer_address=peer_address,
-        # psk=psk,
+        vpn_gateway_connection_patch=vpn_gateway_connection_patch_model,
     )
     return response
 
@@ -3014,15 +2485,6 @@ def list_volumes(service):
 #--------------------------------------------------------
 def create_volume(service, zone):
 
-    # Construct a dict representation of a EncryptionKeyIdentityByCRN model
-    # encryption_key_identity_model = {}
-    # encryption_key_identity_model[
-    #     'crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
-
-    # Construct a dict representation of a ResourceGroupIdentityById model
-    # resource_group_identity_model = {}
-    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-
     # Construct a dict representation of a VolumeProfileIdentityByName model
     volume_profile_identity_model = {}
     volume_profile_identity_model['name'] = 'general-purpose'
@@ -3033,11 +2495,8 @@ def create_volume(service, zone):
 
     # Construct a dict representation of a VolumePrototypeVolumeByCapacity model
     volume_prototype_model = {}
-    # volume_prototype_model['encryption_key'] = encryption_key_identity_model
-    # volume_prototype_model['iops'] = 10000
     volume_prototype_model['name'] = generate_name('vol')
     volume_prototype_model['profile'] = volume_profile_identity_model
-    # volume_prototype_model['resource_group'] = resource_group_identity_model
     volume_prototype_model['zone'] = zone_identity_model
     volume_prototype_model['capacity'] = 10
 
@@ -3064,10 +2523,11 @@ def get_volume(service, id):
 # update_volume()
 #--------------------------------------------------------
 def update_volume(service, id):
-    name = generate_name('vol')
+    volume_patch_model = {}
+    volume_patch_model['name'] = generate_name('vol')
     response = service.update_volume(
         id,
-        name=name,
+        volume_patch=volume_patch_model,
     )
     return response
 
