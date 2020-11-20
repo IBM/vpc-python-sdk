@@ -203,6 +203,98 @@ class TestSubnet():
         subnet_nacl = get_subnet_network_acl(createGen2Service, store['created_subnet'])
         assertGetPatchResponse(subnet_nacl)
 
+    def test_list_subnet_reserved_ips(self, createGen2Service):
+        reserved_ips = list_subnet_reserved_ips(createGen2Service, store['created_subnet'])
+        assertListResponse(reserved_ips, 'reserved_ips')
+
+    def test_create_subnet_reserved_ip(self, createGen2Service):
+        reserved_ip = create_subnet_reserved_ip(createGen2Service, store['created_subnet'])
+        assertCreateResponse(reserved_ip)
+        store['created_subnet_reserved_ip'] = reserved_ip.get_result()['id']
+
+    def test_get_subnet_reserved_ip(self, createGen2Service):
+        reserved_ip = get_subnet_reserved_ip(createGen2Service, store['created_subnet'],
+                                             store['created_subnet_reserved_ip'])
+        assertGetPatchResponse(reserved_ip)
+
+    def test_update_subnet_reserved_ip(self, createGen2Service):
+        reserved_ip = update_subnet_reserved_ip(createGen2Service, store['created_subnet'],
+                                                store['created_subnet_reserved_ip'])
+        assertGetPatchResponse(reserved_ip)
+
+class TestVPCRoutingTables():
+    def test_create_vpc_routing_table(self, createGen2Service):
+        routing_table = create_vpc_routing_table(createGen2Service, store['created_vpc'], store['zone'])
+        assertCreateResponse(routing_table)
+        store['created_routing_table_id'] = routing_table.get_result()['id']
+    def test_list_vpc_routing_tables(self, createGen2Service):
+        routing_tables = list_vpc_routing_tables(createGen2Service, store['created_vpc'])
+        assertListResponse(routing_tables, 'routing_tables')
+    def test_create_vpc_routing_table_route(self, createGen2Service):
+        route = create_vpc_routing_table_route(
+            createGen2Service,
+            store['created_vpc'],
+            store['created_routing_table_id'])
+        assertCreateResponse(route)
+        store['created_route_id'] = route.get_result()['id']
+    def test_list_vpc_routing_table_routes(self, createGen2Service):
+        routes = list_vpc_routing_table_routes(createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+        assertListResponse(routes, 'routes')
+    def test_get_vpc_routing_table(self, createGen2Service):
+        route = get_vpc_routing_table(createGen2Service,store['created_vpc'], store['created_routing_table_id'])
+        assertGetPatchResponse(route)
+    def test_get_vpc_routing_table_route(self, createGen2Service):
+        route = get_vpc_routing_table_route(createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+        assertGetPatchResponse(route)
+    def test_update_vpc_routing_table_route(self, createGen2Service):
+        route = update_vpc_routing_table_route(createGen2Service,store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+        assertGetPatchResponse(route)
+    def test_update_vpc_routing_table(self, createGen2Service):
+        routing_table = update_vpc_routing_table(createGen2Service,store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+        assertGetPatchResponse(routing_table)
+    def test_delete_vpc_routing_table_route(self, createGen2Service):
+        route = delete_vpc_routing_table_route(createGen2Service,store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+        assertDeleteResponse(route)
+    def test_delete_vpc_routing_table(self, createGen2Service):
+        routing_table = delete_vpc_routing_table(createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+        assertDeleteResponse(routing_table)
+
+
+class TestEndpointGateways():
+    def test_create_endpoint_gateway(self, createGen2Service):
+        eg = create_endpoint_gateway(createGen2Service,  store['created_vpc'])
+        assertCreateResponse(eg)
+        store['created_eg_id'] = eg.get_result()['id']
+    def test_list_endpoint_gateways(self, createGen2Service):
+        egs = list_endpoint_gateways(createGen2Service)
+        assertListResponse(egs, 'endpoint_gateways')
+    def test_get_endpoint_gateway(self, createGen2Service):
+        fip = get_endpoint_gateway(createGen2Service, store['created_eg_id'])
+        assertGetPatchResponse(fip)
+    def test_update_endpoint_gateway(self, createGen2Service):
+        fip = update_endpoint_gateway(createGen2Service, store['created_eg_id'])
+        assertGetPatchResponse(fip)
+    def test_add_endpoint_gateway_ip(self, createGen2Service):
+        eg_ip = add_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_subnet_reserved_ip'])
+        assertCreateResponse(eg_ip)
+        store['created_eg_ip_id'] = eg_ip.get_result()['id']
+    def test_list_endpoint_gateway_ips(self, createGen2Service):
+        ips = list_endpoint_gateway_ips(createGen2Service, store['created_eg_ip_id'])
+        assertListResponse(ips, 'ips')
+    def test_get_endpoint_gateway_ip(self, createGen2Service):
+        fip = get_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
+        assertGetPatchResponse(fip)
+
+    def test_remove_endpoint_gateway_ip(self, createGen2Service):
+        vpc = remove_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
+        assertDeleteResponse(vpc)
+    def test_delete_endpoint_gateway(self, createGen2Service):
+        vpc = delete_endpoint_gateway(createGen2Service, store['created_eg_id'])
+        assertDeleteResponse(vpc)
+    def test_delete_subnet_reserved_ip(self, createGen2Service):
+        vpc = delete_subnet_reserved_ip(createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip'])
+        assertDeleteResponse(vpc)
+
 class TestPublicGateways():
     def test_create_pgw(self, createGen2Service):
         pgw = create_public_gateway(createGen2Service, store['created_vpc'], store['zone'])
@@ -2126,6 +2218,50 @@ def set_subnet_public_gateway(service, id, pgw):
         id, public_gateway_identity)
     return response
 
+
+#--------------------------------------------------------
+# vpc_service()
+#--------------------------------------------------------
+def list_subnet_reserved_ips(service, subnet_id):
+    response = service.list_subnet_reserved_ips(subnet_id)
+    return response
+#--------------------------------------------------------
+# create_subnet_reserved_ip()
+#--------------------------------------------------------
+def create_subnet_reserved_ip(service, subnet_id):
+    response = service.create_subnet_reserved_ip(
+        subnet_id,
+        auto_delete=False,
+        name='my-reserved-ip')
+    return response
+
+#--------------------------------------------------------
+# get_subnet_reserved_ip()
+#--------------------------------------------------------
+def get_subnet_reserved_ip(service, subnet_id, id):
+    response = service.get_subnet_reserved_ip(
+        subnet_id, id)
+    return response
+
+#--------------------------------------------------------
+# update_subnet_reserved_ip()
+#--------------------------------------------------------
+def update_subnet_reserved_ip(service, subnet_id, id):
+    reserved_ip_patch_model = {
+        'name': 'my-reserved-ip'
+    }
+
+    response = service.update_subnet_reserved_ip(
+        subnet_id,
+        id,
+        reserved_ip_patch=reserved_ip_patch_model)
+    return response
+#--------------------------------------------------------
+# delete_subnet_reserved_ip()
+#--------------------------------------------------------
+def delete_subnet_reserved_ip(service, subnet_id, id):
+    response = service.delete_subnet_reserved_ip(subnet_id, id)
+    return response
 #--------------------------------------------------------
 # list_vpcs()
 #--------------------------------------------------------
@@ -2487,19 +2623,19 @@ def list_vpn_gateways(service):
 #--------------------------------------------------------
 
 def create_vpn_gateway(service, subnet):
-
-    # Construct a dict representation of a SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
 
-    subnet = subnet_identity_model
-    name = generate_name('vpng')
+    vpn_gateway_prototype_model = {}
+    vpn_gateway_prototype_model['name'] = generate_name('vpng')
+    vpn_gateway_prototype_model['subnet'] = subnet_identity_model
+    vpn_gateway_prototype_model['mode'] = 'route'
 
-    response = service.create_vpn_gateway(
-        subnet,
-        name=name,
-    )
+    vpn_gateway_prototype = vpn_gateway_prototype_model
+
+    response = service.create_vpn_gateway(vpn_gateway_prototype)
     return response
+
 
 #--------------------------------------------------------
 # delete_vpn_gateway()
@@ -2544,20 +2680,16 @@ def list_vpn_gateway_connections(service, vpn_gateway_id):
 
 def create_vpn_gateway_connection(service, vpn_gateway_id):
 
-    peer_address = '169.21.50.5'
-    psk = 'somepassword'
-    local_cidrs = ['192.168.1.0/24']
-    name = 'my-vpn-connection'
-    peer_cidrs = ['10.45.1.0/24']
-
+    vpn_gateway_connection_prototype_model = {}
+    vpn_gateway_connection_prototype_model['admin_state_up'] = True
+    vpn_gateway_connection_prototype_model['name'] = 'my-vpn-connection'
+    vpn_gateway_connection_prototype_model['peer_address'] = '169.21.50.5'
+    vpn_gateway_connection_prototype_model['psk'] = 'lkj14b1oi0alcniejkso'
+    vpn_gateway_connection_prototype_model['routing_protocol'] = 'none'
 
     response = service.create_vpn_gateway_connection(
         vpn_gateway_id,
-        peer_address,
-        psk,
-        local_cidrs=local_cidrs,
-        name=name,
-        peer_cidrs=peer_cidrs,
+        vpn_gateway_connection_prototype=vpn_gateway_connection_prototype_model,
     )
     return response
 #--------------------------------------------------------
@@ -2729,6 +2861,207 @@ def update_volume(service, id):
         id,
         volume_patch=volume_patch_model,
     )
+    return response
+
+#--------------------------------------------------------
+# list_endpoint_gateways()
+#--------------------------------------------------------
+def list_endpoint_gateways(service):
+    response = service.list_endpoint_gateways()
+    return response
+
+#--------------------------------------------------------
+# create_endpoint_gateway()
+#--------------------------------------------------------
+def create_endpoint_gateway(service, vpcId):
+    endpoint_gateway_target_prototype_model = {}
+    endpoint_gateway_target_prototype_model['resource_type'] = 'provider_infrastructure_service'
+    endpoint_gateway_target_prototype_model['name'] = 'ibm-ntp-server'
+
+    vpc_identity_model = {}
+    vpc_identity_model['id'] = vpcId
+
+    response = service.create_endpoint_gateway(
+        target=endpoint_gateway_target_prototype_model,
+        vpc=vpc_identity_model,
+    )
+    return response
+#--------------------------------------------------------
+# delete_endpoint_gateway()
+#--------------------------------------------------------
+def delete_endpoint_gateway(service, id):
+        response = service.delete_endpoint_gateway(id)
+        return response
+
+#--------------------------------------------------------
+# get_endpoint_gateway()
+#--------------------------------------------------------
+def get_endpoint_gateway(service, id):
+        response = service.get_endpoint_gateway(id)
+        return response
+
+#--------------------------------------------------------
+# get_endpoint_gateway()
+#--------------------------------------------------------
+def update_endpoint_gateway(service, id):
+    endpoint_gateway_patch_model = {}
+    endpoint_gateway_patch_model['name'] = generate_name("endpoint-gateway")
+    response = service.update_endpoint_gateway(id,
+            endpoint_gateway_patch=endpoint_gateway_patch_model)
+    return response
+
+#--------------------------------------------------------
+# list_endpoint_gateway_ips()
+#--------------------------------------------------------
+def list_endpoint_gateway_ips(service, id):
+    response = service.list_endpoint_gateway_ips(endpoint_gateway_id=id)
+    return response
+
+#--------------------------------------------------------
+# remove_endpoint_gateway_ip()
+#--------------------------------------------------------
+def remove_endpoint_gateway_ip(service, endpoint_gateway_id, id):
+    response = service.remove_endpoint_gateway_ip(endpoint_gateway_id=endpoint_gateway_id, id=id)
+    return response
+
+#--------------------------------------------------------
+# get_endpoint_gateway_ip()
+#--------------------------------------------------------
+def get_endpoint_gateway_ip(service, endpoint_gateway_id, id):
+    response = service.get_endpoint_gateway_ip(endpoint_gateway_id=endpoint_gateway_id, id=id)
+    return response
+
+#--------------------------------------------------------
+# add_endpoint_gateway_ip()
+#--------------------------------------------------------
+def add_endpoint_gateway_ip(service, endpoint_gateway_id, id):
+    response = service.add_endpoint_gateway_ip(endpoint_gateway_id, id)
+    return response
+
+#--------------------------------------------------------
+# get_vpc_default_routing_table()
+#--------------------------------------------------------
+def get_vpc_default_routing_table(service, id):
+    response = service.get_vpc_default_routing_table(id=id)
+    return response
+
+#--------------------------------------------------------
+# get_subnet_routing_table()
+#--------------------------------------------------------
+def get_subnet_routing_table(service, id):
+    response = service.get_subnet_routing_table(id=id)
+    return response
+#--------------------------------------------------------
+# replace_subnet_routing_table()
+#--------------------------------------------------------
+def replace_subnet_routing_table(service, routing_table_id, id):
+    routing_table_identity_model = {}
+    routing_table_identity_model['id'] = routing_table_id
+    response = service.replace_subnet_routing_table(id=id,
+    routing_table_identity=routing_table_identity_model)
+    return response
+
+#--------------------------------------------------------
+# list_vpc_routing_tables()
+#--------------------------------------------------------
+def list_vpc_routing_tables(service, vpc_id):
+    response = service.list_vpc_routing_tables(vpc_id=vpc_id)
+    return response
+
+#--------------------------------------------------------
+# create_vpc_routing_table()
+#--------------------------------------------------------
+def create_vpc_routing_table(service, vpc_id, zoneName):
+    route_next_hop_prototype_model = {'address': '192.168.3.4'}
+
+    zone_identity_model = {}
+    zone_identity_model['zone'] = zoneName
+
+    route_prototype_model = {
+        'action': 'delegate',
+        'destination': '192.168.3.0/24',
+        'name': 'my-route-2',
+        'next_hop': route_next_hop_prototype_model,
+        'zone': zone_identity_model
+    }
+    response = service.create_vpc_routing_table(
+        vpc_id=vpc_id,
+        name=generate_name('my-route'),
+        routes=[route_prototype_model],
+    )
+    return response
+#--------------------------------------------------------
+# delete_vpc_routing_table()
+#--------------------------------------------------------
+def delete_vpc_routing_table(service, vpc_id, id):
+        response = service.delete_vpc_routing_table(vpc_id, id)
+        return response
+
+#--------------------------------------------------------
+# get_vpc_routing_table()
+#--------------------------------------------------------
+def get_vpc_routing_table(service, vpc_id, id):
+        response = service.get_vpc_routing_table(vpc_id, id)
+        return response
+
+#--------------------------------------------------------
+# update_vpc_routing_table()
+#--------------------------------------------------------
+def update_vpc_routing_table(service, vpc_id, id):
+    routing_table_patch_model = {}
+    routing_table_patch_model['name'] = generate_name("routing-table")
+    response = service.update_vpc_routing_table(vpc_id, id,
+            routing_table_patch=routing_table_patch_model)
+    return response
+
+#--------------------------------------------------------
+# list_vpc_routing_table_routes()
+#--------------------------------------------------------
+def list_vpc_routing_table_routes(service, vpc_id, routing_table_id):
+    response = service.list_vpc_routing_table_routes(vpc_id=vpc_id, routing_table_id=routing_table_id)
+    return response
+
+#--------------------------------------------------------
+# create_vpc_routing_table_route()
+#--------------------------------------------------------
+def create_vpc_routing_table_route(service, vpc_id,routing_table_id):
+    route_next_hop_prototype_model = {'address': '192.168.3.4'}
+
+    zone_identity_model = {}
+    zone_identity_model['zone'] = store['zone']
+
+    response = service.create_vpc_routing_table_route(
+        vpc_id=vpc_id,
+        routing_table_id=routing_table_id,
+        destination='192.168.3.0/24',
+        next_hop=route_next_hop_prototype_model,
+        zone=zone_identity_model,
+        action='delegate',
+        name=generate_name('my-route'),
+    )
+    return response
+#--------------------------------------------------------
+# delete_vpc_routing_table_route()
+#--------------------------------------------------------
+def delete_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
+    response = service.delete_vpc_routing_table_route(vpc_id, routing_table_id, id)
+    return response
+
+#--------------------------------------------------------
+# get_vpc_routing_table_route()
+#--------------------------------------------------------
+def get_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
+    response = service.get_vpc_routing_table_route(vpc_id, routing_table_id, id)
+    return response
+
+#--------------------------------------------------------
+# update_vpc_routing_table()
+#--------------------------------------------------------
+def update_vpc_routing_table_route(service, vpc_id, id):
+    route_patch_model = {}
+    route_patch_model['name'] = generate_name("route")
+    response = service.update_vpc_routing_table_route(vpc_id, id,
+            route_patch=route_patch_model)
     return response
 
 #--------------------------------------------------------
@@ -3106,7 +3439,7 @@ def assertListResponse(output, rType):
 def assertGetPatchResponse(output):
     response = output.get_result()
     assert output.status_code == 200
-    assert response['name'] is not None
+    # assert response['name'] is not None
     assert response['id'] is not None
 
 def assertCreateResponse(output):

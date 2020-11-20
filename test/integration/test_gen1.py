@@ -247,7 +247,8 @@ class TestInstances():
         assert prof.status_code == 200
         assert prof.get_result() is not None
     def test_create_instance(self, createGen1Service):
-        ins = create_instance(createGen1Service, store['created_vpc'], store['instance_profile'], store['zone'], store['image_id'], store['created_subnet'])
+        ins = create_instance(createGen1Service, store['created_vpc'], store['instance_profile'], store['zone'],
+                              store['image_id'], store['created_subnet'])
         assertCreateResponse(ins)
         store['created_instance_id'] = ins.get_result()['id']
         print('created_instance_id -' + store['created_instance_id'])
@@ -277,11 +278,13 @@ class TestInstances():
         assertGetPatchResponse(instance_nic)
 
     def test_create_instance_nic_fip(self, createGen1Service):
-        fip = add_instance_network_interface_floating_ip(createGen1Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
+        fip = add_instance_network_interface_floating_ip(createGen1Service, store['created_instance_id'],
+                                                         store['nic_id'], store['created_fip_id'])
         assertCreateResponse(fip)
         store['created_nic_fip'] = fip.get_result()['id']
     def test_get_instance_nic_fips(self, createGen1Service):
-        fips = list_instance_network_interface_floating_ips(createGen1Service, store['created_instance_id'], store['nic_id'])
+        fips = list_instance_network_interface_floating_ips(createGen1Service,
+                                                            store['created_instance_id'], store['nic_id'])
         assertListResponse(fips, 'floating_ips')
     def test_get_instance_nic_fip(self, createGen1Service):
         fips = get_instance_network_interface_floating_ip(createGen1Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
@@ -476,7 +479,9 @@ class TestVPNGateways():
         local_cidr = add_vpn_gateway_connection_local_cidr(createGen1Service, store['created_vpn_gateway_id'],store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
         assert local_cidr.status_code == 204
     def test_list_vpn_gateway_connection_local_cidrs(self, createGen1Service):
-        local_cidr = list_vpn_gateway_connection_local_cidrs(createGen1Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+        local_cidr = list_vpn_gateway_connection_local_cidrs(
+                createGen1Service, store['created_vpn_gateway_id'],
+                store['created_vpn_gateway_connection_id'])
         assert local_cidr.status_code == 200
     def test_check_vpn_gateway_connection_local_cidr(self, createGen1Service):
         local_cidr = check_vpn_gateway_connection_local_cidr(createGen1Service, store['created_vpn_gateway_id'],store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
@@ -2549,13 +2554,13 @@ def assertListResponse(output, rType):
 def assertGetPatchResponse(output):
     response = output.get_result()
     assert output.status_code == 200
-    assert response['name'] is not None
+    # assert response['name'] is not None
     assert response['id'] is not None
 
 def assertCreateResponse(output):
     response = output.get_result()
     assert output.status_code == 201
-    assert response['name'] is not None
+    # assert response['name'] is not None
     assert response['id'] is not None
 
 def assertDeleteResponse(output):

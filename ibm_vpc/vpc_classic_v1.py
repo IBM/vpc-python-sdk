@@ -49,7 +49,7 @@ class VpcClassicV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-10-06',
+        version: str = '2020-11-17',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 1,
     ) -> 'VpcClassicV1':
@@ -75,7 +75,7 @@ class VpcClassicV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-10-06',
+        version: str = '2020-11-17',
         authenticator: Authenticator = None,
         generation: int = 1,
     ) -> None:
@@ -158,9 +158,9 @@ class VpcClassicV1(BaseService):
 
     def create_vpc(self,
                    *,
-                   name: str = None,
                    address_prefix_management: str = None,
                    classic_access: bool = None,
+                   name: str = None,
                    resource_group: 'ResourceGroupIdentity' = None,
                    **kwargs) -> DetailedResponse:
         """
@@ -170,8 +170,6 @@ class VpcClassicV1(BaseService):
         is structured in the same way as a retrieved VPC, and contains the information
         necessary to create the new VPC.
 
-        :param str name: (optional) The unique user-defined name for this VPC. If
-               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param str address_prefix_management: (optional) Indicates whether a
                default address prefix should be automatically created for each zone in
                this VPC. If `manual`, this VPC will be created with no default address
@@ -181,6 +179,8 @@ class VpcClassicV1(BaseService):
                have private network connectivity to the account's Classic Infrastructure
                resources. Only one VPC, per region, may be connected in this way. This
                value is set at creation and subsequently immutable.
+        :param str name: (optional) The unique user-defined name for this VPC. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -201,9 +201,9 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = {
-            'name': name,
             'address_prefix_management': address_prefix_management,
             'classic_access': classic_access,
+            'name': name,
             'resource_group': resource_group
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -448,8 +448,8 @@ class VpcClassicV1(BaseService):
                                   cidr: str,
                                   zone: 'ZoneIdentity',
                                   *,
-                                  name: str = None,
                                   is_default: bool = None,
+                                  name: str = None,
                                   **kwargs) -> DetailedResponse:
         """
         Create an address pool prefix.
@@ -459,17 +459,24 @@ class VpcClassicV1(BaseService):
         information necessary to create the new prefix.
 
         :param str vpc_id: The VPC identifier.
-        :param str cidr: The CIDR block for this address prefix. The request must
-               not overlap with any existing address prefixes in the VPC, or the reserved
-               CIDR blocks 169.254.0.0/16 and 161.26.0.0/16.
+        :param str cidr: The IPv4 range of the address prefix, expressed in CIDR
+               format. The request must not overlap with any existing address prefixes in
+               the VPC or any of the following reserved address ranges:
+                 - `127.0.0.0/8` (IPv4 loopback addresses)
+                 - `161.26.0.0/16` (IBM services)
+                 - `166.8.0.0/14` (Cloud Service Endpoints)
+                 - `169.254.0.0/16` (IPv4 link-local addresses)
+                 - `224.0.0.0/4` (IPv4 multicast addresses)
+               The prefix length of the address prefix's CIDR must be between `/9`
+               (8,388,608 addresses) and `/29` (8 addresses).
         :param ZoneIdentity zone: The zone this address prefix is to belong to.
-        :param str name: (optional) The user-defined name for this address prefix.
-               Names must be unique within the VPC the address prefix resides in. If
-               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param bool is_default: (optional) Indicates whether this is the default
                prefix for this zone in this VPC. If true, this prefix will become the
                default prefix for this zone in this VPC. This fails if the VPC currently
                has a default address prefix for this zone.
+        :param str name: (optional) The user-defined name for this address prefix.
+               Names must be unique within the VPC the address prefix resides in. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `AddressPrefix` object
@@ -493,8 +500,8 @@ class VpcClassicV1(BaseService):
         data = {
             'cidr': cidr,
             'zone': zone,
-            'name': name,
-            'is_default': is_default
+            'is_default': is_default,
+            'name': name
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -709,8 +716,8 @@ class VpcClassicV1(BaseService):
 
     def create_vpc_route(self,
                          vpc_id: str,
-                         next_hop: 'RouteNextHopPrototype',
                          destination: str,
+                         next_hop: 'RouteNextHopPrototype',
                          zone: 'ZoneIdentity',
                          *,
                          name: str = None,
@@ -724,12 +731,10 @@ class VpcClassicV1(BaseService):
         new route will cause a loop.
 
         :param str vpc_id: The VPC identifier.
+        :param str destination: The destination of the route. Must not overlap with
+               destinations for existing user-defined routes within the VPC.
         :param RouteNextHopPrototype next_hop: The next hop that packets will be
                delivered to.
-        :param str destination: The destination of the route. At most two routes
-               per `zone` in a table can have the same destination, and only if both
-               routes have an `action` of `deliver` and the
-               `next_hop` is an IP address.
         :param ZoneIdentity zone: The zone to apply the route to. (Traffic from
                subnets in this zone will be
                subject to this route.).
@@ -743,10 +748,10 @@ class VpcClassicV1(BaseService):
 
         if vpc_id is None:
             raise ValueError('vpc_id must be provided')
-        if next_hop is None:
-            raise ValueError('next_hop must be provided')
         if destination is None:
             raise ValueError('destination must be provided')
+        if next_hop is None:
+            raise ValueError('next_hop must be provided')
         if zone is None:
             raise ValueError('zone must be provided')
         next_hop = convert_model(next_hop)
@@ -760,8 +765,8 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = {
-            'next_hop': next_hop,
             'destination': destination,
+            'next_hop': next_hop,
             'zone': zone,
             'name': name
         }
@@ -1023,10 +1028,7 @@ class VpcClassicV1(BaseService):
         This request deletes a subnet. This operation cannot be reversed. For this request
         to succeed, the subnet must not be referenced by any network interfaces, VPN
         gateways, or load balancers. A delete operation automatically detaches the subnet
-        from any network ACLs, public gateways, or endpoint gateways. All flow log
-        collectors with `auto_delete` set to
-        `true` targeting the subnet or any resource in the subnet are automatically
-        deleted.
+        from any network ACLs or public gateways.
 
         :param str id: The subnet identifier.
         :param dict headers: A `dict` containing the request headers
@@ -1738,8 +1740,8 @@ class VpcClassicV1(BaseService):
                    public_key: str,
                    *,
                    name: str = None,
-                   type: str = None,
                    resource_group: 'ResourceGroupIdentity' = None,
+                   type: str = None,
                    **kwargs) -> DetailedResponse:
         """
         Create a key.
@@ -1752,11 +1754,11 @@ class VpcClassicV1(BaseService):
         :param str public_key: A unique public SSH key to import, encoded in PEM
                format. The key (prior to encoding) must be either 2048 or 4096 bits long.
         :param str name: (optional) The user-defined name for this key.
-        :param str type: (optional) The cryptosystem used by this key.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param str type: (optional) The crypto-system used by this key.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Key` object
@@ -1777,8 +1779,8 @@ class VpcClassicV1(BaseService):
         data = {
             'public_key': public_key,
             'name': name,
-            'type': type,
-            'resource_group': resource_group
+            'resource_group': resource_group,
+            'type': type
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -3304,7 +3306,7 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def get_region_zone(self, region_name: str, zone_name: str,
+    def get_region_zone(self, region_name: str, name: str,
                         **kwargs) -> DetailedResponse:
         """
         Retrieve a zone.
@@ -3313,7 +3315,7 @@ class VpcClassicV1(BaseService):
         URL.
 
         :param str region_name: The region name.
-        :param str zone_name: The zone name.
+        :param str name: The zone name.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Zone` object
@@ -3321,8 +3323,8 @@ class VpcClassicV1(BaseService):
 
         if region_name is None:
             raise ValueError('region_name must be provided')
-        if zone_name is None:
-            raise ValueError('zone_name must be provided')
+        if name is None:
+            raise ValueError('name must be provided')
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -3335,11 +3337,10 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['region_name', 'zone_name']
-        path_param_values = self.encode_path_vars(region_name, zone_name)
+        path_param_keys = ['region_name', 'name']
+        path_param_values = self.encode_path_vars(region_name, name)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/regions/{region_name}/zones/{zone_name}'.format(
-            **path_param_dict)
+        url = '/regions/{region_name}/zones/{name}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -3403,8 +3404,8 @@ class VpcClassicV1(BaseService):
             vpc: 'VPCIdentity',
             zone: 'ZoneIdentity',
             *,
+            floating_ip: 'PublicGatewayFloatingIPPrototype' = None,
             name: str = None,
-            floating_ip: 'PublicGatewayPrototypeFloatingIp' = None,
             **kwargs) -> DetailedResponse:
         """
         Create a public gateway.
@@ -3420,10 +3421,10 @@ class VpcClassicV1(BaseService):
         :param VPCIdentity vpc: The VPC this public gateway will serve.
         :param ZoneIdentity zone: The zone where this public gateway will be
                created.
+        :param PublicGatewayFloatingIPPrototype floating_ip: (optional)
         :param str name: (optional) The user-defined name for this public gateway.
                Names must be unique within the VPC the public gateway resides in. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
-        :param PublicGatewayPrototypeFloatingIp floating_ip: (optional)
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `PublicGateway` object
@@ -3448,8 +3449,8 @@ class VpcClassicV1(BaseService):
         data = {
             'vpc': vpc,
             'zone': zone,
-            'name': name,
-            'floating_ip': floating_ip
+            'floating_ip': floating_ip,
+            'name': name
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -4361,7 +4362,7 @@ class VpcClassicV1(BaseService):
         This request creates a new security group from a security group prototype object.
         The prototype object is structured in the same way as a retrieved security group,
         and contains the information necessary to create the new security group. If
-        security group rules are included in the protoype object, those rules will be
+        security group rules are included in the prototype object, those rules will be
         added to the security group. Each security group is scoped to one VPC. Only
         network interfaces on instances in that VPC can be added to the security group.
 
@@ -5041,8 +5042,8 @@ class VpcClassicV1(BaseService):
                           encryption_algorithm: str,
                           ike_version: int,
                           *,
-                          name: str = None,
                           key_lifetime: int = None,
+                          name: str = None,
                           resource_group: 'ResourceGroupIdentity' = None,
                           **kwargs) -> DetailedResponse:
         """
@@ -5054,8 +5055,8 @@ class VpcClassicV1(BaseService):
         :param int dh_group: The Diffie-Hellman group.
         :param str encryption_algorithm: The encryption algorithm.
         :param int ike_version: The IKE protocol version.
-        :param str name: (optional) The user-defined name for this IKE policy.
         :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param str name: (optional) The user-defined name for this IKE policy.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -5088,8 +5089,8 @@ class VpcClassicV1(BaseService):
             'dh_group': dh_group,
             'encryption_algorithm': encryption_algorithm,
             'ike_version': ike_version,
-            'name': name,
             'key_lifetime': key_lifetime,
+            'name': name,
             'resource_group': resource_group
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -5323,8 +5324,8 @@ class VpcClassicV1(BaseService):
                             encryption_algorithm: str,
                             pfs: str,
                             *,
-                            name: str = None,
                             key_lifetime: int = None,
+                            name: str = None,
                             resource_group: 'ResourceGroupIdentity' = None,
                             **kwargs) -> DetailedResponse:
         """
@@ -5335,8 +5336,8 @@ class VpcClassicV1(BaseService):
         :param str authentication_algorithm: The authentication algorithm.
         :param str encryption_algorithm: The encryption algorithm.
         :param str pfs: Perfect Forward Secrecy.
-        :param str name: (optional) The user-defined name for this IPsec policy.
         :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param str name: (optional) The user-defined name for this IPsec policy.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -5366,8 +5367,8 @@ class VpcClassicV1(BaseService):
             'authentication_algorithm': authentication_algorithm,
             'encryption_algorithm': encryption_algorithm,
             'pfs': pfs,
-            'name': name,
             'key_lifetime': key_lifetime,
+            'name': name,
             'resource_group': resource_group
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -5558,6 +5559,7 @@ class VpcClassicV1(BaseService):
                           start: str = None,
                           limit: int = None,
                           resource_group_id: str = None,
+                          mode: str = None,
                           **kwargs) -> DetailedResponse:
         """
         List all VPN gateways.
@@ -5571,6 +5573,8 @@ class VpcClassicV1(BaseService):
         :param str resource_group_id: (optional) Filters the collection to
                resources within one of the resource groups identified in a comma-separated
                list of resource group identifiers.
+        :param str mode: (optional) Filters the collection to VPN gateways with the
+               specified mode.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPNGatewayCollection` object
@@ -5587,7 +5591,8 @@ class VpcClassicV1(BaseService):
             'generation': self.generation,
             'start': start,
             'limit': limit,
-            'resource_group.id': resource_group_id
+            'resource_group.id': resource_group_id,
+            'mode': mode
         }
 
         if 'headers' in kwargs:
@@ -5603,33 +5608,24 @@ class VpcClassicV1(BaseService):
         response = self.send(request)
         return response
 
-    def create_vpn_gateway(self,
-                           subnet: 'SubnetIdentity',
-                           *,
-                           name: str = None,
-                           resource_group: 'ResourceGroupIdentity' = None,
+    def create_vpn_gateway(self, vpn_gateway_prototype: 'VPNGatewayPrototype',
                            **kwargs) -> DetailedResponse:
         """
         Create a VPN gateway.
 
         This request creates a new VPN gateway.
 
-        :param SubnetIdentity subnet: Identifies a subnet by a unique property.
-        :param str name: (optional) The user-defined name for this VPN gateway.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
+        :param VPNGatewayPrototype vpn_gateway_prototype: The VPN gateway prototype
+               object.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPNGateway` object
         """
 
-        if subnet is None:
-            raise ValueError('subnet must be provided')
-        subnet = convert_model(subnet)
-        if resource_group is not None:
-            resource_group = convert_model(resource_group)
+        if vpn_gateway_prototype is None:
+            raise ValueError('vpn_gateway_prototype must be provided')
+        if isinstance(vpn_gateway_prototype, VPNGatewayPrototype):
+            vpn_gateway_prototype = convert_model(vpn_gateway_prototype)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -5638,13 +5634,7 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'subnet': subnet,
-            'name': name,
-            'resource_group': resource_group
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
+        data = json.dumps(vpn_gateway_prototype)
         headers['content-type'] = 'application/json'
 
         if 'headers' in kwargs:
@@ -5838,18 +5828,8 @@ class VpcClassicV1(BaseService):
         return response
 
     def create_vpn_gateway_connection(
-            self,
-            vpn_gateway_id: str,
-            peer_address: str,
-            psk: str,
-            *,
-            admin_state_up: bool = None,
-            name: str = None,
-            dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-            ike_policy: 'IKEPolicyIdentity' = None,
-            ipsec_policy: 'IPsecPolicyIdentity' = None,
-            local_cidrs: List[str] = None,
-            peer_cidrs: List[str] = None,
+            self, vpn_gateway_id: str,
+            vpn_gateway_connection_prototype: 'VPNGatewayConnectionPrototype',
             **kwargs) -> DetailedResponse:
         """
         Create a VPN gateway connection.
@@ -5857,23 +5837,8 @@ class VpcClassicV1(BaseService):
         This request creates a new VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
-        :param str peer_address: The IP address of the peer VPN gateway.
-        :param str psk: The preshared key.
-        :param bool admin_state_up: (optional) If set to false, the VPN connection
-               is shut down.
-        :param str name: (optional) The user-defined name for this VPN gateway
-               connection.
-        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
-               Dead Peer Detection settings.
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates
-               autonegotiation.
-        :param List[str] local_cidrs: (optional) A collection of local CIDRs for
-               this resource.
-        :param List[str] peer_cidrs: (optional) A collection of peer CIDRs for this
-               resource.
+        :param VPNGatewayConnectionPrototype vpn_gateway_connection_prototype: The
+               VPN gateway connection prototype object.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPNGatewayConnection` object
@@ -5881,16 +5846,13 @@ class VpcClassicV1(BaseService):
 
         if vpn_gateway_id is None:
             raise ValueError('vpn_gateway_id must be provided')
-        if peer_address is None:
-            raise ValueError('peer_address must be provided')
-        if psk is None:
-            raise ValueError('psk must be provided')
-        if dead_peer_detection is not None:
-            dead_peer_detection = convert_model(dead_peer_detection)
-        if ike_policy is not None:
-            ike_policy = convert_model(ike_policy)
-        if ipsec_policy is not None:
-            ipsec_policy = convert_model(ipsec_policy)
+        if vpn_gateway_connection_prototype is None:
+            raise ValueError(
+                'vpn_gateway_connection_prototype must be provided')
+        if isinstance(vpn_gateway_connection_prototype,
+                      VPNGatewayConnectionPrototype):
+            vpn_gateway_connection_prototype = convert_model(
+                vpn_gateway_connection_prototype)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -5900,19 +5862,7 @@ class VpcClassicV1(BaseService):
 
         params = {'version': self.version, 'generation': self.generation}
 
-        data = {
-            'peer_address': peer_address,
-            'psk': psk,
-            'admin_state_up': admin_state_up,
-            'name': name,
-            'dead_peer_detection': dead_peer_detection,
-            'ike_policy': ike_policy,
-            'ipsec_policy': ipsec_policy,
-            'local_cidrs': local_cidrs,
-            'peer_cidrs': peer_cidrs
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
+        data = json.dumps(vpn_gateway_connection_prototype)
         headers['content-type'] = 'application/json'
 
         if 'headers' in kwargs:
@@ -6541,9 +6491,9 @@ class VpcClassicV1(BaseService):
             is_public: bool,
             subnets: List['SubnetIdentity'],
             *,
-            name: str = None,
             listeners: List[
                 'LoadBalancerListenerPrototypeLoadBalancerContext'] = None,
+            name: str = None,
             pools: List['LoadBalancerPoolPrototype'] = None,
             resource_group: 'ResourceGroupIdentity' = None,
             **kwargs) -> DetailedResponse:
@@ -6552,14 +6502,15 @@ class VpcClassicV1(BaseService):
 
         This request creates and provisions a new load balancer.
 
-        :param bool is_public: The type of this load balancer, public or private.
+        :param bool is_public: Indicates whether this load balancer is public or
+               private.
         :param List[SubnetIdentity] subnets: The subnets to provision this load
                balancer.
+        :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
+               (optional) The listeners of this load balancer.
         :param str name: (optional) The user-defined name for this load balancer.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
-               (optional) The listeners of this load balancer.
         :param List[LoadBalancerPoolPrototype] pools: (optional) The pools of this
                load balancer.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
@@ -6593,8 +6544,8 @@ class VpcClassicV1(BaseService):
         data = {
             'is_public': is_public,
             'subnets': subnets,
-            'name': name,
             'listeners': listeners,
+            'name': name,
             'pools': pools,
             'resource_group': resource_group
         }
@@ -6829,8 +6780,9 @@ class VpcClassicV1(BaseService):
             port: int,
             protocol: str,
             *,
-            connection_limit: int = None,
+            accept_proxy_protocol: bool = None,
             certificate_instance: 'CertificateInstanceIdentity' = None,
+            connection_limit: int = None,
             default_pool: 'LoadBalancerPoolIdentity' = None,
             policies: List['LoadBalancerListenerPolicyPrototype'] = None,
             **kwargs) -> DetailedResponse:
@@ -6840,16 +6792,24 @@ class VpcClassicV1(BaseService):
         This request creates a new listener to the load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
-        :param int port: The listener port number.
+        :param int port: The listener port number. Each listener in the load
+               balancer must have a unique
+               `port` and `protocol` combination.
         :param str protocol: The listener protocol.
-        :param int connection_limit: (optional) The connection limit of the
-               listener.
+        :param bool accept_proxy_protocol: (optional) If set to `true`, this
+               listener will accept and forward PROXY protocol information. Supported by
+               load balancers in the `application` family (otherwise always `false`).
         :param CertificateInstanceIdentity certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
                `https`
                protocol.
+        :param int connection_limit: (optional) The connection limit of the
+               listener.
         :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
-               associated with the listener.
+               associated with the listener. The specified pool must:
+               - Belong to this load balancer
+               - Have the same `protocol` as this listener
+               - Not already be the default pool for another listener.
         :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) The
                list of policies of this listener.
         :param dict headers: A `dict` containing the request headers
@@ -6881,8 +6841,9 @@ class VpcClassicV1(BaseService):
         data = {
             'port': port,
             'protocol': protocol,
-            'connection_limit': connection_limit,
+            'accept_proxy_protocol': accept_proxy_protocol,
             'certificate_instance': certificate_instance,
+            'connection_limit': connection_limit,
             'default_pool': default_pool,
             'policies': policies
         }
@@ -7101,12 +7062,12 @@ class VpcClassicV1(BaseService):
             self,
             load_balancer_id: str,
             listener_id: str,
-            priority: int,
             action: str,
+            priority: int,
             *,
             name: str = None,
             rules: List['LoadBalancerListenerPolicyRulePrototype'] = None,
-            target: 'LoadBalancerListenerPolicyPrototypeTarget' = None,
+            target: 'LoadBalancerListenerPolicyTargetPrototype' = None,
             **kwargs) -> DetailedResponse:
         """
         Create a policy for the load balancer listener.
@@ -7115,14 +7076,14 @@ class VpcClassicV1(BaseService):
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
+        :param str action: The policy action.
         :param int priority: Priority of the policy. Lower value indicates higher
                priority.
-        :param str action: The policy action.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
         :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
                list of rules of this policy.
-        :param LoadBalancerListenerPolicyPrototypeTarget target: (optional) When
+        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
                pool the load balancer forwards the traffic to. When `action` is
@@ -7139,10 +7100,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('load_balancer_id must be provided')
         if listener_id is None:
             raise ValueError('listener_id must be provided')
-        if priority is None:
-            raise ValueError('priority must be provided')
         if action is None:
             raise ValueError('action must be provided')
+        if priority is None:
+            raise ValueError('priority must be provided')
         if rules is not None:
             rules = [convert_model(x) for x in rules]
         if target is not None:
@@ -7157,8 +7118,8 @@ class VpcClassicV1(BaseService):
         params = {'version': self.version, 'generation': self.generation}
 
         data = {
-            'priority': priority,
             'action': action,
+            'priority': priority,
             'name': name,
             'rules': rules,
             'target': target
@@ -7689,11 +7650,12 @@ class VpcClassicV1(BaseService):
             self,
             load_balancer_id: str,
             algorithm: str,
-            protocol: str,
             health_monitor: 'LoadBalancerPoolHealthMonitorPrototype',
+            protocol: str,
             *,
-            name: str = None,
             members: List['LoadBalancerPoolMemberPrototype'] = None,
+            name: str = None,
+            proxy_protocol: str = None,
             session_persistence:
         'LoadBalancerPoolSessionPersistencePrototype' = None,
             **kwargs) -> DetailedResponse:
@@ -7704,20 +7666,26 @@ class VpcClassicV1(BaseService):
 
         :param str load_balancer_id: The load balancer identifier.
         :param str algorithm: The load balancing algorithm.
-        :param str protocol: The protocol used for this load balancer pool.
-               The enumerated values for this property are expected to expand in the
-               future. When processing this property, check for and log unknown values.
-               Optionally halt processing and surface the error, or bypass the pool on
-               which the unexpected property value was encountered.
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
+        :param str protocol: The protocol used for this load balancer pool. Load
+               balancers in the `network` family support `tcp`. Load balancers in the
+               `application` family support `tcp`, `http`, and
+               `https`.
+        :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
+               members for this load balancer pool. For load balancers in the `network`
+               family, the same `port` and `target` tuple cannot be shared by a pool
+               member of any other load balancer in the same VPC.
         :param str name: (optional) The user-defined name for this load balancer
                pool. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
-        :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
-               members for this load balancer pool. For load balancers in the `network`
-               family, the same `port` and `target` tuple cannot be shared by a member of
-               any other load balancer.
+        :param str proxy_protocol: (optional) The PROXY protocol setting for this
+               pool:
+               - `v1`: Enabled with version 1 (human-readable header format)
+               - `v2`: Enabled with version 2 (binary header format)
+               - `disabled`: Disabled
+               Supported by load balancers in the `application` family (otherwise always
+               `disabled`).
         :param LoadBalancerPoolSessionPersistencePrototype session_persistence:
                (optional) The session persistence of this pool.
         :param dict headers: A `dict` containing the request headers
@@ -7729,10 +7697,10 @@ class VpcClassicV1(BaseService):
             raise ValueError('load_balancer_id must be provided')
         if algorithm is None:
             raise ValueError('algorithm must be provided')
-        if protocol is None:
-            raise ValueError('protocol must be provided')
         if health_monitor is None:
             raise ValueError('health_monitor must be provided')
+        if protocol is None:
+            raise ValueError('protocol must be provided')
         health_monitor = convert_model(health_monitor)
         if members is not None:
             members = [convert_model(x) for x in members]
@@ -7748,10 +7716,11 @@ class VpcClassicV1(BaseService):
 
         data = {
             'algorithm': algorithm,
-            'protocol': protocol,
             'health_monitor': health_monitor,
-            'name': name,
+            'protocol': protocol,
             'members': members,
+            'name': name,
+            'proxy_protocol': proxy_protocol,
             'session_persistence': session_persistence
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -7781,7 +7750,8 @@ class VpcClassicV1(BaseService):
         """
         Delete a pool.
 
-        This request deletes a load balancer pool. This operation cannot be reversed.
+        This request deletes a load balancer pool. This operation cannot be reversed. The
+        pool must not currently be the default pool for any listener in the load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str id: The pool identifier.
@@ -7981,8 +7951,8 @@ class VpcClassicV1(BaseService):
                member.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target.
-        :param int weight: (optional) Weight of the server member. This takes
-               effect only when the load balancing algorithm of its belonging pool is
+        :param int weight: (optional) Weight of the server member. Applicable only
+               if the pool algorithm is
                `weighted_round_robin`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -8271,6 +8241,19 @@ class ListNetworkAclRulesEnums:
         OUTBOUND = 'outbound'
 
 
+class ListVpnGatewaysEnums:
+    """
+    Enums for list_vpn_gateways parameters.
+    """
+
+    class Mode(str, Enum):
+        """
+        Filters the collection to VPN gateways with the specified mode.
+        """
+        POLICY = 'policy'
+        ROUTE = 'route'
+
+
 ##############################################################################
 # Models
 ##############################################################################
@@ -8280,76 +8263,55 @@ class AddressPrefix():
     """
     AddressPrefix.
 
-    :attr str id: The unique identifier for this address prefix.
-    :attr str href: The URL for this address prefix.
-    :attr str name: The user-defined name for this address prefix. Names must be
-          unique within the VPC the address prefix resides in.
-    :attr bool is_default: Indicates whether this is the default prefix for this
-          zone in this VPC. If a default prefix was automatically created when the VPC was
-          created, the prefix is automatically named using a hyphenated list of
-          randomly-selected words, but may be updated with a user-specified name.
     :attr str cidr: The CIDR block for this prefix.
     :attr datetime created_at: The date and time that the prefix was created.
     :attr bool has_subnets: Indicates whether subnets exist with addresses from this
           prefix.
+    :attr str href: The URL for this address prefix.
+    :attr str id: The unique identifier for this address prefix.
+    :attr bool is_default: Indicates whether this is the default prefix for this
+          zone in this VPC. If a default prefix was automatically created when the VPC was
+          created, the prefix is automatically named using a hyphenated list of
+          randomly-selected words, but may be updated with a user-specified name.
+    :attr str name: The user-defined name for this address prefix. Names must be
+          unique within the VPC the address prefix resides in.
     :attr ZoneReference zone: The zone this address prefix resides in.
     """
 
-    def __init__(self, id: str, href: str, name: str, is_default: bool,
-                 cidr: str, created_at: datetime, has_subnets: bool,
+    def __init__(self, cidr: str, created_at: datetime, has_subnets: bool,
+                 href: str, id: str, is_default: bool, name: str,
                  zone: 'ZoneReference') -> None:
         """
         Initialize a AddressPrefix object.
 
-        :param str id: The unique identifier for this address prefix.
+        :param str cidr: The CIDR block for this prefix.
+        :param datetime created_at: The date and time that the prefix was created.
+        :param bool has_subnets: Indicates whether subnets exist with addresses
+               from this prefix.
         :param str href: The URL for this address prefix.
-        :param str name: The user-defined name for this address prefix. Names must
-               be unique within the VPC the address prefix resides in.
+        :param str id: The unique identifier for this address prefix.
         :param bool is_default: Indicates whether this is the default prefix for
                this zone in this VPC. If a default prefix was automatically created when
                the VPC was created, the prefix is automatically named using a hyphenated
                list of randomly-selected words, but may be updated with a user-specified
                name.
-        :param str cidr: The CIDR block for this prefix.
-        :param datetime created_at: The date and time that the prefix was created.
-        :param bool has_subnets: Indicates whether subnets exist with addresses
-               from this prefix.
+        :param str name: The user-defined name for this address prefix. Names must
+               be unique within the VPC the address prefix resides in.
         :param ZoneReference zone: The zone this address prefix resides in.
         """
-        self.id = id
-        self.href = href
-        self.name = name
-        self.is_default = is_default
         self.cidr = cidr
         self.created_at = created_at
         self.has_subnets = has_subnets
+        self.href = href
+        self.id = id
+        self.is_default = is_default
+        self.name = name
         self.zone = zone
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AddressPrefix':
         """Initialize a AddressPrefix object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in AddressPrefix JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in AddressPrefix JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in AddressPrefix JSON')
-        if 'is_default' in _dict:
-            args['is_default'] = _dict.get('is_default')
-        else:
-            raise ValueError(
-                'Required property \'is_default\' not present in AddressPrefix JSON'
-            )
         if 'cidr' in _dict:
             args['cidr'] = _dict.get('cidr')
         else:
@@ -8367,6 +8329,27 @@ class AddressPrefix():
             raise ValueError(
                 'Required property \'has_subnets\' not present in AddressPrefix JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in AddressPrefix JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in AddressPrefix JSON')
+        if 'is_default' in _dict:
+            args['is_default'] = _dict.get('is_default')
+        else:
+            raise ValueError(
+                'Required property \'is_default\' not present in AddressPrefix JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in AddressPrefix JSON')
         if 'zone' in _dict:
             args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
         else:
@@ -8382,20 +8365,20 @@ class AddressPrefix():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'is_default') and self.is_default is not None:
-            _dict['is_default'] = self.is_default
         if hasattr(self, 'cidr') and self.cidr is not None:
             _dict['cidr'] = self.cidr
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'has_subnets') and self.has_subnets is not None:
             _dict['has_subnets'] = self.has_subnets
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'is_default') and self.is_default is not None:
+            _dict['is_default'] = self.is_default
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'zone') and self.zone is not None:
             _dict['zone'] = self.zone.to_dict()
         return _dict
@@ -8423,44 +8406,52 @@ class AddressPrefixCollection():
     """
     AddressPrefixCollection.
 
-    :attr AddressPrefixCollectionFirst first: A reference to the first page of
-          resources.
+    :attr List[AddressPrefix] address_prefixes: Collection of address prefixes.
+    :attr AddressPrefixCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr AddressPrefixCollectionNext next: (optional) A reference to the next page
-          of resources; this reference is included for all pages
+    :attr AddressPrefixCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
-    :attr List[AddressPrefix] address_prefixes: Collection of address prefixes.
     """
 
     def __init__(self,
+                 address_prefixes: List['AddressPrefix'],
                  first: 'AddressPrefixCollectionFirst',
                  limit: int,
-                 address_prefixes: List['AddressPrefix'],
                  *,
                  next: 'AddressPrefixCollectionNext' = None) -> None:
         """
         Initialize a AddressPrefixCollection object.
 
-        :param AddressPrefixCollectionFirst first: A reference to the first page of
+        :param List[AddressPrefix] address_prefixes: Collection of address
+               prefixes.
+        :param AddressPrefixCollectionFirst first: A link to the first page of
                resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param List[AddressPrefix] address_prefixes: Collection of address
-               prefixes.
-        :param AddressPrefixCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param AddressPrefixCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
                except the last page.
         """
+        self.address_prefixes = address_prefixes
         self.first = first
         self.limit = limit
         self.next = next
-        self.address_prefixes = address_prefixes
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AddressPrefixCollection':
         """Initialize a AddressPrefixCollection object from a json dictionary."""
         args = {}
+        if 'address_prefixes' in _dict:
+            args['address_prefixes'] = [
+                AddressPrefix.from_dict(x)
+                for x in _dict.get('address_prefixes')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'address_prefixes\' not present in AddressPrefixCollection JSON'
+            )
         if 'first' in _dict:
             args['first'] = AddressPrefixCollectionFirst.from_dict(
                 _dict.get('first'))
@@ -8477,15 +8468,6 @@ class AddressPrefixCollection():
         if 'next' in _dict:
             args['next'] = AddressPrefixCollectionNext.from_dict(
                 _dict.get('next'))
-        if 'address_prefixes' in _dict:
-            args['address_prefixes'] = [
-                AddressPrefix.from_dict(x)
-                for x in _dict.get('address_prefixes')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'address_prefixes\' not present in AddressPrefixCollection JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -8496,17 +8478,17 @@ class AddressPrefixCollection():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self,
+                   'address_prefixes') and self.address_prefixes is not None:
+            _dict['address_prefixes'] = [
+                x.to_dict() for x in self.address_prefixes
+            ]
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
-        if hasattr(self,
-                   'address_prefixes') and self.address_prefixes is not None:
-            _dict['address_prefixes'] = [
-                x.to_dict() for x in self.address_prefixes
-            ]
         return _dict
 
     def _to_dict(self):
@@ -8530,16 +8512,16 @@ class AddressPrefixCollection():
 
 class AddressPrefixCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a AddressPrefixCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -8588,17 +8570,17 @@ class AddressPrefixCollectionFirst():
 
 class AddressPrefixCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a AddressPrefixCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -8649,38 +8631,38 @@ class AddressPrefixPatch():
     """
     AddressPrefixPatch.
 
-    :attr str name: (optional) The user-defined name for this address prefix. Names
-          must be unique within the VPC the address prefix resides in.
     :attr bool is_default: (optional) Indicates whether this is the default prefix
           for this zone in this VPC. Updating to true makes this prefix the default prefix
           for this zone in this VPC, provided the VPC currently has no default address
           prefix for this zone. Updating to false removes the default prefix for this zone
           in this VPC.
+    :attr str name: (optional) The user-defined name for this address prefix. Names
+          must be unique within the VPC the address prefix resides in.
     """
 
-    def __init__(self, *, name: str = None, is_default: bool = None) -> None:
+    def __init__(self, *, is_default: bool = None, name: str = None) -> None:
         """
         Initialize a AddressPrefixPatch object.
 
-        :param str name: (optional) The user-defined name for this address prefix.
-               Names must be unique within the VPC the address prefix resides in.
         :param bool is_default: (optional) Indicates whether this is the default
                prefix for this zone in this VPC. Updating to true makes this prefix the
                default prefix for this zone in this VPC, provided the VPC currently has no
                default address prefix for this zone. Updating to false removes the default
                prefix for this zone in this VPC.
+        :param str name: (optional) The user-defined name for this address prefix.
+               Names must be unique within the VPC the address prefix resides in.
         """
-        self.name = name
         self.is_default = is_default
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AddressPrefixPatch':
         """Initialize a AddressPrefixPatch object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'is_default' in _dict:
             args['is_default'] = _dict.get('is_default')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         return cls(**args)
 
     @classmethod
@@ -8691,10 +8673,10 @@ class AddressPrefixPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'is_default') and self.is_default is not None:
             _dict['is_default'] = self.is_default
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -8794,59 +8776,59 @@ class DefaultSecurityGroup():
     """
     Collection of rules in a default security group.
 
-    :attr str id: The unique identifier for this security group.
+    :attr datetime created_at: The date and time that this security group was
+          created.
     :attr str crn: The security group's CRN.
     :attr str href: The security group's canonical URL.
+    :attr str id: The unique identifier for this security group.
     :attr str name: The name of the default security group created for a VPC. The
           name will be a hyphenated list of randomly-selected words at creation, but may
           be user-specified with a subsequent request.
     :attr List[SecurityGroupRule] rules: Array of rules for the default security
           group for a VPC. Defaults to allowing all outbound traffic, and allowing all
-          inbound traffic from other interfaces in the VPC’s default security group. Rules
+          inbound traffic from other interfaces in the VPC's default security group. Rules
           in the default security group may be changed, added or removed.
-    :attr datetime created_at: The date and time that this security group was
-          created.
     :attr VPCReference vpc: The VPC this security group is a part of.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
-                 rules: List['SecurityGroupRule'], created_at: datetime,
+    def __init__(self, created_at: datetime, crn: str, href: str, id: str,
+                 name: str, rules: List['SecurityGroupRule'],
                  vpc: 'VPCReference') -> None:
         """
         Initialize a DefaultSecurityGroup object.
 
-        :param str id: The unique identifier for this security group.
+        :param datetime created_at: The date and time that this security group was
+               created.
         :param str crn: The security group's CRN.
         :param str href: The security group's canonical URL.
+        :param str id: The unique identifier for this security group.
         :param str name: The name of the default security group created for a VPC.
                The name will be a hyphenated list of randomly-selected words at creation,
                but may be user-specified with a subsequent request.
         :param List[SecurityGroupRule] rules: Array of rules for the default
                security group for a VPC. Defaults to allowing all outbound traffic, and
-               allowing all inbound traffic from other interfaces in the VPC’s default
+               allowing all inbound traffic from other interfaces in the VPC's default
                security group. Rules in the default security group may be changed, added
                or removed.
-        :param datetime created_at: The date and time that this security group was
-               created.
         :param VPCReference vpc: The VPC this security group is a part of.
         """
-        self.id = id
+        self.created_at = created_at
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
         self.rules = rules
-        self.created_at = created_at
         self.vpc = vpc
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'DefaultSecurityGroup':
         """Initialize a DefaultSecurityGroup object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'id\' not present in DefaultSecurityGroup JSON'
+                'Required property \'created_at\' not present in DefaultSecurityGroup JSON'
             )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
@@ -8859,6 +8841,12 @@ class DefaultSecurityGroup():
         else:
             raise ValueError(
                 'Required property \'href\' not present in DefaultSecurityGroup JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DefaultSecurityGroup JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -8873,12 +8861,6 @@ class DefaultSecurityGroup():
         else:
             raise ValueError(
                 'Required property \'rules\' not present in DefaultSecurityGroup JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in DefaultSecurityGroup JSON'
             )
         if 'vpc' in _dict:
             args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
@@ -8896,18 +8878,18 @@ class DefaultSecurityGroup():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
         return _dict
@@ -9017,24 +8999,24 @@ class FloatingIP():
     """
     FloatingIP.
 
-    :attr str id: The unique identifier for this floating IP.
+    :attr str address: The globally unique IP address.
+    :attr datetime created_at: The date and time that the floating IP was created.
     :attr str crn: The CRN for this floating IP.
     :attr str href: The URL for this floating IP.
-    :attr str address: The globally unique IP address.
+    :attr str id: The unique identifier for this floating IP.
     :attr str name: The unique user-defined name for this floating IP.
-    :attr datetime created_at: The date and time that the floating IP was created.
     :attr str status: The status of the floating IP.
     :attr FloatingIPTarget target: (optional) The target of this floating IP.
     :attr ZoneReference zone: The zone the floating IP resides in.
     """
 
     def __init__(self,
-                 id: str,
+                 address: str,
+                 created_at: datetime,
                  crn: str,
                  href: str,
-                 address: str,
+                 id: str,
                  name: str,
-                 created_at: datetime,
                  status: str,
                  zone: 'ZoneReference',
                  *,
@@ -9042,23 +9024,23 @@ class FloatingIP():
         """
         Initialize a FloatingIP object.
 
-        :param str id: The unique identifier for this floating IP.
-        :param str crn: The CRN for this floating IP.
-        :param str href: The URL for this floating IP.
         :param str address: The globally unique IP address.
-        :param str name: The unique user-defined name for this floating IP.
         :param datetime created_at: The date and time that the floating IP was
                created.
+        :param str crn: The CRN for this floating IP.
+        :param str href: The URL for this floating IP.
+        :param str id: The unique identifier for this floating IP.
+        :param str name: The unique user-defined name for this floating IP.
         :param str status: The status of the floating IP.
         :param ZoneReference zone: The zone the floating IP resides in.
         :param FloatingIPTarget target: (optional) The target of this floating IP.
         """
-        self.id = id
+        self.address = address
+        self.created_at = created_at
         self.crn = crn
         self.href = href
-        self.address = address
+        self.id = id
         self.name = name
-        self.created_at = created_at
         self.status = status
         self.target = target
         self.zone = zone
@@ -9067,11 +9049,17 @@ class FloatingIP():
     def from_dict(cls, _dict: Dict) -> 'FloatingIP':
         """Initialize a FloatingIP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
         else:
             raise ValueError(
-                'Required property \'id\' not present in FloatingIP JSON')
+                'Required property \'address\' not present in FloatingIP JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in FloatingIP JSON'
+            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -9082,22 +9070,16 @@ class FloatingIP():
         else:
             raise ValueError(
                 'Required property \'href\' not present in FloatingIP JSON')
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'address\' not present in FloatingIP JSON')
+                'Required property \'id\' not present in FloatingIP JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError(
                 'Required property \'name\' not present in FloatingIP JSON')
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in FloatingIP JSON'
-            )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -9120,18 +9102,18 @@ class FloatingIP():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'target') and self.target is not None:
@@ -9171,7 +9153,7 @@ class FloatingIP():
         PENDING = 'pending'
 
 
-class FloatingIPByTargetTarget():
+class FloatingIPByTargetNetworkInterfaceIdentity():
     """
     The network interface this floating IP is to be bound to.
 
@@ -9179,13 +9161,13 @@ class FloatingIPByTargetTarget():
 
     def __init__(self) -> None:
         """
-        Initialize a FloatingIPByTargetTarget object.
+        Initialize a FloatingIPByTargetNetworkInterfaceIdentity object.
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'FloatingIPByTargetTargetNetworkInterfaceIdentityById',
-                'FloatingIPByTargetTargetNetworkInterfaceIdentityByHref'
+                'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById',
+                'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref'
             ]))
         raise Exception(msg)
 
@@ -9194,38 +9176,37 @@ class FloatingIPCollection():
     """
     FloatingIPCollection.
 
-    :attr FloatingIPCollectionFirst first: A reference to the first page of
-          resources.
+    :attr FloatingIPCollectionFirst first: A link to the first page of resources.
+    :attr List[FloatingIP] floating_ips: Collection of floating IPs.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr FloatingIPCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr FloatingIPCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
-    :attr List[FloatingIP] floating_ips: Collection of floating IPs.
     """
 
     def __init__(self,
                  first: 'FloatingIPCollectionFirst',
-                 limit: int,
                  floating_ips: List['FloatingIP'],
+                 limit: int,
                  *,
                  next: 'FloatingIPCollectionNext' = None) -> None:
         """
         Initialize a FloatingIPCollection object.
 
-        :param FloatingIPCollectionFirst first: A reference to the first page of
+        :param FloatingIPCollectionFirst first: A link to the first page of
                resources.
+        :param List[FloatingIP] floating_ips: Collection of floating IPs.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param List[FloatingIP] floating_ips: Collection of floating IPs.
-        :param FloatingIPCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param FloatingIPCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.floating_ips = floating_ips
         self.limit = limit
         self.next = next
-        self.floating_ips = floating_ips
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'FloatingIPCollection':
@@ -9238,14 +9219,6 @@ class FloatingIPCollection():
             raise ValueError(
                 'Required property \'first\' not present in FloatingIPCollection JSON'
             )
-        if 'limit' in _dict:
-            args['limit'] = _dict.get('limit')
-        else:
-            raise ValueError(
-                'Required property \'limit\' not present in FloatingIPCollection JSON'
-            )
-        if 'next' in _dict:
-            args['next'] = FloatingIPCollectionNext.from_dict(_dict.get('next'))
         if 'floating_ips' in _dict:
             args['floating_ips'] = [
                 FloatingIP.from_dict(x) for x in _dict.get('floating_ips')
@@ -9254,6 +9227,14 @@ class FloatingIPCollection():
             raise ValueError(
                 'Required property \'floating_ips\' not present in FloatingIPCollection JSON'
             )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in FloatingIPCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = FloatingIPCollectionNext.from_dict(_dict.get('next'))
         return cls(**args)
 
     @classmethod
@@ -9266,12 +9247,12 @@ class FloatingIPCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
+            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
-        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
-            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
         return _dict
 
     def _to_dict(self):
@@ -9295,16 +9276,16 @@ class FloatingIPCollection():
 
 class FloatingIPCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a FloatingIPCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -9353,17 +9334,17 @@ class FloatingIPCollectionFirst():
 
 class FloatingIPCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a FloatingIPCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -9538,39 +9519,39 @@ class FloatingIPReference():
     """
     FloatingIPReference.
 
-    :attr str id: The unique identifier for this floating IP.
+    :attr str address: The globally unique IP address.
     :attr str crn: The CRN for this floating IP.
     :attr str href: The URL for this floating IP.
-    :attr str address: The globally unique IP address.
+    :attr str id: The unique identifier for this floating IP.
     :attr str name: The unique user-defined name for this floating IP.
     """
 
-    def __init__(self, id: str, crn: str, href: str, address: str,
+    def __init__(self, address: str, crn: str, href: str, id: str,
                  name: str) -> None:
         """
         Initialize a FloatingIPReference object.
 
-        :param str id: The unique identifier for this floating IP.
+        :param str address: The globally unique IP address.
         :param str crn: The CRN for this floating IP.
         :param str href: The URL for this floating IP.
-        :param str address: The globally unique IP address.
+        :param str id: The unique identifier for this floating IP.
         :param str name: The unique user-defined name for this floating IP.
         """
-        self.id = id
+        self.address = address
         self.crn = crn
         self.href = href
-        self.address = address
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'FloatingIPReference':
         """Initialize a FloatingIPReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
         else:
             raise ValueError(
-                'Required property \'id\' not present in FloatingIPReference JSON'
+                'Required property \'address\' not present in FloatingIPReference JSON'
             )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
@@ -9584,11 +9565,11 @@ class FloatingIPReference():
             raise ValueError(
                 'Required property \'href\' not present in FloatingIPReference JSON'
             )
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'address\' not present in FloatingIPReference JSON'
+                'Required property \'id\' not present in FloatingIPReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -9606,14 +9587,14 @@ class FloatingIPReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -9720,125 +9701,75 @@ class IKEPolicy():
     """
     IKEPolicy.
 
-    :attr str id: The unique identifier for this IKE policy.
-    :attr str href: The IKE policy's canonical URL.
-    :attr str name: The user-defined name for this IKE policy.
-    :attr str resource_type: The resource type.
     :attr str authentication_algorithm: The authentication algorithm.
-    :attr int dh_group: The Diffie-Hellman group.
-    :attr str encryption_algorithm: The encryption algorithm.
-    :attr int ike_version: The IKE protocol version.
-    :attr int key_lifetime: The key lifetime in seconds.
-    :attr ResourceGroupReference resource_group: The resource group for this IKE
-          policy.
     :attr List[VPNGatewayConnectionReference] connections: Collection of references
           to VPN gateway connections that use this IKE policy.
     :attr datetime created_at: The date and time that this IKE policy was created.
+    :attr int dh_group: The Diffie-Hellman group.
+    :attr str encryption_algorithm: The encryption algorithm.
+    :attr str href: The IKE policy's canonical URL.
+    :attr str id: The unique identifier for this IKE policy.
+    :attr int ike_version: The IKE protocol version.
+    :attr int key_lifetime: The key lifetime in seconds.
+    :attr str name: The user-defined name for this IKE policy.
     :attr str negotiation_mode: The IKE negotiation mode. Only `main` is supported.
+    :attr ResourceGroupReference resource_group: The resource group for this IKE
+          policy.
+    :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, href: str, name: str, resource_type: str,
-                 authentication_algorithm: str, dh_group: int,
-                 encryption_algorithm: str, ike_version: int, key_lifetime: int,
-                 resource_group: 'ResourceGroupReference',
+    def __init__(self, authentication_algorithm: str,
                  connections: List['VPNGatewayConnectionReference'],
-                 created_at: datetime, negotiation_mode: str) -> None:
+                 created_at: datetime, dh_group: int, encryption_algorithm: str,
+                 href: str, id: str, ike_version: int, key_lifetime: int,
+                 name: str, negotiation_mode: str,
+                 resource_group: 'ResourceGroupReference',
+                 resource_type: str) -> None:
         """
         Initialize a IKEPolicy object.
 
-        :param str id: The unique identifier for this IKE policy.
-        :param str href: The IKE policy's canonical URL.
-        :param str name: The user-defined name for this IKE policy.
-        :param str resource_type: The resource type.
         :param str authentication_algorithm: The authentication algorithm.
-        :param int dh_group: The Diffie-Hellman group.
-        :param str encryption_algorithm: The encryption algorithm.
-        :param int ike_version: The IKE protocol version.
-        :param int key_lifetime: The key lifetime in seconds.
-        :param ResourceGroupReference resource_group: The resource group for this
-               IKE policy.
         :param List[VPNGatewayConnectionReference] connections: Collection of
                references to VPN gateway connections that use this IKE policy.
         :param datetime created_at: The date and time that this IKE policy was
                created.
+        :param int dh_group: The Diffie-Hellman group.
+        :param str encryption_algorithm: The encryption algorithm.
+        :param str href: The IKE policy's canonical URL.
+        :param str id: The unique identifier for this IKE policy.
+        :param int ike_version: The IKE protocol version.
+        :param int key_lifetime: The key lifetime in seconds.
+        :param str name: The user-defined name for this IKE policy.
         :param str negotiation_mode: The IKE negotiation mode. Only `main` is
                supported.
+        :param ResourceGroupReference resource_group: The resource group for this
+               IKE policy.
+        :param str resource_type: The resource type.
         """
-        self.id = id
-        self.href = href
-        self.name = name
-        self.resource_type = resource_type
         self.authentication_algorithm = authentication_algorithm
-        self.dh_group = dh_group
-        self.encryption_algorithm = encryption_algorithm
-        self.ike_version = ike_version
-        self.key_lifetime = key_lifetime
-        self.resource_group = resource_group
         self.connections = connections
         self.created_at = created_at
+        self.dh_group = dh_group
+        self.encryption_algorithm = encryption_algorithm
+        self.href = href
+        self.id = id
+        self.ike_version = ike_version
+        self.key_lifetime = key_lifetime
+        self.name = name
         self.negotiation_mode = negotiation_mode
+        self.resource_group = resource_group
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IKEPolicy':
         """Initialize a IKEPolicy object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in IKEPolicy JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in IKEPolicy JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in IKEPolicy JSON')
-        if 'resource_type' in _dict:
-            args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError(
-                'Required property \'resource_type\' not present in IKEPolicy JSON'
-            )
         if 'authentication_algorithm' in _dict:
             args['authentication_algorithm'] = _dict.get(
                 'authentication_algorithm')
         else:
             raise ValueError(
                 'Required property \'authentication_algorithm\' not present in IKEPolicy JSON'
-            )
-        if 'dh_group' in _dict:
-            args['dh_group'] = _dict.get('dh_group')
-        else:
-            raise ValueError(
-                'Required property \'dh_group\' not present in IKEPolicy JSON')
-        if 'encryption_algorithm' in _dict:
-            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
-        else:
-            raise ValueError(
-                'Required property \'encryption_algorithm\' not present in IKEPolicy JSON'
-            )
-        if 'ike_version' in _dict:
-            args['ike_version'] = _dict.get('ike_version')
-        else:
-            raise ValueError(
-                'Required property \'ike_version\' not present in IKEPolicy JSON'
-            )
-        if 'key_lifetime' in _dict:
-            args['key_lifetime'] = _dict.get('key_lifetime')
-        else:
-            raise ValueError(
-                'Required property \'key_lifetime\' not present in IKEPolicy JSON'
-            )
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in IKEPolicy JSON'
             )
         if 'connections' in _dict:
             args['connections'] = [
@@ -9855,11 +9786,62 @@ class IKEPolicy():
             raise ValueError(
                 'Required property \'created_at\' not present in IKEPolicy JSON'
             )
+        if 'dh_group' in _dict:
+            args['dh_group'] = _dict.get('dh_group')
+        else:
+            raise ValueError(
+                'Required property \'dh_group\' not present in IKEPolicy JSON')
+        if 'encryption_algorithm' in _dict:
+            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
+        else:
+            raise ValueError(
+                'Required property \'encryption_algorithm\' not present in IKEPolicy JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in IKEPolicy JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in IKEPolicy JSON')
+        if 'ike_version' in _dict:
+            args['ike_version'] = _dict.get('ike_version')
+        else:
+            raise ValueError(
+                'Required property \'ike_version\' not present in IKEPolicy JSON'
+            )
+        if 'key_lifetime' in _dict:
+            args['key_lifetime'] = _dict.get('key_lifetime')
+        else:
+            raise ValueError(
+                'Required property \'key_lifetime\' not present in IKEPolicy JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in IKEPolicy JSON')
         if 'negotiation_mode' in _dict:
             args['negotiation_mode'] = _dict.get('negotiation_mode')
         else:
             raise ValueError(
                 'Required property \'negotiation_mode\' not present in IKEPolicy JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in IKEPolicy JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in IKEPolicy JSON'
             )
         return cls(**args)
 
@@ -9871,35 +9853,35 @@ class IKEPolicy():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'authentication_algorithm'
                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
+        if hasattr(self, 'connections') and self.connections is not None:
+            _dict['connections'] = [x.to_dict() for x in self.connections]
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ike_version') and self.ike_version is not None:
             _dict['ike_version'] = self.ike_version
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'connections') and self.connections is not None:
-            _dict['connections'] = [x.to_dict() for x in self.connections]
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self,
                    'negotiation_mode') and self.negotiation_mode is not None:
             _dict['negotiation_mode'] = self.negotiation_mode
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -9919,12 +9901,6 @@ class IKEPolicy():
     def __ne__(self, other: 'IKEPolicy') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-    class ResourceTypeEnum(str, Enum):
-        """
-        The resource type.
-        """
-        IKE_POLICY = 'ike_policy'
 
     class AuthenticationAlgorithmEnum(str, Enum):
         """
@@ -9948,47 +9924,52 @@ class IKEPolicy():
         """
         MAIN = 'main'
 
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        IKE_POLICY = 'ike_policy'
+
 
 class IKEPolicyCollection():
     """
     IKEPolicyCollection.
 
-    :attr IKEPolicyCollectionFirst first: A reference to the first page of
-          resources.
+    :attr IKEPolicyCollectionFirst first: A link to the first page of resources.
+    :attr List[IKEPolicy] ike_policies: Collection of IKE policies.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr IKEPolicyCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr IKEPolicyCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr int total_count: The total number of resources across all pages.
-    :attr List[IKEPolicy] ike_policies: Collection of IKE policies.
     """
 
     def __init__(self,
                  first: 'IKEPolicyCollectionFirst',
+                 ike_policies: List['IKEPolicy'],
                  limit: int,
                  total_count: int,
-                 ike_policies: List['IKEPolicy'],
                  *,
                  next: 'IKEPolicyCollectionNext' = None) -> None:
         """
         Initialize a IKEPolicyCollection object.
 
-        :param IKEPolicyCollectionFirst first: A reference to the first page of
+        :param IKEPolicyCollectionFirst first: A link to the first page of
                resources.
+        :param List[IKEPolicy] ike_policies: Collection of IKE policies.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param int total_count: The total number of resources across all pages.
-        :param List[IKEPolicy] ike_policies: Collection of IKE policies.
-        :param IKEPolicyCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param IKEPolicyCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.ike_policies = ike_policies
         self.limit = limit
         self.next = next
         self.total_count = total_count
-        self.ike_policies = ike_policies
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IKEPolicyCollection':
@@ -10000,6 +9981,14 @@ class IKEPolicyCollection():
         else:
             raise ValueError(
                 'Required property \'first\' not present in IKEPolicyCollection JSON'
+            )
+        if 'ike_policies' in _dict:
+            args['ike_policies'] = [
+                IKEPolicy.from_dict(x) for x in _dict.get('ike_policies')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'ike_policies\' not present in IKEPolicyCollection JSON'
             )
         if 'limit' in _dict:
             args['limit'] = _dict.get('limit')
@@ -10015,14 +10004,6 @@ class IKEPolicyCollection():
             raise ValueError(
                 'Required property \'total_count\' not present in IKEPolicyCollection JSON'
             )
-        if 'ike_policies' in _dict:
-            args['ike_policies'] = [
-                IKEPolicy.from_dict(x) for x in _dict.get('ike_policies')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'ike_policies\' not present in IKEPolicyCollection JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -10035,14 +10016,14 @@ class IKEPolicyCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'ike_policies') and self.ike_policies is not None:
+            _dict['ike_policies'] = [x.to_dict() for x in self.ike_policies]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
-        if hasattr(self, 'ike_policies') and self.ike_policies is not None:
-            _dict['ike_policies'] = [x.to_dict() for x in self.ike_policies]
         return _dict
 
     def _to_dict(self):
@@ -10066,16 +10047,16 @@ class IKEPolicyCollection():
 
 class IKEPolicyCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a IKEPolicyCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -10124,17 +10105,17 @@ class IKEPolicyCollectionFirst():
 
 class IKEPolicyCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a IKEPolicyCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -10201,46 +10182,44 @@ class IKEPolicyPatch():
     """
     IKEPolicyPatch.
 
-    :attr str name: (optional) The user-defined name for this IKE policy.
     :attr str authentication_algorithm: (optional) The authentication algorithm.
     :attr int dh_group: (optional) The Diffie-Hellman group.
     :attr str encryption_algorithm: (optional) The encryption algorithm.
     :attr int ike_version: (optional) The IKE protocol version.
     :attr int key_lifetime: (optional) The key lifetime in seconds.
+    :attr str name: (optional) The user-defined name for this IKE policy.
     """
 
     def __init__(self,
                  *,
-                 name: str = None,
                  authentication_algorithm: str = None,
                  dh_group: int = None,
                  encryption_algorithm: str = None,
                  ike_version: int = None,
-                 key_lifetime: int = None) -> None:
+                 key_lifetime: int = None,
+                 name: str = None) -> None:
         """
         Initialize a IKEPolicyPatch object.
 
-        :param str name: (optional) The user-defined name for this IKE policy.
         :param str authentication_algorithm: (optional) The authentication
                algorithm.
         :param int dh_group: (optional) The Diffie-Hellman group.
         :param str encryption_algorithm: (optional) The encryption algorithm.
         :param int ike_version: (optional) The IKE protocol version.
         :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param str name: (optional) The user-defined name for this IKE policy.
         """
-        self.name = name
         self.authentication_algorithm = authentication_algorithm
         self.dh_group = dh_group
         self.encryption_algorithm = encryption_algorithm
         self.ike_version = ike_version
         self.key_lifetime = key_lifetime
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IKEPolicyPatch':
         """Initialize a IKEPolicyPatch object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'authentication_algorithm' in _dict:
             args['authentication_algorithm'] = _dict.get(
                 'authentication_algorithm')
@@ -10252,6 +10231,8 @@ class IKEPolicyPatch():
             args['ike_version'] = _dict.get('ike_version')
         if 'key_lifetime' in _dict:
             args['key_lifetime'] = _dict.get('key_lifetime')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         return cls(**args)
 
     @classmethod
@@ -10262,8 +10243,6 @@ class IKEPolicyPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'authentication_algorithm'
                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
@@ -10276,6 +10255,8 @@ class IKEPolicyPatch():
             _dict['ike_version'] = self.ike_version
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -10317,24 +10298,24 @@ class IKEPolicyReference():
     """
     IKEPolicyReference.
 
-    :attr str id: The unique identifier for this IKE policy.
     :attr str href: The IKE policy's canonical URL.
+    :attr str id: The unique identifier for this IKE policy.
     :attr str name: The user-defined name for this IKE policy.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, href: str, name: str,
+    def __init__(self, href: str, id: str, name: str,
                  resource_type: str) -> None:
         """
         Initialize a IKEPolicyReference object.
 
-        :param str id: The unique identifier for this IKE policy.
         :param str href: The IKE policy's canonical URL.
+        :param str id: The unique identifier for this IKE policy.
         :param str name: The user-defined name for this IKE policy.
         :param str resource_type: The resource type.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
 
@@ -10342,17 +10323,17 @@ class IKEPolicyReference():
     def from_dict(cls, _dict: Dict) -> 'IKEPolicyReference':
         """Initialize a IKEPolicyReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in IKEPolicyReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in IKEPolicyReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in IKEPolicyReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -10376,10 +10357,10 @@ class IKEPolicyReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
@@ -10480,123 +10461,78 @@ class IPsecPolicy():
     """
     IPsecPolicy.
 
-    :attr str id: The unique identifier for this IPsec policy.
-    :attr str href: The IPsec policy's canonical URL.
-    :attr str name: The user-defined name for this IPsec policy.
-    :attr str resource_type: The resource type.
     :attr str authentication_algorithm: The authentication algorithm.
-    :attr str encryption_algorithm: The encryption algorithm.
-    :attr int key_lifetime: The key lifetime in seconds.
-    :attr str pfs: Perfect Forward Secrecy.
-    :attr ResourceGroupReference resource_group: The resource group for this IPsec
-          policy.
     :attr List[VPNGatewayConnectionReference] connections: Collection of references
           to VPN gateway connections that use this IPsec policy.
     :attr datetime created_at: The date and time that this IPsec policy was created.
     :attr str encapsulation_mode: The encapsulation mode used. Only `tunnel` is
           supported.
+    :attr str encryption_algorithm: The encryption algorithm.
+    :attr str href: The IPsec policy's canonical URL.
+    :attr str id: The unique identifier for this IPsec policy.
+    :attr int key_lifetime: The key lifetime in seconds.
+    :attr str name: The user-defined name for this IPsec policy.
+    :attr str pfs: Perfect Forward Secrecy.
+    :attr ResourceGroupReference resource_group: The resource group for this IPsec
+          policy.
+    :attr str resource_type: The resource type.
     :attr str transform_protocol: The transform protocol used. Only `esp` is
           supported.
     """
 
-    def __init__(self, id: str, href: str, name: str, resource_type: str,
-                 authentication_algorithm: str, encryption_algorithm: str,
-                 key_lifetime: int, pfs: str,
-                 resource_group: 'ResourceGroupReference',
+    def __init__(self, authentication_algorithm: str,
                  connections: List['VPNGatewayConnectionReference'],
                  created_at: datetime, encapsulation_mode: str,
+                 encryption_algorithm: str, href: str, id: str,
+                 key_lifetime: int, name: str, pfs: str,
+                 resource_group: 'ResourceGroupReference', resource_type: str,
                  transform_protocol: str) -> None:
         """
         Initialize a IPsecPolicy object.
 
-        :param str id: The unique identifier for this IPsec policy.
-        :param str href: The IPsec policy's canonical URL.
-        :param str name: The user-defined name for this IPsec policy.
-        :param str resource_type: The resource type.
         :param str authentication_algorithm: The authentication algorithm.
-        :param str encryption_algorithm: The encryption algorithm.
-        :param int key_lifetime: The key lifetime in seconds.
-        :param str pfs: Perfect Forward Secrecy.
-        :param ResourceGroupReference resource_group: The resource group for this
-               IPsec policy.
         :param List[VPNGatewayConnectionReference] connections: Collection of
                references to VPN gateway connections that use this IPsec policy.
         :param datetime created_at: The date and time that this IPsec policy was
                created.
         :param str encapsulation_mode: The encapsulation mode used. Only `tunnel`
                is supported.
+        :param str encryption_algorithm: The encryption algorithm.
+        :param str href: The IPsec policy's canonical URL.
+        :param str id: The unique identifier for this IPsec policy.
+        :param int key_lifetime: The key lifetime in seconds.
+        :param str name: The user-defined name for this IPsec policy.
+        :param str pfs: Perfect Forward Secrecy.
+        :param ResourceGroupReference resource_group: The resource group for this
+               IPsec policy.
+        :param str resource_type: The resource type.
         :param str transform_protocol: The transform protocol used. Only `esp` is
                supported.
         """
-        self.id = id
-        self.href = href
-        self.name = name
-        self.resource_type = resource_type
         self.authentication_algorithm = authentication_algorithm
-        self.encryption_algorithm = encryption_algorithm
-        self.key_lifetime = key_lifetime
-        self.pfs = pfs
-        self.resource_group = resource_group
         self.connections = connections
         self.created_at = created_at
         self.encapsulation_mode = encapsulation_mode
+        self.encryption_algorithm = encryption_algorithm
+        self.href = href
+        self.id = id
+        self.key_lifetime = key_lifetime
+        self.name = name
+        self.pfs = pfs
+        self.resource_group = resource_group
+        self.resource_type = resource_type
         self.transform_protocol = transform_protocol
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IPsecPolicy':
         """Initialize a IPsecPolicy object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in IPsecPolicy JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in IPsecPolicy JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in IPsecPolicy JSON')
-        if 'resource_type' in _dict:
-            args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError(
-                'Required property \'resource_type\' not present in IPsecPolicy JSON'
-            )
         if 'authentication_algorithm' in _dict:
             args['authentication_algorithm'] = _dict.get(
                 'authentication_algorithm')
         else:
             raise ValueError(
                 'Required property \'authentication_algorithm\' not present in IPsecPolicy JSON'
-            )
-        if 'encryption_algorithm' in _dict:
-            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
-        else:
-            raise ValueError(
-                'Required property \'encryption_algorithm\' not present in IPsecPolicy JSON'
-            )
-        if 'key_lifetime' in _dict:
-            args['key_lifetime'] = _dict.get('key_lifetime')
-        else:
-            raise ValueError(
-                'Required property \'key_lifetime\' not present in IPsecPolicy JSON'
-            )
-        if 'pfs' in _dict:
-            args['pfs'] = _dict.get('pfs')
-        else:
-            raise ValueError(
-                'Required property \'pfs\' not present in IPsecPolicy JSON')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in IPsecPolicy JSON'
             )
         if 'connections' in _dict:
             args['connections'] = [
@@ -10619,6 +10555,51 @@ class IPsecPolicy():
             raise ValueError(
                 'Required property \'encapsulation_mode\' not present in IPsecPolicy JSON'
             )
+        if 'encryption_algorithm' in _dict:
+            args['encryption_algorithm'] = _dict.get('encryption_algorithm')
+        else:
+            raise ValueError(
+                'Required property \'encryption_algorithm\' not present in IPsecPolicy JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in IPsecPolicy JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in IPsecPolicy JSON')
+        if 'key_lifetime' in _dict:
+            args['key_lifetime'] = _dict.get('key_lifetime')
+        else:
+            raise ValueError(
+                'Required property \'key_lifetime\' not present in IPsecPolicy JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in IPsecPolicy JSON')
+        if 'pfs' in _dict:
+            args['pfs'] = _dict.get('pfs')
+        else:
+            raise ValueError(
+                'Required property \'pfs\' not present in IPsecPolicy JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in IPsecPolicy JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in IPsecPolicy JSON'
+            )
         if 'transform_protocol' in _dict:
             args['transform_protocol'] = _dict.get('transform_protocol')
         else:
@@ -10635,26 +10616,9 @@ class IPsecPolicy():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'authentication_algorithm'
                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
-        if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
-            _dict['encryption_algorithm'] = self.encryption_algorithm
-        if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
-            _dict['key_lifetime'] = self.key_lifetime
-        if hasattr(self, 'pfs') and self.pfs is not None:
-            _dict['pfs'] = self.pfs
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
         if hasattr(self, 'created_at') and self.created_at is not None:
@@ -10663,6 +10627,23 @@ class IPsecPolicy():
                 self,
                 'encapsulation_mode') and self.encapsulation_mode is not None:
             _dict['encapsulation_mode'] = self.encapsulation_mode
+        if hasattr(self, 'encryption_algorithm'
+                  ) and self.encryption_algorithm is not None:
+            _dict['encryption_algorithm'] = self.encryption_algorithm
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
+            _dict['key_lifetime'] = self.key_lifetime
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'pfs') and self.pfs is not None:
+            _dict['pfs'] = self.pfs
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         if hasattr(
                 self,
                 'transform_protocol') and self.transform_protocol is not None:
@@ -10687,12 +10668,6 @@ class IPsecPolicy():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-    class ResourceTypeEnum(str, Enum):
-        """
-        The resource type.
-        """
-        IPSEC_POLICY = 'ipsec_policy'
-
     class AuthenticationAlgorithmEnum(str, Enum):
         """
         The authentication algorithm.
@@ -10700,6 +10675,12 @@ class IPsecPolicy():
         MD5 = 'md5'
         SHA1 = 'sha1'
         SHA256 = 'sha256'
+
+    class EncapsulationModeEnum(str, Enum):
+        """
+        The encapsulation mode used. Only `tunnel` is supported.
+        """
+        TUNNEL = 'tunnel'
 
     class EncryptionAlgorithmEnum(str, Enum):
         """
@@ -10718,11 +10699,11 @@ class IPsecPolicy():
         GROUP_2 = 'group_2'
         GROUP_5 = 'group_5'
 
-    class EncapsulationModeEnum(str, Enum):
+    class ResourceTypeEnum(str, Enum):
         """
-        The encapsulation mode used. Only `tunnel` is supported.
+        The resource type.
         """
-        TUNNEL = 'tunnel'
+        IPSEC_POLICY = 'ipsec_policy'
 
     class TransformProtocolEnum(str, Enum):
         """
@@ -10735,42 +10716,41 @@ class IPsecPolicyCollection():
     """
     IPsecPolicyCollection.
 
-    :attr IPsecPolicyCollectionFirst first: A reference to the first page of
-          resources.
+    :attr IPsecPolicyCollectionFirst first: A link to the first page of resources.
+    :attr List[IPsecPolicy] ipsec_policies: Collection of IPsec policies.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr IPsecPolicyCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr IPsecPolicyCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr int total_count: The total number of resources across all pages.
-    :attr List[IPsecPolicy] ipsec_policies: Collection of IPsec policies.
     """
 
     def __init__(self,
                  first: 'IPsecPolicyCollectionFirst',
+                 ipsec_policies: List['IPsecPolicy'],
                  limit: int,
                  total_count: int,
-                 ipsec_policies: List['IPsecPolicy'],
                  *,
                  next: 'IPsecPolicyCollectionNext' = None) -> None:
         """
         Initialize a IPsecPolicyCollection object.
 
-        :param IPsecPolicyCollectionFirst first: A reference to the first page of
+        :param IPsecPolicyCollectionFirst first: A link to the first page of
                resources.
+        :param List[IPsecPolicy] ipsec_policies: Collection of IPsec policies.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param int total_count: The total number of resources across all pages.
-        :param List[IPsecPolicy] ipsec_policies: Collection of IPsec policies.
-        :param IPsecPolicyCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param IPsecPolicyCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.ipsec_policies = ipsec_policies
         self.limit = limit
         self.next = next
         self.total_count = total_count
-        self.ipsec_policies = ipsec_policies
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IPsecPolicyCollection':
@@ -10782,6 +10762,14 @@ class IPsecPolicyCollection():
         else:
             raise ValueError(
                 'Required property \'first\' not present in IPsecPolicyCollection JSON'
+            )
+        if 'ipsec_policies' in _dict:
+            args['ipsec_policies'] = [
+                IPsecPolicy.from_dict(x) for x in _dict.get('ipsec_policies')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'ipsec_policies\' not present in IPsecPolicyCollection JSON'
             )
         if 'limit' in _dict:
             args['limit'] = _dict.get('limit')
@@ -10798,14 +10786,6 @@ class IPsecPolicyCollection():
             raise ValueError(
                 'Required property \'total_count\' not present in IPsecPolicyCollection JSON'
             )
-        if 'ipsec_policies' in _dict:
-            args['ipsec_policies'] = [
-                IPsecPolicy.from_dict(x) for x in _dict.get('ipsec_policies')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'ipsec_policies\' not present in IPsecPolicyCollection JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -10818,14 +10798,14 @@ class IPsecPolicyCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'ipsec_policies') and self.ipsec_policies is not None:
+            _dict['ipsec_policies'] = [x.to_dict() for x in self.ipsec_policies]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
-        if hasattr(self, 'ipsec_policies') and self.ipsec_policies is not None:
-            _dict['ipsec_policies'] = [x.to_dict() for x in self.ipsec_policies]
         return _dict
 
     def _to_dict(self):
@@ -10849,16 +10829,16 @@ class IPsecPolicyCollection():
 
 class IPsecPolicyCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a IPsecPolicyCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -10907,17 +10887,17 @@ class IPsecPolicyCollectionFirst():
 
 class IPsecPolicyCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a IPsecPolicyCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -10984,42 +10964,40 @@ class IPsecPolicyPatch():
     """
     IPsecPolicyPatch.
 
-    :attr str name: (optional) The user-defined name for this IPsec policy.
     :attr str authentication_algorithm: (optional) The authentication algorithm.
     :attr str encryption_algorithm: (optional) The encryption algorithm.
     :attr int key_lifetime: (optional) The key lifetime in seconds.
+    :attr str name: (optional) The user-defined name for this IPsec policy.
     :attr str pfs: (optional) Perfect Forward Secrecy.
     """
 
     def __init__(self,
                  *,
-                 name: str = None,
                  authentication_algorithm: str = None,
                  encryption_algorithm: str = None,
                  key_lifetime: int = None,
+                 name: str = None,
                  pfs: str = None) -> None:
         """
         Initialize a IPsecPolicyPatch object.
 
-        :param str name: (optional) The user-defined name for this IPsec policy.
         :param str authentication_algorithm: (optional) The authentication
                algorithm.
         :param str encryption_algorithm: (optional) The encryption algorithm.
         :param int key_lifetime: (optional) The key lifetime in seconds.
+        :param str name: (optional) The user-defined name for this IPsec policy.
         :param str pfs: (optional) Perfect Forward Secrecy.
         """
-        self.name = name
         self.authentication_algorithm = authentication_algorithm
         self.encryption_algorithm = encryption_algorithm
         self.key_lifetime = key_lifetime
+        self.name = name
         self.pfs = pfs
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'IPsecPolicyPatch':
         """Initialize a IPsecPolicyPatch object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'authentication_algorithm' in _dict:
             args['authentication_algorithm'] = _dict.get(
                 'authentication_algorithm')
@@ -11027,6 +11005,8 @@ class IPsecPolicyPatch():
             args['encryption_algorithm'] = _dict.get('encryption_algorithm')
         if 'key_lifetime' in _dict:
             args['key_lifetime'] = _dict.get('key_lifetime')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'pfs' in _dict:
             args['pfs'] = _dict.get('pfs')
         return cls(**args)
@@ -11039,8 +11019,6 @@ class IPsecPolicyPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'authentication_algorithm'
                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
@@ -11049,6 +11027,8 @@ class IPsecPolicyPatch():
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'pfs') and self.pfs is not None:
             _dict['pfs'] = self.pfs
         return _dict
@@ -11101,24 +11081,24 @@ class IPsecPolicyReference():
     """
     IPsecPolicyReference.
 
-    :attr str id: The unique identifier for this IPsec policy.
     :attr str href: The IPsec policy's canonical URL.
+    :attr str id: The unique identifier for this IPsec policy.
     :attr str name: The user-defined name for this IPsec policy.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, href: str, name: str,
+    def __init__(self, href: str, id: str, name: str,
                  resource_type: str) -> None:
         """
         Initialize a IPsecPolicyReference object.
 
-        :param str id: The unique identifier for this IPsec policy.
         :param str href: The IPsec policy's canonical URL.
+        :param str id: The unique identifier for this IPsec policy.
         :param str name: The user-defined name for this IPsec policy.
         :param str resource_type: The resource type.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
 
@@ -11126,17 +11106,17 @@ class IPsecPolicyReference():
     def from_dict(cls, _dict: Dict) -> 'IPsecPolicyReference':
         """Initialize a IPsecPolicyReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in IPsecPolicyReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in IPsecPolicyReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in IPsecPolicyReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -11160,10 +11140,10 @@ class IPsecPolicyReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
@@ -11199,33 +11179,33 @@ class Image():
     """
     Image.
 
-    :attr str id: The unique identifier for this image.
+    :attr datetime created_at: The date and time that the image was created.
     :attr str crn: The CRN for this image.
+    :attr ImageFile file: Details for the stored image file.
     :attr str href: The URL for this image.
-    :attr str name: The user-defined or system-provided name for this image.
+    :attr str id: The unique identifier for this image.
     :attr int minimum_provisioned_size: (optional) The minimum size (in gigabytes)
           of a volume onto which this image may be provisioned.
           This property may be absent if the image has a `status` of `pending`,
           `tentative`, or
           `failed`.
-    :attr ResourceGroupReference resource_group: The resource group for this image.
-    :attr datetime created_at: The date and time that the image was created.
-    :attr ImageFile file: Details for the stored image file.
+    :attr str name: The user-defined or system-provided name for this image.
     :attr OperatingSystem operating_system: (optional) The operating system included
           in this image.
+    :attr ResourceGroupReference resource_group: The resource group for this image.
     :attr str status: The status of this image.
     :attr str visibility: Whether the image is publicly visible or private to the
           account.
     """
 
     def __init__(self,
-                 id: str,
+                 created_at: datetime,
                  crn: str,
+                 file: 'ImageFile',
                  href: str,
+                 id: str,
                  name: str,
                  resource_group: 'ResourceGroupReference',
-                 created_at: datetime,
-                 file: 'ImageFile',
                  status: str,
                  visibility: str,
                  *,
@@ -11234,14 +11214,14 @@ class Image():
         """
         Initialize a Image object.
 
-        :param str id: The unique identifier for this image.
+        :param datetime created_at: The date and time that the image was created.
         :param str crn: The CRN for this image.
+        :param ImageFile file: Details for the stored image file.
         :param str href: The URL for this image.
+        :param str id: The unique identifier for this image.
         :param str name: The user-defined or system-provided name for this image.
         :param ResourceGroupReference resource_group: The resource group for this
                image.
-        :param datetime created_at: The date and time that the image was created.
-        :param ImageFile file: Details for the stored image file.
         :param str status: The status of this image.
         :param str visibility: Whether the image is publicly visible or private to
                the account.
@@ -11253,15 +11233,15 @@ class Image():
         :param OperatingSystem operating_system: (optional) The operating system
                included in this image.
         """
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
-        self.minimum_provisioned_size = minimum_provisioned_size
-        self.resource_group = resource_group
         self.created_at = created_at
+        self.crn = crn
         self.file = file
+        self.href = href
+        self.id = id
+        self.minimum_provisioned_size = minimum_provisioned_size
+        self.name = name
         self.operating_system = operating_system
+        self.resource_group = resource_group
         self.status = status
         self.visibility = visibility
 
@@ -11269,29 +11249,42 @@ class Image():
     def from_dict(cls, _dict: Dict) -> 'Image':
         """Initialize a Image object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'id\' not present in Image JSON')
+                'Required property \'created_at\' not present in Image JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in Image JSON')
+        if 'file' in _dict:
+            args['file'] = ImageFile.from_dict(_dict.get('file'))
+        else:
+            raise ValueError(
+                'Required property \'file\' not present in Image JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in Image JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in Image JSON')
+        if 'minimum_provisioned_size' in _dict:
+            args['minimum_provisioned_size'] = _dict.get(
+                'minimum_provisioned_size')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError(
                 'Required property \'name\' not present in Image JSON')
-        if 'minimum_provisioned_size' in _dict:
-            args['minimum_provisioned_size'] = _dict.get(
-                'minimum_provisioned_size')
+        if 'operating_system' in _dict:
+            args['operating_system'] = OperatingSystem.from_dict(
+                _dict.get('operating_system'))
         if 'resource_group' in _dict:
             args['resource_group'] = ResourceGroupReference.from_dict(
                 _dict.get('resource_group'))
@@ -11299,19 +11292,6 @@ class Image():
             raise ValueError(
                 'Required property \'resource_group\' not present in Image JSON'
             )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in Image JSON')
-        if 'file' in _dict:
-            args['file'] = ImageFile.from_dict(_dict.get('file'))
-        else:
-            raise ValueError(
-                'Required property \'file\' not present in Image JSON')
-        if 'operating_system' in _dict:
-            args['operating_system'] = OperatingSystem.from_dict(
-                _dict.get('operating_system'))
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -11332,26 +11312,26 @@ class Image():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'file') and self.file is not None:
+            _dict['file'] = self.file.to_dict()
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'minimum_provisioned_size'
                   ) and self.minimum_provisioned_size is not None:
             _dict['minimum_provisioned_size'] = self.minimum_provisioned_size
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'file') and self.file is not None:
-            _dict['file'] = self.file.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self,
                    'operating_system') and self.operating_system is not None:
             _dict['operating_system'] = self.operating_system.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'visibility') and self.visibility is not None:
@@ -11384,6 +11364,7 @@ class Image():
         DELETING = 'deleting'
         DEPRECATED = 'deprecated'
         FAILED = 'failed'
+        UNUSABLE = 'unusable'
         PENDING = 'pending'
         TENTATIVE = 'tentative'
 
@@ -11399,37 +11380,36 @@ class ImageCollection():
     """
     ImageCollection.
 
-    :attr ImageCollectionFirst first: A reference to the first page of resources.
+    :attr ImageCollectionFirst first: A link to the first page of resources.
+    :attr List[Image] images: Collection of images.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr ImageCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr ImageCollectionNext next: (optional) A link to the next page of resources.
+          This property is present for all pages
           except the last page.
-    :attr List[Image] images: Collection of images.
     """
 
     def __init__(self,
                  first: 'ImageCollectionFirst',
-                 limit: int,
                  images: List['Image'],
+                 limit: int,
                  *,
                  next: 'ImageCollectionNext' = None) -> None:
         """
         Initialize a ImageCollection object.
 
-        :param ImageCollectionFirst first: A reference to the first page of
-               resources.
+        :param ImageCollectionFirst first: A link to the first page of resources.
+        :param List[Image] images: Collection of images.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param List[Image] images: Collection of images.
-        :param ImageCollectionNext next: (optional) A reference to the next page of
-               resources; this reference is included for all pages
+        :param ImageCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.images = images
         self.limit = limit
         self.next = next
-        self.images = images
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ImageCollection':
@@ -11441,6 +11421,12 @@ class ImageCollection():
             raise ValueError(
                 'Required property \'first\' not present in ImageCollection JSON'
             )
+        if 'images' in _dict:
+            args['images'] = [Image.from_dict(x) for x in _dict.get('images')]
+        else:
+            raise ValueError(
+                'Required property \'images\' not present in ImageCollection JSON'
+            )
         if 'limit' in _dict:
             args['limit'] = _dict.get('limit')
         else:
@@ -11449,12 +11435,6 @@ class ImageCollection():
             )
         if 'next' in _dict:
             args['next'] = ImageCollectionNext.from_dict(_dict.get('next'))
-        if 'images' in _dict:
-            args['images'] = [Image.from_dict(x) for x in _dict.get('images')]
-        else:
-            raise ValueError(
-                'Required property \'images\' not present in ImageCollection JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -11467,12 +11447,12 @@ class ImageCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'images') and self.images is not None:
+            _dict['images'] = [x.to_dict() for x in self.images]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
-        if hasattr(self, 'images') and self.images is not None:
-            _dict['images'] = [x.to_dict() for x in self.images]
         return _dict
 
     def _to_dict(self):
@@ -11496,16 +11476,16 @@ class ImageCollection():
 
 class ImageCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a ImageCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -11554,17 +11534,17 @@ class ImageCollectionFirst():
 
 class ImageCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a ImageCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -11841,35 +11821,30 @@ class ImageReference():
     """
     ImageReference.
 
-    :attr str id: The unique identifier for this image.
     :attr str crn: The CRN for this image.
     :attr str href: The URL for this image.
+    :attr str id: The unique identifier for this image.
     :attr str name: The user-defined or system-provided name for this image.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a ImageReference object.
 
-        :param str id: The unique identifier for this image.
         :param str crn: The CRN for this image.
         :param str href: The URL for this image.
+        :param str id: The unique identifier for this image.
         :param str name: The user-defined or system-provided name for this image.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ImageReference':
         """Initialize a ImageReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in ImageReference JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -11880,6 +11855,11 @@ class ImageReference():
         else:
             raise ValueError(
                 'Required property \'href\' not present in ImageReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in ImageReference JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -11895,12 +11875,12 @@ class ImageReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -11928,22 +11908,20 @@ class Instance():
     """
     Instance.
 
-    :attr str id: The unique identifier for this virtual server instance.
-    :attr str crn: The CRN for this virtual server instance.
-    :attr str href: The URL for this virtual server instance.
-    :attr str name: The user-defined name for this virtual server instance (and
-          default system hostname).
-    :attr ResourceGroupReference resource_group: The resource group for this
-          instance.
     :attr int bandwidth: The total bandwidth (in megabits per second) shared across
           the virtual server instance's network interfaces.
     :attr VolumeAttachmentReferenceInstanceContext boot_volume_attachment: Boot
           volume attachment.
     :attr datetime created_at: The date and time that the virtual server instance
           was created.
+    :attr str crn: The CRN for this virtual server instance.
+    :attr str href: The URL for this virtual server instance.
+    :attr str id: The unique identifier for this virtual server instance.
     :attr ImageReference image: (optional) The image the virtual server instance was
           provisioned from.
     :attr int memory: The amount of memory in gigabytes.
+    :attr str name: The user-defined name for this virtual server instance (and
+          default system hostname).
     :attr List[NetworkInterfaceInstanceContextReference] network_interfaces:
           Collection of the virtual server instance's network interfaces, including the
           primary network interface.
@@ -11951,6 +11929,8 @@ class Instance():
           Primary network interface.
     :attr InstanceProfileReference profile: The profile this virtual server instance
           uses.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          instance.
     :attr str status: The status of the virtual server instance.
     :attr InstanceVCPU vcpu: The virtual server instance VCPU configuration.
     :attr List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
@@ -11962,20 +11942,20 @@ class Instance():
 
     def __init__(
             self,
-            id: str,
-            crn: str,
-            href: str,
-            name: str,
-            resource_group: 'ResourceGroupReference',
             bandwidth: int,
             boot_volume_attachment: 'VolumeAttachmentReferenceInstanceContext',
             created_at: datetime,
+            crn: str,
+            href: str,
+            id: str,
             memory: int,
+            name: str,
             network_interfaces: List[
                 'NetworkInterfaceInstanceContextReference'],
             primary_network_interface:
         'NetworkInterfaceInstanceContextReference',
             profile: 'InstanceProfileReference',
+            resource_group: 'ResourceGroupReference',
             status: str,
             vcpu: 'InstanceVCPU',
             volume_attachments: List[
@@ -11987,20 +11967,18 @@ class Instance():
         """
         Initialize a Instance object.
 
-        :param str id: The unique identifier for this virtual server instance.
-        :param str crn: The CRN for this virtual server instance.
-        :param str href: The URL for this virtual server instance.
-        :param str name: The user-defined name for this virtual server instance
-               (and default system hostname).
-        :param ResourceGroupReference resource_group: The resource group for this
-               instance.
         :param int bandwidth: The total bandwidth (in megabits per second) shared
                across the virtual server instance's network interfaces.
         :param VolumeAttachmentReferenceInstanceContext boot_volume_attachment:
                Boot volume attachment.
         :param datetime created_at: The date and time that the virtual server
                instance was created.
+        :param str crn: The CRN for this virtual server instance.
+        :param str href: The URL for this virtual server instance.
+        :param str id: The unique identifier for this virtual server instance.
         :param int memory: The amount of memory in gigabytes.
+        :param str name: The user-defined name for this virtual server instance
+               (and default system hostname).
         :param List[NetworkInterfaceInstanceContextReference] network_interfaces:
                Collection of the virtual server instance's network interfaces, including
                the primary network interface.
@@ -12008,6 +11986,8 @@ class Instance():
                Primary network interface.
         :param InstanceProfileReference profile: The profile this virtual server
                instance uses.
+        :param ResourceGroupReference resource_group: The resource group for this
+               instance.
         :param str status: The status of the virtual server instance.
         :param InstanceVCPU vcpu: The virtual server instance VCPU configuration.
         :param List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
@@ -12018,19 +11998,19 @@ class Instance():
         :param ImageReference image: (optional) The image the virtual server
                instance was provisioned from.
         """
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
-        self.resource_group = resource_group
         self.bandwidth = bandwidth
         self.boot_volume_attachment = boot_volume_attachment
         self.created_at = created_at
+        self.crn = crn
+        self.href = href
+        self.id = id
         self.image = image
         self.memory = memory
+        self.name = name
         self.network_interfaces = network_interfaces
         self.primary_network_interface = primary_network_interface
         self.profile = profile
+        self.resource_group = resource_group
         self.status = status
         self.vcpu = vcpu
         self.volume_attachments = volume_attachments
@@ -12041,33 +12021,6 @@ class Instance():
     def from_dict(cls, _dict: Dict) -> 'Instance':
         """Initialize a Instance object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in Instance JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError(
-                'Required property \'crn\' not present in Instance JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in Instance JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in Instance JSON')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in Instance JSON'
-            )
         if 'bandwidth' in _dict:
             args['bandwidth'] = _dict.get('bandwidth')
         else:
@@ -12086,6 +12039,21 @@ class Instance():
         else:
             raise ValueError(
                 'Required property \'created_at\' not present in Instance JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in Instance JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in Instance JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in Instance JSON')
         if 'image' in _dict:
             args['image'] = ImageReference.from_dict(_dict.get('image'))
         if 'memory' in _dict:
@@ -12093,6 +12061,11 @@ class Instance():
         else:
             raise ValueError(
                 'Required property \'memory\' not present in Instance JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Instance JSON')
         if 'network_interfaces' in _dict:
             args['network_interfaces'] = [
                 NetworkInterfaceInstanceContextReference.from_dict(x)
@@ -12116,6 +12089,13 @@ class Instance():
         else:
             raise ValueError(
                 'Required property \'profile\' not present in Instance JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in Instance JSON'
+            )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -12155,16 +12135,6 @@ class Instance():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'boot_volume_attachment'
@@ -12174,10 +12144,18 @@ class Instance():
                 )
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'image') and self.image is not None:
             _dict['image'] = self.image.to_dict()
         if hasattr(self, 'memory') and self.memory is not None:
             _dict['memory'] = self.memory
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(
                 self,
                 'network_interfaces') and self.network_interfaces is not None:
@@ -12191,6 +12169,8 @@ class Instance():
                 )
         if hasattr(self, 'profile') and self.profile is not None:
             _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'vcpu') and self.vcpu is not None:
@@ -12245,66 +12225,51 @@ class InstanceAction():
     """
     InstanceAction.
 
-    :attr str id: The identifier for this instance action.
-    :attr str href: The URL for this instance action.
-    :attr str type: The type of action.
     :attr datetime completed_at: (optional) The date and time that the action was
           completed.
     :attr datetime created_at: The date and time that the action was created.
+    :attr str href: The URL for this instance action.
+    :attr str id: The identifier for this instance action.
     :attr datetime started_at: (optional) The date and time that the action was
           started.
     :attr str status: The current status of this action.
+    :attr str type: The type of action.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 type: str,
                  created_at: datetime,
+                 href: str,
+                 id: str,
                  status: str,
+                 type: str,
                  *,
                  completed_at: datetime = None,
                  started_at: datetime = None) -> None:
         """
         Initialize a InstanceAction object.
 
-        :param str id: The identifier for this instance action.
-        :param str href: The URL for this instance action.
-        :param str type: The type of action.
         :param datetime created_at: The date and time that the action was created.
+        :param str href: The URL for this instance action.
+        :param str id: The identifier for this instance action.
         :param str status: The current status of this action.
+        :param str type: The type of action.
         :param datetime completed_at: (optional) The date and time that the action
                was completed.
         :param datetime started_at: (optional) The date and time that the action
                was started.
         """
-        self.id = id
-        self.href = href
-        self.type = type
         self.completed_at = completed_at
         self.created_at = created_at
+        self.href = href
+        self.id = id
         self.started_at = started_at
         self.status = status
+        self.type = type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceAction':
         """Initialize a InstanceAction object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in InstanceAction JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in InstanceAction JSON')
-        if 'type' in _dict:
-            args['type'] = _dict.get('type')
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in InstanceAction JSON')
         if 'completed_at' in _dict:
             args['completed_at'] = string_to_datetime(_dict.get('completed_at'))
         if 'created_at' in _dict:
@@ -12313,6 +12278,16 @@ class InstanceAction():
             raise ValueError(
                 'Required property \'created_at\' not present in InstanceAction JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceAction JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceAction JSON')
         if 'started_at' in _dict:
             args['started_at'] = string_to_datetime(_dict.get('started_at'))
         if 'status' in _dict:
@@ -12321,6 +12296,11 @@ class InstanceAction():
             raise ValueError(
                 'Required property \'status\' not present in InstanceAction JSON'
             )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceAction JSON')
         return cls(**args)
 
     @classmethod
@@ -12331,20 +12311,20 @@ class InstanceAction():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'completed_at') and self.completed_at is not None:
             _dict['completed_at'] = datetime_to_string(self.completed_at)
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'started_at') and self.started_at is not None:
             _dict['started_at'] = datetime_to_string(self.started_at)
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         return _dict
 
     def _to_dict(self):
@@ -12365,15 +12345,6 @@ class InstanceAction():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-    class TypeEnum(str, Enum):
-        """
-        The type of action.
-        """
-        REBOOT = 'reboot'
-        START = 'start'
-        STOP = 'stop'
-        RESET = 'reset'
-
     class StatusEnum(str, Enum):
         """
         The current status of this action.
@@ -12383,46 +12354,55 @@ class InstanceAction():
         PENDING = 'pending'
         RUNNING = 'running'
 
+    class TypeEnum(str, Enum):
+        """
+        The type of action.
+        """
+        REBOOT = 'reboot'
+        START = 'start'
+        STOP = 'stop'
+        RESET = 'reset'
+
 
 class InstanceCollection():
     """
     InstanceCollection.
 
-    :attr InstanceCollectionFirst first: A reference to the first page of resources.
+    :attr InstanceCollectionFirst first: A link to the first page of resources.
+    :attr List[Instance] instances: Collection of virtual server instances.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr InstanceCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr InstanceCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr int total_count: The total number of resources across all pages.
-    :attr List[Instance] instances: Collection of virtual server instances.
     """
 
     def __init__(self,
                  first: 'InstanceCollectionFirst',
+                 instances: List['Instance'],
                  limit: int,
                  total_count: int,
-                 instances: List['Instance'],
                  *,
                  next: 'InstanceCollectionNext' = None) -> None:
         """
         Initialize a InstanceCollection object.
 
-        :param InstanceCollectionFirst first: A reference to the first page of
+        :param InstanceCollectionFirst first: A link to the first page of
                resources.
+        :param List[Instance] instances: Collection of virtual server instances.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param int total_count: The total number of resources across all pages.
-        :param List[Instance] instances: Collection of virtual server instances.
-        :param InstanceCollectionNext next: (optional) A reference to the next page
-               of resources; this reference is included for all pages
+        :param InstanceCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.instances = instances
         self.limit = limit
         self.next = next
         self.total_count = total_count
-        self.instances = instances
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceCollection':
@@ -12434,6 +12414,14 @@ class InstanceCollection():
         else:
             raise ValueError(
                 'Required property \'first\' not present in InstanceCollection JSON'
+            )
+        if 'instances' in _dict:
+            args['instances'] = [
+                Instance.from_dict(x) for x in _dict.get('instances')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'instances\' not present in InstanceCollection JSON'
             )
         if 'limit' in _dict:
             args['limit'] = _dict.get('limit')
@@ -12449,14 +12437,6 @@ class InstanceCollection():
             raise ValueError(
                 'Required property \'total_count\' not present in InstanceCollection JSON'
             )
-        if 'instances' in _dict:
-            args['instances'] = [
-                Instance.from_dict(x) for x in _dict.get('instances')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'instances\' not present in InstanceCollection JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -12469,14 +12449,14 @@ class InstanceCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'instances') and self.instances is not None:
+            _dict['instances'] = [x.to_dict() for x in self.instances]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
-        if hasattr(self, 'instances') and self.instances is not None:
-            _dict['instances'] = [x.to_dict() for x in self.instances]
         return _dict
 
     def _to_dict(self):
@@ -12500,16 +12480,16 @@ class InstanceCollection():
 
 class InstanceCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a InstanceCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -12558,17 +12538,17 @@ class InstanceCollectionFirst():
 
 class InstanceCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a InstanceCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -12836,67 +12816,71 @@ class InstanceProfile():
     """
     InstanceProfile.
 
-    :attr str name: The name for this virtual server instance profile.
-    :attr str crn: The CRN for this virtual server instance profile.
-    :attr str href: The URL for this virtual server instance profile.
     :attr InstanceProfileBandwidth bandwidth:
-    :attr InstanceProfilePortSpeed port_speed:
+    :attr str crn: The CRN for this virtual server instance profile.
     :attr str family: (optional) The product family this virtual server instance
           profile belongs to.
+    :attr str href: The URL for this virtual server instance profile.
+    :attr str name: The globally unique name for this virtual server instance
+          profile.
+    :attr InstanceProfilePortSpeed port_speed:
     """
 
     def __init__(self,
-                 name: str,
+                 bandwidth: 'InstanceProfileBandwidth',
                  crn: str,
                  href: str,
-                 bandwidth: 'InstanceProfileBandwidth',
+                 name: str,
                  port_speed: 'InstanceProfilePortSpeed',
                  *,
                  family: str = None) -> None:
         """
         Initialize a InstanceProfile object.
 
-        :param str name: The name for this virtual server instance profile.
+        :param InstanceProfileBandwidth bandwidth:
         :param str crn: The CRN for this virtual server instance profile.
         :param str href: The URL for this virtual server instance profile.
-        :param InstanceProfileBandwidth bandwidth:
+        :param str name: The globally unique name for this virtual server instance
+               profile.
         :param InstanceProfilePortSpeed port_speed:
         :param str family: (optional) The product family this virtual server
                instance profile belongs to.
         """
-        self.name = name
-        self.crn = crn
-        self.href = href
         self.bandwidth = bandwidth
-        self.port_speed = port_speed
+        self.crn = crn
         self.family = family
+        self.href = href
+        self.name = name
+        self.port_speed = port_speed
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceProfile':
         """Initialize a InstanceProfile object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'bandwidth' in _dict:
+            args['bandwidth'] = _dict.get('bandwidth')
         else:
             raise ValueError(
-                'Required property \'name\' not present in InstanceProfile JSON'
+                'Required property \'bandwidth\' not present in InstanceProfile JSON'
             )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in InstanceProfile JSON')
+        if 'family' in _dict:
+            args['family'] = _dict.get('family')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in InstanceProfile JSON'
             )
-        if 'bandwidth' in _dict:
-            args['bandwidth'] = _dict.get('bandwidth')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'bandwidth\' not present in InstanceProfile JSON'
+                'Required property \'name\' not present in InstanceProfile JSON'
             )
         if 'port_speed' in _dict:
             args['port_speed'] = _dict.get('port_speed')
@@ -12904,8 +12888,6 @@ class InstanceProfile():
             raise ValueError(
                 'Required property \'port_speed\' not present in InstanceProfile JSON'
             )
-        if 'family' in _dict:
-            args['family'] = _dict.get('family')
         return cls(**args)
 
     @classmethod
@@ -12916,24 +12898,24 @@ class InstanceProfile():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             if isinstance(self.bandwidth, dict):
                 _dict['bandwidth'] = self.bandwidth
             else:
                 _dict['bandwidth'] = self.bandwidth.to_dict()
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'family') and self.family is not None:
+            _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             if isinstance(self.port_speed, dict):
                 _dict['port_speed'] = self.port_speed
             else:
                 _dict['port_speed'] = self.port_speed.to_dict()
-        if hasattr(self, 'family') and self.family is not None:
-            _dict['family'] = self.family
         return _dict
 
     def _to_dict(self):
@@ -12979,44 +12961,44 @@ class InstanceProfileCollection():
     """
     InstanceProfileCollection.
 
-    :attr InstanceProfileCollectionFirst first: A reference to the first page of
+    :attr InstanceProfileCollectionFirst first: A link to the first page of
           resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr InstanceProfileCollectionNext next: (optional) A reference to the next
-          page of resources; this reference is included for all pages
+    :attr InstanceProfileCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
-    :attr int total_count: The total number of resources across all pages.
     :attr List[InstanceProfile] profiles: Collection of virtual server instance
           profiles.
+    :attr int total_count: The total number of resources across all pages.
     """
 
     def __init__(self,
                  first: 'InstanceProfileCollectionFirst',
                  limit: int,
-                 total_count: int,
                  profiles: List['InstanceProfile'],
+                 total_count: int,
                  *,
                  next: 'InstanceProfileCollectionNext' = None) -> None:
         """
         Initialize a InstanceProfileCollection object.
 
-        :param InstanceProfileCollectionFirst first: A reference to the first page
-               of resources.
+        :param InstanceProfileCollectionFirst first: A link to the first page of
+               resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param int total_count: The total number of resources across all pages.
         :param List[InstanceProfile] profiles: Collection of virtual server
                instance profiles.
-        :param InstanceProfileCollectionNext next: (optional) A reference to the
-               next page of resources; this reference is included for all pages
+        :param int total_count: The total number of resources across all pages.
+        :param InstanceProfileCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
         self.limit = limit
         self.next = next
-        self.total_count = total_count
         self.profiles = profiles
+        self.total_count = total_count
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceProfileCollection':
@@ -13038,12 +13020,6 @@ class InstanceProfileCollection():
         if 'next' in _dict:
             args['next'] = InstanceProfileCollectionNext.from_dict(
                 _dict.get('next'))
-        if 'total_count' in _dict:
-            args['total_count'] = _dict.get('total_count')
-        else:
-            raise ValueError(
-                'Required property \'total_count\' not present in InstanceProfileCollection JSON'
-            )
         if 'profiles' in _dict:
             args['profiles'] = [
                 InstanceProfile.from_dict(x) for x in _dict.get('profiles')
@@ -13051,6 +13027,12 @@ class InstanceProfileCollection():
         else:
             raise ValueError(
                 'Required property \'profiles\' not present in InstanceProfileCollection JSON'
+            )
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in InstanceProfileCollection JSON'
             )
         return cls(**args)
 
@@ -13068,10 +13050,10 @@ class InstanceProfileCollection():
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
-        if hasattr(self, 'total_count') and self.total_count is not None:
-            _dict['total_count'] = self.total_count
         if hasattr(self, 'profiles') and self.profiles is not None:
             _dict['profiles'] = [x.to_dict() for x in self.profiles]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
         return _dict
 
     def _to_dict(self):
@@ -13095,16 +13077,16 @@ class InstanceProfileCollection():
 
 class InstanceProfileCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a InstanceProfileCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -13153,17 +13135,17 @@ class InstanceProfileCollectionFirst():
 
 class InstanceProfileCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a InstanceProfileCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -13252,33 +13234,29 @@ class InstanceProfileReference():
     """
     InstanceProfileReference.
 
-    :attr str name: The name for this virtual server instance profile.
     :attr str crn: The CRN for this virtual server instance profile.
     :attr str href: The URL for this virtual server instance profile.
+    :attr str name: The globally unique name for this virtual server instance
+          profile.
     """
 
-    def __init__(self, name: str, crn: str, href: str) -> None:
+    def __init__(self, crn: str, href: str, name: str) -> None:
         """
         Initialize a InstanceProfileReference object.
 
-        :param str name: The name for this virtual server instance profile.
         :param str crn: The CRN for this virtual server instance profile.
         :param str href: The URL for this virtual server instance profile.
+        :param str name: The globally unique name for this virtual server instance
+               profile.
         """
-        self.name = name
         self.crn = crn
         self.href = href
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceProfileReference':
         """Initialize a InstanceProfileReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in InstanceProfileReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -13291,6 +13269,12 @@ class InstanceProfileReference():
             raise ValueError(
                 'Required property \'href\' not present in InstanceProfileReference JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceProfileReference JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -13301,12 +13285,12 @@ class InstanceProfileReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -13332,9 +13316,6 @@ class InstancePrototype():
     """
     InstancePrototype.
 
-    :attr str name: (optional) The user-defined name for this virtual server
-          instance (and default system hostname). If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Up to 10 keys may be
           provided; if no keys are provided the instance will be inaccessible unless the
@@ -13343,10 +13324,16 @@ class InstancePrototype():
           Keys will be made available to the virtual server instance as cloud-init vendor
           data. For cloud-init enabled images, these keys will also be added as SSH
           authorized keys for the administrative user.
+    :attr str name: (optional) The user-defined name for this virtual server
+          instance (and default system hostname). If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
+    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
+          use. If unspecified, the account's [default resource
+          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -13354,28 +13341,22 @@ class InstancePrototype():
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If provided, must match the
           VPC tied to the subnets of the instance's network interfaces.
-    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
-          use. If unspecified, the account's [default resource
-          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
     """
 
     def __init__(self,
                  *,
-                 name: str = None,
                  keys: List['KeyIdentity'] = None,
+                 name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  profile: 'InstanceProfileIdentity' = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
                  user_data: str = None,
                  volume_attachments: List[
                      'VolumeAttachmentPrototypeInstanceContext'] = None,
-                 vpc: 'VPCIdentity' = None,
-                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+                 vpc: 'VPCIdentity' = None) -> None:
         """
         Initialize a InstancePrototype object.
 
-        :param str name: (optional) The user-defined name for this virtual server
-               instance (and default system hostname). If unspecified, the name will be a
-               hyphenated list of randomly-selected words.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Up to 10 keys may be
                provided; if no keys are provided the instance will be inaccessible unless
@@ -13384,11 +13365,18 @@ class InstancePrototype():
                Keys will be made available to the virtual server instance as cloud-init
                vendor data. For cloud-init enabled images, these keys will also be added
                as SSH authorized keys for the administrative user.
+        :param str name: (optional) The user-defined name for this virtual server
+               instance (and default system hostname). If unspecified, the name will be a
+               hyphenated list of randomly-selected words.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -13396,10 +13384,6 @@ class InstancePrototype():
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If provided, must match the
                VPC tied to the subnets of the instance's network interfaces.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(['InstancePrototypeInstanceByImage']))
@@ -13410,38 +13394,32 @@ class InstanceReference():
     """
     InstanceReference.
 
-    :attr str id: The unique identifier for this virtual server instance.
     :attr str crn: The CRN for this virtual server instance.
     :attr str href: The URL for this virtual server instance.
+    :attr str id: The unique identifier for this virtual server instance.
     :attr str name: The user-defined name for this virtual server instance (and
           default system hostname).
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a InstanceReference object.
 
-        :param str id: The unique identifier for this virtual server instance.
         :param str crn: The CRN for this virtual server instance.
         :param str href: The URL for this virtual server instance.
+        :param str id: The unique identifier for this virtual server instance.
         :param str name: The user-defined name for this virtual server instance
                (and default system hostname).
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceReference':
         """Initialize a InstanceReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in InstanceReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -13453,6 +13431,12 @@ class InstanceReference():
         else:
             raise ValueError(
                 'Required property \'href\' not present in InstanceReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -13470,12 +13454,12 @@ class InstanceReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -13571,74 +13555,83 @@ class Key():
     """
     Key.
 
-    :attr str id: The unique identifier for this key.
+    :attr datetime created_at: The date and time that the key was created.
     :attr str crn: The CRN for this key.
-    :attr str href: The URL for this key.
     :attr str fingerprint: The fingerprint for this key.  The value is returned
           base64-encoded and prefixed with the hash algorithm (always `SHA256`).
+    :attr str href: The URL for this key.
+    :attr str id: The unique identifier for this key.
+    :attr int length: The length of this key (in bits).
     :attr str name: The user-defined name for this key.
     :attr str public_key: The public SSH key.
-    :attr str type: The cryptosystem used by this key.
     :attr ResourceGroupReference resource_group: The resource group for this key.
-    :attr datetime created_at: The date and time that the key was created.
-    :attr int length: The length of this key (in bits).
+    :attr str type: The crypto-system used by this key.
     """
 
-    def __init__(self, id: str, crn: str, href: str, fingerprint: str,
-                 name: str, public_key: str, type: str,
-                 resource_group: 'ResourceGroupReference', created_at: datetime,
-                 length: int) -> None:
+    def __init__(self, created_at: datetime, crn: str, fingerprint: str,
+                 href: str, id: str, length: int, name: str, public_key: str,
+                 resource_group: 'ResourceGroupReference', type: str) -> None:
         """
         Initialize a Key object.
 
-        :param str id: The unique identifier for this key.
+        :param datetime created_at: The date and time that the key was created.
         :param str crn: The CRN for this key.
-        :param str href: The URL for this key.
         :param str fingerprint: The fingerprint for this key.  The value is
                returned base64-encoded and prefixed with the hash algorithm (always
                `SHA256`).
+        :param str href: The URL for this key.
+        :param str id: The unique identifier for this key.
+        :param int length: The length of this key (in bits).
         :param str name: The user-defined name for this key.
         :param str public_key: The public SSH key.
-        :param str type: The cryptosystem used by this key.
         :param ResourceGroupReference resource_group: The resource group for this
                key.
-        :param datetime created_at: The date and time that the key was created.
-        :param int length: The length of this key (in bits).
+        :param str type: The crypto-system used by this key.
         """
-        self.id = id
+        self.created_at = created_at
         self.crn = crn
-        self.href = href
         self.fingerprint = fingerprint
+        self.href = href
+        self.id = id
+        self.length = length
         self.name = name
         self.public_key = public_key
-        self.type = type
         self.resource_group = resource_group
-        self.created_at = created_at
-        self.length = length
+        self.type = type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'Key':
         """Initialize a Key object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
-            raise ValueError('Required property \'id\' not present in Key JSON')
+            raise ValueError(
+                'Required property \'created_at\' not present in Key JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in Key JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in Key JSON')
         if 'fingerprint' in _dict:
             args['fingerprint'] = _dict.get('fingerprint')
         else:
             raise ValueError(
                 'Required property \'fingerprint\' not present in Key JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in Key JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in Key JSON')
+        if 'length' in _dict:
+            args['length'] = _dict.get('length')
+        else:
+            raise ValueError(
+                'Required property \'length\' not present in Key JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -13649,27 +13642,17 @@ class Key():
         else:
             raise ValueError(
                 'Required property \'public_key\' not present in Key JSON')
-        if 'type' in _dict:
-            args['type'] = _dict.get('type')
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in Key JSON')
         if 'resource_group' in _dict:
             args['resource_group'] = ResourceGroupReference.from_dict(
                 _dict.get('resource_group'))
         else:
             raise ValueError(
                 'Required property \'resource_group\' not present in Key JSON')
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
         else:
             raise ValueError(
-                'Required property \'created_at\' not present in Key JSON')
-        if 'length' in _dict:
-            args['length'] = _dict.get('length')
-        else:
-            raise ValueError(
-                'Required property \'length\' not present in Key JSON')
+                'Required property \'type\' not present in Key JSON')
         return cls(**args)
 
     @classmethod
@@ -13680,26 +13663,26 @@ class Key():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'fingerprint') and self.fingerprint is not None:
             _dict['fingerprint'] = self.fingerprint
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'length') and self.length is not None:
+            _dict['length'] = self.length
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'public_key') and self.public_key is not None:
             _dict['public_key'] = self.public_key
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'length') and self.length is not None:
-            _dict['length'] = self.length
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         return _dict
 
     def _to_dict(self):
@@ -13722,7 +13705,7 @@ class Key():
 
     class TypeEnum(str, Enum):
         """
-        The cryptosystem used by this key.
+        The crypto-system used by this key.
         """
         RSA = 'rsa'
 
@@ -13731,41 +13714,40 @@ class KeyCollection():
     """
     KeyCollection.
 
-    :attr KeyCollectionFirst first: A reference to the first page of resources.
+    :attr KeyCollectionFirst first: A link to the first page of resources.
+    :attr List[Key] keys: Collection of keys.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr KeyCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr KeyCollectionNext next: (optional) A link to the next page of resources.
+          This property is present for all pages
           except the last page.
     :attr int total_count: The total number of resources across all pages.
-    :attr List[Key] keys: Collection of keys.
     """
 
     def __init__(self,
                  first: 'KeyCollectionFirst',
+                 keys: List['Key'],
                  limit: int,
                  total_count: int,
-                 keys: List['Key'],
                  *,
                  next: 'KeyCollectionNext' = None) -> None:
         """
         Initialize a KeyCollection object.
 
-        :param KeyCollectionFirst first: A reference to the first page of
-               resources.
+        :param KeyCollectionFirst first: A link to the first page of resources.
+        :param List[Key] keys: Collection of keys.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param int total_count: The total number of resources across all pages.
-        :param List[Key] keys: Collection of keys.
-        :param KeyCollectionNext next: (optional) A reference to the next page of
-               resources; this reference is included for all pages
+        :param KeyCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
+        self.keys = keys
         self.limit = limit
         self.next = next
         self.total_count = total_count
-        self.keys = keys
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'KeyCollection':
@@ -13776,6 +13758,11 @@ class KeyCollection():
         else:
             raise ValueError(
                 'Required property \'first\' not present in KeyCollection JSON')
+        if 'keys' in _dict:
+            args['keys'] = [Key.from_dict(x) for x in _dict.get('keys')]
+        else:
+            raise ValueError(
+                'Required property \'keys\' not present in KeyCollection JSON')
         if 'limit' in _dict:
             args['limit'] = _dict.get('limit')
         else:
@@ -13789,11 +13776,6 @@ class KeyCollection():
             raise ValueError(
                 'Required property \'total_count\' not present in KeyCollection JSON'
             )
-        if 'keys' in _dict:
-            args['keys'] = [Key.from_dict(x) for x in _dict.get('keys')]
-        else:
-            raise ValueError(
-                'Required property \'keys\' not present in KeyCollection JSON')
         return cls(**args)
 
     @classmethod
@@ -13806,14 +13788,14 @@ class KeyCollection():
         _dict = {}
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            _dict['keys'] = [x.to_dict() for x in self.keys]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
-        if hasattr(self, 'keys') and self.keys is not None:
-            _dict['keys'] = [x.to_dict() for x in self.keys]
         return _dict
 
     def _to_dict(self):
@@ -13837,16 +13819,16 @@ class KeyCollection():
 
 class KeyCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a KeyCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -13895,17 +13877,17 @@ class KeyCollectionFirst():
 
 class KeyCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a KeyCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -14048,31 +14030,31 @@ class LoadBalancer():
     """
     LoadBalancer.
 
-    :attr str id: The unique identifier for this load balancer.
-    :attr str crn: The load balancer's CRN.
-    :attr str href: The load balancer's canonical URL.
-    :attr str name: The unique user-defined name for this load balancer.
     :attr datetime created_at: The date and time that this load balancer was
           created.
+    :attr str crn: The load balancer's CRN.
     :attr str hostname: Fully qualified domain name assigned to this load balancer.
+    :attr str href: The load balancer's canonical URL.
+    :attr str id: The unique identifier for this load balancer.
     :attr bool is_public: The type of this load balancer, public or private.
     :attr List[LoadBalancerListenerReference] listeners: The listeners of this load
           balancer.
+    :attr str name: The unique user-defined name for this load balancer.
     :attr str operating_status: The operating status of this load balancer.
     :attr List[LoadBalancerPoolReference] pools: The pools of this load balancer.
     :attr List[IP] private_ips: The private IP addresses assigned to this load
           balancer.
     :attr str provisioning_status: The provisioning status of this load balancer.
     :attr List[IP] public_ips: The public IP addresses assigned to this load
-          balancer. These are applicable only for public load balancers.
+          balancer. Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
     :attr List[SubnetReference] subnets: The subnets this load balancer is part of.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
-                 created_at: datetime, hostname: str, is_public: bool,
-                 listeners: List['LoadBalancerListenerReference'],
+    def __init__(self, created_at: datetime, crn: str, hostname: str, href: str,
+                 id: str, is_public: bool,
+                 listeners: List['LoadBalancerListenerReference'], name: str,
                  operating_status: str,
                  pools: List['LoadBalancerPoolReference'],
                  private_ips: List['IP'], provisioning_status: str,
@@ -14082,17 +14064,17 @@ class LoadBalancer():
         """
         Initialize a LoadBalancer object.
 
-        :param str id: The unique identifier for this load balancer.
-        :param str crn: The load balancer's CRN.
-        :param str href: The load balancer's canonical URL.
-        :param str name: The unique user-defined name for this load balancer.
         :param datetime created_at: The date and time that this load balancer was
                created.
+        :param str crn: The load balancer's CRN.
         :param str hostname: Fully qualified domain name assigned to this load
                balancer.
+        :param str href: The load balancer's canonical URL.
+        :param str id: The unique identifier for this load balancer.
         :param bool is_public: The type of this load balancer, public or private.
         :param List[LoadBalancerListenerReference] listeners: The listeners of this
                load balancer.
+        :param str name: The unique user-defined name for this load balancer.
         :param str operating_status: The operating status of this load balancer.
         :param List[LoadBalancerPoolReference] pools: The pools of this load
                balancer.
@@ -14101,20 +14083,20 @@ class LoadBalancer():
         :param str provisioning_status: The provisioning status of this load
                balancer.
         :param List[IP] public_ips: The public IP addresses assigned to this load
-               balancer. These are applicable only for public load balancers.
+               balancer. Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
         :param List[SubnetReference] subnets: The subnets this load balancer is
                part of.
         """
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
         self.created_at = created_at
+        self.crn = crn
         self.hostname = hostname
+        self.href = href
+        self.id = id
         self.is_public = is_public
         self.listeners = listeners
+        self.name = name
         self.operating_status = operating_status
         self.pools = pools
         self.private_ips = private_ips
@@ -14127,38 +14109,33 @@ class LoadBalancer():
     def from_dict(cls, _dict: Dict) -> 'LoadBalancer':
         """Initialize a LoadBalancer object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancer JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError(
-                'Required property \'crn\' not present in LoadBalancer JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in LoadBalancer JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in LoadBalancer JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
                 'Required property \'created_at\' not present in LoadBalancer JSON'
             )
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in LoadBalancer JSON')
         if 'hostname' in _dict:
             args['hostname'] = _dict.get('hostname')
         else:
             raise ValueError(
                 'Required property \'hostname\' not present in LoadBalancer JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in LoadBalancer JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancer JSON')
         if 'is_public' in _dict:
             args['is_public'] = _dict.get('is_public')
         else:
@@ -14174,6 +14151,11 @@ class LoadBalancer():
             raise ValueError(
                 'Required property \'listeners\' not present in LoadBalancer JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in LoadBalancer JSON')
         if 'operating_status' in _dict:
             args['operating_status'] = _dict.get('operating_status')
         else:
@@ -14235,22 +14217,22 @@ class LoadBalancer():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
         if hasattr(self, 'hostname') and self.hostname is not None:
             _dict['hostname'] = self.hostname
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'is_public') and self.is_public is not None:
             _dict['is_public'] = self.is_public
         if hasattr(self, 'listeners') and self.listeners is not None:
             _dict['listeners'] = [x.to_dict() for x in self.listeners]
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self,
                    'operating_status') and self.operating_status is not None:
             _dict['operating_status'] = self.operating_status
@@ -14371,86 +14353,122 @@ class LoadBalancerListener():
     """
     LoadBalancerListener.
 
-    :attr str id: The unique identifier for this load balancer listener.
-    :attr str href: The listener's canonical URL.
-    :attr int connection_limit: (optional) The connection limit of the listener.
-    :attr int port: The listener port number.
-    :attr str protocol: The listener protocol.
+    :attr bool accept_proxy_protocol: If set to `true`, this listener will accept
+          and forward PROXY protocol information. Supported by load balancers in the
+          `application` family (otherwise always `false`).
     :attr CertificateInstanceReference certificate_instance: (optional) The
           certificate instance used for SSL termination. It is applicable only to `https`
           protocol.
+    :attr int connection_limit: (optional) The connection limit of the listener.
     :attr datetime created_at: The date and time that this listener was created.
     :attr LoadBalancerPoolReference default_pool: (optional) The default pool
           associated with the listener.
+    :attr str href: The listener's canonical URL.
+    :attr str id: The unique identifier for this load balancer listener.
     :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The list of
           policies of this listener.
+    :attr int port: The listener port number. Each listener in the load balancer
+          must have a unique
+          `port` and `protocol` combination.
+    :attr str protocol: The listener protocol.
     :attr str provisioning_status: The provisioning status of this listener.
     """
 
     def __init__(
             self,
-            id: str,
+            accept_proxy_protocol: bool,
+            created_at: datetime,
             href: str,
+            id: str,
             port: int,
             protocol: str,
-            created_at: datetime,
             provisioning_status: str,
             *,
-            connection_limit: int = None,
             certificate_instance: 'CertificateInstanceReference' = None,
+            connection_limit: int = None,
             default_pool: 'LoadBalancerPoolReference' = None,
             policies: List['LoadBalancerListenerPolicyReference'] = None
     ) -> None:
         """
         Initialize a LoadBalancerListener object.
 
-        :param str id: The unique identifier for this load balancer listener.
-        :param str href: The listener's canonical URL.
-        :param int port: The listener port number.
-        :param str protocol: The listener protocol.
+        :param bool accept_proxy_protocol: If set to `true`, this listener will
+               accept and forward PROXY protocol information. Supported by load balancers
+               in the `application` family (otherwise always `false`).
         :param datetime created_at: The date and time that this listener was
                created.
+        :param str href: The listener's canonical URL.
+        :param str id: The unique identifier for this load balancer listener.
+        :param int port: The listener port number. Each listener in the load
+               balancer must have a unique
+               `port` and `protocol` combination.
+        :param str protocol: The listener protocol.
         :param str provisioning_status: The provisioning status of this listener.
-        :param int connection_limit: (optional) The connection limit of the
-               listener.
         :param CertificateInstanceReference certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
                `https`
                protocol.
+        :param int connection_limit: (optional) The connection limit of the
+               listener.
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
                associated with the listener.
         :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
                list of policies of this listener.
         """
-        self.id = id
-        self.href = href
-        self.connection_limit = connection_limit
-        self.port = port
-        self.protocol = protocol
+        self.accept_proxy_protocol = accept_proxy_protocol
         self.certificate_instance = certificate_instance
+        self.connection_limit = connection_limit
         self.created_at = created_at
         self.default_pool = default_pool
+        self.href = href
+        self.id = id
         self.policies = policies
+        self.port = port
+        self.protocol = protocol
         self.provisioning_status = provisioning_status
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListener':
         """Initialize a LoadBalancerListener object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'accept_proxy_protocol' in _dict:
+            args['accept_proxy_protocol'] = _dict.get('accept_proxy_protocol')
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListener JSON'
+                'Required property \'accept_proxy_protocol\' not present in LoadBalancerListener JSON'
             )
+        if 'certificate_instance' in _dict:
+            args[
+                'certificate_instance'] = CertificateInstanceReference.from_dict(
+                    _dict.get('certificate_instance'))
+        if 'connection_limit' in _dict:
+            args['connection_limit'] = _dict.get('connection_limit')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in LoadBalancerListener JSON'
+            )
+        if 'default_pool' in _dict:
+            args['default_pool'] = LoadBalancerPoolReference.from_dict(
+                _dict.get('default_pool'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListener JSON'
             )
-        if 'connection_limit' in _dict:
-            args['connection_limit'] = _dict.get('connection_limit')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListener JSON'
+            )
+        if 'policies' in _dict:
+            args['policies'] = [
+                LoadBalancerListenerPolicyReference.from_dict(x)
+                for x in _dict.get('policies')
+            ]
         if 'port' in _dict:
             args['port'] = _dict.get('port')
         else:
@@ -14463,24 +14481,6 @@ class LoadBalancerListener():
             raise ValueError(
                 'Required property \'protocol\' not present in LoadBalancerListener JSON'
             )
-        if 'certificate_instance' in _dict:
-            args[
-                'certificate_instance'] = CertificateInstanceReference.from_dict(
-                    _dict.get('certificate_instance'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in LoadBalancerListener JSON'
-            )
-        if 'default_pool' in _dict:
-            args['default_pool'] = LoadBalancerPoolReference.from_dict(
-                _dict.get('default_pool'))
-        if 'policies' in _dict:
-            args['policies'] = [
-                LoadBalancerListenerPolicyReference.from_dict(x)
-                for x in _dict.get('policies')
-            ]
         if 'provisioning_status' in _dict:
             args['provisioning_status'] = _dict.get('provisioning_status')
         else:
@@ -14497,26 +14497,29 @@ class LoadBalancerListener():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self,
-                   'connection_limit') and self.connection_limit is not None:
-            _dict['connection_limit'] = self.connection_limit
-        if hasattr(self, 'port') and self.port is not None:
-            _dict['port'] = self.port
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
+        if hasattr(self, 'accept_proxy_protocol'
+                  ) and self.accept_proxy_protocol is not None:
+            _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
                   ) and self.certificate_instance is not None:
             _dict['certificate_instance'] = self.certificate_instance.to_dict()
+        if hasattr(self,
+                   'connection_limit') and self.connection_limit is not None:
+            _dict['connection_limit'] = self.connection_limit
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'default_pool') and self.default_pool is not None:
             _dict['default_pool'] = self.default_pool.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'policies') and self.policies is not None:
             _dict['policies'] = [x.to_dict() for x in self.policies]
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(
                 self,
                 'provisioning_status') and self.provisioning_status is not None:
@@ -14626,57 +14629,77 @@ class LoadBalancerListenerPatch():
     """
     LoadBalancerListenerPatch.
 
-    :attr int connection_limit: (optional) The connection limit of the listener.
-    :attr int port: (optional) The listener port number.
-    :attr str protocol: (optional) The listener protocol.
+    :attr bool accept_proxy_protocol: (optional) If set to `true`, this listener
+          will accept and forward PROXY protocol information. Supported by load balancers
+          in the `application` family (otherwise always `false`).
     :attr CertificateInstanceIdentity certificate_instance: (optional) The
           certificate instance used for SSL termination. It is applicable only to `https`
           protocol.
+    :attr int connection_limit: (optional) The connection limit of the listener.
     :attr LoadBalancerPoolIdentity default_pool: (optional) The default pool
-          associated with the listener.
+          associated with the listener. The specified pool must:
+          - Belong to this load balancer
+          - Have the same `protocol` as this listener
+          - Not already be the default pool for another listener.
+    :attr int port: (optional) The listener port number. Each listener in the load
+          balancer must have a unique
+          `port` and `protocol` combination.
+    :attr str protocol: (optional) The listener protocol.
     """
 
     def __init__(self,
                  *,
-                 connection_limit: int = None,
-                 port: int = None,
-                 protocol: str = None,
+                 accept_proxy_protocol: bool = None,
                  certificate_instance: 'CertificateInstanceIdentity' = None,
-                 default_pool: 'LoadBalancerPoolIdentity' = None) -> None:
+                 connection_limit: int = None,
+                 default_pool: 'LoadBalancerPoolIdentity' = None,
+                 port: int = None,
+                 protocol: str = None) -> None:
         """
         Initialize a LoadBalancerListenerPatch object.
 
-        :param int connection_limit: (optional) The connection limit of the
-               listener.
-        :param int port: (optional) The listener port number.
-        :param str protocol: (optional) The listener protocol.
+        :param bool accept_proxy_protocol: (optional) If set to `true`, this
+               listener will accept and forward PROXY protocol information. Supported by
+               load balancers in the `application` family (otherwise always `false`).
         :param CertificateInstanceIdentity certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
                `https`
                protocol.
+        :param int connection_limit: (optional) The connection limit of the
+               listener.
         :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
-               associated with the listener.
+               associated with the listener. The specified pool must:
+               - Belong to this load balancer
+               - Have the same `protocol` as this listener
+               - Not already be the default pool for another listener.
+        :param int port: (optional) The listener port number. Each listener in the
+               load balancer must have a unique
+               `port` and `protocol` combination.
+        :param str protocol: (optional) The listener protocol.
         """
+        self.accept_proxy_protocol = accept_proxy_protocol
+        self.certificate_instance = certificate_instance
         self.connection_limit = connection_limit
+        self.default_pool = default_pool
         self.port = port
         self.protocol = protocol
-        self.certificate_instance = certificate_instance
-        self.default_pool = default_pool
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPatch':
         """Initialize a LoadBalancerListenerPatch object from a json dictionary."""
         args = {}
+        if 'accept_proxy_protocol' in _dict:
+            args['accept_proxy_protocol'] = _dict.get('accept_proxy_protocol')
+        if 'certificate_instance' in _dict:
+            args['certificate_instance'] = _dict.get('certificate_instance')
         if 'connection_limit' in _dict:
             args['connection_limit'] = _dict.get('connection_limit')
+        if 'default_pool' in _dict:
+            args['default_pool'] = _dict.get('default_pool')
         if 'port' in _dict:
             args['port'] = _dict.get('port')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
-        if 'certificate_instance' in _dict:
-            args['certificate_instance'] = _dict.get('certificate_instance')
-        if 'default_pool' in _dict:
-            args['default_pool'] = _dict.get('default_pool')
         return cls(**args)
 
     @classmethod
@@ -14687,13 +14710,9 @@ class LoadBalancerListenerPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self,
-                   'connection_limit') and self.connection_limit is not None:
-            _dict['connection_limit'] = self.connection_limit
-        if hasattr(self, 'port') and self.port is not None:
-            _dict['port'] = self.port
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
+        if hasattr(self, 'accept_proxy_protocol'
+                  ) and self.accept_proxy_protocol is not None:
+            _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
                   ) and self.certificate_instance is not None:
             if isinstance(self.certificate_instance, dict):
@@ -14702,11 +14721,18 @@ class LoadBalancerListenerPatch():
                 _dict[
                     'certificate_instance'] = self.certificate_instance.to_dict(
                     )
+        if hasattr(self,
+                   'connection_limit') and self.connection_limit is not None:
+            _dict['connection_limit'] = self.connection_limit
         if hasattr(self, 'default_pool') and self.default_pool is not None:
             if isinstance(self.default_pool, dict):
                 _dict['default_pool'] = self.default_pool
             else:
                 _dict['default_pool'] = self.default_pool.to_dict()
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         return _dict
 
     def _to_dict(self):
@@ -14740,13 +14766,13 @@ class LoadBalancerListenerPolicy():
     """
     LoadBalancerListenerPolicy.
 
-    :attr str id: The policy's unique identifier.
+    :attr str action: The policy action.
+    :attr datetime created_at: The date and time that this policy was created.
     :attr str href: The listener policy's canonical URL.
+    :attr str id: The policy's unique identifier.
     :attr str name: The user-defined name for this policy.
     :attr int priority: Priority of the policy. Lower value indicates higher
           priority.
-    :attr str action: The policy action.
-    :attr datetime created_at: The date and time that this policy was created.
     :attr str provisioning_status: The provisioning status of this policy.
     :attr List[LoadBalancerListenerPolicyRuleReference] rules: The rules of this
           policy.
@@ -14757,12 +14783,12 @@ class LoadBalancerListenerPolicy():
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
-                 priority: int,
                  action: str,
                  created_at: datetime,
+                 href: str,
+                 id: str,
+                 name: str,
+                 priority: int,
                  provisioning_status: str,
                  rules: List['LoadBalancerListenerPolicyRuleReference'],
                  *,
@@ -14770,13 +14796,13 @@ class LoadBalancerListenerPolicy():
         """
         Initialize a LoadBalancerListenerPolicy object.
 
-        :param str id: The policy's unique identifier.
+        :param str action: The policy action.
+        :param datetime created_at: The date and time that this policy was created.
         :param str href: The listener policy's canonical URL.
+        :param str id: The policy's unique identifier.
         :param str name: The user-defined name for this policy.
         :param int priority: Priority of the policy. Lower value indicates higher
                priority.
-        :param str action: The policy action.
-        :param datetime created_at: The date and time that this policy was created.
         :param str provisioning_status: The provisioning status of this policy.
         :param List[LoadBalancerListenerPolicyRuleReference] rules: The rules of
                this policy.
@@ -14785,12 +14811,12 @@ class LoadBalancerListenerPolicy():
                `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is
                `redirect`.
         """
-        self.id = id
-        self.href = href
-        self.name = name
-        self.priority = priority
         self.action = action
         self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.name = name
+        self.priority = priority
         self.provisioning_status = provisioning_status
         self.rules = rules
         self.target = target
@@ -14799,17 +14825,29 @@ class LoadBalancerListenerPolicy():
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicy':
         """Initialize a LoadBalancerListenerPolicy object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicy JSON'
+                'Required property \'action\' not present in LoadBalancerListenerPolicy JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in LoadBalancerListenerPolicy JSON'
             )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListenerPolicy JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerPolicy JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -14822,18 +14860,6 @@ class LoadBalancerListenerPolicy():
         else:
             raise ValueError(
                 'Required property \'priority\' not present in LoadBalancerListenerPolicy JSON'
-            )
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in LoadBalancerListenerPolicy JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in LoadBalancerListenerPolicy JSON'
             )
         if 'provisioning_status' in _dict:
             args['provisioning_status'] = _dict.get('provisioning_status')
@@ -14862,18 +14888,18 @@ class LoadBalancerListenerPolicy():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'priority') and self.priority is not None:
-            _dict['priority'] = self.priority
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'priority') and self.priority is not None:
+            _dict['priority'] = self.priority
         if hasattr(
                 self,
                 'provisioning_status') and self.provisioning_status is not None:
@@ -14994,7 +15020,7 @@ class LoadBalancerListenerPolicyPatch():
           unique within the load balancer listener the policy resides in.
     :attr int priority: (optional) Priority of the policy. Lower value indicates
           higher priority.
-    :attr LoadBalancerListenerPolicyPatchTarget target: (optional) When `action` is
+    :attr LoadBalancerListenerPolicyTargetPatch target: (optional) When `action` is
           `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
           balancer forwards the traffic to. When `action` is `redirect`,
           `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
@@ -15006,7 +15032,7 @@ class LoadBalancerListenerPolicyPatch():
             *,
             name: str = None,
             priority: int = None,
-            target: 'LoadBalancerListenerPolicyPatchTarget' = None) -> None:
+            target: 'LoadBalancerListenerPolicyTargetPatch' = None) -> None:
         """
         Initialize a LoadBalancerListenerPolicyPatch object.
 
@@ -15014,7 +15040,7 @@ class LoadBalancerListenerPolicyPatch():
                must be unique within the load balancer listener the policy resides in.
         :param int priority: (optional) Priority of the policy. Lower value
                indicates higher priority.
-        :param LoadBalancerListenerPolicyPatchTarget target: (optional) When
+        :param LoadBalancerListenerPolicyTargetPatch target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the
                load
                balancer forwards the traffic to. When `action` is `redirect`,
@@ -15075,40 +15101,18 @@ class LoadBalancerListenerPolicyPatch():
         return not self == other
 
 
-class LoadBalancerListenerPolicyPatchTarget():
-    """
-    When `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
-    balancer forwards the traffic to. When `action` is `redirect`,
-    `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http status code
-    used in the redirect response.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a LoadBalancerListenerPolicyPatchTarget object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity',
-                'LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch'
-            ]))
-        raise Exception(msg)
-
-
 class LoadBalancerListenerPolicyPrototype():
     """
     LoadBalancerListenerPolicyPrototype.
 
+    :attr str action: The policy action.
     :attr str name: (optional) The user-defined name for this policy. Names must be
           unique within the load balancer listener the policy resides in.
     :attr int priority: Priority of the policy. Lower value indicates higher
           priority.
-    :attr str action: The policy action.
     :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The list
           of rules of this policy.
-    :attr LoadBalancerListenerPolicyPrototypeTarget target: (optional) When `action`
+    :attr LoadBalancerListenerPolicyTargetPrototype target: (optional) When `action`
           is `forward`, `LoadBalancerPoolIdentity` is required to specify which
           pool the load balancer forwards the traffic to. When `action` is `redirect`,
           `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the url
@@ -15118,23 +15122,23 @@ class LoadBalancerListenerPolicyPrototype():
 
     def __init__(
             self,
-            priority: int,
             action: str,
+            priority: int,
             *,
             name: str = None,
             rules: List['LoadBalancerListenerPolicyRulePrototype'] = None,
-            target: 'LoadBalancerListenerPolicyPrototypeTarget' = None) -> None:
+            target: 'LoadBalancerListenerPolicyTargetPrototype' = None) -> None:
         """
         Initialize a LoadBalancerListenerPolicyPrototype object.
 
+        :param str action: The policy action.
         :param int priority: Priority of the policy. Lower value indicates higher
                priority.
-        :param str action: The policy action.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
         :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
                list of rules of this policy.
-        :param LoadBalancerListenerPolicyPrototypeTarget target: (optional) When
+        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
                pool the load balancer forwards the traffic to. When `action` is
@@ -15143,9 +15147,9 @@ class LoadBalancerListenerPolicyPrototype():
                url and
                http status code used in the redirect response.
         """
+        self.action = action
         self.name = name
         self.priority = priority
-        self.action = action
         self.rules = rules
         self.target = target
 
@@ -15153,6 +15157,12 @@ class LoadBalancerListenerPolicyPrototype():
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyPrototype':
         """Initialize a LoadBalancerListenerPolicyPrototype object from a json dictionary."""
         args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError(
+                'Required property \'action\' not present in LoadBalancerListenerPolicyPrototype JSON'
+            )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'priority' in _dict:
@@ -15160,12 +15170,6 @@ class LoadBalancerListenerPolicyPrototype():
         else:
             raise ValueError(
                 'Required property \'priority\' not present in LoadBalancerListenerPolicyPrototype JSON'
-            )
-        if 'action' in _dict:
-            args['action'] = _dict.get('action')
-        else:
-            raise ValueError(
-                'Required property \'action\' not present in LoadBalancerListenerPolicyPrototype JSON'
             )
         if 'rules' in _dict:
             args['rules'] = [
@@ -15184,12 +15188,12 @@ class LoadBalancerListenerPolicyPrototype():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'priority') and self.priority is not None:
             _dict['priority'] = self.priority
-        if hasattr(self, 'action') and self.action is not None:
-            _dict['action'] = self.action
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
         if hasattr(self, 'target') and self.target is not None:
@@ -15226,61 +15230,39 @@ class LoadBalancerListenerPolicyPrototype():
         REJECT = 'reject'
 
 
-class LoadBalancerListenerPolicyPrototypeTarget():
-    """
-    When `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify which
-    pool the load balancer forwards the traffic to. When `action` is `redirect`,
-    `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the url and
-    http status code used in the redirect response.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a LoadBalancerListenerPolicyPrototypeTarget object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity',
-                'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype'
-            ]))
-        raise Exception(msg)
-
-
 class LoadBalancerListenerPolicyReference():
     """
     LoadBalancerListenerPolicyReference.
 
-    :attr str id: The policy's unique identifier.
     :attr str href: The listener policy's canonical URL.
+    :attr str id: The policy's unique identifier.
     """
 
-    def __init__(self, id: str, href: str) -> None:
+    def __init__(self, href: str, id: str) -> None:
         """
         Initialize a LoadBalancerListenerPolicyReference object.
 
-        :param str id: The policy's unique identifier.
         :param str href: The listener policy's canonical URL.
+        :param str id: The policy's unique identifier.
         """
-        self.id = id
         self.href = href
+        self.id = id
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyReference':
         """Initialize a LoadBalancerListenerPolicyReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListenerPolicyReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerPolicyReference JSON'
             )
         return cls(**args)
 
@@ -15292,10 +15274,10 @@ class LoadBalancerListenerPolicyReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         return _dict
 
     def _to_dict(self):
@@ -15321,73 +15303,85 @@ class LoadBalancerListenerPolicyRule():
     """
     LoadBalancerListenerPolicyRule.
 
-    :attr str id: The rule's unique identifier.
-    :attr str href: The rule's canonical URL.
     :attr str condition: The condition of the rule.
+    :attr datetime created_at: The date and time that this rule was created.
     :attr str field: (optional) HTTP header field. This is only applicable to
           "header" rule type.
+    :attr str href: The rule's canonical URL.
+    :attr str id: The rule's unique identifier.
+    :attr str provisioning_status: The provisioning status of this rule.
     :attr str type: The type of the rule.
     :attr str value: Value to be matched for rule condition.
-    :attr datetime created_at: The date and time that this rule was created.
-    :attr str provisioning_status: The provisioning status of this rule.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
                  condition: str,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 provisioning_status: str,
                  type: str,
                  value: str,
-                 created_at: datetime,
-                 provisioning_status: str,
                  *,
                  field: str = None) -> None:
         """
         Initialize a LoadBalancerListenerPolicyRule object.
 
-        :param str id: The rule's unique identifier.
-        :param str href: The rule's canonical URL.
         :param str condition: The condition of the rule.
+        :param datetime created_at: The date and time that this rule was created.
+        :param str href: The rule's canonical URL.
+        :param str id: The rule's unique identifier.
+        :param str provisioning_status: The provisioning status of this rule.
         :param str type: The type of the rule.
         :param str value: Value to be matched for rule condition.
-        :param datetime created_at: The date and time that this rule was created.
-        :param str provisioning_status: The provisioning status of this rule.
         :param str field: (optional) HTTP header field. This is only applicable to
                "header" rule type.
         """
-        self.id = id
-        self.href = href
         self.condition = condition
+        self.created_at = created_at
         self.field = field
+        self.href = href
+        self.id = id
+        self.provisioning_status = provisioning_status
         self.type = type
         self.value = value
-        self.created_at = created_at
-        self.provisioning_status = provisioning_status
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyRule':
         """Initialize a LoadBalancerListenerPolicyRule object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyRule JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in LoadBalancerListenerPolicyRule JSON'
-            )
         if 'condition' in _dict:
             args['condition'] = _dict.get('condition')
         else:
             raise ValueError(
                 'Required property \'condition\' not present in LoadBalancerListenerPolicyRule JSON'
             )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in LoadBalancerListenerPolicyRule JSON'
+            )
         if 'field' in _dict:
             args['field'] = _dict.get('field')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in LoadBalancerListenerPolicyRule JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerPolicyRule JSON'
+            )
+        if 'provisioning_status' in _dict:
+            args['provisioning_status'] = _dict.get('provisioning_status')
+        else:
+            raise ValueError(
+                'Required property \'provisioning_status\' not present in LoadBalancerListenerPolicyRule JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         else:
@@ -15400,18 +15394,6 @@ class LoadBalancerListenerPolicyRule():
             raise ValueError(
                 'Required property \'value\' not present in LoadBalancerListenerPolicyRule JSON'
             )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in LoadBalancerListenerPolicyRule JSON'
-            )
-        if 'provisioning_status' in _dict:
-            args['provisioning_status'] = _dict.get('provisioning_status')
-        else:
-            raise ValueError(
-                'Required property \'provisioning_status\' not present in LoadBalancerListenerPolicyRule JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -15422,24 +15404,24 @@ class LoadBalancerListenerPolicyRule():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'condition') and self.condition is not None:
             _dict['condition'] = self.condition
-        if hasattr(self, 'field') and self.field is not None:
-            _dict['field'] = self.field
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
-        if hasattr(self, 'value') and self.value is not None:
-            _dict['value'] = self.value
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'field') and self.field is not None:
+            _dict['field'] = self.field
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(
                 self,
                 'provisioning_status') and self.provisioning_status is not None:
             _dict['provisioning_status'] = self.provisioning_status
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
         return _dict
 
     def _to_dict(self):
@@ -15468,14 +15450,6 @@ class LoadBalancerListenerPolicyRule():
         EQUALS = 'equals'
         MATCHES_REGEX = 'matches_regex'
 
-    class TypeEnum(str, Enum):
-        """
-        The type of the rule.
-        """
-        HEADER = 'header'
-        HOSTNAME = 'hostname'
-        PATH = 'path'
-
     class ProvisioningStatusEnum(str, Enum):
         """
         The provisioning status of this rule.
@@ -15486,6 +15460,14 @@ class LoadBalancerListenerPolicyRule():
         FAILED = 'failed'
         MAINTENANCE_PENDING = 'maintenance_pending'
         UPDATE_PENDING = 'update_pending'
+
+    class TypeEnum(str, Enum):
+        """
+        The type of the rule.
+        """
+        HEADER = 'header'
+        HOSTNAME = 'hostname'
+        PATH = 'path'
 
 
 class LoadBalancerListenerPolicyRuleCollection():
@@ -15763,36 +15745,36 @@ class LoadBalancerListenerPolicyRuleReference():
     """
     LoadBalancerListenerPolicyRuleReference.
 
-    :attr str id: The rule's unique identifier.
     :attr str href: The rule's canonical URL.
+    :attr str id: The rule's unique identifier.
     """
 
-    def __init__(self, id: str, href: str) -> None:
+    def __init__(self, href: str, id: str) -> None:
         """
         Initialize a LoadBalancerListenerPolicyRuleReference object.
 
-        :param str id: The rule's unique identifier.
         :param str href: The rule's canonical URL.
+        :param str id: The rule's unique identifier.
         """
-        self.id = id
         self.href = href
+        self.id = id
 
     @classmethod
     def from_dict(cls,
                   _dict: Dict) -> 'LoadBalancerListenerPolicyRuleReference':
         """Initialize a LoadBalancerListenerPolicyRuleReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyRuleReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListenerPolicyRuleReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerPolicyRuleReference JSON'
             )
         return cls(**args)
 
@@ -15804,10 +15786,10 @@ class LoadBalancerListenerPolicyRuleReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         return _dict
 
     def _to_dict(self):
@@ -15849,37 +15831,93 @@ class LoadBalancerListenerPolicyTarget():
         raise Exception(msg)
 
 
+class LoadBalancerListenerPolicyTargetPatch():
+    """
+    When `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
+    balancer forwards the traffic to. When `action` is `redirect`,
+    `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http status code
+    used in the redirect response.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyTargetPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity',
+                'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch'
+            ]))
+        raise Exception(msg)
+
+
+class LoadBalancerListenerPolicyTargetPrototype():
+    """
+    When `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify which
+    pool the load balancer forwards the traffic to. When `action` is `redirect`,
+    `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the url and
+    http status code used in the redirect response.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyTargetPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity',
+                'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype'
+            ]))
+        raise Exception(msg)
+
+
 class LoadBalancerListenerPrototypeLoadBalancerContext():
     """
     LoadBalancerListenerPrototypeLoadBalancerContext.
 
+    :attr bool accept_proxy_protocol: (optional) If set to `true`, this listener
+          will accept and forward PROXY protocol information. Supported by load balancers
+          in the `application` family (otherwise always `false`).
     :attr int connection_limit: (optional) The connection limit of the listener.
-    :attr int port: The listener port number.
-    :attr str protocol: The listener protocol.
     :attr LoadBalancerPoolIdentityByName default_pool: (optional) The default pool
           associated with the listener.
+    :attr int port: The listener port number. Each listener in the load balancer
+          must have a unique
+          `port` and `protocol` combination.
+    :attr str protocol: The listener protocol.
     """
 
     def __init__(self,
                  port: int,
                  protocol: str,
                  *,
+                 accept_proxy_protocol: bool = None,
                  connection_limit: int = None,
                  default_pool: 'LoadBalancerPoolIdentityByName' = None) -> None:
         """
         Initialize a LoadBalancerListenerPrototypeLoadBalancerContext object.
 
-        :param int port: The listener port number.
+        :param int port: The listener port number. Each listener in the load
+               balancer must have a unique
+               `port` and `protocol` combination.
         :param str protocol: The listener protocol.
+        :param bool accept_proxy_protocol: (optional) If set to `true`, this
+               listener will accept and forward PROXY protocol information. Supported by
+               load balancers in the `application` family (otherwise always `false`).
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolIdentityByName default_pool: (optional) The default
                pool associated with the listener.
         """
+        self.accept_proxy_protocol = accept_proxy_protocol
         self.connection_limit = connection_limit
+        self.default_pool = default_pool
         self.port = port
         self.protocol = protocol
-        self.default_pool = default_pool
 
     @classmethod
     def from_dict(
@@ -15887,8 +15925,13 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
             _dict: Dict) -> 'LoadBalancerListenerPrototypeLoadBalancerContext':
         """Initialize a LoadBalancerListenerPrototypeLoadBalancerContext object from a json dictionary."""
         args = {}
+        if 'accept_proxy_protocol' in _dict:
+            args['accept_proxy_protocol'] = _dict.get('accept_proxy_protocol')
         if 'connection_limit' in _dict:
             args['connection_limit'] = _dict.get('connection_limit')
+        if 'default_pool' in _dict:
+            args['default_pool'] = LoadBalancerPoolIdentityByName.from_dict(
+                _dict.get('default_pool'))
         if 'port' in _dict:
             args['port'] = _dict.get('port')
         else:
@@ -15901,9 +15944,6 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
             raise ValueError(
                 'Required property \'protocol\' not present in LoadBalancerListenerPrototypeLoadBalancerContext JSON'
             )
-        if 'default_pool' in _dict:
-            args['default_pool'] = LoadBalancerPoolIdentityByName.from_dict(
-                _dict.get('default_pool'))
         return cls(**args)
 
     @classmethod
@@ -15914,15 +15954,18 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'accept_proxy_protocol'
+                  ) and self.accept_proxy_protocol is not None:
+            _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
             _dict['connection_limit'] = self.connection_limit
+        if hasattr(self, 'default_pool') and self.default_pool is not None:
+            _dict['default_pool'] = self.default_pool.to_dict()
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
-        if hasattr(self, 'default_pool') and self.default_pool is not None:
-            _dict['default_pool'] = self.default_pool.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -15960,35 +16003,35 @@ class LoadBalancerListenerReference():
     """
     LoadBalancerListenerReference.
 
-    :attr str id: The unique identifier for this load balancer listener.
     :attr str href: The listener's canonical URL.
+    :attr str id: The unique identifier for this load balancer listener.
     """
 
-    def __init__(self, id: str, href: str) -> None:
+    def __init__(self, href: str, id: str) -> None:
         """
         Initialize a LoadBalancerListenerReference object.
 
-        :param str id: The unique identifier for this load balancer listener.
         :param str href: The listener's canonical URL.
+        :param str id: The unique identifier for this load balancer listener.
         """
-        self.id = id
         self.href = href
+        self.id = id
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerReference':
         """Initialize a LoadBalancerListenerReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListenerReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerReference JSON'
             )
         return cls(**args)
 
@@ -16000,10 +16043,10 @@ class LoadBalancerListenerReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         return _dict
 
     def _to_dict(self):
@@ -16084,35 +16127,42 @@ class LoadBalancerPool():
     """
     LoadBalancerPool.
 
-    :attr str id: The unique identifier for this load balancer pool.
-    :attr str href: The pool's canonical URL.
-    :attr str name: The user-defined name for this load balancer pool.
     :attr str algorithm: The load balancing algorithm.
+    :attr datetime created_at: The date and time that this pool was created.
+    :attr LoadBalancerPoolHealthMonitor health_monitor: The health monitor of this
+          pool.
+    :attr str href: The pool's canonical URL.
+    :attr str id: The unique identifier for this load balancer pool.
+    :attr List[LoadBalancerPoolMemberReference] members: (optional) The backend
+          server members of the pool.
+    :attr str name: The user-defined name for this load balancer pool.
     :attr str protocol: The protocol used for this load balancer pool.
           The enumerated values for this property are expected to expand in the future.
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the pool on which the unexpected
           property value was encountered.
-    :attr datetime created_at: The date and time that this pool was created.
-    :attr LoadBalancerPoolHealthMonitor health_monitor: The health monitor of this
-          pool.
-    :attr List[LoadBalancerPoolMemberReference] members: (optional) The backend
-          server members of the pool.
     :attr str provisioning_status: The provisioning status of this pool.
+    :attr str proxy_protocol: The PROXY protocol setting for this pool:
+          - `v1`: Enabled with version 1 (human-readable header format)
+          - `v2`: Enabled with version 2 (binary header format)
+          - `disabled`: Disabled
+          Supported by load balancers in the `application` family (otherwise always
+          `disabled`).
     :attr LoadBalancerPoolSessionPersistence session_persistence: (optional) The
           session persistence of this pool.
     """
 
     def __init__(
         self,
-        id: str,
-        href: str,
-        name: str,
         algorithm: str,
-        protocol: str,
         created_at: datetime,
         health_monitor: 'LoadBalancerPoolHealthMonitor',
+        href: str,
+        id: str,
+        name: str,
+        protocol: str,
         provisioning_status: str,
+        proxy_protocol: str,
         *,
         members: List['LoadBalancerPoolMemberReference'] = None,
         session_persistence: 'LoadBalancerPoolSessionPersistence' = None
@@ -16120,67 +16170,51 @@ class LoadBalancerPool():
         """
         Initialize a LoadBalancerPool object.
 
-        :param str id: The unique identifier for this load balancer pool.
-        :param str href: The pool's canonical URL.
-        :param str name: The user-defined name for this load balancer pool.
         :param str algorithm: The load balancing algorithm.
+        :param datetime created_at: The date and time that this pool was created.
+        :param LoadBalancerPoolHealthMonitor health_monitor: The health monitor of
+               this pool.
+        :param str href: The pool's canonical URL.
+        :param str id: The unique identifier for this load balancer pool.
+        :param str name: The user-defined name for this load balancer pool.
         :param str protocol: The protocol used for this load balancer pool.
                The enumerated values for this property are expected to expand in the
                future. When processing this property, check for and log unknown values.
                Optionally halt processing and surface the error, or bypass the pool on
                which the unexpected property value was encountered.
-        :param datetime created_at: The date and time that this pool was created.
-        :param LoadBalancerPoolHealthMonitor health_monitor: The health monitor of
-               this pool.
         :param str provisioning_status: The provisioning status of this pool.
+        :param str proxy_protocol: The PROXY protocol setting for this pool:
+               - `v1`: Enabled with version 1 (human-readable header format)
+               - `v2`: Enabled with version 2 (binary header format)
+               - `disabled`: Disabled
+               Supported by load balancers in the `application` family (otherwise always
+               `disabled`).
         :param List[LoadBalancerPoolMemberReference] members: (optional) The
                backend server members of the pool.
         :param LoadBalancerPoolSessionPersistence session_persistence: (optional)
                The session persistence of this pool.
         """
-        self.id = id
-        self.href = href
-        self.name = name
         self.algorithm = algorithm
-        self.protocol = protocol
         self.created_at = created_at
         self.health_monitor = health_monitor
+        self.href = href
+        self.id = id
         self.members = members
+        self.name = name
+        self.protocol = protocol
         self.provisioning_status = provisioning_status
+        self.proxy_protocol = proxy_protocol
         self.session_persistence = session_persistence
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPool':
         """Initialize a LoadBalancerPool object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerPool JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in LoadBalancerPool JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in LoadBalancerPool JSON'
-            )
         if 'algorithm' in _dict:
             args['algorithm'] = _dict.get('algorithm')
         else:
             raise ValueError(
                 'Required property \'algorithm\' not present in LoadBalancerPool JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in LoadBalancerPool JSON'
             )
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
@@ -16195,16 +16229,45 @@ class LoadBalancerPool():
             raise ValueError(
                 'Required property \'health_monitor\' not present in LoadBalancerPool JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in LoadBalancerPool JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerPool JSON')
         if 'members' in _dict:
             args['members'] = [
                 LoadBalancerPoolMemberReference.from_dict(x)
                 for x in _dict.get('members')
             ]
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in LoadBalancerPool JSON'
+            )
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in LoadBalancerPool JSON'
+            )
         if 'provisioning_status' in _dict:
             args['provisioning_status'] = _dict.get('provisioning_status')
         else:
             raise ValueError(
                 'Required property \'provisioning_status\' not present in LoadBalancerPool JSON'
+            )
+        if 'proxy_protocol' in _dict:
+            args['proxy_protocol'] = _dict.get('proxy_protocol')
+        else:
+            raise ValueError(
+                'Required property \'proxy_protocol\' not present in LoadBalancerPool JSON'
             )
         if 'session_persistence' in _dict:
             args[
@@ -16220,26 +16283,28 @@ class LoadBalancerPool():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'algorithm') and self.algorithm is not None:
             _dict['algorithm'] = self.algorithm
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'health_monitor') and self.health_monitor is not None:
             _dict['health_monitor'] = self.health_monitor.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'members') and self.members is not None:
             _dict['members'] = [x.to_dict() for x in self.members]
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(
                 self,
                 'provisioning_status') and self.provisioning_status is not None:
             _dict['provisioning_status'] = self.provisioning_status
+        if hasattr(self, 'proxy_protocol') and self.proxy_protocol is not None:
+            _dict['proxy_protocol'] = self.proxy_protocol
         if hasattr(
                 self,
                 'session_persistence') and self.session_persistence is not None:
@@ -16294,6 +16359,19 @@ class LoadBalancerPool():
         FAILED = 'failed'
         MAINTENANCE_PENDING = 'maintenance_pending'
         UPDATE_PENDING = 'update_pending'
+
+    class ProxyProtocolEnum(str, Enum):
+        """
+        The PROXY protocol setting for this pool:
+        - `v1`: Enabled with version 1 (human-readable header format)
+        - `v2`: Enabled with version 2 (binary header format)
+        - `disabled`: Disabled
+        Supported by load balancers in the `application` family (otherwise always
+        `disabled`).
+        """
+        DISABLED = 'disabled'
+        V1 = 'v1'
+        V2 = 'v2'
 
 
 class LoadBalancerPoolCollection():
@@ -16371,8 +16449,8 @@ class LoadBalancerPoolHealthMonitor():
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the health monitor on which the
           unexpected property value was encountered.
-    :attr str url_path: (optional) The health check URL. This is applicable only to
-          `http` type of health monitor.
+    :attr str url_path: (optional) The health check URL path. Applicable only if the
+          health monitor `type` is `http` or `https`.
     """
 
     def __init__(self,
@@ -16398,8 +16476,8 @@ class LoadBalancerPoolHealthMonitor():
                monitor on which the unexpected property value was encountered.
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
-        :param str url_path: (optional) The health check URL. This is applicable
-               only to `http` type of health monitor.
+        :param str url_path: (optional) The health check URL path. Applicable only
+               if the health monitor `type` is `http` or `https`.
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -16507,8 +16585,8 @@ class LoadBalancerPoolHealthMonitorPatch():
           remove an existing port value.
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
-    :attr str url_path: (optional) The health check URL. This is applicable only to
-          `http` type of health monitor.
+    :attr str url_path: (optional) The health check URL path. Applicable only if the
+          health monitor `type` is `http` or `https`.
     """
 
     def __init__(self,
@@ -16531,8 +16609,8 @@ class LoadBalancerPoolHealthMonitorPatch():
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources. Specify
                `null` to remove an existing port value.
-        :param str url_path: (optional) The health check URL. This is applicable
-               only to `http` type of health monitor.
+        :param str url_path: (optional) The health check URL path. Applicable only
+               if the health monitor `type` is `http` or `https`.
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -16635,8 +16713,8 @@ class LoadBalancerPoolHealthMonitorPrototype():
           overrides the ports specified in the server member resources.
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
-    :attr str url_path: (optional) The health check URL. This is applicable only to
-          `http` type of health monitor.
+    :attr str url_path: (optional) The health check URL path. Applicable only if the
+          health monitor `type` is `http` or `https`.
     """
 
     def __init__(self,
@@ -16658,8 +16736,8 @@ class LoadBalancerPoolHealthMonitorPrototype():
                monitor.
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
-        :param str url_path: (optional) The health check URL. This is applicable
-               only to `http` type of health monitor.
+        :param str url_path: (optional) The health check URL path. Applicable only
+               if the health monitor `type` is `http` or `https`.
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -16831,24 +16909,24 @@ class LoadBalancerPoolMember():
     """
     LoadBalancerPoolMember.
 
-    :attr str id: The unique identifier for this load balancer pool member.
-    :attr str href: The member's canonical URL.
-    :attr int port: The port number of the application running in the server member.
-    :attr int weight: (optional) Weight of the server member. This takes effect only
-          when the load balancing algorithm of its belonging pool is
-          `weighted_round_robin`.
-    :attr str health: Health of the server member in the pool.
     :attr datetime created_at: The date and time that this member was created.
+    :attr str health: Health of the server member in the pool.
+    :attr str href: The member's canonical URL.
+    :attr str id: The unique identifier for this load balancer pool member.
+    :attr int port: The port number of the application running in the server member.
     :attr str provisioning_status: The provisioning status of this member.
     :attr LoadBalancerPoolMemberTarget target: The pool member target.
+    :attr int weight: (optional) Weight of the server member. Applicable only if the
+          pool algorithm is
+          `weighted_round_robin`.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 port: int,
-                 health: str,
                  created_at: datetime,
+                 health: str,
+                 href: str,
+                 id: str,
+                 port: int,
                  provisioning_status: str,
                  target: 'LoadBalancerPoolMemberTarget',
                  *,
@@ -16856,36 +16934,42 @@ class LoadBalancerPoolMember():
         """
         Initialize a LoadBalancerPoolMember object.
 
-        :param str id: The unique identifier for this load balancer pool member.
+        :param datetime created_at: The date and time that this member was created.
+        :param str health: Health of the server member in the pool.
         :param str href: The member's canonical URL.
+        :param str id: The unique identifier for this load balancer pool member.
         :param int port: The port number of the application running in the server
                member.
-        :param str health: Health of the server member in the pool.
-        :param datetime created_at: The date and time that this member was created.
         :param str provisioning_status: The provisioning status of this member.
         :param LoadBalancerPoolMemberTarget target: The pool member target.
-        :param int weight: (optional) Weight of the server member. This takes
-               effect only when the load balancing algorithm of its belonging pool is
+        :param int weight: (optional) Weight of the server member. Applicable only
+               if the pool algorithm is
                `weighted_round_robin`.
         """
-        self.id = id
-        self.href = href
-        self.port = port
-        self.weight = weight
-        self.health = health
         self.created_at = created_at
+        self.health = health
+        self.href = href
+        self.id = id
+        self.port = port
         self.provisioning_status = provisioning_status
         self.target = target
+        self.weight = weight
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolMember':
         """Initialize a LoadBalancerPoolMember object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerPoolMember JSON'
+                'Required property \'created_at\' not present in LoadBalancerPoolMember JSON'
+            )
+        if 'health' in _dict:
+            args['health'] = _dict.get('health')
+        else:
+            raise ValueError(
+                'Required property \'health\' not present in LoadBalancerPoolMember JSON'
             )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
@@ -16893,25 +16977,17 @@ class LoadBalancerPoolMember():
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerPoolMember JSON'
             )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerPoolMember JSON'
+            )
         if 'port' in _dict:
             args['port'] = _dict.get('port')
         else:
             raise ValueError(
                 'Required property \'port\' not present in LoadBalancerPoolMember JSON'
-            )
-        if 'weight' in _dict:
-            args['weight'] = _dict.get('weight')
-        if 'health' in _dict:
-            args['health'] = _dict.get('health')
-        else:
-            raise ValueError(
-                'Required property \'health\' not present in LoadBalancerPoolMember JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in LoadBalancerPoolMember JSON'
             )
         if 'provisioning_status' in _dict:
             args['provisioning_status'] = _dict.get('provisioning_status')
@@ -16925,6 +17001,8 @@ class LoadBalancerPoolMember():
             raise ValueError(
                 'Required property \'target\' not present in LoadBalancerPoolMember JSON'
             )
+        if 'weight' in _dict:
+            args['weight'] = _dict.get('weight')
         return cls(**args)
 
     @classmethod
@@ -16935,18 +17013,16 @@ class LoadBalancerPoolMember():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'port') and self.port is not None:
-            _dict['port'] = self.port
-        if hasattr(self, 'weight') and self.weight is not None:
-            _dict['weight'] = self.weight
-        if hasattr(self, 'health') and self.health is not None:
-            _dict['health'] = self.health
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'health') and self.health is not None:
+            _dict['health'] = self.health
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
         if hasattr(
                 self,
                 'provisioning_status') and self.provisioning_status is not None:
@@ -16956,6 +17032,8 @@ class LoadBalancerPoolMember():
                 _dict['target'] = self.target
             else:
                 _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'weight') and self.weight is not None:
+            _dict['weight'] = self.weight
         return _dict
 
     def _to_dict(self):
@@ -17063,33 +17141,32 @@ class LoadBalancerPoolMemberPatch():
 
     :attr int port: (optional) The port number of the application running in the
           server member.
-    :attr int weight: (optional) Weight of the server member. This takes effect only
-          when the load balancing algorithm of its belonging pool is
-          `weighted_round_robin`.
     :attr LoadBalancerPoolMemberTargetPrototype target: (optional) The pool member
           target.
+    :attr int weight: (optional) Weight of the server member. Applicable only if the
+          pool algorithm is
+          `weighted_round_robin`.
     """
 
-    def __init__(
-            self,
-            *,
-            port: int = None,
-            weight: int = None,
-            target: 'LoadBalancerPoolMemberTargetPrototype' = None) -> None:
+    def __init__(self,
+                 *,
+                 port: int = None,
+                 target: 'LoadBalancerPoolMemberTargetPrototype' = None,
+                 weight: int = None) -> None:
         """
         Initialize a LoadBalancerPoolMemberPatch object.
 
         :param int port: (optional) The port number of the application running in
                the server member.
-        :param int weight: (optional) Weight of the server member. This takes
-               effect only when the load balancing algorithm of its belonging pool is
-               `weighted_round_robin`.
         :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
                member target.
+        :param int weight: (optional) Weight of the server member. Applicable only
+               if the pool algorithm is
+               `weighted_round_robin`.
         """
         self.port = port
-        self.weight = weight
         self.target = target
+        self.weight = weight
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolMemberPatch':
@@ -17097,10 +17174,10 @@ class LoadBalancerPoolMemberPatch():
         args = {}
         if 'port' in _dict:
             args['port'] = _dict.get('port')
-        if 'weight' in _dict:
-            args['weight'] = _dict.get('weight')
         if 'target' in _dict:
             args['target'] = _dict.get('target')
+        if 'weight' in _dict:
+            args['weight'] = _dict.get('weight')
         return cls(**args)
 
     @classmethod
@@ -17113,13 +17190,13 @@ class LoadBalancerPoolMemberPatch():
         _dict = {}
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
-        if hasattr(self, 'weight') and self.weight is not None:
-            _dict['weight'] = self.weight
         if hasattr(self, 'target') and self.target is not None:
             if isinstance(self.target, dict):
                 _dict['target'] = self.target
             else:
                 _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'weight') and self.weight is not None:
+            _dict['weight'] = self.weight
         return _dict
 
     def _to_dict(self):
@@ -17146,10 +17223,10 @@ class LoadBalancerPoolMemberPrototype():
     LoadBalancerPoolMemberPrototype.
 
     :attr int port: The port number of the application running in the server member.
-    :attr int weight: (optional) Weight of the server member. This takes effect only
-          when the load balancing algorithm of its belonging pool is
-          `weighted_round_robin`.
     :attr LoadBalancerPoolMemberTargetPrototype target: The pool member target.
+    :attr int weight: (optional) Weight of the server member. Applicable only if the
+          pool algorithm is
+          `weighted_round_robin`.
     """
 
     def __init__(self,
@@ -17164,13 +17241,13 @@ class LoadBalancerPoolMemberPrototype():
                member.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target.
-        :param int weight: (optional) Weight of the server member. This takes
-               effect only when the load balancing algorithm of its belonging pool is
+        :param int weight: (optional) Weight of the server member. Applicable only
+               if the pool algorithm is
                `weighted_round_robin`.
         """
         self.port = port
-        self.weight = weight
         self.target = target
+        self.weight = weight
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolMemberPrototype':
@@ -17182,14 +17259,14 @@ class LoadBalancerPoolMemberPrototype():
             raise ValueError(
                 'Required property \'port\' not present in LoadBalancerPoolMemberPrototype JSON'
             )
-        if 'weight' in _dict:
-            args['weight'] = _dict.get('weight')
         if 'target' in _dict:
             args['target'] = _dict.get('target')
         else:
             raise ValueError(
                 'Required property \'target\' not present in LoadBalancerPoolMemberPrototype JSON'
             )
+        if 'weight' in _dict:
+            args['weight'] = _dict.get('weight')
         return cls(**args)
 
     @classmethod
@@ -17202,13 +17279,13 @@ class LoadBalancerPoolMemberPrototype():
         _dict = {}
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
-        if hasattr(self, 'weight') and self.weight is not None:
-            _dict['weight'] = self.weight
         if hasattr(self, 'target') and self.target is not None:
             if isinstance(self.target, dict):
                 _dict['target'] = self.target
             else:
                 _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'weight') and self.weight is not None:
+            _dict['weight'] = self.weight
         return _dict
 
     def _to_dict(self):
@@ -17234,35 +17311,35 @@ class LoadBalancerPoolMemberReference():
     """
     LoadBalancerPoolMemberReference.
 
-    :attr str id: The unique identifier for this load balancer pool member.
     :attr str href: The member's canonical URL.
+    :attr str id: The unique identifier for this load balancer pool member.
     """
 
-    def __init__(self, id: str, href: str) -> None:
+    def __init__(self, href: str, id: str) -> None:
         """
         Initialize a LoadBalancerPoolMemberReference object.
 
-        :param str id: The unique identifier for this load balancer pool member.
         :param str href: The member's canonical URL.
+        :param str id: The unique identifier for this load balancer pool member.
         """
-        self.id = id
         self.href = href
+        self.id = id
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolMemberReference':
         """Initialize a LoadBalancerPoolMemberReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerPoolMemberReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerPoolMemberReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerPoolMemberReference JSON'
             )
         return cls(**args)
 
@@ -17274,10 +17351,10 @@ class LoadBalancerPoolMemberReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         return _dict
 
     def _to_dict(self):
@@ -17335,15 +17412,21 @@ class LoadBalancerPoolPatch():
     """
     LoadBalancerPoolPatch.
 
-    :attr str name: (optional) The user-defined name for this load balancer pool.
     :attr str algorithm: (optional) The load balancing algorithm.
+    :attr LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The health
+          monitor of this pool.
+    :attr str name: (optional) The user-defined name for this load balancer pool.
     :attr str protocol: (optional) The protocol used for this load balancer pool.
           The enumerated values for this property are expected to expand in the future.
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the pool on which the unexpected
           property value was encountered.
-    :attr LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The health
-          monitor of this pool.
+    :attr str proxy_protocol: (optional) The PROXY protocol setting for this pool:
+          - `v1`: Enabled with version 1 (human-readable header format)
+          - `v2`: Enabled with version 2 (binary header format)
+          - `disabled`: Disabled
+          Supported by load balancers in the `application` family (otherwise always
+          `disabled`).
     :attr LoadBalancerPoolSessionPersistencePatch session_persistence: (optional)
           The session persistence of this pool.
     """
@@ -17351,49 +17434,60 @@ class LoadBalancerPoolPatch():
     def __init__(
         self,
         *,
-        name: str = None,
         algorithm: str = None,
-        protocol: str = None,
         health_monitor: 'LoadBalancerPoolHealthMonitorPatch' = None,
+        name: str = None,
+        protocol: str = None,
+        proxy_protocol: str = None,
         session_persistence: 'LoadBalancerPoolSessionPersistencePatch' = None
     ) -> None:
         """
         Initialize a LoadBalancerPoolPatch object.
 
+        :param str algorithm: (optional) The load balancing algorithm.
+        :param LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The
+               health monitor of this pool.
         :param str name: (optional) The user-defined name for this load balancer
                pool.
-        :param str algorithm: (optional) The load balancing algorithm.
         :param str protocol: (optional) The protocol used for this load balancer
                pool.
                The enumerated values for this property are expected to expand in the
                future. When processing this property, check for and log unknown values.
                Optionally halt processing and surface the error, or bypass the pool on
                which the unexpected property value was encountered.
-        :param LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The
-               health monitor of this pool.
+        :param str proxy_protocol: (optional) The PROXY protocol setting for this
+               pool:
+               - `v1`: Enabled with version 1 (human-readable header format)
+               - `v2`: Enabled with version 2 (binary header format)
+               - `disabled`: Disabled
+               Supported by load balancers in the `application` family (otherwise always
+               `disabled`).
         :param LoadBalancerPoolSessionPersistencePatch session_persistence:
                (optional) The session persistence of this pool.
         """
-        self.name = name
         self.algorithm = algorithm
-        self.protocol = protocol
         self.health_monitor = health_monitor
+        self.name = name
+        self.protocol = protocol
+        self.proxy_protocol = proxy_protocol
         self.session_persistence = session_persistence
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolPatch':
         """Initialize a LoadBalancerPoolPatch object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'algorithm' in _dict:
             args['algorithm'] = _dict.get('algorithm')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
         if 'health_monitor' in _dict:
             args[
                 'health_monitor'] = LoadBalancerPoolHealthMonitorPatch.from_dict(
                     _dict.get('health_monitor'))
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        if 'proxy_protocol' in _dict:
+            args['proxy_protocol'] = _dict.get('proxy_protocol')
         if 'session_persistence' in _dict:
             args[
                 'session_persistence'] = LoadBalancerPoolSessionPersistencePatch.from_dict(
@@ -17408,14 +17502,16 @@ class LoadBalancerPoolPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'algorithm') and self.algorithm is not None:
             _dict['algorithm'] = self.algorithm
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'health_monitor') and self.health_monitor is not None:
             _dict['health_monitor'] = self.health_monitor.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'proxy_protocol') and self.proxy_protocol is not None:
+            _dict['proxy_protocol'] = self.proxy_protocol
         if hasattr(
                 self,
                 'session_persistence') and self.session_persistence is not None:
@@ -17460,25 +17556,43 @@ class LoadBalancerPoolPatch():
         TCP = 'tcp'
         HTTPS = 'https'
 
+    class ProxyProtocolEnum(str, Enum):
+        """
+        The PROXY protocol setting for this pool:
+        - `v1`: Enabled with version 1 (human-readable header format)
+        - `v2`: Enabled with version 2 (binary header format)
+        - `disabled`: Disabled
+        Supported by load balancers in the `application` family (otherwise always
+        `disabled`).
+        """
+        DISABLED = 'disabled'
+        V1 = 'v1'
+        V2 = 'v2'
+
 
 class LoadBalancerPoolPrototype():
     """
     LoadBalancerPoolPrototype.
 
-    :attr str name: (optional) The user-defined name for this load balancer pool. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr str algorithm: The load balancing algorithm.
-    :attr str protocol: The protocol used for this load balancer pool.
-          The enumerated values for this property are expected to expand in the future.
-          When processing this property, check for and log unknown values. Optionally halt
-          processing and surface the error, or bypass the pool on which the unexpected
-          property value was encountered.
     :attr LoadBalancerPoolHealthMonitorPrototype health_monitor: The health monitor
           of this pool.
     :attr List[LoadBalancerPoolMemberPrototype] members: (optional) The members for
           this load balancer pool. For load balancers in the `network` family, the same
-          `port` and `target` tuple cannot be shared by a member of any other load
-          balancer.
+          `port` and `target` tuple cannot be shared by a pool member of any other load
+          balancer in the same VPC.
+    :attr str name: (optional) The user-defined name for this load balancer pool. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str protocol: The protocol used for this load balancer pool. Load
+          balancers in the `network` family support `tcp`. Load balancers in the
+          `application` family support `tcp`, `http`, and
+          `https`.
+    :attr str proxy_protocol: (optional) The PROXY protocol setting for this pool:
+          - `v1`: Enabled with version 1 (human-readable header format)
+          - `v2`: Enabled with version 2 (binary header format)
+          - `disabled`: Disabled
+          Supported by load balancers in the `application` family (otherwise always
+          `disabled`).
     :attr LoadBalancerPoolSessionPersistencePrototype session_persistence:
           (optional) The session persistence of this pool.
     """
@@ -17486,58 +17600,58 @@ class LoadBalancerPoolPrototype():
     def __init__(
         self,
         algorithm: str,
-        protocol: str,
         health_monitor: 'LoadBalancerPoolHealthMonitorPrototype',
+        protocol: str,
         *,
-        name: str = None,
         members: List['LoadBalancerPoolMemberPrototype'] = None,
+        name: str = None,
+        proxy_protocol: str = None,
         session_persistence: 'LoadBalancerPoolSessionPersistencePrototype' = None
     ) -> None:
         """
         Initialize a LoadBalancerPoolPrototype object.
 
         :param str algorithm: The load balancing algorithm.
-        :param str protocol: The protocol used for this load balancer pool.
-               The enumerated values for this property are expected to expand in the
-               future. When processing this property, check for and log unknown values.
-               Optionally halt processing and surface the error, or bypass the pool on
-               which the unexpected property value was encountered.
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
+        :param str protocol: The protocol used for this load balancer pool. Load
+               balancers in the `network` family support `tcp`. Load balancers in the
+               `application` family support `tcp`, `http`, and
+               `https`.
+        :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
+               members for this load balancer pool. For load balancers in the `network`
+               family, the same `port` and `target` tuple cannot be shared by a pool
+               member of any other load balancer in the same VPC.
         :param str name: (optional) The user-defined name for this load balancer
                pool. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
-        :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
-               members for this load balancer pool. For load balancers in the `network`
-               family, the same `port` and `target` tuple cannot be shared by a member of
-               any other load balancer.
+        :param str proxy_protocol: (optional) The PROXY protocol setting for this
+               pool:
+               - `v1`: Enabled with version 1 (human-readable header format)
+               - `v2`: Enabled with version 2 (binary header format)
+               - `disabled`: Disabled
+               Supported by load balancers in the `application` family (otherwise always
+               `disabled`).
         :param LoadBalancerPoolSessionPersistencePrototype session_persistence:
                (optional) The session persistence of this pool.
         """
-        self.name = name
         self.algorithm = algorithm
-        self.protocol = protocol
         self.health_monitor = health_monitor
         self.members = members
+        self.name = name
+        self.protocol = protocol
+        self.proxy_protocol = proxy_protocol
         self.session_persistence = session_persistence
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolPrototype':
         """Initialize a LoadBalancerPoolPrototype object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'algorithm' in _dict:
             args['algorithm'] = _dict.get('algorithm')
         else:
             raise ValueError(
                 'Required property \'algorithm\' not present in LoadBalancerPoolPrototype JSON'
-            )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        else:
-            raise ValueError(
-                'Required property \'protocol\' not present in LoadBalancerPoolPrototype JSON'
             )
         if 'health_monitor' in _dict:
             args[
@@ -17552,6 +17666,16 @@ class LoadBalancerPoolPrototype():
                 LoadBalancerPoolMemberPrototype.from_dict(x)
                 for x in _dict.get('members')
             ]
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in LoadBalancerPoolPrototype JSON'
+            )
+        if 'proxy_protocol' in _dict:
+            args['proxy_protocol'] = _dict.get('proxy_protocol')
         if 'session_persistence' in _dict:
             args[
                 'session_persistence'] = LoadBalancerPoolSessionPersistencePrototype.from_dict(
@@ -17566,16 +17690,18 @@ class LoadBalancerPoolPrototype():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'algorithm') and self.algorithm is not None:
             _dict['algorithm'] = self.algorithm
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'health_monitor') and self.health_monitor is not None:
             _dict['health_monitor'] = self.health_monitor.to_dict()
         if hasattr(self, 'members') and self.members is not None:
             _dict['members'] = [x.to_dict() for x in self.members]
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'proxy_protocol') and self.proxy_protocol is not None:
+            _dict['proxy_protocol'] = self.proxy_protocol
         if hasattr(
                 self,
                 'session_persistence') and self.session_persistence is not None:
@@ -17610,53 +17736,65 @@ class LoadBalancerPoolPrototype():
 
     class ProtocolEnum(str, Enum):
         """
-        The protocol used for this load balancer pool.
-        The enumerated values for this property are expected to expand in the future. When
-        processing this property, check for and log unknown values. Optionally halt
-        processing and surface the error, or bypass the pool on which the unexpected
-        property value was encountered.
+        The protocol used for this load balancer pool. Load balancers in the `network`
+        family support `tcp`. Load balancers in the `application` family support `tcp`,
+        `http`, and
+        `https`.
         """
         HTTP = 'http'
         TCP = 'tcp'
         HTTPS = 'https'
+
+    class ProxyProtocolEnum(str, Enum):
+        """
+        The PROXY protocol setting for this pool:
+        - `v1`: Enabled with version 1 (human-readable header format)
+        - `v2`: Enabled with version 2 (binary header format)
+        - `disabled`: Disabled
+        Supported by load balancers in the `application` family (otherwise always
+        `disabled`).
+        """
+        DISABLED = 'disabled'
+        V1 = 'v1'
+        V2 = 'v2'
 
 
 class LoadBalancerPoolReference():
     """
     LoadBalancerPoolReference.
 
-    :attr str id: The unique identifier for this load balancer pool.
     :attr str href: The pool's canonical URL.
+    :attr str id: The unique identifier for this load balancer pool.
     :attr str name: The user-defined name for this load balancer pool.
     """
 
-    def __init__(self, id: str, href: str, name: str) -> None:
+    def __init__(self, href: str, id: str, name: str) -> None:
         """
         Initialize a LoadBalancerPoolReference object.
 
-        :param str id: The unique identifier for this load balancer pool.
         :param str href: The pool's canonical URL.
+        :param str id: The unique identifier for this load balancer pool.
         :param str name: The user-defined name for this load balancer pool.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPoolReference':
         """Initialize a LoadBalancerPoolReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerPoolReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerPoolReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerPoolReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -17674,10 +17812,10 @@ class LoadBalancerPoolReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -18004,36 +18142,36 @@ class NetworkACL():
     """
     NetworkACL.
 
-    :attr str id: The unique identifier for this network ACL.
-    :attr str href: The URL for this network ACL.
-    :attr str name: The user-defined name for this network ACL.
     :attr datetime created_at: The date and time that the network ACL was created.
+    :attr str href: The URL for this network ACL.
+    :attr str id: The unique identifier for this network ACL.
+    :attr str name: The user-defined name for this network ACL.
     :attr List[NetworkACLRuleItem] rules: The ordered rules for this network ACL. If
           no rules exist, all traffic will be allowed.
     :attr List[SubnetReference] subnets: The subnets to which this network ACL is
           attached.
     """
 
-    def __init__(self, id: str, href: str, name: str, created_at: datetime,
+    def __init__(self, created_at: datetime, href: str, id: str, name: str,
                  rules: List['NetworkACLRuleItem'],
                  subnets: List['SubnetReference']) -> None:
         """
         Initialize a NetworkACL object.
 
-        :param str id: The unique identifier for this network ACL.
-        :param str href: The URL for this network ACL.
-        :param str name: The user-defined name for this network ACL.
         :param datetime created_at: The date and time that the network ACL was
                created.
+        :param str href: The URL for this network ACL.
+        :param str id: The unique identifier for this network ACL.
+        :param str name: The user-defined name for this network ACL.
         :param List[NetworkACLRuleItem] rules: The ordered rules for this network
                ACL. If no rules exist, all traffic will be allowed.
         :param List[SubnetReference] subnets: The subnets to which this network ACL
                is attached.
         """
-        self.id = id
-        self.href = href
-        self.name = name
         self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.name = name
         self.rules = rules
         self.subnets = subnets
 
@@ -18041,27 +18179,27 @@ class NetworkACL():
     def from_dict(cls, _dict: Dict) -> 'NetworkACL':
         """Initialize a NetworkACL object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACL JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACL JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACL JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
                 'Required property \'created_at\' not present in NetworkACL JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in NetworkACL JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACL JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACL JSON')
         if 'rules' in _dict:
             args['rules'] = [
                 NetworkACLRuleItem.from_dict(x) for x in _dict.get('rules')
@@ -18086,14 +18224,14 @@ class NetworkACL():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
         if hasattr(self, 'subnets') and self.subnets is not None:
@@ -18123,14 +18261,13 @@ class NetworkACLCollection():
     """
     NetworkACLCollection.
 
-    :attr NetworkACLCollectionFirst first: A reference to the first page of
-          resources.
+    :attr NetworkACLCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr NetworkACLCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
-          except the last page.
     :attr List[NetworkACL] network_acls: Collection of network ACLs.
+    :attr NetworkACLCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
     """
 
     def __init__(self,
@@ -18142,19 +18279,19 @@ class NetworkACLCollection():
         """
         Initialize a NetworkACLCollection object.
 
-        :param NetworkACLCollectionFirst first: A reference to the first page of
+        :param NetworkACLCollectionFirst first: A link to the first page of
                resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[NetworkACL] network_acls: Collection of network ACLs.
-        :param NetworkACLCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param NetworkACLCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
         self.limit = limit
-        self.next = next
         self.network_acls = network_acls
+        self.next = next
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'NetworkACLCollection':
@@ -18173,8 +18310,6 @@ class NetworkACLCollection():
             raise ValueError(
                 'Required property \'limit\' not present in NetworkACLCollection JSON'
             )
-        if 'next' in _dict:
-            args['next'] = NetworkACLCollectionNext.from_dict(_dict.get('next'))
         if 'network_acls' in _dict:
             args['network_acls'] = [
                 NetworkACL.from_dict(x) for x in _dict.get('network_acls')
@@ -18183,6 +18318,8 @@ class NetworkACLCollection():
             raise ValueError(
                 'Required property \'network_acls\' not present in NetworkACLCollection JSON'
             )
+        if 'next' in _dict:
+            args['next'] = NetworkACLCollectionNext.from_dict(_dict.get('next'))
         return cls(**args)
 
     @classmethod
@@ -18197,10 +18334,10 @@ class NetworkACLCollection():
             _dict['first'] = self.first.to_dict()
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
-        if hasattr(self, 'next') and self.next is not None:
-            _dict['next'] = self.next.to_dict()
         if hasattr(self, 'network_acls') and self.network_acls is not None:
             _dict['network_acls'] = [x.to_dict() for x in self.network_acls]
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -18224,16 +18361,16 @@ class NetworkACLCollection():
 
 class NetworkACLCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a NetworkACLCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -18282,17 +18419,17 @@ class NetworkACLCollectionFirst():
 
 class NetworkACLCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a NetworkACLCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -18438,38 +18575,38 @@ class NetworkACLReference():
     """
     NetworkACLReference.
 
-    :attr str id: The unique identifier for this network ACL.
     :attr str href: The URL for this network ACL.
+    :attr str id: The unique identifier for this network ACL.
     :attr str name: The user-defined name for this network ACL.
     """
 
-    def __init__(self, id: str, href: str, name: str) -> None:
+    def __init__(self, href: str, id: str, name: str) -> None:
         """
         Initialize a NetworkACLReference object.
 
-        :param str id: The unique identifier for this network ACL.
         :param str href: The URL for this network ACL.
+        :param str id: The unique identifier for this network ACL.
         :param str name: The user-defined name for this network ACL.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'NetworkACLReference':
         """Initialize a NetworkACLReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in NetworkACLReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACLReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -18487,10 +18624,10 @@ class NetworkACLReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -18518,56 +18655,56 @@ class NetworkACLRule():
     """
     NetworkACLRule.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
+          immediately before. If absent, this is the last rule.
+    :attr datetime created_at: The date and time that the rule was created.
     :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
           applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
+    :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr str protocol: The protocol to enforce.
     :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
           all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. If absent, this is the last rule.
-    :attr datetime created_at: The date and time that the rule was created.
-    :attr str ip_version: The IP version for this rule.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
-                 source: str,
-                 protocol: str,
-                 created_at: datetime,
+                 href: str,
+                 id: str,
                  ip_version: str,
+                 name: str,
+                 protocol: str,
+                 source: str,
                  *,
                  before: 'NetworkACLRuleReference' = None) -> None:
         """
         Initialize a NetworkACLRule object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
+        :param str protocol: The protocol to enforce.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
-        :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. If absent, this is the last rule.
         """
@@ -18635,15 +18772,6 @@ class NetworkACLRule():
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -18652,18 +18780,58 @@ class NetworkACLRule():
         IPV6 = 'ipv6'
 
 
+class NetworkACLRuleBeforePatch():
+    """
+    The rule to move this rule immediately before. Specify `null` to move this rule after
+    all existing rules.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a NetworkACLRuleBeforePatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'NetworkACLRuleBeforePatchNetworkACLRuleIdentityById',
+                'NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class NetworkACLRuleBeforePrototype():
+    """
+    The rule to insert this rule immediately before. If omitted, this rule will be
+    inserted after all existing rules.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a NetworkACLRuleBeforePrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById',
+                'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
 class NetworkACLRuleCollection():
     """
     NetworkACLRuleCollection.
 
-    :attr NetworkACLRuleCollectionFirst first: A reference to the first page of
+    :attr NetworkACLRuleCollectionFirst first: A link to the first page of
           resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr NetworkACLRuleCollectionNext next: (optional) A reference to the next page
-          of resources; this reference is included for all pages
+    :attr NetworkACLRuleCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
-    :attr List[NetworkACLRuleItem] rules: Ordered collection of Network ACL rules.
+    :attr List[NetworkACLRuleItem] rules: Ordered collection of network ACL rules.
     """
 
     def __init__(self,
@@ -18675,14 +18843,14 @@ class NetworkACLRuleCollection():
         """
         Initialize a NetworkACLRuleCollection object.
 
-        :param NetworkACLRuleCollectionFirst first: A reference to the first page
-               of resources.
+        :param NetworkACLRuleCollectionFirst first: A link to the first page of
+               resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param List[NetworkACLRuleItem] rules: Ordered collection of Network ACL
+        :param List[NetworkACLRuleItem] rules: Ordered collection of network ACL
                rules.
-        :param NetworkACLRuleCollectionNext next: (optional) A reference to the
-               next page of resources; this reference is included for all pages
+        :param NetworkACLRuleCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -18759,16 +18927,16 @@ class NetworkACLRuleCollection():
 
 class NetworkACLRuleCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a NetworkACLRuleCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -18817,17 +18985,17 @@ class NetworkACLRuleCollectionFirst():
 
 class NetworkACLRuleCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a NetworkACLRuleCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -18874,78 +19042,61 @@ class NetworkACLRuleCollectionNext():
         return not self == other
 
 
-class NetworkACLRuleIdentity():
-    """
-    Identifies a network ACL rule by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a NetworkACLRuleIdentity object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(
-                ['NetworkACLRuleIdentityById', 'NetworkACLRuleIdentityByHref']))
-        raise Exception(msg)
-
-
 class NetworkACLRuleItem():
     """
     NetworkACLRuleItem.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
-    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
-          applies to all addresses.
-    :attr str direction: Whether the traffic to be matched is `inbound` or
-          `outbound`.
-    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
-          all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
           immediately before. In a rule collection, this always
           refers to the next item in the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
+    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
+          applies to all addresses.
+    :attr str direction: Whether the traffic to be matched is `inbound` or
+          `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
     :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr str protocol: The protocol to enforce.
+    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
+          all addresses.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
-                 source: str,
-                 protocol: str,
-                 created_at: datetime,
+                 href: str,
+                 id: str,
                  ip_version: str,
+                 name: str,
+                 protocol: str,
+                 source: str,
                  *,
                  before: 'NetworkACLRuleReference' = None) -> None:
         """
         Initialize a NetworkACLRuleItem object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
+        :param str protocol: The protocol to enforce.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
-        :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. In a rule collection, this always
                refers to the next item in the collection. If absent, this is the last
@@ -19015,15 +19166,6 @@ class NetworkACLRuleItem():
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -19036,46 +19178,46 @@ class NetworkACLRulePatch():
     """
     NetworkACLRulePatch.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in.
     :attr str action: (optional) Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePatch before: (optional) The rule to move this rule
+          immediately before. Specify `null` to move this rule after
+          all existing rules.
     :attr str destination: (optional) The destination IP address or CIDR block. The
           CIDR block `0.0.0.0/0` applies to all addresses.
     :attr str direction: (optional) Whether the traffic to be matched is `inbound`
           or `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in.
+    :attr str protocol: (optional) The protocol to enforce.
     :attr str source: (optional) The source IP address or CIDR block.  The CIDR
           block `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after
-          all existing rules.
     """
 
     def __init__(self,
                  *,
-                 name: str = None,
                  action: str = None,
+                 before: 'NetworkACLRuleBeforePatch' = None,
                  destination: str = None,
                  direction: str = None,
-                 source: str = None,
+                 name: str = None,
                  protocol: str = None,
-                 before: 'NetworkACLRuleIdentity' = None) -> None:
+                 source: str = None) -> None:
         """
         Initialize a NetworkACLRulePatch object.
 
-        :param str name: (optional) The user-defined name for this rule. Names must
-               be unique within the network ACL the rule resides in.
         :param str action: (optional) Whether to allow or deny matching traffic.
+        :param NetworkACLRuleBeforePatch before: (optional) The rule to move this
+               rule immediately before. Specify `null` to move this rule after
+               all existing rules.
         :param str destination: (optional) The destination IP address or CIDR
                block. The CIDR block `0.0.0.0/0` applies to all addresses.
         :param str direction: (optional) Whether the traffic to be matched is
                `inbound` or `outbound`.
+        :param str name: (optional) The user-defined name for this rule. Names must
+               be unique within the network ACL the rule resides in.
+        :param str protocol: (optional) The protocol to enforce.
         :param str source: (optional) The source IP address or CIDR block.  The
                CIDR block `0.0.0.0/0` applies to all addresses.
-        :param str protocol: (optional) The protocol to enforce.
-        :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after
-               all existing rules.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
@@ -19141,45 +19283,36 @@ class NetworkACLRulePatch():
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
 
 class NetworkACLRulePrototype():
     """
     NetworkACLRulePrototype.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePrototype before: (optional) The rule to insert this
+          rule immediately before. If omitted, this rule will be
+          inserted after all existing rules.
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
+    :attr str protocol: The protocol to enforce.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be
-          inserted after all existing rules.
     """
 
     def __init__(self,
                  action: str,
                  destination: str,
                  direction: str,
-                 source: str,
                  protocol: str,
+                 source: str,
                  *,
-                 name: str = None,
-                 before: 'NetworkACLRuleIdentity' = None) -> None:
+                 before: 'NetworkACLRuleBeforePrototype' = None,
+                 name: str = None) -> None:
         """
         Initialize a NetworkACLRulePrototype object.
 
@@ -19188,15 +19321,15 @@ class NetworkACLRulePrototype():
                block `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str source: The source IP address or CIDR block.  The CIDR block
                `0.0.0.0/0` applies to all addresses.
-        :param str protocol: The protocol to enforce.
+        :param NetworkACLRuleBeforePrototype before: (optional) The rule to insert
+               this rule immediately before. If omitted, this rule will be
+               inserted after all existing rules.
         :param str name: (optional) The user-defined name for this rule. Names must
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
-        :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be
-               inserted after all existing rules.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
@@ -19262,39 +19395,30 @@ class NetworkACLRulePrototype():
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
 
 class NetworkACLRulePrototypeNetworkACLContext():
     """
     NetworkACLRulePrototypeNetworkACLContext.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
+    :attr str protocol: The protocol to enforce.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
                  action: str,
                  destination: str,
                  direction: str,
-                 source: str,
                  protocol: str,
+                 source: str,
                  *,
                  name: str = None) -> None:
         """
@@ -19305,9 +19429,9 @@ class NetworkACLRulePrototypeNetworkACLContext():
                block `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str source: The source IP address or CIDR block.  The CIDR block
                `0.0.0.0/0` applies to all addresses.
-        :param str protocol: The protocol to enforce.
         :param str name: (optional) The user-defined name for this rule. Names must
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
@@ -19381,52 +19505,43 @@ class NetworkACLRulePrototypeNetworkACLContext():
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
 
 class NetworkACLRuleReference():
     """
     NetworkACLRuleReference.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this Network ACL rule.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
+    :attr str name: The user-defined name for this network ACL rule.
     """
 
-    def __init__(self, id: str, href: str, name: str) -> None:
+    def __init__(self, href: str, id: str, name: str) -> None:
         """
         Initialize a NetworkACLRuleReference object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this Network ACL rule.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str name: The user-defined name for this network ACL rule.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'NetworkACLRuleReference':
         """Initialize a NetworkACLRuleReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in NetworkACLRuleReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACLRuleReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -19444,10 +19559,10 @@ class NetworkACLRuleReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -19475,18 +19590,18 @@ class NetworkInterface():
     """
     NetworkInterface.
 
-    :attr str name: The user-defined name for this network interface.
-    :attr str id: The unique identifier for this network interface.
-    :attr str href: The URL for this network interface.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-    :attr str resource_type: The resource type.
-    :attr List[SecurityGroupReference] security_groups: Collection of security
-          groups.
     :attr datetime created_at: The date and time that the network interface was
           created.
     :attr List[FloatingIPReference] floating_ips: (optional) Array of references to
           floating IPs associated with this network interface.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
+    :attr str primary_ipv4_address: The primary IPv4 address.
+    :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: Collection of security
+          groups.
     :attr str status: The status of the network interface.
           Due to a known issue, the value for this property may be `ACTIVE` instead of
           `available`.
@@ -19495,14 +19610,14 @@ class NetworkInterface():
     """
 
     def __init__(self,
-                 name: str,
-                 id: str,
+                 created_at: datetime,
                  href: str,
+                 id: str,
+                 name: str,
+                 port_speed: int,
                  primary_ipv4_address: str,
                  resource_type: str,
                  security_groups: List['SecurityGroupReference'],
-                 created_at: datetime,
-                 port_speed: int,
                  status: str,
                  subnet: 'SubnetReference',
                  type: str,
@@ -19511,16 +19626,16 @@ class NetworkInterface():
         """
         Initialize a NetworkInterface object.
 
-        :param str name: The user-defined name for this network interface.
-        :param str id: The unique identifier for this network interface.
+        :param datetime created_at: The date and time that the network interface
+               was created.
         :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
+        :param int port_speed: The network interface port speed in Mbps.
         :param str primary_ipv4_address: The primary IPv4 address.
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: Collection of security
                groups.
-        :param datetime created_at: The date and time that the network interface
-               was created.
-        :param int port_speed: The network interface port speed in Mbps.
         :param str status: The status of the network interface.
                Due to a known issue, the value for this property may be `ACTIVE` instead
                of
@@ -19531,15 +19646,15 @@ class NetworkInterface():
         :param List[FloatingIPReference] floating_ips: (optional) Array of
                references to floating IPs associated with this network interface.
         """
-        self.name = name
-        self.id = id
+        self.created_at = created_at
+        self.floating_ips = floating_ips
         self.href = href
+        self.id = id
+        self.name = name
+        self.port_speed = port_speed
         self.primary_ipv4_address = primary_ipv4_address
         self.resource_type = resource_type
         self.security_groups = security_groups
-        self.created_at = created_at
-        self.floating_ips = floating_ips
-        self.port_speed = port_speed
         self.status = status
         self.subnet = subnet
         self.type = type
@@ -19548,22 +19663,39 @@ class NetworkInterface():
     def from_dict(cls, _dict: Dict) -> 'NetworkInterface':
         """Initialize a NetworkInterface object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'name\' not present in NetworkInterface JSON'
+                'Required property \'created_at\' not present in NetworkInterface JSON'
+            )
+        if 'floating_ips' in _dict:
+            args['floating_ips'] = [
+                FloatingIPReference.from_dict(x)
+                for x in _dict.get('floating_ips')
+            ]
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in NetworkInterface JSON'
             )
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
                 'Required property \'id\' not present in NetworkInterface JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'href\' not present in NetworkInterface JSON'
+                'Required property \'name\' not present in NetworkInterface JSON'
+            )
+        if 'port_speed' in _dict:
+            args['port_speed'] = _dict.get('port_speed')
+        else:
+            raise ValueError(
+                'Required property \'port_speed\' not present in NetworkInterface JSON'
             )
         if 'primary_ipv4_address' in _dict:
             args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
@@ -19585,23 +19717,6 @@ class NetworkInterface():
         else:
             raise ValueError(
                 'Required property \'security_groups\' not present in NetworkInterface JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkInterface JSON'
-            )
-        if 'floating_ips' in _dict:
-            args['floating_ips'] = [
-                FloatingIPReference.from_dict(x)
-                for x in _dict.get('floating_ips')
-            ]
-        if 'port_speed' in _dict:
-            args['port_speed'] = _dict.get('port_speed')
-        else:
-            raise ValueError(
-                'Required property \'port_speed\' not present in NetworkInterface JSON'
             )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
@@ -19631,12 +19746,18 @@ class NetworkInterface():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
+            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'port_speed') and self.port_speed is not None:
+            _dict['port_speed'] = self.port_speed
         if hasattr(self, 'primary_ipv4_address'
                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
@@ -19647,12 +19768,6 @@ class NetworkInterface():
             _dict['security_groups'] = [
                 x.to_dict() for x in self.security_groups
             ]
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
-            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
-        if hasattr(self, 'port_speed') and self.port_speed is not None:
-            _dict['port_speed'] = self.port_speed
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'subnet') and self.subnet is not None:
@@ -19775,29 +19890,29 @@ class NetworkInterfaceInstanceContextReference():
     """
     NetworkInterfaceInstanceContextReference.
 
-    :attr str name: The user-defined name for this network interface.
-    :attr str id: The unique identifier for this network interface.
     :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
     :attr str resource_type: The resource type.
     :attr SubnetReference subnet: The associated subnet.
     """
 
-    def __init__(self, name: str, id: str, href: str, primary_ipv4_address: str,
+    def __init__(self, href: str, id: str, name: str, primary_ipv4_address: str,
                  resource_type: str, subnet: 'SubnetReference') -> None:
         """
         Initialize a NetworkInterfaceInstanceContextReference object.
 
-        :param str name: The user-defined name for this network interface.
-        :param str id: The unique identifier for this network interface.
         :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
         :param str resource_type: The resource type.
         :param SubnetReference subnet: The associated subnet.
         """
-        self.name = name
-        self.id = id
         self.href = href
+        self.id = id
+        self.name = name
         self.primary_ipv4_address = primary_ipv4_address
         self.resource_type = resource_type
         self.subnet = subnet
@@ -19807,11 +19922,11 @@ class NetworkInterfaceInstanceContextReference():
                   _dict: Dict) -> 'NetworkInterfaceInstanceContextReference':
         """Initialize a NetworkInterfaceInstanceContextReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'name\' not present in NetworkInterfaceInstanceContextReference JSON'
+                'Required property \'href\' not present in NetworkInterfaceInstanceContextReference JSON'
             )
         if 'id' in _dict:
             args['id'] = _dict.get('id')
@@ -19819,11 +19934,11 @@ class NetworkInterfaceInstanceContextReference():
             raise ValueError(
                 'Required property \'id\' not present in NetworkInterfaceInstanceContextReference JSON'
             )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'href\' not present in NetworkInterfaceInstanceContextReference JSON'
+                'Required property \'name\' not present in NetworkInterfaceInstanceContextReference JSON'
             )
         if 'primary_ipv4_address' in _dict:
             args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
@@ -19853,12 +19968,12 @@ class NetworkInterfaceInstanceContextReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
@@ -20002,27 +20117,27 @@ class NetworkInterfaceReference():
     """
     NetworkInterfaceReference.
 
-    :attr str name: The user-defined name for this network interface.
-    :attr str id: The unique identifier for this network interface.
     :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, name: str, id: str, href: str, primary_ipv4_address: str,
+    def __init__(self, href: str, id: str, name: str, primary_ipv4_address: str,
                  resource_type: str) -> None:
         """
         Initialize a NetworkInterfaceReference object.
 
-        :param str name: The user-defined name for this network interface.
-        :param str id: The unique identifier for this network interface.
         :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
         :param str resource_type: The resource type.
         """
-        self.name = name
-        self.id = id
         self.href = href
+        self.id = id
+        self.name = name
         self.primary_ipv4_address = primary_ipv4_address
         self.resource_type = resource_type
 
@@ -20030,11 +20145,11 @@ class NetworkInterfaceReference():
     def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceReference':
         """Initialize a NetworkInterfaceReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'name\' not present in NetworkInterfaceReference JSON'
+                'Required property \'href\' not present in NetworkInterfaceReference JSON'
             )
         if 'id' in _dict:
             args['id'] = _dict.get('id')
@@ -20042,11 +20157,11 @@ class NetworkInterfaceReference():
             raise ValueError(
                 'Required property \'id\' not present in NetworkInterfaceReference JSON'
             )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'href\' not present in NetworkInterfaceReference JSON'
+                'Required property \'name\' not present in NetworkInterfaceReference JSON'
             )
         if 'primary_ipv4_address' in _dict:
             args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
@@ -20070,12 +20185,12 @@ class NetworkInterfaceReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
@@ -20179,38 +20294,37 @@ class OperatingSystem():
     """
     OperatingSystem.
 
-    :attr str name: The unique name of the operating system.
-    :attr str href: The URL for this operating system.
     :attr str architecture: The operating system architecture.
     :attr str display_name: A unique, display-friendly name for the operating
           system.
     :attr str family: The name of the software family this operating system belongs
           to.
+    :attr str href: The URL for this operating system.
+    :attr str name: The globally unique name for this operating system.
     :attr str vendor: The vendor of the operating system.
     :attr str version: The major release version of this operating system.
     """
 
-    def __init__(self, name: str, href: str, architecture: str,
-                 display_name: str, family: str, vendor: str,
-                 version: str) -> None:
+    def __init__(self, architecture: str, display_name: str, family: str,
+                 href: str, name: str, vendor: str, version: str) -> None:
         """
         Initialize a OperatingSystem object.
 
-        :param str name: The unique name of the operating system.
-        :param str href: The URL for this operating system.
         :param str architecture: The operating system architecture.
         :param str display_name: A unique, display-friendly name for the operating
                system.
         :param str family: The name of the software family this operating system
                belongs to.
+        :param str href: The URL for this operating system.
+        :param str name: The globally unique name for this operating system.
         :param str vendor: The vendor of the operating system.
         :param str version: The major release version of this operating system.
         """
-        self.name = name
-        self.href = href
         self.architecture = architecture
         self.display_name = display_name
         self.family = family
+        self.href = href
+        self.name = name
         self.vendor = vendor
         self.version = version
 
@@ -20218,18 +20332,6 @@ class OperatingSystem():
     def from_dict(cls, _dict: Dict) -> 'OperatingSystem':
         """Initialize a OperatingSystem object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in OperatingSystem JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in OperatingSystem JSON'
-            )
         if 'architecture' in _dict:
             args['architecture'] = _dict.get('architecture')
         else:
@@ -20247,6 +20349,18 @@ class OperatingSystem():
         else:
             raise ValueError(
                 'Required property \'family\' not present in OperatingSystem JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in OperatingSystem JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in OperatingSystem JSON'
             )
         if 'vendor' in _dict:
             args['vendor'] = _dict.get('vendor')
@@ -20270,16 +20384,16 @@ class OperatingSystem():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'architecture') and self.architecture is not None:
             _dict['architecture'] = self.architecture
         if hasattr(self, 'display_name') and self.display_name is not None:
             _dict['display_name'] = self.display_name
         if hasattr(self, 'family') and self.family is not None:
             _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'vendor') and self.vendor is not None:
             _dict['vendor'] = self.vendor
         if hasattr(self, 'version') and self.version is not None:
@@ -20309,12 +20423,12 @@ class OperatingSystemCollection():
     """
     OperatingSystemCollection.
 
-    :attr OperatingSystemCollectionFirst first: A reference to the first page of
+    :attr OperatingSystemCollectionFirst first: A link to the first page of
           resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr OperatingSystemCollectionNext next: (optional) A reference to the next
-          page of resources; this reference is included for all pages
+    :attr OperatingSystemCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr List[OperatingSystem] operating_systems: Collection of operating systems.
     """
@@ -20328,14 +20442,14 @@ class OperatingSystemCollection():
         """
         Initialize a OperatingSystemCollection object.
 
-        :param OperatingSystemCollectionFirst first: A reference to the first page
-               of resources.
+        :param OperatingSystemCollectionFirst first: A link to the first page of
+               resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[OperatingSystem] operating_systems: Collection of operating
                systems.
-        :param OperatingSystemCollectionNext next: (optional) A reference to the
-               next page of resources; this reference is included for all pages
+        :param OperatingSystemCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -20416,16 +20530,16 @@ class OperatingSystemCollection():
 
 class OperatingSystemCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a OperatingSystemCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -20474,17 +20588,17 @@ class OperatingSystemCollectionFirst():
 
 class OperatingSystemCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a OperatingSystemCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -20553,47 +20667,47 @@ class PublicGateway():
     """
     PublicGateway.
 
-    :attr str id: The unique identifier for this public gateway.
-    :attr str crn: The CRN for this public gateway.
-    :attr str href: The URL for this public gateway.
-    :attr str name: The user-defined name for this public gateway.
-    :attr str resource_type: The resource type.
     :attr datetime created_at: The date and time that the public gateway was
           created.
+    :attr str crn: The CRN for this public gateway.
     :attr PublicGatewayFloatingIp floating_ip: Reference to the floating IP which is
           bound to this public gateway.
+    :attr str href: The URL for this public gateway.
+    :attr str id: The unique identifier for this public gateway.
+    :attr str name: The user-defined name for this public gateway.
+    :attr str resource_type: The resource type.
     :attr str status: The status of the volume.
     :attr VPCReference vpc: The VPC this public gateway serves.
     :attr ZoneReference zone: The zone where this public gateway lives.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
-                 resource_type: str, created_at: datetime,
-                 floating_ip: 'PublicGatewayFloatingIp', status: str,
+    def __init__(self, created_at: datetime, crn: str,
+                 floating_ip: 'PublicGatewayFloatingIp', href: str, id: str,
+                 name: str, resource_type: str, status: str,
                  vpc: 'VPCReference', zone: 'ZoneReference') -> None:
         """
         Initialize a PublicGateway object.
 
-        :param str id: The unique identifier for this public gateway.
-        :param str crn: The CRN for this public gateway.
-        :param str href: The URL for this public gateway.
-        :param str name: The user-defined name for this public gateway.
-        :param str resource_type: The resource type.
         :param datetime created_at: The date and time that the public gateway was
                created.
+        :param str crn: The CRN for this public gateway.
         :param PublicGatewayFloatingIp floating_ip: Reference to the floating IP
                which is bound to this public gateway.
+        :param str href: The URL for this public gateway.
+        :param str id: The unique identifier for this public gateway.
+        :param str name: The user-defined name for this public gateway.
+        :param str resource_type: The resource type.
         :param str status: The status of the volume.
         :param VPCReference vpc: The VPC this public gateway serves.
         :param ZoneReference zone: The zone where this public gateway lives.
         """
-        self.id = id
+        self.created_at = created_at
         self.crn = crn
+        self.floating_ip = floating_ip
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
-        self.created_at = created_at
-        self.floating_ip = floating_ip
         self.status = status
         self.vpc = vpc
         self.zone = zone
@@ -20602,21 +20716,34 @@ class PublicGateway():
     def from_dict(cls, _dict: Dict) -> 'PublicGateway':
         """Initialize a PublicGateway object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'id\' not present in PublicGateway JSON')
+                'Required property \'created_at\' not present in PublicGateway JSON'
+            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in PublicGateway JSON')
+        if 'floating_ip' in _dict:
+            args['floating_ip'] = PublicGatewayFloatingIp.from_dict(
+                _dict.get('floating_ip'))
+        else:
+            raise ValueError(
+                'Required property \'floating_ip\' not present in PublicGateway JSON'
+            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in PublicGateway JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in PublicGateway JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -20627,19 +20754,6 @@ class PublicGateway():
         else:
             raise ValueError(
                 'Required property \'resource_type\' not present in PublicGateway JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in PublicGateway JSON'
-            )
-        if 'floating_ip' in _dict:
-            args['floating_ip'] = PublicGatewayFloatingIp.from_dict(
-                _dict.get('floating_ip'))
-        else:
-            raise ValueError(
-                'Required property \'floating_ip\' not present in PublicGateway JSON'
             )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
@@ -20667,20 +20781,20 @@ class PublicGateway():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'floating_ip') and self.floating_ip is not None:
+            _dict['floating_ip'] = self.floating_ip.to_dict()
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'floating_ip') and self.floating_ip is not None:
-            _dict['floating_ip'] = self.floating_ip.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'vpc') and self.vpc is not None:
@@ -20727,12 +20841,11 @@ class PublicGatewayCollection():
     """
     PublicGatewayCollection.
 
-    :attr PublicGatewayCollectionFirst first: A reference to the first page of
-          resources.
+    :attr PublicGatewayCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr PublicGatewayCollectionNext next: (optional) A reference to the next page
-          of resources; this reference is included for all pages
+    :attr PublicGatewayCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr List[PublicGateway] public_gateways: Collection of public gateways.
     """
@@ -20746,13 +20859,13 @@ class PublicGatewayCollection():
         """
         Initialize a PublicGatewayCollection object.
 
-        :param PublicGatewayCollectionFirst first: A reference to the first page of
+        :param PublicGatewayCollectionFirst first: A link to the first page of
                resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[PublicGateway] public_gateways: Collection of public gateways.
-        :param PublicGatewayCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param PublicGatewayCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -20832,16 +20945,16 @@ class PublicGatewayCollection():
 
 class PublicGatewayCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a PublicGatewayCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -20890,17 +21003,17 @@ class PublicGatewayCollectionFirst():
 
 class PublicGatewayCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a PublicGatewayCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -20947,43 +21060,62 @@ class PublicGatewayCollectionNext():
         return not self == other
 
 
+class PublicGatewayFloatingIPPrototype():
+    """
+    PublicGatewayFloatingIPPrototype.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a PublicGatewayFloatingIPPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'PublicGatewayFloatingIPPrototypeFloatingIPIdentity',
+                'PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext'
+            ]))
+        raise Exception(msg)
+
+
 class PublicGatewayFloatingIp():
     """
     Reference to the floating IP which is bound to this public gateway.
 
-    :attr str id: The unique identifier for this floating IP.
+    :attr str address: The globally unique IP address.
     :attr str crn: The CRN for this floating IP.
     :attr str href: The URL for this floating IP.
-    :attr str address: The globally unique IP address.
+    :attr str id: The unique identifier for this floating IP.
     :attr str name: The unique user-defined name for this floating IP.
     """
 
-    def __init__(self, id: str, crn: str, href: str, address: str,
+    def __init__(self, address: str, crn: str, href: str, id: str,
                  name: str) -> None:
         """
         Initialize a PublicGatewayFloatingIp object.
 
-        :param str id: The unique identifier for this floating IP.
+        :param str address: The globally unique IP address.
         :param str crn: The CRN for this floating IP.
         :param str href: The URL for this floating IP.
-        :param str address: The globally unique IP address.
+        :param str id: The unique identifier for this floating IP.
         :param str name: The unique user-defined name for this floating IP.
         """
-        self.id = id
+        self.address = address
         self.crn = crn
         self.href = href
-        self.address = address
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'PublicGatewayFloatingIp':
         """Initialize a PublicGatewayFloatingIp object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
         else:
             raise ValueError(
-                'Required property \'id\' not present in PublicGatewayFloatingIp JSON'
+                'Required property \'address\' not present in PublicGatewayFloatingIp JSON'
             )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
@@ -20997,11 +21129,11 @@ class PublicGatewayFloatingIp():
             raise ValueError(
                 'Required property \'href\' not present in PublicGatewayFloatingIp JSON'
             )
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'address\' not present in PublicGatewayFloatingIp JSON'
+                'Required property \'id\' not present in PublicGatewayFloatingIp JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -21019,14 +21151,14 @@ class PublicGatewayFloatingIp():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -21125,50 +21257,31 @@ class PublicGatewayPatch():
         return not self == other
 
 
-class PublicGatewayPrototypeFloatingIp():
-    """
-    PublicGatewayPrototypeFloatingIp.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a PublicGatewayPrototypeFloatingIp object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'PublicGatewayPrototypeFloatingIpFloatingIPIdentity',
-                'PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext'
-            ]))
-        raise Exception(msg)
-
-
 class PublicGatewayReference():
     """
     PublicGatewayReference.
 
-    :attr str id: The unique identifier for this public gateway.
     :attr str crn: The CRN for this public gateway.
     :attr str href: The URL for this public gateway.
+    :attr str id: The unique identifier for this public gateway.
     :attr str name: The user-defined name for this public gateway.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
+    def __init__(self, crn: str, href: str, id: str, name: str,
                  resource_type: str) -> None:
         """
         Initialize a PublicGatewayReference object.
 
-        :param str id: The unique identifier for this public gateway.
         :param str crn: The CRN for this public gateway.
         :param str href: The URL for this public gateway.
+        :param str id: The unique identifier for this public gateway.
         :param str name: The user-defined name for this public gateway.
         :param str resource_type: The resource type.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
 
@@ -21176,12 +21289,6 @@ class PublicGatewayReference():
     def from_dict(cls, _dict: Dict) -> 'PublicGatewayReference':
         """Initialize a PublicGatewayReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in PublicGatewayReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -21193,6 +21300,12 @@ class PublicGatewayReference():
         else:
             raise ValueError(
                 'Required property \'href\' not present in PublicGatewayReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in PublicGatewayReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -21216,12 +21329,12 @@ class PublicGatewayReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
@@ -21257,46 +21370,46 @@ class Region():
     """
     Region.
 
-    :attr str name: The name for this region.
-    :attr str href: The URL for this region.
     :attr str endpoint: The API endpoint for this region.
+    :attr str href: The URL for this region.
+    :attr str name: The globally unique name for this region.
     :attr str status: The availability status of this region.
     """
 
-    def __init__(self, name: str, href: str, endpoint: str,
+    def __init__(self, endpoint: str, href: str, name: str,
                  status: str) -> None:
         """
         Initialize a Region object.
 
-        :param str name: The name for this region.
-        :param str href: The URL for this region.
         :param str endpoint: The API endpoint for this region.
+        :param str href: The URL for this region.
+        :param str name: The globally unique name for this region.
         :param str status: The availability status of this region.
         """
-        self.name = name
-        self.href = href
         self.endpoint = endpoint
+        self.href = href
+        self.name = name
         self.status = status
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'Region':
         """Initialize a Region object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in Region JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in Region JSON')
         if 'endpoint' in _dict:
             args['endpoint'] = _dict.get('endpoint')
         else:
             raise ValueError(
                 'Required property \'endpoint\' not present in Region JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in Region JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Region JSON')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -21312,12 +21425,12 @@ class Region():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'endpoint') and self.endpoint is not None:
             _dict['endpoint'] = self.endpoint
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         return _dict
@@ -21352,14 +21465,14 @@ class RegionCollection():
     """
     RegionCollection.
 
-    :attr List[Region] regions: Array of Region objects.
+    :attr List[Region] regions: Collection of regions.
     """
 
     def __init__(self, regions: List['Region']) -> None:
         """
         Initialize a RegionCollection object.
 
-        :param List[Region] regions: Array of Region objects.
+        :param List[Region] regions: Collection of regions.
         """
         self.regions = regions
 
@@ -21412,35 +21525,35 @@ class RegionReference():
     """
     RegionReference.
 
-    :attr str name: The name for this region.
     :attr str href: The URL for this region.
+    :attr str name: The globally unique name for this region.
     """
 
-    def __init__(self, name: str, href: str) -> None:
+    def __init__(self, href: str, name: str) -> None:
         """
         Initialize a RegionReference object.
 
-        :param str name: The name for this region.
         :param str href: The URL for this region.
+        :param str name: The globally unique name for this region.
         """
-        self.name = name
         self.href = href
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'RegionReference':
         """Initialize a RegionReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in RegionReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in RegionReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in RegionReference JSON'
             )
         return cls(**args)
 
@@ -21452,10 +21565,10 @@ class RegionReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -21498,35 +21611,35 @@ class ResourceGroupReference():
     """
     ResourceGroupReference.
 
-    :attr str id: The unique identifier for this resource group.
     :attr str href: The URL for this resource group.
+    :attr str id: The unique identifier for this resource group.
     """
 
-    def __init__(self, id: str, href: str) -> None:
+    def __init__(self, href: str, id: str) -> None:
         """
         Initialize a ResourceGroupReference object.
 
-        :param str id: The unique identifier for this resource group.
         :param str href: The URL for this resource group.
+        :param str id: The unique identifier for this resource group.
         """
-        self.id = id
         self.href = href
+        self.id = id
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ResourceGroupReference':
         """Initialize a ResourceGroupReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in ResourceGroupReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in ResourceGroupReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in ResourceGroupReference JSON'
             )
         return cls(**args)
 
@@ -21538,10 +21651,10 @@ class ResourceGroupReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         return _dict
 
     def _to_dict(self):
@@ -21567,69 +21680,49 @@ class Route():
     """
     Route.
 
-    :attr RouteNextHop next_hop: The next hop that packets will be delivered to.
-    :attr str id: The unique identifier for this route.
-    :attr str href: The URL for this route.
-    :attr str name: The user-defined name for this route.
     :attr datetime created_at: The date and time that the route was created.
     :attr str destination: The destination of the route.
+    :attr str href: The URL for this route.
+    :attr str id: The unique identifier for this route.
     :attr str lifecycle_state: The lifecycle state of the route.
+    :attr str name: The user-defined name for this route.
+    :attr RouteNextHop next_hop: The next hop that packets will be delivered to.
     :attr ZoneReference zone: The zone the route applies to. (Traffic from subnets
           in this zone will be
           subject to this route.).
     """
 
-    def __init__(self, next_hop: 'RouteNextHop', id: str, href: str, name: str,
-                 created_at: datetime, destination: str, lifecycle_state: str,
-                 zone: 'ZoneReference') -> None:
+    def __init__(self, created_at: datetime, destination: str, href: str,
+                 id: str, lifecycle_state: str, name: str,
+                 next_hop: 'RouteNextHop', zone: 'ZoneReference') -> None:
         """
         Initialize a Route object.
 
-        :param RouteNextHop next_hop: The next hop that packets will be delivered
-               to.
-        :param str id: The unique identifier for this route.
-        :param str href: The URL for this route.
-        :param str name: The user-defined name for this route.
         :param datetime created_at: The date and time that the route was created.
         :param str destination: The destination of the route.
+        :param str href: The URL for this route.
+        :param str id: The unique identifier for this route.
         :param str lifecycle_state: The lifecycle state of the route.
+        :param str name: The user-defined name for this route.
+        :param RouteNextHop next_hop: The next hop that packets will be delivered
+               to.
         :param ZoneReference zone: The zone the route applies to. (Traffic from
                subnets in this zone will be
                subject to this route.).
         """
-        self.next_hop = next_hop
-        self.id = id
-        self.href = href
-        self.name = name
         self.created_at = created_at
         self.destination = destination
+        self.href = href
+        self.id = id
         self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.next_hop = next_hop
         self.zone = zone
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'Route':
         """Initialize a Route object from a json dictionary."""
         args = {}
-        if 'next_hop' in _dict:
-            args['next_hop'] = _dict.get('next_hop')
-        else:
-            raise ValueError(
-                'Required property \'next_hop\' not present in Route JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in Route JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in Route JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in Route JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -21640,12 +21733,32 @@ class Route():
         else:
             raise ValueError(
                 'Required property \'destination\' not present in Route JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in Route JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in Route JSON')
         if 'lifecycle_state' in _dict:
             args['lifecycle_state'] = _dict.get('lifecycle_state')
         else:
             raise ValueError(
                 'Required property \'lifecycle_state\' not present in Route JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Route JSON')
+        if 'next_hop' in _dict:
+            args['next_hop'] = _dict.get('next_hop')
+        else:
+            raise ValueError(
+                'Required property \'next_hop\' not present in Route JSON')
         if 'zone' in _dict:
             args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
         else:
@@ -21661,24 +21774,24 @@ class Route():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self,
+                   'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'next_hop') and self.next_hop is not None:
             if isinstance(self.next_hop, dict):
                 _dict['next_hop'] = self.next_hop
             else:
                 _dict['next_hop'] = self.next_hop.to_dict()
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self,
-                   'lifecycle_state') and self.lifecycle_state is not None:
-            _dict['lifecycle_state'] = self.lifecycle_state
         if hasattr(self, 'zone') and self.zone is not None:
             _dict['zone'] = self.zone.to_dict()
         return _dict
@@ -21865,51 +21978,52 @@ class SecurityGroup():
     """
     SecurityGroup.
 
-    :attr str id: The unique identifier for this security group.
-    :attr str crn: The security group's CRN.
-    :attr str href: The security group's canonical URL.
-    :attr str name: The user-defined name for this security group. Security group
-          names must be unique, within the scope of an account.
-    :attr ResourceGroupReference resource_group: The resource group for this
-          security group.
     :attr datetime created_at: The date and time that this security group was
           created.
+    :attr str crn: The security group's CRN.
+    :attr str href: The security group's canonical URL.
+    :attr str id: The unique identifier for this security group.
+    :attr str name: The user-defined name for this security group. Security group
+          names must be unique, within the scope of an account.
     :attr List[NetworkInterfaceReference] network_interfaces: Array of references to
           network interfaces.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          security group.
     :attr List[SecurityGroupRule] rules: Array of rules for this security group. If
           no rules exist, all traffic will be denied.
     :attr VPCReference vpc: The VPC this security group is a part of.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
-                 resource_group: 'ResourceGroupReference', created_at: datetime,
+    def __init__(self, created_at: datetime, crn: str, href: str, id: str,
+                 name: str,
                  network_interfaces: List['NetworkInterfaceReference'],
+                 resource_group: 'ResourceGroupReference',
                  rules: List['SecurityGroupRule'], vpc: 'VPCReference') -> None:
         """
         Initialize a SecurityGroup object.
 
-        :param str id: The unique identifier for this security group.
-        :param str crn: The security group's CRN.
-        :param str href: The security group's canonical URL.
-        :param str name: The user-defined name for this security group. Security
-               group names must be unique, within the scope of an account.
-        :param ResourceGroupReference resource_group: The resource group for this
-               security group.
         :param datetime created_at: The date and time that this security group was
                created.
+        :param str crn: The security group's CRN.
+        :param str href: The security group's canonical URL.
+        :param str id: The unique identifier for this security group.
+        :param str name: The user-defined name for this security group. Security
+               group names must be unique, within the scope of an account.
         :param List[NetworkInterfaceReference] network_interfaces: Array of
                references to network interfaces.
+        :param ResourceGroupReference resource_group: The resource group for this
+               security group.
         :param List[SecurityGroupRule] rules: Array of rules for this security
                group. If no rules exist, all traffic will be denied.
         :param VPCReference vpc: The VPC this security group is a part of.
         """
-        self.id = id
+        self.created_at = created_at
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
-        self.resource_group = resource_group
-        self.created_at = created_at
         self.network_interfaces = network_interfaces
+        self.resource_group = resource_group
         self.rules = rules
         self.vpc = vpc
 
@@ -21917,11 +22031,12 @@ class SecurityGroup():
     def from_dict(cls, _dict: Dict) -> 'SecurityGroup':
         """Initialize a SecurityGroup object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
-                'Required property \'id\' not present in SecurityGroup JSON')
+                'Required property \'created_at\' not present in SecurityGroup JSON'
+            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -21932,24 +22047,16 @@ class SecurityGroup():
         else:
             raise ValueError(
                 'Required property \'href\' not present in SecurityGroup JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroup JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError(
                 'Required property \'name\' not present in SecurityGroup JSON')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in SecurityGroup JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in SecurityGroup JSON'
-            )
         if 'network_interfaces' in _dict:
             args['network_interfaces'] = [
                 NetworkInterfaceReference.from_dict(x)
@@ -21958,6 +22065,13 @@ class SecurityGroup():
         else:
             raise ValueError(
                 'Required property \'network_interfaces\' not present in SecurityGroup JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in SecurityGroup JSON'
             )
         if 'rules' in _dict:
             args['rules'] = [
@@ -21981,24 +22095,24 @@ class SecurityGroup():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(
                 self,
                 'network_interfaces') and self.network_interfaces is not None:
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
         if hasattr(self, 'vpc') and self.vpc is not None:
@@ -22166,38 +22280,32 @@ class SecurityGroupReference():
     """
     SecurityGroupReference.
 
-    :attr str id: The unique identifier for this security group.
     :attr str crn: The security group's CRN.
     :attr str href: The security group's canonical URL.
+    :attr str id: The unique identifier for this security group.
     :attr str name: The user-defined name for this security group. Security group
           names must be unique, within the scope of an account.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a SecurityGroupReference object.
 
-        :param str id: The unique identifier for this security group.
         :param str crn: The security group's CRN.
         :param str href: The security group's canonical URL.
+        :param str id: The unique identifier for this security group.
         :param str name: The user-defined name for this security group. Security
                group names must be unique, within the scope of an account.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SecurityGroupReference':
         """Initialize a SecurityGroupReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SecurityGroupReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -22209,6 +22317,12 @@ class SecurityGroupReference():
         else:
             raise ValueError(
                 'Required property \'href\' not present in SecurityGroupReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -22226,12 +22340,12 @@ class SecurityGroupReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -22259,9 +22373,9 @@ class SecurityGroupRule():
     """
     SecurityGroupRule.
 
-    :attr str id: The unique identifier for this security group rule.
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
+    :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
           `remote.address` or `remote.cidr_block` must match this field, if they are used.
           Alternatively, if `remote` references a security group, then this rule only
@@ -22277,8 +22391,8 @@ class SecurityGroupRule():
     """
 
     def __init__(self,
-                 id: str,
                  direction: str,
+                 id: str,
                  *,
                  ip_version: str = None,
                  protocol: str = None,
@@ -22286,9 +22400,9 @@ class SecurityGroupRule():
         """
         Initialize a SecurityGroupRule object.
 
-        :param str id: The unique identifier for this security group rule.
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str id: The unique identifier for this security group rule.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
@@ -22369,15 +22483,6 @@ class SecurityGroupRule():
         """
         IPV4 = 'ipv4'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
 
 class SecurityGroupRuleCollection():
     """
@@ -22443,13 +22548,6 @@ class SecurityGroupRulePatch():
     """
     SecurityGroupRulePatch.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-          security groups from which this rule will allow traffic (or to
-          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
-          a
-          security group. If omitted, then traffic will be allowed from any source (or to
-          any
-          source, for outbound rules).
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -22458,24 +22556,24 @@ class SecurityGroupRulePatch():
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
+    :attr SecurityGroupRuleRemotePatch remote: (optional) The IP addresses or
+          security groups from which this rule will allow traffic (or to
+          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
+          a
+          security group. A CIDR block of `0.0.0.0/0` will allow traffic from any source
+          (or to
+          any source, for outbound rules).
     """
 
     def __init__(self,
                  *,
-                 remote: 'SecurityGroupRulePatchRemote' = None,
                  direction: str = None,
                  ip_version: str = None,
-                 protocol: str = None) -> None:
+                 protocol: str = None,
+                 remote: 'SecurityGroupRuleRemotePatch' = None) -> None:
         """
         Initialize a SecurityGroupRulePatch object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional) The IP addresses or
-               security groups from which this rule will allow traffic (or to
-               which, for outbound rules). Can be specified as an IP address, a CIDR
-               block, or a
-               security group. If omitted, then traffic will be allowed from any source
-               (or to any
-               source, for outbound rules).
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -22484,6 +22582,13 @@ class SecurityGroupRulePatch():
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
+        :param SecurityGroupRuleRemotePatch remote: (optional) The IP addresses or
+               security groups from which this rule will allow traffic (or to
+               which, for outbound rules). Can be specified as an IP address, a CIDR
+               block, or a
+               security group. A CIDR block of `0.0.0.0/0` will allow traffic from any
+               source (or to
+               any source, for outbound rules).
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
@@ -22551,38 +22656,6 @@ class SecurityGroupRulePatch():
         """
         IPV4 = 'ipv4'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
-
-class SecurityGroupRulePatchRemote():
-    """
-    The IP addresses or security groups from which this rule will allow traffic (or to
-    which, for outbound rules). Can be specified as an IP address, a CIDR block, or a
-    security group. If omitted, then traffic will be allowed from any source (or to any
-    source, for outbound rules).
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a SecurityGroupRulePatchRemote object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'SecurityGroupRulePatchRemoteIP',
-                'SecurityGroupRulePatchRemoteCIDR',
-                'SecurityGroupRulePatchRemoteSecurityGroupIdentity'
-            ]))
-        raise Exception(msg)
-
 
 class SecurityGroupRulePrototype():
     """
@@ -22596,7 +22669,7 @@ class SecurityGroupRulePrototype():
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses or
+    :attr SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses or
           security groups from which this rule will allow traffic (or to
           which, for outbound rules). Can be specified as an IP address, a CIDR block, or
           a
@@ -22610,7 +22683,7 @@ class SecurityGroupRulePrototype():
                  *,
                  ip_version: str = None,
                  protocol: str = None,
-                 remote: 'SecurityGroupRulePrototypeRemote' = None) -> None:
+                 remote: 'SecurityGroupRuleRemotePrototype' = None) -> None:
         """
         Initialize a SecurityGroupRulePrototype object.
 
@@ -22622,7 +22695,7 @@ class SecurityGroupRulePrototype():
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional) The IP addresses
+        :param SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses
                or security groups from which this rule will allow traffic (or to
                which, for outbound rules). Can be specified as an IP address, a CIDR
                block, or a
@@ -22700,38 +22773,6 @@ class SecurityGroupRulePrototype():
         """
         IPV4 = 'ipv4'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
-
-class SecurityGroupRulePrototypeRemote():
-    """
-    The IP addresses or security groups from which this rule will allow traffic (or to
-    which, for outbound rules). Can be specified as an IP address, a CIDR block, or a
-    security group. If omitted, then traffic will be allowed from any source (or to any
-    source, for outbound rules).
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a SecurityGroupRulePrototypeRemote object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'SecurityGroupRulePrototypeRemoteIP',
-                'SecurityGroupRulePrototypeRemoteCIDR',
-                'SecurityGroupRulePrototypeRemoteSecurityGroupIdentity'
-            ]))
-        raise Exception(msg)
-
 
 class SecurityGroupRuleRemote():
     """
@@ -22755,44 +22796,90 @@ class SecurityGroupRuleRemote():
         raise Exception(msg)
 
 
+class SecurityGroupRuleRemotePatch():
+    """
+    The IP addresses or security groups from which this rule will allow traffic (or to
+    which, for outbound rules). Can be specified as an IP address, a CIDR block, or a
+    security group. A CIDR block of `0.0.0.0/0` will allow traffic from any source (or to
+    any source, for outbound rules).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'SecurityGroupRuleRemotePatchIP',
+                'SecurityGroupRuleRemotePatchCIDR',
+                'SecurityGroupRuleRemotePatchSecurityGroupIdentity'
+            ]))
+        raise Exception(msg)
+
+
+class SecurityGroupRuleRemotePrototype():
+    """
+    The IP addresses or security groups from which this rule will allow traffic (or to
+    which, for outbound rules). Can be specified as an IP address, a CIDR block, or a
+    security group. If omitted, then traffic will be allowed from any source (or to any
+    source, for outbound rules).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'SecurityGroupRuleRemotePrototypeIP',
+                'SecurityGroupRuleRemotePrototypeCIDR',
+                'SecurityGroupRuleRemotePrototypeSecurityGroupIdentity'
+            ]))
+        raise Exception(msg)
+
+
 class Subnet():
     """
     Subnet.
 
-    :attr str id: The unique identifier for this subnet.
-    :attr str crn: The CRN for this subnet.
-    :attr str href: The URL for this subnet.
-    :attr str name: The user-defined name for this subnet.
     :attr int available_ipv4_address_count: The number of IPv4 addresses in this
           subnet that are not in-use, and have not been reserved by the user or the
           provider.
+    :attr datetime created_at: The date and time that the subnet was created.
+    :attr str crn: The CRN for this subnet.
+    :attr str href: The URL for this subnet.
+    :attr str id: The unique identifier for this subnet.
+    :attr str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
+          format.
+    :attr str name: The user-defined name for this subnet.
     :attr NetworkACLReference network_acl: The network ACL for this subnet.
+    :attr PublicGatewayReference public_gateway: (optional) The public gateway to
+          handle internet bound traffic for this subnet.
+    :attr str status: The status of the subnet.
     :attr int total_ipv4_address_count: The total number of IPv4 addresses in this
           subnet.
           Note: This is calculated as 2<sup>(32 − prefix length)</sup>. For example, the
           prefix length `/24` gives:<br> 2<sup>(32 − 24)</sup> = 2<sup>8</sup> = 256
           addresses.
-    :attr datetime created_at: The date and time that the subnet was created.
-    :attr str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
-          format.
-    :attr PublicGatewayReference public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
-    :attr str status: The status of the subnet.
     :attr VPCReference vpc: The VPC this subnet is a part of.
     :attr ZoneReference zone: The zone this subnet resides in.
     """
 
     def __init__(self,
-                 id: str,
+                 available_ipv4_address_count: int,
+                 created_at: datetime,
                  crn: str,
                  href: str,
-                 name: str,
-                 available_ipv4_address_count: int,
-                 network_acl: 'NetworkACLReference',
-                 total_ipv4_address_count: int,
-                 created_at: datetime,
+                 id: str,
                  ipv4_cidr_block: str,
+                 name: str,
+                 network_acl: 'NetworkACLReference',
                  status: str,
+                 total_ipv4_address_count: int,
                  vpc: 'VPCReference',
                  zone: 'ZoneReference',
                  *,
@@ -22800,39 +22887,39 @@ class Subnet():
         """
         Initialize a Subnet object.
 
-        :param str id: The unique identifier for this subnet.
-        :param str crn: The CRN for this subnet.
-        :param str href: The URL for this subnet.
-        :param str name: The user-defined name for this subnet.
         :param int available_ipv4_address_count: The number of IPv4 addresses in
                this subnet that are not in-use, and have not been reserved by the user or
                the provider.
+        :param datetime created_at: The date and time that the subnet was created.
+        :param str crn: The CRN for this subnet.
+        :param str href: The URL for this subnet.
+        :param str id: The unique identifier for this subnet.
+        :param str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
+               format.
+        :param str name: The user-defined name for this subnet.
         :param NetworkACLReference network_acl: The network ACL for this subnet.
+        :param str status: The status of the subnet.
         :param int total_ipv4_address_count: The total number of IPv4 addresses in
                this subnet.
                Note: This is calculated as 2<sup>(32 − prefix length)</sup>. For example,
                the prefix length `/24` gives:<br> 2<sup>(32 − 24)</sup> = 2<sup>8</sup> =
                256 addresses.
-        :param datetime created_at: The date and time that the subnet was created.
-        :param str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
-               format.
-        :param str status: The status of the subnet.
         :param VPCReference vpc: The VPC this subnet is a part of.
         :param ZoneReference zone: The zone this subnet resides in.
         :param PublicGatewayReference public_gateway: (optional) The public gateway
                to handle internet bound traffic for this subnet.
         """
-        self.id = id
+        self.available_ipv4_address_count = available_ipv4_address_count
+        self.created_at = created_at
         self.crn = crn
         self.href = href
-        self.name = name
-        self.available_ipv4_address_count = available_ipv4_address_count
-        self.network_acl = network_acl
-        self.total_ipv4_address_count = total_ipv4_address_count
-        self.created_at = created_at
+        self.id = id
         self.ipv4_cidr_block = ipv4_cidr_block
+        self.name = name
+        self.network_acl = network_acl
         self.public_gateway = public_gateway
         self.status = status
+        self.total_ipv4_address_count = total_ipv4_address_count
         self.vpc = vpc
         self.zone = zone
 
@@ -22840,11 +22927,18 @@ class Subnet():
     def from_dict(cls, _dict: Dict) -> 'Subnet':
         """Initialize a Subnet object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'available_ipv4_address_count' in _dict:
+            args['available_ipv4_address_count'] = _dict.get(
+                'available_ipv4_address_count')
         else:
             raise ValueError(
-                'Required property \'id\' not present in Subnet JSON')
+                'Required property \'available_ipv4_address_count\' not present in Subnet JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in Subnet JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -22855,42 +22949,28 @@ class Subnet():
         else:
             raise ValueError(
                 'Required property \'href\' not present in Subnet JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'name\' not present in Subnet JSON')
-        if 'available_ipv4_address_count' in _dict:
-            args['available_ipv4_address_count'] = _dict.get(
-                'available_ipv4_address_count')
-        else:
-            raise ValueError(
-                'Required property \'available_ipv4_address_count\' not present in Subnet JSON'
-            )
-        if 'network_acl' in _dict:
-            args['network_acl'] = NetworkACLReference.from_dict(
-                _dict.get('network_acl'))
-        else:
-            raise ValueError(
-                'Required property \'network_acl\' not present in Subnet JSON')
-        if 'total_ipv4_address_count' in _dict:
-            args['total_ipv4_address_count'] = _dict.get(
-                'total_ipv4_address_count')
-        else:
-            raise ValueError(
-                'Required property \'total_ipv4_address_count\' not present in Subnet JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in Subnet JSON')
+                'Required property \'id\' not present in Subnet JSON')
         if 'ipv4_cidr_block' in _dict:
             args['ipv4_cidr_block'] = _dict.get('ipv4_cidr_block')
         else:
             raise ValueError(
                 'Required property \'ipv4_cidr_block\' not present in Subnet JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Subnet JSON')
+        if 'network_acl' in _dict:
+            args['network_acl'] = NetworkACLReference.from_dict(
+                _dict.get('network_acl'))
+        else:
+            raise ValueError(
+                'Required property \'network_acl\' not present in Subnet JSON')
         if 'public_gateway' in _dict:
             args['public_gateway'] = PublicGatewayReference.from_dict(
                 _dict.get('public_gateway'))
@@ -22899,6 +22979,13 @@ class Subnet():
         else:
             raise ValueError(
                 'Required property \'status\' not present in Subnet JSON')
+        if 'total_ipv4_address_count' in _dict:
+            args['total_ipv4_address_count'] = _dict.get(
+                'total_ipv4_address_count')
+        else:
+            raise ValueError(
+                'Required property \'total_ipv4_address_count\' not present in Subnet JSON'
+            )
         if 'vpc' in _dict:
             args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
         else:
@@ -22919,32 +23006,32 @@ class Subnet():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'available_ipv4_address_count'
                   ) and self.available_ipv4_address_count is not None:
             _dict[
                 'available_ipv4_address_count'] = self.available_ipv4_address_count
-        if hasattr(self, 'network_acl') and self.network_acl is not None:
-            _dict['network_acl'] = self.network_acl.to_dict()
-        if hasattr(self, 'total_ipv4_address_count'
-                  ) and self.total_ipv4_address_count is not None:
-            _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self,
                    'ipv4_cidr_block') and self.ipv4_cidr_block is not None:
             _dict['ipv4_cidr_block'] = self.ipv4_cidr_block
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'network_acl') and self.network_acl is not None:
+            _dict['network_acl'] = self.network_acl.to_dict()
         if hasattr(self, 'public_gateway') and self.public_gateway is not None:
             _dict['public_gateway'] = self.public_gateway.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'total_ipv4_address_count'
+                  ) and self.total_ipv4_address_count is not None:
+            _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'zone') and self.zone is not None:
@@ -22983,11 +23070,11 @@ class SubnetCollection():
     """
     SubnetCollection.
 
-    :attr SubnetCollectionFirst first: A reference to the first page of resources.
+    :attr SubnetCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr SubnetCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr SubnetCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr List[Subnet] subnets: Collection of subnets.
     """
@@ -23001,13 +23088,12 @@ class SubnetCollection():
         """
         Initialize a SubnetCollection object.
 
-        :param SubnetCollectionFirst first: A reference to the first page of
-               resources.
+        :param SubnetCollectionFirst first: A link to the first page of resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[Subnet] subnets: Collection of subnets.
-        :param SubnetCollectionNext next: (optional) A reference to the next page
-               of resources; this reference is included for all pages
+        :param SubnetCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -23082,16 +23168,16 @@ class SubnetCollection():
 
 class SubnetCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a SubnetCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -23140,17 +23226,17 @@ class SubnetCollectionFirst():
 
 class SubnetCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a SubnetCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -23344,35 +23430,30 @@ class SubnetReference():
     """
     SubnetReference.
 
-    :attr str id: The unique identifier for this subnet.
     :attr str crn: The CRN for this subnet.
     :attr str href: The URL for this subnet.
+    :attr str id: The unique identifier for this subnet.
     :attr str name: The user-defined name for this subnet.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a SubnetReference object.
 
-        :param str id: The unique identifier for this subnet.
         :param str crn: The CRN for this subnet.
         :param str href: The URL for this subnet.
+        :param str id: The unique identifier for this subnet.
         :param str name: The user-defined name for this subnet.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SubnetReference':
         """Initialize a SubnetReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SubnetReference JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -23384,6 +23465,11 @@ class SubnetReference():
             raise ValueError(
                 'Required property \'href\' not present in SubnetReference JSON'
             )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SubnetReference JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -23400,12 +23486,12 @@ class SubnetReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -23433,61 +23519,61 @@ class VPC():
     """
     VPC.
 
-    :attr str id: The unique identifier for this VPC.
-    :attr str crn: The CRN for this VPC.
-    :attr str href: The URL for this VPC.
-    :attr str name: The unique user-defined name for this VPC.
-    :attr NetworkACLReference default_network_acl: The default network ACL to use
-          for subnets created in this VPC.
     :attr bool classic_access: Indicates whether this VPC is connected to Classic
           Infrastructure. If true, this VPC's resources have private network connectivity
           to the account's Classic Infrastructure resources. Only one VPC, per region, may
           be connected in this way. This value is set at creation and subsequently
           immutable.
-    :attr SecurityGroupReference default_security_group: The default security group
-          to use for network interfaces created in this VPC.
-    :attr ResourceGroupReference resource_group: The resource group for this VPC.
     :attr datetime created_at: The date and time that the VPC was created.
+    :attr str crn: The CRN for this VPC.
     :attr List[VPCCSESourceIP] cse_source_ips: (optional) Array of CSE ([Cloud
           Service
           Endpoint](https://cloud.ibm.com/docs/resources?topic=resources-service-endpoints))
           source IP addresses for the VPC. The VPC will have one CSE source IP address per
           zone.
+    :attr NetworkACLReference default_network_acl: The default network ACL to use
+          for subnets created in this VPC.
+    :attr SecurityGroupReference default_security_group: The default security group
+          to use for network interfaces created in this VPC.
+    :attr str href: The URL for this VPC.
+    :attr str id: The unique identifier for this VPC.
+    :attr str name: The unique user-defined name for this VPC.
+    :attr ResourceGroupReference resource_group: The resource group for this VPC.
     :attr str status: The status of this VPC.
     """
 
     def __init__(self,
-                 id: str,
-                 crn: str,
-                 href: str,
-                 name: str,
-                 default_network_acl: 'NetworkACLReference',
                  classic_access: bool,
-                 default_security_group: 'SecurityGroupReference',
-                 resource_group: 'ResourceGroupReference',
                  created_at: datetime,
+                 crn: str,
+                 default_network_acl: 'NetworkACLReference',
+                 default_security_group: 'SecurityGroupReference',
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_group: 'ResourceGroupReference',
                  status: str,
                  *,
                  cse_source_ips: List['VPCCSESourceIP'] = None) -> None:
         """
         Initialize a VPC object.
 
-        :param str id: The unique identifier for this VPC.
-        :param str crn: The CRN for this VPC.
-        :param str href: The URL for this VPC.
-        :param str name: The unique user-defined name for this VPC.
-        :param NetworkACLReference default_network_acl: The default network ACL to
-               use for subnets created in this VPC.
         :param bool classic_access: Indicates whether this VPC is connected to
                Classic Infrastructure. If true, this VPC's resources have private network
                connectivity to the account's Classic Infrastructure resources. Only one
                VPC, per region, may be connected in this way. This value is set at
                creation and subsequently immutable.
+        :param datetime created_at: The date and time that the VPC was created.
+        :param str crn: The CRN for this VPC.
+        :param NetworkACLReference default_network_acl: The default network ACL to
+               use for subnets created in this VPC.
         :param SecurityGroupReference default_security_group: The default security
                group to use for network interfaces created in this VPC.
+        :param str href: The URL for this VPC.
+        :param str id: The unique identifier for this VPC.
+        :param str name: The unique user-defined name for this VPC.
         :param ResourceGroupReference resource_group: The resource group for this
                VPC.
-        :param datetime created_at: The date and time that the VPC was created.
         :param str status: The status of this VPC.
         :param List[VPCCSESourceIP] cse_source_ips: (optional) Array of CSE ([Cloud
                Service
@@ -23495,41 +23581,41 @@ class VPC():
                source IP addresses for the VPC. The VPC will have one CSE source IP
                address per zone.
         """
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
-        self.default_network_acl = default_network_acl
         self.classic_access = classic_access
-        self.default_security_group = default_security_group
-        self.resource_group = resource_group
         self.created_at = created_at
+        self.crn = crn
         self.cse_source_ips = cse_source_ips
+        self.default_network_acl = default_network_acl
+        self.default_security_group = default_security_group
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_group = resource_group
         self.status = status
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VPC':
         """Initialize a VPC object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
+        if 'classic_access' in _dict:
+            args['classic_access'] = _dict.get('classic_access')
         else:
-            raise ValueError('Required property \'id\' not present in VPC JSON')
+            raise ValueError(
+                'Required property \'classic_access\' not present in VPC JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in VPC JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in VPC JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in VPC JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VPC JSON')
+        if 'cse_source_ips' in _dict:
+            args['cse_source_ips'] = [
+                VPCCSESourceIP.from_dict(x) for x in _dict.get('cse_source_ips')
+            ]
         if 'default_network_acl' in _dict:
             args['default_network_acl'] = NetworkACLReference.from_dict(
                 _dict.get('default_network_acl'))
@@ -23537,11 +23623,6 @@ class VPC():
             raise ValueError(
                 'Required property \'default_network_acl\' not present in VPC JSON'
             )
-        if 'classic_access' in _dict:
-            args['classic_access'] = _dict.get('classic_access')
-        else:
-            raise ValueError(
-                'Required property \'classic_access\' not present in VPC JSON')
         if 'default_security_group' in _dict:
             args['default_security_group'] = SecurityGroupReference.from_dict(
                 _dict.get('default_security_group'))
@@ -23549,21 +23630,26 @@ class VPC():
             raise ValueError(
                 'Required property \'default_security_group\' not present in VPC JSON'
             )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in VPC JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPC JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VPC JSON')
         if 'resource_group' in _dict:
             args['resource_group'] = ResourceGroupReference.from_dict(
                 _dict.get('resource_group'))
         else:
             raise ValueError(
                 'Required property \'resource_group\' not present in VPC JSON')
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in VPC JSON')
-        if 'cse_source_ips' in _dict:
-            args['cse_source_ips'] = [
-                VPCCSESourceIP.from_dict(x) for x in _dict.get('cse_source_ips')
-            ]
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -23579,31 +23665,31 @@ class VPC():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'classic_access') and self.classic_access is not None:
+            _dict['classic_access'] = self.classic_access
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
+        if hasattr(self, 'cse_source_ips') and self.cse_source_ips is not None:
+            _dict['cse_source_ips'] = [x.to_dict() for x in self.cse_source_ips]
         if hasattr(
                 self,
                 'default_network_acl') and self.default_network_acl is not None:
             _dict['default_network_acl'] = self.default_network_acl.to_dict()
-        if hasattr(self, 'classic_access') and self.classic_access is not None:
-            _dict['classic_access'] = self.classic_access
         if hasattr(self, 'default_security_group'
                   ) and self.default_security_group is not None:
             _dict[
                 'default_security_group'] = self.default_security_group.to_dict(
                 )
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'cse_source_ips') and self.cse_source_ips is not None:
-            _dict['cse_source_ips'] = [x.to_dict() for x in self.cse_source_ips]
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         return _dict
@@ -23709,11 +23795,11 @@ class VPCCollection():
     """
     VPCCollection.
 
-    :attr VPCCollectionFirst first: A reference to the first page of resources.
+    :attr VPCCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr VPCCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr VPCCollectionNext next: (optional) A link to the next page of resources.
+          This property is present for all pages
           except the last page.
     :attr List[VPC] vpcs: Collection of VPCs.
     """
@@ -23727,13 +23813,12 @@ class VPCCollection():
         """
         Initialize a VPCCollection object.
 
-        :param VPCCollectionFirst first: A reference to the first page of
-               resources.
+        :param VPCCollectionFirst first: A link to the first page of resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[VPC] vpcs: Collection of VPCs.
-        :param VPCCollectionNext next: (optional) A reference to the next page of
-               resources; this reference is included for all pages
+        :param VPCCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -23803,16 +23888,16 @@ class VPCCollection():
 
 class VPCCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VPCCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -23861,17 +23946,17 @@ class VPCCollectionFirst():
 
 class VPCCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VPCCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -23993,35 +24078,30 @@ class VPCReference():
     """
     VPCReference.
 
-    :attr str id: The unique identifier for this VPC.
     :attr str crn: The CRN for this VPC.
     :attr str href: The URL for this VPC.
+    :attr str id: The unique identifier for this VPC.
     :attr str name: The unique user-defined name for this VPC.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a VPCReference object.
 
-        :param str id: The unique identifier for this VPC.
         :param str crn: The CRN for this VPC.
         :param str href: The URL for this VPC.
+        :param str id: The unique identifier for this VPC.
         :param str name: The unique user-defined name for this VPC.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VPCReference':
         """Initialize a VPCReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VPCReference JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -24032,6 +24112,11 @@ class VPCReference():
         else:
             raise ValueError(
                 'Required property \'href\' not present in VPCReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VPCReference JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -24047,12 +24132,12 @@ class VPCReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -24080,179 +24165,47 @@ class VPNGateway():
     """
     VPNGateway.
 
-    :attr str id: The unique identifier for this VPN gateway.
-    :attr str crn: The VPN gateway's CRN.
-    :attr str href: The VPN gateway's canonical URL.
-    :attr str name: The user-defined name for this VPN gateway.
-    :attr str resource_type: The resource type.
-    :attr ResourceGroupReference resource_group: The resource group for this VPN
-          gateway.
-    :attr VPNGatewayPublicIp public_ip: The public IP address assigned to this VPN
-          gateway.
     :attr List[VPNGatewayConnectionReference] connections: Collection of references
           to VPN gateway connections.
     :attr datetime created_at: The date and time that this VPN gateway was created.
+    :attr str crn: The VPN gateway's CRN.
+    :attr str href: The VPN gateway's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway.
+    :attr List[VPNGatewayMember] members: Collection of VPN gateway members.
+    :attr str name: The user-defined name for this VPN gateway.
+    :attr ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :attr str resource_type: The resource type.
     :attr str status: The status of the VPN gateway.
     :attr SubnetReference subnet:
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
-                 resource_type: str, resource_group: 'ResourceGroupReference',
-                 public_ip: 'VPNGatewayPublicIp',
-                 connections: List['VPNGatewayConnectionReference'],
-                 created_at: datetime, status: str,
-                 subnet: 'SubnetReference') -> None:
+    def __init__(self, connections: List['VPNGatewayConnectionReference'],
+                 created_at: datetime, crn: str, href: str, id: str,
+                 members: List['VPNGatewayMember'], name: str,
+                 resource_group: 'ResourceGroupReference', resource_type: str,
+                 status: str, subnet: 'SubnetReference') -> None:
         """
         Initialize a VPNGateway object.
 
-        :param str id: The unique identifier for this VPN gateway.
-        :param str crn: The VPN gateway's CRN.
-        :param str href: The VPN gateway's canonical URL.
-        :param str name: The user-defined name for this VPN gateway.
-        :param str resource_type: The resource type.
-        :param ResourceGroupReference resource_group: The resource group for this
-               VPN gateway.
-        :param VPNGatewayPublicIp public_ip: The public IP address assigned to this
-               VPN gateway.
         :param List[VPNGatewayConnectionReference] connections: Collection of
                references to VPN gateway connections.
         :param datetime created_at: The date and time that this VPN gateway was
                created.
+        :param str crn: The VPN gateway's CRN.
+        :param str href: The VPN gateway's canonical URL.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayMember] members: Collection of VPN gateway members.
+        :param str name: The user-defined name for this VPN gateway.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
         :param str status: The status of the VPN gateway.
         :param SubnetReference subnet:
         """
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
-        self.resource_type = resource_type
-        self.resource_group = resource_group
-        self.public_ip = public_ip
-        self.connections = connections
-        self.created_at = created_at
-        self.status = status
-        self.subnet = subnet
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGateway':
-        """Initialize a VPNGateway object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VPNGateway JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError(
-                'Required property \'crn\' not present in VPNGateway JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in VPNGateway JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VPNGateway JSON')
-        if 'resource_type' in _dict:
-            args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError(
-                'Required property \'resource_type\' not present in VPNGateway JSON'
-            )
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in VPNGateway JSON'
-            )
-        if 'public_ip' in _dict:
-            args['public_ip'] = VPNGatewayPublicIp.from_dict(
-                _dict.get('public_ip'))
-        else:
-            raise ValueError(
-                'Required property \'public_ip\' not present in VPNGateway JSON'
-            )
-        if 'connections' in _dict:
-            args['connections'] = [
-                VPNGatewayConnectionReference.from_dict(x)
-                for x in _dict.get('connections')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'connections\' not present in VPNGateway JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in VPNGateway JSON'
-            )
-        if 'status' in _dict:
-            args['status'] = _dict.get('status')
-        else:
-            raise ValueError(
-                'Required property \'status\' not present in VPNGateway JSON')
-        if 'subnet' in _dict:
-            args['subnet'] = SubnetReference.from_dict(_dict.get('subnet'))
-        else:
-            raise ValueError(
-                'Required property \'subnet\' not present in VPNGateway JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGateway object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'public_ip') and self.public_ip is not None:
-            _dict['public_ip'] = self.public_ip.to_dict()
-        if hasattr(self, 'connections') and self.connections is not None:
-            _dict['connections'] = [x.to_dict() for x in self.connections]
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
-        if hasattr(self, 'subnet') and self.subnet is not None:
-            _dict['subnet'] = self.subnet.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGateway object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGateway') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGateway') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayPolicyMode']))
+        raise Exception(msg)
 
     class ResourceTypeEnum(str, Enum):
         """
@@ -24274,12 +24227,11 @@ class VPNGatewayCollection():
     """
     VPNGatewayCollection.
 
-    :attr VPNGatewayCollectionFirst first: A reference to the first page of
-          resources.
+    :attr VPNGatewayCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr VPNGatewayCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr VPNGatewayCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr int total_count: The total number of resources across all pages.
     :attr List[VPNGateway] vpn_gateways: Collection of VPN gateways.
@@ -24295,14 +24247,14 @@ class VPNGatewayCollection():
         """
         Initialize a VPNGatewayCollection object.
 
-        :param VPNGatewayCollectionFirst first: A reference to the first page of
+        :param VPNGatewayCollectionFirst first: A link to the first page of
                resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param int total_count: The total number of resources across all pages.
         :param List[VPNGateway] vpn_gateways: Collection of VPN gateways.
-        :param VPNGatewayCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param VPNGatewayCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -24337,9 +24289,7 @@ class VPNGatewayCollection():
                 'Required property \'total_count\' not present in VPNGatewayCollection JSON'
             )
         if 'vpn_gateways' in _dict:
-            args['vpn_gateways'] = [
-                VPNGateway.from_dict(x) for x in _dict.get('vpn_gateways')
-            ]
+            args['vpn_gateways'] = _dict.get('vpn_gateways')
         else:
             raise ValueError(
                 'Required property \'vpn_gateways\' not present in VPNGatewayCollection JSON'
@@ -24363,7 +24313,13 @@ class VPNGatewayCollection():
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
         if hasattr(self, 'vpn_gateways') and self.vpn_gateways is not None:
-            _dict['vpn_gateways'] = [x.to_dict() for x in self.vpn_gateways]
+            vpn_gateways_list = []
+            for x in self.vpn_gateways:
+                if isinstance(x, dict):
+                    vpn_gateways_list.append(x)
+                else:
+                    vpn_gateways_list.append(x.to_dict())
+            _dict['vpn_gateways'] = vpn_gateways_list
         return _dict
 
     def _to_dict(self):
@@ -24387,16 +24343,16 @@ class VPNGatewayCollection():
 
 class VPNGatewayCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VPNGatewayCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -24445,17 +24401,17 @@ class VPNGatewayCollectionFirst():
 
 class VPNGatewayCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VPNGatewayCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -24506,266 +24462,73 @@ class VPNGatewayConnection():
     """
     VPNGatewayConnection.
 
-    :attr str id: The unique identifier for this VPN connection.
-    :attr str href: The VPN connection's canonical URL.
-    :attr str name: The user-defined name for this VPN gateway connection.
-    :attr str resource_type: The resource type.
-    :attr bool admin_state_up: If set to false, the VPN connection is shut down.
-    :attr str peer_address: The IP address of the peer VPN gateway.
-    :attr str psk: The preshared key.
-    :attr List[str] local_cidrs: A collection of local CIDRs for this resource.
-    :attr List[str] peer_cidrs: A collection of peer CIDRs for this resource.
-    :attr str route_mode: The routing mode. Only `policy` is currently supported.
+    :attr bool admin_state_up: If set to false, the VPN gateway connection is shut
+          down.
     :attr str authentication_mode: The authentication mode. Only `psk` is currently
           supported.
-    :attr str status: The status of a VPN connection.
     :attr datetime created_at: The date and time that this VPN gateway connection
           was created.
     :attr VPNGatewayConnectionDPD dead_peer_detection: The Dead Peer Detection
           settings.
+    :attr str href: The VPN connection's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway connection.
     :attr IKEPolicyReference ike_policy: (optional) Optional IKE policy
           configuration. The absence of a policy indicates autonegotiation.
     :attr IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
           configuration. The absence of a policy indicates
           autonegotiation.
+    :attr str mode: The mode of the VPN gateway.
+    :attr str name: The user-defined name for this VPN gateway connection.
+    :attr str peer_address: The IP address of the peer VPN gateway.
+    :attr str psk: The preshared key.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of a VPN gateway connection.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
-                 resource_type: str,
                  admin_state_up: bool,
-                 peer_address: str,
-                 psk: str,
-                 local_cidrs: List[str],
-                 peer_cidrs: List[str],
-                 route_mode: str,
                  authentication_mode: str,
-                 status: str,
                  created_at: datetime,
                  dead_peer_detection: 'VPNGatewayConnectionDPD',
+                 href: str,
+                 id: str,
+                 mode: str,
+                 name: str,
+                 peer_address: str,
+                 psk: str,
+                 resource_type: str,
+                 status: str,
                  *,
                  ike_policy: 'IKEPolicyReference' = None,
                  ipsec_policy: 'IPsecPolicyReference' = None) -> None:
         """
         Initialize a VPNGatewayConnection object.
 
-        :param str id: The unique identifier for this VPN connection.
-        :param str href: The VPN connection's canonical URL.
-        :param str name: The user-defined name for this VPN gateway connection.
-        :param str resource_type: The resource type.
-        :param bool admin_state_up: If set to false, the VPN connection is shut
-               down.
-        :param str peer_address: The IP address of the peer VPN gateway.
-        :param str psk: The preshared key.
-        :param List[str] local_cidrs: A collection of local CIDRs for this
-               resource.
-        :param List[str] peer_cidrs: A collection of peer CIDRs for this resource.
-        :param str route_mode: The routing mode. Only `policy` is currently
-               supported.
+        :param bool admin_state_up: If set to false, the VPN gateway connection is
+               shut down.
         :param str authentication_mode: The authentication mode. Only `psk` is
                currently supported.
-        :param str status: The status of a VPN connection.
         :param datetime created_at: The date and time that this VPN gateway
                connection was created.
         :param VPNGatewayConnectionDPD dead_peer_detection: The Dead Peer Detection
                settings.
+        :param str href: The VPN connection's canonical URL.
+        :param str id: The unique identifier for this VPN gateway connection.
+        :param str mode: The mode of the VPN gateway.
+        :param str name: The user-defined name for this VPN gateway connection.
+        :param str peer_address: The IP address of the peer VPN gateway.
+        :param str psk: The preshared key.
+        :param str resource_type: The resource type.
+        :param str status: The status of a VPN gateway connection.
         :param IKEPolicyReference ike_policy: (optional) Optional IKE policy
                configuration. The absence of a policy indicates autonegotiation.
         :param IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
                configuration. The absence of a policy indicates
                autonegotiation.
         """
-        self.id = id
-        self.href = href
-        self.name = name
-        self.resource_type = resource_type
-        self.admin_state_up = admin_state_up
-        self.peer_address = peer_address
-        self.psk = psk
-        self.local_cidrs = local_cidrs
-        self.peer_cidrs = peer_cidrs
-        self.route_mode = route_mode
-        self.authentication_mode = authentication_mode
-        self.status = status
-        self.created_at = created_at
-        self.dead_peer_detection = dead_peer_detection
-        self.ike_policy = ike_policy
-        self.ipsec_policy = ipsec_policy
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnection':
-        """Initialize a VPNGatewayConnection object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VPNGatewayConnection JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in VPNGatewayConnection JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VPNGatewayConnection JSON'
-            )
-        if 'resource_type' in _dict:
-            args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError(
-                'Required property \'resource_type\' not present in VPNGatewayConnection JSON'
-            )
-        if 'admin_state_up' in _dict:
-            args['admin_state_up'] = _dict.get('admin_state_up')
-        else:
-            raise ValueError(
-                'Required property \'admin_state_up\' not present in VPNGatewayConnection JSON'
-            )
-        if 'peer_address' in _dict:
-            args['peer_address'] = _dict.get('peer_address')
-        else:
-            raise ValueError(
-                'Required property \'peer_address\' not present in VPNGatewayConnection JSON'
-            )
-        if 'psk' in _dict:
-            args['psk'] = _dict.get('psk')
-        else:
-            raise ValueError(
-                'Required property \'psk\' not present in VPNGatewayConnection JSON'
-            )
-        if 'local_cidrs' in _dict:
-            args['local_cidrs'] = _dict.get('local_cidrs')
-        else:
-            raise ValueError(
-                'Required property \'local_cidrs\' not present in VPNGatewayConnection JSON'
-            )
-        if 'peer_cidrs' in _dict:
-            args['peer_cidrs'] = _dict.get('peer_cidrs')
-        else:
-            raise ValueError(
-                'Required property \'peer_cidrs\' not present in VPNGatewayConnection JSON'
-            )
-        if 'route_mode' in _dict:
-            args['route_mode'] = _dict.get('route_mode')
-        else:
-            raise ValueError(
-                'Required property \'route_mode\' not present in VPNGatewayConnection JSON'
-            )
-        if 'authentication_mode' in _dict:
-            args['authentication_mode'] = _dict.get('authentication_mode')
-        else:
-            raise ValueError(
-                'Required property \'authentication_mode\' not present in VPNGatewayConnection JSON'
-            )
-        if 'status' in _dict:
-            args['status'] = _dict.get('status')
-        else:
-            raise ValueError(
-                'Required property \'status\' not present in VPNGatewayConnection JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in VPNGatewayConnection JSON'
-            )
-        if 'dead_peer_detection' in _dict:
-            args['dead_peer_detection'] = VPNGatewayConnectionDPD.from_dict(
-                _dict.get('dead_peer_detection'))
-        else:
-            raise ValueError(
-                'Required property \'dead_peer_detection\' not present in VPNGatewayConnection JSON'
-            )
-        if 'ike_policy' in _dict:
-            args['ike_policy'] = IKEPolicyReference.from_dict(
-                _dict.get('ike_policy'))
-        if 'ipsec_policy' in _dict:
-            args['ipsec_policy'] = IPsecPolicyReference.from_dict(
-                _dict.get('ipsec_policy'))
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayConnection object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'admin_state_up') and self.admin_state_up is not None:
-            _dict['admin_state_up'] = self.admin_state_up
-        if hasattr(self, 'peer_address') and self.peer_address is not None:
-            _dict['peer_address'] = self.peer_address
-        if hasattr(self, 'psk') and self.psk is not None:
-            _dict['psk'] = self.psk
-        if hasattr(self, 'local_cidrs') and self.local_cidrs is not None:
-            _dict['local_cidrs'] = self.local_cidrs
-        if hasattr(self, 'peer_cidrs') and self.peer_cidrs is not None:
-            _dict['peer_cidrs'] = self.peer_cidrs
-        if hasattr(self, 'route_mode') and self.route_mode is not None:
-            _dict['route_mode'] = self.route_mode
-        if hasattr(
-                self,
-                'authentication_mode') and self.authentication_mode is not None:
-            _dict['authentication_mode'] = self.authentication_mode
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(
-                self,
-                'dead_peer_detection') and self.dead_peer_detection is not None:
-            _dict['dead_peer_detection'] = self.dead_peer_detection.to_dict()
-        if hasattr(self, 'ike_policy') and self.ike_policy is not None:
-            _dict['ike_policy'] = self.ike_policy.to_dict()
-        if hasattr(self, 'ipsec_policy') and self.ipsec_policy is not None:
-            _dict['ipsec_policy'] = self.ipsec_policy.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayConnection object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayConnection') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayConnection') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class ResourceTypeEnum(str, Enum):
-        """
-        The resource type.
-        """
-        VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
-
-    class RouteModeEnum(str, Enum):
-        """
-        The routing mode. Only `policy` is currently supported.
-        """
-        POLICY = 'policy'
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayConnectionPolicyMode']))
+        raise Exception(msg)
 
     class AuthenticationModeEnum(str, Enum):
         """
@@ -24773,9 +24536,22 @@ class VPNGatewayConnection():
         """
         PSK = 'psk'
 
+    class ModeEnum(str, Enum):
+        """
+        The mode of the VPN gateway.
+        """
+        POLICY = 'policy'
+        ROUTE = 'route'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
+
     class StatusEnum(str, Enum):
         """
-        The status of a VPN connection.
+        The status of a VPN gateway connection.
         """
         DOWN = 'down'
         UP = 'up'
@@ -24802,10 +24578,7 @@ class VPNGatewayConnectionCollection():
         """Initialize a VPNGatewayConnectionCollection object from a json dictionary."""
         args = {}
         if 'connections' in _dict:
-            args['connections'] = [
-                VPNGatewayConnection.from_dict(x)
-                for x in _dict.get('connections')
-            ]
+            args['connections'] = _dict.get('connections')
         else:
             raise ValueError(
                 'Required property \'connections\' not present in VPNGatewayConnectionCollection JSON'
@@ -24821,7 +24594,13 @@ class VPNGatewayConnectionCollection():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'connections') and self.connections is not None:
-            _dict['connections'] = [x.to_dict() for x in self.connections]
+            connections_list = []
+            for x in self.connections:
+                if isinstance(x, dict):
+                    connections_list.append(x)
+                else:
+                    connections_list.append(x.to_dict())
+            _dict['connections'] = connections_list
         return _dict
 
     def _to_dict(self):
@@ -25077,12 +24856,8 @@ class VPNGatewayConnectionPatch():
     """
     VPNGatewayConnectionPatch.
 
-    :attr bool admin_state_up: (optional) If set to false, the VPN connection is
-          shut down.
-    :attr str peer_address: (optional) The IP address of the peer VPN gateway.
-    :attr str name: (optional) The user-defined name for this VPN gateway
-          connection.
-    :attr str psk: (optional) The preshared key.
+    :attr bool admin_state_up: (optional) If set to false, the VPN gateway
+          connection is shut down.
     :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The Dead
           Peer Detection settings.
     :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
@@ -25090,26 +24865,26 @@ class VPNGatewayConnectionPatch():
     :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
           configuration. The absence of a policy indicates
           autonegotiation.
+    :attr str name: (optional) The user-defined name for this VPN gateway
+          connection.
+    :attr str peer_address: (optional) The IP address of the peer VPN gateway.
+    :attr str psk: (optional) The preshared key.
     """
 
     def __init__(self,
                  *,
                  admin_state_up: bool = None,
-                 peer_address: str = None,
-                 name: str = None,
-                 psk: str = None,
                  dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
                  ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None) -> None:
+                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 name: str = None,
+                 peer_address: str = None,
+                 psk: str = None) -> None:
         """
         Initialize a VPNGatewayConnectionPatch object.
 
-        :param bool admin_state_up: (optional) If set to false, the VPN connection
-               is shut down.
-        :param str peer_address: (optional) The IP address of the peer VPN gateway.
-        :param str name: (optional) The user-defined name for this VPN gateway
-               connection.
-        :param str psk: (optional) The preshared key.
+        :param bool admin_state_up: (optional) If set to false, the VPN gateway
+               connection is shut down.
         :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
                Dead Peer Detection settings.
         :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
@@ -25117,14 +24892,18 @@ class VPNGatewayConnectionPatch():
         :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
                configuration. The absence of a policy indicates
                autonegotiation.
+        :param str name: (optional) The user-defined name for this VPN gateway
+               connection.
+        :param str peer_address: (optional) The IP address of the peer VPN gateway.
+        :param str psk: (optional) The preshared key.
         """
         self.admin_state_up = admin_state_up
-        self.peer_address = peer_address
-        self.name = name
-        self.psk = psk
         self.dead_peer_detection = dead_peer_detection
         self.ike_policy = ike_policy
         self.ipsec_policy = ipsec_policy
+        self.name = name
+        self.peer_address = peer_address
+        self.psk = psk
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionPatch':
@@ -25132,12 +24911,6 @@ class VPNGatewayConnectionPatch():
         args = {}
         if 'admin_state_up' in _dict:
             args['admin_state_up'] = _dict.get('admin_state_up')
-        if 'peer_address' in _dict:
-            args['peer_address'] = _dict.get('peer_address')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'psk' in _dict:
-            args['psk'] = _dict.get('psk')
         if 'dead_peer_detection' in _dict:
             args[
                 'dead_peer_detection'] = VPNGatewayConnectionDPDPrototype.from_dict(
@@ -25146,6 +24919,12 @@ class VPNGatewayConnectionPatch():
             args['ike_policy'] = _dict.get('ike_policy')
         if 'ipsec_policy' in _dict:
             args['ipsec_policy'] = _dict.get('ipsec_policy')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'peer_address' in _dict:
+            args['peer_address'] = _dict.get('peer_address')
+        if 'psk' in _dict:
+            args['psk'] = _dict.get('psk')
         return cls(**args)
 
     @classmethod
@@ -25158,12 +24937,6 @@ class VPNGatewayConnectionPatch():
         _dict = {}
         if hasattr(self, 'admin_state_up') and self.admin_state_up is not None:
             _dict['admin_state_up'] = self.admin_state_up
-        if hasattr(self, 'peer_address') and self.peer_address is not None:
-            _dict['peer_address'] = self.peer_address
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'psk') and self.psk is not None:
-            _dict['psk'] = self.psk
         if hasattr(
                 self,
                 'dead_peer_detection') and self.dead_peer_detection is not None:
@@ -25178,6 +24951,12 @@ class VPNGatewayConnectionPatch():
                 _dict['ipsec_policy'] = self.ipsec_policy
             else:
                 _dict['ipsec_policy'] = self.ipsec_policy.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'peer_address') and self.peer_address is not None:
+            _dict['peer_address'] = self.peer_address
+        if hasattr(self, 'psk') and self.psk is not None:
+            _dict['psk'] = self.psk
         return _dict
 
     def _to_dict(self):
@@ -25255,28 +25034,80 @@ class VPNGatewayConnectionPeerCIDRs():
         return not self == other
 
 
+class VPNGatewayConnectionPrototype():
+    """
+    VPNGatewayConnectionPrototype.
+
+    :attr bool admin_state_up: (optional) If set to false, the VPN gateway
+          connection is shut down.
+    :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The Dead
+          Peer Detection settings.
+    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+          configuration. The absence of a policy indicates
+          autonegotiation.
+    :attr str name: (optional) The user-defined name for this VPN gateway
+          connection.
+    :attr str peer_address: The IP address of the peer VPN gateway.
+    :attr str psk: The preshared key.
+    """
+
+    def __init__(self,
+                 peer_address: str,
+                 psk: str,
+                 *,
+                 admin_state_up: bool = None,
+                 dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
+                 ike_policy: 'IKEPolicyIdentity' = None,
+                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 name: str = None) -> None:
+        """
+        Initialize a VPNGatewayConnectionPrototype object.
+
+        :param str peer_address: The IP address of the peer VPN gateway.
+        :param str psk: The preshared key.
+        :param bool admin_state_up: (optional) If set to false, the VPN gateway
+               connection is shut down.
+        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
+               Dead Peer Detection settings.
+        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+               configuration. The absence of a policy indicates autonegotiation.
+        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+               configuration. The absence of a policy indicates
+               autonegotiation.
+        :param str name: (optional) The user-defined name for this VPN gateway
+               connection.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype'
+            ]))
+        raise Exception(msg)
+
+
 class VPNGatewayConnectionReference():
     """
     VPNGatewayConnectionReference.
 
-    :attr str id: The unique identifier for this VPN connection.
     :attr str href: The VPN connection's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway connection.
     :attr str name: The user-defined name for this VPN connection.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, href: str, name: str,
+    def __init__(self, href: str, id: str, name: str,
                  resource_type: str) -> None:
         """
         Initialize a VPNGatewayConnectionReference object.
 
-        :param str id: The unique identifier for this VPN connection.
         :param str href: The VPN connection's canonical URL.
+        :param str id: The unique identifier for this VPN gateway connection.
         :param str name: The user-defined name for this VPN connection.
         :param str resource_type: The resource type.
         """
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
 
@@ -25284,17 +25115,17 @@ class VPNGatewayConnectionReference():
     def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionReference':
         """Initialize a VPNGatewayConnectionReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VPNGatewayConnectionReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VPNGatewayConnectionReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VPNGatewayConnectionReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -25318,10 +25149,10 @@ class VPNGatewayConnectionReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
@@ -25351,6 +25182,104 @@ class VPNGatewayConnectionReference():
         The resource type.
         """
         VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
+
+
+class VPNGatewayMember():
+    """
+    VPNGatewayMember.
+
+    :attr IP public_ip: The public IP address assigned to the VPN gateway member.
+    :attr str role: The high availability role assigned to the VPN gateway member.
+    :attr str status: The status of the VPN gateway member.
+    """
+
+    def __init__(self, public_ip: 'IP', role: str, status: str) -> None:
+        """
+        Initialize a VPNGatewayMember object.
+
+        :param IP public_ip: The public IP address assigned to the VPN gateway
+               member.
+        :param str role: The high availability role assigned to the VPN gateway
+               member.
+        :param str status: The status of the VPN gateway member.
+        """
+        self.public_ip = public_ip
+        self.role = role
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayMember':
+        """Initialize a VPNGatewayMember object from a json dictionary."""
+        args = {}
+        if 'public_ip' in _dict:
+            args['public_ip'] = IP.from_dict(_dict.get('public_ip'))
+        else:
+            raise ValueError(
+                'Required property \'public_ip\' not present in VPNGatewayMember JSON'
+            )
+        if 'role' in _dict:
+            args['role'] = _dict.get('role')
+        else:
+            raise ValueError(
+                'Required property \'role\' not present in VPNGatewayMember JSON'
+            )
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in VPNGatewayMember JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayMember object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'public_ip') and self.public_ip is not None:
+            _dict['public_ip'] = self.public_ip.to_dict()
+        if hasattr(self, 'role') and self.role is not None:
+            _dict['role'] = self.role
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayMember object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayMember') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayMember') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class RoleEnum(str, Enum):
+        """
+        The high availability role assigned to the VPN gateway member.
+        """
+        ACTIVE = 'active'
+        STANDBY = 'standby'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the VPN gateway member.
+        """
+        AVAILABLE = 'available'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        DELETING = 'deleting'
 
 
 class VPNGatewayPatch():
@@ -25407,93 +25336,62 @@ class VPNGatewayPatch():
         return not self == other
 
 
-class VPNGatewayPublicIp():
+class VPNGatewayPrototype():
     """
-    The public IP address assigned to this VPN gateway.
+    VPNGatewayPrototype.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str name: (optional) The user-defined name for this VPN gateway.
+    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
+          use. If unspecified, the account's [default resource
+          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr SubnetIdentity subnet: Identifies a subnet by a unique property.
     """
 
-    def __init__(self, address: str) -> None:
+    def __init__(self,
+                 subnet: 'SubnetIdentity',
+                 *,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None) -> None:
         """
-        Initialize a VPNGatewayPublicIp object.
+        Initialize a VPNGatewayPrototype object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+        :param str name: (optional) The user-defined name for this VPN gateway.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
         """
-        self.address = address
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPublicIp':
-        """Initialize a VPNGatewayPublicIp object from a json dictionary."""
-        args = {}
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
-        else:
-            raise ValueError(
-                'Required property \'address\' not present in VPNGatewayPublicIp JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayPublicIp object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayPublicIp object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayPublicIp') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayPublicIp') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayPrototypeVPNGatewayPolicyModePrototype']))
+        raise Exception(msg)
 
 
 class Volume():
     """
     Volume.
 
-    :attr int iops: The bandwidth for the volume.
-    :attr int capacity: The capacity of the volume in gigabytes. Note that the
-          specified minimum and maximum capacity values for creating or updating volumes
-          may expand in the future.
-    :attr str id: The unique identifier for this volume.
-    :attr str crn: The CRN for this volume.
-    :attr str href: The URL for this volume.
-    :attr str name: The unique user-defined name for this volume.
-    :attr ResourceGroupReference resource_group: The resource group for this volume.
+    :attr int capacity: The capacity of the volume in gigabytes. The specified
+          minimum and maximum capacity values for creating or updating volumes may expand
+          in the future.
     :attr datetime created_at: The date and time that the volume was created.
+    :attr str crn: The CRN for this volume.
     :attr str encryption: The type of encryption used on the volume.
     :attr EncryptionKeyReference encryption_key: (optional) A reference to the root
           key used to wrap the data encryption key for the volume.
           This property will be present for volumes with an `encryption` type of
           `user_managed`.
+    :attr str href: The URL for this volume.
+    :attr str id: The unique identifier for this volume.
+    :attr int iops: The bandwidth for the volume.
+    :attr str name: The unique user-defined name for this volume.
     :attr VolumeProfileReference profile: The profile this volume uses.
+    :attr ResourceGroupReference resource_group: The resource group for this volume.
     :attr str status: The status of the volume.
+          The enumerated values for this property will expand in the future. When
+          processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the volume on which the unexpected
+          property value was encountered.
     :attr List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
           collection of volume attachments attaching instances to the volume.
     :attr ZoneReference zone: The zone this volume resides in.
@@ -25501,16 +25399,16 @@ class Volume():
 
     def __init__(
             self,
-            iops: int,
             capacity: int,
-            id: str,
-            crn: str,
-            href: str,
-            name: str,
-            resource_group: 'ResourceGroupReference',
             created_at: datetime,
+            crn: str,
             encryption: str,
+            href: str,
+            id: str,
+            iops: int,
+            name: str,
             profile: 'VolumeProfileReference',
+            resource_group: 'ResourceGroupReference',
             status: str,
             volume_attachments: List['VolumeAttachmentReferenceVolumeContext'],
             zone: 'ZoneReference',
@@ -25519,20 +25417,24 @@ class Volume():
         """
         Initialize a Volume object.
 
-        :param int iops: The bandwidth for the volume.
-        :param int capacity: The capacity of the volume in gigabytes. Note that the
-               specified minimum and maximum capacity values for creating or updating
-               volumes may expand in the future.
-        :param str id: The unique identifier for this volume.
+        :param int capacity: The capacity of the volume in gigabytes. The specified
+               minimum and maximum capacity values for creating or updating volumes may
+               expand in the future.
+        :param datetime created_at: The date and time that the volume was created.
         :param str crn: The CRN for this volume.
+        :param str encryption: The type of encryption used on the volume.
         :param str href: The URL for this volume.
+        :param str id: The unique identifier for this volume.
+        :param int iops: The bandwidth for the volume.
         :param str name: The unique user-defined name for this volume.
+        :param VolumeProfileReference profile: The profile this volume uses.
         :param ResourceGroupReference resource_group: The resource group for this
                volume.
-        :param datetime created_at: The date and time that the volume was created.
-        :param str encryption: The type of encryption used on the volume.
-        :param VolumeProfileReference profile: The profile this volume uses.
         :param str status: The status of the volume.
+               The enumerated values for this property will expand in the future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the volume on which the
+               unexpected property value was encountered.
         :param List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
                collection of volume attachments attaching instances to the volume.
         :param ZoneReference zone: The zone this volume resides in.
@@ -25541,17 +25443,17 @@ class Volume():
                This property will be present for volumes with an `encryption` type of
                `user_managed`.
         """
-        self.iops = iops
         self.capacity = capacity
-        self.id = id
-        self.crn = crn
-        self.href = href
-        self.name = name
-        self.resource_group = resource_group
         self.created_at = created_at
+        self.crn = crn
         self.encryption = encryption
         self.encryption_key = encryption_key
+        self.href = href
+        self.id = id
+        self.iops = iops
+        self.name = name
         self.profile = profile
+        self.resource_group = resource_group
         self.status = status
         self.volume_attachments = volume_attachments
         self.zone = zone
@@ -25560,48 +25462,21 @@ class Volume():
     def from_dict(cls, _dict: Dict) -> 'Volume':
         """Initialize a Volume object from a json dictionary."""
         args = {}
-        if 'iops' in _dict:
-            args['iops'] = _dict.get('iops')
-        else:
-            raise ValueError(
-                'Required property \'iops\' not present in Volume JSON')
         if 'capacity' in _dict:
             args['capacity'] = _dict.get('capacity')
         else:
             raise ValueError(
                 'Required property \'capacity\' not present in Volume JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in Volume JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError(
-                'Required property \'crn\' not present in Volume JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in Volume JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in Volume JSON')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(
-                _dict.get('resource_group'))
-        else:
-            raise ValueError(
-                'Required property \'resource_group\' not present in Volume JSON'
-            )
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError(
                 'Required property \'created_at\' not present in Volume JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in Volume JSON')
         if 'encryption' in _dict:
             args['encryption'] = _dict.get('encryption')
         else:
@@ -25610,12 +25485,39 @@ class Volume():
         if 'encryption_key' in _dict:
             args['encryption_key'] = EncryptionKeyReference.from_dict(
                 _dict.get('encryption_key'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in Volume JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in Volume JSON')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
+        else:
+            raise ValueError(
+                'Required property \'iops\' not present in Volume JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Volume JSON')
         if 'profile' in _dict:
             args['profile'] = VolumeProfileReference.from_dict(
                 _dict.get('profile'))
         else:
             raise ValueError(
                 'Required property \'profile\' not present in Volume JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in Volume JSON'
+            )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -25645,28 +25547,28 @@ class Volume():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'iops') and self.iops is not None:
-            _dict['iops'] = self.iops
         if hasattr(self, 'capacity') and self.capacity is not None:
             _dict['capacity'] = self.capacity
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
         if hasattr(self, 'encryption') and self.encryption is not None:
             _dict['encryption'] = self.encryption
         if hasattr(self, 'encryption_key') and self.encryption_key is not None:
             _dict['encryption_key'] = self.encryption_key.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'iops') and self.iops is not None:
+            _dict['iops'] = self.iops
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'profile') and self.profile is not None:
             _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(
@@ -25707,10 +25609,15 @@ class Volume():
     class StatusEnum(str, Enum):
         """
         The status of the volume.
+        The enumerated values for this property will expand in the future. When processing
+        this property, check for and log unknown values. Optionally halt processing and
+        surface the error, or bypass the volume on which the unexpected property value was
+        encountered.
         """
         AVAILABLE = 'available'
         FAILED = 'failed'
         PENDING = 'pending'
+        UNUSABLE = 'unusable'
         PENDING_DELETION = 'pending_deletion'
 
 
@@ -25718,42 +25625,42 @@ class VolumeAttachment():
     """
     VolumeAttachment.
 
+    :attr datetime created_at: The date and time that the volume was attached.
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
-    :attr str name: The user-defined name for this volume attachment.
-    :attr str id: The unique identifier for this volume attachment.
-    :attr str href: The URL for this volume attachment.
     :attr VolumeAttachmentDevice device: (optional) Information about how the volume
           is exposed to the instance operating system.
           This property may be absent if the volume attachment's `status` is not
           `attached`.
-    :attr VolumeReference volume: The attached volume.
-    :attr datetime created_at: The date and time that the volume was attached.
+    :attr str href: The URL for this volume attachment.
+    :attr str id: The unique identifier for this volume attachment.
+    :attr str name: The user-defined name for this volume attachment.
     :attr str status: The status of this volume attachment.
     :attr str type: The type of volume attachment.
+    :attr VolumeReference volume: The attached volume.
     """
 
     def __init__(self,
-                 name: str,
-                 id: str,
-                 href: str,
-                 volume: 'VolumeReference',
                  created_at: datetime,
+                 href: str,
+                 id: str,
+                 name: str,
                  status: str,
                  type: str,
+                 volume: 'VolumeReference',
                  *,
                  delete_volume_on_instance_delete: bool = None,
                  device: 'VolumeAttachmentDevice' = None) -> None:
         """
         Initialize a VolumeAttachment object.
 
-        :param str name: The user-defined name for this volume attachment.
-        :param str id: The unique identifier for this volume attachment.
-        :param str href: The URL for this volume attachment.
-        :param VolumeReference volume: The attached volume.
         :param datetime created_at: The date and time that the volume was attached.
+        :param str href: The URL for this volume attachment.
+        :param str id: The unique identifier for this volume attachment.
+        :param str name: The user-defined name for this volume attachment.
         :param str status: The status of this volume attachment.
         :param str type: The type of volume attachment.
+        :param VolumeReference volume: The attached volume.
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param VolumeAttachmentDevice device: (optional) Information about how the
@@ -25761,54 +25668,48 @@ class VolumeAttachment():
                This property may be absent if the volume attachment's `status` is not
                `attached`.
         """
-        self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
-        self.name = name
-        self.id = id
-        self.href = href
-        self.device = device
-        self.volume = volume
         self.created_at = created_at
+        self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
+        self.device = device
+        self.href = href
+        self.id = id
+        self.name = name
         self.status = status
         self.type = type
+        self.volume = volume
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeAttachment':
         """Initialize a VolumeAttachment object from a json dictionary."""
         args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in VolumeAttachment JSON'
+            )
         if 'delete_volume_on_instance_delete' in _dict:
             args['delete_volume_on_instance_delete'] = _dict.get(
                 'delete_volume_on_instance_delete')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VolumeAttachment JSON'
-            )
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VolumeAttachment JSON')
+        if 'device' in _dict:
+            args['device'] = VolumeAttachmentDevice.from_dict(
+                _dict.get('device'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VolumeAttachment JSON'
             )
-        if 'device' in _dict:
-            args['device'] = VolumeAttachmentDevice.from_dict(
-                _dict.get('device'))
-        if 'volume' in _dict:
-            args['volume'] = VolumeReference.from_dict(_dict.get('volume'))
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'volume\' not present in VolumeAttachment JSON'
-            )
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+                'Required property \'id\' not present in VolumeAttachment JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'created_at\' not present in VolumeAttachment JSON'
+                'Required property \'name\' not present in VolumeAttachment JSON'
             )
         if 'status' in _dict:
             args['status'] = _dict.get('status')
@@ -25822,6 +25723,12 @@ class VolumeAttachment():
             raise ValueError(
                 'Required property \'type\' not present in VolumeAttachment JSON'
             )
+        if 'volume' in _dict:
+            args['volume'] = VolumeReference.from_dict(_dict.get('volume'))
+        else:
+            raise ValueError(
+                'Required property \'volume\' not present in VolumeAttachment JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -25832,26 +25739,26 @@ class VolumeAttachment():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_volume_on_instance_delete'
                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'device') and self.device is not None:
             _dict['device'] = self.device.to_dict()
-        if hasattr(self, 'volume') and self.volume is not None:
-            _dict['volume'] = self.volume.to_dict()
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
+        if hasattr(self, 'volume') and self.volume is not None:
+            _dict['volume'] = self.volume.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -26179,20 +26086,20 @@ class VolumeAttachmentPrototypeInstanceContext():
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
-    :attr VolumeAttachmentPrototypeInstanceContextVolume volume: The identity of the
+    :attr VolumeAttachmentVolumePrototypeInstanceContext volume: The identity of the
           volume to attach to the instance, or a prototype object for a new
           volume.
     """
 
     def __init__(self,
-                 volume: 'VolumeAttachmentPrototypeInstanceContextVolume',
+                 volume: 'VolumeAttachmentVolumePrototypeInstanceContext',
                  *,
                  delete_volume_on_instance_delete: bool = None,
                  name: str = None) -> None:
         """
         Initialize a VolumeAttachmentPrototypeInstanceContext object.
 
-        :param VolumeAttachmentPrototypeInstanceContextVolume volume: The identity
+        :param VolumeAttachmentVolumePrototypeInstanceContext volume: The identity
                of the volume to attach to the instance, or a prototype object for a new
                volume.
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
@@ -26262,42 +26169,23 @@ class VolumeAttachmentPrototypeInstanceContext():
         return not self == other
 
 
-class VolumeAttachmentPrototypeInstanceContextVolume():
-    """
-    The identity of the volume to attach to the instance, or a prototype object for a new
-    volume.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a VolumeAttachmentPrototypeInstanceContextVolume object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContext'
-            ]))
-        raise Exception(msg)
-
-
 class VolumeAttachmentReferenceInstanceContext():
     """
     VolumeAttachmentReferenceInstanceContext.
 
-    :attr str id: The unique identifier for this volume attachment.
-    :attr str href: The URL for this volume attachment.
-    :attr str name: The user-defined name for this volume attachment.
     :attr VolumeAttachmentDevice device: (optional) Information about how the volume
           is exposed to the instance operating system.
           This property may be absent if the volume attachment's `status` is not
           `attached`.
+    :attr str href: The URL for this volume attachment.
+    :attr str id: The unique identifier for this volume attachment.
+    :attr str name: The user-defined name for this volume attachment.
     :attr VolumeReference volume: The attached volume.
     """
 
     def __init__(self,
-                 id: str,
                  href: str,
+                 id: str,
                  name: str,
                  volume: 'VolumeReference',
                  *,
@@ -26305,8 +26193,8 @@ class VolumeAttachmentReferenceInstanceContext():
         """
         Initialize a VolumeAttachmentReferenceInstanceContext object.
 
-        :param str id: The unique identifier for this volume attachment.
         :param str href: The URL for this volume attachment.
+        :param str id: The unique identifier for this volume attachment.
         :param str name: The user-defined name for this volume attachment.
         :param VolumeReference volume: The attached volume.
         :param VolumeAttachmentDevice device: (optional) Information about how the
@@ -26314,10 +26202,10 @@ class VolumeAttachmentReferenceInstanceContext():
                This property may be absent if the volume attachment's `status` is not
                `attached`.
         """
-        self.id = id
-        self.href = href
-        self.name = name
         self.device = device
+        self.href = href
+        self.id = id
+        self.name = name
         self.volume = volume
 
     @classmethod
@@ -26325,17 +26213,20 @@ class VolumeAttachmentReferenceInstanceContext():
                   _dict: Dict) -> 'VolumeAttachmentReferenceInstanceContext':
         """Initialize a VolumeAttachmentReferenceInstanceContext object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VolumeAttachmentReferenceInstanceContext JSON'
-            )
+        if 'device' in _dict:
+            args['device'] = VolumeAttachmentDevice.from_dict(
+                _dict.get('device'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VolumeAttachmentReferenceInstanceContext JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VolumeAttachmentReferenceInstanceContext JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -26343,9 +26234,6 @@ class VolumeAttachmentReferenceInstanceContext():
             raise ValueError(
                 'Required property \'name\' not present in VolumeAttachmentReferenceInstanceContext JSON'
             )
-        if 'device' in _dict:
-            args['device'] = VolumeAttachmentDevice.from_dict(
-                _dict.get('device'))
         if 'volume' in _dict:
             args['volume'] = VolumeReference.from_dict(_dict.get('volume'))
         else:
@@ -26362,14 +26250,14 @@ class VolumeAttachmentReferenceInstanceContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'device') and self.device is not None:
             _dict['device'] = self.device.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'volume') and self.volume is not None:
             _dict['volume'] = self.volume.to_dict()
         return _dict
@@ -26397,76 +26285,76 @@ class VolumeAttachmentReferenceVolumeContext():
     """
     VolumeAttachmentReferenceVolumeContext.
 
-    :attr str id: The unique identifier for this volume attachment.
-    :attr str href: The URL for this volume attachment.
-    :attr str name: The user-defined name for this volume attachment.
     :attr VolumeAttachmentDevice device: (optional) Information about how the volume
           is exposed to the instance operating system.
           This property may be absent if the volume attachment's `status` is not
           `attached`.
+    :attr str href: The URL for this volume attachment.
+    :attr str id: The unique identifier for this volume attachment.
     :attr InstanceReference instance: The attached instance.
+    :attr str name: The user-defined name for this volume attachment.
     :attr str type: The type of volume attachment.
     """
 
     def __init__(self,
-                 id: str,
                  href: str,
-                 name: str,
+                 id: str,
                  instance: 'InstanceReference',
+                 name: str,
                  type: str,
                  *,
                  device: 'VolumeAttachmentDevice' = None) -> None:
         """
         Initialize a VolumeAttachmentReferenceVolumeContext object.
 
-        :param str id: The unique identifier for this volume attachment.
         :param str href: The URL for this volume attachment.
-        :param str name: The user-defined name for this volume attachment.
+        :param str id: The unique identifier for this volume attachment.
         :param InstanceReference instance: The attached instance.
+        :param str name: The user-defined name for this volume attachment.
         :param str type: The type of volume attachment.
         :param VolumeAttachmentDevice device: (optional) Information about how the
                volume is exposed to the instance operating system.
                This property may be absent if the volume attachment's `status` is not
                `attached`.
         """
-        self.id = id
-        self.href = href
-        self.name = name
         self.device = device
+        self.href = href
+        self.id = id
         self.instance = instance
+        self.name = name
         self.type = type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentReferenceVolumeContext':
         """Initialize a VolumeAttachmentReferenceVolumeContext object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VolumeAttachmentReferenceVolumeContext JSON'
-            )
+        if 'device' in _dict:
+            args['device'] = VolumeAttachmentDevice.from_dict(
+                _dict.get('device'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VolumeAttachmentReferenceVolumeContext JSON'
             )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'name\' not present in VolumeAttachmentReferenceVolumeContext JSON'
+                'Required property \'id\' not present in VolumeAttachmentReferenceVolumeContext JSON'
             )
-        if 'device' in _dict:
-            args['device'] = VolumeAttachmentDevice.from_dict(
-                _dict.get('device'))
         if 'instance' in _dict:
             args['instance'] = InstanceReference.from_dict(
                 _dict.get('instance'))
         else:
             raise ValueError(
                 'Required property \'instance\' not present in VolumeAttachmentReferenceVolumeContext JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VolumeAttachmentReferenceVolumeContext JSON'
             )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
@@ -26484,16 +26372,16 @@ class VolumeAttachmentReferenceVolumeContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'device') and self.device is not None:
             _dict['device'] = self.device.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'instance') and self.instance is not None:
             _dict['instance'] = self.instance.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -26524,15 +26412,34 @@ class VolumeAttachmentReferenceVolumeContext():
         DATA = 'data'
 
 
+class VolumeAttachmentVolumePrototypeInstanceContext():
+    """
+    The identity of the volume to attach to the instance, or a prototype object for a new
+    volume.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VolumeAttachmentVolumePrototypeInstanceContext object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext'
+            ]))
+        raise Exception(msg)
+
+
 class VolumeCollection():
     """
     VolumeCollection.
 
-    :attr VolumeCollectionFirst first: A reference to the first page of resources.
+    :attr VolumeCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr VolumeCollectionNext next: (optional) A reference to the next page of
-          resources; this reference is included for all pages
+    :attr VolumeCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
     :attr List[Volume] volumes: Collection of volumes.
     """
@@ -26546,13 +26453,12 @@ class VolumeCollection():
         """
         Initialize a VolumeCollection object.
 
-        :param VolumeCollectionFirst first: A reference to the first page of
-               resources.
+        :param VolumeCollectionFirst first: A link to the first page of resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
         :param List[Volume] volumes: Collection of volumes.
-        :param VolumeCollectionNext next: (optional) A reference to the next page
-               of resources; this reference is included for all pages
+        :param VolumeCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
                except the last page.
         """
         self.first = first
@@ -26627,16 +26533,16 @@ class VolumeCollection():
 
 class VolumeCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VolumeCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -26685,17 +26591,17 @@ class VolumeCollectionFirst():
 
 class VolumeCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VolumeCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -26819,40 +26725,40 @@ class VolumeProfile():
     """
     VolumeProfile.
 
-    :attr str name: The name for this volume profile.
-    :attr str href: The URL for this volume profile.
     :attr str family: (optional) The product family this volume profile belongs to.
+    :attr str href: The URL for this volume profile.
+    :attr str name: The globally unique name for this volume profile.
     """
 
-    def __init__(self, name: str, href: str, *, family: str = None) -> None:
+    def __init__(self, href: str, name: str, *, family: str = None) -> None:
         """
         Initialize a VolumeProfile object.
 
-        :param str name: The name for this volume profile.
         :param str href: The URL for this volume profile.
+        :param str name: The globally unique name for this volume profile.
         :param str family: (optional) The product family this volume profile
                belongs to.
         """
-        self.name = name
-        self.href = href
         self.family = family
+        self.href = href
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeProfile':
         """Initialize a VolumeProfile object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VolumeProfile JSON')
+        if 'family' in _dict:
+            args['family'] = _dict.get('family')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VolumeProfile JSON')
-        if 'family' in _dict:
-            args['family'] = _dict.get('family')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VolumeProfile JSON')
         return cls(**args)
 
     @classmethod
@@ -26863,12 +26769,12 @@ class VolumeProfile():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'family') and self.family is not None:
             _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -26894,42 +26800,41 @@ class VolumeProfileCollection():
     """
     VolumeProfileCollection.
 
-    :attr VolumeProfileCollectionFirst first: A reference to the first page of
-          resources.
+    :attr VolumeProfileCollectionFirst first: A link to the first page of resources.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
-    :attr VolumeProfileCollectionNext next: (optional) A reference to the next page
-          of resources; this reference is included for all pages
+    :attr VolumeProfileCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
           except the last page.
-    :attr int total_count: The total number of resources across all pages.
     :attr List[VolumeProfile] profiles: Collection of volume profiles.
+    :attr int total_count: The total number of resources across all pages.
     """
 
     def __init__(self,
                  first: 'VolumeProfileCollectionFirst',
                  limit: int,
-                 total_count: int,
                  profiles: List['VolumeProfile'],
+                 total_count: int,
                  *,
                  next: 'VolumeProfileCollectionNext' = None) -> None:
         """
         Initialize a VolumeProfileCollection object.
 
-        :param VolumeProfileCollectionFirst first: A reference to the first page of
+        :param VolumeProfileCollectionFirst first: A link to the first page of
                resources.
         :param int limit: The maximum number of resources that can be returned by
                the request.
-        :param int total_count: The total number of resources across all pages.
         :param List[VolumeProfile] profiles: Collection of volume profiles.
-        :param VolumeProfileCollectionNext next: (optional) A reference to the next
-               page of resources; this reference is included for all pages
+        :param int total_count: The total number of resources across all pages.
+        :param VolumeProfileCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
                except the last page.
         """
         self.first = first
         self.limit = limit
         self.next = next
-        self.total_count = total_count
         self.profiles = profiles
+        self.total_count = total_count
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeProfileCollection':
@@ -26951,12 +26856,6 @@ class VolumeProfileCollection():
         if 'next' in _dict:
             args['next'] = VolumeProfileCollectionNext.from_dict(
                 _dict.get('next'))
-        if 'total_count' in _dict:
-            args['total_count'] = _dict.get('total_count')
-        else:
-            raise ValueError(
-                'Required property \'total_count\' not present in VolumeProfileCollection JSON'
-            )
         if 'profiles' in _dict:
             args['profiles'] = [
                 VolumeProfile.from_dict(x) for x in _dict.get('profiles')
@@ -26964,6 +26863,12 @@ class VolumeProfileCollection():
         else:
             raise ValueError(
                 'Required property \'profiles\' not present in VolumeProfileCollection JSON'
+            )
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in VolumeProfileCollection JSON'
             )
         return cls(**args)
 
@@ -26981,10 +26886,10 @@ class VolumeProfileCollection():
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
-        if hasattr(self, 'total_count') and self.total_count is not None:
-            _dict['total_count'] = self.total_count
         if hasattr(self, 'profiles') and self.profiles is not None:
             _dict['profiles'] = [x.to_dict() for x in self.profiles]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
         return _dict
 
     def _to_dict(self):
@@ -27008,16 +26913,16 @@ class VolumeProfileCollection():
 
 class VolumeProfileCollectionFirst():
     """
-    A reference to the first page of resources.
+    A link to the first page of resources.
 
-    :attr str href: The URL for the first page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VolumeProfileCollectionFirst object.
 
-        :param str href: The URL for the first page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -27066,17 +26971,17 @@ class VolumeProfileCollectionFirst():
 
 class VolumeProfileCollectionNext():
     """
-    A reference to the next page of resources; this reference is included for all pages
-    except the last page.
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
 
-    :attr str href: The URL for the next page of resources.
+    :attr str href: The URL for a page of resources.
     """
 
     def __init__(self, href: str) -> None:
         """
         Initialize a VolumeProfileCollectionNext object.
 
-        :param str href: The URL for the next page of resources.
+        :param str href: The URL for a page of resources.
         """
         self.href = href
 
@@ -27144,35 +27049,35 @@ class VolumeProfileReference():
     """
     VolumeProfileReference.
 
-    :attr str name: The name for this volume profile.
     :attr str href: The URL for this volume profile.
+    :attr str name: The globally unique name for this volume profile.
     """
 
-    def __init__(self, name: str, href: str) -> None:
+    def __init__(self, href: str, name: str) -> None:
         """
         Initialize a VolumeProfileReference object.
 
-        :param str name: The name for this volume profile.
         :param str href: The URL for this volume profile.
+        :param str name: The globally unique name for this volume profile.
         """
-        self.name = name
         self.href = href
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeProfileReference':
         """Initialize a VolumeProfileReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in VolumeProfileReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in VolumeProfileReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VolumeProfileReference JSON'
             )
         return cls(**args)
 
@@ -27184,10 +27089,10 @@ class VolumeProfileReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -27213,13 +27118,13 @@ class VolumePrototype():
     """
     VolumePrototype.
 
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
           key to use to wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
@@ -27230,22 +27135,22 @@ class VolumePrototype():
                  profile: 'VolumeProfileIdentity',
                  zone: 'ZoneIdentity',
                  *,
-                 name: str = None,
                  encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
+                 name: str = None,
                  resource_group: 'ResourceGroupIdentity' = None) -> None:
         """
         Initialize a VolumePrototype object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param ZoneIdentity zone: The location of the volume.
-        :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -27260,50 +27165,56 @@ class VolumePrototypeInstanceByImageContext():
     """
     VolumePrototypeInstanceByImageContext.
 
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
+    :attr int capacity: (optional) The capacity of the volume in gigabytes. The
+          specified minimum and maximum capacity values for creating or updating volumes
+          may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
           key to use to wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
-    :attr int capacity: (optional) The capacity of the volume in gigabytes. Note
-          that the specified minimum and maximum capacity values for creating or updating
-          volumes may expand in the future.
     :attr int iops: (optional) The bandwidth for the volume.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
 
     def __init__(self,
                  profile: 'VolumeProfileIdentity',
                  *,
-                 name: str = None,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
                  capacity: int = None,
-                 iops: int = None) -> None:
+                 encryption_key: 'EncryptionKeyIdentity' = None,
+                 iops: int = None,
+                 name: str = None) -> None:
         """
         Initialize a VolumePrototypeInstanceByImageContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param str name: (optional) The unique user-defined name for this volume.
+        :param int capacity: (optional) The capacity of the volume in gigabytes.
+               The specified minimum and maximum capacity values for creating or updating
+               volumes may expand in the future.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
-        :param int capacity: (optional) The capacity of the volume in gigabytes.
-               Note that the specified minimum and maximum capacity values for creating or
-               updating volumes may expand in the future.
         :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         """
+        self.capacity = capacity
+        self.encryption_key = encryption_key
+        self.iops = iops
         self.name = name
         self.profile = profile
-        self.encryption_key = encryption_key
-        self.capacity = capacity
-        self.iops = iops
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumePrototypeInstanceByImageContext':
         """Initialize a VolumePrototypeInstanceByImageContext object from a json dictionary."""
         args = {}
+        if 'capacity' in _dict:
+            args['capacity'] = _dict.get('capacity')
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'profile' in _dict:
@@ -27312,12 +27223,6 @@ class VolumePrototypeInstanceByImageContext():
             raise ValueError(
                 'Required property \'profile\' not present in VolumePrototypeInstanceByImageContext JSON'
             )
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
-        if 'capacity' in _dict:
-            args['capacity'] = _dict.get('capacity')
-        if 'iops' in _dict:
-            args['iops'] = _dict.get('iops')
         return cls(**args)
 
     @classmethod
@@ -27328,6 +27233,15 @@ class VolumePrototypeInstanceByImageContext():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'capacity') and self.capacity is not None:
+            _dict['capacity'] = self.capacity
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            if isinstance(self.encryption_key, dict):
+                _dict['encryption_key'] = self.encryption_key
+            else:
+                _dict['encryption_key'] = self.encryption_key.to_dict()
+        if hasattr(self, 'iops') and self.iops is not None:
+            _dict['iops'] = self.iops
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'profile') and self.profile is not None:
@@ -27335,15 +27249,6 @@ class VolumePrototypeInstanceByImageContext():
                 _dict['profile'] = self.profile
             else:
                 _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
-            if isinstance(self.encryption_key, dict):
-                _dict['encryption_key'] = self.encryption_key
-            else:
-                _dict['encryption_key'] = self.encryption_key.to_dict()
-        if hasattr(self, 'capacity') and self.capacity is not None:
-            _dict['capacity'] = self.capacity
-        if hasattr(self, 'iops') and self.iops is not None:
-            _dict['iops'] = self.iops
         return _dict
 
     def _to_dict(self):
@@ -27369,35 +27274,30 @@ class VolumeReference():
     """
     VolumeReference.
 
-    :attr str id: The unique identifier for this volume.
     :attr str crn: The CRN for this volume.
     :attr str href: The URL for this volume.
+    :attr str id: The unique identifier for this volume.
     :attr str name: The unique user-defined name for this volume.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a VolumeReference object.
 
-        :param str id: The unique identifier for this volume.
         :param str crn: The CRN for this volume.
         :param str href: The URL for this volume.
+        :param str id: The unique identifier for this volume.
         :param str name: The unique user-defined name for this volume.
         """
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeReference':
         """Initialize a VolumeReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in VolumeReference JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -27409,6 +27309,11 @@ class VolumeReference():
             raise ValueError(
                 'Required property \'href\' not present in VolumeReference JSON'
             )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VolumeReference JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -27425,12 +27330,12 @@ class VolumeReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -27458,24 +27363,24 @@ class Zone():
     """
     Zone.
 
-    :attr str name: The name for this zone.
     :attr str href: The URL for this zone.
+    :attr str name: The globally unique name for this zone.
     :attr RegionReference region: The region this zone belongs to.
     :attr str status: The availability status of this zone.
     """
 
-    def __init__(self, name: str, href: str, region: 'RegionReference',
+    def __init__(self, href: str, name: str, region: 'RegionReference',
                  status: str) -> None:
         """
         Initialize a Zone object.
 
-        :param str name: The name for this zone.
         :param str href: The URL for this zone.
+        :param str name: The globally unique name for this zone.
         :param RegionReference region: The region this zone belongs to.
         :param str status: The availability status of this zone.
         """
-        self.name = name
         self.href = href
+        self.name = name
         self.region = region
         self.status = status
 
@@ -27483,16 +27388,16 @@ class Zone():
     def from_dict(cls, _dict: Dict) -> 'Zone':
         """Initialize a Zone object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in Zone JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in Zone JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in Zone JSON')
         if 'region' in _dict:
             args['region'] = RegionReference.from_dict(_dict.get('region'))
         else:
@@ -27513,10 +27418,10 @@ class Zone():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'region') and self.region is not None:
             _dict['region'] = self.region.to_dict()
         if hasattr(self, 'status') and self.status is not None:
@@ -27628,34 +27533,34 @@ class ZoneReference():
     """
     ZoneReference.
 
-    :attr str name: The name for this zone.
     :attr str href: The URL for this zone.
+    :attr str name: The globally unique name for this zone.
     """
 
-    def __init__(self, name: str, href: str) -> None:
+    def __init__(self, href: str, name: str) -> None:
         """
         Initialize a ZoneReference object.
 
-        :param str name: The name for this zone.
         :param str href: The URL for this zone.
+        :param str name: The globally unique name for this zone.
         """
-        self.name = name
         self.href = href
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ZoneReference':
         """Initialize a ZoneReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in ZoneReference JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in ZoneReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in ZoneReference JSON')
         return cls(**args)
 
     @classmethod
@@ -27666,10 +27571,10 @@ class ZoneReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -27817,17 +27722,17 @@ class EncryptionKeyIdentityByCRN(EncryptionKeyIdentity):
         return not self == other
 
 
-class FloatingIPByTargetTargetNetworkInterfaceIdentityByHref(
-        FloatingIPByTargetTarget):
+class FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref(
+        FloatingIPByTargetNetworkInterfaceIdentity):
     """
-    FloatingIPByTargetTargetNetworkInterfaceIdentityByHref.
+    FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref.
 
     :attr str href: The URL for this network interface.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityByHref object.
+        Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object.
 
         :param str href: The URL for this network interface.
         """
@@ -27837,20 +27742,20 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityByHref(
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'FloatingIPByTargetTargetNetworkInterfaceIdentityByHref':
-        """Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityByHref object from a json dictionary."""
+    ) -> 'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref':
+        """Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in FloatingIPByTargetTargetNetworkInterfaceIdentityByHref JSON'
+                'Required property \'href\' not present in FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityByHref object from a json dictionary."""
+        """Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -27865,11 +27770,12 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityByHref(
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this FloatingIPByTargetTargetNetworkInterfaceIdentityByHref object."""
+        """Return a `str` version of this FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
-        self, other: 'FloatingIPByTargetTargetNetworkInterfaceIdentityByHref'
+        self, other:
+        'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -27877,23 +27783,24 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityByHref(
         return self.__dict__ == other.__dict__
 
     def __ne__(
-        self, other: 'FloatingIPByTargetTargetNetworkInterfaceIdentityByHref'
+        self, other:
+        'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class FloatingIPByTargetTargetNetworkInterfaceIdentityById(
-        FloatingIPByTargetTarget):
+class FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById(
+        FloatingIPByTargetNetworkInterfaceIdentity):
     """
-    FloatingIPByTargetTargetNetworkInterfaceIdentityById.
+    FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById.
 
     :attr str id: The unique identifier for this network interface.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityById object.
+        Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object.
 
         :param str id: The unique identifier for this network interface.
         """
@@ -27902,21 +27809,21 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityById(
 
     @classmethod
     def from_dict(
-            cls, _dict: Dict
-    ) -> 'FloatingIPByTargetTargetNetworkInterfaceIdentityById':
-        """Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityById object from a json dictionary."""
+        cls, _dict: Dict
+    ) -> 'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById':
+        """Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in FloatingIPByTargetTargetNetworkInterfaceIdentityById JSON'
+                'Required property \'id\' not present in FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a FloatingIPByTargetTargetNetworkInterfaceIdentityById object from a json dictionary."""
+        """Initialize a FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -27931,11 +27838,12 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityById(
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this FloatingIPByTargetTargetNetworkInterfaceIdentityById object."""
+        """Return a `str` version of this FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
-            self, other: 'FloatingIPByTargetTargetNetworkInterfaceIdentityById'
+        self, other:
+        'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -27943,7 +27851,8 @@ class FloatingIPByTargetTargetNetworkInterfaceIdentityById(
         return self.__dict__ == other.__dict__
 
     def __ne__(
-            self, other: 'FloatingIPByTargetTargetNetworkInterfaceIdentityById'
+        self, other:
+        'FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
@@ -28091,19 +28000,19 @@ class FloatingIPPrototypeFloatingIPByTarget(FloatingIPPrototype):
 
     :attr str name: (optional) The unique user-defined name for this floating IP. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr FloatingIPByTargetTarget target: The network interface this floating IP is
-          to be bound to.
+    :attr FloatingIPByTargetNetworkInterfaceIdentity target: The network interface
+          this floating IP is to be bound to.
     """
 
     def __init__(self,
-                 target: 'FloatingIPByTargetTarget',
+                 target: 'FloatingIPByTargetNetworkInterfaceIdentity',
                  *,
                  name: str = None) -> None:
         """
         Initialize a FloatingIPPrototypeFloatingIPByTarget object.
 
-        :param FloatingIPByTargetTarget target: The network interface this floating
-               IP is to be bound to.
+        :param FloatingIPByTargetNetworkInterfaceIdentity target: The network
+               interface this floating IP is to be bound to.
         :param str name: (optional) The unique user-defined name for this floating
                IP. If unspecified, the name will be a hyphenated list of randomly-selected
                words.
@@ -28239,28 +28148,28 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
     """
     FloatingIPTargetNetworkInterfaceReference.
 
-    :attr str name: The user-defined name for this network interface.
-    :attr str id: The unique identifier for this network interface.
     :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, name: str, id: str, href: str, primary_ipv4_address: str,
+    def __init__(self, href: str, id: str, name: str, primary_ipv4_address: str,
                  resource_type: str) -> None:
         """
         Initialize a FloatingIPTargetNetworkInterfaceReference object.
 
-        :param str name: The user-defined name for this network interface.
-        :param str id: The unique identifier for this network interface.
         :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
         :param str resource_type: The resource type.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
-        self.id = id
         self.href = href
+        self.id = id
+        self.name = name
         self.primary_ipv4_address = primary_ipv4_address
         self.resource_type = resource_type
 
@@ -28269,11 +28178,11 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
                   _dict: Dict) -> 'FloatingIPTargetNetworkInterfaceReference':
         """Initialize a FloatingIPTargetNetworkInterfaceReference object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'name\' not present in FloatingIPTargetNetworkInterfaceReference JSON'
+                'Required property \'href\' not present in FloatingIPTargetNetworkInterfaceReference JSON'
             )
         if 'id' in _dict:
             args['id'] = _dict.get('id')
@@ -28281,11 +28190,11 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
             raise ValueError(
                 'Required property \'id\' not present in FloatingIPTargetNetworkInterfaceReference JSON'
             )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         else:
             raise ValueError(
-                'Required property \'href\' not present in FloatingIPTargetNetworkInterfaceReference JSON'
+                'Required property \'name\' not present in FloatingIPTargetNetworkInterfaceReference JSON'
             )
         if 'primary_ipv4_address' in _dict:
             args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
@@ -28309,12 +28218,12 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
@@ -28353,28 +28262,28 @@ class FloatingIPTargetPublicGatewayReference(FloatingIPTarget):
     """
     FloatingIPTargetPublicGatewayReference.
 
-    :attr str id: The unique identifier for this public gateway.
     :attr str crn: The CRN for this public gateway.
     :attr str href: The URL for this public gateway.
+    :attr str id: The unique identifier for this public gateway.
     :attr str name: The user-defined name for this public gateway.
     :attr str resource_type: The resource type.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str,
+    def __init__(self, crn: str, href: str, id: str, name: str,
                  resource_type: str) -> None:
         """
         Initialize a FloatingIPTargetPublicGatewayReference object.
 
-        :param str id: The unique identifier for this public gateway.
         :param str crn: The CRN for this public gateway.
         :param str href: The URL for this public gateway.
+        :param str id: The unique identifier for this public gateway.
         :param str name: The user-defined name for this public gateway.
         :param str resource_type: The resource type.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
         self.resource_type = resource_type
 
@@ -28382,12 +28291,6 @@ class FloatingIPTargetPublicGatewayReference(FloatingIPTarget):
     def from_dict(cls, _dict: Dict) -> 'FloatingIPTargetPublicGatewayReference':
         """Initialize a FloatingIPTargetPublicGatewayReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in FloatingIPTargetPublicGatewayReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -28399,6 +28302,12 @@ class FloatingIPTargetPublicGatewayReference(FloatingIPTarget):
         else:
             raise ValueError(
                 'Required property \'href\' not present in FloatingIPTargetPublicGatewayReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in FloatingIPTargetPublicGatewayReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -28422,12 +28331,12 @@ class FloatingIPTargetPublicGatewayReference(FloatingIPTarget):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'resource_type') and self.resource_type is not None:
@@ -28883,8 +28792,7 @@ class ImagePrototypeImageByFile(ImagePrototype):
     :attr ImageFilePrototype file: The file from which to create the image.
     :attr OperatingSystemIdentity operating_system: The identity of the [supported
           operating
-          system](https://cloud.ibm.com/apidocs/vpc#retrieves-all-operating-systems)
-          included in
+          system](https://cloud.ibm.com/apidocs/vpc#list-operating-systems) included in
           this image.
     """
 
@@ -28900,8 +28808,8 @@ class ImagePrototypeImageByFile(ImagePrototype):
         :param ImageFilePrototype file: The file from which to create the image.
         :param OperatingSystemIdentity operating_system: The identity of the
                [supported operating
-               system](https://cloud.ibm.com/apidocs/vpc#retrieves-all-operating-systems)
-               included in
+               system](https://cloud.ibm.com/apidocs/vpc#list-operating-systems) included
+               in
                this image.
         :param str name: (optional) The unique user-defined name for this image.
                Names starting with "ibm-" are not allowed. If unspecified, the name will
@@ -29051,39 +28959,39 @@ class InstanceProfileBandwidthEnum(InstanceProfileBandwidth):
     The permitted total bandwidth values (in megabits per second) shared across the
     network interfaces of an instance with this profile.
 
-    :attr str type: The type for this profile field.
     :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
     :attr List[int] values: The permitted values for this profile field.
     """
 
-    def __init__(self, type: str, default: int, values: List[int]) -> None:
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
         """
         Initialize a InstanceProfileBandwidthEnum object.
 
-        :param str type: The type for this profile field.
         :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
         :param List[int] values: The permitted values for this profile field.
         """
         # pylint: disable=super-init-not-called
-        self.type = type
         self.default = default
+        self.type = type
         self.values = values
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceProfileBandwidthEnum':
         """Initialize a InstanceProfileBandwidthEnum object from a json dictionary."""
         args = {}
-        if 'type' in _dict:
-            args['type'] = _dict.get('type')
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in InstanceProfileBandwidthEnum JSON'
-            )
         if 'default' in _dict:
             args['default'] = _dict.get('default')
         else:
             raise ValueError(
                 'Required property \'default\' not present in InstanceProfileBandwidthEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileBandwidthEnum JSON'
             )
         if 'values' in _dict:
             args['values'] = _dict.get('values')
@@ -29101,10 +29009,10 @@ class InstanceProfileBandwidthEnum(InstanceProfileBandwidth):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'default') and self.default is not None:
             _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         if hasattr(self, 'values') and self.values is not None:
             _dict['values'] = self.values
         return _dict
@@ -29216,41 +29124,35 @@ class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
     The permitted total bandwidth range (in megabits per second) shared across the network
     interfaces of an instance with this profile.
 
-    :attr str type: The type for this profile field.
     :attr int default: The default value for this profile field.
     :attr int max: The maximum value for this profile field.
     :attr int min: The minimum value for this profile field.
     :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
     """
 
-    def __init__(self, type: str, default: int, max: int, min: int,
-                 step: int) -> None:
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
         """
         Initialize a InstanceProfileBandwidthRange object.
 
-        :param str type: The type for this profile field.
         :param int default: The default value for this profile field.
         :param int max: The maximum value for this profile field.
         :param int min: The minimum value for this profile field.
         :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
         """
         # pylint: disable=super-init-not-called
-        self.type = type
         self.default = default
         self.max = max
         self.min = min
         self.step = step
+        self.type = type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceProfileBandwidthRange':
         """Initialize a InstanceProfileBandwidthRange object from a json dictionary."""
         args = {}
-        if 'type' in _dict:
-            args['type'] = _dict.get('type')
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in InstanceProfileBandwidthRange JSON'
-            )
         if 'default' in _dict:
             args['default'] = _dict.get('default')
         else:
@@ -29275,6 +29177,12 @@ class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
             raise ValueError(
                 'Required property \'step\' not present in InstanceProfileBandwidthRange JSON'
             )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileBandwidthRange JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -29285,8 +29193,6 @@ class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'default') and self.default is not None:
             _dict['default'] = self.default
         if hasattr(self, 'max') and self.max is not None:
@@ -29295,6 +29201,8 @@ class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
             _dict['min'] = self.min
         if hasattr(self, 'step') and self.step is not None:
             _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         return _dict
 
     def _to_dict(self):
@@ -29444,14 +29352,16 @@ class InstanceProfileIdentityByName(InstanceProfileIdentity):
     """
     InstanceProfileIdentityByName.
 
-    :attr str name: The name for this virtual server instance profile.
+    :attr str name: The globally unique name for this virtual server instance
+          profile.
     """
 
     def __init__(self, name: str) -> None:
         """
         Initialize a InstanceProfileIdentityByName object.
 
-        :param str name: The name for this virtual server instance profile.
+        :param str name: The globally unique name for this virtual server instance
+               profile.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -29646,9 +29556,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     """
     InstancePrototypeInstanceByImage.
 
-    :attr str name: (optional) The user-defined name for this virtual server
-          instance (and default system hostname). If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Up to 10 keys may be
           provided; if no keys are provided the instance will be inaccessible unless the
@@ -29657,10 +29564,14 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           Keys will be made available to the virtual server instance as cloud-init vendor
           data. For cloud-init enabled images, these keys will also be added as SSH
           authorized keys for the administrative user.
+    :attr str name: (optional) The user-defined name for this virtual server
+          instance (and default system hostname). If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
+    :attr ResourceGroupIdentity resource_group: (optional)
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29668,47 +29579,43 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If provided, must match the VPC tied to the subnets of the instance's
           network interfaces.
-    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
+          (optional) The boot volume attachment for the virtual server instance.
+    :attr ImageIdentity image: The identity of the image to use when provisioning
+          the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
           interface.
     :attr ZoneIdentity zone: The identity of the zone to provision the virtual
           server instance in.
-    :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
-          (optional) The boot volume attachment for the virtual server instance.
-    :attr ImageIdentity image: The identity of the image to be used when
-          provisioning the virtual server instance.
     """
 
     def __init__(
         self,
+        image: 'ImageIdentity',
         primary_network_interface: 'NetworkInterfacePrototype',
         zone: 'ZoneIdentity',
-        image: 'ImageIdentity',
         *,
-        name: str = None,
         keys: List['KeyIdentity'] = None,
+        name: str = None,
         network_interfaces: List['NetworkInterfacePrototype'] = None,
         profile: 'InstanceProfileIdentity' = None,
+        resource_group: 'ResourceGroupIdentity' = None,
         user_data: str = None,
         volume_attachments: List[
             'VolumeAttachmentPrototypeInstanceContext'] = None,
         vpc: 'VPCIdentity' = None,
-        resource_group: 'ResourceGroupIdentity' = None,
         boot_volume_attachment:
         'VolumeAttachmentPrototypeInstanceByImageContext' = None
     ) -> None:
         """
         Initialize a InstancePrototypeInstanceByImage object.
 
+        :param ImageIdentity image: The identity of the image to use when
+               provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: Primary network
                interface.
         :param ZoneIdentity zone: The identity of the zone to provision the virtual
                server instance in.
-        :param ImageIdentity image: The identity of the image to be used when
-               provisioning the virtual server instance.
-        :param str name: (optional) The user-defined name for this virtual server
-               instance (and default system hostname). If unspecified, the name will be a
-               hyphenated list of randomly-selected words.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Up to 10 keys may be
                provided; if no keys are provided the instance will be inaccessible unless
@@ -29717,11 +29624,15 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                Keys will be made available to the virtual server instance as cloud-init
                vendor data. For cloud-init enabled images, these keys will also be added
                as SSH authorized keys for the administrative user.
+        :param str name: (optional) The user-defined name for this virtual server
+               instance (and default system hostname). If unspecified, the name will be a
+               hyphenated list of randomly-selected words.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
+        :param ResourceGroupIdentity resource_group: (optional)
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29729,33 +29640,32 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If provided, must match the VPC tied to the subnets of the
                instance's network interfaces.
-        :param ResourceGroupIdentity resource_group: (optional)
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.keys = keys
+        self.name = name
         self.network_interfaces = network_interfaces
         self.profile = profile
+        self.resource_group = resource_group
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
-        self.resource_group = resource_group
-        self.primary_network_interface = primary_network_interface
-        self.zone = zone
         self.boot_volume_attachment = boot_volume_attachment
         self.image = image
+        self.primary_network_interface = primary_network_interface
+        self.zone = zone
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstancePrototypeInstanceByImage':
         """Initialize a InstancePrototypeInstanceByImage object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'network_interfaces' in _dict:
             args['network_interfaces'] = [
                 NetworkInterfacePrototype.from_dict(x)
@@ -29763,6 +29673,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             ]
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -29772,8 +29684,16 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             ]
         if 'vpc' in _dict:
             args['vpc'] = _dict.get('vpc')
-        if 'resource_group' in _dict:
-            args['resource_group'] = _dict.get('resource_group')
+        if 'boot_volume_attachment' in _dict:
+            args[
+                'boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByImageContext.from_dict(
+                    _dict.get('boot_volume_attachment'))
+        if 'image' in _dict:
+            args['image'] = _dict.get('image')
+        else:
+            raise ValueError(
+                'Required property \'image\' not present in InstancePrototypeInstanceByImage JSON'
+            )
         if 'primary_network_interface' in _dict:
             args[
                 'primary_network_interface'] = NetworkInterfacePrototype.from_dict(
@@ -29788,16 +29708,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             raise ValueError(
                 'Required property \'zone\' not present in InstancePrototypeInstanceByImage JSON'
             )
-        if 'boot_volume_attachment' in _dict:
-            args[
-                'boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByImageContext.from_dict(
-                    _dict.get('boot_volume_attachment'))
-        if 'image' in _dict:
-            args['image'] = _dict.get('image')
-        else:
-            raise ValueError(
-                'Required property \'image\' not present in InstancePrototypeInstanceByImage JSON'
-            )
         return cls(**args)
 
     @classmethod
@@ -29808,8 +29718,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'keys') and self.keys is not None:
             keys_list = []
             for x in self.keys:
@@ -29818,6 +29726,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(
                 self,
                 'network_interfaces') and self.network_interfaces is not None:
@@ -29829,6 +29739,11 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 _dict['profile'] = self.profile
             else:
                 _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(
@@ -29842,21 +29757,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 _dict['vpc'] = self.vpc
             else:
                 _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
-            _dict[
-                'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
-        if hasattr(self, 'zone') and self.zone is not None:
-            if isinstance(self.zone, dict):
-                _dict['zone'] = self.zone
-            else:
-                _dict['zone'] = self.zone.to_dict()
         if hasattr(self, 'boot_volume_attachment'
                   ) and self.boot_volume_attachment is not None:
             _dict[
@@ -29867,6 +29767,16 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
+        if hasattr(self, 'primary_network_interface'
+                  ) and self.primary_network_interface is not None:
+            _dict[
+                'primary_network_interface'] = self.primary_network_interface.to_dict(
+                )
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -30202,32 +30112,32 @@ class KeyReferenceInstanceInitializationContextKeyReference(
     """
     KeyReferenceInstanceInitializationContextKeyReference.
 
-    :attr str id: The unique identifier for this key.
     :attr str crn: The CRN for this key.
-    :attr str href: The URL for this key.
     :attr str fingerprint: The fingerprint for this key.  The value is returned
           base64-encoded and prefixed with the hash algorithm (always `SHA256`).
+    :attr str href: The URL for this key.
+    :attr str id: The unique identifier for this key.
     :attr str name: The user-defined name for this key.
     """
 
-    def __init__(self, id: str, crn: str, href: str, fingerprint: str,
+    def __init__(self, crn: str, fingerprint: str, href: str, id: str,
                  name: str) -> None:
         """
         Initialize a KeyReferenceInstanceInitializationContextKeyReference object.
 
-        :param str id: The unique identifier for this key.
         :param str crn: The CRN for this key.
-        :param str href: The URL for this key.
         :param str fingerprint: The fingerprint for this key.  The value is
                returned base64-encoded and prefixed with the hash algorithm (always
                `SHA256`).
+        :param str href: The URL for this key.
+        :param str id: The unique identifier for this key.
         :param str name: The user-defined name for this key.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.crn = crn
-        self.href = href
         self.fingerprint = fingerprint
+        self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
@@ -30236,17 +30146,17 @@ class KeyReferenceInstanceInitializationContextKeyReference(
     ) -> 'KeyReferenceInstanceInitializationContextKeyReference':
         """Initialize a KeyReferenceInstanceInitializationContextKeyReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
                 'Required property \'crn\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
+            )
+        if 'fingerprint' in _dict:
+            args['fingerprint'] = _dict.get('fingerprint')
+        else:
+            raise ValueError(
+                'Required property \'fingerprint\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
             )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
@@ -30254,11 +30164,11 @@ class KeyReferenceInstanceInitializationContextKeyReference(
             raise ValueError(
                 'Required property \'href\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
             )
-        if 'fingerprint' in _dict:
-            args['fingerprint'] = _dict.get('fingerprint')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'fingerprint\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
+                'Required property \'id\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -30276,14 +30186,14 @@ class KeyReferenceInstanceInitializationContextKeyReference(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
         if hasattr(self, 'fingerprint') and self.fingerprint is not None:
             _dict['fingerprint'] = self.fingerprint
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -30311,10 +30221,10 @@ class KeyReferenceInstanceInitializationContextKeyReference(
         return not self == other
 
 
-class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch(
-        LoadBalancerListenerPolicyPatchTarget):
+class LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch(
+        LoadBalancerListenerPolicyTargetPatch):
     """
-    LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch.
+    LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch.
 
     :attr int http_status_code: (optional) The http status code in the redirect
           response.
@@ -30326,7 +30236,7 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURL
                  http_status_code: int = None,
                  url: str = None) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch object.
+        Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch object.
 
         :param int http_status_code: (optional) The http status code in the
                redirect response.
@@ -30339,8 +30249,8 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURL
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch':
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch':
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch object from a json dictionary."""
         args = {}
         if 'http_status_code' in _dict:
             args['http_status_code'] = _dict.get('http_status_code')
@@ -30350,7 +30260,7 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURL
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -30368,12 +30278,12 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURL
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -30382,14 +30292,14 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURL
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerListenerPolicyRedirectURLPatch'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity(
-        LoadBalancerListenerPolicyPatchTarget):
+class LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity(
+        LoadBalancerListenerPolicyTargetPatch):
     """
     Identifies a load balancer pool by a unique property.
 
@@ -30397,22 +30307,22 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity(
 
     def __init__(self) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity object.
+        Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity object.
 
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById',
-                'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+                'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById',
+                'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
             ]))
         raise Exception(msg)
 
 
-class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype(
-        LoadBalancerListenerPolicyPrototypeTarget):
+class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype(
+        LoadBalancerListenerPolicyTargetPrototype):
     """
-    LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype.
+    LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype.
 
     :attr int http_status_code: The http status code in the redirect response.
     :attr str url: The redirect target URL.
@@ -30420,7 +30330,7 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirec
 
     def __init__(self, http_status_code: int, url: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype object.
+        Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype object.
 
         :param int http_status_code: The http status code in the redirect response.
         :param str url: The redirect target URL.
@@ -30432,26 +30342,26 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirec
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype':
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype':
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype object from a json dictionary."""
         args = {}
         if 'http_status_code' in _dict:
             args['http_status_code'] = _dict.get('http_status_code')
         else:
             raise ValueError(
-                'Required property \'http_status_code\' not present in LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype JSON'
+                'Required property \'http_status_code\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype JSON'
             )
         if 'url' in _dict:
             args['url'] = _dict.get('url')
         else:
             raise ValueError(
-                'Required property \'url\' not present in LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype JSON'
+                'Required property \'url\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -30469,12 +30379,12 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirec
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -30483,14 +30393,14 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirec
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerListenerPolicyRedirectURLPrototype'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity(
-        LoadBalancerListenerPolicyPrototypeTarget):
+class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity(
+        LoadBalancerListenerPolicyTargetPrototype):
     """
     Identifies a load balancer pool by a unique property.
 
@@ -30498,14 +30408,14 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity(
 
     def __init__(self) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity object.
+        Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity object.
 
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById',
-                'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+                'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById',
+                'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
             ]))
         raise Exception(msg)
 
@@ -30595,22 +30505,22 @@ class LoadBalancerListenerPolicyTargetLoadBalancerPoolReference(
     """
     LoadBalancerListenerPolicyTargetLoadBalancerPoolReference.
 
-    :attr str id: The unique identifier for this load balancer pool.
     :attr str href: The pool's canonical URL.
+    :attr str id: The unique identifier for this load balancer pool.
     :attr str name: The user-defined name for this load balancer pool.
     """
 
-    def __init__(self, id: str, href: str, name: str) -> None:
+    def __init__(self, href: str, id: str, name: str) -> None:
         """
         Initialize a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object.
 
-        :param str id: The unique identifier for this load balancer pool.
         :param str href: The pool's canonical URL.
+        :param str id: The unique identifier for this load balancer pool.
         :param str name: The user-defined name for this load balancer pool.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
@@ -30619,17 +30529,17 @@ class LoadBalancerListenerPolicyTargetLoadBalancerPoolReference(
     ) -> 'LoadBalancerListenerPolicyTargetLoadBalancerPoolReference':
         """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerPoolReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
-            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetLoadBalancerPoolReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -30647,10 +30557,10 @@ class LoadBalancerListenerPolicyTargetLoadBalancerPoolReference(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -31211,37 +31121,40 @@ class NetworkACLPrototypeNetworkACLBySourceNetworkACL(NetworkACLPrototype):
         return not self == other
 
 
-class NetworkACLRuleIdentityByHref(NetworkACLRuleIdentity):
+class NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref(
+        NetworkACLRuleBeforePatch):
     """
-    NetworkACLRuleIdentityByHref.
+    NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref.
 
-    :attr str href: The URL for this Network ACL rule.
+    :attr str href: The URL for this network ACL rule.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a NetworkACLRuleIdentityByHref object.
+        Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref object.
 
-        :param str href: The URL for this Network ACL rule.
+        :param str href: The URL for this network ACL rule.
         """
         # pylint: disable=super-init-not-called
         self.href = href
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkACLRuleIdentityByHref':
-        """Initialize a NetworkACLRuleIdentityByHref object from a json dictionary."""
+    def from_dict(
+            cls, _dict: Dict
+    ) -> 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref':
+        """Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleIdentityByHref JSON'
+                'Required property \'href\' not present in NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a NetworkACLRuleIdentityByHref object from a json dictionary."""
+        """Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -31256,51 +31169,58 @@ class NetworkACLRuleIdentityByHref(NetworkACLRuleIdentity):
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this NetworkACLRuleIdentityByHref object."""
+        """Return a `str` version of this NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'NetworkACLRuleIdentityByHref') -> bool:
+    def __eq__(
+            self, other: 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref'
+    ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'NetworkACLRuleIdentityByHref') -> bool:
+    def __ne__(
+            self, other: 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref'
+    ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class NetworkACLRuleIdentityById(NetworkACLRuleIdentity):
+class NetworkACLRuleBeforePatchNetworkACLRuleIdentityById(
+        NetworkACLRuleBeforePatch):
     """
-    NetworkACLRuleIdentityById.
+    NetworkACLRuleBeforePatchNetworkACLRuleIdentityById.
 
-    :attr str id: The unique identifier for this Network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a NetworkACLRuleIdentityById object.
+        Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityById object.
 
-        :param str id: The unique identifier for this Network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
         """
         # pylint: disable=super-init-not-called
         self.id = id
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkACLRuleIdentityById':
-        """Initialize a NetworkACLRuleIdentityById object from a json dictionary."""
+    def from_dict(
+            cls, _dict: Dict
+    ) -> 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityById':
+        """Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleIdentityById JSON'
+                'Required property \'id\' not present in NetworkACLRuleBeforePatchNetworkACLRuleIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a NetworkACLRuleIdentityById object from a json dictionary."""
+        """Initialize a NetworkACLRuleBeforePatchNetworkACLRuleIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -31315,16 +31235,152 @@ class NetworkACLRuleIdentityById(NetworkACLRuleIdentity):
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this NetworkACLRuleIdentityById object."""
+        """Return a `str` version of this NetworkACLRuleBeforePatchNetworkACLRuleIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'NetworkACLRuleIdentityById') -> bool:
+    def __eq__(
+            self, other: 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityById'
+    ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'NetworkACLRuleIdentityById') -> bool:
+    def __ne__(
+            self, other: 'NetworkACLRuleBeforePatchNetworkACLRuleIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref(
+        NetworkACLRuleBeforePrototype):
+    """
+    NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref.
+
+    :attr str href: The URL for this network ACL rule.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref object.
+
+        :param str href: The URL for this network ACL rule.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref':
+        """Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other: 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other: 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById(
+        NetworkACLRuleBeforePrototype):
+    """
+    NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById.
+
+    :attr str id: The unique identifier for this network ACL rule.
+    """
+
+    def __init__(self, id: str) -> None:
+        """
+        Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById object.
+
+        :param str id: The unique identifier for this network ACL rule.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById':
+        """Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other: 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other: 'NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById'
+    ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -31333,79 +31389,143 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
     """
     NetworkACLRuleItemNetworkACLRuleProtocolAll.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
-    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
-          applies to all addresses.
-    :attr str direction: Whether the traffic to be matched is `inbound` or
-          `outbound`.
-    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
-          all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
           immediately before. In a rule collection, this always refers to the next item in
           the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
+    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
+          applies to all addresses.
+    :attr str direction: Whether the traffic to be matched is `inbound` or
+          `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
     :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
+          all addresses.
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None) -> None:
         """
         Initialize a NetworkACLRuleItemNetworkACLRuleProtocolAll object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. In a rule collection, this always refers to the next
                item in the collection. If absent, this is the last rule.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
+        self.protocol = protocol
 
     @classmethod
     def from_dict(cls,
                   _dict: Dict) -> 'NetworkACLRuleItemNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRuleItemNetworkACLRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError(
+                'Required property \'action\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        else:
+            raise ValueError(
+                'Required property \'destination\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'ip_version' in _dict:
+            args['ip_version'] = _dict.get('ip_version')
+        else:
+            raise ValueError(
+                'Required property \'ip_version\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -31414,7 +31534,30 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'before') and self.before is not None:
+            _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -31450,15 +31593,6 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -31466,46 +31600,52 @@ class NetworkACLRuleItemNetworkACLRuleProtocolAll(NetworkACLRuleItem):
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
 
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        ALL = 'all'
+
 
 class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
     """
     NetworkACLRuleItemNetworkACLRuleProtocolICMP.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
-    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
-          applies to all addresses.
-    :attr str direction: Whether the traffic to be matched is `inbound` or
-          `outbound`.
-    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
-          all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
           immediately before. In a rule collection, this always refers to the next item in
           the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
+    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
+          applies to all addresses.
+    :attr str direction: Whether the traffic to be matched is `inbound` or
+          `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
     :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
+          all addresses.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
           types are allowed by this rule.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None,
                  code: int = None,
@@ -31513,21 +31653,21 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
         """
         Initialize a NetworkACLRuleItemNetworkACLRuleProtocolICMP object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. In a rule collection, this always refers to the next
                item in the collection. If absent, this is the last rule.
@@ -31538,18 +31678,18 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
                all types are allowed by this rule.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -31557,29 +31697,20 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
             cls, _dict: Dict) -> 'NetworkACLRuleItemNetworkACLRuleProtocolICMP':
         """Initialize a NetworkACLRuleItemNetworkACLRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
-            )
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
             )
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
@@ -31593,26 +31724,17 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
             )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
             )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
@@ -31620,8 +31742,26 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
             raise ValueError(
                 'Required property \'ip_version\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+            )
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -31634,30 +31774,30 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             _dict['before'] = self.before.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -31696,15 +31836,6 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -31712,33 +31843,39 @@ class NetworkACLRuleItemNetworkACLRuleProtocolICMP(NetworkACLRuleItem):
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
 
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        ICMP = 'icmp'
+
 
 class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
     """
     NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
-    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
-          applies to all addresses.
-    :attr str direction: Whether the traffic to be matched is `inbound` or
-          `outbound`.
-    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
-          all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr NetworkACLRuleReference before: (optional) The rule that this rule is
           immediately before. In a rule collection, this always refers to the next item in
           the collection. If absent, this is the last rule.
     :attr datetime created_at: The date and time that the rule was created.
+    :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
+          applies to all addresses.
+    :attr str direction: Whether the traffic to be matched is `inbound` or
+          `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
     :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
+          all addresses.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
           port range.
+    :attr str protocol: The protocol to enforce.
     :attr int source_port_max: (optional) The inclusive upper bound of TCP/UDP
           source port range.
     :attr int source_port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -31746,16 +31883,16 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None,
                  port_max: int = None,
@@ -31765,21 +31902,21 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         """
         Initialize a NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. In a rule collection, this always refers to the next
                item in the collection. If absent, this is the last rule.
@@ -31793,19 +31930,19 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
                source port range.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
         self.source_port_max = source_port_max
         self.source_port_min = source_port_min
 
@@ -31815,29 +31952,20 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
             _dict: Dict) -> 'NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP':
         """Initialize a NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
-            )
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
             )
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
@@ -31851,26 +31979,17 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+                'Required property \'href\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+                'Required property \'id\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
@@ -31878,10 +31997,28 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
             raise ValueError(
                 'Required property \'ip_version\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+            )
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP JSON'
+            )
         if 'source_port_max' in _dict:
             args['source_port_max'] = _dict.get('source_port_max')
         if 'source_port_min' in _dict:
@@ -31896,32 +32033,32 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             _dict['before'] = self.before.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self,
                    'source_port_max') and self.source_port_max is not None:
             _dict['source_port_max'] = self.source_port_max
@@ -31964,15 +32101,6 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -31980,65 +32108,88 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
 
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        TCP = 'tcp'
+        UDP = 'udp'
+
 
 class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
     """
     NetworkACLRulePatchNetworkACLRuleProtocolAll.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in.
     :attr str action: (optional) Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePatch before: (optional)
     :attr str destination: (optional) The destination IP address or CIDR block. The
           CIDR block `0.0.0.0/0` applies to all addresses.
     :attr str direction: (optional) Whether the traffic to be matched is `inbound`
           or `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in.
     :attr str source: (optional) The source IP address or CIDR block.  The CIDR
           block `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after all existing rules.
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 name: str = None,
                  action: str = None,
+                 before: 'NetworkACLRuleBeforePatch' = None,
                  destination: str = None,
                  direction: str = None,
-                 source: str = None,
-                 protocol: str = None,
-                 before: 'NetworkACLRuleIdentity' = None) -> None:
+                 name: str = None,
+                 source: str = None) -> None:
         """
         Initialize a NetworkACLRulePatchNetworkACLRuleProtocolAll object.
 
-        :param str name: (optional) The user-defined name for this rule. Names must
-               be unique within the network ACL the rule resides in.
+        :param str protocol: The protocol to enforce.
         :param str action: (optional) Whether to allow or deny matching traffic.
+        :param NetworkACLRuleBeforePatch before: (optional)
         :param str destination: (optional) The destination IP address or CIDR
                block. The CIDR block `0.0.0.0/0` applies to all addresses.
         :param str direction: (optional) Whether the traffic to be matched is
                `inbound` or `outbound`.
+        :param str name: (optional) The user-defined name for this rule. Names must
+               be unique within the network ACL the rule resides in.
         :param str source: (optional) The source IP address or CIDR block.  The
                CIDR block `0.0.0.0/0` applies to all addresses.
-        :param str protocol: (optional) The protocol to enforce.
-        :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after all existing
-               rules.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
         self.protocol = protocol
-        self.before = before
 
     @classmethod
     def from_dict(
             cls, _dict: Dict) -> 'NetworkACLRulePatchNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePatchNetworkACLRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRulePatchNetworkACLRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -32047,7 +32198,25 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'before') and self.before is not None:
+            if isinstance(self.before, dict):
+                _dict['before'] = self.before
+            else:
+                _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -32088,60 +32257,54 @@ class NetworkACLRulePatchNetworkACLRuleProtocolAll(NetworkACLRulePatch):
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
     """
     NetworkACLRulePatchNetworkACLRuleProtocolICMP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in.
     :attr str action: (optional) Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePatch before: (optional)
     :attr str destination: (optional) The destination IP address or CIDR block. The
           CIDR block `0.0.0.0/0` applies to all addresses.
     :attr str direction: (optional) Whether the traffic to be matched is `inbound`
           or `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in.
     :attr str source: (optional) The source IP address or CIDR block.  The CIDR
           block `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after all existing rules.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
           types are allowed by this rule.
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 name: str = None,
                  action: str = None,
+                 before: 'NetworkACLRuleBeforePatch' = None,
                  destination: str = None,
                  direction: str = None,
+                 name: str = None,
                  source: str = None,
-                 protocol: str = None,
-                 before: 'NetworkACLRuleIdentity' = None,
                  code: int = None,
                  type: int = None) -> None:
         """
         Initialize a NetworkACLRulePatchNetworkACLRuleProtocolICMP object.
 
-        :param str name: (optional) The user-defined name for this rule. Names must
-               be unique within the network ACL the rule resides in.
+        :param str protocol: The protocol to enforce.
         :param str action: (optional) Whether to allow or deny matching traffic.
+        :param NetworkACLRuleBeforePatch before: (optional)
         :param str destination: (optional) The destination IP address or CIDR
                block. The CIDR block `0.0.0.0/0` applies to all addresses.
         :param str direction: (optional) Whether the traffic to be matched is
                `inbound` or `outbound`.
+        :param str name: (optional) The user-defined name for this rule. Names must
+               be unique within the network ACL the rule resides in.
         :param str source: (optional) The source IP address or CIDR block.  The
                CIDR block `0.0.0.0/0` applies to all addresses.
-        :param str protocol: (optional) The protocol to enforce.
-        :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after all existing
-               rules.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
                all codes are allowed. This can only be specified if type is also
                specified.
@@ -32149,14 +32312,14 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
                all types are allowed by this rule.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
-        self.before = before
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -32165,22 +32328,26 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
             _dict: Dict) -> 'NetworkACLRulePatchNetworkACLRuleProtocolICMP':
         """Initialize a NetworkACLRulePatchNetworkACLRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRulePatchNetworkACLRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -32193,25 +32360,25 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             if isinstance(self.before, dict):
                 _dict['before'] = self.before
             else:
                 _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -32254,32 +32421,28 @@ class NetworkACLRulePatchNetworkACLRuleProtocolICMP(NetworkACLRulePatch):
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
     """
     NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in.
     :attr str action: (optional) Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePatch before: (optional)
     :attr str destination: (optional) The destination IP address or CIDR block. The
           CIDR block `0.0.0.0/0` applies to all addresses.
     :attr str direction: (optional) Whether the traffic to be matched is `inbound`
           or `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in.
     :attr str source: (optional) The source IP address or CIDR block.  The CIDR
           block `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to move this rule
-          immediately before. Specify `null` to move this rule after all existing rules.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
           port range.
+    :attr str protocol: The protocol to enforce.
     :attr int source_port_max: (optional) The inclusive upper bound of TCP/UDP
           source port range.
     :attr int source_port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -32287,14 +32450,14 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 name: str = None,
                  action: str = None,
+                 before: 'NetworkACLRuleBeforePatch' = None,
                  destination: str = None,
                  direction: str = None,
+                 name: str = None,
                  source: str = None,
-                 protocol: str = None,
-                 before: 'NetworkACLRuleIdentity' = None,
                  port_max: int = None,
                  port_min: int = None,
                  source_port_max: int = None,
@@ -32302,19 +32465,17 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
         """
         Initialize a NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP object.
 
-        :param str name: (optional) The user-defined name for this rule. Names must
-               be unique within the network ACL the rule resides in.
+        :param str protocol: The protocol to enforce.
         :param str action: (optional) Whether to allow or deny matching traffic.
+        :param NetworkACLRuleBeforePatch before: (optional)
         :param str destination: (optional) The destination IP address or CIDR
                block. The CIDR block `0.0.0.0/0` applies to all addresses.
         :param str direction: (optional) Whether the traffic to be matched is
                `inbound` or `outbound`.
+        :param str name: (optional) The user-defined name for this rule. Names must
+               be unique within the network ACL the rule resides in.
         :param str source: (optional) The source IP address or CIDR block.  The
                CIDR block `0.0.0.0/0` applies to all addresses.
-        :param str protocol: (optional) The protocol to enforce.
-        :param NetworkACLRuleIdentity before: (optional) The rule to move this rule
-               immediately before. Specify `null` to move this rule after all existing
-               rules.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
                destination port range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -32325,15 +32486,15 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
                source port range.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
-        self.before = before
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
         self.source_port_max = source_port_max
         self.source_port_min = source_port_min
 
@@ -32343,24 +32504,28 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
             _dict: Dict) -> 'NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP':
         """Initialize a NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP JSON'
+            )
         if 'source_port_max' in _dict:
             args['source_port_max'] = _dict.get('source_port_max')
         if 'source_port_min' in _dict:
@@ -32375,27 +32540,27 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             if isinstance(self.before, dict):
                 _dict['before'] = self.before
             else:
                 _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self,
                    'source_port_max') and self.source_port_max is not None:
             _dict['source_port_max'] = self.source_port_max
@@ -32444,8 +32609,6 @@ class NetworkACLRulePatchNetworkACLRuleProtocolTCPUDP(NetworkACLRulePatch):
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
 
@@ -32455,14 +32618,14 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
     """
     NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str protocol: The protocol to enforce.
@@ -32492,10 +32655,10 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
                name will be a hyphenated list of randomly-selected words.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
         self.protocol = protocol
 
@@ -32504,7 +32667,40 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
         cls, _dict: Dict
     ) -> 'NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError(
+                'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
+            )
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        else:
+            raise ValueError(
+                'Required property \'destination\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
+            )
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
+            )
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -32513,7 +32709,20 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -32558,9 +32767,6 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll(
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
@@ -32568,19 +32774,19 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
     """
     NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
           types are allowed by this rule.
     """
@@ -32616,13 +32822,13 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
                all types are allowed by this rule.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -32631,8 +32837,6 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
     ) -> 'NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP':
         """Initialize a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
@@ -32651,20 +32855,22 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
         else:
             raise ValueError(
                 'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP JSON'
             )
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError(
                 'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP JSON'
             )
-        if 'code' in _dict:
-            args['code'] = _dict.get('code')
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -32677,20 +32883,20 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
         if hasattr(self, 'destination') and self.destination is not None:
             _dict['destination'] = self.destination
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -32737,10 +32943,7 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
@@ -32748,21 +32951,21 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
     """
     NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
           port range.
+    :attr str protocol: The protocol to enforce.
     :attr int source_port_max: (optional) The inclusive upper bound of TCP/UDP
           source port range.
     :attr int source_port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -32805,14 +33008,14 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
                source port range.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
         self.source_port_max = source_port_max
         self.source_port_min = source_port_min
 
@@ -32822,8 +33025,6 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
     ) -> 'NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP':
         """Initialize a NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
@@ -32842,22 +33043,24 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
         else:
             raise ValueError(
                 'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'port_max' in _dict:
+            args['port_max'] = _dict.get('port_max')
+        if 'port_min' in _dict:
+            args['port_min'] = _dict.get('port_min')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError(
                 'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'port_max' in _dict:
-            args['port_max'] = _dict.get('port_max')
-        if 'port_min' in _dict:
-            args['port_min'] = _dict.get('port_min')
         if 'source_port_max' in _dict:
             args['source_port_max'] = _dict.get('source_port_max')
         if 'source_port_min' in _dict:
@@ -32872,22 +33075,22 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
         if hasattr(self, 'destination') and self.destination is not None:
             _dict['destination'] = self.destination
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self,
                    'source_port_max') and self.source_port_max is not None:
             _dict['source_port_max'] = self.source_port_max
@@ -32938,8 +33141,6 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
 
@@ -32948,20 +33149,18 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolAll.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePrototype before: (optional)
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be inserted after all existing
-          rules.
     """
 
     def __init__(self,
@@ -32971,8 +33170,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
                  source: str,
                  protocol: str,
                  *,
-                 name: str = None,
-                 before: 'NetworkACLRuleIdentity' = None) -> None:
+                 before: 'NetworkACLRuleBeforePrototype' = None,
+                 name: str = None) -> None:
         """
         Initialize a NetworkACLRulePrototypeNetworkACLRuleProtocolAll object.
 
@@ -32984,28 +33183,61 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
         :param str source: The source IP address or CIDR block.  The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str protocol: The protocol to enforce.
+        :param NetworkACLRuleBeforePrototype before: (optional)
         :param str name: (optional) The user-defined name for this rule. Names must
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
-        :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be inserted after all
-               existing rules.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
         self.protocol = protocol
-        self.before = before
 
     @classmethod
     def from_dict(
             cls,
             _dict: Dict) -> 'NetworkACLRulePrototypeNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRulePrototypeNetworkACLRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError(
+                'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        else:
+            raise ValueError(
+                'Required property \'destination\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
+            )
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
+            )
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -33014,7 +33246,25 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'before') and self.before is not None:
+            if isinstance(self.before, dict):
+                _dict['before'] = self.before
+            else:
+                _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -33057,9 +33307,6 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
@@ -33067,22 +33314,20 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolICMP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePrototype before: (optional)
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be inserted after all existing
-          rules.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
           types are allowed by this rule.
     """
@@ -33094,8 +33339,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
                  source: str,
                  protocol: str,
                  *,
+                 before: 'NetworkACLRuleBeforePrototype' = None,
                  name: str = None,
-                 before: 'NetworkACLRuleIdentity' = None,
                  code: int = None,
                  type: int = None) -> None:
         """
@@ -33109,12 +33354,10 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
         :param str source: The source IP address or CIDR block.  The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str protocol: The protocol to enforce.
+        :param NetworkACLRuleBeforePrototype before: (optional)
         :param str name: (optional) The user-defined name for this rule. Names must
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
-        :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be inserted after all
-               existing rules.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
                all codes are allowed. This can only be specified if type is also
                specified.
@@ -33122,14 +33365,14 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
                all types are allowed by this rule.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
-        self.before = before
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -33138,14 +33381,14 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
             _dict: Dict) -> 'NetworkACLRulePrototypeNetworkACLRuleProtocolICMP':
         """Initialize a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolICMP JSON'
             )
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
         else:
@@ -33158,22 +33401,22 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolICMP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
         else:
             raise ValueError(
                 'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolICMP JSON'
             )
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError(
                 'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolICMP JSON'
             )
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
-        if 'code' in _dict:
-            args['code'] = _dict.get('code')
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -33186,25 +33429,25 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             if isinstance(self.before, dict):
                 _dict['before'] = self.before
             else:
                 _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -33249,10 +33492,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
@@ -33260,24 +33500,22 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP.
 
-    :attr str name: (optional) The user-defined name for this rule. Names must be
-          unique within the network ACL the rule resides in. If unspecified, the name will
-          be a hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleBeforePrototype before: (optional)
     :attr str destination: The destination IP address or CIDR block. The CIDR block
           `0.0.0.0/0` applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str name: (optional) The user-defined name for this rule. Names must be
+          unique within the network ACL the rule resides in. If unspecified, the name will
+          be a hyphenated list of randomly-selected words.
     :attr str source: The source IP address or CIDR block.  The CIDR block
           `0.0.0.0/0` applies to all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleIdentity before: (optional) The rule to insert this rule
-          immediately before. If omitted, this rule will be inserted after all existing
-          rules.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
           port range.
+    :attr str protocol: The protocol to enforce.
     :attr int source_port_max: (optional) The inclusive upper bound of TCP/UDP
           source port range.
     :attr int source_port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -33291,8 +33529,8 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
                  source: str,
                  protocol: str,
                  *,
+                 before: 'NetworkACLRuleBeforePrototype' = None,
                  name: str = None,
-                 before: 'NetworkACLRuleIdentity' = None,
                  port_max: int = None,
                  port_min: int = None,
                  source_port_max: int = None,
@@ -33308,12 +33546,10 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
         :param str source: The source IP address or CIDR block.  The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str protocol: The protocol to enforce.
+        :param NetworkACLRuleBeforePrototype before: (optional)
         :param str name: (optional) The user-defined name for this rule. Names must
                be unique within the network ACL the rule resides in. If unspecified, the
                name will be a hyphenated list of randomly-selected words.
-        :param NetworkACLRuleIdentity before: (optional) The rule to insert this
-               rule immediately before. If omitted, this rule will be inserted after all
-               existing rules.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
                destination port range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -33324,15 +33560,15 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
                source port range.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
         self.action = action
+        self.before = before
         self.destination = destination
         self.direction = direction
+        self.name = name
         self.source = source
-        self.protocol = protocol
-        self.before = before
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
         self.source_port_max = source_port_max
         self.source_port_min = source_port_min
 
@@ -33342,14 +33578,14 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
     ) -> 'NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP':
         """Initialize a NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'before' in _dict:
+            args['before'] = _dict.get('before')
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
         else:
@@ -33362,24 +33598,24 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
         if 'source' in _dict:
             args['source'] = _dict.get('source')
         else:
             raise ValueError(
                 'Required property \'source\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'port_max' in _dict:
+            args['port_max'] = _dict.get('port_max')
+        if 'port_min' in _dict:
+            args['port_min'] = _dict.get('port_min')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError(
                 'Required property \'protocol\' not present in NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'before' in _dict:
-            args['before'] = _dict.get('before')
-        if 'port_max' in _dict:
-            args['port_max'] = _dict.get('port_max')
-        if 'port_min' in _dict:
-            args['port_min'] = _dict.get('port_min')
         if 'source_port_max' in _dict:
             args['source_port_max'] = _dict.get('source_port_max')
         if 'source_port_min' in _dict:
@@ -33394,27 +33630,27 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             if isinstance(self.before, dict):
                 _dict['before'] = self.before
             else:
                 _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self,
                    'source_port_max') and self.source_port_max is not None:
             _dict['source_port_max'] = self.source_port_max
@@ -33463,8 +33699,6 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
 
@@ -33473,77 +33707,141 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
     """
     NetworkACLRuleNetworkACLRuleProtocolAll.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
+          immediately before. If absent, this is the last rule.
+    :attr datetime created_at: The date and time that the rule was created.
     :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
           applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
+    :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
     :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
           all addresses.
     :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. If absent, this is the last rule.
-    :attr datetime created_at: The date and time that the rule was created.
-    :attr str ip_version: The IP version for this rule.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None) -> None:
         """
         Initialize a NetworkACLRuleNetworkACLRuleProtocolAll object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. If absent, this is the last rule.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
+        self.protocol = protocol
 
     @classmethod
     def from_dict(cls,
                   _dict: Dict) -> 'NetworkACLRuleNetworkACLRuleProtocolAll':
         """Initialize a NetworkACLRuleNetworkACLRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError(
+                'Required property \'action\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        else:
+            raise ValueError(
+                'Required property \'destination\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'ip_version' in _dict:
+            args['ip_version'] = _dict.get('ip_version')
+        else:
+            raise ValueError(
+                'Required property \'ip_version\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -33552,7 +33850,30 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'before') and self.before is not None:
+            _dict['before'] = self.before.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -33586,15 +33907,6 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -33602,45 +33914,51 @@ class NetworkACLRuleNetworkACLRuleProtocolAll(NetworkACLRule):
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
 
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        ALL = 'all'
+
 
 class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
     """
     NetworkACLRuleNetworkACLRuleProtocolICMP.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
+          immediately before. If absent, this is the last rule.
+    :attr datetime created_at: The date and time that the rule was created.
     :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
           applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
+    :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
     :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
           all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. If absent, this is the last rule.
-    :attr datetime created_at: The date and time that the rule was created.
-    :attr str ip_version: The IP version for this rule.
     :attr int code: (optional) The ICMP traffic code to allow. If unspecified, all
           codes are allowed. This can only be specified if type is also specified.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow. If unspecified, all
           types are allowed by this rule.
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None,
                  code: int = None,
@@ -33648,21 +33966,21 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
         """
         Initialize a NetworkACLRuleNetworkACLRuleProtocolICMP object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. If absent, this is the last rule.
         :param int code: (optional) The ICMP traffic code to allow. If unspecified,
@@ -33672,18 +33990,18 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
                all types are allowed by this rule.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -33691,29 +34009,20 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
                   _dict: Dict) -> 'NetworkACLRuleNetworkACLRuleProtocolICMP':
         """Initialize a NetworkACLRuleNetworkACLRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
-            )
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
             )
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
@@ -33727,26 +34036,17 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
             )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
             )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
@@ -33754,8 +34054,26 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
             raise ValueError(
                 'Required property \'ip_version\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+            )
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -33768,30 +34086,30 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             _dict['before'] = self.before.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -33828,15 +34146,6 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
@@ -33844,32 +34153,38 @@ class NetworkACLRuleNetworkACLRuleProtocolICMP(NetworkACLRule):
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
 
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        ICMP = 'icmp'
+
 
 class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
     """
     NetworkACLRuleNetworkACLRuleProtocolTCPUDP.
 
-    :attr str id: The unique identifier for this Network ACL rule.
-    :attr str href: The URL for this Network ACL rule.
-    :attr str name: The user-defined name for this rule. Names must be unique within
-          the network ACL the rule resides in. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
     :attr str action: Whether to allow or deny matching traffic.
+    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
+          immediately before. If absent, this is the last rule.
+    :attr datetime created_at: The date and time that the rule was created.
     :attr str destination: The destination CIDR block. The CIDR block `0.0.0.0/0`
           applies to all addresses.
     :attr str direction: Whether the traffic to be matched is `inbound` or
           `outbound`.
+    :attr str href: The URL for this network ACL rule.
+    :attr str id: The unique identifier for this network ACL rule.
+    :attr str ip_version: The IP version for this rule.
+    :attr str name: The user-defined name for this rule. Names must be unique within
+          the network ACL the rule resides in. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
     :attr str source: The source CIDR block. The CIDR block `0.0.0.0/0` applies to
           all addresses.
-    :attr str protocol: The protocol to enforce.
-    :attr NetworkACLRuleReference before: (optional) The rule that this rule is
-          immediately before. If absent, this is the last rule.
-    :attr datetime created_at: The date and time that the rule was created.
-    :attr str ip_version: The IP version for this rule.
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP destination
           port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP destination
           port range.
+    :attr str protocol: The protocol to enforce.
     :attr int source_port_max: (optional) The inclusive upper bound of TCP/UDP
           source port range.
     :attr int source_port_min: (optional) The inclusive lower bound of TCP/UDP
@@ -33877,16 +34192,16 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
     """
 
     def __init__(self,
-                 id: str,
-                 href: str,
-                 name: str,
                  action: str,
+                 created_at: datetime,
                  destination: str,
                  direction: str,
+                 href: str,
+                 id: str,
+                 ip_version: str,
+                 name: str,
                  source: str,
                  protocol: str,
-                 created_at: datetime,
-                 ip_version: str,
                  *,
                  before: 'NetworkACLRuleReference' = None,
                  port_max: int = None,
@@ -33896,21 +34211,21 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
         """
         Initialize a NetworkACLRuleNetworkACLRuleProtocolTCPUDP object.
 
-        :param str id: The unique identifier for this Network ACL rule.
-        :param str href: The URL for this Network ACL rule.
-        :param str name: The user-defined name for this rule. Names must be unique
-               within the network ACL the rule resides in. If unspecified, the name will
-               be a hyphenated list of randomly-selected words.
         :param str action: Whether to allow or deny matching traffic.
+        :param datetime created_at: The date and time that the rule was created.
         :param str destination: The destination CIDR block. The CIDR block
                `0.0.0.0/0` applies to all addresses.
         :param str direction: Whether the traffic to be matched is `inbound` or
                `outbound`.
+        :param str href: The URL for this network ACL rule.
+        :param str id: The unique identifier for this network ACL rule.
+        :param str ip_version: The IP version for this rule.
+        :param str name: The user-defined name for this rule. Names must be unique
+               within the network ACL the rule resides in. If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
         :param str source: The source CIDR block. The CIDR block `0.0.0.0/0`
                applies to all addresses.
         :param str protocol: The protocol to enforce.
-        :param datetime created_at: The date and time that the rule was created.
-        :param str ip_version: The IP version for this rule.
         :param NetworkACLRuleReference before: (optional) The rule that this rule
                is immediately before. If absent, this is the last rule.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP
@@ -33923,19 +34238,19 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
                source port range.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
-        self.href = href
-        self.name = name
         self.action = action
-        self.destination = destination
-        self.direction = direction
-        self.source = source
-        self.protocol = protocol
         self.before = before
         self.created_at = created_at
+        self.destination = destination
+        self.direction = direction
+        self.href = href
+        self.id = id
         self.ip_version = ip_version
+        self.name = name
+        self.source = source
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
         self.source_port_max = source_port_max
         self.source_port_min = source_port_min
 
@@ -33944,29 +34259,20 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
                   _dict: Dict) -> 'NetworkACLRuleNetworkACLRuleProtocolTCPUDP':
         """Initialize a NetworkACLRuleNetworkACLRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
-            )
         if 'action' in _dict:
             args['action'] = _dict.get('action')
         else:
             raise ValueError(
                 'Required property \'action\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+            )
+        if 'before' in _dict:
+            args['before'] = NetworkACLRuleReference.from_dict(
+                _dict.get('before'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
             )
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
@@ -33980,26 +34286,17 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
             raise ValueError(
                 'Required property \'direction\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'source' in _dict:
-            args['source'] = _dict.get('source')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+                'Required property \'href\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
             )
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
-            )
-        if 'before' in _dict:
-            args['before'] = NetworkACLRuleReference.from_dict(
-                _dict.get('before'))
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError(
-                'Required property \'created_at\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+                'Required property \'id\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
@@ -34007,10 +34304,28 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
             raise ValueError(
                 'Required property \'ip_version\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+            )
+        if 'source' in _dict:
+            args['source'] = _dict.get('source')
+        else:
+            raise ValueError(
+                'Required property \'source\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+            )
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in NetworkACLRuleNetworkACLRuleProtocolTCPUDP JSON'
+            )
         if 'source_port_max' in _dict:
             args['source_port_max'] = _dict.get('source_port_max')
         if 'source_port_min' in _dict:
@@ -34025,32 +34340,32 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'action') and self.action is not None:
             _dict['action'] = self.action
-        if hasattr(self, 'destination') and self.destination is not None:
-            _dict['destination'] = self.destination
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'source') and self.source is not None:
-            _dict['source'] = self.source
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'before') and self.before is not None:
             _dict['before'] = self.before.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'source') and self.source is not None:
+            _dict['source'] = self.source
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self,
                    'source_port_max') and self.source_port_max is not None:
             _dict['source_port_max'] = self.source_port_max
@@ -34093,21 +34408,19 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
         INBOUND = 'inbound'
         OUTBOUND = 'outbound'
 
-    class ProtocolEnum(str, Enum):
-        """
-        The protocol to enforce.
-        """
-        ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
-
     class IpVersionEnum(str, Enum):
         """
         The IP version for this rule.
         """
         IPV4 = 'ipv4'
         IPV6 = 'ipv6'
+
+    class ProtocolEnum(str, Enum):
+        """
+        The protocol to enforce.
+        """
+        TCP = 'tcp'
+        UDP = 'udp'
 
 
 class OperatingSystemIdentityByHref(OperatingSystemIdentity):
@@ -34173,14 +34486,14 @@ class OperatingSystemIdentityByName(OperatingSystemIdentity):
     """
     OperatingSystemIdentityByName.
 
-    :attr str name: The unique name of the operating system.
+    :attr str name: The globally unique name for this operating system.
     """
 
     def __init__(self, name: str) -> None:
         """
         Initialize a OperatingSystemIdentityByName object.
 
-        :param str name: The unique name of the operating system.
+        :param str name: The globally unique name for this operating system.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -34224,6 +34537,96 @@ class OperatingSystemIdentityByName(OperatingSystemIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'OperatingSystemIdentityByName') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PublicGatewayFloatingIPPrototypeFloatingIPIdentity(
+        PublicGatewayFloatingIPPrototype):
+    """
+    Identifies a floating IP by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById',
+                'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN',
+                'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref',
+                'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress'
+            ]))
+        raise Exception(msg)
+
+
+class PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext(
+        PublicGatewayFloatingIPPrototype):
+    """
+    PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext.
+
+    :attr str name: (optional) The unique user-defined name for this floating IP. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext object.
+
+        :param str name: (optional) The unique user-defined name for this floating
+               IP. If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext':
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self,
+        other: 'PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self,
+        other: 'PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext'
+    ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -34401,96 +34804,6 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'PublicGatewayIdentityById') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-
-class PublicGatewayPrototypeFloatingIpFloatingIPIdentity(
-        PublicGatewayPrototypeFloatingIp):
-    """
-    Identifies a floating IP by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentity object.
-
-        """
-        # pylint: disable=super-init-not-called
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById',
-                'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN',
-                'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref',
-                'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress'
-            ]))
-        raise Exception(msg)
-
-
-class PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext(
-        PublicGatewayPrototypeFloatingIp):
-    """
-    PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext.
-
-    :attr str name: (optional) The unique user-defined name for this floating IP. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
-    """
-
-    def __init__(self, *, name: str = None) -> None:
-        """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext object.
-
-        :param str name: (optional) The unique user-defined name for this floating
-               IP. If unspecified, the name will be a hyphenated list of randomly-selected
-               words.
-        """
-        # pylint: disable=super-init-not-called
-        self.name = name
-
-    @classmethod
-    def from_dict(
-        cls, _dict: Dict
-    ) -> 'PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext':
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(
-        self,
-        other: 'PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext'
-    ) -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(
-        self,
-        other: 'PublicGatewayPrototypeFloatingIpFloatingIPPrototypeTargetContext'
-    ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -34865,162 +35178,6 @@ class SecurityGroupIdentityById(SecurityGroupIdentity):
         return not self == other
 
 
-class SecurityGroupRulePatchRemoteCIDR(SecurityGroupRulePatchRemote):
-    """
-    SecurityGroupRulePatchRemoteCIDR.
-
-    :attr str cidr_block: The CIDR block. This property may add support for IPv6
-          CIDR blocks in the future. When processing a value in this property, verify that
-          the CIDR block is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected CIDR block format was encountered.
-    """
-
-    def __init__(self, cidr_block: str) -> None:
-        """
-        Initialize a SecurityGroupRulePatchRemoteCIDR object.
-
-        :param str cidr_block: The CIDR block. This property may add support for
-               IPv6 CIDR blocks in the future. When processing a value in this property,
-               verify that the CIDR block is in an expected format. If it is not, log an
-               error. Optionally halt processing and surface the error, or bypass the
-               resource on which the unexpected CIDR block format was encountered.
-        """
-        # pylint: disable=super-init-not-called
-        self.cidr_block = cidr_block
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePatchRemoteCIDR':
-        """Initialize a SecurityGroupRulePatchRemoteCIDR object from a json dictionary."""
-        args = {}
-        if 'cidr_block' in _dict:
-            args['cidr_block'] = _dict.get('cidr_block')
-        else:
-            raise ValueError(
-                'Required property \'cidr_block\' not present in SecurityGroupRulePatchRemoteCIDR JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePatchRemoteCIDR object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
-            _dict['cidr_block'] = self.cidr_block
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePatchRemoteCIDR object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'SecurityGroupRulePatchRemoteCIDR') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'SecurityGroupRulePatchRemoteCIDR') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-
-class SecurityGroupRulePatchRemoteIP(SecurityGroupRulePatchRemote):
-    """
-    SecurityGroupRulePatchRemoteIP.
-
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
-    """
-
-    def __init__(self, address: str) -> None:
-        """
-        Initialize a SecurityGroupRulePatchRemoteIP object.
-
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
-        """
-        # pylint: disable=super-init-not-called
-        self.address = address
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePatchRemoteIP':
-        """Initialize a SecurityGroupRulePatchRemoteIP object from a json dictionary."""
-        args = {}
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
-        else:
-            raise ValueError(
-                'Required property \'address\' not present in SecurityGroupRulePatchRemoteIP JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePatchRemoteIP object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePatchRemoteIP object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'SecurityGroupRulePatchRemoteIP') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'SecurityGroupRulePatchRemoteIP') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-
-class SecurityGroupRulePatchRemoteSecurityGroupIdentity(
-        SecurityGroupRulePatchRemote):
-    """
-    Identifies a security group by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentity object.
-
-        """
-        # pylint: disable=super-init-not-called
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById',
-                'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN',
-                'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
-            ]))
-        raise Exception(msg)
-
-
 class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
         SecurityGroupRulePatch):
     """
@@ -35028,7 +35185,6 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
     or
     `code`.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -35036,19 +35192,20 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
+    :attr SecurityGroupRuleRemotePatch remote: (optional)
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 remote: 'SecurityGroupRulePatchRemote' = None,
                  direction: str = None,
                  ip_version: str = None,
-                 protocol: str = None) -> None:
+                 remote: 'SecurityGroupRuleRemotePatch' = None) -> None:
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolAll object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional)
+        :param str protocol: The protocol to enforce.
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -35056,12 +35213,12 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
+        :param SecurityGroupRuleRemotePatch remote: (optional)
         """
         # pylint: disable=super-init-not-called
-        self.remote = remote
         self.direction = direction
         self.ip_version = ip_version
+        self.remote = remote
         self.protocol = protocol
 
     @classmethod
@@ -35069,7 +35226,20 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
             cls, _dict: Dict
     ) -> 'SecurityGroupRulePatchSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        if 'ip_version' in _dict:
+            args['ip_version'] = _dict.get('ip_version')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePatchSecurityGroupRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -35078,7 +35248,19 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'remote') and self.remote is not None:
+            if isinstance(self.remote, dict):
+                _dict['remote'] = self.remote
+            else:
+                _dict['remote'] = self.remote.to_dict()
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -35123,9 +35305,6 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolAll(
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
@@ -35137,7 +35316,6 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
     specified and code is not specified, then traffic is allowed with the specified type
     for all codes.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -35145,23 +35323,24 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
+    :attr SecurityGroupRuleRemotePatch remote: (optional)
     :attr int code: (optional) The ICMP traffic code to allow.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow.
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 remote: 'SecurityGroupRulePatchRemote' = None,
                  direction: str = None,
                  ip_version: str = None,
-                 protocol: str = None,
+                 remote: 'SecurityGroupRuleRemotePatch' = None,
                  code: int = None,
                  type: int = None) -> None:
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional)
+        :param str protocol: The protocol to enforce.
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -35169,16 +35348,16 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
+        :param SecurityGroupRuleRemotePatch remote: (optional)
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
         # pylint: disable=super-init-not-called
-        self.remote = remote
         self.direction = direction
         self.ip_version = ip_version
-        self.protocol = protocol
+        self.remote = remote
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -35187,16 +35366,20 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
     ) -> 'SecurityGroupRulePatchSecurityGroupRuleProtocolICMP':
         """Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePatchSecurityGroupRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -35209,19 +35392,19 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
             else:
                 _dict['remote'] = self.remote.to_dict()
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -35268,10 +35451,7 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolICMP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
@@ -35281,7 +35461,6 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
     `port_max`. Either both should be set, or neither. When neither is set then traffic is
     allowed on all ports. For a single port, set both to the same value.
 
-    :attr SecurityGroupRulePatchRemote remote: (optional)
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -35289,23 +35468,24 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
+    :attr SecurityGroupRuleRemotePatch remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
+                 protocol: str,
                  *,
-                 remote: 'SecurityGroupRulePatchRemote' = None,
                  direction: str = None,
                  ip_version: str = None,
-                 protocol: str = None,
+                 remote: 'SecurityGroupRuleRemotePatch' = None,
                  port_max: int = None,
                  port_min: int = None) -> None:
         """
         Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP object.
 
-        :param SecurityGroupRulePatchRemote remote: (optional)
+        :param str protocol: The protocol to enforce.
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -35313,19 +35493,19 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
+        :param SecurityGroupRuleRemotePatch remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
                range.
         """
         # pylint: disable=super-init-not-called
-        self.remote = remote
         self.direction = direction
         self.ip_version = ip_version
-        self.protocol = protocol
+        self.remote = remote
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
 
     @classmethod
     def from_dict(
@@ -35333,18 +35513,22 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
     ) -> 'SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP':
         """Initialize a SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -35355,21 +35539,21 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
             else:
                 _dict['remote'] = self.remote.to_dict()
-        if hasattr(self, 'direction') and self.direction is not None:
-            _dict['direction'] = self.direction
-        if hasattr(self, 'ip_version') and self.ip_version is not None:
-            _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         return _dict
 
     def _to_dict(self):
@@ -35414,166 +35598,8 @@ class SecurityGroupRulePatchSecurityGroupRuleProtocolTCPUDP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
-
-
-class SecurityGroupRulePrototypeRemoteCIDR(SecurityGroupRulePrototypeRemote):
-    """
-    SecurityGroupRulePrototypeRemoteCIDR.
-
-    :attr str cidr_block: The CIDR block. This property may add support for IPv6
-          CIDR blocks in the future. When processing a value in this property, verify that
-          the CIDR block is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected CIDR block format was encountered.
-    """
-
-    def __init__(self, cidr_block: str) -> None:
-        """
-        Initialize a SecurityGroupRulePrototypeRemoteCIDR object.
-
-        :param str cidr_block: The CIDR block. This property may add support for
-               IPv6 CIDR blocks in the future. When processing a value in this property,
-               verify that the CIDR block is in an expected format. If it is not, log an
-               error. Optionally halt processing and surface the error, or bypass the
-               resource on which the unexpected CIDR block format was encountered.
-        """
-        # pylint: disable=super-init-not-called
-        self.cidr_block = cidr_block
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePrototypeRemoteCIDR':
-        """Initialize a SecurityGroupRulePrototypeRemoteCIDR object from a json dictionary."""
-        args = {}
-        if 'cidr_block' in _dict:
-            args['cidr_block'] = _dict.get('cidr_block')
-        else:
-            raise ValueError(
-                'Required property \'cidr_block\' not present in SecurityGroupRulePrototypeRemoteCIDR JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePrototypeRemoteCIDR object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
-            _dict['cidr_block'] = self.cidr_block
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePrototypeRemoteCIDR object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'SecurityGroupRulePrototypeRemoteCIDR') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'SecurityGroupRulePrototypeRemoteCIDR') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-
-class SecurityGroupRulePrototypeRemoteIP(SecurityGroupRulePrototypeRemote):
-    """
-    SecurityGroupRulePrototypeRemoteIP.
-
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
-    """
-
-    def __init__(self, address: str) -> None:
-        """
-        Initialize a SecurityGroupRulePrototypeRemoteIP object.
-
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
-        """
-        # pylint: disable=super-init-not-called
-        self.address = address
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePrototypeRemoteIP':
-        """Initialize a SecurityGroupRulePrototypeRemoteIP object from a json dictionary."""
-        args = {}
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
-        else:
-            raise ValueError(
-                'Required property \'address\' not present in SecurityGroupRulePrototypeRemoteIP JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePrototypeRemoteIP object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePrototypeRemoteIP object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'SecurityGroupRulePrototypeRemoteIP') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'SecurityGroupRulePrototypeRemoteIP') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-
-class SecurityGroupRulePrototypeRemoteSecurityGroupIdentity(
-        SecurityGroupRulePrototypeRemote):
-    """
-    Identifies a security group by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentity object.
-
-        """
-        # pylint: disable=super-init-not-called
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join([
-                'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById',
-                'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN',
-                'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
-            ]))
-        raise Exception(msg)
 
 
 class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
@@ -35590,41 +35616,58 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional)
+    :attr SecurityGroupRuleRemotePrototype remote: (optional)
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
                  direction: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
-                 remote: 'SecurityGroupRulePrototypeRemote' = None) -> None:
+                 remote: 'SecurityGroupRuleRemotePrototype' = None) -> None:
         """
         Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll object.
 
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional)
+        :param SecurityGroupRuleRemotePrototype remote: (optional)
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
+        self.protocol = protocol
 
     @classmethod
     def from_dict(
         cls, _dict: Dict
     ) -> 'SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll JSON'
+            )
+        if 'ip_version' in _dict:
+            args['ip_version'] = _dict.get('ip_version')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -35633,7 +35676,19 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'remote') and self.remote is not None:
+            if isinstance(self.remote, dict):
+                _dict['remote'] = self.remote
+            else:
+                _dict['remote'] = self.remote.to_dict()
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -35678,9 +35733,6 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
@@ -35699,18 +35751,18 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional)
+    :attr SecurityGroupRuleRemotePrototype remote: (optional)
     :attr int code: (optional) The ICMP traffic code to allow.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow.
     """
 
     def __init__(self,
                  direction: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
-                 remote: 'SecurityGroupRulePrototypeRemote' = None,
+                 remote: 'SecurityGroupRuleRemotePrototype' = None,
                  code: int = None,
                  type: int = None) -> None:
         """
@@ -35718,22 +35770,22 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
 
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional)
+        :param SecurityGroupRuleRemotePrototype remote: (optional)
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -35750,12 +35802,16 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -35772,8 +35828,6 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
             _dict['direction'] = self.direction
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
@@ -35781,6 +35835,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
                 _dict['remote'] = self.remote.to_dict()
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -35827,10 +35883,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
@@ -35847,18 +35900,18 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
-    :attr SecurityGroupRulePrototypeRemote remote: (optional)
+    :attr SecurityGroupRuleRemotePrototype remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
                  direction: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
-                 remote: 'SecurityGroupRulePrototypeRemote' = None,
+                 remote: 'SecurityGroupRuleRemotePrototype' = None,
                  port_max: int = None,
                  port_min: int = None) -> None:
         """
@@ -35866,13 +35919,13 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
 
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
-        :param SecurityGroupRulePrototypeRemote remote: (optional)
+        :param SecurityGroupRuleRemotePrototype remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
@@ -35881,10 +35934,10 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
         # pylint: disable=super-init-not-called
         self.direction = direction
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
 
     @classmethod
     def from_dict(
@@ -35900,14 +35953,18 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
             )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -35922,8 +35979,6 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
             _dict['direction'] = self.direction
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
@@ -35933,6 +35988,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         return _dict
 
     def _to_dict(self):
@@ -35977,10 +36034,320 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
+
+
+class SecurityGroupRuleRemotePatchCIDR(SecurityGroupRuleRemotePatch):
+    """
+    SecurityGroupRuleRemotePatchCIDR.
+
+    :attr str cidr_block: The CIDR block. This property may add support for IPv6
+          CIDR blocks in the future. When processing a value in this property, verify that
+          the CIDR block is in an expected format. If it is not, log an error. Optionally
+          halt processing and surface the error, or bypass the resource on which the
+          unexpected CIDR block format was encountered.
+    """
+
+    def __init__(self, cidr_block: str) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePatchCIDR object.
+
+        :param str cidr_block: The CIDR block. This property may add support for
+               IPv6 CIDR blocks in the future. When processing a value in this property,
+               verify that the CIDR block is in an expected format. If it is not, log an
+               error. Optionally halt processing and surface the error, or bypass the
+               resource on which the unexpected CIDR block format was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.cidr_block = cidr_block
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRuleRemotePatchCIDR':
+        """Initialize a SecurityGroupRuleRemotePatchCIDR object from a json dictionary."""
+        args = {}
+        if 'cidr_block' in _dict:
+            args['cidr_block'] = _dict.get('cidr_block')
+        else:
+            raise ValueError(
+                'Required property \'cidr_block\' not present in SecurityGroupRuleRemotePatchCIDR JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupRuleRemotePatchCIDR object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupRuleRemotePatchCIDR object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupRuleRemotePatchCIDR') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupRuleRemotePatchCIDR') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupRuleRemotePatchIP(SecurityGroupRuleRemotePatch):
+    """
+    SecurityGroupRuleRemotePatchIP.
+
+    :attr str address: The IP address. This property may add support for IPv6
+          addresses in the future. When processing a value in this property, verify that
+          the address is in an expected format. If it is not, log an error. Optionally
+          halt processing and surface the error, or bypass the resource on which the
+          unexpected IP address format was encountered.
+    """
+
+    def __init__(self, address: str) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePatchIP object.
+
+        :param str address: The IP address. This property may add support for IPv6
+               addresses in the future. When processing a value in this property, verify
+               that the address is in an expected format. If it is not, log an error.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected IP address format was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.address = address
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRuleRemotePatchIP':
+        """Initialize a SecurityGroupRuleRemotePatchIP object from a json dictionary."""
+        args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        else:
+            raise ValueError(
+                'Required property \'address\' not present in SecurityGroupRuleRemotePatchIP JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupRuleRemotePatchIP object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupRuleRemotePatchIP object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupRuleRemotePatchIP') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupRuleRemotePatchIP') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupRuleRemotePatchSecurityGroupIdentity(
+        SecurityGroupRuleRemotePatch):
+    """
+    Identifies a security group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById',
+                'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN',
+                'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class SecurityGroupRuleRemotePrototypeCIDR(SecurityGroupRuleRemotePrototype):
+    """
+    SecurityGroupRuleRemotePrototypeCIDR.
+
+    :attr str cidr_block: The CIDR block. This property may add support for IPv6
+          CIDR blocks in the future. When processing a value in this property, verify that
+          the CIDR block is in an expected format. If it is not, log an error. Optionally
+          halt processing and surface the error, or bypass the resource on which the
+          unexpected CIDR block format was encountered.
+    """
+
+    def __init__(self, cidr_block: str) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePrototypeCIDR object.
+
+        :param str cidr_block: The CIDR block. This property may add support for
+               IPv6 CIDR blocks in the future. When processing a value in this property,
+               verify that the CIDR block is in an expected format. If it is not, log an
+               error. Optionally halt processing and surface the error, or bypass the
+               resource on which the unexpected CIDR block format was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.cidr_block = cidr_block
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRuleRemotePrototypeCIDR':
+        """Initialize a SecurityGroupRuleRemotePrototypeCIDR object from a json dictionary."""
+        args = {}
+        if 'cidr_block' in _dict:
+            args['cidr_block'] = _dict.get('cidr_block')
+        else:
+            raise ValueError(
+                'Required property \'cidr_block\' not present in SecurityGroupRuleRemotePrototypeCIDR JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupRuleRemotePrototypeCIDR object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupRuleRemotePrototypeCIDR object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupRuleRemotePrototypeCIDR') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupRuleRemotePrototypeCIDR') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupRuleRemotePrototypeIP(SecurityGroupRuleRemotePrototype):
+    """
+    SecurityGroupRuleRemotePrototypeIP.
+
+    :attr str address: The IP address. This property may add support for IPv6
+          addresses in the future. When processing a value in this property, verify that
+          the address is in an expected format. If it is not, log an error. Optionally
+          halt processing and surface the error, or bypass the resource on which the
+          unexpected IP address format was encountered.
+    """
+
+    def __init__(self, address: str) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePrototypeIP object.
+
+        :param str address: The IP address. This property may add support for IPv6
+               addresses in the future. When processing a value in this property, verify
+               that the address is in an expected format. If it is not, log an error.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected IP address format was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.address = address
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupRuleRemotePrototypeIP':
+        """Initialize a SecurityGroupRuleRemotePrototypeIP object from a json dictionary."""
+        args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        else:
+            raise ValueError(
+                'Required property \'address\' not present in SecurityGroupRuleRemotePrototypeIP JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupRuleRemotePrototypeIP object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupRuleRemotePrototypeIP object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupRuleRemotePrototypeIP') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupRuleRemotePrototypeIP') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupRuleRemotePrototypeSecurityGroupIdentity(
+        SecurityGroupRuleRemotePrototype):
+    """
+    Identifies a security group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById',
+                'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN',
+                'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref'
+            ]))
+        raise Exception(msg)
 
 
 class SecurityGroupRuleRemoteCIDR(SecurityGroupRuleRemote):
@@ -36121,27 +36488,27 @@ class SecurityGroupRuleRemoteSecurityGroupReference(SecurityGroupRuleRemote):
     """
     SecurityGroupRuleRemoteSecurityGroupReference.
 
-    :attr str id: The unique identifier for this security group.
     :attr str crn: The security group's CRN.
     :attr str href: The security group's canonical URL.
+    :attr str id: The unique identifier for this security group.
     :attr str name: The user-defined name for this security group. Security group
           names must be unique, within the scope of an account.
     """
 
-    def __init__(self, id: str, crn: str, href: str, name: str) -> None:
+    def __init__(self, crn: str, href: str, id: str, name: str) -> None:
         """
         Initialize a SecurityGroupRuleRemoteSecurityGroupReference object.
 
-        :param str id: The unique identifier for this security group.
         :param str crn: The security group's CRN.
         :param str href: The security group's canonical URL.
+        :param str id: The unique identifier for this security group.
         :param str name: The user-defined name for this security group. Security
                group names must be unique, within the scope of an account.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.crn = crn
         self.href = href
+        self.id = id
         self.name = name
 
     @classmethod
@@ -36150,12 +36517,6 @@ class SecurityGroupRuleRemoteSecurityGroupReference(SecurityGroupRuleRemote):
             _dict: Dict) -> 'SecurityGroupRuleRemoteSecurityGroupReference':
         """Initialize a SecurityGroupRuleRemoteSecurityGroupReference object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRuleRemoteSecurityGroupReference JSON'
-            )
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
@@ -36167,6 +36528,12 @@ class SecurityGroupRuleRemoteSecurityGroupReference(SecurityGroupRuleRemote):
         else:
             raise ValueError(
                 'Required property \'href\' not present in SecurityGroupRuleRemoteSecurityGroupReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupRuleRemoteSecurityGroupReference JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -36184,12 +36551,12 @@ class SecurityGroupRuleRemoteSecurityGroupReference(SecurityGroupRuleRemote):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -36221,52 +36588,75 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
     or
     `code`.
 
-    :attr str id: The unique identifier for this security group rule.
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
+    :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
           `remote.address` or `remote.cidr_block` must match this field, if they are used.
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
     :attr SecurityGroupRuleRemote remote: (optional)
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
-                 id: str,
                  direction: str,
+                 id: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
                  remote: 'SecurityGroupRuleRemote' = None) -> None:
         """
         Initialize a SecurityGroupRuleSecurityGroupRuleProtocolAll object.
 
-        :param str id: The unique identifier for this security group rule.
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str id: The unique identifier for this security group rule.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
         :param SecurityGroupRuleRemote remote: (optional)
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.direction = direction
+        self.id = id
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
+        self.protocol = protocol
 
     @classmethod
     def from_dict(
             cls,
             _dict: Dict) -> 'SecurityGroupRuleSecurityGroupRuleProtocolAll':
         """Initialize a SecurityGroupRuleSecurityGroupRuleProtocolAll object from a json dictionary."""
-        return cls(**_dict)
+        args = {}
+        if 'direction' in _dict:
+            args['direction'] = _dict.get('direction')
+        else:
+            raise ValueError(
+                'Required property \'direction\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON'
+            )
+        if 'ip_version' in _dict:
+            args['ip_version'] = _dict.get('ip_version')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON'
+            )
+        return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
@@ -36275,7 +36665,21 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
-        return vars(self)
+        _dict = {}
+        if hasattr(self, 'direction') and self.direction is not None:
+            _dict['direction'] = self.direction
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'ip_version') and self.ip_version is not None:
+            _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'remote') and self.remote is not None:
+            if isinstance(self.remote, dict):
+                _dict['remote'] = self.remote
+            else:
+                _dict['remote'] = self.remote.to_dict()
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        return _dict
 
     def _to_dict(self):
         """Return a json dictionary representing this model."""
@@ -36318,9 +36722,6 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
         The protocol to enforce.
         """
         ALL = 'all'
-        ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
@@ -36331,52 +36732,52 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
     specified and code is not specified, then traffic is allowed with the specified type
     for all codes.
 
-    :attr str id: The unique identifier for this security group rule.
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
+    :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
           `remote.address` or `remote.cidr_block` must match this field, if they are used.
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
     :attr SecurityGroupRuleRemote remote: (optional)
     :attr int code: (optional) The ICMP traffic code to allow.
+    :attr str protocol: The protocol to enforce.
     :attr int type: (optional) The ICMP traffic type to allow.
     """
 
     def __init__(self,
-                 id: str,
                  direction: str,
+                 id: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
                  remote: 'SecurityGroupRuleRemote' = None,
                  code: int = None,
                  type: int = None) -> None:
         """
         Initialize a SecurityGroupRuleSecurityGroupRuleProtocolICMP object.
 
-        :param str id: The unique identifier for this security group rule.
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str id: The unique identifier for this security group rule.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
         :param SecurityGroupRuleRemote remote: (optional)
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.direction = direction
+        self.id = id
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
         self.code = code
+        self.protocol = protocol
         self.type = type
 
     @classmethod
@@ -36385,26 +36786,30 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
             _dict: Dict) -> 'SecurityGroupRuleSecurityGroupRuleProtocolICMP':
         """Initialize a SecurityGroupRuleSecurityGroupRuleProtocolICMP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON'
-            )
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
         else:
             raise ValueError(
                 'Required property \'direction\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON'
             )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON'
+            )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         if 'code' in _dict:
             args['code'] = _dict.get('code')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON'
+            )
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -36417,14 +36822,12 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
@@ -36432,6 +36835,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
                 _dict['remote'] = self.remote.to_dict()
         if hasattr(self, 'code') and self.code is not None:
             _dict['code'] = self.code
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -36476,10 +36881,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
         """
         The protocol to enforce.
         """
-        ALL = 'all'
         ICMP = 'icmp'
-        TCP = 'tcp'
-        UDP = 'udp'
 
 
 class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
@@ -36488,41 +36890,41 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
     `port_max`. Either both should be set, or neither. When neither is set then traffic is
     allowed on all ports. For a single port, set both to the same value.
 
-    :attr str id: The unique identifier for this security group rule.
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
+    :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
           `remote.address` or `remote.cidr_block` must match this field, if they are used.
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
     :attr SecurityGroupRuleRemote remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
+    :attr str protocol: The protocol to enforce.
     """
 
     def __init__(self,
-                 id: str,
                  direction: str,
+                 id: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
                  remote: 'SecurityGroupRuleRemote' = None,
                  port_max: int = None,
                  port_min: int = None) -> None:
         """
         Initialize a SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP object.
 
-        :param str id: The unique identifier for this security group rule.
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str id: The unique identifier for this security group rule.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this field, if they are
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
         :param SecurityGroupRuleRemote remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
@@ -36530,13 +36932,13 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
                range.
         """
         # pylint: disable=super-init-not-called
-        self.id = id
         self.direction = direction
+        self.id = id
         self.ip_version = ip_version
-        self.protocol = protocol
         self.remote = remote
         self.port_max = port_max
         self.port_min = port_min
+        self.protocol = protocol
 
     @classmethod
     def from_dict(
@@ -36544,28 +36946,32 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
             _dict: Dict) -> 'SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP':
         """Initialize a SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP object from a json dictionary."""
         args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON'
-            )
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
         else:
             raise ValueError(
                 'Required property \'direction\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON'
             )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON'
+            )
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'protocol' in _dict:
-            args['protocol'] = _dict.get('protocol')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
             args['port_min'] = _dict.get('port_min')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError(
+                'Required property \'protocol\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -36576,14 +36982,12 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
@@ -36593,6 +36997,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         return _dict
 
     def _to_dict(self):
@@ -36637,8 +37043,6 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
         """
         The protocol to enforce.
         """
-        ALL = 'all'
-        ICMP = 'icmp'
         TCP = 'tcp'
         UDP = 'udp'
 
@@ -37273,42 +37677,803 @@ class VPCIdentityById(VPCIdentity):
         return not self == other
 
 
-class VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContext(
-        VolumeAttachmentPrototypeInstanceContextVolume):
+class VPNGatewayConnectionPolicyMode(VPNGatewayConnection):
     """
-    VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContext.
+    VPNGatewayConnectionPolicyMode.
 
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
+    :attr bool admin_state_up: If set to false, the VPN gateway connection is shut
+          down.
+    :attr str authentication_mode: The authentication mode. Only `psk` is currently
+          supported.
+    :attr datetime created_at: The date and time that this VPN gateway connection
+          was created.
+    :attr VPNGatewayConnectionDPD dead_peer_detection:
+    :attr str href: The VPN connection's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway connection.
+    :attr IKEPolicyReference ike_policy: (optional) Optional IKE policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr str mode: The mode of the VPN gateway.
+    :attr str name: The user-defined name for this VPN gateway connection.
+    :attr str peer_address: The IP address of the peer VPN gateway.
+    :attr str psk: The preshared key.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of a VPN gateway connection.
+    :attr List[str] local_cidrs: A collection of local CIDRs for this resource.
+    :attr List[str] peer_cidrs: A collection of peer CIDRs for this resource.
+    """
+
+    def __init__(self,
+                 admin_state_up: bool,
+                 authentication_mode: str,
+                 created_at: datetime,
+                 dead_peer_detection: 'VPNGatewayConnectionDPD',
+                 href: str,
+                 id: str,
+                 mode: str,
+                 name: str,
+                 peer_address: str,
+                 psk: str,
+                 resource_type: str,
+                 status: str,
+                 local_cidrs: List[str],
+                 peer_cidrs: List[str],
+                 *,
+                 ike_policy: 'IKEPolicyReference' = None,
+                 ipsec_policy: 'IPsecPolicyReference' = None) -> None:
+        """
+        Initialize a VPNGatewayConnectionPolicyMode object.
+
+        :param bool admin_state_up: If set to false, the VPN gateway connection is
+               shut down.
+        :param str authentication_mode: The authentication mode. Only `psk` is
+               currently supported.
+        :param datetime created_at: The date and time that this VPN gateway
+               connection was created.
+        :param VPNGatewayConnectionDPD dead_peer_detection:
+        :param str href: The VPN connection's canonical URL.
+        :param str id: The unique identifier for this VPN gateway connection.
+        :param str mode: The mode of the VPN gateway.
+        :param str name: The user-defined name for this VPN gateway connection.
+        :param str peer_address: The IP address of the peer VPN gateway.
+        :param str psk: The preshared key.
+        :param str resource_type: The resource type.
+        :param str status: The status of a VPN gateway connection.
+        :param List[str] local_cidrs: A collection of local CIDRs for this
+               resource.
+        :param List[str] peer_cidrs: A collection of peer CIDRs for this resource.
+        :param IKEPolicyReference ike_policy: (optional) Optional IKE policy
+               configuration. The absence of a policy indicates autonegotiation.
+        :param IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
+               configuration. The absence of a policy indicates autonegotiation.
+        """
+        # pylint: disable=super-init-not-called
+        self.admin_state_up = admin_state_up
+        self.authentication_mode = authentication_mode
+        self.created_at = created_at
+        self.dead_peer_detection = dead_peer_detection
+        self.href = href
+        self.id = id
+        self.ike_policy = ike_policy
+        self.ipsec_policy = ipsec_policy
+        self.mode = mode
+        self.name = name
+        self.peer_address = peer_address
+        self.psk = psk
+        self.resource_type = resource_type
+        self.status = status
+        self.local_cidrs = local_cidrs
+        self.peer_cidrs = peer_cidrs
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionPolicyMode':
+        """Initialize a VPNGatewayConnectionPolicyMode object from a json dictionary."""
+        args = {}
+        if 'admin_state_up' in _dict:
+            args['admin_state_up'] = _dict.get('admin_state_up')
+        else:
+            raise ValueError(
+                'Required property \'admin_state_up\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'authentication_mode' in _dict:
+            args['authentication_mode'] = _dict.get('authentication_mode')
+        else:
+            raise ValueError(
+                'Required property \'authentication_mode\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'dead_peer_detection' in _dict:
+            args['dead_peer_detection'] = VPNGatewayConnectionDPD.from_dict(
+                _dict.get('dead_peer_detection'))
+        else:
+            raise ValueError(
+                'Required property \'dead_peer_detection\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'ike_policy' in _dict:
+            args['ike_policy'] = IKEPolicyReference.from_dict(
+                _dict.get('ike_policy'))
+        if 'ipsec_policy' in _dict:
+            args['ipsec_policy'] = IPsecPolicyReference.from_dict(
+                _dict.get('ipsec_policy'))
+        if 'mode' in _dict:
+            args['mode'] = _dict.get('mode')
+        else:
+            raise ValueError(
+                'Required property \'mode\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'peer_address' in _dict:
+            args['peer_address'] = _dict.get('peer_address')
+        else:
+            raise ValueError(
+                'Required property \'peer_address\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'psk' in _dict:
+            args['psk'] = _dict.get('psk')
+        else:
+            raise ValueError(
+                'Required property \'psk\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'local_cidrs' in _dict:
+            args['local_cidrs'] = _dict.get('local_cidrs')
+        else:
+            raise ValueError(
+                'Required property \'local_cidrs\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        if 'peer_cidrs' in _dict:
+            args['peer_cidrs'] = _dict.get('peer_cidrs')
+        else:
+            raise ValueError(
+                'Required property \'peer_cidrs\' not present in VPNGatewayConnectionPolicyMode JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionPolicyMode object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'admin_state_up') and self.admin_state_up is not None:
+            _dict['admin_state_up'] = self.admin_state_up
+        if hasattr(
+                self,
+                'authentication_mode') and self.authentication_mode is not None:
+            _dict['authentication_mode'] = self.authentication_mode
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(
+                self,
+                'dead_peer_detection') and self.dead_peer_detection is not None:
+            _dict['dead_peer_detection'] = self.dead_peer_detection.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'ike_policy') and self.ike_policy is not None:
+            _dict['ike_policy'] = self.ike_policy.to_dict()
+        if hasattr(self, 'ipsec_policy') and self.ipsec_policy is not None:
+            _dict['ipsec_policy'] = self.ipsec_policy.to_dict()
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'peer_address') and self.peer_address is not None:
+            _dict['peer_address'] = self.peer_address
+        if hasattr(self, 'psk') and self.psk is not None:
+            _dict['psk'] = self.psk
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'local_cidrs') and self.local_cidrs is not None:
+            _dict['local_cidrs'] = self.local_cidrs
+        if hasattr(self, 'peer_cidrs') and self.peer_cidrs is not None:
+            _dict['peer_cidrs'] = self.peer_cidrs
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionPolicyMode object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionPolicyMode') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionPolicyMode') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AuthenticationModeEnum(str, Enum):
+        """
+        The authentication mode. Only `psk` is currently supported.
+        """
+        PSK = 'psk'
+
+    class ModeEnum(str, Enum):
+        """
+        The mode of the VPN gateway.
+        """
+        POLICY = 'policy'
+        ROUTE = 'route'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of a VPN gateway connection.
+        """
+        DOWN = 'down'
+        UP = 'up'
+
+
+class VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype(
+        VPNGatewayConnectionPrototype):
+    """
+    VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype.
+
+    :attr bool admin_state_up: (optional) If set to false, the VPN gateway
+          connection is shut down.
+    :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
+    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+          configuration. The absence of a policy indicates autonegotiation.
+    :attr str name: (optional) The user-defined name for this VPN gateway
+          connection.
+    :attr str peer_address: The IP address of the peer VPN gateway.
+    :attr str psk: The preshared key.
+    :attr List[str] local_cidrs: A collection of local CIDRs for this resource.
+    :attr List[str] peer_cidrs: A collection of peer CIDRs for this resource.
+    """
+
+    def __init__(self,
+                 peer_address: str,
+                 psk: str,
+                 local_cidrs: List[str],
+                 peer_cidrs: List[str],
+                 *,
+                 admin_state_up: bool = None,
+                 dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
+                 ike_policy: 'IKEPolicyIdentity' = None,
+                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 name: str = None) -> None:
+        """
+        Initialize a VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype object.
+
+        :param str peer_address: The IP address of the peer VPN gateway.
+        :param str psk: The preshared key.
+        :param List[str] local_cidrs: A collection of local CIDRs for this
+               resource.
+        :param List[str] peer_cidrs: A collection of peer CIDRs for this resource.
+        :param bool admin_state_up: (optional) If set to false, the VPN gateway
+               connection is shut down.
+        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
+        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
+               configuration. The absence of a policy indicates autonegotiation.
+        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
+               configuration. The absence of a policy indicates autonegotiation.
+        :param str name: (optional) The user-defined name for this VPN gateway
+               connection.
+        """
+        # pylint: disable=super-init-not-called
+        self.admin_state_up = admin_state_up
+        self.dead_peer_detection = dead_peer_detection
+        self.ike_policy = ike_policy
+        self.ipsec_policy = ipsec_policy
+        self.name = name
+        self.peer_address = peer_address
+        self.psk = psk
+        self.local_cidrs = local_cidrs
+        self.peer_cidrs = peer_cidrs
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype':
+        """Initialize a VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype object from a json dictionary."""
+        args = {}
+        if 'admin_state_up' in _dict:
+            args['admin_state_up'] = _dict.get('admin_state_up')
+        if 'dead_peer_detection' in _dict:
+            args[
+                'dead_peer_detection'] = VPNGatewayConnectionDPDPrototype.from_dict(
+                    _dict.get('dead_peer_detection'))
+        if 'ike_policy' in _dict:
+            args['ike_policy'] = _dict.get('ike_policy')
+        if 'ipsec_policy' in _dict:
+            args['ipsec_policy'] = _dict.get('ipsec_policy')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'peer_address' in _dict:
+            args['peer_address'] = _dict.get('peer_address')
+        else:
+            raise ValueError(
+                'Required property \'peer_address\' not present in VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype JSON'
+            )
+        if 'psk' in _dict:
+            args['psk'] = _dict.get('psk')
+        else:
+            raise ValueError(
+                'Required property \'psk\' not present in VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype JSON'
+            )
+        if 'local_cidrs' in _dict:
+            args['local_cidrs'] = _dict.get('local_cidrs')
+        else:
+            raise ValueError(
+                'Required property \'local_cidrs\' not present in VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype JSON'
+            )
+        if 'peer_cidrs' in _dict:
+            args['peer_cidrs'] = _dict.get('peer_cidrs')
+        else:
+            raise ValueError(
+                'Required property \'peer_cidrs\' not present in VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'admin_state_up') and self.admin_state_up is not None:
+            _dict['admin_state_up'] = self.admin_state_up
+        if hasattr(
+                self,
+                'dead_peer_detection') and self.dead_peer_detection is not None:
+            _dict['dead_peer_detection'] = self.dead_peer_detection.to_dict()
+        if hasattr(self, 'ike_policy') and self.ike_policy is not None:
+            if isinstance(self.ike_policy, dict):
+                _dict['ike_policy'] = self.ike_policy
+            else:
+                _dict['ike_policy'] = self.ike_policy.to_dict()
+        if hasattr(self, 'ipsec_policy') and self.ipsec_policy is not None:
+            if isinstance(self.ipsec_policy, dict):
+                _dict['ipsec_policy'] = self.ipsec_policy
+            else:
+                _dict['ipsec_policy'] = self.ipsec_policy.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'peer_address') and self.peer_address is not None:
+            _dict['peer_address'] = self.peer_address
+        if hasattr(self, 'psk') and self.psk is not None:
+            _dict['psk'] = self.psk
+        if hasattr(self, 'local_cidrs') and self.local_cidrs is not None:
+            _dict['local_cidrs'] = self.local_cidrs
+        if hasattr(self, 'peer_cidrs') and self.peer_cidrs is not None:
+            _dict['peer_cidrs'] = self.peer_cidrs
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VPNGatewayPolicyMode(VPNGateway):
+    """
+    VPNGatewayPolicyMode.
+
+    :attr List[VPNGatewayConnectionReference] connections: Collection of references
+          to VPN gateway connections.
+    :attr datetime created_at: The date and time that this VPN gateway was created.
+    :attr str crn: The VPN gateway's CRN.
+    :attr str href: The VPN gateway's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway.
+    :attr List[VPNGatewayMember] members: Collection of VPN gateway members.
+    :attr str name: The user-defined name for this VPN gateway.
+    :attr ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the VPN gateway.
+    :attr SubnetReference subnet:
+    :attr str mode: Policy mode VPN gateway.
+    """
+
+    def __init__(self, connections: List['VPNGatewayConnectionReference'],
+                 created_at: datetime, crn: str, href: str, id: str,
+                 members: List['VPNGatewayMember'], name: str,
+                 resource_group: 'ResourceGroupReference', resource_type: str,
+                 status: str, subnet: 'SubnetReference', mode: str) -> None:
+        """
+        Initialize a VPNGatewayPolicyMode object.
+
+        :param List[VPNGatewayConnectionReference] connections: Collection of
+               references to VPN gateway connections.
+        :param datetime created_at: The date and time that this VPN gateway was
+               created.
+        :param str crn: The VPN gateway's CRN.
+        :param str href: The VPN gateway's canonical URL.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayMember] members: Collection of VPN gateway members.
+        :param str name: The user-defined name for this VPN gateway.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
+        :param str status: The status of the VPN gateway.
+        :param SubnetReference subnet:
+        :param str mode: Policy mode VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.connections = connections
+        self.created_at = created_at
+        self.crn = crn
+        self.href = href
+        self.id = id
+        self.members = members
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.status = status
+        self.subnet = subnet
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPolicyMode':
+        """Initialize a VPNGatewayPolicyMode object from a json dictionary."""
+        args = {}
+        if 'connections' in _dict:
+            args['connections'] = [
+                VPNGatewayConnectionReference.from_dict(x)
+                for x in _dict.get('connections')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'connections\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'members' in _dict:
+            args['members'] = [
+                VPNGatewayMember.from_dict(x) for x in _dict.get('members')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'members\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'subnet' in _dict:
+            args['subnet'] = SubnetReference.from_dict(_dict.get('subnet'))
+        else:
+            raise ValueError(
+                'Required property \'subnet\' not present in VPNGatewayPolicyMode JSON'
+            )
+        if 'mode' in _dict:
+            args['mode'] = _dict.get('mode')
+        else:
+            raise ValueError(
+                'Required property \'mode\' not present in VPNGatewayPolicyMode JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPolicyMode object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'connections') and self.connections is not None:
+            _dict['connections'] = [x.to_dict() for x in self.connections]
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'members') and self.members is not None:
+            _dict['members'] = [x.to_dict() for x in self.members]
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPolicyMode object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPolicyMode') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPolicyMode') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_GATEWAY = 'vpn_gateway'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the VPN gateway.
+        """
+        AVAILABLE = 'available'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+
+    class ModeEnum(str, Enum):
+        """
+        Policy mode VPN gateway.
+        """
+        POLICY = 'policy'
+
+
+class VPNGatewayPrototypeVPNGatewayPolicyModePrototype(VPNGatewayPrototype):
+    """
+    VPNGatewayPrototypeVPNGatewayPolicyModePrototype.
+
+    :attr str name: (optional) The user-defined name for this VPN gateway.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr SubnetIdentity subnet:
+    :attr str mode: (optional) Policy mode VPN gateway.
+    """
+
+    def __init__(self,
+                 subnet: 'SubnetIdentity',
+                 *,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 mode: str = None) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object.
+
+        :param SubnetIdentity subnet:
+        :param str name: (optional) The user-defined name for this VPN gateway.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str mode: (optional) Policy mode VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.subnet = subnet
+        self.mode = mode
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'subnet' in _dict:
+            args['subnet'] = _dict.get('subnet')
+        else:
+            raise ValueError(
+                'Required property \'subnet\' not present in VPNGatewayPrototypeVPNGatewayPolicyModePrototype JSON'
+            )
+        if 'mode' in _dict:
+            args['mode'] = _dict.get('mode')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayPolicyModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ModeEnum(str, Enum):
+        """
+        Policy mode VPN gateway.
+        """
+        POLICY = 'policy'
+
+
+class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext(
+        VolumeAttachmentVolumePrototypeInstanceContext):
+    """
+    VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext.
+
     :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
           key to use to wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
 
     def __init__(self,
                  profile: 'VolumeProfileIdentity',
                  *,
-                 name: str = None,
                  encryption_key: 'EncryptionKeyIdentity' = None,
-                 iops: int = None) -> None:
+                 iops: int = None,
+                 name: str = None) -> None:
         """
-        Initialize a VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContext object.
+        Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
+                'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
             ]))
         raise Exception(msg)
 
@@ -37553,14 +38718,14 @@ class VolumeProfileIdentityByName(VolumeProfileIdentity):
     """
     VolumeProfileIdentityByName.
 
-    :attr str name: The name for this volume profile.
+    :attr str name: The globally unique name for this volume profile.
     """
 
     def __init__(self, name: str) -> None:
         """
         Initialize a VolumeProfileIdentityByName object.
 
-        :param str name: The name for this volume profile.
+        :param str name: The globally unique name for this volume profile.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -37612,18 +38777,18 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     """
     VolumePrototypeVolumeByCapacity.
 
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
           key to use to wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr ZoneIdentity zone: The location of the volume.
-    :attr int capacity: The capacity of the volume in gigabytes. Note that the
-          specified minimum and maximum capacity values for creating or updating volumes
-          may expand in the future.
+    :attr int capacity: The capacity of the volume in gigabytes. The specified
+          minimum and maximum capacity values for creating or updating volumes may expand
+          in the future.
     """
 
     def __init__(self,
@@ -37631,32 +38796,32 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                  zone: 'ZoneIdentity',
                  capacity: int,
                  *,
-                 name: str = None,
                  encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
+                 name: str = None,
                  resource_group: 'ResourceGroupIdentity' = None) -> None:
         """
         Initialize a VolumePrototypeVolumeByCapacity object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param ZoneIdentity zone: The location of the volume.
-        :param int capacity: The capacity of the volume in gigabytes. Note that the
-               specified minimum and maximum capacity values for creating or updating
-               volumes may expand in the future.
-        :param str name: (optional) The unique user-defined name for this volume.
+        :param int capacity: The capacity of the volume in gigabytes. The specified
+               minimum and maximum capacity values for creating or updating volumes may
+               expand in the future.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional)
         """
         # pylint: disable=super-init-not-called
-        self.name = name
-        self.profile = profile
         self.encryption_key = encryption_key
         self.iops = iops
+        self.name = name
+        self.profile = profile
         self.resource_group = resource_group
         self.zone = zone
         self.capacity = capacity
@@ -37665,6 +38830,10 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     def from_dict(cls, _dict: Dict) -> 'VolumePrototypeVolumeByCapacity':
         """Initialize a VolumePrototypeVolumeByCapacity object from a json dictionary."""
         args = {}
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'profile' in _dict:
@@ -37673,10 +38842,6 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
             raise ValueError(
                 'Required property \'profile\' not present in VolumePrototypeVolumeByCapacity JSON'
             )
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
-        if 'iops' in _dict:
-            args['iops'] = _dict.get('iops')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
         if 'zone' in _dict:
@@ -37701,13 +38866,6 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'encryption_key') and self.encryption_key is not None:
             if isinstance(self.encryption_key, dict):
                 _dict['encryption_key'] = self.encryption_key
@@ -37715,6 +38873,13 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                 _dict['encryption_key'] = self.encryption_key.to_dict()
         if hasattr(self, 'iops') and self.iops is not None:
             _dict['iops'] = self.iops
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             if isinstance(self.resource_group, dict):
                 _dict['resource_group'] = self.resource_group
@@ -37811,14 +38976,14 @@ class ZoneIdentityByName(ZoneIdentity):
     """
     ZoneIdentityByName.
 
-    :attr str name: The name for this zone.
+    :attr str name: The globally unique name for this zone.
     """
 
     def __init__(self, name: str) -> None:
         """
         Initialize a ZoneIdentityByName object.
 
-        :param str name: The name for this zone.
+        :param str name: The globally unique name for this zone.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -37866,17 +39031,17 @@ class ZoneIdentityByName(ZoneIdentity):
         return not self == other
 
 
-class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref(
-        LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity):
+class LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref(
+        LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity):
     """
-    LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref.
+    LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref.
 
     :attr str href: The pool's canonical URL.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object.
+        Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object.
 
         :param str href: The pool's canonical URL.
         """
@@ -37886,20 +39051,20 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref':
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref':
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref JSON'
+                'Required property \'href\' not present in LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -37914,12 +39079,12 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -37928,23 +39093,23 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById(
-        LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentity):
+class LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById(
+        LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity):
     """
-    LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById.
+    LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById.
 
     :attr str id: The unique identifier for this load balancer pool.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object.
+        Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object.
 
         :param str id: The unique identifier for this load balancer pool.
         """
@@ -37954,20 +39119,20 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById':
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById':
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById JSON'
+                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -37982,12 +39147,12 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -37996,23 +39161,23 @@ class LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerP
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPatchTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
+        'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref(
-        LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity):
+class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref(
+        LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity):
     """
-    LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref.
+    LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref.
 
     :attr str href: The pool's canonical URL.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object.
+        Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object.
 
         :param str href: The pool's canonical URL.
         """
@@ -38022,20 +39187,20 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref':
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref':
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref JSON'
+                'Required property \'href\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38050,12 +39215,12 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38064,23 +39229,23 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById(
-        LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentity):
+class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById(
+        LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity):
     """
-    LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById.
+    LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById.
 
     :attr str id: The unique identifier for this load balancer pool.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object.
+        Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object.
 
         :param str id: The unique identifier for this load balancer pool.
         """
@@ -38090,20 +39255,20 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById':
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
+    ) -> 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById':
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById JSON'
+                'Required property \'id\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38118,12 +39283,12 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object."""
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38132,23 +39297,23 @@ class LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalan
 
     def __ne__(
         self, other:
-        'LoadBalancerListenerPolicyPrototypeTargetLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
+        'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress(
-        PublicGatewayPrototypeFloatingIpFloatingIPIdentity):
+class PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress(
+        PublicGatewayFloatingIPPrototypeFloatingIPIdentity):
     """
-    PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress.
+    PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress.
 
     :attr str address: The globally unique IP address.
     """
 
     def __init__(self, address: str) -> None:
         """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress object.
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress object.
 
         :param str address: The globally unique IP address.
         """
@@ -38158,20 +39323,20 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddr
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress':
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress object from a json dictionary."""
+    ) -> 'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress':
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress object from a json dictionary."""
         args = {}
         if 'address' in _dict:
             args['address'] = _dict.get('address')
         else:
             raise ValueError(
-                'Required property \'address\' not present in PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress JSON'
+                'Required property \'address\' not present in PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress object from a json dictionary."""
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38186,12 +39351,12 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddr
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress object."""
+        """Return a `str` version of this PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38200,23 +39365,23 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddr
 
     def __ne__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByAddress'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN(
-        PublicGatewayPrototypeFloatingIpFloatingIPIdentity):
+class PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN(
+        PublicGatewayFloatingIPPrototypeFloatingIPIdentity):
     """
-    PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN.
+    PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN.
 
     :attr str crn: The CRN for this floating IP.
     """
 
     def __init__(self, crn: str) -> None:
         """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN object.
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN object.
 
         :param str crn: The CRN for this floating IP.
         """
@@ -38226,20 +39391,20 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN(
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN':
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN object from a json dictionary."""
+    ) -> 'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN':
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN object from a json dictionary."""
         args = {}
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
-                'Required property \'crn\' not present in PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN JSON'
+                'Required property \'crn\' not present in PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN object from a json dictionary."""
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38254,12 +39419,12 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN(
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN object."""
+        """Return a `str` version of this PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38268,23 +39433,23 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN(
 
     def __ne__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByCRN'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref(
-        PublicGatewayPrototypeFloatingIpFloatingIPIdentity):
+class PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref(
+        PublicGatewayFloatingIPPrototypeFloatingIPIdentity):
     """
-    PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref.
+    PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref.
 
     :attr str href: The URL for this floating IP.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref object.
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref object.
 
         :param str href: The URL for this floating IP.
         """
@@ -38294,20 +39459,20 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref':
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref object from a json dictionary."""
+    ) -> 'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref':
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref JSON'
+                'Required property \'href\' not present in PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref object from a json dictionary."""
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38322,12 +39487,12 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref object."""
+        """Return a `str` version of this PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38336,23 +39501,23 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref
 
     def __ne__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityByHref'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById(
-        PublicGatewayPrototypeFloatingIpFloatingIPIdentity):
+class PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById(
+        PublicGatewayFloatingIPPrototypeFloatingIPIdentity):
     """
-    PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById.
+    PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById.
 
     :attr str id: The unique identifier for this floating IP.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById object.
+        Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById object.
 
         :param str id: The unique identifier for this floating IP.
         """
@@ -38362,20 +39527,20 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById(
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById':
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById object from a json dictionary."""
+    ) -> 'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById':
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById JSON'
+                'Required property \'id\' not present in PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById object from a json dictionary."""
+        """Initialize a PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38390,12 +39555,12 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById(
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById object."""
+        """Return a `str` version of this PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38404,23 +39569,23 @@ class PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById(
 
     def __ne__(
         self, other:
-        'PublicGatewayPrototypeFloatingIpFloatingIPIdentityFloatingIPIdentityById'
+        'PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-        SecurityGroupRulePatchRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN(
+        SecurityGroupRuleRemotePatchSecurityGroupIdentity):
     """
-    SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.
+    SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN.
 
     :attr str crn: The security group's CRN.
     """
 
     def __init__(self, crn: str) -> None:
         """
-        Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object.
+        Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN object.
 
         :param str crn: The security group's CRN.
         """
@@ -38430,20 +39595,20 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCR
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN':
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN':
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
         args = {}
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
-                'Required property \'crn\' not present in SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN JSON'
+                'Required property \'crn\' not present in SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38458,12 +39623,12 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCR
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38472,23 +39637,23 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCR
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-        SecurityGroupRulePatchRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref(
+        SecurityGroupRuleRemotePatchSecurityGroupIdentity):
     """
-    SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.
+    SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref.
 
     :attr str href: The security group's canonical URL.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object.
+        Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref object.
 
         :param str href: The security group's canonical URL.
         """
@@ -38498,20 +39663,20 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHr
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref':
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref':
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref JSON'
+                'Required property \'href\' not present in SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38526,12 +39691,12 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHr
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38540,23 +39705,23 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHr
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-        SecurityGroupRulePatchRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById(
+        SecurityGroupRuleRemotePatchSecurityGroupIdentity):
     """
-    SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById.
+    SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById.
 
     :attr str id: The unique identifier for this security group.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById object.
+        Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById object.
 
         :param str id: The unique identifier for this security group.
         """
@@ -38566,20 +39731,20 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById':
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById':
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById JSON'
+                'Required property \'id\' not present in SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38594,12 +39759,12 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38608,23 +39773,23 @@ class SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePatchRemoteSecurityGroupIdentitySecurityGroupIdentityById'
+        'SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN(
-        SecurityGroupRulePrototypeRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN(
+        SecurityGroupRuleRemotePrototypeSecurityGroupIdentity):
     """
-    SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN.
+    SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN.
 
     :attr str crn: The security group's CRN.
     """
 
     def __init__(self, crn: str) -> None:
         """
-        Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object.
+        Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN object.
 
         :param str crn: The security group's CRN.
         """
@@ -38634,20 +39799,20 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN':
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN':
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
         args = {}
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError(
-                'Required property \'crn\' not present in SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN JSON'
+                'Required property \'crn\' not present in SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38662,12 +39827,12 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38676,23 +39841,23 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByCRN'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref(
-        SecurityGroupRulePrototypeRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref(
+        SecurityGroupRuleRemotePrototypeSecurityGroupIdentity):
     """
-    SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref.
+    SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref.
 
     :attr str href: The security group's canonical URL.
     """
 
     def __init__(self, href: str) -> None:
         """
-        Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object.
+        Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref object.
 
         :param str href: The security group's canonical URL.
         """
@@ -38702,20 +39867,20 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref':
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref':
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
             raise ValueError(
-                'Required property \'href\' not present in SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref JSON'
+                'Required property \'href\' not present in SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38730,12 +39895,12 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38744,23 +39909,23 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityByHref'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById(
-        SecurityGroupRulePrototypeRemoteSecurityGroupIdentity):
+class SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById(
+        SecurityGroupRuleRemotePrototypeSecurityGroupIdentity):
     """
-    SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById.
+    SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById.
 
     :attr str id: The unique identifier for this security group.
     """
 
     def __init__(self, id: str) -> None:
         """
-        Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById object.
+        Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById object.
 
         :param str id: The unique identifier for this security group.
         """
@@ -38770,20 +39935,20 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById':
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
+    ) -> 'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById':
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
             raise ValueError(
-                'Required property \'id\' not present in SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById JSON'
+                'Required property \'id\' not present in SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
+        """Initialize a SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38798,12 +39963,12 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById object."""
+        """Return a `str` version of this SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38812,100 +39977,93 @@ class SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentity
 
     def __ne__(
         self, other:
-        'SecurityGroupRulePrototypeRemoteSecurityGroupIdentitySecurityGroupIdentityById'
+        'SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
 
-class VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity(
-        VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContext
+class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity(
+        VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext
 ):
     """
-    VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
+    VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
           key to use to wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
           `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
-    :attr int capacity: The capacity of the volume in gigabytes. Note that the
-          specified minimum and maximum capacity values for creating or updating volumes
-          may expand in the future.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
+    :attr int capacity: The capacity of the volume in gigabytes. The specified
+          minimum and maximum capacity values for creating or updating volumes may expand
+          in the future.
     """
 
     def __init__(self,
                  profile: 'VolumeProfileIdentity',
                  capacity: int,
                  *,
-                 name: str = None,
                  encryption_key: 'EncryptionKeyIdentity' = None,
-                 iops: int = None) -> None:
+                 iops: int = None,
+                 name: str = None) -> None:
         """
-        Initialize a VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object.
+        Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int capacity: The capacity of the volume in gigabytes. Note that the
-               specified minimum and maximum capacity values for creating or updating
-               volumes may expand in the future.
-        :param str name: (optional) The unique user-defined name for this volume.
+        :param int capacity: The capacity of the volume in gigabytes. The specified
+               minimum and maximum capacity values for creating or updating volumes may
+               expand in the future.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
-        self.name = name
-        self.profile = profile
         self.encryption_key = encryption_key
         self.iops = iops
+        self.name = name
+        self.profile = profile
         self.capacity = capacity
 
     @classmethod
     def from_dict(
         cls, _dict: Dict
-    ) -> 'VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity':
-        """Initialize a VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object from a json dictionary."""
+    ) -> 'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity':
+        """Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object from a json dictionary."""
         args = {}
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         else:
             raise ValueError(
-                'Required property \'profile\' not present in VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity JSON'
+                'Required property \'profile\' not present in VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity JSON'
             )
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
-        if 'iops' in _dict:
-            args['iops'] = _dict.get('iops')
         if 'capacity' in _dict:
             args['capacity'] = _dict.get('capacity')
         else:
             raise ValueError(
-                'Required property \'capacity\' not present in VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity JSON'
+                'Required property \'capacity\' not present in VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity JSON'
             )
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object from a json dictionary."""
+        """Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'encryption_key') and self.encryption_key is not None:
             if isinstance(self.encryption_key, dict):
                 _dict['encryption_key'] = self.encryption_key
@@ -38913,6 +40071,13 @@ class VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceConte
                 _dict['encryption_key'] = self.encryption_key.to_dict()
         if hasattr(self, 'iops') and self.iops is not None:
             _dict['iops'] = self.iops
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'capacity') and self.capacity is not None:
             _dict['capacity'] = self.capacity
         return _dict
@@ -38922,12 +40087,12 @@ class VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceConte
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object."""
+        """Return a `str` version of this VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object."""
         return json.dumps(self.to_dict(), indent=2)
 
     def __eq__(
         self, other:
-        'VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
+        'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
     ) -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
@@ -38936,7 +40101,7 @@ class VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceConte
 
     def __ne__(
         self, other:
-        'VolumeAttachmentPrototypeInstanceContextVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
+        'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
