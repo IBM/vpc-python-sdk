@@ -49,7 +49,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-11-17',
+        version: str = '2020-12-15',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 2,
     ) -> 'VpcV1':
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-11-17',
+        version: str = '2020-12-15',
         authenticator: Authenticator = None,
         generation: int = 2,
     ) -> None:
@@ -1119,9 +1119,9 @@ class VpcV1(BaseService):
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_transit_gateway_ingress: (optional) If set to `true`,
                this routing table will be used to route traffic that originates from
                [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this
@@ -1130,9 +1130,9 @@ class VpcV1(BaseService):
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
                If [Classic
                Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
                is enabled for this VPC, and this property is set to `true`, its incoming
@@ -1144,9 +1144,9 @@ class VpcV1(BaseService):
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param List[RoutePrototype] routes: (optional) Array of route prototype
                objects for routes to create for this routing table. If unspecified, the
                routing table will be created with no routes.
@@ -2344,7 +2344,8 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -2387,7 +2388,8 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2440,7 +2442,8 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
+            **path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -3014,6 +3017,10 @@ class VpcV1(BaseService):
         """
         List all instance profiles.
 
+        This request lists provisionable instance profiles in the region. An instance
+        profile specifies the performance characteristics and pricing model for an
+        instance.
+
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `InstanceProfileCollection` object
@@ -3081,6 +3088,8 @@ class VpcV1(BaseService):
     def list_instance_templates(self, **kwargs) -> DetailedResponse:
         """
         Get instance templates.
+
+        This request lists all instance templates in the region.
 
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -3193,6 +3202,9 @@ class VpcV1(BaseService):
     def get_instance_template(self, id: str, **kwargs) -> DetailedResponse:
         """
         Retrieve specified instance template.
+
+        This request retrieves a single instance template specified by the identifier in
+        the URL.
 
         :param str id: The instance template identifier.
         :param dict headers: A `dict` containing the request headers
@@ -3680,9 +3692,10 @@ class VpcV1(BaseService):
 
         :param str instance_id: The instance identifier.
         :param SubnetIdentity subnet: The associated subnet.
-        :param bool allow_ip_spoofing: (optional) Indicates whether IP spoofing is
-               allowed on this interface. If false, IP spoofing is prevented on this
-               interface. If true, IP spoofing is allowed on this interface.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
         :param str name: (optional) The user-defined name for this network
                interface. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
@@ -4366,6 +4379,8 @@ class VpcV1(BaseService):
         """
         List all instance groups.
 
+        This request lists all instance groups in the region.
+
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
@@ -4908,6 +4923,8 @@ class VpcV1(BaseService):
         """
         List all policies for an instance group manager.
 
+        This request lists all instance group policies for an instance group manager.
+
         :param str instance_group_id: The instance group identifier.
         :param str instance_group_manager_id: The instance group manager
                identifier.
@@ -4948,9 +4965,9 @@ class VpcV1(BaseService):
         return response
 
     def create_instance_group_manager_policy(
-            self, instance_group_id: str, instance_group_manager_id: str,
-            instance_group_manager_policy_prototype:
-        'InstanceGroupManagerPolicyPrototype', **kwargs) -> DetailedResponse:
+        self, instance_group_id: str, instance_group_manager_id: str,
+        instance_group_manager_policy_prototype:
+            'InstanceGroupManagerPolicyPrototype', **kwargs) -> DetailedResponse:
         """
         Create an instance group manager policy.
 
@@ -5117,9 +5134,9 @@ class VpcV1(BaseService):
         return response
 
     def update_instance_group_manager_policy(
-            self, instance_group_id: str, instance_group_manager_id: str,
-            id: str, instance_group_manager_policy_patch:
-        'InstanceGroupManagerPolicyPatch', **kwargs) -> DetailedResponse:
+        self, instance_group_id: str, instance_group_manager_id: str,
+        id: str, instance_group_manager_policy_patch:
+            'InstanceGroupManagerPolicyPatch', **kwargs) -> DetailedResponse:
         """
         Update specified instance group manager policy.
 
@@ -5229,6 +5246,8 @@ class VpcV1(BaseService):
                                         **kwargs) -> DetailedResponse:
         """
         List all memberships for the instance group.
+
+        This request lists all instance group memberships for an instance group.
 
         :param str instance_group_id: The instance group identifier.
         :param dict headers: A `dict` containing the request headers
@@ -5378,7 +5397,8 @@ class VpcV1(BaseService):
         if id is None:
             raise ValueError('id must be provided')
         if instance_group_membership_patch is None:
-            raise ValueError('instance_group_membership_patch must be provided')
+            raise ValueError(
+                'instance_group_membership_patch must be provided')
         if isinstance(instance_group_membership_patch,
                       InstanceGroupMembershipPatch):
             instance_group_membership_patch = convert_model(
@@ -5404,6 +5424,584 @@ class VpcV1(BaseService):
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/instance_groups/{instance_group_id}/memberships/{id}'.format(
             **path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    #########################
+    # Dedicated hosts
+    #########################
+
+    def list_dedicated_host_groups(self,
+                                   *,
+                                   start: str = None,
+                                   limit: int = None,
+                                   resource_group_id: str = None,
+                                   zone_name: str = None,
+                                   **kwargs) -> DetailedResponse:
+        """
+        List all dedicated host groups.
+
+        This request lists all dedicated host groups in the region. Host groups are a
+        collection of dedicated hosts for placement of instances. Each dedicated host must
+        belong to one and only one group. Host groups do not span zones.
+
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str resource_group_id: (optional) Filters the collection to
+               resources within one of the resource groups identified in a comma-separated
+               list of resource group identifiers.
+        :param str zone_name: (optional) Filters the collection to resources in the
+               zone with the exact specified name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostGroupCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_dedicated_host_groups')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'resource_group.id': resource_group_id,
+            'zone.name': zone_name
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/dedicated_host/groups'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def create_dedicated_host_group(
+            self,
+            *,
+            class_: str = None,
+            family: str = None,
+            zone: 'ZoneIdentity' = None,
+            name: str = None,
+            resource_group: 'ResourceGroupIdentity' = None,
+            **kwargs) -> DetailedResponse:
+        """
+        Create a dedicated host group.
+
+        This request creates a new dedicated host group.
+
+        :param str class_: (optional) The dedicated host profile class for hosts in
+               this group.
+        :param str family: (optional) The dedicated host profile family for hosts
+               in this group.
+        :param ZoneIdentity zone: (optional) The zone to provision the dedicated
+               host group in.
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostGroup` object
+        """
+
+        if zone is not None:
+            zone = convert_model(zone)
+        if resource_group is not None:
+            resource_group = convert_model(resource_group)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_dedicated_host_group')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = {
+            'class': class_,
+            'family': family,
+            'zone': zone,
+            'name': name,
+            'resource_group': resource_group
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/dedicated_host/groups'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def delete_dedicated_host_group(self, id: str,
+                                    **kwargs) -> DetailedResponse:
+        """
+        Delete specified dedicated host group.
+
+        This request deletes a dedicated host group.
+
+        :param str id: The dedicated host group identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_dedicated_host_group')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_host/groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_dedicated_host_group(self, id: str, **kwargs) -> DetailedResponse:
+        """
+        Retrieve a dedicated host group.
+
+        This request retrieves a single dedicated host group specified by the identifier
+        in the URL.
+
+        :param str id: The dedicated host group identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostGroup` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_dedicated_host_group')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_host/groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def update_dedicated_host_group(
+            self, id: str,
+            dedicated_host_group_patch: 'DedicatedHostGroupPatch',
+            **kwargs) -> DetailedResponse:
+        """
+        Update specified dedicated host group.
+
+        This request updates a dedicated host group with the information in a provided
+        dedicated host group patch. The dedicated host group patch object is structured in
+        the same way as a retrieved dedicated host group and contains only the information
+        to be updated.
+
+        :param str id: The dedicated host group identifier.
+        :param DedicatedHostGroupPatch dedicated_host_group_patch: The dedicated
+               host group patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostGroup` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if dedicated_host_group_patch is None:
+            raise ValueError('dedicated_host_group_patch must be provided')
+        if isinstance(dedicated_host_group_patch, DedicatedHostGroupPatch):
+            dedicated_host_group_patch = convert_model(
+                dedicated_host_group_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_dedicated_host_group')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(dedicated_host_group_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_host/groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def list_dedicated_host_profiles(self,
+                                     *,
+                                     start: str = None,
+                                     limit: int = None,
+                                     **kwargs) -> DetailedResponse:
+        """
+        List all dedicated host profiles.
+
+        This request lists provisionable dedicated host profiles in the region. A
+        dedicated host profile specifies the hardware characteristics for a dedicated
+        host.
+
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostProfileCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_dedicated_host_profiles')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/dedicated_host/profiles'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_dedicated_host_profile(self, name: str,
+                                   **kwargs) -> DetailedResponse:
+        """
+        Retrieve specified dedicated host profile.
+
+        This request retrieves a single dedicated host profile specified by the name in
+        the URL.
+
+        :param str name: The dedicated host profile name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostProfile` object
+        """
+
+        if name is None:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_dedicated_host_profile')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_host/profiles/{name}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def list_dedicated_hosts(self,
+                             *,
+                             dedicated_host_group_id: str = None,
+                             start: str = None,
+                             limit: int = None,
+                             resource_group_id: str = None,
+                             zone_name: str = None,
+                             **kwargs) -> DetailedResponse:
+        """
+        List all dedicated hosts.
+
+        This request lists all dedicated hosts.
+
+        :param str dedicated_host_group_id: (optional) Filters the collection to
+               dedicated host groups with specified identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str resource_group_id: (optional) Filters the collection to
+               resources within one of the resource groups identified in a comma-separated
+               list of resource group identifiers.
+        :param str zone_name: (optional) Filters the collection to resources in the
+               zone with the exact specified name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_dedicated_hosts')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'dedicated_host_group.id': dedicated_host_group_id,
+            'start': start,
+            'limit': limit,
+            'resource_group.id': resource_group_id,
+            'zone.name': zone_name
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/dedicated_hosts'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def create_dedicated_host(
+            self, dedicated_host_prototype: 'DedicatedHostPrototype',
+            **kwargs) -> DetailedResponse:
+        """
+        Create a dedicated host.
+
+        This request creates a new dedicated host.
+
+        :param DedicatedHostPrototype dedicated_host_prototype: The dedicated host
+               prototype object.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHost` object
+        """
+
+        if dedicated_host_prototype is None:
+            raise ValueError('dedicated_host_prototype must be provided')
+        if isinstance(dedicated_host_prototype, DedicatedHostPrototype):
+            dedicated_host_prototype = convert_model(dedicated_host_prototype)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_dedicated_host')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(dedicated_host_prototype)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/dedicated_hosts'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def delete_dedicated_host(self, id: str, **kwargs) -> DetailedResponse:
+        """
+        Delete specified dedicated host.
+
+        This request deletes a dedicated host.
+
+        :param str id: The dedicated host identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_dedicated_host')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_dedicated_host(self, id: str, **kwargs) -> DetailedResponse:
+        """
+        Retrieve a dedicated host.
+
+        This request retrieves a single dedicated host specified by the identifiers in the
+        URL.
+
+        :param str id: The dedicated host identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHost` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_dedicated_host')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def update_dedicated_host(self, id: str,
+                              dedicated_host_patch: 'DedicatedHostPatch',
+                              **kwargs) -> DetailedResponse:
+        """
+        Update specified dedicated host.
+
+        This request updates a dedicated host with the information in a provided dedicated
+        host patch. The dedicated host patch object is structured in the same way as a
+        retrieved dedicated host and contains only the information to be updated.
+
+        :param str id: The dedicated host identifier.
+        :param DedicatedHostPatch dedicated_host_patch: The dedicated host patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHost` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if dedicated_host_patch is None:
+            raise ValueError('dedicated_host_patch must be provided')
+        if isinstance(dedicated_host_patch, DedicatedHostPatch):
+            dedicated_host_patch = convert_model(dedicated_host_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_dedicated_host')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(dedicated_host_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -5732,7 +6330,7 @@ class VpcV1(BaseService):
         List all regions.
 
         This request lists all regions. Each region is a separate geographic area that
-        contains multiple isolated zones. Resources can be provisioned into a one or more
+        contains multiple isolated zones. Resources can be provisioned into one or more
         zones in a region. Each zone is isolated, but connected to other zones in the same
         region with low-latency and high-bandwidth links. Regions represent the top-level
         of fault isolation available. Resources deployed within a single region also
@@ -7540,7 +8138,8 @@ class VpcV1(BaseService):
         if security_group_rule_patch is None:
             raise ValueError('security_group_rule_patch must be provided')
         if isinstance(security_group_rule_patch, SecurityGroupRulePatch):
-            security_group_rule_patch = convert_model(security_group_rule_patch)
+            security_group_rule_patch = convert_model(
+                security_group_rule_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -9162,6 +9761,7 @@ class VpcV1(BaseService):
             *,
             listeners: List[
                 'LoadBalancerListenerPrototypeLoadBalancerContext'] = None,
+            logging: 'LoadBalancerLogging' = None,
             name: str = None,
             pools: List['LoadBalancerPoolPrototype'] = None,
             profile: 'LoadBalancerProfileIdentity' = None,
@@ -9178,6 +9778,13 @@ class VpcV1(BaseService):
                balancer.
         :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
                (optional) The listeners of this load balancer.
+        :param LoadBalancerLogging logging: (optional) The logging configuration to
+               use for this load balancer. See [VPC Datapath
+               Logging](https://cloud.ibm.com/docs/vpc?topic=vpc-datapath-logging)
+               on the logging format, fields and permitted values.
+               To activate logging, the load balancer profile must support the specified
+               logging
+               type.
         :param str name: (optional) The user-defined name for this load balancer.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
@@ -9201,6 +9808,8 @@ class VpcV1(BaseService):
         subnets = [convert_model(x) for x in subnets]
         if listeners is not None:
             listeners = [convert_model(x) for x in listeners]
+        if logging is not None:
+            logging = convert_model(logging)
         if pools is not None:
             pools = [convert_model(x) for x in pools]
         if profile is not None:
@@ -9219,6 +9828,7 @@ class VpcV1(BaseService):
             'is_public': is_public,
             'subnets': subnets,
             'listeners': listeners,
+            'logging': logging,
             'name': name,
             'pools': pools,
             'profile': profile,
@@ -9724,7 +10334,8 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -9811,7 +10422,8 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -9922,9 +10534,9 @@ class VpcV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy(
-            self, load_balancer_id: str, listener_id: str, id: str,
-            load_balancer_listener_policy_patch:
-        'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
+        self, load_balancer_id: str, listener_id: str, id: str,
+        load_balancer_listener_policy_patch:
+            'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
         """
         Update a policy of the load balancer listener.
 
@@ -10151,7 +10763,8 @@ class VpcV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10204,7 +10817,8 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10219,9 +10833,9 @@ class VpcV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy_rule(
-            self, load_balancer_id: str, listener_id: str, policy_id: str,
-            id: str, load_balancer_listener_policy_rule_patch:
-        'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
+        self, load_balancer_id: str, listener_id: str, policy_id: str,
+        id: str, load_balancer_listener_policy_rule_patch:
+            'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
         """
         Update a rule of the load balancer listener policy.
 
@@ -10269,7 +10883,8 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10772,7 +11387,8 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -10820,7 +11436,8 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -10858,7 +11475,8 @@ class VpcV1(BaseService):
         if id is None:
             raise ValueError('id must be provided')
         if load_balancer_pool_member_patch is None:
-            raise ValueError('load_balancer_pool_member_patch must be provided')
+            raise ValueError(
+                'load_balancer_pool_member_patch must be provided')
         if isinstance(load_balancer_pool_member_patch,
                       LoadBalancerPoolMemberPatch):
             load_balancer_pool_member_patch = convert_model(
@@ -10880,7 +11498,8 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -11448,8 +12067,8 @@ class VpcV1(BaseService):
                The bucket must exist and an IAM service authorization must grant
                `IBM Cloud Flow Logs` resources of `VPC Infrastructure Services` writer
                access to the bucket.
-        :param FlowLogCollectorTargetPrototype target: The target this collector
-               will collect flow logs for. If the target is an instance,
+        :param FlowLogCollectorTargetPrototype target: The target this collector is
+               collecting flow logs for. If the target is an instance,
                subnet, or VPC, flow logs will not be collected for any network interfaces
                within the
                target that are themselves the target of a more specific flow log
@@ -12335,6 +12954,2369 @@ class CloudObjectStorageBucketReference():
         return not self == other
 
 
+class DedicatedHost():
+    """
+    DedicatedHost.
+
+    :attr int available_memory: The amount of memory in gibibytes that is currently
+          available for instances.
+    :attr VCPU available_vcpu: The available VCPU for the dedicated host.
+    :attr datetime created_at: The date and time that the dedicated host was
+          created.
+    :attr str crn: The CRN for this dedicated host.
+    :attr DedicatedHostGroupReference group: The dedicated host group this dedicated
+          host is in.
+    :attr str href: The URL for this dedicated host.
+    :attr str id: The unique identifier for this dedicated host.
+    :attr bool instance_placement_enabled: If set to true, instances can be placed
+          on this dedicated host.
+    :attr List[InstanceReference] instances: Array of instances that are allocated
+          to this dedicated host.
+    :attr str lifecycle_state: The lifecycle state of the dedicated host resource.
+    :attr int memory: The total amount of memory in gibibytes for this host.
+    :attr str name: The unique user-defined name for this dedicated host. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr DedicatedHostProfileReference profile: The profile this dedicated host
+          uses.
+    :attr bool provisionable: Indicates whether this dedicated host is available for
+          instance creation.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          dedicated host.
+    :attr str resource_type: The type of resource referenced.
+    :attr int socket_count: The total number of sockets for this host.
+    :attr str state: The administrative state of the dedicated host.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the dedicated host on which the
+          unexpected property value was encountered.
+    :attr List[InstanceProfileReference] supported_instance_profiles: Array of
+          instance profiles that can be used by instances placed on this dedicated host.
+    :attr VCPU vcpu: The total VCPU of the dedicated host.
+    :attr ZoneReference zone: The reference of the zone to provision the dedicated
+          host in.
+    """
+
+    def __init__(self, available_memory: int, available_vcpu: 'VCPU',
+                 created_at: datetime, crn: str,
+                 group: 'DedicatedHostGroupReference', href: str, id: str,
+                 instance_placement_enabled: bool,
+                 instances: List['InstanceReference'], lifecycle_state: str,
+                 memory: int, name: str,
+                 profile: 'DedicatedHostProfileReference', provisionable: bool,
+                 resource_group: 'ResourceGroupReference', resource_type: str,
+                 socket_count: int, state: str,
+                 supported_instance_profiles: List['InstanceProfileReference'],
+                 vcpu: 'VCPU', zone: 'ZoneReference') -> None:
+        """
+        Initialize a DedicatedHost object.
+
+        :param int available_memory: The amount of memory in gibibytes that is
+               currently available for instances.
+        :param VCPU available_vcpu: The available VCPU for the dedicated host.
+        :param datetime created_at: The date and time that the dedicated host was
+               created.
+        :param str crn: The CRN for this dedicated host.
+        :param DedicatedHostGroupReference group: The dedicated host group this
+               dedicated host is in.
+        :param str href: The URL for this dedicated host.
+        :param str id: The unique identifier for this dedicated host.
+        :param bool instance_placement_enabled: If set to true, instances can be
+               placed on this dedicated host.
+        :param List[InstanceReference] instances: Array of instances that are
+               allocated to this dedicated host.
+        :param str lifecycle_state: The lifecycle state of the dedicated host
+               resource.
+        :param int memory: The total amount of memory in gibibytes for this host.
+        :param str name: The unique user-defined name for this dedicated host. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+        :param DedicatedHostProfileReference profile: The profile this dedicated
+               host uses.
+        :param bool provisionable: Indicates whether this dedicated host is
+               available for instance creation.
+        :param ResourceGroupReference resource_group: The resource group for this
+               dedicated host.
+        :param str resource_type: The type of resource referenced.
+        :param int socket_count: The total number of sockets for this host.
+        :param str state: The administrative state of the dedicated host.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the dedicated
+               host on which the unexpected property value was encountered.
+        :param List[InstanceProfileReference] supported_instance_profiles: Array of
+               instance profiles that can be used by instances placed on this dedicated
+               host.
+        :param VCPU vcpu: The total VCPU of the dedicated host.
+        :param ZoneReference zone: The reference of the zone to provision the
+               dedicated host in.
+        """
+        self.available_memory = available_memory
+        self.available_vcpu = available_vcpu
+        self.created_at = created_at
+        self.crn = crn
+        self.group = group
+        self.href = href
+        self.id = id
+        self.instance_placement_enabled = instance_placement_enabled
+        self.instances = instances
+        self.lifecycle_state = lifecycle_state
+        self.memory = memory
+        self.name = name
+        self.profile = profile
+        self.provisionable = provisionable
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.socket_count = socket_count
+        self.state = state
+        self.supported_instance_profiles = supported_instance_profiles
+        self.vcpu = vcpu
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHost':
+        """Initialize a DedicatedHost object from a json dictionary."""
+        args = {}
+        if 'available_memory' in _dict:
+            args['available_memory'] = _dict.get('available_memory')
+        else:
+            raise ValueError(
+                'Required property \'available_memory\' not present in DedicatedHost JSON'
+            )
+        if 'available_vcpu' in _dict:
+            args['available_vcpu'] = VCPU.from_dict(
+                _dict.get('available_vcpu'))
+        else:
+            raise ValueError(
+                'Required property \'available_vcpu\' not present in DedicatedHost JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in DedicatedHost JSON'
+            )
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in DedicatedHost JSON')
+        if 'group' in _dict:
+            args['group'] = DedicatedHostGroupReference.from_dict(
+                _dict.get('group'))
+        else:
+            raise ValueError(
+                'Required property \'group\' not present in DedicatedHost JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHost JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHost JSON')
+        if 'instance_placement_enabled' in _dict:
+            args['instance_placement_enabled'] = _dict.get(
+                'instance_placement_enabled')
+        else:
+            raise ValueError(
+                'Required property \'instance_placement_enabled\' not present in DedicatedHost JSON'
+            )
+        if 'instances' in _dict:
+            args['instances'] = [
+                InstanceReference.from_dict(x) for x in _dict.get('instances')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'instances\' not present in DedicatedHost JSON'
+            )
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError(
+                'Required property \'lifecycle_state\' not present in DedicatedHost JSON'
+            )
+        if 'memory' in _dict:
+            args['memory'] = _dict.get('memory')
+        else:
+            raise ValueError(
+                'Required property \'memory\' not present in DedicatedHost JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHost JSON')
+        if 'profile' in _dict:
+            args['profile'] = DedicatedHostProfileReference.from_dict(
+                _dict.get('profile'))
+        else:
+            raise ValueError(
+                'Required property \'profile\' not present in DedicatedHost JSON'
+            )
+        if 'provisionable' in _dict:
+            args['provisionable'] = _dict.get('provisionable')
+        else:
+            raise ValueError(
+                'Required property \'provisionable\' not present in DedicatedHost JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in DedicatedHost JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in DedicatedHost JSON'
+            )
+        if 'socket_count' in _dict:
+            args['socket_count'] = _dict.get('socket_count')
+        else:
+            raise ValueError(
+                'Required property \'socket_count\' not present in DedicatedHost JSON'
+            )
+        if 'state' in _dict:
+            args['state'] = _dict.get('state')
+        else:
+            raise ValueError(
+                'Required property \'state\' not present in DedicatedHost JSON')
+        if 'supported_instance_profiles' in _dict:
+            args['supported_instance_profiles'] = [
+                InstanceProfileReference.from_dict(x)
+                for x in _dict.get('supported_instance_profiles')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'supported_instance_profiles\' not present in DedicatedHost JSON'
+            )
+        if 'vcpu' in _dict:
+            args['vcpu'] = VCPU.from_dict(_dict.get('vcpu'))
+        else:
+            raise ValueError(
+                'Required property \'vcpu\' not present in DedicatedHost JSON')
+        if 'zone' in _dict:
+            args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
+        else:
+            raise ValueError(
+                'Required property \'zone\' not present in DedicatedHost JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHost object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'available_memory') and self.available_memory is not None:
+            _dict['available_memory'] = self.available_memory
+        if hasattr(self, 'available_vcpu') and self.available_vcpu is not None:
+            _dict['available_vcpu'] = self.available_vcpu.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'instance_placement_enabled'
+                   ) and self.instance_placement_enabled is not None:
+            _dict[
+                'instance_placement_enabled'] = self.instance_placement_enabled
+        if hasattr(self, 'instances') and self.instances is not None:
+            _dict['instances'] = [x.to_dict() for x in self.instances]
+        if hasattr(self,
+                   'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'memory') and self.memory is not None:
+            _dict['memory'] = self.memory
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'provisionable') and self.provisionable is not None:
+            _dict['provisionable'] = self.provisionable
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'socket_count') and self.socket_count is not None:
+            _dict['socket_count'] = self.socket_count
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'supported_instance_profiles'
+                   ) and self.supported_instance_profiles is not None:
+            _dict['supported_instance_profiles'] = [
+                x.to_dict() for x in self.supported_instance_profiles
+            ]
+        if hasattr(self, 'vcpu') and self.vcpu is not None:
+            _dict['vcpu'] = self.vcpu.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHost object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHost') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHost') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the dedicated host resource.
+        """
+        DELETED = 'deleted'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+        SUSPENDED = 'suspended'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of resource referenced.
+        """
+        DEDICATED_HOST = 'dedicated_host'
+
+    class StateEnum(str, Enum):
+        """
+        The administrative state of the dedicated host.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the dedicated host on which the
+        unexpected property value was encountered.
+        """
+        AVAILABLE = 'available'
+        DEGRADED = 'degraded'
+        MIGRATING = 'migrating'
+        UNAVAILABLE = 'unavailable'
+
+
+class DedicatedHostCollection():
+    """
+    DedicatedHostCollection.
+
+    :attr List[DedicatedHost] dedicated_hosts: Collection of dedicated hosts.
+    :attr DedicatedHostCollectionFirst first: A link to the first page of resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr DedicatedHostCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 dedicated_hosts: List['DedicatedHost'],
+                 first: 'DedicatedHostCollectionFirst',
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'DedicatedHostCollectionNext' = None) -> None:
+        """
+        Initialize a DedicatedHostCollection object.
+
+        :param List[DedicatedHost] dedicated_hosts: Collection of dedicated hosts.
+        :param DedicatedHostCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param DedicatedHostCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
+               except the last page.
+        """
+        self.dedicated_hosts = dedicated_hosts
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostCollection':
+        """Initialize a DedicatedHostCollection object from a json dictionary."""
+        args = {}
+        if 'dedicated_hosts' in _dict:
+            args['dedicated_hosts'] = [
+                DedicatedHost.from_dict(x) for x in _dict.get('dedicated_hosts')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'dedicated_hosts\' not present in DedicatedHostCollection JSON'
+            )
+        if 'first' in _dict:
+            args['first'] = DedicatedHostCollectionFirst.from_dict(
+                _dict.get('first'))
+        else:
+            raise ValueError(
+                'Required property \'first\' not present in DedicatedHostCollection JSON'
+            )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in DedicatedHostCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = DedicatedHostCollectionNext.from_dict(
+                _dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in DedicatedHostCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'dedicated_hosts') and self.dedicated_hosts is not None:
+            _dict['dedicated_hosts'] = [
+                x.to_dict() for x in self.dedicated_hosts
+            ]
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostCollectionFirst':
+        """Initialize a DedicatedHostCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostCollectionFirst JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostCollectionNext':
+        """Initialize a DedicatedHostCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostCollectionNext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroup():
+    """
+    DedicatedHostGroup.
+
+    :attr str class_: The dedicated host profile class for hosts in this group.
+    :attr datetime created_at: The date and time that the dedicated host group was
+          created.
+    :attr str crn: The CRN for this dedicated host group.
+    :attr List[DedicatedHostReference] dedicated_hosts: The dedicated hosts that are
+          in this dedicated host group.
+    :attr str family: The dedicated host profile family for hosts in this group.
+    :attr str href: The URL for this dedicated host group.
+    :attr str id: The unique identifier for this dedicated host group.
+    :attr str name: The unique user-defined name for this dedicated host group. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          dedicated host group.
+    :attr str resource_type: The type of resource referenced.
+    :attr List[InstanceProfileReference] supported_instance_profiles: Array of
+          instance profiles that can be used by instances placed on this dedicated host
+          group.
+    :attr ZoneReference zone: The zone the dedicated host group resides in.
+    """
+
+    def __init__(self, class_: str, created_at: datetime, crn: str,
+                 dedicated_hosts: List['DedicatedHostReference'], family: str,
+                 href: str, id: str, name: str,
+                 resource_group: 'ResourceGroupReference', resource_type: str,
+                 supported_instance_profiles: List['InstanceProfileReference'],
+                 zone: 'ZoneReference') -> None:
+        """
+        Initialize a DedicatedHostGroup object.
+
+        :param str class_: The dedicated host profile class for hosts in this
+               group.
+        :param datetime created_at: The date and time that the dedicated host group
+               was created.
+        :param str crn: The CRN for this dedicated host group.
+        :param List[DedicatedHostReference] dedicated_hosts: The dedicated hosts
+               that are in this dedicated host group.
+        :param str family: The dedicated host profile family for hosts in this
+               group.
+        :param str href: The URL for this dedicated host group.
+        :param str id: The unique identifier for this dedicated host group.
+        :param str name: The unique user-defined name for this dedicated host
+               group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupReference resource_group: The resource group for this
+               dedicated host group.
+        :param str resource_type: The type of resource referenced.
+        :param List[InstanceProfileReference] supported_instance_profiles: Array of
+               instance profiles that can be used by instances placed on this dedicated
+               host group.
+        :param ZoneReference zone: The zone the dedicated host group resides in.
+        """
+        self.class_ = class_
+        self.created_at = created_at
+        self.crn = crn
+        self.dedicated_hosts = dedicated_hosts
+        self.family = family
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.supported_instance_profiles = supported_instance_profiles
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroup':
+        """Initialize a DedicatedHostGroup object from a json dictionary."""
+        args = {}
+        if 'class' in _dict:
+            args['class_'] = _dict.get('class')
+        else:
+            raise ValueError(
+                'Required property \'class\' not present in DedicatedHostGroup JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in DedicatedHostGroup JSON'
+            )
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in DedicatedHostGroup JSON'
+            )
+        if 'dedicated_hosts' in _dict:
+            args['dedicated_hosts'] = [
+                DedicatedHostReference.from_dict(x)
+                for x in _dict.get('dedicated_hosts')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'dedicated_hosts\' not present in DedicatedHostGroup JSON'
+            )
+        if 'family' in _dict:
+            args['family'] = _dict.get('family')
+        else:
+            raise ValueError(
+                'Required property \'family\' not present in DedicatedHostGroup JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostGroup JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHostGroup JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostGroup JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(
+                _dict.get('resource_group'))
+        else:
+            raise ValueError(
+                'Required property \'resource_group\' not present in DedicatedHostGroup JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in DedicatedHostGroup JSON'
+            )
+        if 'supported_instance_profiles' in _dict:
+            args['supported_instance_profiles'] = [
+                InstanceProfileReference.from_dict(x)
+                for x in _dict.get('supported_instance_profiles')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'supported_instance_profiles\' not present in DedicatedHostGroup JSON'
+            )
+        if 'zone' in _dict:
+            args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
+        else:
+            raise ValueError(
+                'Required property \'zone\' not present in DedicatedHostGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'class_') and self.class_ is not None:
+            _dict['class'] = self.class_
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self,
+                   'dedicated_hosts') and self.dedicated_hosts is not None:
+            _dict['dedicated_hosts'] = [
+                x.to_dict() for x in self.dedicated_hosts
+            ]
+        if hasattr(self, 'family') and self.family is not None:
+            _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'supported_instance_profiles'
+                   ) and self.supported_instance_profiles is not None:
+            _dict['supported_instance_profiles'] = [
+                x.to_dict() for x in self.supported_instance_profiles
+            ]
+        if hasattr(self, 'zone') and self.zone is not None:
+            _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroup') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroup') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class FamilyEnum(str, Enum):
+        """
+        The dedicated host profile family for hosts in this group.
+        """
+        MEMORY = 'memory'
+        BALANCED = 'balanced'
+        COMPUTE = 'compute'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of resource referenced.
+        """
+        DEDICATED_HOST_GROUP = 'dedicated_host_group'
+
+
+class DedicatedHostGroupCollection():
+    """
+    DedicatedHostGroupCollection.
+
+    :attr DedicatedHostGroupCollectionFirst first: A link to the first page of
+          resources.
+    :attr List[DedicatedHostGroup] groups: Collection of dedicated host groups.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr DedicatedHostGroupCollectionNext next: (optional) A link to the next page
+          of resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'DedicatedHostGroupCollectionFirst',
+                 groups: List['DedicatedHostGroup'],
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'DedicatedHostGroupCollectionNext' = None) -> None:
+        """
+        Initialize a DedicatedHostGroupCollection object.
+
+        :param DedicatedHostGroupCollectionFirst first: A link to the first page of
+               resources.
+        :param List[DedicatedHostGroup] groups: Collection of dedicated host
+               groups.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param DedicatedHostGroupCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.groups = groups
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupCollection':
+        """Initialize a DedicatedHostGroupCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = DedicatedHostGroupCollectionFirst.from_dict(
+                _dict.get('first'))
+        else:
+            raise ValueError(
+                'Required property \'first\' not present in DedicatedHostGroupCollection JSON'
+            )
+        if 'groups' in _dict:
+            args['groups'] = [
+                DedicatedHostGroup.from_dict(x) for x in _dict.get('groups')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'groups\' not present in DedicatedHostGroupCollection JSON'
+            )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in DedicatedHostGroupCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = DedicatedHostGroupCollectionNext.from_dict(
+                _dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in DedicatedHostGroupCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'groups') and self.groups is not None:
+            _dict['groups'] = [x.to_dict() for x in self.groups]
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostGroupCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupCollectionFirst':
+        """Initialize a DedicatedHostGroupCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostGroupCollectionFirst JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostGroupCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupCollectionNext':
+        """Initialize a DedicatedHostGroupCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostGroupCollectionNext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupIdentity():
+    """
+    Identifies a dedicated host group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a DedicatedHostGroupIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostGroupIdentityById',
+                'DedicatedHostGroupIdentityByCRN',
+                'DedicatedHostGroupIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostGroupPatch():
+    """
+    DedicatedHostGroupPatch.
+
+    :attr str name: (optional) The unique user-defined name for this dedicated host
+          group. If unspecified, the name will be a hyphenated list of randomly-selected
+          words.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a DedicatedHostGroupPatch object.
+
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupPatch':
+        """Initialize a DedicatedHostGroupPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupPrototypeDedicatedHostByZoneContext():
+    """
+    DedicatedHostGroupPrototypeDedicatedHostByZoneContext.
+
+    :attr str name: (optional) The unique user-defined name for this dedicated host
+          group. If unspecified, the name will be a hyphenated list of randomly-selected
+          words.
+    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
+          use. If unspecified, the host's resource group is used.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+        """
+        Initialize a DedicatedHostGroupPrototypeDedicatedHostByZoneContext object.
+
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the host's resource group is used.
+        """
+        self.name = name
+        self.resource_group = resource_group
+
+    @classmethod
+    def from_dict(
+            cls, _dict: Dict
+    ) -> 'DedicatedHostGroupPrototypeDedicatedHostByZoneContext':
+        """Initialize a DedicatedHostGroupPrototypeDedicatedHostByZoneContext object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupPrototypeDedicatedHostByZoneContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupPrototypeDedicatedHostByZoneContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self, other: 'DedicatedHostGroupPrototypeDedicatedHostByZoneContext'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self, other: 'DedicatedHostGroupPrototypeDedicatedHostByZoneContext'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupReference():
+    """
+    DedicatedHostGroupReference.
+
+    :attr str crn: The CRN for this dedicated host group.
+    :attr DedicatedHostGroupReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this dedicated host group.
+    :attr str id: The unique identifier for this dedicated host group.
+    :attr str name: The unique user-defined name for this dedicated host group. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str resource_type: The type of resource referenced.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'DedicatedHostGroupReferenceDeleted' = None) -> None:
+        """
+        Initialize a DedicatedHostGroupReference object.
+
+        :param str crn: The CRN for this dedicated host group.
+        :param str href: The URL for this dedicated host group.
+        :param str id: The unique identifier for this dedicated host group.
+        :param str name: The unique user-defined name for this dedicated host
+               group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param str resource_type: The type of resource referenced.
+        :param DedicatedHostGroupReferenceDeleted deleted: (optional) If present,
+               this property indicates the referenced resource has been deleted and
+               provides
+               some supplementary information.
+        """
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupReference':
+        """Initialize a DedicatedHostGroupReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in DedicatedHostGroupReference JSON'
+            )
+        if 'deleted' in _dict:
+            args['deleted'] = DedicatedHostGroupReferenceDeleted.from_dict(
+                _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostGroupReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHostGroupReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostGroupReference JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in DedicatedHostGroupReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of resource referenced.
+        """
+        DEDICATED_HOST_GROUP = 'dedicated_host_group'
+
+
+class DedicatedHostGroupReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self, more_info: str) -> None:
+        """
+        Initialize a DedicatedHostGroupReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupReferenceDeleted':
+        """Initialize a DedicatedHostGroupReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError(
+                'Required property \'more_info\' not present in DedicatedHostGroupReferenceDeleted JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostPatch():
+    """
+    DedicatedHostPatch.
+
+    :attr bool instance_placement_enabled: (optional) If set to true, instances can
+          be placed on this dedicated host.
+    :attr str name: (optional) The unique user-defined name for this dedicated host.
+          If unspecified, the name will be a hyphenated list of randomly-selected words.
+    """
+
+    def __init__(self,
+                 *,
+                 instance_placement_enabled: bool = None,
+                 name: str = None) -> None:
+        """
+        Initialize a DedicatedHostPatch object.
+
+        :param bool instance_placement_enabled: (optional) If set to true,
+               instances can be placed on this dedicated host.
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        """
+        self.instance_placement_enabled = instance_placement_enabled
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostPatch':
+        """Initialize a DedicatedHostPatch object from a json dictionary."""
+        args = {}
+        if 'instance_placement_enabled' in _dict:
+            args['instance_placement_enabled'] = _dict.get(
+                'instance_placement_enabled')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'instance_placement_enabled'
+                   ) and self.instance_placement_enabled is not None:
+            _dict[
+                'instance_placement_enabled'] = self.instance_placement_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfile():
+    """
+    DedicatedHostProfile.
+
+    :attr str class_: The product class this dedicated host profile belongs to.
+    :attr str family: The product family this dedicated host profile belongs to
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str href: The URL for this dedicated host.
+    :attr DedicatedHostProfileMemory memory:
+    :attr str name: The globally unique name for this dedicated host profile.
+    :attr DedicatedHostProfileSocket socket_count:
+    :attr List[InstanceProfileReference] supported_instance_profiles: Array of
+          instance profiles that can be used by instances placed on dedicated hosts with
+          this profile.
+    :attr DedicatedHostProfileVCPUArchitecture vcpu_architecture:
+    :attr DedicatedHostProfileVCPU vcpu_count:
+    """
+
+    def __init__(self, class_: str, family: str, href: str,
+                 memory: 'DedicatedHostProfileMemory', name: str,
+                 socket_count: 'DedicatedHostProfileSocket',
+                 supported_instance_profiles: List['InstanceProfileReference'],
+                 vcpu_architecture: 'DedicatedHostProfileVCPUArchitecture',
+                 vcpu_count: 'DedicatedHostProfileVCPU') -> None:
+        """
+        Initialize a DedicatedHostProfile object.
+
+        :param str class_: The product class this dedicated host profile belongs
+               to.
+        :param str family: The product family this dedicated host profile belongs
+               to
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str href: The URL for this dedicated host.
+        :param DedicatedHostProfileMemory memory:
+        :param str name: The globally unique name for this dedicated host profile.
+        :param DedicatedHostProfileSocket socket_count:
+        :param List[InstanceProfileReference] supported_instance_profiles: Array of
+               instance profiles that can be used by instances placed on dedicated hosts
+               with this profile.
+        :param DedicatedHostProfileVCPUArchitecture vcpu_architecture:
+        :param DedicatedHostProfileVCPU vcpu_count:
+        """
+        self.class_ = class_
+        self.family = family
+        self.href = href
+        self.memory = memory
+        self.name = name
+        self.socket_count = socket_count
+        self.supported_instance_profiles = supported_instance_profiles
+        self.vcpu_architecture = vcpu_architecture
+        self.vcpu_count = vcpu_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfile':
+        """Initialize a DedicatedHostProfile object from a json dictionary."""
+        args = {}
+        if 'class' in _dict:
+            args['class_'] = _dict.get('class')
+        else:
+            raise ValueError(
+                'Required property \'class\' not present in DedicatedHostProfile JSON'
+            )
+        if 'family' in _dict:
+            args['family'] = _dict.get('family')
+        else:
+            raise ValueError(
+                'Required property \'family\' not present in DedicatedHostProfile JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostProfile JSON'
+            )
+        if 'memory' in _dict:
+            args['memory'] = _dict.get('memory')
+        else:
+            raise ValueError(
+                'Required property \'memory\' not present in DedicatedHostProfile JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostProfile JSON'
+            )
+        if 'socket_count' in _dict:
+            args['socket_count'] = _dict.get('socket_count')
+        else:
+            raise ValueError(
+                'Required property \'socket_count\' not present in DedicatedHostProfile JSON'
+            )
+        if 'supported_instance_profiles' in _dict:
+            args['supported_instance_profiles'] = [
+                InstanceProfileReference.from_dict(x)
+                for x in _dict.get('supported_instance_profiles')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'supported_instance_profiles\' not present in DedicatedHostProfile JSON'
+            )
+        if 'vcpu_architecture' in _dict:
+            args[
+                'vcpu_architecture'] = DedicatedHostProfileVCPUArchitecture.from_dict(
+                    _dict.get('vcpu_architecture'))
+        else:
+            raise ValueError(
+                'Required property \'vcpu_architecture\' not present in DedicatedHostProfile JSON'
+            )
+        if 'vcpu_count' in _dict:
+            args['vcpu_count'] = _dict.get('vcpu_count')
+        else:
+            raise ValueError(
+                'Required property \'vcpu_count\' not present in DedicatedHostProfile JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfile object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'class_') and self.class_ is not None:
+            _dict['class'] = self.class_
+        if hasattr(self, 'family') and self.family is not None:
+            _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'memory') and self.memory is not None:
+            if isinstance(self.memory, dict):
+                _dict['memory'] = self.memory
+            else:
+                _dict['memory'] = self.memory.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'socket_count') and self.socket_count is not None:
+            if isinstance(self.socket_count, dict):
+                _dict['socket_count'] = self.socket_count
+            else:
+                _dict['socket_count'] = self.socket_count.to_dict()
+        if hasattr(self, 'supported_instance_profiles'
+                   ) and self.supported_instance_profiles is not None:
+            _dict['supported_instance_profiles'] = [
+                x.to_dict() for x in self.supported_instance_profiles
+            ]
+        if hasattr(self,
+                   'vcpu_architecture') and self.vcpu_architecture is not None:
+            _dict['vcpu_architecture'] = self.vcpu_architecture.to_dict()
+        if hasattr(self, 'vcpu_count') and self.vcpu_count is not None:
+            if isinstance(self.vcpu_count, dict):
+                _dict['vcpu_count'] = self.vcpu_count
+            else:
+                _dict['vcpu_count'] = self.vcpu_count.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfile object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfile') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfile') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class FamilyEnum(str, Enum):
+        """
+        The product family this dedicated host profile belongs to
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        MEMORY = 'memory'
+        BALANCED = 'balanced'
+        COMPUTE = 'compute'
+
+
+class DedicatedHostProfileCollection():
+    """
+    DedicatedHostProfileCollection.
+
+    :attr DedicatedHostProfileCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr DedicatedHostProfileCollectionNext next: (optional) A link to the next
+          page of resources. This property is present for all pages
+          except the last page.
+    :attr List[DedicatedHostProfile] profiles: Collection of dedicated host
+          profiles.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'DedicatedHostProfileCollectionFirst',
+                 limit: int,
+                 profiles: List['DedicatedHostProfile'],
+                 total_count: int,
+                 *,
+                 next: 'DedicatedHostProfileCollectionNext' = None) -> None:
+        """
+        Initialize a DedicatedHostProfileCollection object.
+
+        :param DedicatedHostProfileCollectionFirst first: A link to the first page
+               of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[DedicatedHostProfile] profiles: Collection of dedicated host
+               profiles.
+        :param int total_count: The total number of resources across all pages.
+        :param DedicatedHostProfileCollectionNext next: (optional) A link to the
+               next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.profiles = profiles
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileCollection':
+        """Initialize a DedicatedHostProfileCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = DedicatedHostProfileCollectionFirst.from_dict(
+                _dict.get('first'))
+        else:
+            raise ValueError(
+                'Required property \'first\' not present in DedicatedHostProfileCollection JSON'
+            )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in DedicatedHostProfileCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = DedicatedHostProfileCollectionNext.from_dict(
+                _dict.get('next'))
+        if 'profiles' in _dict:
+            args['profiles'] = [
+                DedicatedHostProfile.from_dict(x) for x in _dict.get('profiles')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'profiles\' not present in DedicatedHostProfileCollection JSON'
+            )
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in DedicatedHostProfileCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'profiles') and self.profiles is not None:
+            _dict['profiles'] = [x.to_dict() for x in self.profiles]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostProfileCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileCollectionFirst':
+        """Initialize a DedicatedHostProfileCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostProfileCollectionFirst JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostProfileCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileCollectionNext':
+        """Initialize a DedicatedHostProfileCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostProfileCollectionNext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileIdentity():
+    """
+    Identifies a dedicated host profile by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a DedicatedHostProfileIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostProfileIdentityByName',
+                'DedicatedHostProfileIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostProfileMemory():
+    """
+    DedicatedHostProfileMemory.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a DedicatedHostProfileMemory object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostProfileMemoryFixed',
+                'DedicatedHostProfileMemoryRange',
+                'DedicatedHostProfileMemoryEnum',
+                'DedicatedHostProfileMemoryDependent'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostProfileReference():
+    """
+    DedicatedHostProfileReference.
+
+    :attr str href: The URL for this dedicated host.
+    :attr str name: The globally unique name for this dedicated host profile.
+    """
+
+    def __init__(self, href: str, name: str) -> None:
+        """
+        Initialize a DedicatedHostProfileReference object.
+
+        :param str href: The URL for this dedicated host.
+        :param str name: The globally unique name for this dedicated host profile.
+        """
+        self.href = href
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileReference':
+        """Initialize a DedicatedHostProfileReference object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostProfileReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostProfileReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileSocket():
+    """
+    DedicatedHostProfileSocket.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a DedicatedHostProfileSocket object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostProfileSocketFixed',
+                'DedicatedHostProfileSocketRange',
+                'DedicatedHostProfileSocketEnum',
+                'DedicatedHostProfileSocketDependent'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostProfileVCPU():
+    """
+    DedicatedHostProfileVCPU.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPU object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostProfileVCPUFixed',
+                'DedicatedHostProfileVCPURange', 'DedicatedHostProfileVCPUEnum',
+                'DedicatedHostProfileVCPUDependent'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostProfileVCPUArchitecture():
+    """
+    DedicatedHostProfileVCPUArchitecture.
+
+    :attr str type: The type for this profile field.
+    :attr str value: The VCPU architecture for a dedicated host with this profile.
+    """
+
+    def __init__(self, type: str, value: str) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPUArchitecture object.
+
+        :param str type: The type for this profile field.
+        :param str value: The VCPU architecture for a dedicated host with this
+               profile.
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileVCPUArchitecture':
+        """Initialize a DedicatedHostProfileVCPUArchitecture object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileVCPUArchitecture JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileVCPUArchitecture JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileVCPUArchitecture object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileVCPUArchitecture object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileVCPUArchitecture') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileVCPUArchitecture') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostPrototype():
+    """
+    DedicatedHostPrototype.
+
+    :attr bool instance_placement_enabled: (optional) If set to true, instances can
+          be placed on this dedicated host.
+    :attr str name: (optional) The unique user-defined name for this dedicated host.
+          If unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr DedicatedHostProfileIdentity profile: The profile to use for this
+          dedicated host.
+    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
+          use. If unspecified, the account's [default resource
+          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    """
+
+    def __init__(self,
+                 profile: 'DedicatedHostProfileIdentity',
+                 *,
+                 instance_placement_enabled: bool = None,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+        """
+        Initialize a DedicatedHostPrototype object.
+
+        :param DedicatedHostProfileIdentity profile: The profile to use for this
+               dedicated host.
+        :param bool instance_placement_enabled: (optional) If set to true,
+               instances can be placed on this dedicated host.
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'DedicatedHostPrototypeDedicatedHostByGroup',
+                'DedicatedHostPrototypeDedicatedHostByZone'
+            ]))
+        raise Exception(msg)
+
+
+class DedicatedHostReference():
+    """
+    DedicatedHostReference.
+
+    :attr str crn: The CRN for this dedicated host.
+    :attr DedicatedHostReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this dedicated host.
+    :attr str id: The unique identifier for this dedicated host.
+    :attr str name: The unique user-defined name for this dedicated host. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str resource_type: The type of resource referenced.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'DedicatedHostReferenceDeleted' = None) -> None:
+        """
+        Initialize a DedicatedHostReference object.
+
+        :param str crn: The CRN for this dedicated host.
+        :param str href: The URL for this dedicated host.
+        :param str id: The unique identifier for this dedicated host.
+        :param str name: The unique user-defined name for this dedicated host. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+        :param str resource_type: The type of resource referenced.
+        :param DedicatedHostReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostReference':
+        """Initialize a DedicatedHostReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in DedicatedHostReference JSON'
+            )
+        if 'deleted' in _dict:
+            args['deleted'] = DedicatedHostReferenceDeleted.from_dict(
+                _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHostReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostReference JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in DedicatedHostReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of resource referenced.
+        """
+        DEDICATED_HOST = 'dedicated_host'
+
+
+class DedicatedHostReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self, more_info: str) -> None:
+        """
+        Initialize a DedicatedHostReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostReferenceDeleted':
+        """Initialize a DedicatedHostReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError(
+                'Required property \'more_info\' not present in DedicatedHostReferenceDeleted JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class DefaultNetworkACL():
     """
     DefaultNetworkACL.
@@ -12527,26 +15509,23 @@ class DefaultRoutingTable():
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr bool route_transit_gateway_ingress: Indicates whether this routing table
           is used to route traffic that originates from from [Transit
           Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr bool route_vpc_zone_ingress: Indicates whether this routing table is used
           to route traffic that originates from subnets in other zones in this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr List[RouteReference] routes: The routes for the default routing table for
           this VPC. The table is created with no routes, but routes may be added, changed,
           or removed with a subsequent request.
@@ -12580,27 +15559,27 @@ class DefaultRoutingTable():
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_transit_gateway_ingress: Indicates whether this routing
                table is used to route traffic that originates from from [Transit
                Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_vpc_zone_ingress: Indicates whether this routing table is
                used to route traffic that originates from subnets in other zones in this
                VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param List[RouteReference] routes: The routes for the default routing
                table for this VPC. The table is created with no routes, but routes may be
                added, changed, or removed with a subsequent request.
@@ -12681,7 +15660,8 @@ class DefaultRoutingTable():
                 'Required property \'route_transit_gateway_ingress\' not present in DefaultRoutingTable JSON'
             )
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get(
+                'route_vpc_zone_ingress')
         else:
             raise ValueError(
                 'Required property \'route_vpc_zone_ingress\' not present in DefaultRoutingTable JSON'
@@ -12728,14 +15708,14 @@ class DefaultRoutingTable():
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'route_direct_link_ingress'
-                  ) and self.route_direct_link_ingress is not None:
+                   ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                  ) and self.route_transit_gateway_ingress is not None:
+                   ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                  ) and self.route_vpc_zone_ingress is not None:
+                   ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         if hasattr(self, 'routes') and self.routes is not None:
             _dict['routes'] = [x.to_dict() for x in self.routes]
@@ -12783,7 +15763,7 @@ class DefaultRoutingTable():
 
 class DefaultSecurityGroup():
     """
-    Collection of rules in a default security group.
+    DefaultSecurityGroup.
 
     :attr datetime created_at: The date and time that this security group was
           created.
@@ -13653,8 +16633,8 @@ class EndpointGatewayReferenceDeleted():
 
 class EndpointGatewayReservedIP():
     """
-    A reserved IP to bind to the endpoint gateway. This can be a an existing reserved IP,
-    or a prototype used to allocate a reserved IP. The reserved IP will be bound to the
+    A reserved IP to bind to the endpoint gateway. This can be an existing reserved IP, or
+    a prototype used to allocate a reserved IP. The reserved IP will be bound to the
     endpoint gateway to function as a virtual private endpoint for the service.
 
     """
@@ -14018,7 +16998,8 @@ class FloatingIPCollection():
                 'Required property \'limit\' not present in FloatingIPCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = FloatingIPCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = FloatingIPCollectionNext.from_dict(
+                _dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -15128,7 +18109,7 @@ class FlowLogCollectorTarget():
 
 class FlowLogCollectorTargetPrototype():
     """
-    The target this collector will collect flow logs for. If the target is an instance,
+    The target this collector is collecting flow logs for. If the target is an instance,
     subnet, or VPC, flow logs will not be collected for any network interfaces within the
     target that are themselves the target of a more specific flow log collector.
 
@@ -15306,7 +18287,7 @@ class IKEPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -15315,7 +18296,7 @@ class IKEPolicy():
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -15696,12 +18677,12 @@ class IKEPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'ike_version') and self.ike_version is not None:
             _dict['ike_version'] = self.ike_version
@@ -16145,7 +19126,7 @@ class IPsecPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -16156,7 +19137,7 @@ class IPsecPolicy():
                 'encapsulation_mode') and self.encapsulation_mode is not None:
             _dict['encapsulation_mode'] = self.encapsulation_mode
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -16327,7 +19308,8 @@ class IPsecPolicyCollection():
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
         if hasattr(self, 'ipsec_policies') and self.ipsec_policies is not None:
-            _dict['ipsec_policies'] = [x.to_dict() for x in self.ipsec_policies]
+            _dict['ipsec_policies'] = [x.to_dict()
+                                       for x in self.ipsec_policies]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
@@ -16548,10 +19530,10 @@ class IPsecPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
@@ -16803,7 +19785,28 @@ class Image():
     :attr OperatingSystem operating_system: (optional) The operating system included
           in this image.
     :attr ResourceGroupReference resource_group: The resource group for this image.
-    :attr str status: The status of this image.
+    :attr str status: The status of this image
+          - available: image can be used (provisionable)
+          - deleting: image is being deleted, and can no longer be used to provision new
+            resources
+          - deprecated: image can be used, but is slated to become `obsolete`
+          (provisionable)
+          - failed: image is corrupt or did not pass validation
+          - obsolete: image can no longer be used to provision new resources
+          - pending: image is being imported and is not yet `available`
+          - tentative: image import has timed out (contact support)
+          - unusable: image cannot be used (see `status_reasons[]` for possible
+          remediation)
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the image on which the unexpected
+          property value was encountered.
+    :attr List[ImageStatusReason] status_reasons: Array of reasons for the current
+          status (if any).
+          The enumerated reason code values for this property will expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          reason code was encountered.
     :attr str visibility: Whether the image is publicly visible or private to the
           account.
     """
@@ -16818,6 +19821,7 @@ class Image():
                  name: str,
                  resource_group: 'ResourceGroupReference',
                  status: str,
+                 status_reasons: List['ImageStatusReason'],
                  visibility: str,
                  *,
                  encryption_key: 'EncryptionKeyReference' = None,
@@ -16835,7 +19839,29 @@ class Image():
         :param str name: The user-defined or system-provided name for this image.
         :param ResourceGroupReference resource_group: The resource group for this
                image.
-        :param str status: The status of this image.
+        :param str status: The status of this image
+               - available: image can be used (provisionable)
+               - deleting: image is being deleted, and can no longer be used to provision
+               new
+                 resources
+               - deprecated: image can be used, but is slated to become `obsolete`
+               (provisionable)
+               - failed: image is corrupt or did not pass validation
+               - obsolete: image can no longer be used to provision new resources
+               - pending: image is being imported and is not yet `available`
+               - tentative: image import has timed out (contact support)
+               - unusable: image cannot be used (see `status_reasons[]` for possible
+               remediation)
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the image on
+               which the unexpected property value was encountered.
+        :param List[ImageStatusReason] status_reasons: Array of reasons for the
+               current status (if any).
+               The enumerated reason code values for this property will expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected reason code was encountered.
         :param str visibility: Whether the image is publicly visible or private to
                the account.
         :param EncryptionKeyReference encryption_key: (optional) The key that will
@@ -16863,6 +19889,7 @@ class Image():
         self.operating_system = operating_system
         self.resource_group = resource_group
         self.status = status
+        self.status_reasons = status_reasons
         self.visibility = visibility
 
     @classmethod
@@ -16925,6 +19952,15 @@ class Image():
         else:
             raise ValueError(
                 'Required property \'status\' not present in Image JSON')
+        if 'status_reasons' in _dict:
+            args['status_reasons'] = [
+                ImageStatusReason.from_dict(x)
+                for x in _dict.get('status_reasons')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'status_reasons\' not present in Image JSON'
+            )
         if 'visibility' in _dict:
             args['visibility'] = _dict.get('visibility')
         else:
@@ -16955,7 +19991,7 @@ class Image():
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'minimum_provisioned_size'
-                  ) and self.minimum_provisioned_size is not None:
+                   ) and self.minimum_provisioned_size is not None:
             _dict['minimum_provisioned_size'] = self.minimum_provisioned_size
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -16966,6 +20002,9 @@ class Image():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'status_reasons') and self.status_reasons is not None:
+            _dict['status_reasons'] = [x.to_dict()
+                                       for x in self.status_reasons]
         if hasattr(self, 'visibility') and self.visibility is not None:
             _dict['visibility'] = self.visibility
         return _dict
@@ -16997,7 +20036,21 @@ class Image():
 
     class StatusEnum(str, Enum):
         """
-        The status of this image.
+        The status of this image
+        - available: image can be used (provisionable)
+        - deleting: image is being deleted, and can no longer be used to provision new
+          resources
+        - deprecated: image can be used, but is slated to become `obsolete`
+        (provisionable)
+        - failed: image is corrupt or did not pass validation
+        - obsolete: image can no longer be used to provision new resources
+        - pending: image is being imported and is not yet `available`
+        - tentative: image import has timed out (contact support)
+        - unusable: image cannot be used (see `status_reasons[]` for possible remediation)
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the image on which the unexpected
+        property value was encountered.
         """
         AVAILABLE = 'available'
         DELETING = 'deleting'
@@ -17620,6 +20673,95 @@ class ImageReferenceDeleted():
         return not self == other
 
 
+class ImageStatusReason():
+    """
+    ImageStatusReason.
+
+    :attr str code: A snake case string succinctly identifying the status reason.
+    :attr str message: An explanation of the status reason.
+    :attr str more_info: (optional) Link to documentation about this status reason.
+    """
+
+    def __init__(self,
+                 code: str,
+                 message: str,
+                 *,
+                 more_info: str = None) -> None:
+        """
+        Initialize a ImageStatusReason object.
+
+        :param str code: A snake case string succinctly identifying the status
+               reason.
+        :param str message: An explanation of the status reason.
+        :param str more_info: (optional) Link to documentation about this status
+               reason.
+        """
+        self.code = code
+        self.message = message
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ImageStatusReason':
+        """Initialize a ImageStatusReason object from a json dictionary."""
+        args = {}
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
+        else:
+            raise ValueError(
+                'Required property \'code\' not present in ImageStatusReason JSON'
+            )
+        if 'message' in _dict:
+            args['message'] = _dict.get('message')
+        else:
+            raise ValueError(
+                'Required property \'message\' not present in ImageStatusReason JSON'
+            )
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ImageStatusReason object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ImageStatusReason object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ImageStatusReason') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ImageStatusReason') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class CodeEnum(str, Enum):
+        """
+        A snake case string succinctly identifying the status reason.
+        """
+        ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
+        ENCRYPTION_KEY_DISABLED = 'encryption_key_disabled'
+
+
 class Instance():
     """
     Instance.
@@ -17644,8 +20786,8 @@ class Instance():
           primary network interface.
     :attr NetworkInterfaceInstanceContextReference primary_network_interface:
           Primary network interface.
-    :attr InstanceProfileReference profile: The profile this virtual server instance
-          uses.
+    :attr InstanceProfileReference profile: The profile for this virtual server
+          instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance.
     :attr str status: The status of the virtual server instance.
@@ -17702,8 +20844,8 @@ class Instance():
                the primary network interface.
         :param NetworkInterfaceInstanceContextReference primary_network_interface:
                Primary network interface.
-        :param InstanceProfileReference profile: The profile this virtual server
-               instance uses.
+        :param InstanceProfileReference profile: The profile for this virtual
+               server instance.
         :param ResourceGroupReference resource_group: The resource group for this
                instance.
         :param str status: The status of the virtual server instance.
@@ -17861,10 +21003,10 @@ class Instance():
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
@@ -17888,10 +21030,10 @@ class Instance():
                 x.to_dict() for x in self.network_interfaces
             ]
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'profile') and self.profile is not None:
             _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
@@ -17934,6 +21076,7 @@ class Instance():
         """
         The status of the virtual server instance.
         """
+        DELETING = 'deleting'
         FAILED = 'failed'
         PAUSED = 'paused'
         PAUSING = 'pausing'
@@ -18002,7 +21145,8 @@ class InstanceAction():
         """Initialize a InstanceAction object from a json dictionary."""
         args = {}
         if 'completed_at' in _dict:
-            args['completed_at'] = string_to_datetime(_dict.get('completed_at'))
+            args['completed_at'] = string_to_datetime(
+                _dict.get('completed_at'))
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -19057,10 +22201,10 @@ class InstanceGroupManager():
         if hasattr(self, 'manager_type') and self.manager_type is not None:
             _dict['manager_type'] = self.manager_type
         if hasattr(self, 'max_membership_count'
-                  ) and self.max_membership_count is not None:
+                   ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                  ) and self.min_membership_count is not None:
+                   ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -19414,10 +22558,10 @@ class InstanceGroupManagerPatch():
                 'management_enabled') and self.management_enabled is not None:
             _dict['management_enabled'] = self.management_enabled
         if hasattr(self, 'max_membership_count'
-                  ) and self.max_membership_count is not None:
+                   ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                  ) and self.min_membership_count is not None:
+                   ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -20294,7 +23438,7 @@ class InstanceGroupMembership():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_instance_on_membership_delete'
-                  ) and self.delete_instance_on_membership_delete is not None:
+                   ) and self.delete_instance_on_membership_delete is not None:
             _dict[
                 'delete_instance_on_membership_delete'] = self.delete_instance_on_membership_delete
         if hasattr(self, 'href') and self.href is not None:
@@ -22490,12 +25634,14 @@ class InstanceTemplateReference():
           some supplementary information.
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
+    :attr str name: The unique user-defined name for this instance template.
     """
 
     def __init__(self,
                  crn: str,
                  href: str,
                  id: str,
+                 name: str,
                  *,
                  deleted: 'InstanceTemplateReferenceDeleted' = None) -> None:
         """
@@ -22504,6 +25650,7 @@ class InstanceTemplateReference():
         :param str crn: The CRN for this instance template.
         :param str href: The URL for this instance template.
         :param str id: The unique identifier for this instance template.
+        :param str name: The unique user-defined name for this instance template.
         :param InstanceTemplateReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
                provides
@@ -22513,6 +25660,7 @@ class InstanceTemplateReference():
         self.deleted = deleted
         self.href = href
         self.id = id
+        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceTemplateReference':
@@ -22539,6 +25687,12 @@ class InstanceTemplateReference():
             raise ValueError(
                 'Required property \'id\' not present in InstanceTemplateReference JSON'
             )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceTemplateReference JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -22557,6 +25711,8 @@ class InstanceTemplateReference():
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -22782,7 +25938,8 @@ class Key():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in Key JSON')
+            raise ValueError(
+                'Required property \'id\' not present in Key JSON')
         if 'length' in _dict:
             args['length'] = _dict.get('length')
         else:
@@ -23087,6 +26244,8 @@ class LoadBalancer():
     :attr bool is_public: The type of this load balancer, public or private.
     :attr List[LoadBalancerListenerReference] listeners: The listeners of this load
           balancer.
+    :attr LoadBalancerLogging logging: The logging configuration for this load
+          balancer.
     :attr str name: The unique user-defined name for this load balancer.
     :attr str operating_status: The operating status of this load balancer.
     :attr List[LoadBalancerPoolReference] pools: The pools of this load balancer.
@@ -23096,7 +26255,8 @@ class LoadBalancer():
           balancer.
     :attr str provisioning_status: The provisioning status of this load balancer.
     :attr List[IP] public_ips: The public IP addresses assigned to this load
-          balancer. Applicable only for public load balancers.
+          balancer.
+          Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
     :attr List[SubnetReference] subnets: The subnets this load balancer is part of.
@@ -23104,7 +26264,8 @@ class LoadBalancer():
 
     def __init__(self, created_at: datetime, crn: str, hostname: str, href: str,
                  id: str, is_public: bool,
-                 listeners: List['LoadBalancerListenerReference'], name: str,
+                 listeners: List['LoadBalancerListenerReference'],
+                 logging: 'LoadBalancerLogging', name: str,
                  operating_status: str,
                  pools: List['LoadBalancerPoolReference'],
                  private_ips: List['IP'],
@@ -23125,6 +26286,8 @@ class LoadBalancer():
         :param bool is_public: The type of this load balancer, public or private.
         :param List[LoadBalancerListenerReference] listeners: The listeners of this
                load balancer.
+        :param LoadBalancerLogging logging: The logging configuration for this load
+               balancer.
         :param str name: The unique user-defined name for this load balancer.
         :param str operating_status: The operating status of this load balancer.
         :param List[LoadBalancerPoolReference] pools: The pools of this load
@@ -23136,7 +26299,8 @@ class LoadBalancer():
         :param str provisioning_status: The provisioning status of this load
                balancer.
         :param List[IP] public_ips: The public IP addresses assigned to this load
-               balancer. Applicable only for public load balancers.
+               balancer.
+               Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
         :param List[SubnetReference] subnets: The subnets this load balancer is
@@ -23149,6 +26313,7 @@ class LoadBalancer():
         self.id = id
         self.is_public = is_public
         self.listeners = listeners
+        self.logging = logging
         self.name = name
         self.operating_status = operating_status
         self.pools = pools
@@ -23204,6 +26369,13 @@ class LoadBalancer():
         else:
             raise ValueError(
                 'Required property \'listeners\' not present in LoadBalancer JSON'
+            )
+        if 'logging' in _dict:
+            args['logging'] = LoadBalancerLogging.from_dict(
+                _dict.get('logging'))
+        else:
+            raise ValueError(
+                'Required property \'logging\' not present in LoadBalancer JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -23292,6 +26464,8 @@ class LoadBalancer():
             _dict['is_public'] = self.is_public
         if hasattr(self, 'listeners') and self.listeners is not None:
             _dict['listeners'] = [x.to_dict() for x in self.listeners]
+        if hasattr(self, 'logging') and self.logging is not None:
+            _dict['logging'] = self.logging.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self,
@@ -23390,7 +26564,8 @@ class LoadBalancerCollection():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'load_balancers') and self.load_balancers is not None:
-            _dict['load_balancers'] = [x.to_dict() for x in self.load_balancers]
+            _dict['load_balancers'] = [x.to_dict()
+                                       for x in self.load_balancers]
         return _dict
 
     def _to_dict(self):
@@ -23586,10 +26761,10 @@ class LoadBalancerListener():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                  ) and self.certificate_instance is not None:
+                   ) and self.certificate_instance is not None:
             _dict['certificate_instance'] = self.certificate_instance.to_dict()
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -23808,16 +26983,16 @@ class LoadBalancerListenerPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                  ) and self.certificate_instance is not None:
+                   ) and self.certificate_instance is not None:
             if isinstance(self.certificate_instance, dict):
                 _dict['certificate_instance'] = self.certificate_instance
             else:
                 _dict[
                     'certificate_instance'] = self.certificate_instance.to_dict(
-                    )
+                )
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
             _dict['connection_limit'] = self.connection_limit
@@ -25227,7 +28402,7 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -25420,26 +28595,160 @@ class LoadBalancerListenerReferenceDeleted():
         return not self == other
 
 
+class LoadBalancerLogging():
+    """
+    The logging configuration for this load balancer.
+
+    :attr LoadBalancerLoggingDatapath datapath: (optional) The datapath logging
+          configuration for this load balancer.
+    """
+
+    def __init__(self,
+                 *,
+                 datapath: 'LoadBalancerLoggingDatapath' = None) -> None:
+        """
+        Initialize a LoadBalancerLogging object.
+
+        :param LoadBalancerLoggingDatapath datapath: (optional) The datapath
+               logging configuration for this load balancer.
+        """
+        self.datapath = datapath
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerLogging':
+        """Initialize a LoadBalancerLogging object from a json dictionary."""
+        args = {}
+        if 'datapath' in _dict:
+            args['datapath'] = LoadBalancerLoggingDatapath.from_dict(
+                _dict.get('datapath'))
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerLogging object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'datapath') and self.datapath is not None:
+            _dict['datapath'] = self.datapath.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerLogging object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerLogging') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerLogging') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LoadBalancerLoggingDatapath():
+    """
+    The datapath logging configuration for this load balancer.
+
+    :attr bool active: If set to `true`, datapath logging is active for this load
+          balancer.
+    """
+
+    def __init__(self, active: bool) -> None:
+        """
+        Initialize a LoadBalancerLoggingDatapath object.
+
+        :param bool active: If set to `true`, datapath logging is active for this
+               load balancer.
+        """
+        self.active = active
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerLoggingDatapath':
+        """Initialize a LoadBalancerLoggingDatapath object from a json dictionary."""
+        args = {}
+        if 'active' in _dict:
+            args['active'] = _dict.get('active')
+        else:
+            raise ValueError(
+                'Required property \'active\' not present in LoadBalancerLoggingDatapath JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerLoggingDatapath object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'active') and self.active is not None:
+            _dict['active'] = self.active
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerLoggingDatapath object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerLoggingDatapath') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerLoggingDatapath') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class LoadBalancerPatch():
     """
     LoadBalancerPatch.
 
+    :attr LoadBalancerLogging logging: (optional) The logging configuration to use
+          for this load balancer.
+          To activate logging, the load balancer profile must support the specified
+          logging type.
     :attr str name: (optional) The unique user-defined name for this load balancer.
     """
 
-    def __init__(self, *, name: str = None) -> None:
+    def __init__(self,
+                 *,
+                 logging: 'LoadBalancerLogging' = None,
+                 name: str = None) -> None:
         """
         Initialize a LoadBalancerPatch object.
 
+        :param LoadBalancerLogging logging: (optional) The logging configuration to
+               use for this load balancer.
+               To activate logging, the load balancer profile must support the specified
+               logging type.
         :param str name: (optional) The unique user-defined name for this load
                balancer.
         """
+        self.logging = logging
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPatch':
         """Initialize a LoadBalancerPatch object from a json dictionary."""
         args = {}
+        if 'logging' in _dict:
+            args['logging'] = LoadBalancerLogging.from_dict(
+                _dict.get('logging'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         return cls(**args)
@@ -25452,6 +28761,8 @@ class LoadBalancerPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'logging') and self.logging is not None:
+            _dict['logging'] = self.logging.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -25813,7 +29124,9 @@ class LoadBalancerPoolHealthMonitor():
           processing and surface the error, or bypass the health monitor on which the
           unexpected property value was encountered.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -25840,7 +29153,9 @@ class LoadBalancerPoolHealthMonitor():
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -25949,7 +29264,9 @@ class LoadBalancerPoolHealthMonitorPatch():
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -25973,7 +29290,9 @@ class LoadBalancerPoolHealthMonitorPatch():
                this overrides the ports specified in the server member resources. Specify
                `null` to remove an existing port value.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -26077,7 +29396,9 @@ class LoadBalancerPoolHealthMonitorPrototype():
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -26100,7 +29421,9 @@ class LoadBalancerPoolHealthMonitorPrototype():
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -27576,20 +30899,27 @@ class LoadBalancerProfile():
 
     :attr str family: The product family this load balancer profile belongs to.
     :attr str href: The URL for this load balancer profile.
+    :attr LoadBalancerProfileLoggingSupported logging_supported: Indicates which
+          logging type(s) are supported for a load balancer with this profile.
     :attr str name: The globally unique name for this load balancer profile.
     """
 
-    def __init__(self, family: str, href: str, name: str) -> None:
+    def __init__(self, family: str, href: str,
+                 logging_supported: 'LoadBalancerProfileLoggingSupported',
+                 name: str) -> None:
         """
         Initialize a LoadBalancerProfile object.
 
         :param str family: The product family this load balancer profile belongs
                to.
         :param str href: The URL for this load balancer profile.
+        :param LoadBalancerProfileLoggingSupported logging_supported: Indicates
+               which logging type(s) are supported for a load balancer with this profile.
         :param str name: The globally unique name for this load balancer profile.
         """
         self.family = family
         self.href = href
+        self.logging_supported = logging_supported
         self.name = name
 
     @classmethod
@@ -27607,6 +30937,14 @@ class LoadBalancerProfile():
         else:
             raise ValueError(
                 'Required property \'href\' not present in LoadBalancerProfile JSON'
+            )
+        if 'logging_supported' in _dict:
+            args[
+                'logging_supported'] = LoadBalancerProfileLoggingSupported.from_dict(
+                    _dict.get('logging_supported'))
+        else:
+            raise ValueError(
+                'Required property \'logging_supported\' not present in LoadBalancerProfile JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -27628,6 +30966,9 @@ class LoadBalancerProfile():
             _dict['family'] = self.family
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self,
+                   'logging_supported') and self.logging_supported is not None:
+            _dict['logging_supported'] = self.logging_supported.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -27904,6 +31245,83 @@ class LoadBalancerProfileIdentity():
         raise Exception(msg)
 
 
+class LoadBalancerProfileLoggingSupported():
+    """
+    Indicates which logging type(s) are supported for a load balancer with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr List[str] value: The supported logging type(s) for a load balancer with
+          this profile.
+    """
+
+    def __init__(self, type: str, value: List[str]) -> None:
+        """
+        Initialize a LoadBalancerProfileLoggingSupported object.
+
+        :param str type: The type for this profile field.
+        :param List[str] value: The supported logging type(s) for a load balancer
+               with this profile.
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileLoggingSupported':
+        """Initialize a LoadBalancerProfileLoggingSupported object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in LoadBalancerProfileLoggingSupported JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in LoadBalancerProfileLoggingSupported JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileLoggingSupported object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileLoggingSupported object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileLoggingSupported') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileLoggingSupported') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
 class LoadBalancerProfileReference():
     """
     LoadBalancerProfileReference.
@@ -28063,7 +31481,7 @@ class LoadBalancerStatistics():
                    'connection_rate') and self.connection_rate is not None:
             _dict['connection_rate'] = self.connection_rate
         if hasattr(self, 'data_processed_this_month'
-                  ) and self.data_processed_this_month is not None:
+                   ) and self.data_processed_this_month is not None:
             _dict['data_processed_this_month'] = self.data_processed_this_month
         if hasattr(self, 'throughput') and self.throughput is not None:
             _dict['throughput'] = self.throughput
@@ -28308,7 +31726,8 @@ class NetworkACLCollection():
                 'Required property \'network_acls\' not present in NetworkACLCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = NetworkACLCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = NetworkACLCollectionNext.from_dict(
+                _dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -29420,10 +32839,10 @@ class NetworkACLRulePatch():
         if hasattr(self, 'destination') and self.destination is not None:
             _dict['destination'] = self.destination
         if hasattr(self, 'destination_port_max'
-                  ) and self.destination_port_max is not None:
+                   ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                  ) and self.destination_port_min is not None:
+                   ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
@@ -29856,9 +33275,9 @@ class NetworkInterface():
     """
     NetworkInterface.
 
-    :attr bool allow_ip_spoofing: Indicates whether IP spoofing is allowed on this
-          interface. If false, IP spoofing is prevented on this interface. If true, IP
-          spoofing is allowed on this interface.
+    :attr bool allow_ip_spoofing: Indicates whether source IP spoofing is allowed on
+          this interface. If false, source IP spoofing is prevented on this interface. If
+          true, source IP spoofing is allowed on this interface.
     :attr datetime created_at: The date and time that the network interface was
           created.
     :attr List[FloatingIPReference] floating_ips: (optional) Array of references to
@@ -29894,9 +33313,9 @@ class NetworkInterface():
         """
         Initialize a NetworkInterface object.
 
-        :param bool allow_ip_spoofing: Indicates whether IP spoofing is allowed on
-               this interface. If false, IP spoofing is prevented on this interface. If
-               true, IP spoofing is allowed on this interface.
+        :param bool allow_ip_spoofing: Indicates whether source IP spoofing is
+               allowed on this interface. If false, source IP spoofing is prevented on
+               this interface. If true, source IP spoofing is allowed on this interface.
         :param datetime created_at: The date and time that the network interface
                was created.
         :param str href: The URL for this network interface.
@@ -30037,7 +33456,7 @@ class NetworkInterface():
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -30083,6 +33502,7 @@ class NetworkInterface():
         The status of the network interface.
         """
         AVAILABLE = 'available'
+        DELETING = 'deleting'
         FAILED = 'failed'
         PENDING = 'pending'
 
@@ -30447,7 +33867,7 @@ class NetworkInterfaceInstanceContextReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -30549,9 +33969,9 @@ class NetworkInterfacePatch():
     """
     NetworkInterfacePatch.
 
-    :attr bool allow_ip_spoofing: (optional) Indicates whether IP spoofing is
-          allowed on this interface. Updating to true allows IP spoofing on this
-          interface. Updating to false prevents IP spoofing on this interface.
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
     :attr str name: (optional) The user-defined name for this network interface.
     """
 
@@ -30562,9 +33982,10 @@ class NetworkInterfacePatch():
         """
         Initialize a NetworkInterfacePatch object.
 
-        :param bool allow_ip_spoofing: (optional) Indicates whether IP spoofing is
-               allowed on this interface. Updating to true allows IP spoofing on this
-               interface. Updating to false prevents IP spoofing on this interface.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
         :param str name: (optional) The user-defined name for this network
                interface.
         """
@@ -30619,9 +34040,9 @@ class NetworkInterfacePrototype():
     """
     NetworkInterfacePrototype.
 
-    :attr bool allow_ip_spoofing: (optional) Indicates whether IP spoofing is
-          allowed on this interface. If false, IP spoofing is prevented on this interface.
-          If true, IP spoofing is allowed on this interface.
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
     :attr str name: (optional) The user-defined name for this network interface. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
@@ -30643,9 +34064,10 @@ class NetworkInterfacePrototype():
         Initialize a NetworkInterfacePrototype object.
 
         :param SubnetIdentity subnet: The associated subnet.
-        :param bool allow_ip_spoofing: (optional) Indicates whether IP spoofing is
-               allowed on this interface. If false, IP spoofing is prevented on this
-               interface. If true, IP spoofing is allowed on this interface.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
         :param str name: (optional) The user-defined name for this network
                interface. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
@@ -30696,7 +34118,7 @@ class NetworkInterfacePrototype():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self,
                    'security_groups') and self.security_groups is not None:
@@ -30831,7 +34253,7 @@ class NetworkInterfaceReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -32711,7 +36133,8 @@ class ReservedIPCollection():
                 'Required property \'limit\' not present in ReservedIPCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = ReservedIPCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = ReservedIPCollectionNext.from_dict(
+                _dict.get('next'))
         if 'reserved_ips' in _dict:
             args['reserved_ips'] = [
                 ReservedIP.from_dict(x) for x in _dict.get('reserved_ips')
@@ -34294,26 +37717,23 @@ class RoutingTable():
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr bool route_transit_gateway_ingress: Indicates whether this routing table
           is used to route traffic that originates from from [Transit
           Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr bool route_vpc_zone_ingress: Indicates whether this routing table is used
           to route traffic that originates from subnets in other zones in this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr List[RouteReference] routes: The routes for this routing table.
     :attr List[SubnetReference] subnets: The subnets to which this routing table is
           attached.
@@ -34343,27 +37763,27 @@ class RoutingTable():
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_transit_gateway_ingress: Indicates whether this routing
                table is used to route traffic that originates from from [Transit
                Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_vpc_zone_ingress: Indicates whether this routing table is
                used to route traffic that originates from subnets in other zones in this
                VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param List[RouteReference] routes: The routes for this routing table.
         :param List[SubnetReference] subnets: The subnets to which this routing
                table is attached.
@@ -34439,7 +37859,8 @@ class RoutingTable():
                 'Required property \'route_transit_gateway_ingress\' not present in RoutingTable JSON'
             )
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get(
+                'route_vpc_zone_ingress')
         else:
             raise ValueError(
                 'Required property \'route_vpc_zone_ingress\' not present in RoutingTable JSON'
@@ -34485,14 +37906,14 @@ class RoutingTable():
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'route_direct_link_ingress'
-                  ) and self.route_direct_link_ingress is not None:
+                   ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                  ) and self.route_transit_gateway_ingress is not None:
+                   ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                  ) and self.route_vpc_zone_ingress is not None:
+                   ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         if hasattr(self, 'routes') and self.routes is not None:
             _dict['routes'] = [x.to_dict() for x in self.routes]
@@ -34629,7 +38050,8 @@ class RoutingTableCollection():
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'routing_tables') and self.routing_tables is not None:
-            _dict['routing_tables'] = [x.to_dict() for x in self.routing_tables]
+            _dict['routing_tables'] = [x.to_dict()
+                                       for x in self.routing_tables]
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
         return _dict
@@ -34802,9 +38224,8 @@ class RoutingTablePatch():
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     :attr bool route_transit_gateway_ingress: (optional) Indicates whether this
           routing table is used to route traffic that originates from
           [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
@@ -34815,9 +38236,8 @@ class RoutingTablePatch():
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
           If [Classic
           Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
           is enabled for this VPC, and this property is set to `true`, its incoming
@@ -34831,9 +38251,8 @@ class RoutingTablePatch():
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
           `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with with a `next_hop` of an
-          internet-bound IP address or a VPN gateway connection, the packet will be
-          dropped.
+          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
+          address or a VPN gateway connection, the packet will be dropped.
     """
 
     def __init__(self,
@@ -34856,9 +38275,9 @@ class RoutingTablePatch():
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         :param bool route_transit_gateway_ingress: (optional) Indicates whether
                this routing table is used to route traffic that originates from
                [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this
@@ -34869,9 +38288,9 @@ class RoutingTablePatch():
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
                If [Classic
                Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
                is enabled for this VPC, and this property is set to `true`, its incoming
@@ -34885,9 +38304,9 @@ class RoutingTablePatch():
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
                unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with with a
-               `next_hop` of an internet-bound IP address or a VPN gateway connection, the
-               packet will be dropped.
+               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
+               of an internet-bound IP address or a VPN gateway connection, the packet
+               will be dropped.
         """
         self.name = name
         self.route_direct_link_ingress = route_direct_link_ingress
@@ -34907,7 +38326,8 @@ class RoutingTablePatch():
             args['route_transit_gateway_ingress'] = _dict.get(
                 'route_transit_gateway_ingress')
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get(
+                'route_vpc_zone_ingress')
         return cls(**args)
 
     @classmethod
@@ -34921,14 +38341,14 @@ class RoutingTablePatch():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'route_direct_link_ingress'
-                  ) and self.route_direct_link_ingress is not None:
+                   ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                  ) and self.route_transit_gateway_ingress is not None:
+                   ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                  ) and self.route_vpc_zone_ingress is not None:
+                   ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         return _dict
 
@@ -36478,7 +39898,7 @@ class Subnet():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'available_ipv4_address_count'
-                  ) and self.available_ipv4_address_count is not None:
+                   ) and self.available_ipv4_address_count is not None:
             _dict[
                 'available_ipv4_address_count'] = self.available_ipv4_address_count
         if hasattr(self, 'created_at') and self.created_at is not None:
@@ -36507,7 +39927,7 @@ class Subnet():
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'total_ipv4_address_count'
-                  ) and self.total_ipv4_address_count is not None:
+                   ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
@@ -37133,6 +40553,73 @@ class SubnetReferenceDeleted():
         return not self == other
 
 
+class VCPU():
+    """
+    The VCPU configuration.
+
+    :attr str architecture: The VCPU architecture.
+    :attr int count: The number of VCPUs assigned.
+    """
+
+    def __init__(self, architecture: str, count: int) -> None:
+        """
+        Initialize a VCPU object.
+
+        :param str architecture: The VCPU architecture.
+        :param int count: The number of VCPUs assigned.
+        """
+        self.architecture = architecture
+        self.count = count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VCPU':
+        """Initialize a VCPU object from a json dictionary."""
+        args = {}
+        if 'architecture' in _dict:
+            args['architecture'] = _dict.get('architecture')
+        else:
+            raise ValueError(
+                'Required property \'architecture\' not present in VCPU JSON')
+        if 'count' in _dict:
+            args['count'] = _dict.get('count')
+        else:
+            raise ValueError(
+                'Required property \'count\' not present in VCPU JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VCPU object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'architecture') and self.architecture is not None:
+            _dict['architecture'] = self.architecture
+        if hasattr(self, 'count') and self.count is not None:
+            _dict['count'] = self.count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VCPU object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VCPU') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VCPU') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class VPC():
     """
     VPC.
@@ -37269,7 +40756,8 @@ class VPC():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in VPC JSON')
+            raise ValueError(
+                'Required property \'id\' not present in VPC JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -37303,20 +40791,21 @@ class VPC():
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'cse_source_ips') and self.cse_source_ips is not None:
-            _dict['cse_source_ips'] = [x.to_dict() for x in self.cse_source_ips]
+            _dict['cse_source_ips'] = [x.to_dict()
+                                       for x in self.cse_source_ips]
         if hasattr(
                 self,
                 'default_network_acl') and self.default_network_acl is not None:
             _dict['default_network_acl'] = self.default_network_acl.to_dict()
         if hasattr(self, 'default_routing_table'
-                  ) and self.default_routing_table is not None:
+                   ) and self.default_routing_table is not None:
             _dict['default_routing_table'] = self.default_routing_table.to_dict(
             )
         if hasattr(self, 'default_security_group'
-                  ) and self.default_security_group is not None:
+                   ) and self.default_security_group is not None:
             _dict[
                 'default_security_group'] = self.default_security_group.to_dict(
-                )
+            )
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
@@ -38005,7 +41494,8 @@ class VPNGatewayCollection():
                 'Required property \'limit\' not present in VPNGatewayCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = VPNGatewayCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = VPNGatewayCollectionNext.from_dict(
+                _dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -39208,6 +42698,12 @@ class Volume():
           processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the volume on which the unexpected
           property value was encountered.
+    :attr List[VolumeStatusReason] status_reasons: Array of reasons for the current
+          status (if any).
+          The enumerated reason code values for this property will expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          reason code was encountered.
     :attr List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
           collection of volume attachments attaching instances to the volume.
     :attr ZoneReference zone: The zone this volume resides in.
@@ -39226,6 +42722,7 @@ class Volume():
             profile: 'VolumeProfileReference',
             resource_group: 'ResourceGroupReference',
             status: str,
+            status_reasons: List['VolumeStatusReason'],
             volume_attachments: List['VolumeAttachmentReferenceVolumeContext'],
             zone: 'ZoneReference',
             *,
@@ -39251,6 +42748,12 @@ class Volume():
                processing this property, check for and log unknown values. Optionally halt
                processing and surface the error, or bypass the volume on which the
                unexpected property value was encountered.
+        :param List[VolumeStatusReason] status_reasons: Array of reasons for the
+               current status (if any).
+               The enumerated reason code values for this property will expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected reason code was encountered.
         :param List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
                collection of volume attachments attaching instances to the volume.
         :param ZoneReference zone: The zone this volume resides in.
@@ -39271,6 +42774,7 @@ class Volume():
         self.profile = profile
         self.resource_group = resource_group
         self.status = status
+        self.status_reasons = status_reasons
         self.volume_attachments = volume_attachments
         self.zone = zone
 
@@ -39339,6 +42843,15 @@ class Volume():
         else:
             raise ValueError(
                 'Required property \'status\' not present in Volume JSON')
+        if 'status_reasons' in _dict:
+            args['status_reasons'] = [
+                VolumeStatusReason.from_dict(x)
+                for x in _dict.get('status_reasons')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'status_reasons\' not present in Volume JSON'
+            )
         if 'volume_attachments' in _dict:
             args['volume_attachments'] = [
                 VolumeAttachmentReferenceVolumeContext.from_dict(x)
@@ -39387,6 +42900,9 @@ class Volume():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'status_reasons') and self.status_reasons is not None:
+            _dict['status_reasons'] = [x.to_dict()
+                                       for x in self.status_reasons]
         if hasattr(
                 self,
                 'volume_attachments') and self.volume_attachments is not None:
@@ -39558,7 +43074,7 @@ class VolumeAttachment():
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'device') and self.device is not None:
@@ -39601,6 +43117,7 @@ class VolumeAttachment():
         """
         ATTACHED = 'attached'
         ATTACHING = 'attaching'
+        DELETING = 'deleting'
         DETACHING = 'detaching'
 
     class TypeEnum(str, Enum):
@@ -39778,7 +43295,7 @@ class VolumeAttachmentPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -39863,7 +43380,7 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -39954,7 +43471,7 @@ class VolumeAttachmentPrototypeInstanceContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -40299,7 +43816,7 @@ class VolumeAttachmentReferenceVolumeContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'deleted') and self.deleted is not None:
@@ -41433,6 +44950,94 @@ class VolumeReferenceDeleted():
         return not self == other
 
 
+class VolumeStatusReason():
+    """
+    VolumeStatusReason.
+
+    :attr str code: A snake case string succinctly identifying the status reason.
+    :attr str message: An explanation of the status reason.
+    :attr str more_info: (optional) Link to documentation about this status reason.
+    """
+
+    def __init__(self,
+                 code: str,
+                 message: str,
+                 *,
+                 more_info: str = None) -> None:
+        """
+        Initialize a VolumeStatusReason object.
+
+        :param str code: A snake case string succinctly identifying the status
+               reason.
+        :param str message: An explanation of the status reason.
+        :param str more_info: (optional) Link to documentation about this status
+               reason.
+        """
+        self.code = code
+        self.message = message
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeStatusReason':
+        """Initialize a VolumeStatusReason object from a json dictionary."""
+        args = {}
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
+        else:
+            raise ValueError(
+                'Required property \'code\' not present in VolumeStatusReason JSON'
+            )
+        if 'message' in _dict:
+            args['message'] = _dict.get('message')
+        else:
+            raise ValueError(
+                'Required property \'message\' not present in VolumeStatusReason JSON'
+            )
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeStatusReason object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeStatusReason object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeStatusReason') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeStatusReason') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class CodeEnum(str, Enum):
+        """
+        A snake case string succinctly identifying the status reason.
+        """
+        ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
+
+
 class Zone():
     """
     Zone.
@@ -41784,6 +45389,1569 @@ class CloudObjectStorageBucketIdentityByName(CloudObjectStorageBucketIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'CloudObjectStorageBucketIdentityByName') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupIdentityByCRN(DedicatedHostGroupIdentity):
+    """
+    DedicatedHostGroupIdentityByCRN.
+
+    :attr str crn: The CRN for this dedicated host group.
+    """
+
+    def __init__(self, crn: str) -> None:
+        """
+        Initialize a DedicatedHostGroupIdentityByCRN object.
+
+        :param str crn: The CRN for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupIdentityByCRN':
+        """Initialize a DedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in DedicatedHostGroupIdentityByCRN JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupIdentityByHref(DedicatedHostGroupIdentity):
+    """
+    DedicatedHostGroupIdentityByHref.
+
+    :attr str href: The URL for this dedicated host group.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostGroupIdentityByHref object.
+
+        :param str href: The URL for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupIdentityByHref':
+        """Initialize a DedicatedHostGroupIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostGroupIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostGroupIdentityById(DedicatedHostGroupIdentity):
+    """
+    DedicatedHostGroupIdentityById.
+
+    :attr str id: The unique identifier for this dedicated host group.
+    """
+
+    def __init__(self, id: str) -> None:
+        """
+        Initialize a DedicatedHostGroupIdentityById object.
+
+        :param str id: The unique identifier for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostGroupIdentityById':
+        """Initialize a DedicatedHostGroupIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHostGroupIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostGroupIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostGroupIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostGroupIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostGroupIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileIdentityByHref(DedicatedHostProfileIdentity):
+    """
+    DedicatedHostProfileIdentityByHref.
+
+    :attr str href: The URL for this dedicated host profile.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a DedicatedHostProfileIdentityByHref object.
+
+        :param str href: The URL for this dedicated host profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileIdentityByHref':
+        """Initialize a DedicatedHostProfileIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostProfileIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileIdentityByName(DedicatedHostProfileIdentity):
+    """
+    DedicatedHostProfileIdentityByName.
+
+    :attr str name: The globally unique name for this dedicated host profile.
+    """
+
+    def __init__(self, name: str) -> None:
+        """
+        Initialize a DedicatedHostProfileIdentityByName object.
+
+        :param str name: The globally unique name for this dedicated host profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileIdentityByName':
+        """Initialize a DedicatedHostProfileIdentityByName object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostProfileIdentityByName JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileIdentityByName object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileIdentityByName object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileIdentityByName') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileIdentityByName') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileMemoryDependent(DedicatedHostProfileMemory):
+    """
+    The memory value for a dedicated host with this profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileMemoryDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileMemoryDependent':
+        """Initialize a DedicatedHostProfileMemoryDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileMemoryDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileMemoryDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileMemoryDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileMemoryDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileMemoryDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class DedicatedHostProfileMemoryEnum(DedicatedHostProfileMemory):
+    """
+    The permitted memory values (in gibibytes) for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
+        """
+        Initialize a DedicatedHostProfileMemoryEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileMemoryEnum':
+        """Initialize a DedicatedHostProfileMemoryEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileMemoryEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileMemoryEnum JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in DedicatedHostProfileMemoryEnum JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileMemoryEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileMemoryEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileMemoryEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileMemoryEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class DedicatedHostProfileMemoryFixed(DedicatedHostProfileMemory):
+    """
+    The memory (in gibibytes) for a dedicated host with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a DedicatedHostProfileMemoryFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileMemoryFixed':
+        """Initialize a DedicatedHostProfileMemoryFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileMemoryFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileMemoryFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileMemoryFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileMemoryFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileMemoryFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileMemoryFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostProfileMemoryRange(DedicatedHostProfileMemory):
+    """
+    The permitted memory range (in gibibytes) for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileMemoryRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileMemoryRange':
+        """Initialize a DedicatedHostProfileMemoryRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileMemoryRange JSON'
+            )
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError(
+                'Required property \'max\' not present in DedicatedHostProfileMemoryRange JSON'
+            )
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError(
+                'Required property \'min\' not present in DedicatedHostProfileMemoryRange JSON'
+            )
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError(
+                'Required property \'step\' not present in DedicatedHostProfileMemoryRange JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileMemoryRange JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileMemoryRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileMemoryRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileMemoryRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileMemoryRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class DedicatedHostProfileSocketDependent(DedicatedHostProfileSocket):
+    """
+    The CPU socket count for a dedicated host with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileSocketDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileSocketDependent':
+        """Initialize a DedicatedHostProfileSocketDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileSocketDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileSocketDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileSocketDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileSocketDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileSocketDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class DedicatedHostProfileSocketEnum(DedicatedHostProfileSocket):
+    """
+    The permitted values for CPU socket count for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
+        """
+        Initialize a DedicatedHostProfileSocketEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileSocketEnum':
+        """Initialize a DedicatedHostProfileSocketEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileSocketEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileSocketEnum JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in DedicatedHostProfileSocketEnum JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileSocketEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileSocketEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileSocketEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileSocketEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class DedicatedHostProfileSocketFixed(DedicatedHostProfileSocket):
+    """
+    The CPU socket count for a dedicated host with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a DedicatedHostProfileSocketFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileSocketFixed':
+        """Initialize a DedicatedHostProfileSocketFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileSocketFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileSocketFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileSocketFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileSocketFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileSocketFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileSocketFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostProfileSocketRange(DedicatedHostProfileSocket):
+    """
+    The permitted range for CPU socket count for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileSocketRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileSocketRange':
+        """Initialize a DedicatedHostProfileSocketRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileSocketRange JSON'
+            )
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError(
+                'Required property \'max\' not present in DedicatedHostProfileSocketRange JSON'
+            )
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError(
+                'Required property \'min\' not present in DedicatedHostProfileSocketRange JSON'
+            )
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError(
+                'Required property \'step\' not present in DedicatedHostProfileSocketRange JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileSocketRange JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileSocketRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileSocketRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileSocketRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileSocketRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class DedicatedHostProfileVCPUDependent(DedicatedHostProfileVCPU):
+    """
+    The VCPU count for a dedicated host with this profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPUDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileVCPUDependent':
+        """Initialize a DedicatedHostProfileVCPUDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileVCPUDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileVCPUDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileVCPUDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileVCPUDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileVCPUDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class DedicatedHostProfileVCPUEnum(DedicatedHostProfileVCPU):
+    """
+    The permitted values for VCPU count for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPUEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileVCPUEnum':
+        """Initialize a DedicatedHostProfileVCPUEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileVCPUEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileVCPUEnum JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in DedicatedHostProfileVCPUEnum JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileVCPUEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileVCPUEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileVCPUEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileVCPUEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class DedicatedHostProfileVCPUFixed(DedicatedHostProfileVCPU):
+    """
+    The VCPU count for a dedicated host with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPUFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileVCPUFixed':
+        """Initialize a DedicatedHostProfileVCPUFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileVCPUFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileVCPUFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileVCPUFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileVCPUFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileVCPUFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileVCPUFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostProfileVCPURange(DedicatedHostProfileVCPU):
+    """
+    The permitted range for VCPU count for a dedicated host with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
+        """
+        Initialize a DedicatedHostProfileVCPURange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileVCPURange':
+        """Initialize a DedicatedHostProfileVCPURange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in DedicatedHostProfileVCPURange JSON'
+            )
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError(
+                'Required property \'max\' not present in DedicatedHostProfileVCPURange JSON'
+            )
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError(
+                'Required property \'min\' not present in DedicatedHostProfileVCPURange JSON'
+            )
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError(
+                'Required property \'step\' not present in DedicatedHostProfileVCPURange JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileVCPURange JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileVCPURange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileVCPURange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileVCPURange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileVCPURange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class DedicatedHostPrototypeDedicatedHostByGroup(DedicatedHostPrototype):
+    """
+    DedicatedHostPrototypeDedicatedHostByGroup.
+
+    :attr bool instance_placement_enabled: (optional) If set to true, instances can
+          be placed on this dedicated host.
+    :attr str name: (optional) The unique user-defined name for this dedicated host.
+          If unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr DedicatedHostProfileIdentity profile: The profile to use for this
+          dedicated host.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr DedicatedHostGroupIdentity group: The dedicated host group for this
+          dedicated host.
+    """
+
+    def __init__(self,
+                 profile: 'DedicatedHostProfileIdentity',
+                 group: 'DedicatedHostGroupIdentity',
+                 *,
+                 instance_placement_enabled: bool = None,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+        """
+        Initialize a DedicatedHostPrototypeDedicatedHostByGroup object.
+
+        :param DedicatedHostProfileIdentity profile: The profile to use for this
+               dedicated host.
+        :param DedicatedHostGroupIdentity group: The dedicated host group for this
+               dedicated host.
+        :param bool instance_placement_enabled: (optional) If set to true,
+               instances can be placed on this dedicated host.
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        """
+        # pylint: disable=super-init-not-called
+        self.instance_placement_enabled = instance_placement_enabled
+        self.name = name
+        self.profile = profile
+        self.resource_group = resource_group
+        self.group = group
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'DedicatedHostPrototypeDedicatedHostByGroup':
+        """Initialize a DedicatedHostPrototypeDedicatedHostByGroup object from a json dictionary."""
+        args = {}
+        if 'instance_placement_enabled' in _dict:
+            args['instance_placement_enabled'] = _dict.get(
+                'instance_placement_enabled')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        else:
+            raise ValueError(
+                'Required property \'profile\' not present in DedicatedHostPrototypeDedicatedHostByGroup JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'group' in _dict:
+            args['group'] = _dict.get('group')
+        else:
+            raise ValueError(
+                'Required property \'group\' not present in DedicatedHostPrototypeDedicatedHostByGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostPrototypeDedicatedHostByGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'instance_placement_enabled'
+                   ) and self.instance_placement_enabled is not None:
+            _dict[
+                'instance_placement_enabled'] = self.instance_placement_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'group') and self.group is not None:
+            if isinstance(self.group, dict):
+                _dict['group'] = self.group
+            else:
+                _dict['group'] = self.group.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostPrototypeDedicatedHostByGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'DedicatedHostPrototypeDedicatedHostByGroup') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'DedicatedHostPrototypeDedicatedHostByGroup') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostPrototypeDedicatedHostByZone(DedicatedHostPrototype):
+    """
+    DedicatedHostPrototypeDedicatedHostByZone.
+
+    :attr bool instance_placement_enabled: (optional) If set to true, instances can
+          be placed on this dedicated host.
+    :attr str name: (optional) The unique user-defined name for this dedicated host.
+          If unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr DedicatedHostProfileIdentity profile: The profile to use for this
+          dedicated host.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr DedicatedHostGroupPrototypeDedicatedHostByZoneContext group: (optional)
+    :attr ZoneIdentity zone: The zone to provision the dedicated host in.
+    """
+
+    def __init__(
+        self,
+        profile: 'DedicatedHostProfileIdentity',
+        zone: 'ZoneIdentity',
+        *,
+        instance_placement_enabled: bool = None,
+        name: str = None,
+        resource_group: 'ResourceGroupIdentity' = None,
+        group: 'DedicatedHostGroupPrototypeDedicatedHostByZoneContext' = None
+    ) -> None:
+        """
+        Initialize a DedicatedHostPrototypeDedicatedHostByZone object.
+
+        :param DedicatedHostProfileIdentity profile: The profile to use for this
+               dedicated host.
+        :param ZoneIdentity zone: The zone to provision the dedicated host in.
+        :param bool instance_placement_enabled: (optional) If set to true,
+               instances can be placed on this dedicated host.
+        :param str name: (optional) The unique user-defined name for this dedicated
+               host. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param DedicatedHostGroupPrototypeDedicatedHostByZoneContext group:
+               (optional)
+        """
+        # pylint: disable=super-init-not-called
+        self.instance_placement_enabled = instance_placement_enabled
+        self.name = name
+        self.profile = profile
+        self.resource_group = resource_group
+        self.group = group
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'DedicatedHostPrototypeDedicatedHostByZone':
+        """Initialize a DedicatedHostPrototypeDedicatedHostByZone object from a json dictionary."""
+        args = {}
+        if 'instance_placement_enabled' in _dict:
+            args['instance_placement_enabled'] = _dict.get(
+                'instance_placement_enabled')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        else:
+            raise ValueError(
+                'Required property \'profile\' not present in DedicatedHostPrototypeDedicatedHostByZone JSON'
+            )
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'group' in _dict:
+            args[
+                'group'] = DedicatedHostGroupPrototypeDedicatedHostByZoneContext.from_dict(
+                    _dict.get('group'))
+        if 'zone' in _dict:
+            args['zone'] = _dict.get('zone')
+        else:
+            raise ValueError(
+                'Required property \'zone\' not present in DedicatedHostPrototypeDedicatedHostByZone JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostPrototypeDedicatedHostByZone object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'instance_placement_enabled'
+                   ) and self.instance_placement_enabled is not None:
+            _dict[
+                'instance_placement_enabled'] = self.instance_placement_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostPrototypeDedicatedHostByZone object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'DedicatedHostPrototypeDedicatedHostByZone') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'DedicatedHostPrototypeDedicatedHostByZone') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -42749,7 +47917,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -42976,7 +48144,7 @@ class FlowLogCollectorTargetPrototypeSubnetIdentity(
 
 
 class FlowLogCollectorTargetPrototypeVPCIdentity(FlowLogCollectorTargetPrototype
-                                                ):
+                                                 ):
     """
     Identifies a VPC by a unique property.
 
@@ -44402,10 +49570,10 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(
         if hasattr(self, 'manager_type') and self.manager_type is not None:
             _dict['manager_type'] = self.manager_type
         if hasattr(self, 'max_membership_count'
-                  ) and self.max_membership_count is not None:
+                   ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                  ) and self.min_membership_count is not None:
+                   ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         return _dict
 
@@ -45927,20 +51095,20 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -46172,20 +51340,20 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -46604,20 +51772,20 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -46851,20 +52019,20 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -47161,20 +52329,20 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -47460,20 +52628,20 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -48786,7 +53954,7 @@ class LoadBalancerPoolMemberTargetIP(LoadBalancerPoolMemberTarget):
 
 
 class LoadBalancerPoolMemberTargetInstanceReference(LoadBalancerPoolMemberTarget
-                                                   ):
+                                                    ):
     """
     LoadBalancerPoolMemberTargetInstanceReference.
 
@@ -50346,10 +55514,10 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                  ) and self.destination_port_max is not None:
+                   ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                  ) and self.destination_port_min is not None:
+                   ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -50883,10 +56051,10 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                  ) and self.destination_port_max is not None:
+                   ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                  ) and self.destination_port_min is not None:
+                   ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -51109,7 +56277,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
 
 
 class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
-                                                       ):
+                                                        ):
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolICMP.
 
@@ -51445,10 +56613,10 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                  ) and self.destination_port_max is not None:
+                   ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                  ) and self.destination_port_min is not None:
+                   ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -52162,10 +57330,10 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                  ) and self.destination_port_max is not None:
+                   ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                  ) and self.destination_port_min is not None:
+                   ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -52630,7 +57798,7 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
 
 
 class ReservedIPTargetPrototypeEndpointGatewayIdentity(ReservedIPTargetPrototype
-                                                      ):
+                                                       ):
     """
     ReservedIPTargetPrototypeEndpointGatewayIdentity.
 
@@ -55408,7 +60576,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'total_ipv4_address_count'
-                  ) and self.total_ipv4_address_count is not None:
+                   ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
