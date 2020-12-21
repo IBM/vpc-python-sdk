@@ -49,7 +49,7 @@ class VpcClassicV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-11-17',
+        version: str = '2020-12-15',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 1,
     ) -> 'VpcClassicV1':
@@ -75,7 +75,7 @@ class VpcClassicV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-11-17',
+        version: str = '2020-12-15',
         authenticator: Authenticator = None,
         generation: int = 1,
     ) -> None:
@@ -1935,6 +1935,10 @@ class VpcClassicV1(BaseService):
         """
         List all instance profiles.
 
+        This request lists provisionable instance profiles in the region. An instance
+        profile specifies the performance characteristics and pricing model for an
+        instance.
+
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
@@ -3196,7 +3200,7 @@ class VpcClassicV1(BaseService):
         List all regions.
 
         This request lists all regions. Each region is a separate geographic area that
-        contains multiple isolated zones. Resources can be provisioned into a one or more
+        contains multiple isolated zones. Resources can be provisioned into one or more
         zones in a region. Each zone is isolated, but connected to other zones in the same
         region with low-latency and high-bandwidth links. Regions represent the top-level
         of fault isolation available. Resources deployed within a single region also
@@ -4957,7 +4961,8 @@ class VpcClassicV1(BaseService):
         if security_group_rule_patch is None:
             raise ValueError('security_group_rule_patch must be provided')
         if isinstance(security_group_rule_patch, SecurityGroupRulePatch):
-            security_group_rule_patch = convert_model(security_group_rule_patch)
+            security_group_rule_patch = convert_model(
+                security_group_rule_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -6493,6 +6498,7 @@ class VpcClassicV1(BaseService):
             *,
             listeners: List[
                 'LoadBalancerListenerPrototypeLoadBalancerContext'] = None,
+            logging: 'LoadBalancerLogging' = None,
             name: str = None,
             pools: List['LoadBalancerPoolPrototype'] = None,
             resource_group: 'ResourceGroupIdentity' = None,
@@ -6508,6 +6514,13 @@ class VpcClassicV1(BaseService):
                balancer.
         :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
                (optional) The listeners of this load balancer.
+        :param LoadBalancerLogging logging: (optional) The logging configuration to
+               use for this load balancer. See [VPC Datapath
+               Logging](https://cloud.ibm.com/docs/vpc?topic=vpc-datapath-logging)
+               on the logging format, fields and permitted values.
+               To activate logging, the load balancer profile must support the specified
+               logging
+               type.
         :param str name: (optional) The user-defined name for this load balancer.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
@@ -6529,6 +6542,8 @@ class VpcClassicV1(BaseService):
         subnets = [convert_model(x) for x in subnets]
         if listeners is not None:
             listeners = [convert_model(x) for x in listeners]
+        if logging is not None:
+            logging = convert_model(logging)
         if pools is not None:
             pools = [convert_model(x) for x in pools]
         if resource_group is not None:
@@ -6545,6 +6560,7 @@ class VpcClassicV1(BaseService):
             'is_public': is_public,
             'subnets': subnets,
             'listeners': listeners,
+            'logging': logging,
             'name': name,
             'pools': pools,
             'resource_group': resource_group
@@ -7046,7 +7062,8 @@ class VpcClassicV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -7133,7 +7150,8 @@ class VpcClassicV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -7244,9 +7262,9 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy(
-            self, load_balancer_id: str, listener_id: str, id: str,
-            load_balancer_listener_policy_patch:
-        'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
+        self, load_balancer_id: str, listener_id: str, id: str,
+        load_balancer_listener_policy_patch:
+            'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
         """
         Update a policy of the load balancer listener.
 
@@ -7473,7 +7491,8 @@ class VpcClassicV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -7526,7 +7545,8 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -7541,9 +7561,9 @@ class VpcClassicV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy_rule(
-            self, load_balancer_id: str, listener_id: str, policy_id: str,
-            id: str, load_balancer_listener_policy_rule_patch:
-        'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
+        self, load_balancer_id: str, listener_id: str, policy_id: str,
+        id: str, load_balancer_listener_policy_rule_patch:
+            'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
         """
         Update a rule of the load balancer listener policy.
 
@@ -7591,7 +7611,8 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id',
+                           'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -8093,7 +8114,8 @@ class VpcClassicV1(BaseService):
             headers.update(kwargs.get('headers'))
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -8141,7 +8163,8 @@ class VpcClassicV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -8179,7 +8202,8 @@ class VpcClassicV1(BaseService):
         if id is None:
             raise ValueError('id must be provided')
         if load_balancer_pool_member_patch is None:
-            raise ValueError('load_balancer_pool_member_patch must be provided')
+            raise ValueError(
+                'load_balancer_pool_member_patch must be provided')
         if isinstance(load_balancer_pool_member_patch,
                       LoadBalancerPoolMemberPatch):
             load_balancer_pool_member_patch = convert_model(
@@ -8201,7 +8225,8 @@ class VpcClassicV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(
+            load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -8774,7 +8799,7 @@ class CertificateInstanceReference():
 
 class DefaultSecurityGroup():
     """
-    Collection of rules in a default security group.
+    DefaultSecurityGroup.
 
     :attr datetime created_at: The date and time that this security group was
           created.
@@ -9234,7 +9259,8 @@ class FloatingIPCollection():
                 'Required property \'limit\' not present in FloatingIPCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = FloatingIPCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = FloatingIPCollectionNext.from_dict(
+                _dict.get('next'))
         return cls(**args)
 
     @classmethod
@@ -9854,7 +9880,7 @@ class IKEPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -9863,7 +9889,7 @@ class IKEPolicy():
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -10244,12 +10270,12 @@ class IKEPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'ike_version') and self.ike_version is not None:
             _dict['ike_version'] = self.ike_version
@@ -10617,7 +10643,7 @@ class IPsecPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -10628,7 +10654,7 @@ class IPsecPolicy():
                 'encapsulation_mode') and self.encapsulation_mode is not None:
             _dict['encapsulation_mode'] = self.encapsulation_mode
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -10799,7 +10825,8 @@ class IPsecPolicyCollection():
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
         if hasattr(self, 'ipsec_policies') and self.ipsec_policies is not None:
-            _dict['ipsec_policies'] = [x.to_dict() for x in self.ipsec_policies]
+            _dict['ipsec_policies'] = [x.to_dict()
+                                       for x in self.ipsec_policies]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
@@ -11020,10 +11047,10 @@ class IPsecPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                  ) and self.authentication_algorithm is not None:
+                   ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'encryption_algorithm'
-                  ) and self.encryption_algorithm is not None:
+                   ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
@@ -11323,7 +11350,7 @@ class Image():
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'minimum_provisioned_size'
-                  ) and self.minimum_provisioned_size is not None:
+                   ) and self.minimum_provisioned_size is not None:
             _dict['minimum_provisioned_size'] = self.minimum_provisioned_size
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -11927,8 +11954,8 @@ class Instance():
           primary network interface.
     :attr NetworkInterfaceInstanceContextReference primary_network_interface:
           Primary network interface.
-    :attr InstanceProfileReference profile: The profile this virtual server instance
-          uses.
+    :attr InstanceProfileReference profile: The profile for this virtual server
+          instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance.
     :attr str status: The status of the virtual server instance.
@@ -11984,8 +12011,8 @@ class Instance():
                the primary network interface.
         :param NetworkInterfaceInstanceContextReference primary_network_interface:
                Primary network interface.
-        :param InstanceProfileReference profile: The profile this virtual server
-               instance uses.
+        :param InstanceProfileReference profile: The profile for this virtual
+               server instance.
         :param ResourceGroupReference resource_group: The resource group for this
                instance.
         :param str status: The status of the virtual server instance.
@@ -12138,10 +12165,10 @@ class Instance():
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
@@ -12163,10 +12190,10 @@ class Instance():
                 x.to_dict() for x in self.network_interfaces
             ]
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'profile') and self.profile is not None:
             _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
@@ -12209,6 +12236,7 @@ class Instance():
         """
         The status of the virtual server instance.
         """
+        DELETING = 'deleting'
         FAILED = 'failed'
         PAUSED = 'paused'
         PAUSING = 'pausing'
@@ -12271,7 +12299,8 @@ class InstanceAction():
         """Initialize a InstanceAction object from a json dictionary."""
         args = {}
         if 'completed_at' in _dict:
-            args['completed_at'] = string_to_datetime(_dict.get('completed_at'))
+            args['completed_at'] = string_to_datetime(
+                _dict.get('completed_at'))
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -13626,7 +13655,8 @@ class Key():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in Key JSON')
+            raise ValueError(
+                'Required property \'id\' not present in Key JSON')
         if 'length' in _dict:
             args['length'] = _dict.get('length')
         else:
@@ -14039,6 +14069,8 @@ class LoadBalancer():
     :attr bool is_public: The type of this load balancer, public or private.
     :attr List[LoadBalancerListenerReference] listeners: The listeners of this load
           balancer.
+    :attr LoadBalancerLogging logging: The logging configuration for this load
+          balancer.
     :attr str name: The unique user-defined name for this load balancer.
     :attr str operating_status: The operating status of this load balancer.
     :attr List[LoadBalancerPoolReference] pools: The pools of this load balancer.
@@ -14046,7 +14078,8 @@ class LoadBalancer():
           balancer.
     :attr str provisioning_status: The provisioning status of this load balancer.
     :attr List[IP] public_ips: The public IP addresses assigned to this load
-          balancer. Applicable only for public load balancers.
+          balancer.
+          Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
     :attr List[SubnetReference] subnets: The subnets this load balancer is part of.
@@ -14054,7 +14087,8 @@ class LoadBalancer():
 
     def __init__(self, created_at: datetime, crn: str, hostname: str, href: str,
                  id: str, is_public: bool,
-                 listeners: List['LoadBalancerListenerReference'], name: str,
+                 listeners: List['LoadBalancerListenerReference'],
+                 logging: 'LoadBalancerLogging', name: str,
                  operating_status: str,
                  pools: List['LoadBalancerPoolReference'],
                  private_ips: List['IP'], provisioning_status: str,
@@ -14074,6 +14108,8 @@ class LoadBalancer():
         :param bool is_public: The type of this load balancer, public or private.
         :param List[LoadBalancerListenerReference] listeners: The listeners of this
                load balancer.
+        :param LoadBalancerLogging logging: The logging configuration for this load
+               balancer.
         :param str name: The unique user-defined name for this load balancer.
         :param str operating_status: The operating status of this load balancer.
         :param List[LoadBalancerPoolReference] pools: The pools of this load
@@ -14083,7 +14119,8 @@ class LoadBalancer():
         :param str provisioning_status: The provisioning status of this load
                balancer.
         :param List[IP] public_ips: The public IP addresses assigned to this load
-               balancer. Applicable only for public load balancers.
+               balancer.
+               Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
         :param List[SubnetReference] subnets: The subnets this load balancer is
@@ -14096,6 +14133,7 @@ class LoadBalancer():
         self.id = id
         self.is_public = is_public
         self.listeners = listeners
+        self.logging = logging
         self.name = name
         self.operating_status = operating_status
         self.pools = pools
@@ -14150,6 +14188,13 @@ class LoadBalancer():
         else:
             raise ValueError(
                 'Required property \'listeners\' not present in LoadBalancer JSON'
+            )
+        if 'logging' in _dict:
+            args['logging'] = LoadBalancerLogging.from_dict(
+                _dict.get('logging'))
+        else:
+            raise ValueError(
+                'Required property \'logging\' not present in LoadBalancer JSON'
             )
         if 'name' in _dict:
             args['name'] = _dict.get('name')
@@ -14231,6 +14276,8 @@ class LoadBalancer():
             _dict['is_public'] = self.is_public
         if hasattr(self, 'listeners') and self.listeners is not None:
             _dict['listeners'] = [x.to_dict() for x in self.listeners]
+        if hasattr(self, 'logging') and self.logging is not None:
+            _dict['logging'] = self.logging.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self,
@@ -14327,7 +14374,8 @@ class LoadBalancerCollection():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'load_balancers') and self.load_balancers is not None:
-            _dict['load_balancers'] = [x.to_dict() for x in self.load_balancers]
+            _dict['load_balancers'] = [x.to_dict()
+                                       for x in self.load_balancers]
         return _dict
 
     def _to_dict(self):
@@ -14498,10 +14546,10 @@ class LoadBalancerListener():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                  ) and self.certificate_instance is not None:
+                   ) and self.certificate_instance is not None:
             _dict['certificate_instance'] = self.certificate_instance.to_dict()
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -14711,16 +14759,16 @@ class LoadBalancerListenerPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                  ) and self.certificate_instance is not None:
+                   ) and self.certificate_instance is not None:
             if isinstance(self.certificate_instance, dict):
                 _dict['certificate_instance'] = self.certificate_instance
             else:
                 _dict[
                     'certificate_instance'] = self.certificate_instance.to_dict(
-                    )
+                )
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
             _dict['connection_limit'] = self.connection_limit
@@ -15955,7 +16003,7 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                  ) and self.accept_proxy_protocol is not None:
+                   ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -16068,26 +16116,160 @@ class LoadBalancerListenerReference():
         return not self == other
 
 
+class LoadBalancerLogging():
+    """
+    The logging configuration for this load balancer.
+
+    :attr LoadBalancerLoggingDatapath datapath: (optional) The datapath logging
+          configuration for this load balancer.
+    """
+
+    def __init__(self,
+                 *,
+                 datapath: 'LoadBalancerLoggingDatapath' = None) -> None:
+        """
+        Initialize a LoadBalancerLogging object.
+
+        :param LoadBalancerLoggingDatapath datapath: (optional) The datapath
+               logging configuration for this load balancer.
+        """
+        self.datapath = datapath
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerLogging':
+        """Initialize a LoadBalancerLogging object from a json dictionary."""
+        args = {}
+        if 'datapath' in _dict:
+            args['datapath'] = LoadBalancerLoggingDatapath.from_dict(
+                _dict.get('datapath'))
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerLogging object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'datapath') and self.datapath is not None:
+            _dict['datapath'] = self.datapath.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerLogging object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerLogging') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerLogging') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LoadBalancerLoggingDatapath():
+    """
+    The datapath logging configuration for this load balancer.
+
+    :attr bool active: If set to `true`, datapath logging is active for this load
+          balancer.
+    """
+
+    def __init__(self, active: bool) -> None:
+        """
+        Initialize a LoadBalancerLoggingDatapath object.
+
+        :param bool active: If set to `true`, datapath logging is active for this
+               load balancer.
+        """
+        self.active = active
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerLoggingDatapath':
+        """Initialize a LoadBalancerLoggingDatapath object from a json dictionary."""
+        args = {}
+        if 'active' in _dict:
+            args['active'] = _dict.get('active')
+        else:
+            raise ValueError(
+                'Required property \'active\' not present in LoadBalancerLoggingDatapath JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerLoggingDatapath object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'active') and self.active is not None:
+            _dict['active'] = self.active
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerLoggingDatapath object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerLoggingDatapath') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerLoggingDatapath') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class LoadBalancerPatch():
     """
     LoadBalancerPatch.
 
+    :attr LoadBalancerLogging logging: (optional) The logging configuration to use
+          for this load balancer.
+          To activate logging, the load balancer profile must support the specified
+          logging type.
     :attr str name: (optional) The unique user-defined name for this load balancer.
     """
 
-    def __init__(self, *, name: str = None) -> None:
+    def __init__(self,
+                 *,
+                 logging: 'LoadBalancerLogging' = None,
+                 name: str = None) -> None:
         """
         Initialize a LoadBalancerPatch object.
 
+        :param LoadBalancerLogging logging: (optional) The logging configuration to
+               use for this load balancer.
+               To activate logging, the load balancer profile must support the specified
+               logging type.
         :param str name: (optional) The unique user-defined name for this load
                balancer.
         """
+        self.logging = logging
         self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerPatch':
         """Initialize a LoadBalancerPatch object from a json dictionary."""
         args = {}
+        if 'logging' in _dict:
+            args['logging'] = LoadBalancerLogging.from_dict(
+                _dict.get('logging'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         return cls(**args)
@@ -16100,6 +16282,8 @@ class LoadBalancerPatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'logging') and self.logging is not None:
+            _dict['logging'] = self.logging.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         return _dict
@@ -16450,7 +16634,9 @@ class LoadBalancerPoolHealthMonitor():
           processing and surface the error, or bypass the health monitor on which the
           unexpected property value was encountered.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -16477,7 +16663,9 @@ class LoadBalancerPoolHealthMonitor():
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -16586,7 +16774,9 @@ class LoadBalancerPoolHealthMonitorPatch():
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -16610,7 +16800,9 @@ class LoadBalancerPoolHealthMonitorPatch():
                this overrides the ports specified in the server member resources. Specify
                `null` to remove an existing port value.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -16714,7 +16906,9 @@ class LoadBalancerPoolHealthMonitorPrototype():
     :attr int timeout: The health check timeout in seconds.
     :attr str type: The protocol type of this load balancer pool health monitor.
     :attr str url_path: (optional) The health check URL path. Applicable only if the
-          health monitor `type` is `http` or `https`.
+          health monitor `type` is `http` or
+          `https`. This value must be in the format of an [origin-form request
+          target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
     """
 
     def __init__(self,
@@ -16737,7 +16931,9 @@ class LoadBalancerPoolHealthMonitorPrototype():
         :param int port: (optional) The health check port number. If specified,
                this overrides the ports specified in the server member resources.
         :param str url_path: (optional) The health check URL path. Applicable only
-               if the health monitor `type` is `http` or `https`.
+               if the health monitor `type` is `http` or
+               `https`. This value must be in the format of an [origin-form request
+               target](https://tools.ietf.org/html/rfc7230#section-5.3.1).
         """
         self.delay = delay
         self.max_retries = max_retries
@@ -18113,7 +18309,7 @@ class LoadBalancerStatistics():
                    'connection_rate') and self.connection_rate is not None:
             _dict['connection_rate'] = self.connection_rate
         if hasattr(self, 'data_processed_this_month'
-                  ) and self.data_processed_this_month is not None:
+                   ) and self.data_processed_this_month is not None:
             _dict['data_processed_this_month'] = self.data_processed_this_month
         if hasattr(self, 'throughput') and self.throughput is not None:
             _dict['throughput'] = self.throughput
@@ -18319,7 +18515,8 @@ class NetworkACLCollection():
                 'Required property \'network_acls\' not present in NetworkACLCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = NetworkACLCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = NetworkACLCollectionNext.from_dict(
+                _dict.get('next'))
         return cls(**args)
 
     @classmethod
@@ -19759,7 +19956,7 @@ class NetworkInterface():
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -19808,6 +20005,7 @@ class NetworkInterface():
         """
         ACTIVE = 'active'
         AVAILABLE = 'available'
+        DELETING = 'deleting'
         FAILED = 'failed'
         PENDING = 'pending'
 
@@ -19975,7 +20173,7 @@ class NetworkInterfaceInstanceContextReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -20076,7 +20274,7 @@ class NetworkInterfacePrototype():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self,
                    'security_groups') and self.security_groups is not None:
@@ -20192,7 +20390,7 @@ class NetworkInterfaceReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -23007,7 +23205,7 @@ class Subnet():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'available_ipv4_address_count'
-                  ) and self.available_ipv4_address_count is not None:
+                   ) and self.available_ipv4_address_count is not None:
             _dict[
                 'available_ipv4_address_count'] = self.available_ipv4_address_count
         if hasattr(self, 'created_at') and self.created_at is not None:
@@ -23030,7 +23228,7 @@ class Subnet():
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'total_ipv4_address_count'
-                  ) and self.total_ipv4_address_count is not None:
+                   ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
@@ -23638,7 +23836,8 @@ class VPC():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in VPC JSON')
+            raise ValueError(
+                'Required property \'id\' not present in VPC JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -23672,16 +23871,17 @@ class VPC():
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'cse_source_ips') and self.cse_source_ips is not None:
-            _dict['cse_source_ips'] = [x.to_dict() for x in self.cse_source_ips]
+            _dict['cse_source_ips'] = [x.to_dict()
+                                       for x in self.cse_source_ips]
         if hasattr(
                 self,
                 'default_network_acl') and self.default_network_acl is not None:
             _dict['default_network_acl'] = self.default_network_acl.to_dict()
         if hasattr(self, 'default_security_group'
-                  ) and self.default_security_group is not None:
+                   ) and self.default_security_group is not None:
             _dict[
                 'default_security_group'] = self.default_security_group.to_dict(
-                )
+            )
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
@@ -24281,7 +24481,8 @@ class VPNGatewayCollection():
                 'Required property \'limit\' not present in VPNGatewayCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = VPNGatewayCollectionNext.from_dict(_dict.get('next'))
+            args['next'] = VPNGatewayCollectionNext.from_dict(
+                _dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -25742,7 +25943,7 @@ class VolumeAttachment():
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'device') and self.device is not None:
@@ -25785,6 +25986,7 @@ class VolumeAttachment():
         """
         ATTACHED = 'attached'
         ATTACHING = 'attaching'
+        DELETING = 'deleting'
         DETACHING = 'detaching'
 
     class TypeEnum(str, Enum):
@@ -25962,7 +26164,7 @@ class VolumeAttachmentPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -26047,7 +26249,7 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -26138,7 +26340,7 @@ class VolumeAttachmentPrototypeInstanceContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                  ) and self.delete_volume_on_instance_delete is not None:
+                   ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -28225,7 +28427,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                  ) and self.primary_ipv4_address is not None:
+                   ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -29758,20 +29960,20 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                  ) and self.boot_volume_attachment is not None:
+                   ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-                )
+            )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                  ) and self.primary_network_interface is not None:
+                   ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-                )
+            )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -33310,7 +33512,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
 
 
 class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
-                                                       ):
+                                                        ):
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolICMP.
 
@@ -37473,7 +37675,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'total_ipv4_address_count'
-                  ) and self.total_ipv4_address_count is not None:
+                   ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
