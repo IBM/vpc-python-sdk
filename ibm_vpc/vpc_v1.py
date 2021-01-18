@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2020.
+# (C) Copyright IBM Corp. 2020, 2021.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-12-15',
+        version: str = '2021-01-12',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 2,
     ) -> 'VpcV1':
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-12-15',
+        version: str = '2021-01-12',
         authenticator: Authenticator = None,
         generation: int = 2,
     ) -> None:
@@ -113,10 +113,10 @@ class VpcV1(BaseService):
         """
         List all VPCs.
 
-        This request lists all VPCs. A VPC is a virtual network that belongs to an account
-        and provides logical isolation from other networks. A VPC is made up of resources
-        in one or more zones. VPCs are regional, and each VPC can contain resources in
-        multiple zones in a region.
+        This request lists all VPCs in the region. A VPC is a virtual network that belongs
+        to an account and provides logical isolation from other networks. A VPC is made up
+        of resources in one or more zones. VPCs are regional, and each VPC can contain
+        resources in multiple zones in a region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -231,7 +231,7 @@ class VpcV1(BaseService):
 
     def delete_vpc(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified VPC.
+        Delete a VPC.
 
         This request deletes a VPC. This operation cannot be reversed. For this request to
         succeed, the VPC must not contain any instances, subnets, or public gateways. All
@@ -272,7 +272,7 @@ class VpcV1(BaseService):
 
     def get_vpc(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified VPC.
+        Retrieve a VPC.
 
         This request retrieves a single VPC specified by the identifier in the URL.
 
@@ -311,7 +311,7 @@ class VpcV1(BaseService):
     def update_vpc(self, id: str, vpc_patch: 'VPCPatch',
                    **kwargs) -> DetailedResponse:
         """
-        Update specified VPC.
+        Update a VPC.
 
         This request updates a VPC's name.
 
@@ -490,7 +490,7 @@ class VpcV1(BaseService):
                                   limit: int = None,
                                   **kwargs) -> DetailedResponse:
         """
-        List all address pool prefixes for a VPC.
+        List all address prefixes for a VPC.
 
         This request lists all address pool prefixes for a VPC.
 
@@ -543,7 +543,7 @@ class VpcV1(BaseService):
                                   name: str = None,
                                   **kwargs) -> DetailedResponse:
         """
-        Create an address pool prefix.
+        Create an address prefix for a VPC.
 
         This request creates a new prefix from a prefix prototype object. The prototype
         object is structured in the same way as a retrieved prefix, and contains the
@@ -614,7 +614,7 @@ class VpcV1(BaseService):
     def delete_vpc_address_prefix(self, vpc_id: str, id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Delete specified address pool prefix.
+        Delete an address prefix.
 
         This request deletes a prefix. This operation cannot be reversed. The request will
         fail if any subnets use addresses from this prefix.
@@ -656,7 +656,7 @@ class VpcV1(BaseService):
     def get_vpc_address_prefix(self, vpc_id: str, id: str,
                                **kwargs) -> DetailedResponse:
         """
-        Retrieve specified address pool prefix.
+        Retrieve an address prefix.
 
         This request retrieves a single prefix specified by the identifier in the URL.
 
@@ -699,7 +699,7 @@ class VpcV1(BaseService):
                                   address_prefix_patch: 'AddressPrefixPatch',
                                   **kwargs) -> DetailedResponse:
         """
-        Update an address pool prefix.
+        Update an address prefix.
 
         This request updates a prefix with the information in a provided prefix patch. The
         prefix patch object is structured in the same way as a retrieved prefix and
@@ -757,9 +757,9 @@ class VpcV1(BaseService):
                         limit: int = None,
                         **kwargs) -> DetailedResponse:
         """
-        List all routes in the VPC's default routing table.
+        List all routes in a VPC's default routing table.
 
-        This request retrieves routes in the VPC's default routing table. Each route is
+        This request lists all routes in the VPC's default routing table. Each route is
         zone-specific and directs any packets matching its destination CIDR block to a
         `next_hop` IP address. The most specific route matching a packet's destination
         will be used. If multiple equally-specific routes exist, traffic will be
@@ -818,7 +818,7 @@ class VpcV1(BaseService):
                          name: str = None,
                          **kwargs) -> DetailedResponse:
         """
-        Create a route in the VPC's default routing table.
+        Create a route in a VPC's default routing table.
 
         This request creates a new route in the VPC's default routing table. The route
         prototype object is structured in the same way as a retrieved route, and contains
@@ -898,7 +898,7 @@ class VpcV1(BaseService):
     def delete_vpc_route(self, vpc_id: str, id: str,
                          **kwargs) -> DetailedResponse:
         """
-        Delete the specified route in the VPC's default routing table.
+        Delete a VPC route.
 
         This request deletes a route. This operation cannot be reversed.
 
@@ -938,7 +938,7 @@ class VpcV1(BaseService):
 
     def get_vpc_route(self, vpc_id: str, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified route in the VPC's default routing table.
+        Retrieve a VPC route.
 
         This request retrieves a single route specified by the identifier in the URL.
 
@@ -980,7 +980,7 @@ class VpcV1(BaseService):
     def update_vpc_route(self, vpc_id: str, id: str, route_patch: 'RoutePatch',
                          **kwargs) -> DetailedResponse:
         """
-        Update the specified route in the VPC's default routing table.
+        Update a VPC route.
 
         This request updates a route with the information in a provided route patch. The
         route patch object is structured in the same way as a retrieved route and contains
@@ -1102,7 +1102,7 @@ class VpcV1(BaseService):
                                  routes: List['RoutePrototype'] = None,
                                  **kwargs) -> DetailedResponse:
         """
-        Create a VPC routing table.
+        Create a routing table for a VPC.
 
         This request creates a user-defined routing table from a routing table prototype
         object. The prototype object is structured in the same way as a retrieved routing
@@ -1198,7 +1198,7 @@ class VpcV1(BaseService):
     def delete_vpc_routing_table(self, vpc_id: str, id: str,
                                  **kwargs) -> DetailedResponse:
         """
-        Delete specified VPC routing table.
+        Delete a VPC routing table.
 
         This request deletes a routing table.  A routing table cannot be deleted if it is
         associated with any subnets in the VPC. Additionally, a VPC's default routing
@@ -1241,7 +1241,7 @@ class VpcV1(BaseService):
     def get_vpc_routing_table(self, vpc_id: str, id: str,
                               **kwargs) -> DetailedResponse:
         """
-        Retrieve specified VPC routing table.
+        Retrieve a VPC routing table.
 
         This request retrieves a single routing table specified by the identifier in the
         URL.
@@ -1285,7 +1285,7 @@ class VpcV1(BaseService):
                                  routing_table_patch: 'RoutingTablePatch',
                                  **kwargs) -> DetailedResponse:
         """
-        Update specified VPC routing table.
+        Update a VPC routing table.
 
         This request updates a routing table with the information in a provided routing
         table patch. The patch object is structured in the same way as a retrieved table
@@ -1343,14 +1343,14 @@ class VpcV1(BaseService):
                                       limit: int = None,
                                       **kwargs) -> DetailedResponse:
         """
-        List all the routes of a VPC routing table.
+        List all routes in a VPC routing table.
 
-        This request lists all the routes for the specified VPC routing table.  If a
-        subnet has been associated with this routing table, delivery of packets sent on a
-        subnet is performed according to the action of the most specific matching route in
-        the table (provided the subnet and route are in the same zone).  If multiple
-        equally-specific routes exist, traffic will be distributed across them.  If no
-        routes match, delivery will be controlled by the system's built-in routes.
+        This request lists all routes in a VPC routing table. If a subnet has been
+        associated with this routing table, delivery of packets sent on a subnet is
+        performed according to the action of the most specific matching route in the table
+        (provided the subnet and route are in the same zone). If multiple equally-specific
+        routes exist, traffic will be distributed across them. If no routes match,
+        delivery will be controlled by the system's built-in routes.
 
         :param str vpc_id: The VPC identifier.
         :param str routing_table_id: The routing table identifier.
@@ -1408,7 +1408,7 @@ class VpcV1(BaseService):
                                        name: str = None,
                                        **kwargs) -> DetailedResponse:
         """
-        Create a VPC route.
+        Create a route in a VPC routing table.
 
         This request creates a new VPC route from a VPC route prototype object. The
         prototype object is structured in the same way as a retrieved VPC route and
@@ -1492,7 +1492,7 @@ class VpcV1(BaseService):
     def delete_vpc_routing_table_route(self, vpc_id: str, routing_table_id: str,
                                        id: str, **kwargs) -> DetailedResponse:
         """
-        Delete the specified VPC route.
+        Delete a VPC routing table route.
 
         This request deletes a VPC route. This operation cannot be reversed.
 
@@ -1538,7 +1538,7 @@ class VpcV1(BaseService):
     def get_vpc_routing_table_route(self, vpc_id: str, routing_table_id: str,
                                     id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified VPC route.
+        Retrieve a VPC routing table route.
 
         This request retrieves a single VPC route specified by the identifier in the URL
         path.
@@ -1587,7 +1587,7 @@ class VpcV1(BaseService):
                                        id: str, route_patch: 'RoutePatch',
                                        **kwargs) -> DetailedResponse:
         """
-        Update the specified VPC route.
+        Update a VPC routing table route.
 
         This request updates a VPC route with the information provided in a route patch
         object. The patch object is structured in the same way as a retrieved VPC route
@@ -1752,7 +1752,7 @@ class VpcV1(BaseService):
 
     def delete_subnet(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified subnet.
+        Delete a subnet.
 
         This request deletes a subnet. This operation cannot be reversed. For this request
         to succeed, the subnet must not be referenced by any network interfaces, VPN
@@ -1794,7 +1794,7 @@ class VpcV1(BaseService):
 
     def get_subnet(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified subnet.
+        Retrieve a subnet.
 
         This request retrieves a single subnet specified by the identifier in the URL.
 
@@ -1833,7 +1833,7 @@ class VpcV1(BaseService):
     def update_subnet(self, id: str, subnet_patch: 'SubnetPatch',
                       **kwargs) -> DetailedResponse:
         """
-        Update specified subnet.
+        Update a subnet.
 
         This request updates a subnet with the information in a provided subnet patch. The
         subnet patch object is structured in the same way as a retrieved subnet and
@@ -2200,7 +2200,7 @@ class VpcV1(BaseService):
         """
         List all reserved IPs in a subnet.
 
-        This request lists reserved IPs in the subnet that are unbound or bound to an
+        This request lists reserved IPs in a subnet that are unbound or bound to an
         endpoint gateway.
 
         :param str subnet_id: The subnet identifier.
@@ -2315,7 +2315,7 @@ class VpcV1(BaseService):
     def delete_subnet_reserved_ip(self, subnet_id: str, id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Release specified reserved IP.
+        Release a reserved IP.
 
         This request releases a reserved IP. This operation cannot be reversed.
 
@@ -2344,8 +2344,7 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
-            **path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE',
                                        url=url,
                                        headers=headers,
@@ -2357,7 +2356,7 @@ class VpcV1(BaseService):
     def get_subnet_reserved_ip(self, subnet_id: str, id: str,
                                **kwargs) -> DetailedResponse:
         """
-        Retrieve specified reserved IP.
+        Retrieve a reserved IP.
 
         This request retrieves a single reserved IP specified by the identifier in the
         URL.
@@ -2388,8 +2387,7 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
-            **path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='GET',
                                        url=url,
                                        headers=headers,
@@ -2402,7 +2400,7 @@ class VpcV1(BaseService):
                                   reserved_ip_patch: 'ReservedIPPatch',
                                   **kwargs) -> DetailedResponse:
         """
-        Update specified reserved IP.
+        Update a reserved IP.
 
         This request updates a reserved IP with the information in a provided reserved IP
         patch. The reserved IP patch object is structured in the same way as a retrieved
@@ -2442,8 +2440,7 @@ class VpcV1(BaseService):
         path_param_keys = ['subnet_id', 'id']
         path_param_values = self.encode_path_vars(subnet_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(
-            **path_param_dict)
+        url = '/subnets/{subnet_id}/reserved_ips/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
@@ -2566,7 +2563,7 @@ class VpcV1(BaseService):
 
     def delete_image(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified image.
+        Delete an image.
 
         This request deletes an image. This operation cannot be reversed. System-provided
         images are not allowed to be deleted. An image with a `status` of `pending`,
@@ -2605,7 +2602,7 @@ class VpcV1(BaseService):
 
     def get_image(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified image.
+        Retrieve an image.
 
         This request retrieves a single image specified by the identifier in the URL.
 
@@ -2644,7 +2641,7 @@ class VpcV1(BaseService):
     def update_image(self, id: str, image_patch: 'ImagePatch',
                      **kwargs) -> DetailedResponse:
         """
-        Update specified image.
+        Update an image.
 
         This request updates an image with the information in a provided image patch. The
         image patch object is structured in the same way as a retrieved image and contains
@@ -2698,9 +2695,9 @@ class VpcV1(BaseService):
                                limit: int = None,
                                **kwargs) -> DetailedResponse:
         """
-        Retrieves all operating systems.
+        List all operating systems.
 
-        This request retrieves all operating systems.
+        This request lists all operating systems in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -2738,7 +2735,7 @@ class VpcV1(BaseService):
 
     def get_operating_system(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieves an operating system.
+        Retrieve an operating system.
 
         This request retrieves a single operating system specified by the name in the URL.
 
@@ -2785,8 +2782,8 @@ class VpcV1(BaseService):
         """
         List all keys.
 
-        This request lists all keys. A key contains a public SSH key which may be
-        installed on instances when they are created. Private keys are not stored.
+        This request lists all keys in the region. A key contains a public SSH key which
+        may be installed on instances when they are created. Private keys are not stored.
 
         :param str resource_group_id: (optional) Filters the collection to
                resources within one of the resource groups identified in a comma-separated
@@ -2888,7 +2885,7 @@ class VpcV1(BaseService):
 
     def delete_key(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified key.
+        Delete a key.
 
         This request deletes a key. This operation cannot be reversed.
 
@@ -2925,7 +2922,7 @@ class VpcV1(BaseService):
 
     def get_key(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified key.
+        Retrieve a key.
 
         This request retrieves a single key specified by the identifier in the URL.
 
@@ -2964,7 +2961,7 @@ class VpcV1(BaseService):
     def update_key(self, id: str, key_patch: 'KeyPatch',
                    **kwargs) -> DetailedResponse:
         """
-        Update specified key.
+        Update a key.
 
         This request updates a key's name.
 
@@ -3049,7 +3046,7 @@ class VpcV1(BaseService):
 
     def get_instance_profile(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance profile.
+        Retrieve an instance profile.
 
         This request retrieves a single instance profile specified by the name in the URL.
 
@@ -3087,7 +3084,7 @@ class VpcV1(BaseService):
 
     def list_instance_templates(self, **kwargs) -> DetailedResponse:
         """
-        Get instance templates.
+        List all instance templates.
 
         This request lists all instance templates in the region.
 
@@ -3164,7 +3161,7 @@ class VpcV1(BaseService):
 
     def delete_instance_template(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified instance template.
+        Delete an instance template.
 
         This request deletes the instance template. This operation cannot be reversed.
 
@@ -3201,7 +3198,7 @@ class VpcV1(BaseService):
 
     def get_instance_template(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance template.
+        Retrieve an instance template.
 
         This request retrieves a single instance template specified by the identifier in
         the URL.
@@ -3242,7 +3239,7 @@ class VpcV1(BaseService):
             self, id: str, instance_template_patch: 'InstanceTemplatePatch',
             **kwargs) -> DetailedResponse:
         """
-        Update specified instance template.
+        Update an instance template.
 
         This request updates an instance template with the information provided in the
         instance template patch. The instance template patch object is structured in the
@@ -3403,7 +3400,7 @@ class VpcV1(BaseService):
 
     def delete_instance(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified instance.
+        Delete an instance.
 
         This request deletes an instance. This operation cannot be reversed. Any floating
         IPs associated with the instance's network interfaces are implicitly
@@ -3482,7 +3479,7 @@ class VpcV1(BaseService):
     def update_instance(self, id: str, instance_patch: 'InstancePatch',
                         **kwargs) -> DetailedResponse:
         """
-        Update specified instance.
+        Update an instance.
 
         This request updates an instance with the information in a provided instance
         patch. The instance patch object is structured in the same way as a retrieved
@@ -3532,7 +3529,7 @@ class VpcV1(BaseService):
     def get_instance_initialization(self, id: str,
                                     **kwargs) -> DetailedResponse:
         """
-        Retrieve configuration used to initialize the instance.
+        Retrieve initialization configuration for an instance.
 
         This request retrieves configuration variables used to initialize the instance,
         such as SSH keys and the Windows administrator password.
@@ -3681,7 +3678,7 @@ class VpcV1(BaseService):
             security_groups: List['SecurityGroupIdentity'] = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a network interface.
+        Create a network interface on an instance.
 
         This request creates a new network interface from a network interface prototype
         object. The prototype object is structured in the same way as a retrieved network
@@ -3758,7 +3755,7 @@ class VpcV1(BaseService):
     def delete_instance_network_interface(self, instance_id: str, id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Delete specified network interface.
+        Delete a network interface.
 
         This request deletes a network interface. This operation cannot be reversed. Any
         floating IPs associated with the network interface are implicitly disassociated.
@@ -3805,7 +3802,7 @@ class VpcV1(BaseService):
     def get_instance_network_interface(self, instance_id: str, id: str,
                                        **kwargs) -> DetailedResponse:
         """
-        Retrieve specified network interface.
+        Retrieve a network interface.
 
         This request retrieves a single network interface specified by the identifier in
         the URL.
@@ -3956,7 +3953,7 @@ class VpcV1(BaseService):
             self, instance_id: str, network_interface_id: str, id: str,
             **kwargs) -> DetailedResponse:
         """
-        Disassociate specified floating IP.
+        Disassociate a floating IP from a network interface.
 
         This request disassociates the specified floating IP from the specified network
         interface.
@@ -4106,9 +4103,9 @@ class VpcV1(BaseService):
     def list_instance_volume_attachments(self, instance_id: str,
                                          **kwargs) -> DetailedResponse:
         """
-        List all volumes attached to an instance.
+        List all volumes attachments on an instance.
 
-        This request lists all volume attachments for an instance. A volume attachment
+        This request lists all volume attachments on an instance. A volume attachment
         connects a volume to an instance. Each instance may have many volume attachments
         but each volume attachment connects exactly one instance to exactly one volume.
 
@@ -4155,7 +4152,7 @@ class VpcV1(BaseService):
             name: str = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a volume attachment, connecting a volume to an instance.
+        Create a volume attachment on an instance.
 
         This request creates a new volume attachment from a volume attachment prototype
         object. The prototype object is structured in the same way as a retrieved volume
@@ -4223,7 +4220,7 @@ class VpcV1(BaseService):
     def delete_instance_volume_attachment(self, instance_id: str, id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Delete a volume attachment, detaching a volume from an instance.
+        Delete a volume attachment.
 
         This request deletes a volume attachment. The deletion of a volume attachment
         detaches a volume from an instance.
@@ -4267,7 +4264,7 @@ class VpcV1(BaseService):
     def get_instance_volume_attachment(self, instance_id: str, id: str,
                                        **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume attachment.
+        Retrieve a volume attachment.
 
         This request retrieves a single volume attachment specified by the identifier in
         the URL.
@@ -4509,7 +4506,7 @@ class VpcV1(BaseService):
 
     def delete_instance_group(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified instance group.
+        Delete an instance group.
 
         This request deletes an instance group. This operation cannot be reversed. Any
         instances associated with the group will be deleted.
@@ -4547,7 +4544,7 @@ class VpcV1(BaseService):
 
     def get_instance_group(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance group.
+        Retrieve an instance group.
 
         This request retrieves a single instance group specified by identifier in the URL.
 
@@ -4587,7 +4584,7 @@ class VpcV1(BaseService):
                               instance_group_patch: 'InstanceGroupPatch',
                               **kwargs) -> DetailedResponse:
         """
-        Update specified instance group.
+        Update an instance group.
 
         This request updates an instance group with the information provided instance
         group patch. The instance group patch object is structured in the same way as a
@@ -4637,7 +4634,7 @@ class VpcV1(BaseService):
     def delete_instance_group_load_balancer(self, instance_group_id: str,
                                             **kwargs) -> DetailedResponse:
         """
-        Delete specified instance group load balancer.
+        Delete an instance group load balancer.
 
         This request unbinds the instance group from the load balancer pool, and deletes
         the load balancer pool members.
@@ -4680,7 +4677,7 @@ class VpcV1(BaseService):
         """
         List all managers for an instance group.
 
-        This request retrieves instance group managers.
+        This request lists all managers for an instance group.
 
         :param str instance_group_id: The instance group identifier.
         :param dict headers: A `dict` containing the request headers
@@ -4721,7 +4718,7 @@ class VpcV1(BaseService):
             instance_group_manager_prototype: 'InstanceGroupManagerPrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create an instance group manager.
+        Create a manager for an instance group.
 
         This request creates a new instance group manager.
 
@@ -4775,7 +4772,7 @@ class VpcV1(BaseService):
     def delete_instance_group_manager(self, instance_group_id: str, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        Delete specified instance group manager.
+        Delete an instance group manager.
 
         This request deletes an instance group manager. This operation cannot be reversed.
 
@@ -4818,7 +4815,7 @@ class VpcV1(BaseService):
     def get_instance_group_manager(self, instance_group_id: str, id: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance group.
+        Retrieve an instance group manager.
 
         This request retrieves a single instance group manager specified by identifier in
         the URL.
@@ -4864,7 +4861,7 @@ class VpcV1(BaseService):
             instance_group_manager_patch: 'InstanceGroupManagerPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update specified instance group manager.
+        Update an instance group manager.
 
         This request updates an instance group manager with the information provided
         instance group manager patch.
@@ -4923,7 +4920,7 @@ class VpcV1(BaseService):
         """
         List all policies for an instance group manager.
 
-        This request lists all instance group policies for an instance group manager.
+        This request lists all policies for an instance group manager.
 
         :param str instance_group_id: The instance group identifier.
         :param str instance_group_manager_id: The instance group manager
@@ -4965,11 +4962,11 @@ class VpcV1(BaseService):
         return response
 
     def create_instance_group_manager_policy(
-        self, instance_group_id: str, instance_group_manager_id: str,
-        instance_group_manager_policy_prototype:
-            'InstanceGroupManagerPolicyPrototype', **kwargs) -> DetailedResponse:
+            self, instance_group_id: str, instance_group_manager_id: str,
+            instance_group_manager_policy_prototype:
+        'InstanceGroupManagerPolicyPrototype', **kwargs) -> DetailedResponse:
         """
-        Create an instance group manager policy.
+        Create a policy for an instance group manager.
 
         This request creates a new instance group manager policy.
 
@@ -5031,7 +5028,7 @@ class VpcV1(BaseService):
                                              id: str,
                                              **kwargs) -> DetailedResponse:
         """
-        Delete specified instance group manager policy.
+        Delete an instance group manager policy.
 
         This request deletes an instance group manager policy. This operation cannot be
         reversed.
@@ -5084,7 +5081,7 @@ class VpcV1(BaseService):
                                           id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance group manager policy.
+        Retrieve an instance group manager policy.
 
         This request retrieves a single instance group manager policy specified by
         identifier in the URL.
@@ -5134,11 +5131,11 @@ class VpcV1(BaseService):
         return response
 
     def update_instance_group_manager_policy(
-        self, instance_group_id: str, instance_group_manager_id: str,
-        id: str, instance_group_manager_policy_patch:
-            'InstanceGroupManagerPolicyPatch', **kwargs) -> DetailedResponse:
+            self, instance_group_id: str, instance_group_manager_id: str,
+            id: str, instance_group_manager_policy_patch:
+        'InstanceGroupManagerPolicyPatch', **kwargs) -> DetailedResponse:
         """
-        Update specified instance group manager policy.
+        Update an instance group manager policy.
 
         This request updates an instance group manager policy.
 
@@ -5202,7 +5199,7 @@ class VpcV1(BaseService):
     def delete_instance_group_memberships(self, instance_group_id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Delete all memberships from the instance group.
+        Delete all memberships from an instance group.
 
         This request deletes all memberships of an instance group. This operation cannot
         be reversed. reversed. Any memberships that have
@@ -5245,7 +5242,7 @@ class VpcV1(BaseService):
     def list_instance_group_memberships(self, instance_group_id: str,
                                         **kwargs) -> DetailedResponse:
         """
-        List all memberships for the instance group.
+        List all memberships for an instance group.
 
         This request lists all instance group memberships for an instance group.
 
@@ -5286,7 +5283,7 @@ class VpcV1(BaseService):
     def delete_instance_group_membership(self, instance_group_id: str, id: str,
                                          **kwargs) -> DetailedResponse:
         """
-        Delete specified instance group membership.
+        Delete an instance group membership.
 
         This request deletes a memberships of an instance group. This operation cannot be
         reversed. reversed. If the membership has `delete_instance_on_membership_delete`
@@ -5331,7 +5328,7 @@ class VpcV1(BaseService):
     def get_instance_group_membership(self, instance_group_id: str, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance group membership.
+        Retrieve an instance group membership.
 
         This request retrieves a single instance group membership specified by identifier
         in the URL.
@@ -5378,7 +5375,7 @@ class VpcV1(BaseService):
             instance_group_membership_patch: 'InstanceGroupMembershipPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update specified instance group membership.
+        Update an instance group membership.
 
         This request updates an instance group membership with the information provided
         instance group membership patch.
@@ -5397,8 +5394,7 @@ class VpcV1(BaseService):
         if id is None:
             raise ValueError('id must be provided')
         if instance_group_membership_patch is None:
-            raise ValueError(
-                'instance_group_membership_patch must be provided')
+            raise ValueError('instance_group_membership_patch must be provided')
         if isinstance(instance_group_membership_patch,
                       InstanceGroupMembershipPatch):
             instance_group_membership_patch = convert_model(
@@ -5565,7 +5561,7 @@ class VpcV1(BaseService):
     def delete_dedicated_host_group(self, id: str,
                                     **kwargs) -> DetailedResponse:
         """
-        Delete specified dedicated host group.
+        Delete a dedicated host group.
 
         This request deletes a dedicated host group.
 
@@ -5645,7 +5641,7 @@ class VpcV1(BaseService):
             dedicated_host_group_patch: 'DedicatedHostGroupPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update specified dedicated host group.
+        Update a dedicated host group.
 
         This request updates a dedicated host group with the information in a provided
         dedicated host group patch. The dedicated host group patch object is structured in
@@ -5704,7 +5700,7 @@ class VpcV1(BaseService):
         """
         List all dedicated host profiles.
 
-        This request lists provisionable dedicated host profiles in the region. A
+        This request lists all provisionable dedicated host profiles in the region. A
         dedicated host profile specifies the hardware characteristics for a dedicated
         host.
 
@@ -5746,7 +5742,7 @@ class VpcV1(BaseService):
     def get_dedicated_host_profile(self, name: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve specified dedicated host profile.
+        Retrieve a dedicated host profile.
 
         This request retrieves a single dedicated host profile specified by the name in
         the URL.
@@ -5794,7 +5790,7 @@ class VpcV1(BaseService):
         """
         List all dedicated hosts.
 
-        This request lists all dedicated hosts.
+        This request lists all dedicated hosts in the region.
 
         :param str dedicated_host_group_id: (optional) Filters the collection to
                dedicated host groups with specified identifier.
@@ -5886,7 +5882,7 @@ class VpcV1(BaseService):
 
     def delete_dedicated_host(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified dedicated host.
+        Delete a dedicated host.
 
         This request deletes a dedicated host.
 
@@ -5964,7 +5960,7 @@ class VpcV1(BaseService):
                               dedicated_host_patch: 'DedicatedHostPatch',
                               **kwargs) -> DetailedResponse:
         """
-        Update specified dedicated host.
+        Update a dedicated host.
 
         This request updates a dedicated host with the information in a provided dedicated
         host patch. The dedicated host patch object is structured in the same way as a
@@ -6062,7 +6058,7 @@ class VpcV1(BaseService):
 
     def get_volume_profile(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume profile.
+        Retrieve a volume profile.
 
         This request retrieves a single volume profile specified by the name in the URL.
 
@@ -6197,7 +6193,7 @@ class VpcV1(BaseService):
 
     def delete_volume(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified volume.
+        Delete a volume.
 
         This request deletes a volume. This operation cannot be reversed. For this request
         to succeed, the volume must not be attached to any instances.
@@ -6235,7 +6231,7 @@ class VpcV1(BaseService):
 
     def get_volume(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume.
+        Retrieve a volume.
 
         This request retrieves a single volume specified by the identifier in the URL.
 
@@ -6274,7 +6270,7 @@ class VpcV1(BaseService):
     def update_volume(self, id: str, volume_patch: 'VolumePatch',
                       **kwargs) -> DetailedResponse:
         """
-        Update specified volume.
+        Update a volume.
 
         This request updates a volume with the information in a provided volume patch. The
         volume patch object is structured in the same way as a retrieved volume and
@@ -6496,9 +6492,10 @@ class VpcV1(BaseService):
         """
         List all public gateways.
 
-        This request lists all public gateways. A public gateway is a virtual network
-        device associated with a VPC, which allows access to the Internet. A public
-        gateway resides in a zone and can be connected to subnets in the same zone only.
+        This request lists all public gateways in the region. A public gateway is a
+        virtual network device associated with a VPC, which allows access to the Internet.
+        A public gateway resides in a zone and can be connected to subnets in the same
+        zone only.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -6619,7 +6616,7 @@ class VpcV1(BaseService):
 
     def delete_public_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified public gateway.
+        Delete a public gateway.
 
         This request deletes a public gateway. This operation cannot be reversed. For this
         request to succeed, the public gateway must not be attached to any subnets. The
@@ -6659,7 +6656,7 @@ class VpcV1(BaseService):
 
     def get_public_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified public gateway.
+        Retrieve a public gateway.
 
         This request retrieves a single public gateway specified by the identifier in the
         URL.
@@ -6700,7 +6697,7 @@ class VpcV1(BaseService):
                               public_gateway_patch: 'PublicGatewayPatch',
                               **kwargs) -> DetailedResponse:
         """
-        Update a public gateway's name.
+        Update a public gateway.
 
         This request updates a public gateway's name.
 
@@ -6758,8 +6755,8 @@ class VpcV1(BaseService):
         """
         List all floating IPs.
 
-        This request retrieves all floating IPs in the region. Floating IPs allow inbound
-        and outbound traffic from the Internet to an instance.
+        This request lists all floating IPs in the region. Floating IPs allow inbound and
+        outbound traffic from the Internet to an instance.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -6844,7 +6841,7 @@ class VpcV1(BaseService):
 
     def delete_floating_ip(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Release the specified floating IP.
+        Release a floating IP.
 
         This request disassociates (if associated) and releases a floating IP. This
         operation cannot be reversed. For this request to succeed, the floating IP must
@@ -6883,7 +6880,7 @@ class VpcV1(BaseService):
 
     def get_floating_ip(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified floating IP.
+        Retrieve a floating IP.
 
         This request retrieves a single floating IP specified by the identifier in the
         URL.
@@ -6923,7 +6920,7 @@ class VpcV1(BaseService):
     def update_floating_ip(self, id: str, floating_ip_patch: 'FloatingIPPatch',
                            **kwargs) -> DetailedResponse:
         """
-        Update the specified floating IP.
+        Update a floating IP.
 
         This request updates a floating IP's name and/or target.
 
@@ -7072,7 +7069,7 @@ class VpcV1(BaseService):
 
     def delete_network_acl(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified network ACL.
+        Delete a network ACL.
 
         This request deletes a network ACL. This operation cannot be reversed. For this
         request to succeed, the network ACL must not be the default network ACL for any
@@ -7111,7 +7108,7 @@ class VpcV1(BaseService):
 
     def get_network_acl(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified network ACL.
+        Retrieve a network ACL.
 
         This request retrieves a single network ACL specified by the identifier in the
         URL.
@@ -7258,7 +7255,7 @@ class VpcV1(BaseService):
             network_acl_rule_prototype: 'NetworkACLRulePrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a rule.
+        Create a rule for a network ACL.
 
         This request creates a new rule from a network ACL rule prototype object. The
         prototype object is structured in the same way as a retrieved rule, and contains
@@ -7310,7 +7307,7 @@ class VpcV1(BaseService):
     def delete_network_acl_rule(self, network_acl_id: str, id: str,
                                 **kwargs) -> DetailedResponse:
         """
-        Delete specified rule.
+        Delete a network ACL rule.
 
         This request deletes a rule. This operation cannot be reversed.
 
@@ -7352,7 +7349,7 @@ class VpcV1(BaseService):
     def get_network_acl_rule(self, network_acl_id: str, id: str,
                              **kwargs) -> DetailedResponse:
         """
-        Retrieve specified rule.
+        Retrieve a network ACL rule.
 
         This request retrieves a single rule specified by the identifier in the URL.
 
@@ -7396,7 +7393,7 @@ class VpcV1(BaseService):
                                 network_acl_rule_patch: 'NetworkACLRulePatch',
                                 **kwargs) -> DetailedResponse:
         """
-        Update a rule.
+        Update a network ACL rule.
 
         This request updates a rule with the information in a provided rule patch. The
         rule patch object contains only the information to be updated. The request will
@@ -7464,12 +7461,12 @@ class VpcV1(BaseService):
         """
         List all security groups.
 
-        This request lists all existing security groups. Security groups provide a
-        convenient way to apply IP filtering rules to instances in the associated VPC.
-        With security groups, all traffic is denied by default, and rules added to
-        security groups define which traffic the security group permits. Security group
-        rules are stateful such that reverse traffic in response to allowed traffic is
-        automatically permitted.
+        This request lists all security groups in the region. Security groups provide a
+        way to apply IP filtering rules to instances in the associated VPC. With security
+        groups, all traffic is denied by default, and rules added to security groups
+        define which traffic the security group permits. Security group rules are stateful
+        such that reverse traffic in response to allowed traffic is automatically
+        permitted.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -7728,9 +7725,9 @@ class VpcV1(BaseService):
                                                limit: int = None,
                                                **kwargs) -> DetailedResponse:
         """
-        List a security group's network interfaces.
+        List all network interfaces associated with a security group.
 
-        This request lists all network interfaces associated with the security group, to
+        This request lists all network interfaces associated with a security group, to
         which the rules in the security group are applied.
 
         :param str security_group_id: The security group identifier.
@@ -7921,12 +7918,11 @@ class VpcV1(BaseService):
     def list_security_group_rules(self, security_group_id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        List all the rules of a security group.
+        List all rules in a security group.
 
-        This request lists all the security group rules for a particular security group.
-        These rules define what traffic the security group permits. Security group rules
-        are stateful, such that reverse traffic in response to allowed traffic is
-        automatically permitted.
+        This request lists all rules in a security group. These rules define what traffic
+        the security group permits. Security group rules are stateful, such that reverse
+        traffic in response to allowed traffic is automatically permitted.
 
         :param str security_group_id: The security group identifier.
         :param dict headers: A `dict` containing the request headers
@@ -7966,7 +7962,7 @@ class VpcV1(BaseService):
             security_group_rule_prototype: 'SecurityGroupRulePrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a security group rule.
+        Create a rule for a security group.
 
         This request creates a new security group rule from a security group rule
         prototype object. The prototype object is structured in the same way as a
@@ -8138,8 +8134,7 @@ class VpcV1(BaseService):
         if security_group_rule_patch is None:
             raise ValueError('security_group_rule_patch must be provided')
         if isinstance(security_group_rule_patch, SecurityGroupRulePatch):
-            security_group_rule_patch = convert_model(
-                security_group_rule_patch)
+            security_group_rule_patch = convert_model(security_group_rule_patch)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -8181,8 +8176,7 @@ class VpcV1(BaseService):
         """
         List all IKE policies.
 
-        This request retrieves a paginated list of all IKE policies that belong to this
-        account.
+        This request lists all IKE policies in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -8332,7 +8326,7 @@ class VpcV1(BaseService):
 
     def get_ike_policy(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified IKE policy.
+        Retrieve an IKE policy.
 
         This request retrieves a single IKE policy specified by the identifier in the URL.
 
@@ -8419,9 +8413,9 @@ class VpcV1(BaseService):
     def list_ike_policy_connections(self, id: str,
                                     **kwargs) -> DetailedResponse:
         """
-        List all connections that use the specified IKE policy.
+        List all VPN gateway connections that use a specified IKE policy.
 
-        This request lists all the connections that use the specified policy.
+        This request lists all VPN gateway connections that use a policy.
 
         :param str id: The IKE policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -8464,8 +8458,7 @@ class VpcV1(BaseService):
         """
         List all IPsec policies.
 
-        This request retrieves a paginated list of all IPsec policies that belong to this
-        account.
+        This request lists all IPsec policies in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -8610,7 +8603,7 @@ class VpcV1(BaseService):
 
     def get_ipsec_policy(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified IPsec policy.
+        Retrieve an IPsec policy.
 
         This request retrieves a single IPsec policy specified by the identifier in the
         URL.
@@ -8699,9 +8692,9 @@ class VpcV1(BaseService):
     def list_ipsec_policy_connections(self, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        List all connections that use the specified IPsec policy.
+        List all VPN gateway connections that use a specified IPsec policy.
 
-        This request lists all the connections that use the specified policy.
+        This request lists all VPN gateway connections that use a policy.
 
         :param str id: The IPsec policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -8746,8 +8739,7 @@ class VpcV1(BaseService):
         """
         List all VPN gateways.
 
-        This request retrieves a paginated list of all VPN gateways that belong to this
-        account.
+        This request lists all VPN gateways in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -8874,7 +8866,7 @@ class VpcV1(BaseService):
 
     def get_vpn_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified VPN gateway.
+        Retrieve a VPN gateway.
 
         This request retrieves a single VPN gateway specified by the identifier in the
         URL.
@@ -8967,7 +8959,7 @@ class VpcV1(BaseService):
         """
         List all connections of a VPN gateway.
 
-        This request lists all the connections of a particular VPN gateway.
+        This request lists all connections of a VPN gateway.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str status: (optional) Filters the collection to VPN gateway
@@ -9014,7 +9006,7 @@ class VpcV1(BaseService):
             vpn_gateway_connection_prototype: 'VPNGatewayConnectionPrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a VPN gateway connection.
+        Create a connection for a VPN gateway.
 
         This request creates a new VPN gateway connection.
 
@@ -9111,7 +9103,7 @@ class VpcV1(BaseService):
     def get_vpn_gateway_connection(self, vpn_gateway_id: str, id: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified VPN gateway connection.
+        Retrieve a VPN gateway connection.
 
         This request retrieves a single VPN gateway connection specified by the identifier
         in the URL.
@@ -9215,8 +9207,7 @@ class VpcV1(BaseService):
         """
         List all local CIDRs for a VPN gateway connection.
 
-        This request lists all local CIDRs for a VPN gateway connection specified by the
-        identifier in the URL.
+        This request lists all local CIDRs for a VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -9426,8 +9417,7 @@ class VpcV1(BaseService):
         """
         List all peer CIDRs for a VPN gateway connection.
 
-        This request lists all peer CIDRs for a VPN gateway connection specified by the
-        identifier in the URL.
+        This request lists all peer CIDRs for a VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -9685,7 +9675,7 @@ class VpcV1(BaseService):
     def get_load_balancer_profile(self, name: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Retrieve specified load balancer profile.
+        Retrieve a load balancer profile.
 
         This request retrieves a load balancer profile specified by the name in the URL.
 
@@ -9725,8 +9715,7 @@ class VpcV1(BaseService):
         """
         List all load balancers.
 
-        This request retrieves a paginated list of all load balancers that belong to this
-        account.
+        This request lists all load balancers in the region.
 
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -9768,7 +9757,7 @@ class VpcV1(BaseService):
             resource_group: 'ResourceGroupIdentity' = None,
             **kwargs) -> DetailedResponse:
         """
-        Create and provision a load balancer.
+        Create a load balancer.
 
         This request creates and provisions a new load balancer.
 
@@ -9980,10 +9969,9 @@ class VpcV1(BaseService):
     def get_load_balancer_statistics(self, id: str,
                                      **kwargs) -> DetailedResponse:
         """
-        List statistics of a load balancer.
+        List all statistics of a load balancer.
 
-        This request lists statistics of a load balancer specified by the identifier in
-        the URL path.
+        This request lists statistics of a load balancer.
 
         :param str id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -10021,9 +10009,9 @@ class VpcV1(BaseService):
     def list_load_balancer_listeners(self, load_balancer_id: str,
                                      **kwargs) -> DetailedResponse:
         """
-        List all listeners of the load balancer.
+        List all listeners for a load balancer.
 
-        This request retrieves a list of all listeners that belong to the load balancer.
+        This request lists all listeners for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -10072,9 +10060,9 @@ class VpcV1(BaseService):
             policies: List['LoadBalancerListenerPolicyPrototype'] = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a listener.
+        Create a listener for a load balancer.
 
-        This request creates a new listener to the load balancer.
+        This request creates a new listener for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param int port: The listener port number. Each listener in the load
@@ -10098,8 +10086,8 @@ class VpcV1(BaseService):
                - Belong to this load balancer
                - Have the same `protocol` as this listener
                - Not already be the default pool for another listener.
-        :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) The
-               list of policies of this listener.
+        :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) An
+               array of policies for this listener.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListener` object
@@ -10160,7 +10148,7 @@ class VpcV1(BaseService):
     def delete_load_balancer_listener(self, load_balancer_id: str, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        Delete a listener.
+        Delete a load balancer listener.
 
         This request deletes a load balancer listener. This operation cannot be reversed.
 
@@ -10203,7 +10191,7 @@ class VpcV1(BaseService):
     def get_load_balancer_listener(self, load_balancer_id: str, id: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve a listener.
+        Retrieve a load balancer listener.
 
         This request retrieves a single listener specified by the identifier in the URL
         path.
@@ -10249,7 +10237,7 @@ class VpcV1(BaseService):
             load_balancer_listener_patch: 'LoadBalancerListenerPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update a listener.
+        Update a load balancer listener.
 
         This request updates a load balancer listener from a listener patch.
 
@@ -10305,9 +10293,9 @@ class VpcV1(BaseService):
                                              listener_id: str,
                                              **kwargs) -> DetailedResponse:
         """
-        List all policies of the load balancer listener.
+        List all policies for a load balancer listener.
 
-        Retrieves a list of all policies belonging to the load balancer listener.
+        This request lists all policies for a load balancer listener.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -10334,8 +10322,7 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(
-            load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -10359,9 +10346,9 @@ class VpcV1(BaseService):
             target: 'LoadBalancerListenerPolicyTargetPrototype' = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a policy for the load balancer listener.
+        Create a policy for a load balancer listener.
 
-        Creates a new policy to the load balancer listener.
+        Creates a new policy for a load balancer listener.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -10370,8 +10357,8 @@ class VpcV1(BaseService):
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
-        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
-               list of rules of this policy.
+        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An
+               array of rules for this policy.
         :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
@@ -10422,8 +10409,7 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'listener_id']
-        path_param_values = self.encode_path_vars(
-            load_balancer_id, listener_id)
+        path_param_values = self.encode_path_vars(load_balancer_id, listener_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/listeners/{listener_id}/policies'.format(
             **path_param_dict)
@@ -10440,7 +10426,7 @@ class VpcV1(BaseService):
                                              listener_id: str, id: str,
                                              **kwargs) -> DetailedResponse:
         """
-        Delete a policy of the load balancer listener.
+        Delete a load balancer listener policy.
 
         Deletes a policy of the load balancer listener. This operation cannot be reversed.
 
@@ -10488,7 +10474,7 @@ class VpcV1(BaseService):
                                           listener_id: str, id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Retrieve a policy of the load balancer listener.
+        Retrieve a load balancer listener policy.
 
         Retrieve a single policy specified by the identifier in the URL path.
 
@@ -10534,11 +10520,11 @@ class VpcV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy(
-        self, load_balancer_id: str, listener_id: str, id: str,
-        load_balancer_listener_policy_patch:
-            'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
+            self, load_balancer_id: str, listener_id: str, id: str,
+            load_balancer_listener_policy_patch:
+        'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
         """
-        Update a policy of the load balancer listener.
+        Update a load balancer listener policy.
 
         Updates a policy from a policy patch.
 
@@ -10601,9 +10587,9 @@ class VpcV1(BaseService):
                                                  policy_id: str,
                                                  **kwargs) -> DetailedResponse:
         """
-        List all rules of the load balancer listener policy.
+        List all rules of a load balancer listener policy.
 
-        Retrieves a list of all rules belonging to the load balancer listener policy.
+        This request lists all rules of a load balancer listener policy.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -10657,7 +10643,7 @@ class VpcV1(BaseService):
                                                   field: str = None,
                                                   **kwargs) -> DetailedResponse:
         """
-        Create a rule for the load balancer listener policy.
+        Create a rule for a load balancer listener policy.
 
         Creates a new rule for the load balancer listener policy.
 
@@ -10729,7 +10715,7 @@ class VpcV1(BaseService):
                                                   policy_id: str, id: str,
                                                   **kwargs) -> DetailedResponse:
         """
-        Delete a rule from the load balancer listener policy.
+        Delete a load balancer listener policy rule.
 
         Deletes a rule from the load balancer listener policy. This operation cannot be
         reversed.
@@ -10763,8 +10749,7 @@ class VpcV1(BaseService):
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
 
-        path_param_keys = ['load_balancer_id',
-                           'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10783,7 +10768,7 @@ class VpcV1(BaseService):
                                                id: str,
                                                **kwargs) -> DetailedResponse:
         """
-        Retrieve a rule of the load balancer listener policy.
+        Retrieve a load balancer listener policy rule.
 
         Retrieves a single rule specified by the identifier in the URL path.
 
@@ -10817,8 +10802,7 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id',
-                           'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10833,11 +10817,11 @@ class VpcV1(BaseService):
         return response
 
     def update_load_balancer_listener_policy_rule(
-        self, load_balancer_id: str, listener_id: str, policy_id: str,
-        id: str, load_balancer_listener_policy_rule_patch:
-            'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
+            self, load_balancer_id: str, listener_id: str, policy_id: str,
+            id: str, load_balancer_listener_policy_rule_patch:
+        'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
         """
-        Update a rule of the load balancer listener policy.
+        Update a load balancer listener policy rule.
 
         Updates a rule of the load balancer listener policy.
 
@@ -10883,8 +10867,7 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['load_balancer_id',
-                           'listener_id', 'policy_id', 'id']
+        path_param_keys = ['load_balancer_id', 'listener_id', 'policy_id', 'id']
         path_param_values = self.encode_path_vars(load_balancer_id, listener_id,
                                                   policy_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
@@ -10902,9 +10885,9 @@ class VpcV1(BaseService):
     def list_load_balancer_pools(self, load_balancer_id: str,
                                  **kwargs) -> DetailedResponse:
         """
-        List all pools of the load balancer.
+        List all pools of a load balancer.
 
-        This request lists all pools that belong to the load balancer.
+        This request lists all pools of a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -11041,7 +11024,7 @@ class VpcV1(BaseService):
     def delete_load_balancer_pool(self, load_balancer_id: str, id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Delete a pool.
+        Delete a load balancer pool.
 
         This request deletes a load balancer pool. This operation cannot be reversed. The
         pool must not currently be the default pool for any listener in the load balancer.
@@ -11183,9 +11166,9 @@ class VpcV1(BaseService):
                                         pool_id: str,
                                         **kwargs) -> DetailedResponse:
         """
-        List all members of the load balancer pool.
+        List all members of a load balancer pool.
 
-        This request retrieves a paginated list of all members that belong to the pool.
+        This request lists all members of a load balancer pool.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str pool_id: The pool identifier.
@@ -11234,7 +11217,7 @@ class VpcV1(BaseService):
             weight: int = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a member in the load balancer pool.
+        Create a member in a load balancer pool.
 
         This request creates a new member and adds the member to the pool.
 
@@ -11299,7 +11282,7 @@ class VpcV1(BaseService):
             members: List['LoadBalancerPoolMemberPrototype'],
             **kwargs) -> DetailedResponse:
         """
-        Update members of the load balancer pool.
+        Update load balancer pool members.
 
         This request updates members of the load balancer pool from a collection of member
         prototype objects.
@@ -11356,7 +11339,7 @@ class VpcV1(BaseService):
                                          pool_id: str, id: str,
                                          **kwargs) -> DetailedResponse:
         """
-        Delete a member from the load balancer pool.
+        Delete a load balancer pool member.
 
         This request deletes a member from the pool. This operation cannot be reversed.
 
@@ -11387,8 +11370,7 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(
-            load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -11403,7 +11385,7 @@ class VpcV1(BaseService):
     def get_load_balancer_pool_member(self, load_balancer_id: str, pool_id: str,
                                       id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve a member in the load balancer pool.
+        Retrieve a load balancer pool member.
 
         This request retrieves a single member specified by the identifier in the URL
         path.
@@ -11436,8 +11418,7 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(
-            load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -11454,7 +11435,7 @@ class VpcV1(BaseService):
             load_balancer_pool_member_patch: 'LoadBalancerPoolMemberPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update a member in the load balancer pool.
+        Update a load balancer pool member.
 
         This request updates an existing member from a member patch.
 
@@ -11475,8 +11456,7 @@ class VpcV1(BaseService):
         if id is None:
             raise ValueError('id must be provided')
         if load_balancer_pool_member_patch is None:
-            raise ValueError(
-                'load_balancer_pool_member_patch must be provided')
+            raise ValueError('load_balancer_pool_member_patch must be provided')
         if isinstance(load_balancer_pool_member_patch,
                       LoadBalancerPoolMemberPatch):
             load_balancer_pool_member_patch = convert_model(
@@ -11498,8 +11478,7 @@ class VpcV1(BaseService):
         headers['Accept'] = 'application/json'
 
         path_param_keys = ['load_balancer_id', 'pool_id', 'id']
-        path_param_values = self.encode_path_vars(
-            load_balancer_id, pool_id, id)
+        path_param_values = self.encode_path_vars(load_balancer_id, pool_id, id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/load_balancers/{load_balancer_id}/pools/{pool_id}/members/{id}'.format(
             **path_param_dict)
@@ -11526,8 +11505,8 @@ class VpcV1(BaseService):
         """
         List all endpoint gateways.
 
-        This request lists all endpoint gateways. An endpoint gateway maps one or more
-        reserved IPs in a VPC to a target outside the VPC.
+        This request lists all endpoint gateways in the region. An endpoint gateway maps
+        one or more reserved IPs in a VPC to a target outside the VPC.
 
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
@@ -11587,7 +11566,7 @@ class VpcV1(BaseService):
         :param EndpointGatewayTargetPrototype target: The target for this endpoint
                gateway.
         :param VPCIdentity vpc: The VPC this endpoint gateway will serve.
-        :param List[EndpointGatewayReservedIP] ips: (optional) A list of reserved
+        :param List[EndpointGatewayReservedIP] ips: (optional) An array of reserved
                IPs to attach to this endpoint gateway.
         :param str name: (optional) The user-defined name for this endpoint
                gateway. If unspecified, the name will be a hyphenated list of
@@ -11655,7 +11634,7 @@ class VpcV1(BaseService):
         """
         List all reserved IPs bound to an endpoint gateway.
 
-        This request retrieves all reserved IPs bound to an endpoint gateway.
+        This request lists all reserved IPs bound to an endpoint gateway.
 
         :param str endpoint_gateway_id: The endpoint gateway identifier.
         :param str start: (optional) A server-supplied token determining what
@@ -11985,7 +11964,7 @@ class VpcV1(BaseService):
         """
         List all flow log collectors.
 
-        This request retrieves all flow log collectors in the region. A flow log collector
+        This request lists all flow log collectors in the region. A flow log collector
         summarizes data sent over one or more network interfaces within a VPC, depending
         on the chosen target.
 
@@ -12067,14 +12046,14 @@ class VpcV1(BaseService):
                The bucket must exist and an IAM service authorization must grant
                `IBM Cloud Flow Logs` resources of `VPC Infrastructure Services` writer
                access to the bucket.
-        :param FlowLogCollectorTargetPrototype target: The target this collector is
-               collecting flow logs for. If the target is an instance,
+        :param FlowLogCollectorTargetPrototype target: The target this collector
+               will collect flow logs for. If the target is an instance,
                subnet, or VPC, flow logs will not be collected for any network interfaces
                within the
                target that are themselves the target of a more specific flow log
                collector.
-        :param bool active: (optional) Indicates whether this collector is active.
-               If false, this collector is created in inactive mode.
+        :param bool active: (optional) Indicates whether this collector will be
+               active upon creation.
         :param str name: (optional) The unique user-defined name for this flow log
                collector. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
@@ -12130,7 +12109,7 @@ class VpcV1(BaseService):
 
     def delete_flow_log_collector(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete the specified flow log collector.
+        Delete a flow log collector.
 
         This request stops and deletes a flow log collector. Collected flow logs remain
         available within the flow log collector's bucket.
@@ -12168,7 +12147,7 @@ class VpcV1(BaseService):
 
     def get_flow_log_collector(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified flow log collector.
+        Retrieve a flow log collector.
 
         This request retrieves a single flow log collector specified by the identifier in
         the URL.
@@ -12209,7 +12188,7 @@ class VpcV1(BaseService):
             self, id: str, flow_log_collector_patch: 'FlowLogCollectorPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update the specified flow log collector.
+        Update a flow log collector.
 
         This request updates a flow log collector with the information in a provided flow
         log collector patch. The flow log collector patch object is structured in the same
@@ -13082,8 +13061,7 @@ class DedicatedHost():
                 'Required property \'available_memory\' not present in DedicatedHost JSON'
             )
         if 'available_vcpu' in _dict:
-            args['available_vcpu'] = VCPU.from_dict(
-                _dict.get('available_vcpu'))
+            args['available_vcpu'] = VCPU.from_dict(_dict.get('available_vcpu'))
         else:
             raise ValueError(
                 'Required property \'available_vcpu\' not present in DedicatedHost JSON'
@@ -13229,7 +13207,7 @@ class DedicatedHost():
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'instance_placement_enabled'
-                   ) and self.instance_placement_enabled is not None:
+                  ) and self.instance_placement_enabled is not None:
             _dict[
                 'instance_placement_enabled'] = self.instance_placement_enabled
         if hasattr(self, 'instances') and self.instances is not None:
@@ -13254,7 +13232,7 @@ class DedicatedHost():
         if hasattr(self, 'state') and self.state is not None:
             _dict['state'] = self.state
         if hasattr(self, 'supported_instance_profiles'
-                   ) and self.supported_instance_profiles is not None:
+                  ) and self.supported_instance_profiles is not None:
             _dict['supported_instance_profiles'] = [
                 x.to_dict() for x in self.supported_instance_profiles
             ]
@@ -13735,7 +13713,7 @@ class DedicatedHostGroup():
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'supported_instance_profiles'
-                   ) and self.supported_instance_profiles is not None:
+                  ) and self.supported_instance_profiles is not None:
             _dict['supported_instance_profiles'] = [
                 x.to_dict() for x in self.supported_instance_profiles
             ]
@@ -14403,7 +14381,7 @@ class DedicatedHostPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'instance_placement_enabled'
-                   ) and self.instance_placement_enabled is not None:
+                  ) and self.instance_placement_enabled is not None:
             _dict[
                 'instance_placement_enabled'] = self.instance_placement_enabled
         if hasattr(self, 'name') and self.name is not None:
@@ -14579,7 +14557,7 @@ class DedicatedHostProfile():
             else:
                 _dict['socket_count'] = self.socket_count.to_dict()
         if hasattr(self, 'supported_instance_profiles'
-                   ) and self.supported_instance_profiles is not None:
+                  ) and self.supported_instance_profiles is not None:
             _dict['supported_instance_profiles'] = [
                 x.to_dict() for x in self.supported_instance_profiles
             ]
@@ -15660,8 +15638,7 @@ class DefaultRoutingTable():
                 'Required property \'route_transit_gateway_ingress\' not present in DefaultRoutingTable JSON'
             )
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get(
-                'route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
         else:
             raise ValueError(
                 'Required property \'route_vpc_zone_ingress\' not present in DefaultRoutingTable JSON'
@@ -15708,14 +15685,14 @@ class DefaultRoutingTable():
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'route_direct_link_ingress'
-                   ) and self.route_direct_link_ingress is not None:
+                  ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                   ) and self.route_transit_gateway_ingress is not None:
+                  ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                   ) and self.route_vpc_zone_ingress is not None:
+                  ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         if hasattr(self, 'routes') and self.routes is not None:
             _dict['routes'] = [x.to_dict() for x in self.routes]
@@ -16998,8 +16975,7 @@ class FloatingIPCollection():
                 'Required property \'limit\' not present in FloatingIPCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = FloatingIPCollectionNext.from_dict(
-                _dict.get('next'))
+            args['next'] = FloatingIPCollectionNext.from_dict(_dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -18109,7 +18085,7 @@ class FlowLogCollectorTarget():
 
 class FlowLogCollectorTargetPrototype():
     """
-    The target this collector is collecting flow logs for. If the target is an instance,
+    The target this collector will collect flow logs for. If the target is an instance,
     subnet, or VPC, flow logs will not be collected for any network interfaces within the
     target that are themselves the target of a more specific flow log collector.
 
@@ -18287,7 +18263,7 @@ class IKEPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                   ) and self.authentication_algorithm is not None:
+                  ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -18296,7 +18272,7 @@ class IKEPolicy():
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                   ) and self.encryption_algorithm is not None:
+                  ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -18677,12 +18653,12 @@ class IKEPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                   ) and self.authentication_algorithm is not None:
+                  ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'dh_group') and self.dh_group is not None:
             _dict['dh_group'] = self.dh_group
         if hasattr(self, 'encryption_algorithm'
-                   ) and self.encryption_algorithm is not None:
+                  ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'ike_version') and self.ike_version is not None:
             _dict['ike_version'] = self.ike_version
@@ -19126,7 +19102,7 @@ class IPsecPolicy():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                   ) and self.authentication_algorithm is not None:
+                  ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'connections') and self.connections is not None:
             _dict['connections'] = [x.to_dict() for x in self.connections]
@@ -19137,7 +19113,7 @@ class IPsecPolicy():
                 'encapsulation_mode') and self.encapsulation_mode is not None:
             _dict['encapsulation_mode'] = self.encapsulation_mode
         if hasattr(self, 'encryption_algorithm'
-                   ) and self.encryption_algorithm is not None:
+                  ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
@@ -19308,8 +19284,7 @@ class IPsecPolicyCollection():
         if hasattr(self, 'first') and self.first is not None:
             _dict['first'] = self.first.to_dict()
         if hasattr(self, 'ipsec_policies') and self.ipsec_policies is not None:
-            _dict['ipsec_policies'] = [x.to_dict()
-                                       for x in self.ipsec_policies]
+            _dict['ipsec_policies'] = [x.to_dict() for x in self.ipsec_policies]
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'next') and self.next is not None:
@@ -19530,10 +19505,10 @@ class IPsecPolicyPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'authentication_algorithm'
-                   ) and self.authentication_algorithm is not None:
+                  ) and self.authentication_algorithm is not None:
             _dict['authentication_algorithm'] = self.authentication_algorithm
         if hasattr(self, 'encryption_algorithm'
-                   ) and self.encryption_algorithm is not None:
+                  ) and self.encryption_algorithm is not None:
             _dict['encryption_algorithm'] = self.encryption_algorithm
         if hasattr(self, 'key_lifetime') and self.key_lifetime is not None:
             _dict['key_lifetime'] = self.key_lifetime
@@ -19991,7 +19966,7 @@ class Image():
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'minimum_provisioned_size'
-                   ) and self.minimum_provisioned_size is not None:
+                  ) and self.minimum_provisioned_size is not None:
             _dict['minimum_provisioned_size'] = self.minimum_provisioned_size
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -20003,8 +19978,7 @@ class Image():
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'status_reasons') and self.status_reasons is not None:
-            _dict['status_reasons'] = [x.to_dict()
-                                       for x in self.status_reasons]
+            _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
         if hasattr(self, 'visibility') and self.visibility is not None:
             _dict['visibility'] = self.visibility
         return _dict
@@ -21003,10 +20977,10 @@ class Instance():
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
@@ -21030,10 +21004,10 @@ class Instance():
                 x.to_dict() for x in self.network_interfaces
             ]
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self, 'profile') and self.profile is not None:
             _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
@@ -21145,8 +21119,7 @@ class InstanceAction():
         """Initialize a InstanceAction object from a json dictionary."""
         args = {}
         if 'completed_at' in _dict:
-            args['completed_at'] = string_to_datetime(
-                _dict.get('completed_at'))
+            args['completed_at'] = string_to_datetime(_dict.get('completed_at'))
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -22201,10 +22174,10 @@ class InstanceGroupManager():
         if hasattr(self, 'manager_type') and self.manager_type is not None:
             _dict['manager_type'] = self.manager_type
         if hasattr(self, 'max_membership_count'
-                   ) and self.max_membership_count is not None:
+                  ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                   ) and self.min_membership_count is not None:
+                  ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -22558,10 +22531,10 @@ class InstanceGroupManagerPatch():
                 'management_enabled') and self.management_enabled is not None:
             _dict['management_enabled'] = self.management_enabled
         if hasattr(self, 'max_membership_count'
-                   ) and self.max_membership_count is not None:
+                  ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                   ) and self.min_membership_count is not None:
+                  ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
@@ -23438,7 +23411,7 @@ class InstanceGroupMembership():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_instance_on_membership_delete'
-                   ) and self.delete_instance_on_membership_delete is not None:
+                  ) and self.delete_instance_on_membership_delete is not None:
             _dict[
                 'delete_instance_on_membership_delete'] = self.delete_instance_on_membership_delete
         if hasattr(self, 'href') and self.href is not None:
@@ -25938,8 +25911,7 @@ class Key():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError(
-                'Required property \'id\' not present in Key JSON')
+            raise ValueError('Required property \'id\' not present in Key JSON')
         if 'length' in _dict:
             args['length'] = _dict.get('length')
         else:
@@ -26564,8 +26536,7 @@ class LoadBalancerCollection():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'load_balancers') and self.load_balancers is not None:
-            _dict['load_balancers'] = [x.to_dict()
-                                       for x in self.load_balancers]
+            _dict['load_balancers'] = [x.to_dict() for x in self.load_balancers]
         return _dict
 
     def _to_dict(self):
@@ -26622,8 +26593,8 @@ class LoadBalancerListener():
           associated with the listener.
     :attr str href: The listener's canonical URL.
     :attr str id: The unique identifier for this load balancer listener.
-    :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The list of
-          policies of this listener.
+    :attr List[LoadBalancerListenerPolicyReference] policies: (optional) An array of
+          policies for this listener.
     :attr int port: The listener port number. Each listener in the load balancer
           must have a unique
           `port` and `protocol` combination.
@@ -26675,8 +26646,8 @@ class LoadBalancerListener():
                listener.
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
                associated with the listener.
-        :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
-               list of policies of this listener.
+        :param List[LoadBalancerListenerPolicyReference] policies: (optional) An
+               array of policies for this listener.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.certificate_instance = certificate_instance
@@ -26761,10 +26732,10 @@ class LoadBalancerListener():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                   ) and self.accept_proxy_protocol is not None:
+                  ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                   ) and self.certificate_instance is not None:
+                  ) and self.certificate_instance is not None:
             _dict['certificate_instance'] = self.certificate_instance.to_dict()
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -26983,16 +26954,16 @@ class LoadBalancerListenerPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                   ) and self.accept_proxy_protocol is not None:
+                  ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self, 'certificate_instance'
-                   ) and self.certificate_instance is not None:
+                  ) and self.certificate_instance is not None:
             if isinstance(self.certificate_instance, dict):
                 _dict['certificate_instance'] = self.certificate_instance
             else:
                 _dict[
                     'certificate_instance'] = self.certificate_instance.to_dict(
-                )
+                    )
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
             _dict['connection_limit'] = self.connection_limit
@@ -27385,8 +27356,8 @@ class LoadBalancerListenerPolicyPrototype():
           unique within the load balancer listener the policy resides in.
     :attr int priority: Priority of the policy. Lower value indicates higher
           priority.
-    :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The list
-          of rules of this policy.
+    :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An array
+          of rules for this policy.
     :attr LoadBalancerListenerPolicyTargetPrototype target: (optional) When `action`
           is `forward`, `LoadBalancerPoolIdentity` is required to specify which
           pool the load balancer forwards the traffic to. When `action` is `redirect`,
@@ -27411,8 +27382,8 @@ class LoadBalancerListenerPolicyPrototype():
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
-        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
-               list of rules of this policy.
+        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An
+               array of rules for this policy.
         :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
@@ -28402,7 +28373,7 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'accept_proxy_protocol'
-                   ) and self.accept_proxy_protocol is not None:
+                  ) and self.accept_proxy_protocol is not None:
             _dict['accept_proxy_protocol'] = self.accept_proxy_protocol
         if hasattr(self,
                    'connection_limit') and self.connection_limit is not None:
@@ -31481,7 +31452,7 @@ class LoadBalancerStatistics():
                    'connection_rate') and self.connection_rate is not None:
             _dict['connection_rate'] = self.connection_rate
         if hasattr(self, 'data_processed_this_month'
-                   ) and self.data_processed_this_month is not None:
+                  ) and self.data_processed_this_month is not None:
             _dict['data_processed_this_month'] = self.data_processed_this_month
         if hasattr(self, 'throughput') and self.throughput is not None:
             _dict['throughput'] = self.throughput
@@ -31726,8 +31697,7 @@ class NetworkACLCollection():
                 'Required property \'network_acls\' not present in NetworkACLCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = NetworkACLCollectionNext.from_dict(
-                _dict.get('next'))
+            args['next'] = NetworkACLCollectionNext.from_dict(_dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -32839,10 +32809,10 @@ class NetworkACLRulePatch():
         if hasattr(self, 'destination') and self.destination is not None:
             _dict['destination'] = self.destination
         if hasattr(self, 'destination_port_max'
-                   ) and self.destination_port_max is not None:
+                  ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                   ) and self.destination_port_min is not None:
+                  ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
@@ -33456,7 +33426,7 @@ class NetworkInterface():
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
         if hasattr(self, 'primary_ipv4_address'
-                   ) and self.primary_ipv4_address is not None:
+                  ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -33867,7 +33837,7 @@ class NetworkInterfaceInstanceContextReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                   ) and self.primary_ipv4_address is not None:
+                  ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -34118,7 +34088,7 @@ class NetworkInterfacePrototype():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                   ) and self.primary_ipv4_address is not None:
+                  ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self,
                    'security_groups') and self.security_groups is not None:
@@ -34253,7 +34223,7 @@ class NetworkInterfaceReference():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                   ) and self.primary_ipv4_address is not None:
+                  ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -36133,8 +36103,7 @@ class ReservedIPCollection():
                 'Required property \'limit\' not present in ReservedIPCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = ReservedIPCollectionNext.from_dict(
-                _dict.get('next'))
+            args['next'] = ReservedIPCollectionNext.from_dict(_dict.get('next'))
         if 'reserved_ips' in _dict:
             args['reserved_ips'] = [
                 ReservedIP.from_dict(x) for x in _dict.get('reserved_ips')
@@ -37859,8 +37828,7 @@ class RoutingTable():
                 'Required property \'route_transit_gateway_ingress\' not present in RoutingTable JSON'
             )
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get(
-                'route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
         else:
             raise ValueError(
                 'Required property \'route_vpc_zone_ingress\' not present in RoutingTable JSON'
@@ -37906,14 +37874,14 @@ class RoutingTable():
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'route_direct_link_ingress'
-                   ) and self.route_direct_link_ingress is not None:
+                  ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                   ) and self.route_transit_gateway_ingress is not None:
+                  ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                   ) and self.route_vpc_zone_ingress is not None:
+                  ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         if hasattr(self, 'routes') and self.routes is not None:
             _dict['routes'] = [x.to_dict() for x in self.routes]
@@ -38050,8 +38018,7 @@ class RoutingTableCollection():
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'routing_tables') and self.routing_tables is not None:
-            _dict['routing_tables'] = [x.to_dict()
-                                       for x in self.routing_tables]
+            _dict['routing_tables'] = [x.to_dict() for x in self.routing_tables]
         if hasattr(self, 'total_count') and self.total_count is not None:
             _dict['total_count'] = self.total_count
         return _dict
@@ -38326,8 +38293,7 @@ class RoutingTablePatch():
             args['route_transit_gateway_ingress'] = _dict.get(
                 'route_transit_gateway_ingress')
         if 'route_vpc_zone_ingress' in _dict:
-            args['route_vpc_zone_ingress'] = _dict.get(
-                'route_vpc_zone_ingress')
+            args['route_vpc_zone_ingress'] = _dict.get('route_vpc_zone_ingress')
         return cls(**args)
 
     @classmethod
@@ -38341,14 +38307,14 @@ class RoutingTablePatch():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'route_direct_link_ingress'
-                   ) and self.route_direct_link_ingress is not None:
+                  ) and self.route_direct_link_ingress is not None:
             _dict['route_direct_link_ingress'] = self.route_direct_link_ingress
         if hasattr(self, 'route_transit_gateway_ingress'
-                   ) and self.route_transit_gateway_ingress is not None:
+                  ) and self.route_transit_gateway_ingress is not None:
             _dict[
                 'route_transit_gateway_ingress'] = self.route_transit_gateway_ingress
         if hasattr(self, 'route_vpc_zone_ingress'
-                   ) and self.route_vpc_zone_ingress is not None:
+                  ) and self.route_vpc_zone_ingress is not None:
             _dict['route_vpc_zone_ingress'] = self.route_vpc_zone_ingress
         return _dict
 
@@ -39898,7 +39864,7 @@ class Subnet():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'available_ipv4_address_count'
-                   ) and self.available_ipv4_address_count is not None:
+                  ) and self.available_ipv4_address_count is not None:
             _dict[
                 'available_ipv4_address_count'] = self.available_ipv4_address_count
         if hasattr(self, 'created_at') and self.created_at is not None:
@@ -39927,7 +39893,7 @@ class Subnet():
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'total_ipv4_address_count'
-                   ) and self.total_ipv4_address_count is not None:
+                  ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
@@ -40756,8 +40722,7 @@ class VPC():
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError(
-                'Required property \'id\' not present in VPC JSON')
+            raise ValueError('Required property \'id\' not present in VPC JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -40791,21 +40756,20 @@ class VPC():
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
         if hasattr(self, 'cse_source_ips') and self.cse_source_ips is not None:
-            _dict['cse_source_ips'] = [x.to_dict()
-                                       for x in self.cse_source_ips]
+            _dict['cse_source_ips'] = [x.to_dict() for x in self.cse_source_ips]
         if hasattr(
                 self,
                 'default_network_acl') and self.default_network_acl is not None:
             _dict['default_network_acl'] = self.default_network_acl.to_dict()
         if hasattr(self, 'default_routing_table'
-                   ) and self.default_routing_table is not None:
+                  ) and self.default_routing_table is not None:
             _dict['default_routing_table'] = self.default_routing_table.to_dict(
             )
         if hasattr(self, 'default_security_group'
-                   ) and self.default_security_group is not None:
+                  ) and self.default_security_group is not None:
             _dict[
                 'default_security_group'] = self.default_security_group.to_dict(
-            )
+                )
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
@@ -41494,8 +41458,7 @@ class VPNGatewayCollection():
                 'Required property \'limit\' not present in VPNGatewayCollection JSON'
             )
         if 'next' in _dict:
-            args['next'] = VPNGatewayCollectionNext.from_dict(
-                _dict.get('next'))
+            args['next'] = VPNGatewayCollectionNext.from_dict(_dict.get('next'))
         if 'total_count' in _dict:
             args['total_count'] = _dict.get('total_count')
         else:
@@ -42901,8 +42864,7 @@ class Volume():
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         if hasattr(self, 'status_reasons') and self.status_reasons is not None:
-            _dict['status_reasons'] = [x.to_dict()
-                                       for x in self.status_reasons]
+            _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
         if hasattr(
                 self,
                 'volume_attachments') and self.volume_attachments is not None:
@@ -43074,7 +43036,7 @@ class VolumeAttachment():
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_volume_on_instance_delete'
-                   ) and self.delete_volume_on_instance_delete is not None:
+                  ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'device') and self.device is not None:
@@ -43295,7 +43257,7 @@ class VolumeAttachmentPatch():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                   ) and self.delete_volume_on_instance_delete is not None:
+                  ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -43380,7 +43342,7 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                   ) and self.delete_volume_on_instance_delete is not None:
+                  ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -43471,7 +43433,7 @@ class VolumeAttachmentPrototypeInstanceContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                   ) and self.delete_volume_on_instance_delete is not None:
+                  ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -43816,7 +43778,7 @@ class VolumeAttachmentReferenceVolumeContext():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'delete_volume_on_instance_delete'
-                   ) and self.delete_volume_on_instance_delete is not None:
+                  ) and self.delete_volume_on_instance_delete is not None:
             _dict[
                 'delete_volume_on_instance_delete'] = self.delete_volume_on_instance_delete
         if hasattr(self, 'deleted') and self.deleted is not None:
@@ -46781,7 +46743,7 @@ class DedicatedHostPrototypeDedicatedHostByGroup(DedicatedHostPrototype):
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'instance_placement_enabled'
-                   ) and self.instance_placement_enabled is not None:
+                  ) and self.instance_placement_enabled is not None:
             _dict[
                 'instance_placement_enabled'] = self.instance_placement_enabled
         if hasattr(self, 'name') and self.name is not None:
@@ -46911,7 +46873,7 @@ class DedicatedHostPrototypeDedicatedHostByZone(DedicatedHostPrototype):
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'instance_placement_enabled'
-                   ) and self.instance_placement_enabled is not None:
+                  ) and self.instance_placement_enabled is not None:
             _dict[
                 'instance_placement_enabled'] = self.instance_placement_enabled
         if hasattr(self, 'name') and self.name is not None:
@@ -47917,7 +47879,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ipv4_address'
-                   ) and self.primary_ipv4_address is not None:
+                  ) and self.primary_ipv4_address is not None:
             _dict['primary_ipv4_address'] = self.primary_ipv4_address
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
@@ -48144,7 +48106,7 @@ class FlowLogCollectorTargetPrototypeSubnetIdentity(
 
 
 class FlowLogCollectorTargetPrototypeVPCIdentity(FlowLogCollectorTargetPrototype
-                                                 ):
+                                                ):
     """
     Identifies a VPC by a unique property.
 
@@ -49570,10 +49532,10 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(
         if hasattr(self, 'manager_type') and self.manager_type is not None:
             _dict['manager_type'] = self.manager_type
         if hasattr(self, 'max_membership_count'
-                   ) and self.max_membership_count is not None:
+                  ) and self.max_membership_count is not None:
             _dict['max_membership_count'] = self.max_membership_count
         if hasattr(self, 'min_membership_count'
-                   ) and self.min_membership_count is not None:
+                  ) and self.min_membership_count is not None:
             _dict['min_membership_count'] = self.min_membership_count
         return _dict
 
@@ -51095,20 +51057,20 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -51340,20 +51302,20 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -51772,20 +51734,20 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -52019,20 +51981,20 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -52329,20 +52291,20 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -52628,20 +52590,20 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'boot_volume_attachment'
-                   ) and self.boot_volume_attachment is not None:
+                  ) and self.boot_volume_attachment is not None:
             _dict[
                 'boot_volume_attachment'] = self.boot_volume_attachment.to_dict(
-            )
+                )
         if hasattr(self, 'image') and self.image is not None:
             if isinstance(self.image, dict):
                 _dict['image'] = self.image
             else:
                 _dict['image'] = self.image.to_dict()
         if hasattr(self, 'primary_network_interface'
-                   ) and self.primary_network_interface is not None:
+                  ) and self.primary_network_interface is not None:
             _dict[
                 'primary_network_interface'] = self.primary_network_interface.to_dict(
-            )
+                )
         if hasattr(self,
                    'source_template') and self.source_template is not None:
             if isinstance(self.source_template, dict):
@@ -53954,7 +53916,7 @@ class LoadBalancerPoolMemberTargetIP(LoadBalancerPoolMemberTarget):
 
 
 class LoadBalancerPoolMemberTargetInstanceReference(LoadBalancerPoolMemberTarget
-                                                    ):
+                                                   ):
     """
     LoadBalancerPoolMemberTargetInstanceReference.
 
@@ -55514,10 +55476,10 @@ class NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP(NetworkACLRuleItem):
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                   ) and self.destination_port_max is not None:
+                  ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                   ) and self.destination_port_min is not None:
+                  ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -56051,10 +56013,10 @@ class NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP(
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                   ) and self.destination_port_max is not None:
+                  ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                   ) and self.destination_port_min is not None:
+                  ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -56277,7 +56239,7 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolAll(NetworkACLRulePrototype):
 
 
 class NetworkACLRulePrototypeNetworkACLRuleProtocolICMP(NetworkACLRulePrototype
-                                                        ):
+                                                       ):
     """
     NetworkACLRulePrototypeNetworkACLRuleProtocolICMP.
 
@@ -56613,10 +56575,10 @@ class NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP(
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                   ) and self.destination_port_max is not None:
+                  ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                   ) and self.destination_port_min is not None:
+                  ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -57330,10 +57292,10 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
         if hasattr(self, 'source') and self.source is not None:
             _dict['source'] = self.source
         if hasattr(self, 'destination_port_max'
-                   ) and self.destination_port_max is not None:
+                  ) and self.destination_port_max is not None:
             _dict['destination_port_max'] = self.destination_port_max
         if hasattr(self, 'destination_port_min'
-                   ) and self.destination_port_min is not None:
+                  ) and self.destination_port_min is not None:
             _dict['destination_port_min'] = self.destination_port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
@@ -57798,7 +57760,7 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
 
 
 class ReservedIPTargetPrototypeEndpointGatewayIdentity(ReservedIPTargetPrototype
-                                                       ):
+                                                      ):
     """
     ReservedIPTargetPrototypeEndpointGatewayIdentity.
 
@@ -60576,7 +60538,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
             else:
                 _dict['vpc'] = self.vpc.to_dict()
         if hasattr(self, 'total_ipv4_address_count'
-                   ) and self.total_ipv4_address_count is not None:
+                  ) and self.total_ipv4_address_count is not None:
             _dict['total_ipv4_address_count'] = self.total_ipv4_address_count
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
