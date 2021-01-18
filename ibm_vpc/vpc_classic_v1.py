@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2020.
+# (C) Copyright IBM Corp. 2020, 2021.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class VpcClassicV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2020-12-15',
+        version: str = '2021-01-12',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 1,
     ) -> 'VpcClassicV1':
@@ -75,7 +75,7 @@ class VpcClassicV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2020-12-15',
+        version: str = '2021-01-12',
         authenticator: Authenticator = None,
         generation: int = 1,
     ) -> None:
@@ -112,10 +112,10 @@ class VpcClassicV1(BaseService):
         """
         List all VPCs.
 
-        This request lists all VPCs. A VPC is a virtual network that belongs to an account
-        and provides logical isolation from other networks. A VPC is made up of resources
-        in one or more zones. VPCs are regional, and each VPC can contain resources in
-        multiple zones in a region.
+        This request lists all VPCs in the region. A VPC is a virtual network that belongs
+        to an account and provides logical isolation from other networks. A VPC is made up
+        of resources in one or more zones. VPCs are regional, and each VPC can contain
+        resources in multiple zones in a region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -226,7 +226,7 @@ class VpcClassicV1(BaseService):
 
     def delete_vpc(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified VPC.
+        Delete a VPC.
 
         This request deletes a VPC. This operation cannot be reversed. For this request to
         succeed, the VPC must not contain any instances, subnets, or public gateways. All
@@ -266,7 +266,7 @@ class VpcClassicV1(BaseService):
 
     def get_vpc(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified VPC.
+        Retrieve a VPC.
 
         This request retrieves a single VPC specified by the identifier in the URL.
 
@@ -305,7 +305,7 @@ class VpcClassicV1(BaseService):
     def update_vpc(self, id: str, vpc_patch: 'VPCPatch',
                    **kwargs) -> DetailedResponse:
         """
-        Update specified VPC.
+        Update a VPC.
 
         This request updates a VPC's name.
 
@@ -399,7 +399,7 @@ class VpcClassicV1(BaseService):
                                   limit: int = None,
                                   **kwargs) -> DetailedResponse:
         """
-        List all address pool prefixes for a VPC.
+        List all address prefixes for a VPC.
 
         This request lists all address pool prefixes for a VPC.
 
@@ -452,7 +452,7 @@ class VpcClassicV1(BaseService):
                                   name: str = None,
                                   **kwargs) -> DetailedResponse:
         """
-        Create an address pool prefix.
+        Create an address prefix for a VPC.
 
         This request creates a new prefix from a prefix prototype object. The prototype
         object is structured in the same way as a retrieved prefix, and contains the
@@ -527,7 +527,7 @@ class VpcClassicV1(BaseService):
     def delete_vpc_address_prefix(self, vpc_id: str, id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Delete specified address pool prefix.
+        Delete an address prefix.
 
         This request deletes a prefix. This operation cannot be reversed. The request will
         fail if any subnets use addresses from this prefix.
@@ -569,7 +569,7 @@ class VpcClassicV1(BaseService):
     def get_vpc_address_prefix(self, vpc_id: str, id: str,
                                **kwargs) -> DetailedResponse:
         """
-        Retrieve specified address pool prefix.
+        Retrieve an address prefix.
 
         This request retrieves a single prefix specified by the identifier in the URL.
 
@@ -612,7 +612,7 @@ class VpcClassicV1(BaseService):
                                   address_prefix_patch: 'AddressPrefixPatch',
                                   **kwargs) -> DetailedResponse:
         """
-        Update an address pool prefix.
+        Update an address prefix.
 
         This request updates a prefix with the information in a provided prefix patch. The
         prefix patch object is structured in the same way as a retrieved prefix and
@@ -668,9 +668,9 @@ class VpcClassicV1(BaseService):
                         zone_name: str = None,
                         **kwargs) -> DetailedResponse:
         """
-        List all routes in the VPC's default routing table.
+        List all routes in a VPC's default routing table.
 
-        This request retrieves routes in the VPC's default routing table. Each route is
+        This request lists all routes in the VPC's default routing table. Each route is
         zone-specific and directs any packets matching its destination CIDR block to a
         `next_hop` IP address. The most specific route matching a packet's destination
         will be used. If multiple equally-specific routes exist, traffic will be
@@ -723,7 +723,7 @@ class VpcClassicV1(BaseService):
                          name: str = None,
                          **kwargs) -> DetailedResponse:
         """
-        Create a route in the VPC's default routing table.
+        Create a route in a VPC's default routing table.
 
         This request creates a new route in the VPC's default routing table. The route
         prototype object is structured in the same way as a retrieved route, and contains
@@ -794,7 +794,7 @@ class VpcClassicV1(BaseService):
     def delete_vpc_route(self, vpc_id: str, id: str,
                          **kwargs) -> DetailedResponse:
         """
-        Delete the specified route in the VPC's default routing table.
+        Delete a VPC route.
 
         This request deletes a route. This operation cannot be reversed.
 
@@ -834,7 +834,7 @@ class VpcClassicV1(BaseService):
 
     def get_vpc_route(self, vpc_id: str, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified route in the VPC's default routing table.
+        Retrieve a VPC route.
 
         This request retrieves a single route specified by the identifier in the URL.
 
@@ -876,7 +876,7 @@ class VpcClassicV1(BaseService):
     def update_vpc_route(self, vpc_id: str, id: str, route_patch: 'RoutePatch',
                          **kwargs) -> DetailedResponse:
         """
-        Update the specified route in the VPC's default routing table.
+        Update a VPC route.
 
         This request updates a route with the information in a provided route patch. The
         route patch object is structured in the same way as a retrieved route and contains
@@ -1023,7 +1023,7 @@ class VpcClassicV1(BaseService):
 
     def delete_subnet(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified subnet.
+        Delete a subnet.
 
         This request deletes a subnet. This operation cannot be reversed. For this request
         to succeed, the subnet must not be referenced by any network interfaces, VPN
@@ -1063,7 +1063,7 @@ class VpcClassicV1(BaseService):
 
     def get_subnet(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified subnet.
+        Retrieve a subnet.
 
         This request retrieves a single subnet specified by the identifier in the URL.
 
@@ -1102,7 +1102,7 @@ class VpcClassicV1(BaseService):
     def update_subnet(self, id: str, subnet_patch: 'SubnetPatch',
                       **kwargs) -> DetailedResponse:
         """
-        Update specified subnet.
+        Update a subnet.
 
         This request updates a subnet with the information in a provided subnet patch. The
         subnet patch object is structured in the same way as a retrieved subnet and
@@ -1479,7 +1479,7 @@ class VpcClassicV1(BaseService):
 
     def delete_image(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified image.
+        Delete an image.
 
         This request deletes an image. This operation cannot be reversed. System-provided
         images are not allowed to be deleted. An image with a `status` of `pending`,
@@ -1518,7 +1518,7 @@ class VpcClassicV1(BaseService):
 
     def get_image(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified image.
+        Retrieve an image.
 
         This request retrieves a single image specified by the identifier in the URL.
 
@@ -1557,7 +1557,7 @@ class VpcClassicV1(BaseService):
     def update_image(self, id: str, image_patch: 'ImagePatch',
                      **kwargs) -> DetailedResponse:
         """
-        Update specified image.
+        Update an image.
 
         This request updates an image with the information in a provided image patch. The
         image patch object is structured in the same way as a retrieved image and contains
@@ -1611,9 +1611,9 @@ class VpcClassicV1(BaseService):
                                limit: int = None,
                                **kwargs) -> DetailedResponse:
         """
-        Retrieves all operating systems.
+        List all operating systems.
 
-        This request retrieves all operating systems.
+        This request lists all operating systems in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -1651,7 +1651,7 @@ class VpcClassicV1(BaseService):
 
     def get_operating_system(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieves an operating system.
+        Retrieve an operating system.
 
         This request retrieves a single operating system specified by the name in the URL.
 
@@ -1699,8 +1699,8 @@ class VpcClassicV1(BaseService):
         """
         List all keys.
 
-        This request lists all keys. A key contains a public SSH key which may be
-        installed on instances when they are created. Private keys are not stored.
+        This request lists all keys in the region. A key contains a public SSH key which
+        may be installed on instances when they are created. Private keys are not stored.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -1802,7 +1802,7 @@ class VpcClassicV1(BaseService):
 
     def delete_key(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified key.
+        Delete a key.
 
         This request deletes a key. This operation cannot be reversed.
 
@@ -1839,7 +1839,7 @@ class VpcClassicV1(BaseService):
 
     def get_key(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified key.
+        Retrieve a key.
 
         This request retrieves a single key specified by the identifier in the URL.
 
@@ -1878,7 +1878,7 @@ class VpcClassicV1(BaseService):
     def update_key(self, id: str, key_patch: 'KeyPatch',
                    **kwargs) -> DetailedResponse:
         """
-        Update specified key.
+        Update a key.
 
         This request updates a key's name.
 
@@ -1975,7 +1975,7 @@ class VpcClassicV1(BaseService):
 
     def get_instance_profile(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified instance profile.
+        Retrieve an instance profile.
 
         This request retrieves a single instance profile specified by the name in the URL.
 
@@ -2114,7 +2114,7 @@ class VpcClassicV1(BaseService):
 
     def delete_instance(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified instance.
+        Delete an instance.
 
         This request deletes an instance. This operation cannot be reversed. Any floating
         IPs associated with the instance's network interfaces are implicitly
@@ -2193,7 +2193,7 @@ class VpcClassicV1(BaseService):
     def update_instance(self, id: str, instance_patch: 'InstancePatch',
                         **kwargs) -> DetailedResponse:
         """
-        Update specified instance.
+        Update an instance.
 
         This request updates an instance with the information in a provided instance
         patch. The instance patch object is structured in the same way as a retrieved
@@ -2243,7 +2243,7 @@ class VpcClassicV1(BaseService):
     def get_instance_initialization(self, id: str,
                                     **kwargs) -> DetailedResponse:
         """
-        Retrieve configuration used to initialize the instance.
+        Retrieve initialization configuration for an instance.
 
         This request retrieves configuration variables used to initialize the instance,
         such as SSH keys and the Windows administrator password.
@@ -2378,7 +2378,7 @@ class VpcClassicV1(BaseService):
     def get_instance_network_interface(self, instance_id: str, id: str,
                                        **kwargs) -> DetailedResponse:
         """
-        Retrieve specified network interface.
+        Retrieve a network interface.
 
         This request retrieves a single network interface specified by the identifier in
         the URL.
@@ -2470,7 +2470,7 @@ class VpcClassicV1(BaseService):
             self, instance_id: str, network_interface_id: str, id: str,
             **kwargs) -> DetailedResponse:
         """
-        Disassociate specified floating IP.
+        Disassociate a floating IP from a network interface.
 
         This request disassociates the specified floating IP from the specified network
         interface.
@@ -2620,9 +2620,9 @@ class VpcClassicV1(BaseService):
     def list_instance_volume_attachments(self, instance_id: str,
                                          **kwargs) -> DetailedResponse:
         """
-        List all volumes attached to an instance.
+        List all volumes attachments on an instance.
 
-        This request lists all volume attachments for an instance. A volume attachment
+        This request lists all volume attachments on an instance. A volume attachment
         connects a volume to an instance. Each instance may have many volume attachments
         but each volume attachment connects exactly one instance to exactly one volume.
 
@@ -2669,7 +2669,7 @@ class VpcClassicV1(BaseService):
             name: str = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a volume attachment, connecting a volume to an instance.
+        Create a volume attachment on an instance.
 
         This request creates a new volume attachment from a volume attachment prototype
         object. The prototype object is structured in the same way as a retrieved volume
@@ -2737,7 +2737,7 @@ class VpcClassicV1(BaseService):
     def delete_instance_volume_attachment(self, instance_id: str, id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Delete a volume attachment, detaching a volume from an instance.
+        Delete a volume attachment.
 
         This request deletes a volume attachment. The deletion of a volume attachment
         detaches a volume from an instance.
@@ -2781,7 +2781,7 @@ class VpcClassicV1(BaseService):
     def get_instance_volume_attachment(self, instance_id: str, id: str,
                                        **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume attachment.
+        Retrieve a volume attachment.
 
         This request retrieves a single volume attachment specified by the identifier in
         the URL.
@@ -2932,7 +2932,7 @@ class VpcClassicV1(BaseService):
 
     def get_volume_profile(self, name: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume profile.
+        Retrieve a volume profile.
 
         This request retrieves a single volume profile specified by the name in the URL.
 
@@ -3067,7 +3067,7 @@ class VpcClassicV1(BaseService):
 
     def delete_volume(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified volume.
+        Delete a volume.
 
         This request deletes a volume. This operation cannot be reversed. For this request
         to succeed, the volume must not be attached to any instances.
@@ -3105,7 +3105,7 @@ class VpcClassicV1(BaseService):
 
     def get_volume(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified volume.
+        Retrieve a volume.
 
         This request retrieves a single volume specified by the identifier in the URL.
 
@@ -3144,7 +3144,7 @@ class VpcClassicV1(BaseService):
     def update_volume(self, id: str, volume_patch: 'VolumePatch',
                       **kwargs) -> DetailedResponse:
         """
-        Update specified volume.
+        Update a volume.
 
         This request updates a volume with the information in a provided volume patch. The
         volume patch object is structured in the same way as a retrieved volume and
@@ -3365,9 +3365,10 @@ class VpcClassicV1(BaseService):
         """
         List all public gateways.
 
-        This request lists all public gateways. A public gateway is a virtual network
-        device associated with a VPC, which allows access to the Internet. A public
-        gateway resides in a zone and can be connected to subnets in the same zone only.
+        This request lists all public gateways in the region. A public gateway is a
+        virtual network device associated with a VPC, which allows access to the Internet.
+        A public gateway resides in a zone and can be connected to subnets in the same
+        zone only.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -3476,7 +3477,7 @@ class VpcClassicV1(BaseService):
 
     def delete_public_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified public gateway.
+        Delete a public gateway.
 
         This request deletes a public gateway. This operation cannot be reversed. For this
         request to succeed, the public gateway must not be attached to any subnets. The
@@ -3516,7 +3517,7 @@ class VpcClassicV1(BaseService):
 
     def get_public_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified public gateway.
+        Retrieve a public gateway.
 
         This request retrieves a single public gateway specified by the identifier in the
         URL.
@@ -3557,7 +3558,7 @@ class VpcClassicV1(BaseService):
                               public_gateway_patch: 'PublicGatewayPatch',
                               **kwargs) -> DetailedResponse:
         """
-        Update a public gateway's name.
+        Update a public gateway.
 
         This request updates a public gateway's name.
 
@@ -3614,8 +3615,8 @@ class VpcClassicV1(BaseService):
         """
         List all floating IPs.
 
-        This request retrieves all floating IPs in the region. Floating IPs allow inbound
-        and outbound traffic from the Internet to an instance.
+        This request lists all floating IPs in the region. Floating IPs allow inbound and
+        outbound traffic from the Internet to an instance.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -3696,7 +3697,7 @@ class VpcClassicV1(BaseService):
 
     def delete_floating_ip(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Release the specified floating IP.
+        Release a floating IP.
 
         This request disassociates (if associated) and releases a floating IP. This
         operation cannot be reversed. For this request to succeed, the floating IP must
@@ -3735,7 +3736,7 @@ class VpcClassicV1(BaseService):
 
     def get_floating_ip(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified floating IP.
+        Retrieve a floating IP.
 
         This request retrieves a single floating IP specified by the identifier in the
         URL.
@@ -3775,7 +3776,7 @@ class VpcClassicV1(BaseService):
     def update_floating_ip(self, id: str, floating_ip_patch: 'FloatingIPPatch',
                            **kwargs) -> DetailedResponse:
         """
-        Update the specified floating IP.
+        Update a floating IP.
 
         This request updates a floating IP's name and/or target.
 
@@ -3919,7 +3920,7 @@ class VpcClassicV1(BaseService):
 
     def delete_network_acl(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Delete specified network ACL.
+        Delete a network ACL.
 
         This request deletes a network ACL. This operation cannot be reversed. For this
         request to succeed, the network ACL must not be the default network ACL for any
@@ -3958,7 +3959,7 @@ class VpcClassicV1(BaseService):
 
     def get_network_acl(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve specified network ACL.
+        Retrieve a network ACL.
 
         This request retrieves a single network ACL specified by the identifier in the
         URL.
@@ -4105,7 +4106,7 @@ class VpcClassicV1(BaseService):
             network_acl_rule_prototype: 'NetworkACLRulePrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a rule.
+        Create a rule for a network ACL.
 
         This request creates a new rule from a network ACL rule prototype object. The
         prototype object is structured in the same way as a retrieved rule, and contains
@@ -4157,7 +4158,7 @@ class VpcClassicV1(BaseService):
     def delete_network_acl_rule(self, network_acl_id: str, id: str,
                                 **kwargs) -> DetailedResponse:
         """
-        Delete specified rule.
+        Delete a network ACL rule.
 
         This request deletes a rule. This operation cannot be reversed.
 
@@ -4199,7 +4200,7 @@ class VpcClassicV1(BaseService):
     def get_network_acl_rule(self, network_acl_id: str, id: str,
                              **kwargs) -> DetailedResponse:
         """
-        Retrieve specified rule.
+        Retrieve a network ACL rule.
 
         This request retrieves a single rule specified by the identifier in the URL.
 
@@ -4243,7 +4244,7 @@ class VpcClassicV1(BaseService):
                                 network_acl_rule_patch: 'NetworkACLRulePatch',
                                 **kwargs) -> DetailedResponse:
         """
-        Update a rule.
+        Update a network ACL rule.
 
         This request updates a rule with the information in a provided rule patch. The
         rule patch object is structured in the same way as a retrieved rule and contains
@@ -4308,12 +4309,12 @@ class VpcClassicV1(BaseService):
         """
         List all security groups.
 
-        This request lists all existing security groups. Security groups provide a
-        convenient way to apply IP filtering rules to instances in the associated VPC.
-        With security groups, all traffic is denied by default, and rules added to
-        security groups define which traffic the security group permits. Security group
-        rules are stateful such that reverse traffic in response to allowed traffic is
-        automatically permitted.
+        This request lists all security groups in the region. Security groups provide a
+        way to apply IP filtering rules to instances in the associated VPC. With security
+        groups, all traffic is denied by default, and rules added to security groups
+        define which traffic the security group permits. Security group rules are stateful
+        such that reverse traffic in response to allowed traffic is automatically
+        permitted.
 
         :param str vpc_id: (optional) Filters the collection to resources in the
                VPC with the specified identifier.
@@ -4559,9 +4560,9 @@ class VpcClassicV1(BaseService):
     def list_security_group_network_interfaces(self, security_group_id: str,
                                                **kwargs) -> DetailedResponse:
         """
-        List a security group's network interfaces.
+        List all network interfaces associated with a security group.
 
-        This request lists all network interfaces associated with the security group, to
+        This request lists all network interfaces associated with a security group, to
         which the rules in the security group are applied.
 
         :param str security_group_id: The security group identifier.
@@ -4744,12 +4745,11 @@ class VpcClassicV1(BaseService):
     def list_security_group_rules(self, security_group_id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        List all the rules of a security group.
+        List all rules in a security group.
 
-        This request lists all the security group rules for a particular security group.
-        These rules define what traffic the security group permits. Security group rules
-        are stateful, such that reverse traffic in response to allowed traffic is
-        automatically permitted.
+        This request lists all rules in a security group. These rules define what traffic
+        the security group permits. Security group rules are stateful, such that reverse
+        traffic in response to allowed traffic is automatically permitted.
 
         :param str security_group_id: The security group identifier.
         :param dict headers: A `dict` containing the request headers
@@ -4789,7 +4789,7 @@ class VpcClassicV1(BaseService):
             security_group_rule_prototype: 'SecurityGroupRulePrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a security group rule.
+        Create a rule for a security group.
 
         This request creates a new security group rule from a security group rule
         prototype object. The prototype object is structured in the same way as a
@@ -5004,8 +5004,7 @@ class VpcClassicV1(BaseService):
         """
         List all IKE policies.
 
-        This request retrieves a paginated list of all IKE policies that belong to this
-        account.
+        This request lists all IKE policies in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -5155,7 +5154,7 @@ class VpcClassicV1(BaseService):
 
     def get_ike_policy(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified IKE policy.
+        Retrieve an IKE policy.
 
         This request retrieves a single IKE policy specified by the identifier in the URL.
 
@@ -5242,9 +5241,9 @@ class VpcClassicV1(BaseService):
     def list_ike_policy_connections(self, id: str,
                                     **kwargs) -> DetailedResponse:
         """
-        List all connections that use the specified IKE policy.
+        List all VPN gateway connections that use a specified IKE policy.
 
-        This request lists all the connections that use the specified policy.
+        This request lists all VPN gateway connections that use a policy.
 
         :param str id: The IKE policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -5287,8 +5286,7 @@ class VpcClassicV1(BaseService):
         """
         List all IPsec policies.
 
-        This request retrieves a paginated list of all IPsec policies that belong to this
-        account.
+        This request lists all IPsec policies in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -5433,7 +5431,7 @@ class VpcClassicV1(BaseService):
 
     def get_ipsec_policy(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified IPsec policy.
+        Retrieve an IPsec policy.
 
         This request retrieves a single IPsec policy specified by the identifier in the
         URL.
@@ -5522,9 +5520,9 @@ class VpcClassicV1(BaseService):
     def list_ipsec_policy_connections(self, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        List all connections that use the specified IPsec policy.
+        List all VPN gateway connections that use a specified IPsec policy.
 
-        This request lists all the connections that use the specified policy.
+        This request lists all VPN gateway connections that use a policy.
 
         :param str id: The IPsec policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -5569,8 +5567,7 @@ class VpcClassicV1(BaseService):
         """
         List all VPN gateways.
 
-        This request retrieves a paginated list of all VPN gateways that belong to this
-        account.
+        This request lists all VPN gateways in the region.
 
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
@@ -5697,7 +5694,7 @@ class VpcClassicV1(BaseService):
 
     def get_vpn_gateway(self, id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified VPN gateway.
+        Retrieve a VPN gateway.
 
         This request retrieves a single VPN gateway specified by the identifier in the
         URL.
@@ -5790,7 +5787,7 @@ class VpcClassicV1(BaseService):
         """
         List all connections of a VPN gateway.
 
-        This request lists all the connections of a particular VPN gateway.
+        This request lists all connections of a VPN gateway.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str status: (optional) Filters the collection to VPN gateway
@@ -5837,7 +5834,7 @@ class VpcClassicV1(BaseService):
             vpn_gateway_connection_prototype: 'VPNGatewayConnectionPrototype',
             **kwargs) -> DetailedResponse:
         """
-        Create a VPN gateway connection.
+        Create a connection for a VPN gateway.
 
         This request creates a new VPN gateway connection.
 
@@ -5934,7 +5931,7 @@ class VpcClassicV1(BaseService):
     def get_vpn_gateway_connection(self, vpn_gateway_id: str, id: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve the specified VPN gateway connection.
+        Retrieve a VPN gateway connection.
 
         This request retrieves a single VPN gateway connection specified by the identifier
         in the URL.
@@ -6038,8 +6035,7 @@ class VpcClassicV1(BaseService):
         """
         List all local CIDRs for a VPN gateway connection.
 
-        This request lists all local CIDRs for a VPN gateway connection specified by the
-        identifier in the URL.
+        This request lists all local CIDRs for a VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -6249,8 +6245,7 @@ class VpcClassicV1(BaseService):
         """
         List all peer CIDRs for a VPN gateway connection.
 
-        This request lists all peer CIDRs for a VPN gateway connection specified by the
-        identifier in the URL.
+        This request lists all peer CIDRs for a VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -6462,8 +6457,7 @@ class VpcClassicV1(BaseService):
         """
         List all load balancers.
 
-        This request retrieves a paginated list of all load balancers that belong to this
-        account.
+        This request lists all load balancers in the region.
 
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -6504,7 +6498,7 @@ class VpcClassicV1(BaseService):
             resource_group: 'ResourceGroupIdentity' = None,
             **kwargs) -> DetailedResponse:
         """
-        Create and provision a load balancer.
+        Create a load balancer.
 
         This request creates and provisions a new load balancer.
 
@@ -6711,10 +6705,9 @@ class VpcClassicV1(BaseService):
     def get_load_balancer_statistics(self, id: str,
                                      **kwargs) -> DetailedResponse:
         """
-        List statistics of a load balancer.
+        List all statistics of a load balancer.
 
-        This request lists statistics of a load balancer specified by the identifier in
-        the URL path.
+        This request lists statistics of a load balancer.
 
         :param str id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -6752,9 +6745,9 @@ class VpcClassicV1(BaseService):
     def list_load_balancer_listeners(self, load_balancer_id: str,
                                      **kwargs) -> DetailedResponse:
         """
-        List all listeners of the load balancer.
+        List all listeners for a load balancer.
 
-        This request retrieves a list of all listeners that belong to the load balancer.
+        This request lists all listeners for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -6803,9 +6796,9 @@ class VpcClassicV1(BaseService):
             policies: List['LoadBalancerListenerPolicyPrototype'] = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a listener.
+        Create a listener for a load balancer.
 
-        This request creates a new listener to the load balancer.
+        This request creates a new listener for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param int port: The listener port number. Each listener in the load
@@ -6826,8 +6819,8 @@ class VpcClassicV1(BaseService):
                - Belong to this load balancer
                - Have the same `protocol` as this listener
                - Not already be the default pool for another listener.
-        :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) The
-               list of policies of this listener.
+        :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) An
+               array of policies for this listener.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListener` object
@@ -6888,7 +6881,7 @@ class VpcClassicV1(BaseService):
     def delete_load_balancer_listener(self, load_balancer_id: str, id: str,
                                       **kwargs) -> DetailedResponse:
         """
-        Delete a listener.
+        Delete a load balancer listener.
 
         This request deletes a load balancer listener. This operation cannot be reversed.
 
@@ -6931,7 +6924,7 @@ class VpcClassicV1(BaseService):
     def get_load_balancer_listener(self, load_balancer_id: str, id: str,
                                    **kwargs) -> DetailedResponse:
         """
-        Retrieve a listener.
+        Retrieve a load balancer listener.
 
         This request retrieves a single listener specified by the identifier in the URL
         path.
@@ -6977,7 +6970,7 @@ class VpcClassicV1(BaseService):
             load_balancer_listener_patch: 'LoadBalancerListenerPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update a listener.
+        Update a load balancer listener.
 
         This request updates a load balancer listener from a listener patch.
 
@@ -7033,9 +7026,9 @@ class VpcClassicV1(BaseService):
                                              listener_id: str,
                                              **kwargs) -> DetailedResponse:
         """
-        List all policies of the load balancer listener.
+        List all policies for a load balancer listener.
 
-        Retrieves a list of all policies belonging to the load balancer listener.
+        This request lists all policies for a load balancer listener.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -7087,9 +7080,9 @@ class VpcClassicV1(BaseService):
             target: 'LoadBalancerListenerPolicyTargetPrototype' = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a policy for the load balancer listener.
+        Create a policy for a load balancer listener.
 
-        Creates a new policy to the load balancer listener.
+        Creates a new policy for a load balancer listener.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -7098,8 +7091,8 @@ class VpcClassicV1(BaseService):
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
-        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
-               list of rules of this policy.
+        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An
+               array of rules for this policy.
         :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
@@ -7168,7 +7161,7 @@ class VpcClassicV1(BaseService):
                                              listener_id: str, id: str,
                                              **kwargs) -> DetailedResponse:
         """
-        Delete a policy of the load balancer listener.
+        Delete a load balancer listener policy.
 
         Deletes a policy of the load balancer listener. This operation cannot be reversed.
 
@@ -7216,7 +7209,7 @@ class VpcClassicV1(BaseService):
                                           listener_id: str, id: str,
                                           **kwargs) -> DetailedResponse:
         """
-        Retrieve a policy of the load balancer listener.
+        Retrieve a load balancer listener policy.
 
         Retrieve a single policy specified by the identifier in the URL path.
 
@@ -7266,7 +7259,7 @@ class VpcClassicV1(BaseService):
         load_balancer_listener_policy_patch:
             'LoadBalancerListenerPolicyPatch', **kwargs) -> DetailedResponse:
         """
-        Update a policy of the load balancer listener.
+        Update a load balancer listener policy.
 
         Updates a policy from a policy patch.
 
@@ -7329,9 +7322,9 @@ class VpcClassicV1(BaseService):
                                                  policy_id: str,
                                                  **kwargs) -> DetailedResponse:
         """
-        List all rules of the load balancer listener policy.
+        List all rules of a load balancer listener policy.
 
-        Retrieves a list of all rules belonging to the load balancer listener policy.
+        This request lists all rules of a load balancer listener policy.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
@@ -7385,7 +7378,7 @@ class VpcClassicV1(BaseService):
                                                   field: str = None,
                                                   **kwargs) -> DetailedResponse:
         """
-        Create a rule for the load balancer listener policy.
+        Create a rule for a load balancer listener policy.
 
         Creates a new rule for the load balancer listener policy.
 
@@ -7457,7 +7450,7 @@ class VpcClassicV1(BaseService):
                                                   policy_id: str, id: str,
                                                   **kwargs) -> DetailedResponse:
         """
-        Delete a rule from the load balancer listener policy.
+        Delete a load balancer listener policy rule.
 
         Deletes a rule from the load balancer listener policy. This operation cannot be
         reversed.
@@ -7511,7 +7504,7 @@ class VpcClassicV1(BaseService):
                                                id: str,
                                                **kwargs) -> DetailedResponse:
         """
-        Retrieve a rule of the load balancer listener policy.
+        Retrieve a load balancer listener policy rule.
 
         Retrieves a single rule specified by the identifier in the URL path.
 
@@ -7565,7 +7558,7 @@ class VpcClassicV1(BaseService):
         id: str, load_balancer_listener_policy_rule_patch:
             'LoadBalancerListenerPolicyRulePatch', **kwargs) -> DetailedResponse:
         """
-        Update a rule of the load balancer listener policy.
+        Update a load balancer listener policy rule.
 
         Updates a rule of the load balancer listener policy.
 
@@ -7630,9 +7623,9 @@ class VpcClassicV1(BaseService):
     def list_load_balancer_pools(self, load_balancer_id: str,
                                  **kwargs) -> DetailedResponse:
         """
-        List all pools of the load balancer.
+        List all pools of a load balancer.
 
-        This request lists all pools that belong to the load balancer.
+        This request lists all pools of a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -7769,7 +7762,7 @@ class VpcClassicV1(BaseService):
     def delete_load_balancer_pool(self, load_balancer_id: str, id: str,
                                   **kwargs) -> DetailedResponse:
         """
-        Delete a pool.
+        Delete a load balancer pool.
 
         This request deletes a load balancer pool. This operation cannot be reversed. The
         pool must not currently be the default pool for any listener in the load balancer.
@@ -7911,9 +7904,9 @@ class VpcClassicV1(BaseService):
                                         pool_id: str,
                                         **kwargs) -> DetailedResponse:
         """
-        List all members of the load balancer pool.
+        List all members of a load balancer pool.
 
-        This request retrieves a paginated list of all members that belong to the pool.
+        This request lists all members of a load balancer pool.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str pool_id: The pool identifier.
@@ -7962,7 +7955,7 @@ class VpcClassicV1(BaseService):
             weight: int = None,
             **kwargs) -> DetailedResponse:
         """
-        Create a member in the load balancer pool.
+        Create a member in a load balancer pool.
 
         This request creates a new member and adds the member to the pool.
 
@@ -8026,7 +8019,7 @@ class VpcClassicV1(BaseService):
             members: List['LoadBalancerPoolMemberPrototype'],
             **kwargs) -> DetailedResponse:
         """
-        Update members of the load balancer pool.
+        Update load balancer pool members.
 
         This request updates members of the load balancer pool from a collection of member
         prototype objects.
@@ -8083,7 +8076,7 @@ class VpcClassicV1(BaseService):
                                          pool_id: str, id: str,
                                          **kwargs) -> DetailedResponse:
         """
-        Delete a member from the load balancer pool.
+        Delete a load balancer pool member.
 
         This request deletes a member from the pool. This operation cannot be reversed.
 
@@ -8130,7 +8123,7 @@ class VpcClassicV1(BaseService):
     def get_load_balancer_pool_member(self, load_balancer_id: str, pool_id: str,
                                       id: str, **kwargs) -> DetailedResponse:
         """
-        Retrieve a member in the load balancer pool.
+        Retrieve a load balancer pool member.
 
         This request retrieves a single member specified by the identifier in the URL
         path.
@@ -8181,7 +8174,7 @@ class VpcClassicV1(BaseService):
             load_balancer_pool_member_patch: 'LoadBalancerPoolMemberPatch',
             **kwargs) -> DetailedResponse:
         """
-        Update a member in the load balancer pool.
+        Update a load balancer pool member.
 
         This request updates an existing member from a member patch.
 
@@ -14413,8 +14406,8 @@ class LoadBalancerListener():
           associated with the listener.
     :attr str href: The listener's canonical URL.
     :attr str id: The unique identifier for this load balancer listener.
-    :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The list of
-          policies of this listener.
+    :attr List[LoadBalancerListenerPolicyReference] policies: (optional) An array of
+          policies for this listener.
     :attr int port: The listener port number. Each listener in the load balancer
           must have a unique
           `port` and `protocol` combination.
@@ -14460,8 +14453,8 @@ class LoadBalancerListener():
                listener.
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
                associated with the listener.
-        :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
-               list of policies of this listener.
+        :param List[LoadBalancerListenerPolicyReference] policies: (optional) An
+               array of policies for this listener.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.certificate_instance = certificate_instance
@@ -15158,8 +15151,8 @@ class LoadBalancerListenerPolicyPrototype():
           unique within the load balancer listener the policy resides in.
     :attr int priority: Priority of the policy. Lower value indicates higher
           priority.
-    :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The list
-          of rules of this policy.
+    :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An array
+          of rules for this policy.
     :attr LoadBalancerListenerPolicyTargetPrototype target: (optional) When `action`
           is `forward`, `LoadBalancerPoolIdentity` is required to specify which
           pool the load balancer forwards the traffic to. When `action` is `redirect`,
@@ -15184,8 +15177,8 @@ class LoadBalancerListenerPolicyPrototype():
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
-        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
-               list of rules of this policy.
+        :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) An
+               array of rules for this policy.
         :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
                `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
                which
