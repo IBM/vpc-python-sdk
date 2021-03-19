@@ -38,7 +38,7 @@ deploy:
   script: npx semantic-release
   skip_cleanup: true
   on:
-    python: '3.5'
+    python: '3.6'
     branch: master
 
 - provider: pypi
