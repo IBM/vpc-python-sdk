@@ -1,3 +1,11 @@
+# [0.5.0](https://github.com/IBM/vpc-python-sdk/compare/v0.4.1...v0.5.0) (2021-03-19)
+
+
+### Features
+
+* **security-group-targets:** Update VPC SDK with API version 2021-03-09 ([#15](https://github.com/IBM/vpc-python-sdk/issues/15)) ([1d5a29a](https://github.com/IBM/vpc-python-sdk/commit/1d5a29a79cf5b0275798ba4d6b927ff43197f384))
+* **sg-targets:** Release SDK for API version 2021-03-09 ([#17](https://github.com/IBM/vpc-python-sdk/issues/17)) ([f9ecee7](https://github.com/IBM/vpc-python-sdk/commit/f9ecee7ec6bdd6141f954612482de5a1746a17a1))
+
 ## [0.4.1](https://github.com/IBM/vpc-python-sdk/compare/v0.4.0...v0.4.1) (2021-01-18)
 
 
