@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.12.3-81ed37e0-20200929-215851
+# IBM OpenAPI SDK Code Generator Version: 3.28.0-55613c9e-20210220-164656
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage infrastructure resources, including virtual server instances, subnets, volumes,
@@ -49,7 +49,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2021-01-12',
+        version: str = '2021-03-09',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 2,
     ) -> 'VpcV1':
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2021-01-12',
+        version: str = '2021-03-09',
         authenticator: Authenticator = None,
         generation: int = 2,
     ) -> None:
@@ -552,11 +552,15 @@ class VpcV1(BaseService):
         :param str vpc_id: The VPC identifier.
         :param str cidr: The IPv4 range of the address prefix, expressed in CIDR
                format. The request must not overlap with any existing address prefixes in
-               the VPC, and must fall within the [RFC
-               1918](https://tools.ietf.org/html/rfc1918) address ranges. The prefix
-               length of the address prefix's CIDR must be between `/9` (8,388,608
-               addresses) and `/29` (8 addresses).
-        :param ZoneIdentity zone: The zone this address prefix is to belong to.
+               the VPC or any of the following reserved address ranges:
+                 - `127.0.0.0/8` (IPv4 loopback addresses)
+                 - `161.26.0.0/16` (IBM services)
+                 - `166.8.0.0/14` (Cloud Service Endpoints)
+                 - `169.254.0.0/16` (IPv4 link-local addresses)
+                 - `224.0.0.0/4` (IPv4 multicast addresses)
+               The prefix length of the address prefix's CIDR must be between `/9`
+               (8,388,608 addresses) and `/29` (8 addresses).
+        :param ZoneIdentity zone: The zone this address prefix will reside in.
         :param bool is_default: (optional) Indicates whether this is the default
                prefix for this zone in this VPC. If true, this prefix will become the
                default prefix for this zone in this VPC. This fails if the VPC currently
@@ -811,11 +815,11 @@ class VpcV1(BaseService):
     def create_vpc_route(self,
                          vpc_id: str,
                          destination: str,
-                         next_hop: 'RouteNextHopPrototype',
                          zone: 'ZoneIdentity',
                          *,
                          action: str = None,
                          name: str = None,
+                         next_hop: 'RouteNextHopPrototype' = None,
                          **kwargs) -> DetailedResponse:
         """
         Create a route in a VPC's default routing table.
@@ -830,20 +834,23 @@ class VpcV1(BaseService):
                per `zone` in a table can have the same destination, and only if both
                routes have an `action` of `deliver` and the
                `next_hop` is an IP address.
-        :param RouteNextHopPrototype next_hop: If `action` is `deliver`, the next
-               hop that packets will be delivered to.  For
-               other `action` values, its `address` will be `0.0.0.0`.
         :param ZoneIdentity zone: The zone to apply the route to. (Traffic from
                subnets in this zone will be
                subject to this route.).
         :param str action: (optional) The action to perform with a packet matching
                the route:
                - `delegate`: delegate to the system's built-in routes
+               - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+               Internet-bound
+                 routes
                - `deliver`: deliver the packet to the specified `next_hop`
                - `drop`: drop the packet.
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
+        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to.  For
+               other `action` values, it must be omitted or specified as `0.0.0.0`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Route` object
@@ -853,12 +860,11 @@ class VpcV1(BaseService):
             raise ValueError('vpc_id must be provided')
         if destination is None:
             raise ValueError('destination must be provided')
-        if next_hop is None:
-            raise ValueError('next_hop must be provided')
         if zone is None:
             raise ValueError('zone must be provided')
-        next_hop = convert_model(next_hop)
         zone = convert_model(zone)
+        if next_hop is not None:
+            next_hop = convert_model(next_hop)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -869,10 +875,10 @@ class VpcV1(BaseService):
 
         data = {
             'destination': destination,
-            'next_hop': next_hop,
             'zone': zone,
             'action': action,
-            'name': name
+            'name': name,
+            'next_hop': next_hop
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -1401,11 +1407,11 @@ class VpcV1(BaseService):
                                        vpc_id: str,
                                        routing_table_id: str,
                                        destination: str,
-                                       next_hop: 'RouteNextHopPrototype',
                                        zone: 'ZoneIdentity',
                                        *,
                                        action: str = None,
                                        name: str = None,
+                                       next_hop: 'RouteNextHopPrototype' = None,
                                        **kwargs) -> DetailedResponse:
         """
         Create a route in a VPC routing table.
@@ -1420,20 +1426,23 @@ class VpcV1(BaseService):
                per `zone` in a table can have the same destination, and only if both
                routes have an `action` of `deliver` and the
                `next_hop` is an IP address.
-        :param RouteNextHopPrototype next_hop: If `action` is `deliver`, the next
-               hop that packets will be delivered to.  For
-               other `action` values, its `address` will be `0.0.0.0`.
         :param ZoneIdentity zone: The zone to apply the route to. (Traffic from
                subnets in this zone will be
                subject to this route.).
         :param str action: (optional) The action to perform with a packet matching
                the route:
                - `delegate`: delegate to the system's built-in routes
+               - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+               Internet-bound
+                 routes
                - `deliver`: deliver the packet to the specified `next_hop`
                - `drop`: drop the packet.
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
+        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to.  For
+               other `action` values, it must be omitted or specified as `0.0.0.0`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Route` object
@@ -1445,12 +1454,11 @@ class VpcV1(BaseService):
             raise ValueError('routing_table_id must be provided')
         if destination is None:
             raise ValueError('destination must be provided')
-        if next_hop is None:
-            raise ValueError('next_hop must be provided')
         if zone is None:
             raise ValueError('zone must be provided')
-        next_hop = convert_model(next_hop)
         zone = convert_model(zone)
+        if next_hop is not None:
+            next_hop = convert_model(next_hop)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -1462,10 +1470,10 @@ class VpcV1(BaseService):
 
         data = {
             'destination': destination,
-            'next_hop': next_hop,
             'zone': zone,
             'action': action,
-            'name': name
+            'name': name,
+            'next_hop': next_hop
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -1668,9 +1676,9 @@ class VpcV1(BaseService):
                resources within one of the resource groups identified in a comma-separated
                list of resource group identifiers.
         :param str routing_table_id: (optional) Filters the collection to subnets
-               with the routing table of the specified identifier.
+               attached to the routing table with the specified identifier.
         :param str routing_table_name: (optional) Filters the collection to subnets
-               with the routing table of the specified name.
+               attached to the routing table with the specified name.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `SubnetCollection` object
@@ -5506,8 +5514,8 @@ class VpcV1(BaseService):
                this group.
         :param str family: (optional) The dedicated host profile family for hosts
                in this group.
-        :param ZoneIdentity zone: (optional) The zone to provision the dedicated
-               host group in.
+        :param ZoneIdentity zone: (optional) The zone this dedicated host group
+               will reside in.
         :param str name: (optional) The unique user-defined name for this dedicated
                host group. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
@@ -5793,7 +5801,7 @@ class VpcV1(BaseService):
         This request lists all dedicated hosts in the region.
 
         :param str dedicated_host_group_id: (optional) Filters the collection to
-               dedicated host groups with specified identifier.
+               dedicated host groups with the specified identifier.
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
@@ -6556,8 +6564,7 @@ class VpcV1(BaseService):
         be explicitly attached to each subnet it will provide connectivity for.
 
         :param VPCIdentity vpc: The VPC this public gateway will serve.
-        :param ZoneIdentity zone: The zone where this public gateway will be
-               created.
+        :param ZoneIdentity zone: The zone this public gateway will reside in.
         :param PublicGatewayFloatingIPPrototype floating_ip: (optional)
         :param str name: (optional) The user-defined name for this public gateway.
                Names must be unique within the VPC the public gateway resides in. If
@@ -8164,6 +8171,204 @@ class VpcV1(BaseService):
         response = self.send(request)
         return response
 
+    def list_security_group_targets(self,
+                                    security_group_id: str,
+                                    *,
+                                    start: str = None,
+                                    limit: int = None,
+                                    **kwargs) -> DetailedResponse:
+        """
+        List all targets associated with a security group.
+
+        This request lists all targets associated with a security group, to which the
+        rules in the security group are applied.
+
+        :param str security_group_id: The security group identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SecurityGroupTargetCollection` object
+        """
+
+        if security_group_id is None:
+            raise ValueError('security_group_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_security_group_targets')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['security_group_id']
+        path_param_values = self.encode_path_vars(security_group_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/targets'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def delete_security_group_target_binding(self, security_group_id: str,
+                                             id: str,
+                                             **kwargs) -> DetailedResponse:
+        """
+        Remove a target from a security group.
+
+        This request removes a target from a security group. For this request to succeed,
+        the target must be attached to at least one other security group.  The supplied
+        target identifier can be:
+        - A network interface identifier
+        - An application load balancer identifier
+        Security groups are stateful, so any changes to a target's security groups are
+        applied to new connections. Existing connections are not affected.
+
+        :param str security_group_id: The security group identifier.
+        :param str id: The security group target identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if security_group_id is None:
+            raise ValueError('security_group_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_security_group_target_binding')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/targets/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_security_group_target(self, security_group_id: str, id: str,
+                                  **kwargs) -> DetailedResponse:
+        """
+        Retrieve a security group target.
+
+        This request retrieves a single target specified by the identifier in the URL
+        path. The target must be an existing target of the security group.
+
+        :param str security_group_id: The security group identifier.
+        :param str id: The security group target identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SecurityGroupTargetReference` object
+        """
+
+        if security_group_id is None:
+            raise ValueError('security_group_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_security_group_target')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/targets/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def create_security_group_target_binding(self, security_group_id: str,
+                                             id: str,
+                                             **kwargs) -> DetailedResponse:
+        """
+        Add a target to a security group.
+
+        This request adds a resource to an existing security group. The supplied target
+        identifier can be:
+        - A network interface identifier
+        - An application load balancer identifier
+        When a target is added to a security group, the security group rules are applied
+        to the target. A request body is not required, and if supplied, is ignored.
+
+        :param str security_group_id: The security group identifier.
+        :param str id: The security group target identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SecurityGroupTargetReference` object
+        """
+
+        if security_group_id is None:
+            raise ValueError('security_group_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_security_group_target_binding')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['security_group_id', 'id']
+        path_param_values = self.encode_path_vars(security_group_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/security_groups/{security_group_id}/targets/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='PUT',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
     #########################
     # VPN gateways
     #########################
@@ -9755,6 +9960,7 @@ class VpcV1(BaseService):
             pools: List['LoadBalancerPoolPrototype'] = None,
             profile: 'LoadBalancerProfileIdentity' = None,
             resource_group: 'ResourceGroupIdentity' = None,
+            security_groups: List['SecurityGroupIdentity'] = None,
             **kwargs) -> DetailedResponse:
         """
         Create a load balancer.
@@ -9785,6 +9991,9 @@ class VpcV1(BaseService):
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this load balancer.
+               The load balancer profile must support security groups.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancer` object
@@ -9805,6 +10014,8 @@ class VpcV1(BaseService):
             profile = convert_model(profile)
         if resource_group is not None:
             resource_group = convert_model(resource_group)
+        if security_groups is not None:
+            security_groups = [convert_model(x) for x in security_groups]
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -9821,7 +10032,8 @@ class VpcV1(BaseService):
             'name': name,
             'pools': pools,
             'profile': profile,
-            'resource_group': resource_group
+            'resource_group': resource_group,
+            'security_groups': security_groups
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -11282,10 +11494,10 @@ class VpcV1(BaseService):
             members: List['LoadBalancerPoolMemberPrototype'],
             **kwargs) -> DetailedResponse:
         """
-        Update load balancer pool members.
+        Replace load balancer pool members.
 
-        This request updates members of the load balancer pool from a collection of member
-        prototype objects.
+        This request replaces the existing members of the load balancer pool with new
+        members created from the collection of member prototype objects.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str pool_id: The pool identifier.
@@ -11567,7 +11779,8 @@ class VpcV1(BaseService):
                gateway.
         :param VPCIdentity vpc: The VPC this endpoint gateway will serve.
         :param List[EndpointGatewayReservedIP] ips: (optional) An array of reserved
-               IPs to attach to this endpoint gateway.
+               IPs to bind to this endpoint gateway. At most one reserved IP per zone is
+               allowed.
         :param str name: (optional) The user-defined name for this endpoint
                gateway. If unspecified, the name will be a hyphenated list of
                randomly-selected words. Names must be unique within the VPC this endpoint
@@ -11778,8 +11991,10 @@ class VpcV1(BaseService):
         Bind a reserved IP to an endpoint gateway.
 
         This request binds the specified reserved IP to the specified endpoint gateway.
-        For this request to succeed, the reserved IP must currently be unbound and must
-        not have a floating IP bound to it.
+        The reserved IP:
+        - must currently be unbound
+        - must not be in the same zone as any other reserved IP bound to the endpoint
+        gateway.
 
         :param str endpoint_gateway_id: The endpoint gateway identifier.
         :param str id: The reserved IP identifier.
@@ -12971,8 +13186,7 @@ class DedicatedHost():
     :attr List[InstanceProfileReference] supported_instance_profiles: Array of
           instance profiles that can be used by instances placed on this dedicated host.
     :attr VCPU vcpu: The total VCPU of the dedicated host.
-    :attr ZoneReference zone: The reference of the zone to provision the dedicated
-          host in.
+    :attr ZoneReference zone: The zone this dedicated host resides in.
     """
 
     def __init__(self, available_memory: int, available_vcpu: 'VCPU',
@@ -13025,8 +13239,7 @@ class DedicatedHost():
                instance profiles that can be used by instances placed on this dedicated
                host.
         :param VCPU vcpu: The total VCPU of the dedicated host.
-        :param ZoneReference zone: The reference of the zone to provision the
-               dedicated host in.
+        :param ZoneReference zone: The zone this dedicated host resides in.
         """
         self.available_memory = available_memory
         self.available_vcpu = available_vcpu
@@ -13549,7 +13762,7 @@ class DedicatedHostGroup():
     :attr List[InstanceProfileReference] supported_instance_profiles: Array of
           instance profiles that can be used by instances placed on this dedicated host
           group.
-    :attr ZoneReference zone: The zone the dedicated host group resides in.
+    :attr ZoneReference zone: The zone this dedicated host group resides in.
     """
 
     def __init__(self, class_: str, created_at: datetime, crn: str,
@@ -13581,7 +13794,7 @@ class DedicatedHostGroup():
         :param List[InstanceProfileReference] supported_instance_profiles: Array of
                instance profiles that can be used by instances placed on this dedicated
                host group.
-        :param ZoneReference zone: The zone the dedicated host group resides in.
+        :param ZoneReference zone: The zone this dedicated host group resides in.
         """
         self.class_ = class_
         self.created_at = created_at
@@ -16731,7 +16944,7 @@ class FloatingIP():
           floating IP.
     :attr str status: The status of the floating IP.
     :attr FloatingIPTarget target: (optional) The target of this floating IP.
-    :attr ZoneReference zone: The zone the floating IP resides in.
+    :attr ZoneReference zone: The zone this floating IP resides in.
     """
 
     def __init__(self,
@@ -16759,7 +16972,7 @@ class FloatingIP():
         :param ResourceGroupReference resource_group: The resource group for this
                floating IP.
         :param str status: The status of the floating IP.
-        :param ZoneReference zone: The zone the floating IP resides in.
+        :param ZoneReference zone: The zone this floating IP resides in.
         :param FloatingIPTarget target: (optional) The target of this floating IP.
         """
         self.address = address
@@ -18318,6 +18531,7 @@ class IKEPolicy():
         MD5 = 'md5'
         SHA1 = 'sha1'
         SHA256 = 'sha256'
+        SHA512 = 'sha512'
 
     class EncryptionAlgorithmEnum(str, Enum):
         """
@@ -18693,6 +18907,7 @@ class IKEPolicyPatch():
         MD5 = 'md5'
         SHA1 = 'sha1'
         SHA256 = 'sha256'
+        SHA512 = 'sha512'
 
     class EncryptionAlgorithmEnum(str, Enum):
         """
@@ -19160,6 +19375,7 @@ class IPsecPolicy():
         MD5 = 'md5'
         SHA1 = 'sha1'
         SHA256 = 'sha256'
+        SHA512 = 'sha512'
 
     class EncapsulationModeEnum(str, Enum):
         """
@@ -19181,6 +19397,7 @@ class IPsecPolicy():
         """
         DISABLED = 'disabled'
         GROUP_14 = 'group_14'
+        GROUP_19 = 'group_19'
         GROUP_2 = 'group_2'
         GROUP_5 = 'group_5'
 
@@ -19543,6 +19760,7 @@ class IPsecPolicyPatch():
         MD5 = 'md5'
         SHA1 = 'sha1'
         SHA256 = 'sha256'
+        SHA512 = 'sha512'
 
     class EncryptionAlgorithmEnum(str, Enum):
         """
@@ -19558,6 +19776,7 @@ class IPsecPolicyPatch():
         """
         DISABLED = 'disabled'
         GROUP_14 = 'group_14'
+        GROUP_19 = 'group_19'
         GROUP_2 = 'group_2'
         GROUP_5 = 'group_5'
 
@@ -20261,6 +20480,10 @@ class ImageFile():
     """
     ImageFile.
 
+    :attr ImageFileChecksums checksums: (optional) Checksums for this image file.
+          This property may be absent if the associated image has a `status` of `pending`
+          or
+          `failed`.
     :attr int size: (optional) The size of the stored image file rounded up to the
           next gigabyte.
           This property may be absent if the associated image has a `status` of `pending`
@@ -20268,22 +20491,34 @@ class ImageFile():
           `failed`.
     """
 
-    def __init__(self, *, size: int = None) -> None:
+    def __init__(self,
+                 *,
+                 checksums: 'ImageFileChecksums' = None,
+                 size: int = None) -> None:
         """
         Initialize a ImageFile object.
 
+        :param ImageFileChecksums checksums: (optional) Checksums for this image
+               file.
+               This property may be absent if the associated image has a `status` of
+               `pending` or
+               `failed`.
         :param int size: (optional) The size of the stored image file rounded up to
                the next gigabyte.
                This property may be absent if the associated image has a `status` of
                `pending` or
                `failed`.
         """
+        self.checksums = checksums
         self.size = size
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ImageFile':
         """Initialize a ImageFile object from a json dictionary."""
         args = {}
+        if 'checksums' in _dict:
+            args['checksums'] = ImageFileChecksums.from_dict(
+                _dict.get('checksums'))
         if 'size' in _dict:
             args['size'] = _dict.get('size')
         return cls(**args)
@@ -20296,6 +20531,8 @@ class ImageFile():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'checksums') and self.checksums is not None:
+            _dict['checksums'] = self.checksums.to_dict()
         if hasattr(self, 'size') and self.size is not None:
             _dict['size'] = self.size
         return _dict
@@ -20315,6 +20552,60 @@ class ImageFile():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'ImageFile') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ImageFileChecksums():
+    """
+    ImageFileChecksums.
+
+    :attr str sha256: (optional) The SHA256 fingerprint of the image file.
+    """
+
+    def __init__(self, *, sha256: str = None) -> None:
+        """
+        Initialize a ImageFileChecksums object.
+
+        :param str sha256: (optional) The SHA256 fingerprint of the image file.
+        """
+        self.sha256 = sha256
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ImageFileChecksums':
+        """Initialize a ImageFileChecksums object from a json dictionary."""
+        args = {}
+        if 'sha256' in _dict:
+            args['sha256'] = _dict.get('sha256')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ImageFileChecksums object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'sha256') and self.sha256 is not None:
+            _dict['sha256'] = self.sha256
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ImageFileChecksums object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ImageFileChecksums') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ImageFileChecksums') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -20752,7 +21043,7 @@ class Instance():
     :attr str id: The unique identifier for this virtual server instance.
     :attr ImageReference image: (optional) The image the virtual server instance was
           provisioned from.
-    :attr int memory: The amount of memory in gigabytes.
+    :attr int memory: The amount of memory, truncated to whole gibibytes.
     :attr str name: The user-defined name for this virtual server instance (and
           default system hostname).
     :attr List[NetworkInterfaceInstanceContextReference] network_interfaces:
@@ -20769,8 +21060,8 @@ class Instance():
     :attr List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
           Collection of the virtual server instance's volume attachments, including the
           boot volume attachment.
-    :attr VPCReference vpc: The VPC the virtual server instance resides in.
-    :attr ZoneReference zone: The zone the virtual server instance resides in.
+    :attr VPCReference vpc: The VPC this virtual server instance resides in.
+    :attr ZoneReference zone: The zone this virtual server instance resides in.
     """
 
     def __init__(
@@ -20810,7 +21101,7 @@ class Instance():
         :param str crn: The CRN for this virtual server instance.
         :param str href: The URL for this virtual server instance.
         :param str id: The unique identifier for this virtual server instance.
-        :param int memory: The amount of memory in gigabytes.
+        :param int memory: The amount of memory, truncated to whole gibibytes.
         :param str name: The user-defined name for this virtual server instance
                (and default system hostname).
         :param List[NetworkInterfaceInstanceContextReference] network_interfaces:
@@ -20827,8 +21118,9 @@ class Instance():
         :param List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
                Collection of the virtual server instance's volume attachments, including
                the boot volume attachment.
-        :param VPCReference vpc: The VPC the virtual server instance resides in.
-        :param ZoneReference zone: The zone the virtual server instance resides in.
+        :param VPCReference vpc: The VPC this virtual server instance resides in.
+        :param ZoneReference zone: The zone this virtual server instance resides
+               in.
         :param InstanceGPU gpu: (optional) The virtual server instance GPU
                configuration.
         :param ImageReference image: (optional) The image the virtual server
@@ -22033,37 +22325,16 @@ class InstanceGroupManager():
     """
     InstanceGroupManager.
 
-    :attr int aggregation_window: (optional) The time window in seconds to aggregate
-          metrics prior to evaluation.
-    :attr int cooldown: (optional) The duration of time in seconds to pause further
-          scale actions after scaling has taken place.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: If set to `true`, this manager will control the
           instance group.
-    :attr str manager_type: The type of instance group manager.
-    :attr int max_membership_count: (optional) The maximum number of members in a
-          managed instance group.
-    :attr int min_membership_count: (optional) The minimum number of members in a
-          managed instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
-    :attr List[InstanceGroupManagerPolicyReference] policies: The policies of the
-          instance group manager.
     """
 
-    def __init__(self,
-                 href: str,
-                 id: str,
-                 management_enabled: bool,
-                 manager_type: str,
-                 name: str,
-                 policies: List['InstanceGroupManagerPolicyReference'],
-                 *,
-                 aggregation_window: int = None,
-                 cooldown: int = None,
-                 max_membership_count: int = None,
-                 min_membership_count: int = None) -> None:
+    def __init__(self, href: str, id: str, management_enabled: bool,
+                 name: str) -> None:
         """
         Initialize a InstanceGroupManager object.
 
@@ -22071,143 +22342,12 @@ class InstanceGroupManager():
         :param str id: The unique identifier for this instance group manager.
         :param bool management_enabled: If set to `true`, this manager will control
                the instance group.
-        :param str manager_type: The type of instance group manager.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
-        :param List[InstanceGroupManagerPolicyReference] policies: The policies of
-               the instance group manager.
-        :param int aggregation_window: (optional) The time window in seconds to
-               aggregate metrics prior to evaluation.
-        :param int cooldown: (optional) The duration of time in seconds to pause
-               further scale actions after scaling has taken place.
-        :param int max_membership_count: (optional) The maximum number of members
-               in a managed instance group.
-        :param int min_membership_count: (optional) The minimum number of members
-               in a managed instance group.
         """
-        self.aggregation_window = aggregation_window
-        self.cooldown = cooldown
-        self.href = href
-        self.id = id
-        self.management_enabled = management_enabled
-        self.manager_type = manager_type
-        self.max_membership_count = max_membership_count
-        self.min_membership_count = min_membership_count
-        self.name = name
-        self.policies = policies
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstanceGroupManager':
-        """Initialize a InstanceGroupManager object from a json dictionary."""
-        args = {}
-        if 'aggregation_window' in _dict:
-            args['aggregation_window'] = _dict.get('aggregation_window')
-        if 'cooldown' in _dict:
-            args['cooldown'] = _dict.get('cooldown')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError(
-                'Required property \'href\' not present in InstanceGroupManager JSON'
-            )
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError(
-                'Required property \'id\' not present in InstanceGroupManager JSON'
-            )
-        if 'management_enabled' in _dict:
-            args['management_enabled'] = _dict.get('management_enabled')
-        else:
-            raise ValueError(
-                'Required property \'management_enabled\' not present in InstanceGroupManager JSON'
-            )
-        if 'manager_type' in _dict:
-            args['manager_type'] = _dict.get('manager_type')
-        else:
-            raise ValueError(
-                'Required property \'manager_type\' not present in InstanceGroupManager JSON'
-            )
-        if 'max_membership_count' in _dict:
-            args['max_membership_count'] = _dict.get('max_membership_count')
-        if 'min_membership_count' in _dict:
-            args['min_membership_count'] = _dict.get('min_membership_count')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError(
-                'Required property \'name\' not present in InstanceGroupManager JSON'
-            )
-        if 'policies' in _dict:
-            args['policies'] = [
-                InstanceGroupManagerPolicyReference.from_dict(x)
-                for x in _dict.get('policies')
-            ]
-        else:
-            raise ValueError(
-                'Required property \'policies\' not present in InstanceGroupManager JSON'
-            )
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstanceGroupManager object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(
-                self,
-                'aggregation_window') and self.aggregation_window is not None:
-            _dict['aggregation_window'] = self.aggregation_window
-        if hasattr(self, 'cooldown') and self.cooldown is not None:
-            _dict['cooldown'] = self.cooldown
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(
-                self,
-                'management_enabled') and self.management_enabled is not None:
-            _dict['management_enabled'] = self.management_enabled
-        if hasattr(self, 'manager_type') and self.manager_type is not None:
-            _dict['manager_type'] = self.manager_type
-        if hasattr(self, 'max_membership_count'
-                  ) and self.max_membership_count is not None:
-            _dict['max_membership_count'] = self.max_membership_count
-        if hasattr(self, 'min_membership_count'
-                  ) and self.min_membership_count is not None:
-            _dict['min_membership_count'] = self.min_membership_count
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'policies') and self.policies is not None:
-            _dict['policies'] = [x.to_dict() for x in self.policies]
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstanceGroupManager object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstanceGroupManager') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstanceGroupManager') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class ManagerTypeEnum(str, Enum):
-        """
-        The type of instance group manager.
-        """
-        AUTOSCALE = 'autoscale'
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['InstanceGroupManagerAutoScale']))
+        raise Exception(msg)
 
 
 class InstanceGroupManagerCollection():
@@ -22271,9 +22411,7 @@ class InstanceGroupManagerCollection():
                 'Required property \'limit\' not present in InstanceGroupManagerCollection JSON'
             )
         if 'managers' in _dict:
-            args['managers'] = [
-                InstanceGroupManager.from_dict(x) for x in _dict.get('managers')
-            ]
+            args['managers'] = _dict.get('managers')
         else:
             raise ValueError(
                 'Required property \'managers\' not present in InstanceGroupManagerCollection JSON'
@@ -22302,7 +22440,13 @@ class InstanceGroupManagerCollection():
         if hasattr(self, 'limit') and self.limit is not None:
             _dict['limit'] = self.limit
         if hasattr(self, 'managers') and self.managers is not None:
-            _dict['managers'] = [x.to_dict() for x in self.managers]
+            managers_list = []
+            for x in self.managers:
+                if isinstance(x, dict):
+                    managers_list.append(x)
+                else:
+                    managers_list.append(x.to_dict())
+            _dict['managers'] = managers_list
         if hasattr(self, 'next') and self.next is not None:
             _dict['next'] = self.next.to_dict()
         if hasattr(self, 'total_count') and self.total_count is not None:
@@ -26231,6 +26375,11 @@ class LoadBalancer():
           Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this load balancer.
+          Applicable only for load balancers that support security groups.
+    :attr bool security_groups_supported: Indicates whether this load balancer
+          supports security groups.
     :attr List[SubnetReference] subnets: The subnets this load balancer is part of.
     """
 
@@ -26244,6 +26393,8 @@ class LoadBalancer():
                  profile: 'LoadBalancerProfileReference',
                  provisioning_status: str, public_ips: List['IP'],
                  resource_group: 'ResourceGroupReference',
+                 security_groups: List['SecurityGroupReference'],
+                 security_groups_supported: bool,
                  subnets: List['SubnetReference']) -> None:
         """
         Initialize a LoadBalancer object.
@@ -26275,6 +26426,11 @@ class LoadBalancer():
                Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this load balancer.
+               Applicable only for load balancers that support security groups.
+        :param bool security_groups_supported: Indicates whether this load balancer
+               supports security groups.
         :param List[SubnetReference] subnets: The subnets this load balancer is
                part of.
         """
@@ -26294,6 +26450,8 @@ class LoadBalancer():
         self.provisioning_status = provisioning_status
         self.public_ips = public_ips
         self.resource_group = resource_group
+        self.security_groups = security_groups
+        self.security_groups_supported = security_groups_supported
         self.subnets = subnets
 
     @classmethod
@@ -26404,6 +26562,22 @@ class LoadBalancer():
             raise ValueError(
                 'Required property \'resource_group\' not present in LoadBalancer JSON'
             )
+        if 'security_groups' in _dict:
+            args['security_groups'] = [
+                SecurityGroupReference.from_dict(x)
+                for x in _dict.get('security_groups')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'security_groups\' not present in LoadBalancer JSON'
+            )
+        if 'security_groups_supported' in _dict:
+            args['security_groups_supported'] = _dict.get(
+                'security_groups_supported')
+        else:
+            raise ValueError(
+                'Required property \'security_groups_supported\' not present in LoadBalancer JSON'
+            )
         if 'subnets' in _dict:
             args['subnets'] = [
                 SubnetReference.from_dict(x) for x in _dict.get('subnets')
@@ -26457,6 +26631,14 @@ class LoadBalancer():
             _dict['public_ips'] = [x.to_dict() for x in self.public_ips]
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self,
+                   'security_groups') and self.security_groups is not None:
+            _dict['security_groups'] = [
+                x.to_dict() for x in self.security_groups
+            ]
+        if hasattr(self, 'security_groups_supported'
+                  ) and self.security_groups_supported is not None:
+            _dict['security_groups_supported'] = self.security_groups_supported
         if hasattr(self, 'subnets') and self.subnets is not None:
             _dict['subnets'] = [x.to_dict() for x in self.subnets]
         return _dict
@@ -30873,11 +31055,14 @@ class LoadBalancerProfile():
     :attr LoadBalancerProfileLoggingSupported logging_supported: Indicates which
           logging type(s) are supported for a load balancer with this profile.
     :attr str name: The globally unique name for this load balancer profile.
+    :attr LoadBalancerProfileSecurityGroupsSupported security_groups_supported:
     """
 
-    def __init__(self, family: str, href: str,
-                 logging_supported: 'LoadBalancerProfileLoggingSupported',
-                 name: str) -> None:
+    def __init__(
+        self, family: str, href: str,
+        logging_supported: 'LoadBalancerProfileLoggingSupported', name: str,
+        security_groups_supported: 'LoadBalancerProfileSecurityGroupsSupported'
+    ) -> None:
         """
         Initialize a LoadBalancerProfile object.
 
@@ -30887,11 +31072,14 @@ class LoadBalancerProfile():
         :param LoadBalancerProfileLoggingSupported logging_supported: Indicates
                which logging type(s) are supported for a load balancer with this profile.
         :param str name: The globally unique name for this load balancer profile.
+        :param LoadBalancerProfileSecurityGroupsSupported
+               security_groups_supported:
         """
         self.family = family
         self.href = href
         self.logging_supported = logging_supported
         self.name = name
+        self.security_groups_supported = security_groups_supported
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfile':
@@ -30923,6 +31111,13 @@ class LoadBalancerProfile():
             raise ValueError(
                 'Required property \'name\' not present in LoadBalancerProfile JSON'
             )
+        if 'security_groups_supported' in _dict:
+            args['security_groups_supported'] = _dict.get(
+                'security_groups_supported')
+        else:
+            raise ValueError(
+                'Required property \'security_groups_supported\' not present in LoadBalancerProfile JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -30942,6 +31137,15 @@ class LoadBalancerProfile():
             _dict['logging_supported'] = self.logging_supported.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'security_groups_supported'
+                  ) and self.security_groups_supported is not None:
+            if isinstance(self.security_groups_supported, dict):
+                _dict[
+                    'security_groups_supported'] = self.security_groups_supported
+            else:
+                _dict[
+                    'security_groups_supported'] = self.security_groups_supported.to_dict(
+                    )
         return _dict
 
     def _to_dict(self):
@@ -31370,6 +31574,84 @@ class LoadBalancerProfileReference():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'LoadBalancerProfileReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LoadBalancerProfileSecurityGroupsSupported():
+    """
+    LoadBalancerProfileSecurityGroupsSupported.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerProfileSecurityGroupsSupported object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'LoadBalancerProfileSecurityGroupsSupportedFixed',
+                'LoadBalancerProfileSecurityGroupsSupportedDependent'
+            ]))
+        raise Exception(msg)
+
+
+class LoadBalancerReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self, more_info: str) -> None:
+        """
+        Initialize a LoadBalancerReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerReferenceDeleted':
+        """Initialize a LoadBalancerReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError(
+                'Required property \'more_info\' not present in LoadBalancerReferenceDeleted JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerReferenceDeleted') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -34833,7 +35115,7 @@ class PublicGateway():
     :attr str resource_type: The resource type.
     :attr str status: The status of the volume.
     :attr VPCReference vpc: The VPC this public gateway serves.
-    :attr ZoneReference zone: The zone where this public gateway lives.
+    :attr ZoneReference zone: The zone this public gateway resides in.
     """
 
     def __init__(self, created_at: datetime, crn: str,
@@ -34857,7 +35139,7 @@ class PublicGateway():
         :param str resource_type: The resource type.
         :param str status: The status of the volume.
         :param VPCReference vpc: The VPC this public gateway serves.
-        :param ZoneReference zone: The zone where this public gateway lives.
+        :param ZoneReference zone: The zone this public gateway resides in.
         """
         self.created_at = created_at
         self.crn = crn
@@ -37312,7 +37594,10 @@ class RouteNextHopPrototype():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['RouteNextHopPrototypeRouteNextHopIP']))
+            ", ".join([
+                'RouteNextHopPrototypeRouteNextHopIP',
+                'RouteNextHopPrototypeVPNGatewayConnectionIdentity'
+            ]))
         raise Exception(msg)
 
 
@@ -37379,6 +37664,9 @@ class RoutePrototype():
     :attr str action: (optional) The action to perform with a packet matching the
           route:
           - `delegate`: delegate to the system's built-in routes
+          - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+          Internet-bound
+            routes
           - `deliver`: deliver the packet to the specified `next_hop`
           - `drop`: drop the packet.
     :attr str destination: The destination of the route. At most two routes per
@@ -37388,9 +37676,9 @@ class RoutePrototype():
     :attr str name: (optional) The user-defined name for this route. If unspecified,
           the name will be a hyphenated list of randomly-selected words. Names must be
           unique within the VPC routing table the route resides in.
-    :attr RouteNextHopPrototype next_hop: If `action` is `deliver`, the next hop
-          that packets will be delivered to.  For
-          other `action` values, its `address` will be `0.0.0.0`.
+    :attr RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`, the
+          next hop that packets will be delivered to.  For
+          other `action` values, it must be omitted or specified as `0.0.0.0`.
     :attr ZoneIdentity zone: The zone to apply the route to. (Traffic from subnets
           in this zone will be
           subject to this route.).
@@ -37398,11 +37686,11 @@ class RoutePrototype():
 
     def __init__(self,
                  destination: str,
-                 next_hop: 'RouteNextHopPrototype',
                  zone: 'ZoneIdentity',
                  *,
                  action: str = None,
-                 name: str = None) -> None:
+                 name: str = None,
+                 next_hop: 'RouteNextHopPrototype' = None) -> None:
         """
         Initialize a RoutePrototype object.
 
@@ -37410,20 +37698,23 @@ class RoutePrototype():
                per `zone` in a table can have the same destination, and only if both
                routes have an `action` of `deliver` and the
                `next_hop` is an IP address.
-        :param RouteNextHopPrototype next_hop: If `action` is `deliver`, the next
-               hop that packets will be delivered to.  For
-               other `action` values, its `address` will be `0.0.0.0`.
         :param ZoneIdentity zone: The zone to apply the route to. (Traffic from
                subnets in this zone will be
                subject to this route.).
         :param str action: (optional) The action to perform with a packet matching
                the route:
                - `delegate`: delegate to the system's built-in routes
+               - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+               Internet-bound
+                 routes
                - `deliver`: deliver the packet to the specified `next_hop`
                - `drop`: drop the packet.
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
+        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to.  For
+               other `action` values, it must be omitted or specified as `0.0.0.0`.
         """
         self.action = action
         self.destination = destination
@@ -37447,10 +37738,6 @@ class RoutePrototype():
             args['name'] = _dict.get('name')
         if 'next_hop' in _dict:
             args['next_hop'] = _dict.get('next_hop')
-        else:
-            raise ValueError(
-                'Required property \'next_hop\' not present in RoutePrototype JSON'
-            )
         if 'zone' in _dict:
             args['zone'] = _dict.get('zone')
         else:
@@ -37506,10 +37793,14 @@ class RoutePrototype():
         """
         The action to perform with a packet matching the route:
         - `delegate`: delegate to the system's built-in routes
+        - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+        Internet-bound
+          routes
         - `deliver`: deliver the packet to the specified `next_hop`
         - `drop`: drop the packet.
         """
         DELEGATE = 'delegate'
+        DELEGATE_VPC = 'delegate_vpc'
         DELIVER = 'deliver'
         DROP = 'drop'
 
@@ -38528,6 +38819,8 @@ class SecurityGroup():
           security group.
     :attr List[SecurityGroupRule] rules: Array of rules for this security group. If
           no rules exist, all traffic will be denied.
+    :attr List[SecurityGroupTargetReference] targets: Array of references to
+          targets.
     :attr VPCReference vpc: The VPC this security group is a part of.
     """
 
@@ -38535,7 +38828,9 @@ class SecurityGroup():
                  name: str,
                  network_interfaces: List['NetworkInterfaceReference'],
                  resource_group: 'ResourceGroupReference',
-                 rules: List['SecurityGroupRule'], vpc: 'VPCReference') -> None:
+                 rules: List['SecurityGroupRule'],
+                 targets: List['SecurityGroupTargetReference'],
+                 vpc: 'VPCReference') -> None:
         """
         Initialize a SecurityGroup object.
 
@@ -38552,6 +38847,8 @@ class SecurityGroup():
                security group.
         :param List[SecurityGroupRule] rules: Array of rules for this security
                group. If no rules exist, all traffic will be denied.
+        :param List[SecurityGroupTargetReference] targets: Array of references to
+               targets.
         :param VPCReference vpc: The VPC this security group is a part of.
         """
         self.created_at = created_at
@@ -38562,6 +38859,7 @@ class SecurityGroup():
         self.network_interfaces = network_interfaces
         self.resource_group = resource_group
         self.rules = rules
+        self.targets = targets
         self.vpc = vpc
 
     @classmethod
@@ -38617,6 +38915,12 @@ class SecurityGroup():
         else:
             raise ValueError(
                 'Required property \'rules\' not present in SecurityGroup JSON')
+        if 'targets' in _dict:
+            args['targets'] = _dict.get('targets')
+        else:
+            raise ValueError(
+                'Required property \'targets\' not present in SecurityGroup JSON'
+            )
         if 'vpc' in _dict:
             args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
         else:
@@ -38652,6 +38956,14 @@ class SecurityGroup():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
+        if hasattr(self, 'targets') and self.targets is not None:
+            targets_list = []
+            for x in self.targets:
+                if isinstance(x, dict):
+                    targets_list.append(x)
+                else:
+                    targets_list.append(x.to_dict())
+            _dict['targets'] = targets_list
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
         return _dict
@@ -39662,6 +39974,264 @@ class SecurityGroupRuleRemotePrototype():
                 'SecurityGroupRuleRemotePrototypeIP',
                 'SecurityGroupRuleRemotePrototypeCIDR',
                 'SecurityGroupRuleRemotePrototypeSecurityGroupIdentity'
+            ]))
+        raise Exception(msg)
+
+
+class SecurityGroupTargetCollection():
+    """
+    SecurityGroupTargetCollection.
+
+    :attr SecurityGroupTargetCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr SecurityGroupTargetCollectionNext next: (optional) A link to the next page
+          of resources. This property is present for all pages
+          except the last page.
+    :attr List[SecurityGroupTargetReference] targets: Collection of security group
+          target references.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'SecurityGroupTargetCollectionFirst',
+                 limit: int,
+                 targets: List['SecurityGroupTargetReference'],
+                 total_count: int,
+                 *,
+                 next: 'SecurityGroupTargetCollectionNext' = None) -> None:
+        """
+        Initialize a SecurityGroupTargetCollection object.
+
+        :param SecurityGroupTargetCollectionFirst first: A link to the first page
+               of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[SecurityGroupTargetReference] targets: Collection of security
+               group target references.
+        :param int total_count: The total number of resources across all pages.
+        :param SecurityGroupTargetCollectionNext next: (optional) A link to the
+               next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.targets = targets
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetCollection':
+        """Initialize a SecurityGroupTargetCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = SecurityGroupTargetCollectionFirst.from_dict(
+                _dict.get('first'))
+        else:
+            raise ValueError(
+                'Required property \'first\' not present in SecurityGroupTargetCollection JSON'
+            )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in SecurityGroupTargetCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = SecurityGroupTargetCollectionNext.from_dict(
+                _dict.get('next'))
+        if 'targets' in _dict:
+            args['targets'] = _dict.get('targets')
+        else:
+            raise ValueError(
+                'Required property \'targets\' not present in SecurityGroupTargetCollection JSON'
+            )
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in SecurityGroupTargetCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'targets') and self.targets is not None:
+            targets_list = []
+            for x in self.targets:
+                if isinstance(x, dict):
+                    targets_list.append(x)
+                else:
+                    targets_list.append(x.to_dict())
+            _dict['targets'] = targets_list
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupTargetCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupTargetCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupTargetCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a SecurityGroupTargetCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetCollectionFirst':
+        """Initialize a SecurityGroupTargetCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in SecurityGroupTargetCollectionFirst JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupTargetCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupTargetCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupTargetCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a SecurityGroupTargetCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetCollectionNext':
+        """Initialize a SecurityGroupTargetCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in SecurityGroupTargetCollectionNext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupTargetCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupTargetCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupTargetReference():
+    """
+    SecurityGroupTargetReference.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SecurityGroupTargetReference object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext',
+                'SecurityGroupTargetReferenceLoadBalancerReference'
             ]))
         raise Exception(msg)
 
@@ -40814,18 +41384,18 @@ class VPCCSESourceIP():
     """
     VPCCSESourceIP.
 
-    :attr IP ip: The Cloud Service Endpoint source IP address for this zone.
-    :attr ZoneReference zone: The zone this Cloud Service Endpoint source IP belongs
-          to.
+    :attr IP ip: The cloud service endpoint source IP address for this zone.
+    :attr ZoneReference zone: The zone this cloud service endpoint source IP resides
+          in.
     """
 
     def __init__(self, ip: 'IP', zone: 'ZoneReference') -> None:
         """
         Initialize a VPCCSESourceIP object.
 
-        :param IP ip: The Cloud Service Endpoint source IP address for this zone.
-        :param ZoneReference zone: The zone this Cloud Service Endpoint source IP
-               belongs to.
+        :param IP ip: The cloud service endpoint source IP address for this zone.
+        :param ZoneReference zone: The zone this cloud service endpoint source IP
+               resides in.
         """
         self.ip = ip
         self.zone = zone
@@ -42454,12 +43024,21 @@ class VPNGatewayMember():
     """
     VPNGatewayMember.
 
+    :attr IP private_ip: (optional) The private IP address assigned to the VPN
+          gateway member. This
+          property will be present only when the VPN gateway status is
+          `available`.
     :attr IP public_ip: The public IP address assigned to the VPN gateway member.
     :attr str role: The high availability role assigned to the VPN gateway member.
     :attr str status: The status of the VPN gateway member.
     """
 
-    def __init__(self, public_ip: 'IP', role: str, status: str) -> None:
+    def __init__(self,
+                 public_ip: 'IP',
+                 role: str,
+                 status: str,
+                 *,
+                 private_ip: 'IP' = None) -> None:
         """
         Initialize a VPNGatewayMember object.
 
@@ -42468,7 +43047,12 @@ class VPNGatewayMember():
         :param str role: The high availability role assigned to the VPN gateway
                member.
         :param str status: The status of the VPN gateway member.
+        :param IP private_ip: (optional) The private IP address assigned to the VPN
+               gateway member. This
+               property will be present only when the VPN gateway status is
+               `available`.
         """
+        self.private_ip = private_ip
         self.public_ip = public_ip
         self.role = role
         self.status = status
@@ -42477,6 +43061,8 @@ class VPNGatewayMember():
     def from_dict(cls, _dict: Dict) -> 'VPNGatewayMember':
         """Initialize a VPNGatewayMember object from a json dictionary."""
         args = {}
+        if 'private_ip' in _dict:
+            args['private_ip'] = IP.from_dict(_dict.get('private_ip'))
         if 'public_ip' in _dict:
             args['public_ip'] = IP.from_dict(_dict.get('public_ip'))
         else:
@@ -42505,6 +43091,8 @@ class VPNGatewayMember():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'private_ip') and self.private_ip is not None:
+            _dict['private_ip'] = self.private_ip.to_dict()
         if hasattr(self, 'public_ip') and self.public_ip is not None:
             _dict['public_ip'] = self.public_ip.to_dict()
         if hasattr(self, 'role') and self.role is not None:
@@ -44603,7 +45191,7 @@ class VolumePrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
-    :attr ZoneIdentity zone: The location of the volume.
+    :attr ZoneIdentity zone: The zone this volume will reside in.
     """
 
     def __init__(self,
@@ -44618,7 +45206,7 @@ class VolumePrototype():
         Initialize a VolumePrototype object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param ZoneIdentity zone: The location of the volume.
+        :param ZoneIdentity zone: The zone this volume will reside in.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
@@ -45006,7 +45594,7 @@ class Zone():
 
     :attr str href: The URL for this zone.
     :attr str name: The globally unique name for this zone.
-    :attr RegionReference region: The region this zone belongs to.
+    :attr RegionReference region: The region this zone resides in.
     :attr str status: The availability status of this zone.
     """
 
@@ -45017,7 +45605,7 @@ class Zone():
 
         :param str href: The URL for this zone.
         :param str name: The globally unique name for this zone.
-        :param RegionReference region: The region this zone belongs to.
+        :param RegionReference region: The region this zone resides in.
         :param str status: The availability status of this zone.
         """
         self.href = href
@@ -46798,7 +47386,7 @@ class DedicatedHostPrototypeDedicatedHostByZone(DedicatedHostPrototype):
           dedicated host.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr DedicatedHostGroupPrototypeDedicatedHostByZoneContext group: (optional)
-    :attr ZoneIdentity zone: The zone to provision the dedicated host in.
+    :attr ZoneIdentity zone: The zone this dedicated host will reside in.
     """
 
     def __init__(
@@ -46816,7 +47404,7 @@ class DedicatedHostPrototypeDedicatedHostByZone(DedicatedHostPrototype):
 
         :param DedicatedHostProfileIdentity profile: The profile to use for this
                dedicated host.
-        :param ZoneIdentity zone: The zone to provision the dedicated host in.
+        :param ZoneIdentity zone: The zone this dedicated host will reside in.
         :param bool instance_placement_enabled: (optional) If set to true,
                instances can be placed on this dedicated host.
         :param str name: (optional) The unique user-defined name for this dedicated
@@ -47699,7 +48287,7 @@ class FloatingIPPrototypeFloatingIPByZone(FloatingIPPrototype):
     :attr str name: (optional) The unique user-defined name for this floating IP. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr ResourceGroupIdentity resource_group: (optional)
-    :attr ZoneIdentity zone: The identity of the zone to provision a floating IP in.
+    :attr ZoneIdentity zone: The zone this floating IP will reside in.
     """
 
     def __init__(self,
@@ -47710,8 +48298,7 @@ class FloatingIPPrototypeFloatingIPByZone(FloatingIPPrototype):
         """
         Initialize a FloatingIPPrototypeFloatingIPByZone object.
 
-        :param ZoneIdentity zone: The identity of the zone to provision a floating
-               IP in.
+        :param ZoneIdentity zone: The zone this floating IP will reside in.
         :param str name: (optional) The unique user-defined name for this floating
                IP. If unspecified, the name will be a hyphenated list of randomly-selected
                words.
@@ -49163,6 +49750,196 @@ class ImagePrototypeImageByFile(ImagePrototype):
         return not self == other
 
 
+class InstanceGroupManagerAutoScale(InstanceGroupManager):
+    """
+    InstanceGroupManagerAutoScale.
+
+    :attr str href: The URL for this instance group manager.
+    :attr str id: The unique identifier for this instance group manager.
+    :attr bool management_enabled: If set to `true`, this manager will control the
+          instance group.
+    :attr str name: The user-defined name for this instance group manager. Names
+          must be unique within the instance group.
+    :attr int aggregation_window: The time window in seconds to aggregate metrics
+          prior to evaluation.
+    :attr int cooldown: The duration of time in seconds to pause further scale
+          actions after scaling has taken place.
+    :attr str manager_type: The type of instance group manager.
+    :attr int max_membership_count: The maximum number of members in a managed
+          instance group.
+    :attr int min_membership_count: The minimum number of members in a managed
+          instance group.
+    :attr List[InstanceGroupManagerPolicyReference] policies: The policies of the
+          instance group manager.
+    """
+
+    def __init__(self, href: str, id: str, management_enabled: bool, name: str,
+                 aggregation_window: int, cooldown: int, manager_type: str,
+                 max_membership_count: int, min_membership_count: int,
+                 policies: List['InstanceGroupManagerPolicyReference']) -> None:
+        """
+        Initialize a InstanceGroupManagerAutoScale object.
+
+        :param str href: The URL for this instance group manager.
+        :param str id: The unique identifier for this instance group manager.
+        :param bool management_enabled: If set to `true`, this manager will control
+               the instance group.
+        :param str name: The user-defined name for this instance group manager.
+               Names must be unique within the instance group.
+        :param int aggregation_window: The time window in seconds to aggregate
+               metrics prior to evaluation.
+        :param int cooldown: The duration of time in seconds to pause further scale
+               actions after scaling has taken place.
+        :param str manager_type: The type of instance group manager.
+        :param int max_membership_count: The maximum number of members in a managed
+               instance group.
+        :param int min_membership_count: The minimum number of members in a managed
+               instance group.
+        :param List[InstanceGroupManagerPolicyReference] policies: The policies of
+               the instance group manager.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+        self.id = id
+        self.management_enabled = management_enabled
+        self.name = name
+        self.aggregation_window = aggregation_window
+        self.cooldown = cooldown
+        self.manager_type = manager_type
+        self.max_membership_count = max_membership_count
+        self.min_membership_count = min_membership_count
+        self.policies = policies
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceGroupManagerAutoScale':
+        """Initialize a InstanceGroupManagerAutoScale object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'management_enabled' in _dict:
+            args['management_enabled'] = _dict.get('management_enabled')
+        else:
+            raise ValueError(
+                'Required property \'management_enabled\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'aggregation_window' in _dict:
+            args['aggregation_window'] = _dict.get('aggregation_window')
+        else:
+            raise ValueError(
+                'Required property \'aggregation_window\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'cooldown' in _dict:
+            args['cooldown'] = _dict.get('cooldown')
+        else:
+            raise ValueError(
+                'Required property \'cooldown\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'manager_type' in _dict:
+            args['manager_type'] = _dict.get('manager_type')
+        else:
+            raise ValueError(
+                'Required property \'manager_type\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'max_membership_count' in _dict:
+            args['max_membership_count'] = _dict.get('max_membership_count')
+        else:
+            raise ValueError(
+                'Required property \'max_membership_count\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'min_membership_count' in _dict:
+            args['min_membership_count'] = _dict.get('min_membership_count')
+        else:
+            raise ValueError(
+                'Required property \'min_membership_count\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'policies' in _dict:
+            args['policies'] = [
+                InstanceGroupManagerPolicyReference.from_dict(x)
+                for x in _dict.get('policies')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'policies\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerAutoScale object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(
+                self,
+                'management_enabled') and self.management_enabled is not None:
+            _dict['management_enabled'] = self.management_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(
+                self,
+                'aggregation_window') and self.aggregation_window is not None:
+            _dict['aggregation_window'] = self.aggregation_window
+        if hasattr(self, 'cooldown') and self.cooldown is not None:
+            _dict['cooldown'] = self.cooldown
+        if hasattr(self, 'manager_type') and self.manager_type is not None:
+            _dict['manager_type'] = self.manager_type
+        if hasattr(self, 'max_membership_count'
+                  ) and self.max_membership_count is not None:
+            _dict['max_membership_count'] = self.max_membership_count
+        if hasattr(self, 'min_membership_count'
+                  ) and self.min_membership_count is not None:
+            _dict['min_membership_count'] = self.min_membership_count
+        if hasattr(self, 'policies') and self.policies is not None:
+            _dict['policies'] = [x.to_dict() for x in self.policies]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerAutoScale object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceGroupManagerAutoScale') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceGroupManagerAutoScale') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ManagerTypeEnum(str, Enum):
+        """
+        The type of instance group manager.
+        """
+        AUTOSCALE = 'autoscale'
+
+
 class InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype(
         InstanceGroupManagerPolicyPrototype):
     """
@@ -50099,7 +50876,7 @@ class InstanceProfileMemoryDependent(InstanceProfileMemory):
 
 class InstanceProfileMemoryEnum(InstanceProfileMemory):
     """
-    The permitted memory values (in gigabytes) for an instance with this profile.
+    The permitted memory values (in gibibytes) for an instance with this profile.
 
     :attr int default: The default value for this profile field.
     :attr str type: The type for this profile field.
@@ -50186,7 +50963,7 @@ class InstanceProfileMemoryEnum(InstanceProfileMemory):
 
 class InstanceProfileMemoryFixed(InstanceProfileMemory):
     """
-    The memory (in gigabytes) for an instance with this profile.
+    The memory (in gibibytes) for an instance with this profile.
 
     :attr str type: The type for this profile field.
     :attr int value: The value for this profile field.
@@ -50262,7 +51039,7 @@ class InstanceProfileMemoryFixed(InstanceProfileMemory):
 
 class InstanceProfileMemoryRange(InstanceProfileMemory):
     """
-    The permitted memory range (in gigabytes) for an instance with this profile.
+    The permitted memory range (in gibibytes) for an instance with this profile.
 
     :attr int default: The default value for this profile field.
     :attr int max: The maximum value for this profile field.
@@ -50884,8 +51661,7 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
           interface.
-    :attr ZoneIdentity zone: The identity of the zone to provision the virtual
-          server instance in.
+    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
     """
 
     def __init__(
@@ -50913,8 +51689,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: Primary network
                interface.
-        :param ZoneIdentity zone: The identity of the zone to provision the virtual
-               server instance in.
+        :param ZoneIdentity zone: The zone this virtual server instance will reside
+               in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Up to 10 keys may be
                provided; if no keys are provided the instance will be inaccessible unless
@@ -51132,8 +51908,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           network interface.
     :attr InstanceTemplateIdentity source_template: Identifies an instance template
           by a unique property.
-    :attr ZoneIdentity zone: (optional) The identity of the zone to provision the
-          virtual server instance in.
+    :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
+          reside in.
     """
 
     def __init__(self,
@@ -51189,8 +51965,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                when provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: (optional)
                Primary network interface.
-        :param ZoneIdentity zone: (optional) The identity of the zone to provision
-               the virtual server instance in.
+        :param ZoneIdentity zone: (optional) The zone this virtual server instance
+               will reside in.
         """
         # pylint: disable=super-init-not-called
         self.keys = keys
@@ -51560,8 +52336,7 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
           interface.
-    :attr ZoneIdentity zone: The identity of the zone to provision the virtual
-          server instance in.
+    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
     """
 
     def __init__(
@@ -51589,8 +52364,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: Primary network
                interface.
-        :param ZoneIdentity zone: The identity of the zone to provision the virtual
-               server instance in.
+        :param ZoneIdentity zone: The zone this virtual server instance will reside
+               in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Up to 10 keys may be
                provided; if no keys are provided the instance will be inaccessible unless
@@ -51810,8 +52585,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
           network interface.
     :attr InstanceTemplateIdentity source_template: Identifies an instance template
           by a unique property.
-    :attr ZoneIdentity zone: (optional) The identity of the zone to provision the
-          virtual server instance in.
+    :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
+          reside in.
     """
 
     def __init__(self,
@@ -51867,8 +52642,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
                when provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: (optional)
                Primary network interface.
-        :param ZoneIdentity zone: (optional) The identity of the zone to provision
-               the virtual server instance in.
+        :param ZoneIdentity zone: (optional) The zone this virtual server instance
+               will reside in.
         """
         # pylint: disable=super-init-not-called
         self.keys = keys
@@ -52068,8 +52843,7 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
           interface.
-    :attr ZoneIdentity zone: The identity of the zone to provision the virtual
-          server instance in.
+    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
     """
 
     def __init__(
@@ -52109,8 +52883,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: Primary network
                interface.
-        :param ZoneIdentity zone: The identity of the zone to provision the virtual
-               server instance in.
+        :param ZoneIdentity zone: The zone this virtual server instance will reside
+               in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Up to 10 keys may be
                provided; if no keys are provided the instance will be inaccessible unless
@@ -52370,8 +53144,8 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
           network interface.
     :attr InstanceTemplateIdentity source_template: Identifies an instance template
           by a unique property.
-    :attr ZoneIdentity zone: (optional) The identity of the zone to provision the
-          virtual server instance in.
+    :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
+          reside in.
     """
 
     def __init__(self,
@@ -52435,8 +53209,8 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
                when provisioning the virtual server instance.
         :param NetworkInterfacePrototype primary_network_interface: (optional)
                Primary network interface.
-        :param ZoneIdentity zone: (optional) The identity of the zone to provision
-               the virtual server instance in.
+        :param ZoneIdentity zone: (optional) The zone this virtual server instance
+               will reside in.
         """
         # pylint: disable=super-init-not-called
         self.created_at = created_at
@@ -54148,6 +54922,162 @@ class LoadBalancerProfileIdentityByName(LoadBalancerProfileIdentity):
     def __ne__(self, other: 'LoadBalancerProfileIdentityByName') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class LoadBalancerProfileSecurityGroupsSupportedDependent(
+        LoadBalancerProfileSecurityGroupsSupported):
+    """
+    The security group support for a load balancer with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a LoadBalancerProfileSecurityGroupsSupportedDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(
+            cls, _dict: Dict
+    ) -> 'LoadBalancerProfileSecurityGroupsSupportedDependent':
+        """Initialize a LoadBalancerProfileSecurityGroupsSupportedDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in LoadBalancerProfileSecurityGroupsSupportedDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileSecurityGroupsSupportedDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileSecurityGroupsSupportedDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self, other: 'LoadBalancerProfileSecurityGroupsSupportedDependent'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self, other: 'LoadBalancerProfileSecurityGroupsSupportedDependent'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class LoadBalancerProfileSecurityGroupsSupportedFixed(
+        LoadBalancerProfileSecurityGroupsSupported):
+    """
+    The security group support for a load balancer with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr bool value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: bool) -> None:
+        """
+        Initialize a LoadBalancerProfileSecurityGroupsSupportedFixed object.
+
+        :param str type: The type for this profile field.
+        :param bool value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'LoadBalancerProfileSecurityGroupsSupportedFixed':
+        """Initialize a LoadBalancerProfileSecurityGroupsSupportedFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in LoadBalancerProfileSecurityGroupsSupportedFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in LoadBalancerProfileSecurityGroupsSupportedFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileSecurityGroupsSupportedFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileSecurityGroupsSupportedFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'LoadBalancerProfileSecurityGroupsSupportedFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'LoadBalancerProfileSecurityGroupsSupportedFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
 
 
 class NetworkACLIdentityByCRN(NetworkACLIdentity):
@@ -58103,6 +59033,26 @@ class RouteNextHopPrototypeRouteNextHopIP(RouteNextHopPrototype):
         return not self == other
 
 
+class RouteNextHopPrototypeVPNGatewayConnectionIdentity(RouteNextHopPrototype):
+    """
+    Identifies a VPN gateway connection by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById',
+                'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
 class RouteNextHopVPNGatewayConnectionReference(RouteNextHop):
     """
     RouteNextHopVPNGatewayConnectionReference.
@@ -60030,6 +60980,253 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
         UDP = 'udp'
 
 
+class SecurityGroupTargetReferenceLoadBalancerReference(
+        SecurityGroupTargetReference):
+    """
+    SecurityGroupTargetReferenceLoadBalancerReference.
+
+    :attr str crn: The load balancer's CRN.
+    :attr LoadBalancerReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The load balancer's canonical URL.
+    :attr str id: The unique identifier for this load balancer.
+    :attr str name: The unique user-defined name for this load balancer.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 *,
+                 deleted: 'LoadBalancerReferenceDeleted' = None) -> None:
+        """
+        Initialize a SecurityGroupTargetReferenceLoadBalancerReference object.
+
+        :param str crn: The load balancer's CRN.
+        :param str href: The load balancer's canonical URL.
+        :param str id: The unique identifier for this load balancer.
+        :param str name: The unique user-defined name for this load balancer.
+        :param LoadBalancerReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'SecurityGroupTargetReferenceLoadBalancerReference':
+        """Initialize a SecurityGroupTargetReferenceLoadBalancerReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON'
+            )
+        if 'deleted' in _dict:
+            args['deleted'] = LoadBalancerReferenceDeleted.from_dict(
+                _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetReferenceLoadBalancerReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetReferenceLoadBalancerReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'SecurityGroupTargetReferenceLoadBalancerReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'SecurityGroupTargetReferenceLoadBalancerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext(
+        SecurityGroupTargetReference):
+    """
+    SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext.
+
+    :attr NetworkInterfaceReferenceTargetContextDeleted deleted: (optional) If
+          present, this property indicates the referenced resource has been deleted and
+          provides
+          some supplementary information.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(
+        self,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        *,
+        deleted: 'NetworkInterfaceReferenceTargetContextDeleted' = None
+    ) -> None:
+        """
+        Initialize a SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext object.
+
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
+        :param str resource_type: The resource type.
+        :param NetworkInterfaceReferenceTargetContextDeleted deleted: (optional) If
+               present, this property indicates the referenced resource has been deleted
+               and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext':
+        """Initialize a SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args[
+                'deleted'] = NetworkInterfaceReferenceTargetContextDeleted.from_dict(
+                    _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
 class SubnetIdentityByCRN(SubnetIdentity):
     """
     SubnetIdentityByCRN.
@@ -60232,7 +61429,7 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
           the zone of the address prefix that contains the IPv4 CIDR. If zone is
           specified, it must match the zone of the address prefix that contains the
           subnet's IPv4 CIDR.
-    :attr ZoneIdentity zone: (optional) The zone the subnet is to reside in.
+    :attr ZoneIdentity zone: (optional) The zone this subnet will reside in.
     """
 
     def __init__(self,
@@ -60273,7 +61470,7 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
                is used. The routing table properties `route_direct_link_ingress`,
                `route_transit_gateway_ingress`, and `route_vpc_zone_ingress` must be
                `false`.
-        :param ZoneIdentity zone: (optional) The zone the subnet is to reside in.
+        :param ZoneIdentity zone: (optional) The zone this subnet will reside in.
         """
         # pylint: disable=super-init-not-called
         self.ip_version = ip_version
@@ -60412,7 +61609,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
           Must be a power of 2. The VPC must have a default address prefix in the
           specified zone, and that prefix must have a free CIDR range with at least this
           number of addresses.
-    :attr ZoneIdentity zone: The zone the subnet is to reside in.
+    :attr ZoneIdentity zone: The zone this subnet will reside in.
     """
 
     def __init__(self,
@@ -60434,7 +61631,7 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
                required. Must be a power of 2. The VPC must have a default address prefix
                in the specified zone, and that prefix must have a free CIDR range with at
                least this number of addresses.
-        :param ZoneIdentity zone: The zone the subnet is to reside in.
+        :param ZoneIdentity zone: The zone this subnet will reside in.
         :param str ip_version: (optional) The IP version(s) to support for this
                subnet.
         :param str name: (optional) The user-defined name for this subnet. Names
@@ -62794,7 +63991,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
-    :attr ZoneIdentity zone: The location of the volume.
+    :attr ZoneIdentity zone: The zone this volume will reside in.
     :attr int capacity: The capacity of the volume in gigabytes. The specified
           minimum and maximum capacity values for creating or updating volumes may expand
           in the future.
@@ -62813,7 +64010,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
         Initialize a VolumePrototypeVolumeByCapacity object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param ZoneIdentity zone: The location of the volume.
+        :param ZoneIdentity zone: The zone this volume will reside in.
         :param int capacity: The capacity of the volume in gigabytes. The specified
                minimum and maximum capacity values for creating or updating volumes may
                expand in the future.
@@ -65050,6 +66247,142 @@ class ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByI
         return not self == other
 
 
+class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref(
+        RouteNextHopPrototypeVPNGatewayConnectionIdentity):
+    """
+    RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.
+
+    :attr str href: The VPN connection's canonical URL.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object.
+
+        :param str href: The VPN connection's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref':
+        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById(
+        RouteNextHopPrototypeVPNGatewayConnectionIdentity):
+    """
+    RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.
+
+    :attr str id: The unique identifier for this VPN gateway connection.
+    """
+
+    def __init__(self, id: str) -> None:
+        """
+        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object.
+
+        :param str id: The unique identifier for this VPN gateway connection.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById':
+        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN(
         SecurityGroupRuleRemotePatchSecurityGroupIdentity):
     """
@@ -65782,5 +67115,5 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         self, other:
         'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
     ) -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
+        """Return `true` when self and other are notequal, false otherwise."""
         return not self == other
