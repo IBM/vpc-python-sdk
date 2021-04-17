@@ -48,5 +48,5 @@ deploy:
   repository: https://upload.pypi.org/legacy
   skip_cleanup: true
   on:
-    python: '3.5'
+    python: '3.6'
     tags: true
