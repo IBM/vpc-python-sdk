@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/IBM/vpc-python-sdk/compare/v0.5.0...v0.5.1) (2021-04-17)
+
+
+### Bug Fixes
+
+* **build:** Update travis.yml to fix publishing to repo manager ([#21](https://github.com/IBM/vpc-python-sdk/issues/21)) ([61a0064](https://github.com/IBM/vpc-python-sdk/commit/61a0064cd417483acfbb93091e2b73f8448f58be))
+
 # [0.5.0](https://github.com/IBM/vpc-python-sdk/compare/v0.4.1...v0.5.0) (2021-03-19)
 
 
