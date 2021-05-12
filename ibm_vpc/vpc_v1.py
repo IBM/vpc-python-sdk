@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2020, 2021.
+# (C) Copyright IBM Corp. 2021.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.28.0-55613c9e-20210220-164656
+# IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage infrastructure resources, including virtual server instances, subnets, volumes,
@@ -49,7 +49,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: str = '2021-03-09',
+        version: str = '2021-05-06',
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: int = 2,
     ) -> 'VpcV1':
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: str = '2021-03-09',
+        version: str = '2021-05-06',
         authenticator: Authenticator = None,
         generation: int = 2,
     ) -> None:
@@ -1948,6 +1948,8 @@ class VpcV1(BaseService):
             raise ValueError('id must be provided')
         if network_acl_identity is None:
             raise ValueError('network_acl_identity must be provided')
+        if isinstance(network_acl_identity, NetworkACLIdentity):
+            network_acl_identity = convert_model(network_acl_identity)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -2077,6 +2079,8 @@ class VpcV1(BaseService):
             raise ValueError('id must be provided')
         if public_gateway_identity is None:
             raise ValueError('public_gateway_identity must be provided')
+        if isinstance(public_gateway_identity, PublicGatewayIdentity):
+            public_gateway_identity = convert_model(public_gateway_identity)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -2169,6 +2173,8 @@ class VpcV1(BaseService):
             raise ValueError('id must be provided')
         if routing_table_identity is None:
             raise ValueError('routing_table_identity must be provided')
+        if isinstance(routing_table_identity, RoutingTableIdentity):
+            routing_table_identity = convert_model(routing_table_identity)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -2573,9 +2579,10 @@ class VpcV1(BaseService):
         """
         Delete an image.
 
-        This request deletes an image. This operation cannot be reversed. System-provided
-        images are not allowed to be deleted. An image with a `status` of `pending`,
-        `tentative`, or `deleting` cannot be deleted.
+        This request deletes an image. This operation cannot be reversed. A
+        system-provided image is not allowed to be deleted. Additionally, an image cannot
+        be deleted if it has a
+        `status` of `pending`, `tentative`, or `deleting`.
 
         :param str id: The image identifier.
         :param dict headers: A `dict` containing the request headers
@@ -2653,7 +2660,7 @@ class VpcV1(BaseService):
 
         This request updates an image with the information in a provided image patch. The
         image patch object is structured in the same way as a retrieved image and contains
-        only the information to be updated. System-provided images are not allowed to be
+        only the information to be updated. A system-provided image is not allowed to be
         updated. An image with a `status` of `deleting` cannot be updated.
 
         :param str id: The image identifier.
@@ -3630,6 +3637,205 @@ class VpcV1(BaseService):
         response = self.send(request)
         return response
 
+    def create_instance_console_access_token(self,
+                                             instance_id: str,
+                                             console_type: str,
+                                             *,
+                                             force: bool = None,
+                                             **kwargs) -> DetailedResponse:
+        """
+        Create a console access token for an instance.
+
+        This request creates a new single-use console access token for an instance. All
+        console configuration is provided at token create time, and the token is
+        subsequently used in the `access_token` query parameter for the WebSocket request.
+         The access token is only valid for a short period of time, and a maximum of one
+        token is valid for a given instance at a time.
+
+        :param str instance_id: The instance identifier.
+        :param str console_type: The instance console type for which this token may
+               be used.
+        :param bool force: (optional) Indicates whether to disconnect an existing
+               serial console session as the serial console cannot be shared.  This has no
+               effect on VNC consoles.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceConsoleAccessToken` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        if console_type is None:
+            raise ValueError('console_type must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_instance_console_access_token')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = {'console_type': console_type, 'force': force}
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/console_access_token'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def list_instance_disks(self, instance_id: str,
+                            **kwargs) -> DetailedResponse:
+        """
+        List all disks on an instance.
+
+        This request lists all disks on an instance.  A disk is a block device that is
+        locally attached to the instance's physical host and is also referred to as
+        instance storage. By default, the listed disks are sorted by their `created_at`
+        property values, with the newest disk first.
+
+        :param str instance_id: The instance identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceDiskCollection` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_instance_disks')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id']
+        path_param_values = self.encode_path_vars(instance_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/disks'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_instance_disk(self, instance_id: str, id: str,
+                          **kwargs) -> DetailedResponse:
+        """
+        Retrieve an instance disk.
+
+        This request retrieves a single instance disk specified by the identifier in the
+        URL.
+
+        :param str instance_id: The instance identifier.
+        :param str id: The instance disk identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceDisk` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_instance_disk')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/disks/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def update_instance_disk(self, instance_id: str, id: str,
+                             instance_disk_patch: 'InstanceDiskPatch',
+                             **kwargs) -> DetailedResponse:
+        """
+        Update an instance disk.
+
+        This request updates the instance disk with the information in a provided patch.
+
+        :param str instance_id: The instance identifier.
+        :param str id: The instance disk identifier.
+        :param InstanceDiskPatch instance_disk_patch: The instance disk patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceDisk` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if instance_disk_patch is None:
+            raise ValueError('instance_disk_patch must be provided')
+        if isinstance(instance_disk_patch, InstanceDiskPatch):
+            instance_disk_patch = convert_model(instance_disk_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_instance_disk')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(instance_disk_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/disks/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
     def list_instance_network_interfaces(self, instance_id: str,
                                          **kwargs) -> DetailedResponse:
         """
@@ -3859,10 +4065,10 @@ class VpcV1(BaseService):
         """
         Update a network interface.
 
-        This request updates a network interface with the information in a provided
-        network interface patch. The network interface patch object is structured in the
-        same way as a retrieved network interface and can contain an updated name and/or
-        port speed.
+        This request updates a network interface with the information provided in a
+        network interface patch object. The network interface patch object is structured
+        in the same way as a retrieved network interface and needs to contain only the
+        information to be updated.
 
         :param str instance_id: The instance identifier.
         :param str id: The network interface identifier.
@@ -4321,9 +4527,10 @@ class VpcV1(BaseService):
         """
         Update a volume attachment.
 
-        This request updates a volume attachment with the information in a provided volume
-        attachment patch. The volume attachment patch object is structured in the same way
-        as a retrieved volume attachment and can contain an updated name.
+        This request updates a volume attachment with the information provided in a volume
+        attachment patch object. The volume attachment patch object is structured in the
+        same way as a retrieved volume attachment and needs to contain only the
+        information to be updated.
 
         :param str instance_id: The instance identifier.
         :param str id: The volume attachment identifier.
@@ -4680,7 +4887,11 @@ class VpcV1(BaseService):
         response = self.send(request)
         return response
 
-    def list_instance_group_managers(self, instance_group_id: str,
+    def list_instance_group_managers(self,
+                                     instance_group_id: str,
+                                     *,
+                                     start: str = None,
+                                     limit: int = None,
                                      **kwargs) -> DetailedResponse:
         """
         List all managers for an instance group.
@@ -4688,6 +4899,9 @@ class VpcV1(BaseService):
         This request lists all managers for an instance group.
 
         :param str instance_group_id: The instance group identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerCollection` object
@@ -4702,7 +4916,12 @@ class VpcV1(BaseService):
             operation_id='list_instance_group_managers')
         headers.update(sdk_headers)
 
-        params = {'version': self.version, 'generation': self.generation}
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
@@ -4922,8 +5141,306 @@ class VpcV1(BaseService):
         response = self.send(request)
         return response
 
-    def list_instance_group_manager_policies(self, instance_group_id: str,
+    def list_instance_group_manager_actions(self,
+                                            instance_group_id: str,
+                                            instance_group_manager_id: str,
+                                            *,
+                                            start: str = None,
+                                            limit: int = None,
+                                            **kwargs) -> DetailedResponse:
+        """
+        List all actions for an instance group manager.
+
+        This request lists all instance group actions for an instance group manager.
+
+        :param str instance_group_id: The instance group identifier.
+        :param str instance_group_manager_id: The instance group manager
+               identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerActionsCollection` object
+        """
+
+        if instance_group_id is None:
+            raise ValueError('instance_group_id must be provided')
+        if instance_group_manager_id is None:
+            raise ValueError('instance_group_manager_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_instance_group_manager_actions')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_group_id', 'instance_group_manager_id']
+        path_param_values = self.encode_path_vars(instance_group_id,
+                                                  instance_group_manager_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance_groups/{instance_group_id}/managers/{instance_group_manager_id}/actions'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def create_instance_group_manager_action(
+            self, instance_group_id: str, instance_group_manager_id: str,
+            instance_group_manager_action_prototype:
+        'InstanceGroupManagerActionPrototype', **kwargs) -> DetailedResponse:
+        """
+        Create an instance group manager action.
+
+        This request creates a new instance group manager action.
+
+        :param str instance_group_id: The instance group identifier.
+        :param str instance_group_manager_id: The instance group manager
+               identifier.
+        :param InstanceGroupManagerActionPrototype
+               instance_group_manager_action_prototype: The instance group manager action
+               prototype object.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerAction` object
+        """
+
+        if instance_group_id is None:
+            raise ValueError('instance_group_id must be provided')
+        if instance_group_manager_id is None:
+            raise ValueError('instance_group_manager_id must be provided')
+        if instance_group_manager_action_prototype is None:
+            raise ValueError(
+                'instance_group_manager_action_prototype must be provided')
+        if isinstance(instance_group_manager_action_prototype,
+                      InstanceGroupManagerActionPrototype):
+            instance_group_manager_action_prototype = convert_model(
+                instance_group_manager_action_prototype)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_instance_group_manager_action')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(instance_group_manager_action_prototype)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_group_id', 'instance_group_manager_id']
+        path_param_values = self.encode_path_vars(instance_group_id,
+                                                  instance_group_manager_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance_groups/{instance_group_id}/managers/{instance_group_manager_id}/actions'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def delete_instance_group_manager_action(self, instance_group_id: str,
                                              instance_group_manager_id: str,
+                                             id: str,
+                                             **kwargs) -> DetailedResponse:
+        """
+        Delete specified instance group manager action.
+
+        This request deletes an instance group manager action. This operation cannot be
+        reversed.
+
+        :param str instance_group_id: The instance group identifier.
+        :param str instance_group_manager_id: The instance group manager
+               identifier.
+        :param str id: The instance group manager action identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if instance_group_id is None:
+            raise ValueError('instance_group_id must be provided')
+        if instance_group_manager_id is None:
+            raise ValueError('instance_group_manager_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_instance_group_manager_action')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = [
+            'instance_group_id', 'instance_group_manager_id', 'id'
+        ]
+        path_param_values = self.encode_path_vars(instance_group_id,
+                                                  instance_group_manager_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance_groups/{instance_group_id}/managers/{instance_group_manager_id}/actions/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_instance_group_manager_action(self, instance_group_id: str,
+                                          instance_group_manager_id: str,
+                                          id: str,
+                                          **kwargs) -> DetailedResponse:
+        """
+        Retrieve specified instance group manager action.
+
+        This request retrieves a single instance group manager action specified by
+        identifier in the URL.
+
+        :param str instance_group_id: The instance group identifier.
+        :param str instance_group_manager_id: The instance group manager
+               identifier.
+        :param str id: The instance group manager action identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerAction` object
+        """
+
+        if instance_group_id is None:
+            raise ValueError('instance_group_id must be provided')
+        if instance_group_manager_id is None:
+            raise ValueError('instance_group_manager_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_instance_group_manager_action')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = [
+            'instance_group_id', 'instance_group_manager_id', 'id'
+        ]
+        path_param_values = self.encode_path_vars(instance_group_id,
+                                                  instance_group_manager_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance_groups/{instance_group_id}/managers/{instance_group_manager_id}/actions/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def update_instance_group_manager_action(
+            self, instance_group_id: str, instance_group_manager_id: str,
+            id: str, instance_group_manager_action_patch:
+        'InstanceGroupManagerActionPatch', **kwargs) -> DetailedResponse:
+        """
+        Update specified instance group manager action.
+
+        This request updates an instance group manager action.
+
+        :param str instance_group_id: The instance group identifier.
+        :param str instance_group_manager_id: The instance group manager
+               identifier.
+        :param str id: The instance group manager action identifier.
+        :param InstanceGroupManagerActionPatch instance_group_manager_action_patch:
+               The instance group manager action patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerAction` object
+        """
+
+        if instance_group_id is None:
+            raise ValueError('instance_group_id must be provided')
+        if instance_group_manager_id is None:
+            raise ValueError('instance_group_manager_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if instance_group_manager_action_patch is None:
+            raise ValueError(
+                'instance_group_manager_action_patch must be provided')
+        if isinstance(instance_group_manager_action_patch,
+                      InstanceGroupManagerActionPatch):
+            instance_group_manager_action_patch = convert_model(
+                instance_group_manager_action_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_instance_group_manager_action')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(instance_group_manager_action_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = [
+            'instance_group_id', 'instance_group_manager_id', 'id'
+        ]
+        path_param_values = self.encode_path_vars(instance_group_id,
+                                                  instance_group_manager_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instance_groups/{instance_group_id}/managers/{instance_group_manager_id}/actions/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def list_instance_group_manager_policies(self,
+                                             instance_group_id: str,
+                                             instance_group_manager_id: str,
+                                             *,
+                                             start: str = None,
+                                             limit: int = None,
                                              **kwargs) -> DetailedResponse:
         """
         List all policies for an instance group manager.
@@ -4933,6 +5450,9 @@ class VpcV1(BaseService):
         :param str instance_group_id: The instance group identifier.
         :param str instance_group_manager_id: The instance group manager
                identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `InstanceGroupManagerPolicyCollection` object
@@ -4949,7 +5469,12 @@ class VpcV1(BaseService):
             operation_id='list_instance_group_manager_policies')
         headers.update(sdk_headers)
 
-        params = {'version': self.version, 'generation': self.generation}
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
@@ -5247,7 +5772,11 @@ class VpcV1(BaseService):
         response = self.send(request)
         return response
 
-    def list_instance_group_memberships(self, instance_group_id: str,
+    def list_instance_group_memberships(self,
+                                        instance_group_id: str,
+                                        *,
+                                        start: str = None,
+                                        limit: int = None,
                                         **kwargs) -> DetailedResponse:
         """
         List all memberships for an instance group.
@@ -5255,6 +5784,9 @@ class VpcV1(BaseService):
         This request lists all instance group memberships for an instance group.
 
         :param str instance_group_id: The instance group identifier.
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `InstanceGroupMembershipCollection` object
@@ -5269,7 +5801,12 @@ class VpcV1(BaseService):
             operation_id='list_instance_group_memberships')
         headers.update(sdk_headers)
 
-        params = {'version': self.version, 'generation': self.generation}
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
 
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
@@ -5880,6 +6417,149 @@ class VpcV1(BaseService):
 
         url = '/dedicated_hosts'
         request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    def list_dedicated_host_disks(self, dedicated_host_id: str,
+                                  **kwargs) -> DetailedResponse:
+        """
+        List all disks on a dedicated host.
+
+        This request lists all disks on a dedicated host.  A disk is a physical device
+        that is locally attached to the compute node. By default, the listed disks are
+        sorted by their
+        `created_at` property values, with the newest disk first.
+
+        :param str dedicated_host_id: The dedicated host identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostDiskCollection` object
+        """
+
+        if dedicated_host_id is None:
+            raise ValueError('dedicated_host_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_dedicated_host_disks')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['dedicated_host_id']
+        path_param_values = self.encode_path_vars(dedicated_host_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{dedicated_host_id}/disks'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def get_dedicated_host_disk(self, dedicated_host_id: str, id: str,
+                                **kwargs) -> DetailedResponse:
+        """
+        Retrieve a dedicated host disk.
+
+        This request retrieves a single dedicated host disk specified by the identifier in
+        the URL.
+
+        :param str dedicated_host_id: The dedicated host identifier.
+        :param str id: The dedicated host disk identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostDisk` object
+        """
+
+        if dedicated_host_id is None:
+            raise ValueError('dedicated_host_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_dedicated_host_disk')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['dedicated_host_id', 'id']
+        path_param_values = self.encode_path_vars(dedicated_host_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{dedicated_host_id}/disks/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+    def update_dedicated_host_disk(
+            self, dedicated_host_id: str, id: str,
+            dedicated_host_disk_patch: 'DedicatedHostDiskPatch',
+            **kwargs) -> DetailedResponse:
+        """
+        Update a dedicated host disk.
+
+        This request updates the dedicated host disk with the information in a provided
+        patch.
+
+        :param str dedicated_host_id: The dedicated host identifier.
+        :param str id: The dedicated host disk identifier.
+        :param DedicatedHostDiskPatch dedicated_host_disk_patch: The dedicated host
+               disk patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `DedicatedHostDisk` object
+        """
+
+        if dedicated_host_id is None:
+            raise ValueError('dedicated_host_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if dedicated_host_disk_patch is None:
+            raise ValueError('dedicated_host_disk_patch must be provided')
+        if isinstance(dedicated_host_disk_patch, DedicatedHostDiskPatch):
+            dedicated_host_disk_patch = convert_model(dedicated_host_disk_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_dedicated_host_disk')
+        headers.update(sdk_headers)
+
+        params = {'version': self.version, 'generation': self.generation}
+
+        data = json.dumps(dedicated_host_disk_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['dedicated_host_id', 'id']
+        path_param_values = self.encode_path_vars(dedicated_host_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/dedicated_hosts/{dedicated_host_id}/disks/{id}'.format(
+            **path_param_dict)
+        request = self.prepare_request(method='PATCH',
                                        url=url,
                                        headers=headers,
                                        params=params,
@@ -10277,8 +10957,8 @@ class VpcV1(BaseService):
         This request creates a new listener for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
+        :param int port: The listener port number, or the inclusive lower bound of
+               the port range. Each listener in the load balancer must have a unique
                `port` and `protocol` combination.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
@@ -10864,9 +11544,18 @@ class VpcV1(BaseService):
         :param str policy_id: The policy identifier.
         :param str condition: The condition of the rule.
         :param str type: The type of the rule.
+               Body rules are applied to form-encoded request bodies using the `UTF-8`
+               character set.
         :param str value: Value to be matched for rule condition.
-        :param str field: (optional) HTTP header field. This is only applicable to
-               "header" rule type.
+               If the rule type is `query` and the rule condition is not `matches_regex`,
+               the value must be percent-encoded.
+        :param str field: (optional) The field. This is applicable to `header`,
+               `query`, and `body` rule types.
+               If the rule type is `header`, this field is required.
+               If the rule type is `query`, this is optional. If specified and the rule
+               condition is not
+               `matches_regex`, the value must be percent-encoded.
+               If the rule type is `body`, this is optional.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListenerPolicyRule` object
@@ -13158,6 +13847,7 @@ class DedicatedHost():
     :attr datetime created_at: The date and time that the dedicated host was
           created.
     :attr str crn: The CRN for this dedicated host.
+    :attr List[DedicatedHostDisk] disks: Collection of the dedicated host's disks.
     :attr DedicatedHostGroupReference group: The dedicated host group this dedicated
           host is in.
     :attr str href: The URL for this dedicated host.
@@ -13191,6 +13881,7 @@ class DedicatedHost():
 
     def __init__(self, available_memory: int, available_vcpu: 'VCPU',
                  created_at: datetime, crn: str,
+                 disks: List['DedicatedHostDisk'],
                  group: 'DedicatedHostGroupReference', href: str, id: str,
                  instance_placement_enabled: bool,
                  instances: List['InstanceReference'], lifecycle_state: str,
@@ -13209,6 +13900,8 @@ class DedicatedHost():
         :param datetime created_at: The date and time that the dedicated host was
                created.
         :param str crn: The CRN for this dedicated host.
+        :param List[DedicatedHostDisk] disks: Collection of the dedicated host's
+               disks.
         :param DedicatedHostGroupReference group: The dedicated host group this
                dedicated host is in.
         :param str href: The URL for this dedicated host.
@@ -13245,6 +13938,7 @@ class DedicatedHost():
         self.available_vcpu = available_vcpu
         self.created_at = created_at
         self.crn = crn
+        self.disks = disks
         self.group = group
         self.href = href
         self.id = id
@@ -13290,6 +13984,13 @@ class DedicatedHost():
         else:
             raise ValueError(
                 'Required property \'crn\' not present in DedicatedHost JSON')
+        if 'disks' in _dict:
+            args['disks'] = [
+                DedicatedHostDisk.from_dict(x) for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in DedicatedHost JSON')
         if 'group' in _dict:
             args['group'] = DedicatedHostGroupReference.from_dict(
                 _dict.get('group'))
@@ -13413,6 +14114,8 @@ class DedicatedHost():
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'group') and self.group is not None:
             _dict['group'] = self.group.to_dict()
         if hasattr(self, 'href') and self.href is not None:
@@ -13737,6 +14440,374 @@ class DedicatedHostCollectionNext():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'DedicatedHostCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostDisk():
+    """
+    DedicatedHostDisk.
+
+    :attr int available: The remaining space left for instance placement in GB
+          (gigabytes).
+    :attr datetime created_at: The date and time that the disk was created.
+    :attr str href: The URL for this disk.
+    :attr str id: The unique identifier for this disk.
+    :attr List[InstanceDiskReference] instance_disks: Instance disks that are on
+          this dedicated host disk.
+    :attr str interface_type: The disk interface used for attaching the disk
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str lifecycle_state: (optional) The lifecycle state of this dedicated host
+          disk.
+    :attr str name: The user-defined or system-provided name for this disk.
+    :attr bool provisionable: Indicates whether this dedicated host disk is
+          available for instance disk creation.
+    :attr str resource_type: The type of resource referenced.
+    :attr int size: The size of the disk in GB (gigabytes).
+    :attr List[str] supported_instance_interface_types: The instance disk interfaces
+          supported for this dedicated host disk.
+    """
+
+    def __init__(self,
+                 available: int,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 instance_disks: List['InstanceDiskReference'],
+                 interface_type: str,
+                 name: str,
+                 provisionable: bool,
+                 resource_type: str,
+                 size: int,
+                 supported_instance_interface_types: List[str],
+                 *,
+                 lifecycle_state: str = None) -> None:
+        """
+        Initialize a DedicatedHostDisk object.
+
+        :param int available: The remaining space left for instance placement in GB
+               (gigabytes).
+        :param datetime created_at: The date and time that the disk was created.
+        :param str href: The URL for this disk.
+        :param str id: The unique identifier for this disk.
+        :param List[InstanceDiskReference] instance_disks: Instance disks that are
+               on this dedicated host disk.
+        :param str interface_type: The disk interface used for attaching the disk
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str name: The user-defined or system-provided name for this disk.
+        :param bool provisionable: Indicates whether this dedicated host disk is
+               available for instance disk creation.
+        :param str resource_type: The type of resource referenced.
+        :param int size: The size of the disk in GB (gigabytes).
+        :param List[str] supported_instance_interface_types: The instance disk
+               interfaces supported for this dedicated host disk.
+        :param str lifecycle_state: (optional) The lifecycle state of this
+               dedicated host disk.
+        """
+        self.available = available
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.instance_disks = instance_disks
+        self.interface_type = interface_type
+        self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.provisionable = provisionable
+        self.resource_type = resource_type
+        self.size = size
+        self.supported_instance_interface_types = supported_instance_interface_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostDisk':
+        """Initialize a DedicatedHostDisk object from a json dictionary."""
+        args = {}
+        if 'available' in _dict:
+            args['available'] = _dict.get('available')
+        else:
+            raise ValueError(
+                'Required property \'available\' not present in DedicatedHostDisk JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in DedicatedHostDisk JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in DedicatedHostDisk JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in DedicatedHostDisk JSON'
+            )
+        if 'instance_disks' in _dict:
+            args['instance_disks'] = [
+                InstanceDiskReference.from_dict(x)
+                for x in _dict.get('instance_disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'instance_disks\' not present in DedicatedHostDisk JSON'
+            )
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError(
+                'Required property \'interface_type\' not present in DedicatedHostDisk JSON'
+            )
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in DedicatedHostDisk JSON'
+            )
+        if 'provisionable' in _dict:
+            args['provisionable'] = _dict.get('provisionable')
+        else:
+            raise ValueError(
+                'Required property \'provisionable\' not present in DedicatedHostDisk JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in DedicatedHostDisk JSON'
+            )
+        if 'size' in _dict:
+            args['size'] = _dict.get('size')
+        else:
+            raise ValueError(
+                'Required property \'size\' not present in DedicatedHostDisk JSON'
+            )
+        if 'supported_instance_interface_types' in _dict:
+            args['supported_instance_interface_types'] = _dict.get(
+                'supported_instance_interface_types')
+        else:
+            raise ValueError(
+                'Required property \'supported_instance_interface_types\' not present in DedicatedHostDisk JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'available') and self.available is not None:
+            _dict['available'] = self.available
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'instance_disks') and self.instance_disks is not None:
+            _dict['instance_disks'] = [x.to_dict() for x in self.instance_disks]
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self,
+                   'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'provisionable') and self.provisionable is not None:
+            _dict['provisionable'] = self.provisionable
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'size') and self.size is not None:
+            _dict['size'] = self.size
+        if hasattr(self, 'supported_instance_interface_types'
+                  ) and self.supported_instance_interface_types is not None:
+            _dict[
+                'supported_instance_interface_types'] = self.supported_instance_interface_types
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        NVME = 'nvme'
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of this dedicated host disk.
+        """
+        DELETED = 'deleted'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+        SUSPENDED = 'suspended'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of resource referenced.
+        """
+        DEDICATED_HOST_DISK = 'dedicated_host_disk'
+
+    class SupportedInstanceInterfaceTypesEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        VIRTIO_BLK = 'virtio_blk'
+        NVME = 'nvme'
+
+
+class DedicatedHostDiskCollection():
+    """
+    DedicatedHostDiskCollection.
+
+    :attr List[DedicatedHostDisk] disks: Collection of the dedicated host's disks.
+    """
+
+    def __init__(self, disks: List['DedicatedHostDisk']) -> None:
+        """
+        Initialize a DedicatedHostDiskCollection object.
+
+        :param List[DedicatedHostDisk] disks: Collection of the dedicated host's
+               disks.
+        """
+        self.disks = disks
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostDiskCollection':
+        """Initialize a DedicatedHostDiskCollection object from a json dictionary."""
+        args = {}
+        if 'disks' in _dict:
+            args['disks'] = [
+                DedicatedHostDisk.from_dict(x) for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in DedicatedHostDiskCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostDiskCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostDiskCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostDiskCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostDiskCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostDiskPatch():
+    """
+    DedicatedHostDiskPatch.
+
+    :attr str name: (optional) The user-defined name for this disk.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a DedicatedHostDiskPatch object.
+
+        :param str name: (optional) The user-defined name for this disk.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostDiskPatch':
+        """Initialize a DedicatedHostDiskPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostDiskPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostDiskPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostDiskPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostDiskPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -14625,6 +15696,8 @@ class DedicatedHostProfile():
     DedicatedHostProfile.
 
     :attr str class_: The product class this dedicated host profile belongs to.
+    :attr List[DedicatedHostProfileDisk] disks: Collection of the dedicated host
+          profile's disks.
     :attr str family: The product family this dedicated host profile belongs to
           The enumerated values for this property are expected to expand in the future.
           When processing this property, check for and log unknown values. Optionally halt
@@ -14641,9 +15714,9 @@ class DedicatedHostProfile():
     :attr DedicatedHostProfileVCPU vcpu_count:
     """
 
-    def __init__(self, class_: str, family: str, href: str,
-                 memory: 'DedicatedHostProfileMemory', name: str,
-                 socket_count: 'DedicatedHostProfileSocket',
+    def __init__(self, class_: str, disks: List['DedicatedHostProfileDisk'],
+                 family: str, href: str, memory: 'DedicatedHostProfileMemory',
+                 name: str, socket_count: 'DedicatedHostProfileSocket',
                  supported_instance_profiles: List['InstanceProfileReference'],
                  vcpu_architecture: 'DedicatedHostProfileVCPUArchitecture',
                  vcpu_count: 'DedicatedHostProfileVCPU') -> None:
@@ -14652,6 +15725,8 @@ class DedicatedHostProfile():
 
         :param str class_: The product class this dedicated host profile belongs
                to.
+        :param List[DedicatedHostProfileDisk] disks: Collection of the dedicated
+               host profile's disks.
         :param str family: The product family this dedicated host profile belongs
                to
                The enumerated values for this property are expected to expand in the
@@ -14669,6 +15744,7 @@ class DedicatedHostProfile():
         :param DedicatedHostProfileVCPU vcpu_count:
         """
         self.class_ = class_
+        self.disks = disks
         self.family = family
         self.href = href
         self.memory = memory
@@ -14687,6 +15763,15 @@ class DedicatedHostProfile():
         else:
             raise ValueError(
                 'Required property \'class\' not present in DedicatedHostProfile JSON'
+            )
+        if 'disks' in _dict:
+            args['disks'] = [
+                DedicatedHostProfileDisk.from_dict(x)
+                for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in DedicatedHostProfile JSON'
             )
         if 'family' in _dict:
             args['family'] = _dict.get('family')
@@ -14753,6 +15838,8 @@ class DedicatedHostProfile():
         _dict = {}
         if hasattr(self, 'class_') and self.class_ is not None:
             _dict['class'] = self.class_
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'family') and self.family is not None:
             _dict['family'] = self.family
         if hasattr(self, 'href') and self.href is not None:
@@ -15048,6 +16135,453 @@ class DedicatedHostProfileCollectionNext():
     def __ne__(self, other: 'DedicatedHostProfileCollectionNext') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class DedicatedHostProfileDisk():
+    """
+    Disks provided by this profile.
+
+    :attr DedicatedHostProfileDiskInterface interface_type:
+    :attr DedicatedHostProfileDiskQuantity quantity: The number of disks of this
+          type for a dedicated host with this profile.
+    :attr DedicatedHostProfileDiskSize size: The size of the disk in GB (gigabytes).
+    :attr DedicatedHostProfileDiskSupportedInterfaces
+          supported_instance_interface_types:
+    """
+
+    def __init__(
+        self, interface_type: 'DedicatedHostProfileDiskInterface',
+        quantity: 'DedicatedHostProfileDiskQuantity',
+        size: 'DedicatedHostProfileDiskSize',
+        supported_instance_interface_types:
+        'DedicatedHostProfileDiskSupportedInterfaces'
+    ) -> None:
+        """
+        Initialize a DedicatedHostProfileDisk object.
+
+        :param DedicatedHostProfileDiskInterface interface_type:
+        :param DedicatedHostProfileDiskQuantity quantity: The number of disks of
+               this type for a dedicated host with this profile.
+        :param DedicatedHostProfileDiskSize size: The size of the disk in GB
+               (gigabytes).
+        :param DedicatedHostProfileDiskSupportedInterfaces
+               supported_instance_interface_types:
+        """
+        self.interface_type = interface_type
+        self.quantity = quantity
+        self.size = size
+        self.supported_instance_interface_types = supported_instance_interface_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileDisk':
+        """Initialize a DedicatedHostProfileDisk object from a json dictionary."""
+        args = {}
+        if 'interface_type' in _dict:
+            args[
+                'interface_type'] = DedicatedHostProfileDiskInterface.from_dict(
+                    _dict.get('interface_type'))
+        else:
+            raise ValueError(
+                'Required property \'interface_type\' not present in DedicatedHostProfileDisk JSON'
+            )
+        if 'quantity' in _dict:
+            args['quantity'] = DedicatedHostProfileDiskQuantity.from_dict(
+                _dict.get('quantity'))
+        else:
+            raise ValueError(
+                'Required property \'quantity\' not present in DedicatedHostProfileDisk JSON'
+            )
+        if 'size' in _dict:
+            args['size'] = DedicatedHostProfileDiskSize.from_dict(
+                _dict.get('size'))
+        else:
+            raise ValueError(
+                'Required property \'size\' not present in DedicatedHostProfileDisk JSON'
+            )
+        if 'supported_instance_interface_types' in _dict:
+            args[
+                'supported_instance_interface_types'] = DedicatedHostProfileDiskSupportedInterfaces.from_dict(
+                    _dict.get('supported_instance_interface_types'))
+        else:
+            raise ValueError(
+                'Required property \'supported_instance_interface_types\' not present in DedicatedHostProfileDisk JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type.to_dict()
+        if hasattr(self, 'quantity') and self.quantity is not None:
+            _dict['quantity'] = self.quantity.to_dict()
+        if hasattr(self, 'size') and self.size is not None:
+            _dict['size'] = self.size.to_dict()
+        if hasattr(self, 'supported_instance_interface_types'
+                  ) and self.supported_instance_interface_types is not None:
+            _dict[
+                'supported_instance_interface_types'] = self.supported_instance_interface_types.to_dict(
+                )
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class DedicatedHostProfileDiskInterface():
+    """
+    DedicatedHostProfileDiskInterface.
+
+    :attr str type: The type for this profile field.
+    :attr str value: The interface of the disk for a dedicated host with this
+          profile
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self, type: str, value: str) -> None:
+        """
+        Initialize a DedicatedHostProfileDiskInterface object.
+
+        :param str type: The type for this profile field.
+        :param str value: The interface of the disk for a dedicated host with this
+               profile
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileDiskInterface':
+        """Initialize a DedicatedHostProfileDiskInterface object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileDiskInterface JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileDiskInterface JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileDiskInterface object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileDiskInterface object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileDiskInterface') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileDiskInterface') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+    class ValueEnum(str, Enum):
+        """
+        The interface of the disk for a dedicated host with this profile
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        NVME = 'nvme'
+
+
+class DedicatedHostProfileDiskQuantity():
+    """
+    The number of disks of this type for a dedicated host with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a DedicatedHostProfileDiskQuantity object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileDiskQuantity':
+        """Initialize a DedicatedHostProfileDiskQuantity object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileDiskQuantity JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileDiskQuantity JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileDiskQuantity object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileDiskQuantity object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileDiskQuantity') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileDiskQuantity') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostProfileDiskSize():
+    """
+    The size of the disk in GB (gigabytes).
+
+    :attr str type: The type for this profile field.
+    :attr int value: The size of the disk in GB (gigabytes).
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a DedicatedHostProfileDiskSize object.
+
+        :param str type: The type for this profile field.
+        :param int value: The size of the disk in GB (gigabytes).
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'DedicatedHostProfileDiskSize':
+        """Initialize a DedicatedHostProfileDiskSize object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileDiskSize JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileDiskSize JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileDiskSize object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileDiskSize object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'DedicatedHostProfileDiskSize') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'DedicatedHostProfileDiskSize') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class DedicatedHostProfileDiskSupportedInterfaces():
+    """
+    DedicatedHostProfileDiskSupportedInterfaces.
+
+    :attr str type: The type for this profile field.
+    :attr List[str] value: The instance disk interfaces supported for a dedicated
+          host with this profile.
+    """
+
+    def __init__(self, type: str, value: List[str]) -> None:
+        """
+        Initialize a DedicatedHostProfileDiskSupportedInterfaces object.
+
+        :param str type: The type for this profile field.
+        :param List[str] value: The instance disk interfaces supported for a
+               dedicated host with this profile.
+        """
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'DedicatedHostProfileDiskSupportedInterfaces':
+        """Initialize a DedicatedHostProfileDiskSupportedInterfaces object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in DedicatedHostProfileDiskSupportedInterfaces JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in DedicatedHostProfileDiskSupportedInterfaces JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a DedicatedHostProfileDiskSupportedInterfaces object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this DedicatedHostProfileDiskSupportedInterfaces object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'DedicatedHostProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'DedicatedHostProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+    class ValueEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        VIRTIO_BLK = 'virtio_blk'
+        NVME = 'nvme'
 
 
 class DedicatedHostProfileIdentity():
@@ -21038,6 +22572,7 @@ class Instance():
     :attr datetime created_at: The date and time that the virtual server instance
           was created.
     :attr str crn: The CRN for this virtual server instance.
+    :attr List[InstanceDisk] disks: Collection of the instance's disks.
     :attr InstanceGPU gpu: (optional) The virtual server instance GPU configuration.
     :attr str href: The URL for this virtual server instance.
     :attr str id: The unique identifier for this virtual server instance.
@@ -21056,6 +22591,12 @@ class Instance():
     :attr ResourceGroupReference resource_group: The resource group for this
           instance.
     :attr str status: The status of the virtual server instance.
+    :attr List[InstanceStatusReason] status_reasons: Array of reasons for the
+          current status (if any).
+          The enumerated reason code values for this property will expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          reason code was encountered.
     :attr InstanceVCPU vcpu: The virtual server instance VCPU configuration.
     :attr List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
           Collection of the virtual server instance's volume attachments, including the
@@ -21070,6 +22611,7 @@ class Instance():
             boot_volume_attachment: 'VolumeAttachmentReferenceInstanceContext',
             created_at: datetime,
             crn: str,
+            disks: List['InstanceDisk'],
             href: str,
             id: str,
             memory: int,
@@ -21081,6 +22623,7 @@ class Instance():
             profile: 'InstanceProfileReference',
             resource_group: 'ResourceGroupReference',
             status: str,
+            status_reasons: List['InstanceStatusReason'],
             vcpu: 'InstanceVCPU',
             volume_attachments: List[
                 'VolumeAttachmentReferenceInstanceContext'],
@@ -21099,6 +22642,7 @@ class Instance():
         :param datetime created_at: The date and time that the virtual server
                instance was created.
         :param str crn: The CRN for this virtual server instance.
+        :param List[InstanceDisk] disks: Collection of the instance's disks.
         :param str href: The URL for this virtual server instance.
         :param str id: The unique identifier for this virtual server instance.
         :param int memory: The amount of memory, truncated to whole gibibytes.
@@ -21114,6 +22658,12 @@ class Instance():
         :param ResourceGroupReference resource_group: The resource group for this
                instance.
         :param str status: The status of the virtual server instance.
+        :param List[InstanceStatusReason] status_reasons: Array of reasons for the
+               current status (if any).
+               The enumerated reason code values for this property will expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected reason code was encountered.
         :param InstanceVCPU vcpu: The virtual server instance VCPU configuration.
         :param List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
                Collection of the virtual server instance's volume attachments, including
@@ -21130,6 +22680,7 @@ class Instance():
         self.boot_volume_attachment = boot_volume_attachment
         self.created_at = created_at
         self.crn = crn
+        self.disks = disks
         self.gpu = gpu
         self.href = href
         self.id = id
@@ -21141,6 +22692,7 @@ class Instance():
         self.profile = profile
         self.resource_group = resource_group
         self.status = status
+        self.status_reasons = status_reasons
         self.vcpu = vcpu
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -21173,6 +22725,13 @@ class Instance():
         else:
             raise ValueError(
                 'Required property \'crn\' not present in Instance JSON')
+        if 'disks' in _dict:
+            args['disks'] = [
+                InstanceDisk.from_dict(x) for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in Instance JSON')
         if 'gpu' in _dict:
             args['gpu'] = InstanceGPU.from_dict(_dict.get('gpu'))
         if 'href' in _dict:
@@ -21232,6 +22791,15 @@ class Instance():
         else:
             raise ValueError(
                 'Required property \'status\' not present in Instance JSON')
+        if 'status_reasons' in _dict:
+            args['status_reasons'] = [
+                InstanceStatusReason.from_dict(x)
+                for x in _dict.get('status_reasons')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'status_reasons\' not present in Instance JSON'
+            )
         if 'vcpu' in _dict:
             args['vcpu'] = InstanceVCPU.from_dict(_dict.get('vcpu'))
         else:
@@ -21277,6 +22845,8 @@ class Instance():
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'gpu') and self.gpu is not None:
             _dict['gpu'] = self.gpu.to_dict()
         if hasattr(self, 'href') and self.href is not None:
@@ -21306,6 +22876,8 @@ class Instance():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'status_reasons') and self.status_reasons is not None:
+            _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
         if hasattr(self, 'vcpu') and self.vcpu is not None:
             _dict['vcpu'] = self.vcpu.to_dict()
         if hasattr(
@@ -21738,6 +23310,573 @@ class InstanceCollectionNext():
         return not self == other
 
 
+class InstanceConsoleAccessToken():
+    """
+    The instance console access token information.
+
+    :attr str access_token: A URL safe single-use token used to access the console
+          WebSocket.
+    :attr str console_type: The instance console type for which this token may be
+          used.
+    :attr datetime created_at: The date and time that the access token was created.
+    :attr datetime expires_at: The date and time that the access token will expire.
+    :attr bool force: Indicates whether to disconnect an existing serial console
+          session as the serial console cannot be shared.  This has no effect on VNC
+          consoles.
+    :attr str href: The URL to access this instance console.
+    """
+
+    def __init__(self, access_token: str, console_type: str,
+                 created_at: datetime, expires_at: datetime, force: bool,
+                 href: str) -> None:
+        """
+        Initialize a InstanceConsoleAccessToken object.
+
+        :param str access_token: A URL safe single-use token used to access the
+               console WebSocket.
+        :param str console_type: The instance console type for which this token may
+               be used.
+        :param datetime created_at: The date and time that the access token was
+               created.
+        :param datetime expires_at: The date and time that the access token will
+               expire.
+        :param bool force: Indicates whether to disconnect an existing serial
+               console session as the serial console cannot be shared.  This has no effect
+               on VNC consoles.
+        :param str href: The URL to access this instance console.
+        """
+        self.access_token = access_token
+        self.console_type = console_type
+        self.created_at = created_at
+        self.expires_at = expires_at
+        self.force = force
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceConsoleAccessToken':
+        """Initialize a InstanceConsoleAccessToken object from a json dictionary."""
+        args = {}
+        if 'access_token' in _dict:
+            args['access_token'] = _dict.get('access_token')
+        else:
+            raise ValueError(
+                'Required property \'access_token\' not present in InstanceConsoleAccessToken JSON'
+            )
+        if 'console_type' in _dict:
+            args['console_type'] = _dict.get('console_type')
+        else:
+            raise ValueError(
+                'Required property \'console_type\' not present in InstanceConsoleAccessToken JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceConsoleAccessToken JSON'
+            )
+        if 'expires_at' in _dict:
+            args['expires_at'] = string_to_datetime(_dict.get('expires_at'))
+        else:
+            raise ValueError(
+                'Required property \'expires_at\' not present in InstanceConsoleAccessToken JSON'
+            )
+        if 'force' in _dict:
+            args['force'] = _dict.get('force')
+        else:
+            raise ValueError(
+                'Required property \'force\' not present in InstanceConsoleAccessToken JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceConsoleAccessToken JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceConsoleAccessToken object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'access_token') and self.access_token is not None:
+            _dict['access_token'] = self.access_token
+        if hasattr(self, 'console_type') and self.console_type is not None:
+            _dict['console_type'] = self.console_type
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'expires_at') and self.expires_at is not None:
+            _dict['expires_at'] = datetime_to_string(self.expires_at)
+        if hasattr(self, 'force') and self.force is not None:
+            _dict['force'] = self.force
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceConsoleAccessToken object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceConsoleAccessToken') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceConsoleAccessToken') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ConsoleTypeEnum(str, Enum):
+        """
+        The instance console type for which this token may be used.
+        """
+        VNC = 'vnc'
+        SERIAL = 'serial'
+
+
+class InstanceDisk():
+    """
+    InstanceDisk.
+
+    :attr datetime created_at: The date and time that the disk was created.
+    :attr str href: The URL for this instance disk.
+    :attr str id: The unique identifier for this instance disk.
+    :attr str interface_type: The disk interface used for attaching the disk.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str name: The user-defined name for this disk.
+    :attr str resource_type: The resource type.
+    :attr int size: The size of the disk in GB (gigabytes).
+    """
+
+    def __init__(self, created_at: datetime, href: str, id: str,
+                 interface_type: str, name: str, resource_type: str,
+                 size: int) -> None:
+        """
+        Initialize a InstanceDisk object.
+
+        :param datetime created_at: The date and time that the disk was created.
+        :param str href: The URL for this instance disk.
+        :param str id: The unique identifier for this instance disk.
+        :param str interface_type: The disk interface used for attaching the disk.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str name: The user-defined name for this disk.
+        :param str resource_type: The resource type.
+        :param int size: The size of the disk in GB (gigabytes).
+        """
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.interface_type = interface_type
+        self.name = name
+        self.resource_type = resource_type
+        self.size = size
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDisk':
+        """Initialize a InstanceDisk object from a json dictionary."""
+        args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceDisk JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceDisk JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceDisk JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError(
+                'Required property \'interface_type\' not present in InstanceDisk JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceDisk JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in InstanceDisk JSON'
+            )
+        if 'size' in _dict:
+            args['size'] = _dict.get('size')
+        else:
+            raise ValueError(
+                'Required property \'size\' not present in InstanceDisk JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'size') and self.size is not None:
+            _dict['size'] = self.size
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        VIRTIO_BLK = 'virtio_blk'
+        NVME = 'nvme'
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_DISK = 'instance_disk'
+
+
+class InstanceDiskCollection():
+    """
+    InstanceDiskCollection.
+
+    :attr List[InstanceDisk] disks: Collection of the instance's disks.
+    """
+
+    def __init__(self, disks: List['InstanceDisk']) -> None:
+        """
+        Initialize a InstanceDiskCollection object.
+
+        :param List[InstanceDisk] disks: Collection of the instance's disks.
+        """
+        self.disks = disks
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDiskCollection':
+        """Initialize a InstanceDiskCollection object from a json dictionary."""
+        args = {}
+        if 'disks' in _dict:
+            args['disks'] = [
+                InstanceDisk.from_dict(x) for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in InstanceDiskCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDiskCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDiskCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDiskCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDiskCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceDiskPatch():
+    """
+    InstanceDiskPatch.
+
+    :attr str name: (optional) The user-defined name for this disk.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a InstanceDiskPatch object.
+
+        :param str name: (optional) The user-defined name for this disk.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDiskPatch':
+        """Initialize a InstanceDiskPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDiskPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDiskPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDiskPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDiskPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceDiskReference():
+    """
+    InstanceDiskReference.
+
+    :attr InstanceDiskReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this instance disk.
+    :attr str id: The unique identifier for this instance disk.
+    :attr str name: The user-defined name for this disk.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'InstanceDiskReferenceDeleted' = None) -> None:
+        """
+        Initialize a InstanceDiskReference object.
+
+        :param str href: The URL for this instance disk.
+        :param str id: The unique identifier for this instance disk.
+        :param str name: The user-defined name for this disk.
+        :param str resource_type: The resource type.
+        :param InstanceDiskReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDiskReference':
+        """Initialize a InstanceDiskReference object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = InstanceDiskReferenceDeleted.from_dict(
+                _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceDiskReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceDiskReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceDiskReference JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in InstanceDiskReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDiskReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDiskReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDiskReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDiskReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_DISK = 'instance_disk'
+
+
+class InstanceDiskReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self, more_info: str) -> None:
+        """
+        Initialize a InstanceDiskReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDiskReferenceDeleted':
+        """Initialize a InstanceDiskReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError(
+                'Required property \'more_info\' not present in InstanceDiskReferenceDeleted JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDiskReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDiskReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDiskReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDiskReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class InstanceGPU():
     """
     The virtual server instance GPU configuration.
@@ -21858,6 +23997,8 @@ class InstanceGroup():
           - `unhealthy`: Group is unable to reach `membership_count` instances.
     :attr List[SubnetReference] subnets: Array of references to subnets to use when
           creating new instances.
+    :attr datetime updated_at: The date and time that the instance group was
+          updated.
     :attr VPCReference vpc: The VPC the instance group resides in.
     """
 
@@ -21874,6 +24015,7 @@ class InstanceGroup():
             resource_group: 'ResourceGroupReference',
             status: str,
             subnets: List['SubnetReference'],
+            updated_at: datetime,
             vpc: 'VPCReference',
             *,
             application_port: int = None,
@@ -21901,6 +24043,8 @@ class InstanceGroup():
                - `unhealthy`: Group is unable to reach `membership_count` instances.
         :param List[SubnetReference] subnets: Array of references to subnets to use
                when creating new instances.
+        :param datetime updated_at: The date and time that the instance group was
+               updated.
         :param VPCReference vpc: The VPC the instance group resides in.
         :param int application_port: (optional) Required if specifying a load
                balancer pool only. Used by the instance group when scaling up instances to
@@ -21923,6 +24067,7 @@ class InstanceGroup():
         self.resource_group = resource_group
         self.status = status
         self.subnets = subnets
+        self.updated_at = updated_at
         self.vpc = vpc
 
     @classmethod
@@ -22003,6 +24148,12 @@ class InstanceGroup():
             raise ValueError(
                 'Required property \'subnets\' not present in InstanceGroup JSON'
             )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroup JSON'
+            )
         if 'vpc' in _dict:
             args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
         else:
@@ -22049,6 +24200,8 @@ class InstanceGroup():
             _dict['status'] = self.status
         if hasattr(self, 'subnets') and self.subnets is not None:
             _dict['subnets'] = [x.to_dict() for x in self.subnets]
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
         return _dict
@@ -22325,29 +24478,597 @@ class InstanceGroupManager():
     """
     InstanceGroupManager.
 
+    :attr datetime created_at: The date and time that the instance group manager was
+          created.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: If set to `true`, this manager will control the
           instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
+    :attr datetime updated_at: The date and time that the instance group manager was
+          updated.
     """
 
-    def __init__(self, href: str, id: str, management_enabled: bool,
-                 name: str) -> None:
+    def __init__(self, created_at: datetime, href: str, id: str,
+                 management_enabled: bool, name: str,
+                 updated_at: datetime) -> None:
         """
         Initialize a InstanceGroupManager object.
 
+        :param datetime created_at: The date and time that the instance group
+               manager was created.
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
         :param bool management_enabled: If set to `true`, this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
+        :param datetime updated_at: The date and time that the instance group
+               manager was updated.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['InstanceGroupManagerAutoScale']))
+            ", ".join([
+                'InstanceGroupManagerAutoScale', 'InstanceGroupManagerScheduled'
+            ]))
         raise Exception(msg)
+
+
+class InstanceGroupManagerAction():
+    """
+    InstanceGroupManagerAction.
+
+    :attr bool auto_delete: If set to `true`, this scheduled action will be
+          automatically deleted after it has finished and the `auto_delete_timeout` time
+          has passed.
+    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
+          before the scheduled action will be automatically deleted once it has finished.
+          If this value is 0, the action will be deleted on completion.
+    :attr datetime created_at: The date and time that the instance group manager
+          action was created.
+    :attr str href: The URL for this instance group manager action.
+    :attr str id: The unique identifier for this instance group manager action.
+    :attr str name: The user-defined name for this instance group manager action.
+          Names must be unique within the instance group manager.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the instance group action
+          - `active`: Action is ready to be run
+          - `completed`: Action was completed successfully
+          - `failed`: Action could not be completed successfully
+          - `incompatible`: Action parameters are not compatible with the group or manager
+          - `omitted`: Action was not applied because this action's manager was disabled.
+    :attr datetime updated_at: The date and time that the instance group manager
+          action was modified.
+    """
+
+    def __init__(self, auto_delete: bool, auto_delete_timeout: int,
+                 created_at: datetime, href: str, id: str, name: str,
+                 resource_type: str, status: str, updated_at: datetime) -> None:
+        """
+        Initialize a InstanceGroupManagerAction object.
+
+        :param bool auto_delete: If set to `true`, this scheduled action will be
+               automatically deleted after it has finished and the `auto_delete_timeout`
+               time has passed.
+        :param int auto_delete_timeout: Amount of time in hours that are required
+               to pass before the scheduled action will be automatically deleted once it
+               has finished. If this value is 0, the action will be deleted on completion.
+        :param datetime created_at: The date and time that the instance group
+               manager action was created.
+        :param str href: The URL for this instance group manager action.
+        :param str id: The unique identifier for this instance group manager
+               action.
+        :param str name: The user-defined name for this instance group manager
+               action. Names must be unique within the instance group manager.
+        :param str resource_type: The resource type.
+        :param str status: The status of the instance group action
+               - `active`: Action is ready to be run
+               - `completed`: Action was completed successfully
+               - `failed`: Action could not be completed successfully
+               - `incompatible`: Action parameters are not compatible with the group or
+               manager
+               - `omitted`: Action was not applied because this action's manager was
+               disabled.
+        :param datetime updated_at: The date and time that the instance group
+               manager action was modified.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['InstanceGroupManagerActionScheduledAction']))
+        raise Exception(msg)
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_GROUP_MANAGER_ACTION = 'instance_group_manager_action'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the instance group action
+        - `active`: Action is ready to be run
+        - `completed`: Action was completed successfully
+        - `failed`: Action could not be completed successfully
+        - `incompatible`: Action parameters are not compatible with the group or manager
+        - `omitted`: Action was not applied because this action's manager was disabled.
+        """
+        ACTIVE = 'active'
+        COMPLETED = 'completed'
+        FAILED = 'failed'
+        INCOMPATIBLE = 'incompatible'
+        OMITTED = 'omitted'
+
+
+class InstanceGroupManagerActionPatch():
+    """
+    InstanceGroupManagerActionPatch.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPatch object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['InstanceGroupManagerActionPatchScheduledActionPatch']))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerActionPrototype():
+    """
+    InstanceGroupManagerActionPrototype.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototype object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototype'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerActionReference():
+    """
+    InstanceGroupManagerActionReference.
+
+    :attr InstanceGroupManagerActionReferenceDeleted deleted: (optional) If present,
+          this property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this instance group manager action.
+    :attr str id: The unique identifier for this instance group manager action.
+    :attr str name: The user-defined name for this instance group manager action.
+          Names must be unique within the instance group manager.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(
+            self,
+            href: str,
+            id: str,
+            name: str,
+            resource_type: str,
+            *,
+            deleted: 'InstanceGroupManagerActionReferenceDeleted' = None
+    ) -> None:
+        """
+        Initialize a InstanceGroupManagerActionReference object.
+
+        :param str href: The URL for this instance group manager action.
+        :param str id: The unique identifier for this instance group manager
+               action.
+        :param str name: The user-defined name for this instance group manager
+               action. Names must be unique within the instance group manager.
+        :param str resource_type: The resource type.
+        :param InstanceGroupManagerActionReferenceDeleted deleted: (optional) If
+               present, this property indicates the referenced resource has been deleted
+               and provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceGroupManagerActionReference':
+        """Initialize a InstanceGroupManagerActionReference object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args[
+                'deleted'] = InstanceGroupManagerActionReferenceDeleted.from_dict(
+                    _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerActionReference JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerActionReference JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerActionReference JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in InstanceGroupManagerActionReference JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceGroupManagerActionReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceGroupManagerActionReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_GROUP_MANAGER_ACTION = 'instance_group_manager_action'
+
+
+class InstanceGroupManagerActionReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self, more_info: str) -> None:
+        """
+        Initialize a InstanceGroupManagerActionReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'InstanceGroupManagerActionReferenceDeleted':
+        """Initialize a InstanceGroupManagerActionReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError(
+                'Required property \'more_info\' not present in InstanceGroupManagerActionReferenceDeleted JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerActionReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerActionReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionsCollection():
+    """
+    InstanceGroupManagerActionsCollection.
+
+    :attr List[InstanceGroupManagerAction] actions: Collection of instance group
+          manager actions.
+    :attr InstanceGroupManagerActionsCollectionFirst first: A link to the first page
+          of resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr InstanceGroupManagerActionsCollectionNext next: (optional) A link to the
+          next page of resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(
+            self,
+            actions: List['InstanceGroupManagerAction'],
+            first: 'InstanceGroupManagerActionsCollectionFirst',
+            limit: int,
+            total_count: int,
+            *,
+            next: 'InstanceGroupManagerActionsCollectionNext' = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionsCollection object.
+
+        :param List[InstanceGroupManagerAction] actions: Collection of instance
+               group manager actions.
+        :param InstanceGroupManagerActionsCollectionFirst first: A link to the
+               first page of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param InstanceGroupManagerActionsCollectionNext next: (optional) A link to
+               the next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.actions = actions
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceGroupManagerActionsCollection':
+        """Initialize a InstanceGroupManagerActionsCollection object from a json dictionary."""
+        args = {}
+        if 'actions' in _dict:
+            args['actions'] = _dict.get('actions')
+        else:
+            raise ValueError(
+                'Required property \'actions\' not present in InstanceGroupManagerActionsCollection JSON'
+            )
+        if 'first' in _dict:
+            args[
+                'first'] = InstanceGroupManagerActionsCollectionFirst.from_dict(
+                    _dict.get('first'))
+        else:
+            raise ValueError(
+                'Required property \'first\' not present in InstanceGroupManagerActionsCollection JSON'
+            )
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError(
+                'Required property \'limit\' not present in InstanceGroupManagerActionsCollection JSON'
+            )
+        if 'next' in _dict:
+            args['next'] = InstanceGroupManagerActionsCollectionNext.from_dict(
+                _dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError(
+                'Required property \'total_count\' not present in InstanceGroupManagerActionsCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionsCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'actions') and self.actions is not None:
+            actions_list = []
+            for x in self.actions:
+                if isinstance(x, dict):
+                    actions_list.append(x)
+                else:
+                    actions_list.append(x.to_dict())
+            _dict['actions'] = actions_list
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionsCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceGroupManagerActionsCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceGroupManagerActionsCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionsCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a InstanceGroupManagerActionsCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'InstanceGroupManagerActionsCollectionFirst':
+        """Initialize a InstanceGroupManagerActionsCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerActionsCollectionFirst JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionsCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionsCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerActionsCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerActionsCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionsCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a InstanceGroupManagerActionsCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls,
+                  _dict: Dict) -> 'InstanceGroupManagerActionsCollectionNext':
+        """Initialize a InstanceGroupManagerActionsCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerActionsCollectionNext JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionsCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionsCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerActionsCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerActionsCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class InstanceGroupManagerCollection():
@@ -22707,21 +25428,30 @@ class InstanceGroupManagerPolicy():
     """
     InstanceGroupManagerPolicy.
 
+    :attr datetime created_at: The date and time that the instance group manager
+          policy was created.
     :attr str href: The URL for this instance group manager policy.
     :attr str id: The unique identifier for this instance group manager policy.
     :attr str name: The user-defined name for this instance group manager policy.
           Names must be unique within the instance group manager.
+    :attr datetime updated_at: The date and time that the instance group manager
+          policy was updated.
     """
 
-    def __init__(self, href: str, id: str, name: str) -> None:
+    def __init__(self, created_at: datetime, href: str, id: str, name: str,
+                 updated_at: datetime) -> None:
         """
         Initialize a InstanceGroupManagerPolicy object.
 
+        :param datetime created_at: The date and time that the instance group
+               manager policy was created.
         :param str href: The URL for this instance group manager policy.
         :param str id: The unique identifier for this instance group manager
                policy.
         :param str name: The user-defined name for this instance group manager
                policy. Names must be unique within the instance group manager.
+        :param datetime updated_at: The date and time that the instance group
+               manager policy was updated.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(
@@ -23268,7 +25998,8 @@ class InstanceGroupManagerPrototype():
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join([
-                'InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype'
+                'InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype',
+                'InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype'
             ]))
         raise Exception(msg)
 
@@ -23433,10 +26164,258 @@ class InstanceGroupManagerReferenceDeleted():
         return not self == other
 
 
+class InstanceGroupManagerScheduledActionByManagerManager():
+    """
+    InstanceGroupManagerScheduledActionByManagerManager.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerManager object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototype'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerScheduledActionByManagerPatchManager():
+    """
+    InstanceGroupManagerScheduledActionByManagerPatchManager.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerPatchManager object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerScheduledActionGroupGroup():
+    """
+    InstanceGroupManagerScheduledActionGroupGroup.
+
+    :attr int membership_count: The number of members the instance group should have
+          at the scheduled time.
+    """
+
+    def __init__(self, membership_count: int) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionGroupGroup object.
+
+        :param int membership_count: The number of members the instance group
+               should have at the scheduled time.
+        """
+        self.membership_count = membership_count
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstanceGroupManagerScheduledActionGroupGroup':
+        """Initialize a InstanceGroupManagerScheduledActionGroupGroup object from a json dictionary."""
+        args = {}
+        if 'membership_count' in _dict:
+            args['membership_count'] = _dict.get('membership_count')
+        else:
+            raise ValueError(
+                'Required property \'membership_count\' not present in InstanceGroupManagerScheduledActionGroupGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionGroupGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'membership_count') and self.membership_count is not None:
+            _dict['membership_count'] = self.membership_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionGroupGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerScheduledActionGroupGroup') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerScheduledActionGroupGroup') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerScheduledActionGroupPatch():
+    """
+    InstanceGroupManagerScheduledActionGroupPatch.
+
+    :attr int membership_count: (optional) The number of members the instance group
+          should have at the scheduled time.
+    """
+
+    def __init__(self, *, membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionGroupPatch object.
+
+        :param int membership_count: (optional) The number of members the instance
+               group should have at the scheduled time.
+        """
+        self.membership_count = membership_count
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstanceGroupManagerScheduledActionGroupPatch':
+        """Initialize a InstanceGroupManagerScheduledActionGroupPatch object from a json dictionary."""
+        args = {}
+        if 'membership_count' in _dict:
+            args['membership_count'] = _dict.get('membership_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionGroupPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'membership_count') and self.membership_count is not None:
+            _dict['membership_count'] = self.membership_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionGroupPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerScheduledActionGroupPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerScheduledActionGroupPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerScheduledActionGroupPrototype():
+    """
+    InstanceGroupManagerScheduledActionGroupPrototype.
+
+    :attr int membership_count: The number of members the instance group should have
+          at the scheduled time.
+    """
+
+    def __init__(self, membership_count: int) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionGroupPrototype object.
+
+        :param int membership_count: The number of members the instance group
+               should have at the scheduled time.
+        """
+        self.membership_count = membership_count
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstanceGroupManagerScheduledActionGroupPrototype':
+        """Initialize a InstanceGroupManagerScheduledActionGroupPrototype object from a json dictionary."""
+        args = {}
+        if 'membership_count' in _dict:
+            args['membership_count'] = _dict.get('membership_count')
+        else:
+            raise ValueError(
+                'Required property \'membership_count\' not present in InstanceGroupManagerScheduledActionGroupPrototype JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionGroupPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self,
+                   'membership_count') and self.membership_count is not None:
+            _dict['membership_count'] = self.membership_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionGroupPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'InstanceGroupManagerScheduledActionGroupPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'InstanceGroupManagerScheduledActionGroupPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerScheduledActionManagerManager():
+    """
+    InstanceGroupManagerScheduledActionManagerManager.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionManagerManager object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(
+                ['InstanceGroupManagerScheduledActionManagerManagerAutoScale']))
+        raise Exception(msg)
+
+
 class InstanceGroupMembership():
     """
     InstanceGroupMembership.
 
+    :attr datetime created_at: The date and time that the instance group manager
+          policy was created.
     :attr bool delete_instance_on_membership_delete: If set to true, when deleting
           the membership the instance will also be deleted.
     :attr str href: The URL for this instance group membership.
@@ -23452,9 +26431,12 @@ class InstanceGroupMembership():
           - `healthy`: Membership is active and serving in the group
           - `pending`: Membership is waiting for dependent resources
           - `unhealthy`: Membership has unhealthy dependent resources.
+    :attr datetime updated_at: The date and time that the instance group membership
+          was updated.
     """
 
     def __init__(self,
+                 created_at: datetime,
                  delete_instance_on_membership_delete: bool,
                  href: str,
                  id: str,
@@ -23462,11 +26444,14 @@ class InstanceGroupMembership():
                  instance_template: 'InstanceTemplateReference',
                  name: str,
                  status: str,
+                 updated_at: datetime,
                  *,
                  pool_member: 'LoadBalancerPoolMemberReference' = None) -> None:
         """
         Initialize a InstanceGroupMembership object.
 
+        :param datetime created_at: The date and time that the instance group
+               manager policy was created.
         :param bool delete_instance_on_membership_delete: If set to true, when
                deleting the membership the instance will also be deleted.
         :param str href: The URL for this instance group membership.
@@ -23481,8 +26466,11 @@ class InstanceGroupMembership():
                - `healthy`: Membership is active and serving in the group
                - `pending`: Membership is waiting for dependent resources
                - `unhealthy`: Membership has unhealthy dependent resources.
+        :param datetime updated_at: The date and time that the instance group
+               membership was updated.
         :param LoadBalancerPoolMemberReference pool_member: (optional)
         """
+        self.created_at = created_at
         self.delete_instance_on_membership_delete = delete_instance_on_membership_delete
         self.href = href
         self.id = id
@@ -23491,11 +26479,18 @@ class InstanceGroupMembership():
         self.name = name
         self.pool_member = pool_member
         self.status = status
+        self.updated_at = updated_at
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstanceGroupMembership':
         """Initialize a InstanceGroupMembership object from a json dictionary."""
         args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupMembership JSON'
+            )
         if 'delete_instance_on_membership_delete' in _dict:
             args['delete_instance_on_membership_delete'] = _dict.get(
                 'delete_instance_on_membership_delete')
@@ -23544,6 +26539,12 @@ class InstanceGroupMembership():
             raise ValueError(
                 'Required property \'status\' not present in InstanceGroupMembership JSON'
             )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupMembership JSON'
+            )
         return cls(**args)
 
     @classmethod
@@ -23554,6 +26555,8 @@ class InstanceGroupMembership():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_instance_on_membership_delete'
                   ) and self.delete_instance_on_membership_delete is not None:
             _dict[
@@ -23573,6 +26576,8 @@ class InstanceGroupMembership():
             _dict['pool_member'] = self.pool_member.to_dict()
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
         return _dict
 
     def _to_dict(self):
@@ -24383,16 +27388,47 @@ class InstancePatch():
 
     :attr str name: (optional) The user-defined name for this virtual server
           instance (and default system hostname).
+    :attr InstancePatchProfile profile: (optional) The profile to use for this
+          virtual server instance. For the profile to be changed,
+          the instance `status` must be `stopping` or `stopped`. In addition, the
+          requested
+          profile must:
+          - Match the current profile's instance disk support. (Note: If the current
+          profile
+            supports instance storage disks, the requested profile can have a different
+            instance storage disk configuration.)
+          - Be compatible with any `placement_target` constraints. For example, if the
+            instance is placed on a dedicated host, the requested profile `family` must be
+            the same as the dedicated host `family`.
     """
 
-    def __init__(self, *, name: str = None) -> None:
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 profile: 'InstancePatchProfile' = None) -> None:
         """
         Initialize a InstancePatch object.
 
         :param str name: (optional) The user-defined name for this virtual server
                instance (and default system hostname).
+        :param InstancePatchProfile profile: (optional) The profile to use for this
+               virtual server instance. For the profile to be changed,
+               the instance `status` must be `stopping` or `stopped`. In addition, the
+               requested
+               profile must:
+               - Match the current profile's instance disk support. (Note: If the current
+               profile
+                 supports instance storage disks, the requested profile can have a
+               different
+                 instance storage disk configuration.)
+               - Be compatible with any `placement_target` constraints. For example, if
+               the
+                 instance is placed on a dedicated host, the requested profile `family`
+               must be
+                 the same as the dedicated host `family`.
         """
         self.name = name
+        self.profile = profile
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstancePatch':
@@ -24400,6 +27436,8 @@ class InstancePatch():
         args = {}
         if 'name' in _dict:
             args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
         return cls(**args)
 
     @classmethod
@@ -24412,6 +27450,11 @@ class InstancePatch():
         _dict = {}
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -24433,11 +27476,59 @@ class InstancePatch():
         return not self == other
 
 
+class InstancePatchProfile():
+    """
+    The profile to use for this virtual server instance. For the profile to be changed,
+    the instance `status` must be `stopping` or `stopped`. In addition, the requested
+    profile must:
+    - Match the current profile's instance disk support. (Note: If the current profile
+      supports instance storage disks, the requested profile can have a different
+      instance storage disk configuration.)
+    - Be compatible with any `placement_target` constraints. For example, if the
+      instance is placed on a dedicated host, the requested profile `family` must be
+      the same as the dedicated host `family`.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePatchProfile object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstancePatchProfileInstanceProfileIdentityByName',
+                'InstancePatchProfileInstanceProfileIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class InstancePlacementTargetPrototype():
+    """
+    InstancePlacementTargetPrototype.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstancePlacementTargetPrototypeDedicatedHostIdentity',
+                'InstancePlacementTargetPrototypeDedicatedHostGroupIdentity'
+            ]))
+        raise Exception(msg)
+
+
 class InstanceProfile():
     """
     InstanceProfile.
 
     :attr InstanceProfileBandwidth bandwidth:
+    :attr List[InstanceProfileDisk] disks: Collection of the instance profile's
+          disks.
     :attr str family: (optional) The product family this virtual server instance
           profile belongs to.
     :attr str href: The URL for this virtual server instance profile.
@@ -24452,6 +27543,7 @@ class InstanceProfile():
 
     def __init__(self,
                  bandwidth: 'InstanceProfileBandwidth',
+                 disks: List['InstanceProfileDisk'],
                  href: str,
                  memory: 'InstanceProfileMemory',
                  name: str,
@@ -24465,6 +27557,8 @@ class InstanceProfile():
         Initialize a InstanceProfile object.
 
         :param InstanceProfileBandwidth bandwidth:
+        :param List[InstanceProfileDisk] disks: Collection of the instance
+               profile's disks.
         :param str href: The URL for this virtual server instance profile.
         :param InstanceProfileMemory memory:
         :param str name: The globally unique name for this virtual server instance
@@ -24477,6 +27571,7 @@ class InstanceProfile():
                instance profile belongs to.
         """
         self.bandwidth = bandwidth
+        self.disks = disks
         self.family = family
         self.href = href
         self.memory = memory
@@ -24495,6 +27590,14 @@ class InstanceProfile():
         else:
             raise ValueError(
                 'Required property \'bandwidth\' not present in InstanceProfile JSON'
+            )
+        if 'disks' in _dict:
+            args['disks'] = [
+                InstanceProfileDisk.from_dict(x) for x in _dict.get('disks')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'disks\' not present in InstanceProfile JSON'
             )
         if 'family' in _dict:
             args['family'] = _dict.get('family')
@@ -24558,6 +27661,8 @@ class InstanceProfile():
                 _dict['bandwidth'] = self.bandwidth
             else:
                 _dict['bandwidth'] = self.bandwidth.to_dict()
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'family') and self.family is not None:
             _dict['family'] = self.family
         if hasattr(self, 'href') and self.href is not None:
@@ -24686,6 +27791,260 @@ class InstanceProfileCollection():
     def __ne__(self, other: 'InstanceProfileCollection') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class InstanceProfileDisk():
+    """
+    Disks provided by this profile.
+
+    :attr InstanceProfileDiskQuantity quantity:
+    :attr InstanceProfileDiskSize size:
+    :attr InstanceProfileDiskSupportedInterfaces supported_interface_types:
+    """
+
+    def __init__(
+        self, quantity: 'InstanceProfileDiskQuantity',
+        size: 'InstanceProfileDiskSize',
+        supported_interface_types: 'InstanceProfileDiskSupportedInterfaces'
+    ) -> None:
+        """
+        Initialize a InstanceProfileDisk object.
+
+        :param InstanceProfileDiskQuantity quantity:
+        :param InstanceProfileDiskSize size:
+        :param InstanceProfileDiskSupportedInterfaces supported_interface_types:
+        """
+        self.quantity = quantity
+        self.size = size
+        self.supported_interface_types = supported_interface_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDisk':
+        """Initialize a InstanceProfileDisk object from a json dictionary."""
+        args = {}
+        if 'quantity' in _dict:
+            args['quantity'] = _dict.get('quantity')
+        else:
+            raise ValueError(
+                'Required property \'quantity\' not present in InstanceProfileDisk JSON'
+            )
+        if 'size' in _dict:
+            args['size'] = _dict.get('size')
+        else:
+            raise ValueError(
+                'Required property \'size\' not present in InstanceProfileDisk JSON'
+            )
+        if 'supported_interface_types' in _dict:
+            args[
+                'supported_interface_types'] = InstanceProfileDiskSupportedInterfaces.from_dict(
+                    _dict.get('supported_interface_types'))
+        else:
+            raise ValueError(
+                'Required property \'supported_interface_types\' not present in InstanceProfileDisk JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'quantity') and self.quantity is not None:
+            if isinstance(self.quantity, dict):
+                _dict['quantity'] = self.quantity
+            else:
+                _dict['quantity'] = self.quantity.to_dict()
+        if hasattr(self, 'size') and self.size is not None:
+            if isinstance(self.size, dict):
+                _dict['size'] = self.size
+            else:
+                _dict['size'] = self.size.to_dict()
+        if hasattr(self, 'supported_interface_types'
+                  ) and self.supported_interface_types is not None:
+            _dict[
+                'supported_interface_types'] = self.supported_interface_types.to_dict(
+                )
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceProfileDiskQuantity():
+    """
+    InstanceProfileDiskQuantity.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceProfileDiskQuantity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceProfileDiskQuantityFixed',
+                'InstanceProfileDiskQuantityRange',
+                'InstanceProfileDiskQuantityEnum',
+                'InstanceProfileDiskQuantityDependent'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceProfileDiskSize():
+    """
+    InstanceProfileDiskSize.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceProfileDiskSize object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceProfileDiskSizeFixed', 'InstanceProfileDiskSizeRange',
+                'InstanceProfileDiskSizeEnum',
+                'InstanceProfileDiskSizeDependent'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceProfileDiskSupportedInterfaces():
+    """
+    InstanceProfileDiskSupportedInterfaces.
+
+    :attr str default: The disk interface used for attaching the disk.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The supported disk interfaces used for attaching the
+          disk.
+    """
+
+    def __init__(self, default: str, type: str, values: List[str]) -> None:
+        """
+        Initialize a InstanceProfileDiskSupportedInterfaces object.
+
+        :param str default: The disk interface used for attaching the disk.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str type: The type for this profile field.
+        :param List[str] values: The supported disk interfaces used for attaching
+               the disk.
+        """
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskSupportedInterfaces':
+        """Initialize a InstanceProfileDiskSupportedInterfaces object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in InstanceProfileDiskSupportedInterfaces JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskSupportedInterfaces JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in InstanceProfileDiskSupportedInterfaces JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskSupportedInterfaces object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskSupportedInterfaces object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class DefaultEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        VIRTIO_BLK = 'virtio_blk'
+        NVME = 'nvme'
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+    class ValuesEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        VIRTIO_BLK = 'virtio_blk'
+        NVME = 'nvme'
 
 
 class InstanceProfileIdentity():
@@ -25025,6 +28384,8 @@ class InstancePrototype():
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
@@ -25044,6 +28405,7 @@ class InstancePrototype():
                  keys: List['KeyIdentity'] = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
                  user_data: str = None,
@@ -25067,6 +28429,8 @@ class InstancePrototype():
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
@@ -25259,6 +28623,100 @@ class InstanceReferenceDeleted():
         return not self == other
 
 
+class InstanceStatusReason():
+    """
+    InstanceStatusReason.
+
+    :attr str code: A snake case string succinctly identifying the status reason.
+    :attr str message: An explanation of the status reason.
+    :attr str more_info: (optional) Link to documentation about this status reason.
+    """
+
+    def __init__(self,
+                 code: str,
+                 message: str,
+                 *,
+                 more_info: str = None) -> None:
+        """
+        Initialize a InstanceStatusReason object.
+
+        :param str code: A snake case string succinctly identifying the status
+               reason.
+        :param str message: An explanation of the status reason.
+        :param str more_info: (optional) Link to documentation about this status
+               reason.
+        """
+        self.code = code
+        self.message = message
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceStatusReason':
+        """Initialize a InstanceStatusReason object from a json dictionary."""
+        args = {}
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
+        else:
+            raise ValueError(
+                'Required property \'code\' not present in InstanceStatusReason JSON'
+            )
+        if 'message' in _dict:
+            args['message'] = _dict.get('message')
+        else:
+            raise ValueError(
+                'Required property \'message\' not present in InstanceStatusReason JSON'
+            )
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceStatusReason object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceStatusReason object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceStatusReason') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceStatusReason') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class CodeEnum(str, Enum):
+        """
+        A snake case string succinctly identifying the status reason.
+        """
+        CANNOT_START = 'cannot_start'
+        CANNOT_START_CAPACITY = 'cannot_start_capacity'
+        CANNOT_START_COMPUTE = 'cannot_start_compute'
+        CANNOT_START_IP_ADDRESS = 'cannot_start_ip_address'
+        CANNOT_START_NETWORK = 'cannot_start_network'
+        CANNOT_START_STORAGE = 'cannot_start_storage'
+        ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
+
+
 class InstanceTemplate():
     """
     InstanceTemplate.
@@ -25279,6 +28737,8 @@ class InstanceTemplate():
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
@@ -25302,6 +28762,7 @@ class InstanceTemplate():
                  *,
                  keys: List['KeyIdentity'] = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  user_data: str = None,
                  volume_attachments: List[
@@ -25329,6 +28790,8 @@ class InstanceTemplate():
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param str user_data: (optional) User data to be made available when
@@ -25677,6 +29140,8 @@ class InstanceTemplatePrototype():
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
@@ -25696,6 +29161,7 @@ class InstanceTemplatePrototype():
                  keys: List['KeyIdentity'] = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
                  user_data: str = None,
@@ -25719,6 +29185,8 @@ class InstanceTemplatePrototype():
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
@@ -26777,9 +30245,9 @@ class LoadBalancerListener():
     :attr str id: The unique identifier for this load balancer listener.
     :attr List[LoadBalancerListenerPolicyReference] policies: (optional) An array of
           policies for this listener.
-    :attr int port: The listener port number. Each listener in the load balancer
-          must have a unique
-          `port` and `protocol` combination.
+    :attr int port: The listener port number, or the inclusive lower bound of the
+          port range. Each listener in the load balancer must have a unique `port` and
+          `protocol` combination.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -26812,8 +30280,8 @@ class LoadBalancerListener():
                created.
         :param str href: The listener's canonical URL.
         :param str id: The unique identifier for this load balancer listener.
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
+        :param int port: The listener port number, or the inclusive lower bound of
+               the port range. Each listener in the load balancer must have a unique
                `port` and `protocol` combination.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
@@ -27060,8 +30528,8 @@ class LoadBalancerListenerPatch():
           - Belong to this load balancer
           - Have the same `protocol` as this listener
           - Not already be the default pool for another listener.
-    :attr int port: (optional) The listener port number. Each listener in the load
-          balancer must have a unique
+    :attr int port: (optional) The listener port number, or the inclusive lower
+          bound of the port range. Each listener in the load balancer must have a unique
           `port` and `protocol` combination.
     :attr str protocol: (optional) The listener protocol. Load balancers in the
           `network` family support `tcp`. Load balancers in the `application` family
@@ -27094,9 +30562,9 @@ class LoadBalancerListenerPatch():
                - Belong to this load balancer
                - Have the same `protocol` as this listener
                - Not already be the default pool for another listener.
-        :param int port: (optional) The listener port number. Each listener in the
-               load balancer must have a unique
-               `port` and `protocol` combination.
+        :param int port: (optional) The listener port number, or the inclusive
+               lower bound of the port range. Each listener in the load balancer must have
+               a unique `port` and `protocol` combination.
         :param str protocol: (optional) The listener protocol. Load balancers in
                the `network` family support `tcp`. Load balancers in the `application`
                family support `tcp`, `http`, and `https`. Each listener in the load
@@ -27815,13 +31283,22 @@ class LoadBalancerListenerPolicyRule():
 
     :attr str condition: The condition of the rule.
     :attr datetime created_at: The date and time that this rule was created.
-    :attr str field: (optional) HTTP header field. This is only applicable to
-          "header" rule type.
+    :attr str field: (optional) The field. This is applicable to `header`, `query`,
+          and `body` rule types.
+          If the rule type is `header`, this field is required.
+          If the rule type is `query`, this is optional. If specified and the rule
+          condition is not
+          `matches_regex`, the value must be percent-encoded.
+          If the rule type is `body`, this is optional.
     :attr str href: The rule's canonical URL.
     :attr str id: The rule's unique identifier.
     :attr str provisioning_status: The provisioning status of this rule.
     :attr str type: The type of the rule.
+          Body rules are applied to form-encoded request bodies using the `UTF-8`
+          character set.
     :attr str value: Value to be matched for rule condition.
+          If the rule type is `query` and the rule condition is not `matches_regex`, the
+          value must be percent-encoded.
     """
 
     def __init__(self,
@@ -27843,9 +31320,18 @@ class LoadBalancerListenerPolicyRule():
         :param str id: The rule's unique identifier.
         :param str provisioning_status: The provisioning status of this rule.
         :param str type: The type of the rule.
+               Body rules are applied to form-encoded request bodies using the `UTF-8`
+               character set.
         :param str value: Value to be matched for rule condition.
-        :param str field: (optional) HTTP header field. This is only applicable to
-               "header" rule type.
+               If the rule type is `query` and the rule condition is not `matches_regex`,
+               the value must be percent-encoded.
+        :param str field: (optional) The field. This is applicable to `header`,
+               `query`, and `body` rule types.
+               If the rule type is `header`, this field is required.
+               If the rule type is `query`, this is optional. If specified and the rule
+               condition is not
+               `matches_regex`, the value must be percent-encoded.
+               If the rule type is `body`, this is optional.
         """
         self.condition = condition
         self.created_at = created_at
@@ -27974,10 +31460,14 @@ class LoadBalancerListenerPolicyRule():
     class TypeEnum(str, Enum):
         """
         The type of the rule.
+        Body rules are applied to form-encoded request bodies using the `UTF-8` character
+        set.
         """
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
+        QUERY = 'query'
+        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRuleCollection():
@@ -28047,10 +31537,19 @@ class LoadBalancerListenerPolicyRulePatch():
     LoadBalancerListenerPolicyRulePatch.
 
     :attr str condition: (optional) The condition of the rule.
-    :attr str field: (optional) HTTP header field. This is only applicable to
-          "header" rule type.
+    :attr str field: (optional) The field. This is applicable to `header`, `query`,
+          and `body` rule types.
+          If the rule type is `header`, this field is required.
+          If the rule type is `query`, this is optional. If specified and the rule
+          condition is not
+          `matches_regex`, the value must be percent-encoded.
+          If the rule type is `body`, this is optional.
     :attr str type: (optional) The type of the rule.
+          Body rules are applied to form-encoded request bodies using the `UTF-8`
+          character set.
     :attr str value: (optional) Value to be matched for rule condition.
+          If the rule type is `query` and the rule condition is not `matches_regex`, the
+          value must be percent-encoded.
     """
 
     def __init__(self,
@@ -28063,10 +31562,19 @@ class LoadBalancerListenerPolicyRulePatch():
         Initialize a LoadBalancerListenerPolicyRulePatch object.
 
         :param str condition: (optional) The condition of the rule.
-        :param str field: (optional) HTTP header field. This is only applicable to
-               "header" rule type.
+        :param str field: (optional) The field. This is applicable to `header`,
+               `query`, and `body` rule types.
+               If the rule type is `header`, this field is required.
+               If the rule type is `query`, this is optional. If specified and the rule
+               condition is not
+               `matches_regex`, the value must be percent-encoded.
+               If the rule type is `body`, this is optional.
         :param str type: (optional) The type of the rule.
+               Body rules are applied to form-encoded request bodies using the `UTF-8`
+               character set.
         :param str value: (optional) Value to be matched for rule condition.
+               If the rule type is `query` and the rule condition is not `matches_regex`,
+               the value must be percent-encoded.
         """
         self.condition = condition
         self.field = field
@@ -28134,10 +31642,14 @@ class LoadBalancerListenerPolicyRulePatch():
     class TypeEnum(str, Enum):
         """
         The type of the rule.
+        Body rules are applied to form-encoded request bodies using the `UTF-8` character
+        set.
         """
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
+        QUERY = 'query'
+        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRulePrototype():
@@ -28145,10 +31657,19 @@ class LoadBalancerListenerPolicyRulePrototype():
     LoadBalancerListenerPolicyRulePrototype.
 
     :attr str condition: The condition of the rule.
-    :attr str field: (optional) HTTP header field. This is only applicable to
-          "header" rule type.
+    :attr str field: (optional) The field. This is applicable to `header`, `query`,
+          and `body` rule types.
+          If the rule type is `header`, this field is required.
+          If the rule type is `query`, this is optional. If specified and the rule
+          condition is not
+          `matches_regex`, the value must be percent-encoded.
+          If the rule type is `body`, this is optional.
     :attr str type: The type of the rule.
+          Body rules are applied to form-encoded request bodies using the `UTF-8`
+          character set.
     :attr str value: Value to be matched for rule condition.
+          If the rule type is `query` and the rule condition is not `matches_regex`, the
+          value must be percent-encoded.
     """
 
     def __init__(self,
@@ -28162,9 +31683,18 @@ class LoadBalancerListenerPolicyRulePrototype():
 
         :param str condition: The condition of the rule.
         :param str type: The type of the rule.
+               Body rules are applied to form-encoded request bodies using the `UTF-8`
+               character set.
         :param str value: Value to be matched for rule condition.
-        :param str field: (optional) HTTP header field. This is only applicable to
-               "header" rule type.
+               If the rule type is `query` and the rule condition is not `matches_regex`,
+               the value must be percent-encoded.
+        :param str field: (optional) The field. This is applicable to `header`,
+               `query`, and `body` rule types.
+               If the rule type is `header`, this field is required.
+               If the rule type is `query`, this is optional. If specified and the rule
+               condition is not
+               `matches_regex`, the value must be percent-encoded.
+               If the rule type is `body`, this is optional.
         """
         self.condition = condition
         self.field = field
@@ -28245,10 +31775,14 @@ class LoadBalancerListenerPolicyRulePrototype():
     class TypeEnum(str, Enum):
         """
         The type of the rule.
+        Body rules are applied to form-encoded request bodies using the `UTF-8` character
+        set.
         """
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
+        QUERY = 'query'
+        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRuleReference():
@@ -28479,9 +32013,9 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
     :attr int connection_limit: (optional) The connection limit of the listener.
     :attr LoadBalancerPoolIdentityByName default_pool: (optional) The default pool
           associated with the listener.
-    :attr int port: The listener port number. Each listener in the load balancer
-          must have a unique
-          `port` and `protocol` combination.
+    :attr int port: The listener port number, or the inclusive lower bound of the
+          port range. Each listener in the load balancer must have a unique `port` and
+          `protocol` combination.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -28498,8 +32032,8 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         """
         Initialize a LoadBalancerListenerPrototypeLoadBalancerContext object.
 
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
+        :param int port: The listener port number, or the inclusive lower bound of
+               the port range. Each listener in the load balancer must have a unique
                `port` and `protocol` combination.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
@@ -28968,6 +32502,11 @@ class LoadBalancerPool():
           `disabled`).
     :attr LoadBalancerPoolSessionPersistence session_persistence: (optional) The
           session persistence of this pool.
+          The enumerated values for this property are expected to expand in the future.
+          When
+          processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the pool on which the unexpected
+          property value was encountered.
     """
 
     def __init__(
@@ -29014,6 +32553,12 @@ class LoadBalancerPool():
                backend server members of the pool.
         :param LoadBalancerPoolSessionPersistence session_persistence: (optional)
                The session persistence of this pool.
+               The enumerated values for this property are expected to expand in the
+               future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the pool on which the
+               unexpected
+               property value was encountered.
         """
         self.algorithm = algorithm
         self.created_at = created_at
@@ -34730,6 +38275,8 @@ class OperatingSystem():
     OperatingSystem.
 
     :attr str architecture: The operating system architecture.
+    :attr bool dedicated_host_only: Images with this operating system can only be
+          used on dedicated hosts or dedicated host groups.
     :attr str display_name: A unique, display-friendly name for the operating
           system.
     :attr str family: The name of the software family this operating system belongs
@@ -34740,12 +38287,15 @@ class OperatingSystem():
     :attr str version: The major release version of this operating system.
     """
 
-    def __init__(self, architecture: str, display_name: str, family: str,
-                 href: str, name: str, vendor: str, version: str) -> None:
+    def __init__(self, architecture: str, dedicated_host_only: bool,
+                 display_name: str, family: str, href: str, name: str,
+                 vendor: str, version: str) -> None:
         """
         Initialize a OperatingSystem object.
 
         :param str architecture: The operating system architecture.
+        :param bool dedicated_host_only: Images with this operating system can only
+               be used on dedicated hosts or dedicated host groups.
         :param str display_name: A unique, display-friendly name for the operating
                system.
         :param str family: The name of the software family this operating system
@@ -34756,6 +38306,7 @@ class OperatingSystem():
         :param str version: The major release version of this operating system.
         """
         self.architecture = architecture
+        self.dedicated_host_only = dedicated_host_only
         self.display_name = display_name
         self.family = family
         self.href = href
@@ -34772,6 +38323,12 @@ class OperatingSystem():
         else:
             raise ValueError(
                 'Required property \'architecture\' not present in OperatingSystem JSON'
+            )
+        if 'dedicated_host_only' in _dict:
+            args['dedicated_host_only'] = _dict.get('dedicated_host_only')
+        else:
+            raise ValueError(
+                'Required property \'dedicated_host_only\' not present in OperatingSystem JSON'
             )
         if 'display_name' in _dict:
             args['display_name'] = _dict.get('display_name')
@@ -34821,6 +38378,10 @@ class OperatingSystem():
         _dict = {}
         if hasattr(self, 'architecture') and self.architecture is not None:
             _dict['architecture'] = self.architecture
+        if hasattr(
+                self,
+                'dedicated_host_only') and self.dedicated_host_only is not None:
+            _dict['dedicated_host_only'] = self.dedicated_host_only
         if hasattr(self, 'display_name') and self.display_name is not None:
             _dict['display_name'] = self.display_name
         if hasattr(self, 'family') and self.family is not None:
@@ -36882,6 +40443,11 @@ class ReservedIPReference():
     """
     ReservedIPReference.
 
+    :attr str address: The IP address. This property may add support for IPv6
+          addresses in the future. When processing a value in this property, verify that
+          the address is in an expected format. If it is not, log an error. Optionally
+          halt processing and surface the error, or bypass the resource on which the
+          unexpected IP address format was encountered.
     :attr ReservedIPReferenceDeleted deleted: (optional) If present, this property
           indicates the referenced resource has been deleted and provides
           some supplementary information.
@@ -36892,6 +40458,7 @@ class ReservedIPReference():
     """
 
     def __init__(self,
+                 address: str,
                  href: str,
                  id: str,
                  name: str,
@@ -36901,6 +40468,11 @@ class ReservedIPReference():
         """
         Initialize a ReservedIPReference object.
 
+        :param str address: The IP address. This property may add support for IPv6
+               addresses in the future. When processing a value in this property, verify
+               that the address is in an expected format. If it is not, log an error.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected IP address format was encountered.
         :param str href: The URL for this reserved IP.
         :param str id: The unique identifier for this reserved IP.
         :param str name: The user-defined or system-provided name for this reserved
@@ -36910,6 +40482,7 @@ class ReservedIPReference():
                property indicates the referenced resource has been deleted and provides
                some supplementary information.
         """
+        self.address = address
         self.deleted = deleted
         self.href = href
         self.id = id
@@ -36920,6 +40493,12 @@ class ReservedIPReference():
     def from_dict(cls, _dict: Dict) -> 'ReservedIPReference':
         """Initialize a ReservedIPReference object from a json dictionary."""
         args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        else:
+            raise ValueError(
+                'Required property \'address\' not present in ReservedIPReference JSON'
+            )
         if 'deleted' in _dict:
             args['deleted'] = ReservedIPReferenceDeleted.from_dict(
                 _dict.get('deleted'))
@@ -36957,6 +40536,8 @@ class ReservedIPReference():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
         if hasattr(self, 'deleted') and self.deleted is not None:
             _dict['deleted'] = self.deleted.to_dict()
         if hasattr(self, 'href') and self.href is not None:
@@ -39650,7 +43231,8 @@ class SecurityGroupRulePatch():
     """
     SecurityGroupRulePatch.
 
-    :attr int code: (optional) The ICMP traffic code to allow.
+    :attr int code: (optional) The ICMP traffic code to allow. Specify `null` to
+          remove an existing ICMP traffic code value.
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
@@ -39658,8 +43240,12 @@ class SecurityGroupRulePatch():
           Alternatively, if `remote` references a security group, then this rule only
           applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
-    :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
+    :attr int port_max: (optional) The inclusive upper bound of the protocol port
+          range. Specify `null` to clear an existing upper bound. If a lower bound has
+          been set, the upper bound must also be set, and must not be smaller.
+    :attr int port_min: (optional) The inclusive lower bound of the protocol port
+          range. Specify `null` to clear an existing lower bound. If an upper bound has
+          been set, the lower bound must also be set, and must not be larger.
     :attr SecurityGroupRuleRemotePatch remote: (optional) The IP addresses or
           security groups from which this rule will allow traffic (or to
           which, for outbound rules). Can be specified as an IP address, a CIDR block, or
@@ -39667,7 +43253,8 @@ class SecurityGroupRulePatch():
           security group. A CIDR block of `0.0.0.0/0` will allow traffic from any source
           (or to
           any source, for outbound rules).
-    :attr int type: (optional) The ICMP traffic type to allow.
+    :attr int type: (optional) The ICMP traffic type to allow. Specify `null` to
+          remove an existing ICMP traffic type value.
     """
 
     def __init__(self,
@@ -39682,7 +43269,8 @@ class SecurityGroupRulePatch():
         """
         Initialize a SecurityGroupRulePatch object.
 
-        :param int code: (optional) The ICMP traffic code to allow.
+        :param int code: (optional) The ICMP traffic code to allow. Specify `null`
+               to remove an existing ICMP traffic code value.
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
@@ -39690,10 +43278,14 @@ class SecurityGroupRulePatch():
                used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
-               range.
-        :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
-               range.
+        :param int port_max: (optional) The inclusive upper bound of the protocol
+               port range. Specify `null` to clear an existing upper bound. If a lower
+               bound has been set, the upper bound must also be set, and must not be
+               smaller.
+        :param int port_min: (optional) The inclusive lower bound of the protocol
+               port range. Specify `null` to clear an existing lower bound. If an upper
+               bound has been set, the lower bound must also be set, and must not be
+               larger.
         :param SecurityGroupRuleRemotePatch remote: (optional) The IP addresses or
                security groups from which this rule will allow traffic (or to
                which, for outbound rules). Can be specified as an IP address, a CIDR
@@ -39701,7 +43293,8 @@ class SecurityGroupRulePatch():
                security group. A CIDR block of `0.0.0.0/0` will allow traffic from any
                source (or to
                any source, for outbound rules).
-        :param int type: (optional) The ICMP traffic type to allow.
+        :param int type: (optional) The ICMP traffic type to allow. Specify `null`
+               to remove an existing ICMP traffic type value.
         """
         self.code = code
         self.direction = direction
@@ -40219,7 +43812,10 @@ class SecurityGroupTargetCollectionNext():
 
 class SecurityGroupTargetReference():
     """
-    SecurityGroupTargetReference.
+    The resource types that can be security group targets are expected to expand in the
+    future. When iterating over security group targets, do not assume that every target
+    resource will be from a known set of resource types. Optionally halt processing and
+    surface an error, or bypass resources of unrecognized types.
 
     """
 
@@ -43499,8 +47095,8 @@ class Volume():
         AVAILABLE = 'available'
         FAILED = 'failed'
         PENDING = 'pending'
-        UNUSABLE = 'unusable'
         PENDING_DELETION = 'pending_deletion'
+        UNUSABLE = 'unusable'
 
 
 class VolumeAttachment():
@@ -45181,10 +48777,6 @@ class VolumePrototype():
     """
     VolumePrototype.
 
-    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
-          key to use to wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
@@ -45198,7 +48790,6 @@ class VolumePrototype():
                  profile: 'VolumeProfileIdentity',
                  zone: 'ZoneIdentity',
                  *,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
                  name: str = None,
                  resource_group: 'ResourceGroupIdentity' = None) -> None:
@@ -45207,11 +48798,6 @@ class VolumePrototype():
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param ZoneIdentity zone: The zone this volume will reside in.
-        :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
-               root key to use to wrap the data encryption key for the volume.
-               If this property is not provided, the `encryption` type for the volume will
-               be
-               `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
@@ -49750,16 +53336,279 @@ class ImagePrototypeImageByFile(ImagePrototype):
         return not self == other
 
 
+class InstanceGroupManagerActionPatchScheduledActionPatch(
+        InstanceGroupManagerActionPatch):
+    """
+    InstanceGroupManagerActionPatchScheduledActionPatch.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr InstanceGroupManagerScheduledActionGroupPatch group: (optional)
+    :attr InstanceGroupManagerScheduledActionByManagerPatchManager manager:
+          (optional)
+    :attr datetime run_at: (optional) The date and time the scheduled action will
+          run.
+    """
+
+    def __init__(
+            self,
+            *,
+            name: str = None,
+            cron_spec: str = None,
+            group: 'InstanceGroupManagerScheduledActionGroupPatch' = None,
+            manager:
+        'InstanceGroupManagerScheduledActionByManagerPatchManager' = None,
+            run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPatchScheduledActionPatch object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        :param InstanceGroupManagerScheduledActionGroupPatch group: (optional)
+        :param InstanceGroupManagerScheduledActionByManagerPatchManager manager:
+               (optional)
+        :param datetime run_at: (optional) The date and time the scheduled action
+               will run.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.cron_spec = cron_spec
+        self.group = group
+        self.manager = manager
+        self.run_at = run_at
+
+    @classmethod
+    def from_dict(
+            cls, _dict: Dict
+    ) -> 'InstanceGroupManagerActionPatchScheduledActionPatch':
+        """Initialize a InstanceGroupManagerActionPatchScheduledActionPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'group' in _dict:
+            args[
+                'group'] = InstanceGroupManagerScheduledActionGroupPatch.from_dict(
+                    _dict.get('group'))
+        if 'manager' in _dict:
+            args['manager'] = _dict.get('manager')
+        if 'run_at' in _dict:
+            args['run_at'] = string_to_datetime(_dict.get('run_at'))
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionPatchScheduledActionPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        if hasattr(self, 'manager') and self.manager is not None:
+            if isinstance(self.manager, dict):
+                _dict['manager'] = self.manager
+            else:
+                _dict['manager'] = self.manager.to_dict()
+        if hasattr(self, 'run_at') and self.run_at is not None:
+            _dict['run_at'] = datetime_to_string(self.run_at)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionPatchScheduledActionPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self, other: 'InstanceGroupManagerActionPatchScheduledActionPatch'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self, other: 'InstanceGroupManagerActionPatchScheduledActionPatch'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototype(
+        InstanceGroupManagerActionPrototype):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototype.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    """
+
+    def __init__(self, *, name: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototype object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt',
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
+    """
+    InstanceGroupManagerActionScheduledAction.
+
+    :attr bool auto_delete: If set to `true`, this scheduled action will be
+          automatically deleted after it has finished and the `auto_delete_timeout` time
+          has passed.
+    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
+          before the scheduled action will be automatically deleted once it has finished.
+          If this value is 0, the action will be deleted on completion.
+    :attr datetime created_at: The date and time that the instance group manager
+          action was created.
+    :attr str href: The URL for this instance group manager action.
+    :attr str id: The unique identifier for this instance group manager action.
+    :attr str name: The user-defined name for this instance group manager action.
+          Names must be unique within the instance group manager.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the instance group action
+          - `active`: Action is ready to be run
+          - `completed`: Action was completed successfully
+          - `failed`: Action could not be completed successfully
+          - `incompatible`: Action parameters are not compatible with the group or manager
+          - `omitted`: Action was not applied because this action's manager was disabled.
+    :attr datetime updated_at: The date and time that the instance group manager
+          action was modified.
+    :attr str action_type: The type of action for the instance group.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr datetime last_applied_at: (optional) The date and time the scheduled
+          action was last applied. If empty the action has never been applied.
+    :attr datetime next_run_at: (optional) The date and time the scheduled action
+          will next run. If empty the system is currently calculating the next run time.
+    """
+
+    def __init__(self,
+                 auto_delete: bool,
+                 auto_delete_timeout: int,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 status: str,
+                 updated_at: datetime,
+                 action_type: str,
+                 *,
+                 cron_spec: str = None,
+                 last_applied_at: datetime = None,
+                 next_run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionScheduledAction object.
+
+        :param bool auto_delete: If set to `true`, this scheduled action will be
+               automatically deleted after it has finished and the `auto_delete_timeout`
+               time has passed.
+        :param int auto_delete_timeout: Amount of time in hours that are required
+               to pass before the scheduled action will be automatically deleted once it
+               has finished. If this value is 0, the action will be deleted on completion.
+        :param datetime created_at: The date and time that the instance group
+               manager action was created.
+        :param str href: The URL for this instance group manager action.
+        :param str id: The unique identifier for this instance group manager
+               action.
+        :param str name: The user-defined name for this instance group manager
+               action. Names must be unique within the instance group manager.
+        :param str resource_type: The resource type.
+        :param str status: The status of the instance group action
+               - `active`: Action is ready to be run
+               - `completed`: Action was completed successfully
+               - `failed`: Action could not be completed successfully
+               - `incompatible`: Action parameters are not compatible with the group or
+               manager
+               - `omitted`: Action was not applied because this action's manager was
+               disabled.
+        :param datetime updated_at: The date and time that the instance group
+               manager action was modified.
+        :param str action_type: The type of action for the instance group.
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        :param datetime last_applied_at: (optional) The date and time the scheduled
+               action was last applied. If empty the action has never been applied.
+        :param datetime next_run_at: (optional) The date and time the scheduled
+               action will next run. If empty the system is currently calculating the next
+               run time.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerActionScheduledActionGroup',
+                'InstanceGroupManagerActionScheduledActionManager'
+            ]))
+        raise Exception(msg)
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_GROUP_MANAGER_ACTION = 'instance_group_manager_action'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the instance group action
+        - `active`: Action is ready to be run
+        - `completed`: Action was completed successfully
+        - `failed`: Action could not be completed successfully
+        - `incompatible`: Action parameters are not compatible with the group or manager
+        - `omitted`: Action was not applied because this action's manager was disabled.
+        """
+        ACTIVE = 'active'
+        COMPLETED = 'completed'
+        FAILED = 'failed'
+        INCOMPATIBLE = 'incompatible'
+        OMITTED = 'omitted'
+
+    class ActionTypeEnum(str, Enum):
+        """
+        The type of action for the instance group.
+        """
+        SCHEDULED = 'scheduled'
+
+
 class InstanceGroupManagerAutoScale(InstanceGroupManager):
     """
     InstanceGroupManagerAutoScale.
 
+    :attr datetime created_at: The date and time that the instance group manager was
+          created.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: If set to `true`, this manager will control the
           instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
+    :attr datetime updated_at: The date and time that the instance group manager was
+          updated.
     :attr int aggregation_window: The time window in seconds to aggregate metrics
           prior to evaluation.
     :attr int cooldown: The duration of time in seconds to pause further scale
@@ -49773,19 +53622,24 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
           instance group manager.
     """
 
-    def __init__(self, href: str, id: str, management_enabled: bool, name: str,
+    def __init__(self, created_at: datetime, href: str, id: str,
+                 management_enabled: bool, name: str, updated_at: datetime,
                  aggregation_window: int, cooldown: int, manager_type: str,
                  max_membership_count: int, min_membership_count: int,
                  policies: List['InstanceGroupManagerPolicyReference']) -> None:
         """
         Initialize a InstanceGroupManagerAutoScale object.
 
+        :param datetime created_at: The date and time that the instance group
+               manager was created.
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
         :param bool management_enabled: If set to `true`, this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
+        :param datetime updated_at: The date and time that the instance group
+               manager was updated.
         :param int aggregation_window: The time window in seconds to aggregate
                metrics prior to evaluation.
         :param int cooldown: The duration of time in seconds to pause further scale
@@ -49799,10 +53653,12 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
                the instance group manager.
         """
         # pylint: disable=super-init-not-called
+        self.created_at = created_at
         self.href = href
         self.id = id
         self.management_enabled = management_enabled
         self.name = name
+        self.updated_at = updated_at
         self.aggregation_window = aggregation_window
         self.cooldown = cooldown
         self.manager_type = manager_type
@@ -49814,6 +53670,12 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
     def from_dict(cls, _dict: Dict) -> 'InstanceGroupManagerAutoScale':
         """Initialize a InstanceGroupManagerAutoScale object from a json dictionary."""
         args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupManagerAutoScale JSON'
+            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
@@ -49837,6 +53699,12 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
         else:
             raise ValueError(
                 'Required property \'name\' not present in InstanceGroupManagerAutoScale JSON'
+            )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupManagerAutoScale JSON'
             )
         if 'aggregation_window' in _dict:
             args['aggregation_window'] = _dict.get('aggregation_window')
@@ -49887,6 +53755,8 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
@@ -49897,6 +53767,8 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
             _dict['management_enabled'] = self.management_enabled
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
         if hasattr(
                 self,
                 'aggregation_window') and self.aggregation_window is not None:
@@ -50064,33 +53936,44 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(
     """
     InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy.
 
+    :attr datetime created_at: The date and time that the instance group manager
+          policy was created.
     :attr str href: The URL for this instance group manager policy.
     :attr str id: The unique identifier for this instance group manager policy.
     :attr str name: The user-defined name for this instance group manager policy.
           Names must be unique within the instance group manager.
+    :attr datetime updated_at: The date and time that the instance group manager
+          policy was updated.
     :attr str metric_type: The type of metric to be evaluated.
     :attr int metric_value: The metric value to be evaluated.
     :attr str policy_type: The type of policy for the instance group.
     """
 
-    def __init__(self, href: str, id: str, name: str, metric_type: str,
-                 metric_value: int, policy_type: str) -> None:
+    def __init__(self, created_at: datetime, href: str, id: str, name: str,
+                 updated_at: datetime, metric_type: str, metric_value: int,
+                 policy_type: str) -> None:
         """
         Initialize a InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy object.
 
+        :param datetime created_at: The date and time that the instance group
+               manager policy was created.
         :param str href: The URL for this instance group manager policy.
         :param str id: The unique identifier for this instance group manager
                policy.
         :param str name: The user-defined name for this instance group manager
                policy. Names must be unique within the instance group manager.
+        :param datetime updated_at: The date and time that the instance group
+               manager policy was updated.
         :param str metric_type: The type of metric to be evaluated.
         :param int metric_value: The metric value to be evaluated.
         :param str policy_type: The type of policy for the instance group.
         """
         # pylint: disable=super-init-not-called
+        self.created_at = created_at
         self.href = href
         self.id = id
         self.name = name
+        self.updated_at = updated_at
         self.metric_type = metric_type
         self.metric_value = metric_value
         self.policy_type = policy_type
@@ -50101,6 +53984,12 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(
     ) -> 'InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy':
         """Initialize a InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy object from a json dictionary."""
         args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy JSON'
+            )
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
@@ -50118,6 +54007,12 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(
         else:
             raise ValueError(
                 'Required property \'name\' not present in InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy JSON'
+            )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy JSON'
             )
         if 'metric_type' in _dict:
             args['metric_type'] = _dict.get('metric_type')
@@ -50147,12 +54042,16 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
         if hasattr(self, 'metric_type') and self.metric_type is not None:
             _dict['metric_type'] = self.metric_type
         if hasattr(self, 'metric_value') and self.metric_value is not None:
@@ -50347,10 +54246,690 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(
         AUTOSCALE = 'autoscale'
 
 
+class InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype(
+        InstanceGroupManagerPrototype):
+    """
+    InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype.
+
+    :attr bool management_enabled: (optional) If set to `true`, this manager will
+          control the instance group.
+    :attr str name: (optional) The user-defined name for this instance group
+          manager. Names must be unique within the instance group.
+    :attr str manager_type: The type of instance group manager.
+    """
+
+    def __init__(self,
+                 manager_type: str,
+                 *,
+                 management_enabled: bool = None,
+                 name: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype object.
+
+        :param str manager_type: The type of instance group manager.
+        :param bool management_enabled: (optional) If set to `true`, this manager
+               will control the instance group.
+        :param str name: (optional) The user-defined name for this instance group
+               manager. Names must be unique within the instance group.
+        """
+        # pylint: disable=super-init-not-called
+        self.management_enabled = management_enabled
+        self.name = name
+        self.manager_type = manager_type
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype':
+        """Initialize a InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype object from a json dictionary."""
+        args = {}
+        if 'management_enabled' in _dict:
+            args['management_enabled'] = _dict.get('management_enabled')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'manager_type' in _dict:
+            args['manager_type'] = _dict.get('manager_type')
+        else:
+            raise ValueError(
+                'Required property \'manager_type\' not present in InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(
+                self,
+                'management_enabled') and self.management_enabled is not None:
+            _dict['management_enabled'] = self.management_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'manager_type') and self.manager_type is not None:
+            _dict['manager_type'] = self.manager_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ManagerTypeEnum(str, Enum):
+        """
+        The type of instance group manager.
+        """
+        SCHEDULED = 'scheduled'
+
+
+class InstanceGroupManagerScheduled(InstanceGroupManager):
+    """
+    InstanceGroupManagerScheduled.
+
+    :attr datetime created_at: The date and time that the instance group manager was
+          created.
+    :attr str href: The URL for this instance group manager.
+    :attr str id: The unique identifier for this instance group manager.
+    :attr bool management_enabled: If set to `true`, this manager will control the
+          instance group.
+    :attr str name: The user-defined name for this instance group manager. Names
+          must be unique within the instance group.
+    :attr datetime updated_at: The date and time that the instance group manager was
+          updated.
+    :attr List[InstanceGroupManagerActionReference] actions: The actions of the
+          instance group manager.
+    :attr str manager_type: The type of instance group manager.
+    """
+
+    def __init__(self, created_at: datetime, href: str, id: str,
+                 management_enabled: bool, name: str, updated_at: datetime,
+                 actions: List['InstanceGroupManagerActionReference'],
+                 manager_type: str) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduled object.
+
+        :param datetime created_at: The date and time that the instance group
+               manager was created.
+        :param str href: The URL for this instance group manager.
+        :param str id: The unique identifier for this instance group manager.
+        :param bool management_enabled: If set to `true`, this manager will control
+               the instance group.
+        :param str name: The user-defined name for this instance group manager.
+               Names must be unique within the instance group.
+        :param datetime updated_at: The date and time that the instance group
+               manager was updated.
+        :param List[InstanceGroupManagerActionReference] actions: The actions of
+               the instance group manager.
+        :param str manager_type: The type of instance group manager.
+        """
+        # pylint: disable=super-init-not-called
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.management_enabled = management_enabled
+        self.name = name
+        self.updated_at = updated_at
+        self.actions = actions
+        self.manager_type = manager_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceGroupManagerScheduled':
+        """Initialize a InstanceGroupManagerScheduled object from a json dictionary."""
+        args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'management_enabled' in _dict:
+            args['management_enabled'] = _dict.get('management_enabled')
+        else:
+            raise ValueError(
+                'Required property \'management_enabled\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'actions' in _dict:
+            args['actions'] = [
+                InstanceGroupManagerActionReference.from_dict(x)
+                for x in _dict.get('actions')
+            ]
+        else:
+            raise ValueError(
+                'Required property \'actions\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        if 'manager_type' in _dict:
+            args['manager_type'] = _dict.get('manager_type')
+        else:
+            raise ValueError(
+                'Required property \'manager_type\' not present in InstanceGroupManagerScheduled JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduled object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(
+                self,
+                'management_enabled') and self.management_enabled is not None:
+            _dict['management_enabled'] = self.management_enabled
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = [x.to_dict() for x in self.actions]
+        if hasattr(self, 'manager_type') and self.manager_type is not None:
+            _dict['manager_type'] = self.manager_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduled object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceGroupManagerScheduled') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceGroupManagerScheduled') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ManagerTypeEnum(str, Enum):
+        """
+        The type of instance group manager.
+        """
+        SCHEDULED = 'scheduled'
+
+
+class InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototype(
+        InstanceGroupManagerScheduledActionByManagerManager):
+    """
+    The identity of the auto scale manager to update and the property or properties to be
+    updated. Exactly one of `id` or `href` must be provided in addition to at least one of
+    `min_membership_count` and `max_membership_count`.
+
+    :attr int max_membership_count: (optional) The maximum number of members the
+          instance group should have at the scheduled time.
+    :attr int min_membership_count: (optional) The minimum number of members the
+          instance group should have at the scheduled time.
+    """
+
+    def __init__(self,
+                 *,
+                 max_membership_count: int = None,
+                 min_membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototype object.
+
+        :param int max_membership_count: (optional) The maximum number of members
+               the instance group should have at the scheduled time.
+        :param int min_membership_count: (optional) The minimum number of members
+               the instance group should have at the scheduled time.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById',
+                'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch(
+        InstanceGroupManagerScheduledActionByManagerPatchManager):
+    """
+    InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch.
+
+    :attr int max_membership_count: (optional) The maximum number of members the
+          instance group should have at the scheduled time.
+    :attr int min_membership_count: (optional) The minimum number of members the
+          instance group should have at the scheduled time.
+    """
+
+    def __init__(self,
+                 *,
+                 max_membership_count: int = None,
+                 min_membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch object.
+
+        :param int max_membership_count: (optional) The maximum number of members
+               the instance group should have at the scheduled time.
+        :param int min_membership_count: (optional) The minimum number of members
+               the instance group should have at the scheduled time.
+        """
+        # pylint: disable=super-init-not-called
+        self.max_membership_count = max_membership_count
+        self.min_membership_count = min_membership_count
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch':
+        """Initialize a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch object from a json dictionary."""
+        args = {}
+        if 'max_membership_count' in _dict:
+            args['max_membership_count'] = _dict.get('max_membership_count')
+        if 'min_membership_count' in _dict:
+            args['min_membership_count'] = _dict.get('min_membership_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'max_membership_count'
+                  ) and self.max_membership_count is not None:
+            _dict['max_membership_count'] = self.max_membership_count
+        if hasattr(self, 'min_membership_count'
+                  ) and self.min_membership_count is not None:
+            _dict['min_membership_count'] = self.min_membership_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerScheduledActionManagerManagerAutoScale(
+        InstanceGroupManagerScheduledActionManagerManager):
+    """
+    InstanceGroupManagerScheduledActionManagerManagerAutoScale.
+
+    :attr InstanceGroupManagerReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this instance group manager.
+    :attr str id: The unique identifier for this instance group manager.
+    :attr str name: The user-defined name for this instance group manager. Names
+          must be unique within the instance group.
+    :attr int max_membership_count: (optional) The maximum number of members the
+          instance group should have at the scheduled time.
+    :attr int min_membership_count: (optional) The minimum number of members the
+          instance group should have at the scheduled time.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 *,
+                 deleted: 'InstanceGroupManagerReferenceDeleted' = None,
+                 max_membership_count: int = None,
+                 min_membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionManagerManagerAutoScale object.
+
+        :param str href: The URL for this instance group manager.
+        :param str id: The unique identifier for this instance group manager.
+        :param str name: The user-defined name for this instance group manager.
+               Names must be unique within the instance group.
+        :param InstanceGroupManagerReferenceDeleted deleted: (optional) If present,
+               this property indicates the referenced resource has been deleted and
+               provides
+               some supplementary information.
+        :param int max_membership_count: (optional) The maximum number of members
+               the instance group should have at the scheduled time.
+        :param int min_membership_count: (optional) The minimum number of members
+               the instance group should have at the scheduled time.
+        """
+        # pylint: disable=super-init-not-called
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.max_membership_count = max_membership_count
+        self.min_membership_count = min_membership_count
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerScheduledActionManagerManagerAutoScale':
+        """Initialize a InstanceGroupManagerScheduledActionManagerManagerAutoScale object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = InstanceGroupManagerReferenceDeleted.from_dict(
+                _dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerScheduledActionManagerManagerAutoScale JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerScheduledActionManagerManagerAutoScale JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerScheduledActionManagerManagerAutoScale JSON'
+            )
+        if 'max_membership_count' in _dict:
+            args['max_membership_count'] = _dict.get('max_membership_count')
+        if 'min_membership_count' in _dict:
+            args['min_membership_count'] = _dict.get('min_membership_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionManagerManagerAutoScale object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'max_membership_count'
+                  ) and self.max_membership_count is not None:
+            _dict['max_membership_count'] = self.max_membership_count
+        if hasattr(self, 'min_membership_count'
+                  ) and self.min_membership_count is not None:
+            _dict['min_membership_count'] = self.min_membership_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionManagerManagerAutoScale object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self,
+        other: 'InstanceGroupManagerScheduledActionManagerManagerAutoScale'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self,
+        other: 'InstanceGroupManagerScheduledActionManagerManagerAutoScale'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePatchProfileInstanceProfileIdentityByHref(InstancePatchProfile):
+    """
+    InstancePatchProfileInstanceProfileIdentityByHref.
+
+    :attr str href: The URL for this virtual server instance profile.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a InstancePatchProfileInstanceProfileIdentityByHref object.
+
+        :param str href: The URL for this virtual server instance profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstancePatchProfileInstanceProfileIdentityByHref':
+        """Initialize a InstancePatchProfileInstanceProfileIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstancePatchProfileInstanceProfileIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePatchProfileInstanceProfileIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePatchProfileInstanceProfileIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'InstancePatchProfileInstanceProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'InstancePatchProfileInstanceProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePatchProfileInstanceProfileIdentityByName(InstancePatchProfile):
+    """
+    InstancePatchProfileInstanceProfileIdentityByName.
+
+    :attr str name: The globally unique name for this virtual server instance
+          profile.
+    """
+
+    def __init__(self, name: str) -> None:
+        """
+        Initialize a InstancePatchProfileInstanceProfileIdentityByName object.
+
+        :param str name: The globally unique name for this virtual server instance
+               profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstancePatchProfileInstanceProfileIdentityByName':
+        """Initialize a InstancePatchProfileInstanceProfileIdentityByName object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstancePatchProfileInstanceProfileIdentityByName JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePatchProfileInstanceProfileIdentityByName object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePatchProfileInstanceProfileIdentityByName object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'InstancePatchProfileInstanceProfileIdentityByName') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'InstancePatchProfileInstanceProfileIdentityByName') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostGroupIdentity(
+        InstancePlacementTargetPrototype):
+    """
+    Identifies a dedicated host group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById',
+                'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN',
+                'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
+class InstancePlacementTargetPrototypeDedicatedHostIdentity(
+        InstancePlacementTargetPrototype):
+    """
+    Identifies a dedicated host by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById',
+                'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN',
+                'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref'
+            ]))
+        raise Exception(msg)
+
+
 class InstanceProfileBandwidthDependent(InstanceProfileBandwidth):
     """
-    The total bandwidth shared across the network interfaces of an instance with this
-    profile depends on its configuration.
+    The total bandwidth shared across the network interfaces and storage volumes of an
+    instance with this profile depends on its configuration.
 
     :attr str type: The type for this profile field.
     """
@@ -50503,8 +55082,8 @@ class InstanceProfileBandwidthEnum(InstanceProfileBandwidth):
 
 class InstanceProfileBandwidthFixed(InstanceProfileBandwidth):
     """
-    The total bandwidth (in megabits per second) shared across the network interfaces of
-    an instance with this profile.
+    The total bandwidth (in megabits per second) shared across the network interfaces and
+    storage volumes of an instance with this profile.
 
     :attr str type: The type for this profile field.
     :attr int value: The value for this profile field.
@@ -50581,7 +55160,7 @@ class InstanceProfileBandwidthFixed(InstanceProfileBandwidth):
 class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
     """
     The permitted total bandwidth range (in megabits per second) shared across the network
-    interfaces of an instance with this profile.
+    interfaces and storage volumes of an instance with this profile.
 
     :attr int default: The default value for this profile field.
     :attr int max: The maximum value for this profile field.
@@ -50679,6 +55258,688 @@ class InstanceProfileBandwidthRange(InstanceProfileBandwidth):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceProfileBandwidthRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class InstanceProfileDiskQuantityDependent(InstanceProfileDiskQuantity):
+    """
+    The number of disks of this configuration for an instance with this profile depends on
+    its instance configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a InstanceProfileDiskQuantityDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskQuantityDependent':
+        """Initialize a InstanceProfileDiskQuantityDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskQuantityDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskQuantityDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskQuantityDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskQuantityDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskQuantityDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class InstanceProfileDiskQuantityEnum(InstanceProfileDiskQuantity):
+    """
+    The permitted the number of disks of this configuration for an instance with this
+    profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
+        """
+        Initialize a InstanceProfileDiskQuantityEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskQuantityEnum':
+        """Initialize a InstanceProfileDiskQuantityEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in InstanceProfileDiskQuantityEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskQuantityEnum JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in InstanceProfileDiskQuantityEnum JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskQuantityEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskQuantityEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskQuantityEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskQuantityEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileDiskQuantityFixed(InstanceProfileDiskQuantity):
+    """
+    The number of disks of this configuration for an instance with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a InstanceProfileDiskQuantityFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskQuantityFixed':
+        """Initialize a InstanceProfileDiskQuantityFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskQuantityFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in InstanceProfileDiskQuantityFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskQuantityFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskQuantityFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskQuantityFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskQuantityFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class InstanceProfileDiskQuantityRange(InstanceProfileDiskQuantity):
+    """
+    The permitted range for the number of disks of this configuration for an instance with
+    this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileDiskQuantityRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskQuantityRange':
+        """Initialize a InstanceProfileDiskQuantityRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in InstanceProfileDiskQuantityRange JSON'
+            )
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError(
+                'Required property \'max\' not present in InstanceProfileDiskQuantityRange JSON'
+            )
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError(
+                'Required property \'min\' not present in InstanceProfileDiskQuantityRange JSON'
+            )
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError(
+                'Required property \'step\' not present in InstanceProfileDiskQuantityRange JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskQuantityRange JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskQuantityRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskQuantityRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskQuantityRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskQuantityRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class InstanceProfileDiskSizeDependent(InstanceProfileDiskSize):
+    """
+    The disk size in GB (gigabytes) of this configuration for an instance with this
+    profile depends on its instance configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, type: str) -> None:
+        """
+        Initialize a InstanceProfileDiskSizeDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskSizeDependent':
+        """Initialize a InstanceProfileDiskSizeDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskSizeDependent JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskSizeDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskSizeDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskSizeDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskSizeDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class InstanceProfileDiskSizeEnum(InstanceProfileDiskSize):
+    """
+    The permitted disk size in GB (gigabytes) of this configuration for an instance with
+    this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self, default: int, type: str, values: List[int]) -> None:
+        """
+        Initialize a InstanceProfileDiskSizeEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskSizeEnum':
+        """Initialize a InstanceProfileDiskSizeEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in InstanceProfileDiskSizeEnum JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskSizeEnum JSON'
+            )
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError(
+                'Required property \'values\' not present in InstanceProfileDiskSizeEnum JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskSizeEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskSizeEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskSizeEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskSizeEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileDiskSizeFixed(InstanceProfileDiskSize):
+    """
+    The size of the disk in GB (gigabytes).
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self, type: str, value: int) -> None:
+        """
+        Initialize a InstanceProfileDiskSizeFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskSizeFixed':
+        """Initialize a InstanceProfileDiskSizeFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskSizeFixed JSON'
+            )
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError(
+                'Required property \'value\' not present in InstanceProfileDiskSizeFixed JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskSizeFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskSizeFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskSizeFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskSizeFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class InstanceProfileDiskSizeRange(InstanceProfileDiskSize):
+    """
+    The permitted range for the disk size of this configuration in GB (gigabytes) for an
+    instance with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self, default: int, max: int, min: int, step: int,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileDiskSizeRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileDiskSizeRange':
+        """Initialize a InstanceProfileDiskSizeRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError(
+                'Required property \'default\' not present in InstanceProfileDiskSizeRange JSON'
+            )
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError(
+                'Required property \'max\' not present in InstanceProfileDiskSizeRange JSON'
+            )
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError(
+                'Required property \'min\' not present in InstanceProfileDiskSizeRange JSON'
+            )
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError(
+                'Required property \'step\' not present in InstanceProfileDiskSizeRange JSON'
+            )
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in InstanceProfileDiskSizeRange JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileDiskSizeRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileDiskSizeRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileDiskSizeRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileDiskSizeRange') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -51645,6 +56906,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
@@ -51673,6 +56936,7 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         keys: List['KeyIdentity'] = None,
         name: str = None,
         network_interfaces: List['NetworkInterfacePrototype'] = None,
+        placement_target: 'InstancePlacementTargetPrototype' = None,
         profile: 'InstanceProfileIdentity' = None,
         resource_group: 'ResourceGroupIdentity' = None,
         user_data: str = None,
@@ -51705,6 +56969,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
@@ -51723,6 +56989,7 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -51746,6 +57013,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -51809,6 +57078,12 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -51890,6 +57165,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
@@ -51918,6 +57195,7 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                  keys: List['KeyIdentity'] = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
                  user_data: str = None,
@@ -51948,6 +57226,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
@@ -51972,6 +57252,7 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -51997,6 +57278,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -52054,6 +57337,12 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -52320,6 +57609,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
@@ -52348,6 +57639,7 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         keys: List['KeyIdentity'] = None,
         name: str = None,
         network_interfaces: List['NetworkInterfacePrototype'] = None,
+        placement_target: 'InstancePlacementTargetPrototype' = None,
         profile: 'InstanceProfileIdentity' = None,
         resource_group: 'ResourceGroupIdentity' = None,
         user_data: str = None,
@@ -52380,6 +57672,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
@@ -52398,6 +57692,7 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -52422,6 +57717,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -52485,6 +57782,12 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -52567,6 +57870,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
           hyphenated list of randomly-selected words.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
@@ -52595,6 +57900,7 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
                  keys: List['KeyIdentity'] = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
                  user_data: str = None,
@@ -52625,6 +57931,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
@@ -52649,6 +57957,7 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -52675,6 +57984,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -52732,6 +58043,12 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -52826,6 +58143,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
@@ -52860,6 +58179,7 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         *,
         keys: List['KeyIdentity'] = None,
         network_interfaces: List['NetworkInterfacePrototype'] = None,
+        placement_target: 'InstancePlacementTargetPrototype' = None,
         profile: 'InstanceProfileIdentity' = None,
         user_data: str = None,
         volume_attachments: List[
@@ -52896,6 +58216,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param str user_data: (optional) User data to be made available when
@@ -52917,6 +58239,7 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -52968,6 +58291,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -53044,6 +58369,12 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -53125,6 +58456,8 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) Collection
           of additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
@@ -53159,6 +58492,7 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
                  *,
                  keys: List['KeyIdentity'] = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  user_data: str = None,
                  volume_attachments: List[
@@ -53193,6 +58527,8 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
         :param List[NetworkInterfacePrototype] network_interfaces: (optional)
                Collection of additional network interfaces to create for the virtual
                server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param str user_data: (optional) User data to be made available when
@@ -53220,6 +58556,7 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
         self.keys = keys
         self.name = name
         self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
         self.user_data = user_data
@@ -53273,6 +58610,8 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
                 NetworkInterfacePrototype.from_dict(x)
                 for x in _dict.get('network_interfaces')
             ]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
@@ -53343,6 +58682,12 @@ class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
             _dict['network_interfaces'] = [
                 x.to_dict() for x in self.network_interfaces
             ]
+        if hasattr(self,
+                   'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -59757,7 +65102,7 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(
         SecurityGroupRulePrototype):
     """
     If `protocol` is either `tcp` or `udp`, then the rule may also contain `port_min` and
-    `port_max`. Either both should be set, or neither. When neither is set then traffic is
+    `port_max`. Either both must be set, or neither. When neither is set then traffic is
     allowed on all ports. For a single port, set both to the same value.
 
     :attr str direction: The direction of traffic to enforce, either `inbound` or
@@ -60804,7 +66149,7 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
 class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
     """
     If `protocol` is either `tcp` or `udp`, then the rule may also contain `port_min` and
-    `port_max`. Either both should be set, or neither. When neither is set then traffic is
+    `port_max`. Either both must be set, or neither. When neither is set then traffic is
     allowed on all ports. For a single port, set both to the same value.
 
     :attr str direction: The direction of traffic to enforce, either `inbound` or
@@ -63649,10 +68994,6 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext.
 
-    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
-          key to use to wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
@@ -63661,18 +69002,12 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     def __init__(self,
                  profile: 'VolumeProfileIdentity',
                  *,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
                  name: str = None) -> None:
         """
         Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
-               root key to use to wrap the data encryption key for the volume.
-               If this property is not provided, the `encryption` type for the volume will
-               be
-               `provider_managed`.
         :param int iops: (optional) The bandwidth for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         """
@@ -63983,10 +69318,6 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     """
     VolumePrototypeVolumeByCapacity.
 
-    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
-          key to use to wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
@@ -63995,6 +69326,10 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     :attr int capacity: The capacity of the volume in gigabytes. The specified
           minimum and maximum capacity values for creating or updating volumes may expand
           in the future.
+    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
+          key to use to wrap the data encryption key for the volume.
+          If this property is not provided, the `encryption` type for the volume will be
+          `provider_managed`.
     """
 
     def __init__(self,
@@ -64002,10 +69337,10 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                  zone: 'ZoneIdentity',
                  capacity: int,
                  *,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
                  name: str = None,
-                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 encryption_key: 'EncryptionKeyIdentity' = None) -> None:
         """
         Initialize a VolumePrototypeVolumeByCapacity object.
 
@@ -64014,30 +69349,28 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
         :param int capacity: The capacity of the volume in gigabytes. The specified
                minimum and maximum capacity values for creating or updating volumes may
                expand in the future.
+        :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
+        :param ResourceGroupIdentity resource_group: (optional)
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
-        :param int iops: (optional) The bandwidth for the volume.
-        :param str name: (optional) The unique user-defined name for this volume.
-        :param ResourceGroupIdentity resource_group: (optional)
         """
         # pylint: disable=super-init-not-called
-        self.encryption_key = encryption_key
         self.iops = iops
         self.name = name
         self.profile = profile
         self.resource_group = resource_group
         self.zone = zone
         self.capacity = capacity
+        self.encryption_key = encryption_key
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumePrototypeVolumeByCapacity':
         """Initialize a VolumePrototypeVolumeByCapacity object from a json dictionary."""
         args = {}
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
         if 'iops' in _dict:
             args['iops'] = _dict.get('iops')
         if 'name' in _dict:
@@ -64062,6 +69395,8 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
             raise ValueError(
                 'Required property \'capacity\' not present in VolumePrototypeVolumeByCapacity JSON'
             )
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
         return cls(**args)
 
     @classmethod
@@ -64072,11 +69407,6 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
-            if isinstance(self.encryption_key, dict):
-                _dict['encryption_key'] = self.encryption_key
-            else:
-                _dict['encryption_key'] = self.encryption_key.to_dict()
         if hasattr(self, 'iops') and self.iops is not None:
             _dict['iops'] = self.iops
         if hasattr(self, 'name') and self.name is not None:
@@ -64098,6 +69428,11 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                 _dict['zone'] = self.zone.to_dict()
         if hasattr(self, 'capacity') and self.capacity is not None:
             _dict['capacity'] = self.capacity
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            if isinstance(self.encryption_key, dict):
+                _dict['encryption_key'] = self.encryption_key
+            else:
+                _dict['encryption_key'] = self.encryption_key.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -65290,6 +70625,1216 @@ class FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById(
 
     def __ne__(
         self, other: 'FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototype):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    """
+
+    def __init__(self, *, name: str = None, cron_spec: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup',
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototype):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr datetime run_at: (optional) The date and time the scheduled action will
+          run.
+    """
+
+    def __init__(self, *, name: str = None, run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt object.
+
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param datetime run_at: (optional) The date and time the scheduled action
+               will run.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join([
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup',
+                'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager'
+            ]))
+        raise Exception(msg)
+
+
+class InstanceGroupManagerActionScheduledActionGroup(
+        InstanceGroupManagerActionScheduledAction):
+    """
+    InstanceGroupManagerActionScheduledActionGroup.
+
+    :attr bool auto_delete: If set to `true`, this scheduled action will be
+          automatically deleted after it has finished and the `auto_delete_timeout` time
+          has passed.
+    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
+          before the scheduled action will be automatically deleted once it has finished.
+          If this value is 0, the action will be deleted on completion.
+    :attr datetime created_at: The date and time that the instance group manager
+          action was created.
+    :attr str href: The URL for this instance group manager action.
+    :attr str id: The unique identifier for this instance group manager action.
+    :attr str name: The user-defined name for this instance group manager action.
+          Names must be unique within the instance group manager.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the instance group action
+          - `active`: Action is ready to be run
+          - `completed`: Action was completed successfully
+          - `failed`: Action could not be completed successfully
+          - `incompatible`: Action parameters are not compatible with the group or manager
+          - `omitted`: Action was not applied because this action's manager was disabled.
+    :attr datetime updated_at: The date and time that the instance group manager
+          action was modified.
+    :attr str action_type: The type of action for the instance group.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr datetime last_applied_at: (optional) The date and time the scheduled
+          action was last applied. If empty the action has never been applied.
+    :attr datetime next_run_at: (optional) The date and time the scheduled action
+          will next run. If empty the system is currently calculating the next run time.
+    :attr InstanceGroupManagerScheduledActionGroupGroup group:
+    """
+
+    def __init__(self,
+                 auto_delete: bool,
+                 auto_delete_timeout: int,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 status: str,
+                 updated_at: datetime,
+                 action_type: str,
+                 group: 'InstanceGroupManagerScheduledActionGroupGroup',
+                 *,
+                 cron_spec: str = None,
+                 last_applied_at: datetime = None,
+                 next_run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionScheduledActionGroup object.
+
+        :param bool auto_delete: If set to `true`, this scheduled action will be
+               automatically deleted after it has finished and the `auto_delete_timeout`
+               time has passed.
+        :param int auto_delete_timeout: Amount of time in hours that are required
+               to pass before the scheduled action will be automatically deleted once it
+               has finished. If this value is 0, the action will be deleted on completion.
+        :param datetime created_at: The date and time that the instance group
+               manager action was created.
+        :param str href: The URL for this instance group manager action.
+        :param str id: The unique identifier for this instance group manager
+               action.
+        :param str name: The user-defined name for this instance group manager
+               action. Names must be unique within the instance group manager.
+        :param str resource_type: The resource type.
+        :param str status: The status of the instance group action
+               - `active`: Action is ready to be run
+               - `completed`: Action was completed successfully
+               - `failed`: Action could not be completed successfully
+               - `incompatible`: Action parameters are not compatible with the group or
+               manager
+               - `omitted`: Action was not applied because this action's manager was
+               disabled.
+        :param datetime updated_at: The date and time that the instance group
+               manager action was modified.
+        :param str action_type: The type of action for the instance group.
+        :param InstanceGroupManagerScheduledActionGroupGroup group:
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        :param datetime last_applied_at: (optional) The date and time the scheduled
+               action was last applied. If empty the action has never been applied.
+        :param datetime next_run_at: (optional) The date and time the scheduled
+               action will next run. If empty the system is currently calculating the next
+               run time.
+        """
+        # pylint: disable=super-init-not-called
+        self.auto_delete = auto_delete
+        self.auto_delete_timeout = auto_delete_timeout
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+        self.status = status
+        self.updated_at = updated_at
+        self.action_type = action_type
+        self.cron_spec = cron_spec
+        self.last_applied_at = last_applied_at
+        self.next_run_at = next_run_at
+        self.group = group
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstanceGroupManagerActionScheduledActionGroup':
+        """Initialize a InstanceGroupManagerActionScheduledActionGroup object from a json dictionary."""
+        args = {}
+        if 'auto_delete' in _dict:
+            args['auto_delete'] = _dict.get('auto_delete')
+        else:
+            raise ValueError(
+                'Required property \'auto_delete\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'auto_delete_timeout' in _dict:
+            args['auto_delete_timeout'] = _dict.get('auto_delete_timeout')
+        else:
+            raise ValueError(
+                'Required property \'auto_delete_timeout\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'action_type' in _dict:
+            args['action_type'] = _dict.get('action_type')
+        else:
+            raise ValueError(
+                'Required property \'action_type\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'last_applied_at' in _dict:
+            args['last_applied_at'] = string_to_datetime(
+                _dict.get('last_applied_at'))
+        if 'next_run_at' in _dict:
+            args['next_run_at'] = string_to_datetime(_dict.get('next_run_at'))
+        if 'group' in _dict:
+            args[
+                'group'] = InstanceGroupManagerScheduledActionGroupGroup.from_dict(
+                    _dict.get('group'))
+        else:
+            raise ValueError(
+                'Required property \'group\' not present in InstanceGroupManagerActionScheduledActionGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionScheduledActionGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'auto_delete') and self.auto_delete is not None:
+            _dict['auto_delete'] = self.auto_delete
+        if hasattr(
+                self,
+                'auto_delete_timeout') and self.auto_delete_timeout is not None:
+            _dict['auto_delete_timeout'] = self.auto_delete_timeout
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
+        if hasattr(self, 'action_type') and self.action_type is not None:
+            _dict['action_type'] = self.action_type
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self,
+                   'last_applied_at') and self.last_applied_at is not None:
+            _dict['last_applied_at'] = datetime_to_string(self.last_applied_at)
+        if hasattr(self, 'next_run_at') and self.next_run_at is not None:
+            _dict['next_run_at'] = datetime_to_string(self.next_run_at)
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionScheduledActionGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self,
+               other: 'InstanceGroupManagerActionScheduledActionGroup') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self,
+               other: 'InstanceGroupManagerActionScheduledActionGroup') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_GROUP_MANAGER_ACTION = 'instance_group_manager_action'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the instance group action
+        - `active`: Action is ready to be run
+        - `completed`: Action was completed successfully
+        - `failed`: Action could not be completed successfully
+        - `incompatible`: Action parameters are not compatible with the group or manager
+        - `omitted`: Action was not applied because this action's manager was disabled.
+        """
+        ACTIVE = 'active'
+        COMPLETED = 'completed'
+        FAILED = 'failed'
+        INCOMPATIBLE = 'incompatible'
+        OMITTED = 'omitted'
+
+    class ActionTypeEnum(str, Enum):
+        """
+        The type of action for the instance group.
+        """
+        SCHEDULED = 'scheduled'
+
+
+class InstanceGroupManagerActionScheduledActionManager(
+        InstanceGroupManagerActionScheduledAction):
+    """
+    InstanceGroupManagerActionScheduledActionManager.
+
+    :attr bool auto_delete: If set to `true`, this scheduled action will be
+          automatically deleted after it has finished and the `auto_delete_timeout` time
+          has passed.
+    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
+          before the scheduled action will be automatically deleted once it has finished.
+          If this value is 0, the action will be deleted on completion.
+    :attr datetime created_at: The date and time that the instance group manager
+          action was created.
+    :attr str href: The URL for this instance group manager action.
+    :attr str id: The unique identifier for this instance group manager action.
+    :attr str name: The user-defined name for this instance group manager action.
+          Names must be unique within the instance group manager.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the instance group action
+          - `active`: Action is ready to be run
+          - `completed`: Action was completed successfully
+          - `failed`: Action could not be completed successfully
+          - `incompatible`: Action parameters are not compatible with the group or manager
+          - `omitted`: Action was not applied because this action's manager was disabled.
+    :attr datetime updated_at: The date and time that the instance group manager
+          action was modified.
+    :attr str action_type: The type of action for the instance group.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr datetime last_applied_at: (optional) The date and time the scheduled
+          action was last applied. If empty the action has never been applied.
+    :attr datetime next_run_at: (optional) The date and time the scheduled action
+          will next run. If empty the system is currently calculating the next run time.
+    :attr InstanceGroupManagerScheduledActionManagerManager manager:
+    """
+
+    def __init__(self,
+                 auto_delete: bool,
+                 auto_delete_timeout: int,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 status: str,
+                 updated_at: datetime,
+                 action_type: str,
+                 manager: 'InstanceGroupManagerScheduledActionManagerManager',
+                 *,
+                 cron_spec: str = None,
+                 last_applied_at: datetime = None,
+                 next_run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionScheduledActionManager object.
+
+        :param bool auto_delete: If set to `true`, this scheduled action will be
+               automatically deleted after it has finished and the `auto_delete_timeout`
+               time has passed.
+        :param int auto_delete_timeout: Amount of time in hours that are required
+               to pass before the scheduled action will be automatically deleted once it
+               has finished. If this value is 0, the action will be deleted on completion.
+        :param datetime created_at: The date and time that the instance group
+               manager action was created.
+        :param str href: The URL for this instance group manager action.
+        :param str id: The unique identifier for this instance group manager
+               action.
+        :param str name: The user-defined name for this instance group manager
+               action. Names must be unique within the instance group manager.
+        :param str resource_type: The resource type.
+        :param str status: The status of the instance group action
+               - `active`: Action is ready to be run
+               - `completed`: Action was completed successfully
+               - `failed`: Action could not be completed successfully
+               - `incompatible`: Action parameters are not compatible with the group or
+               manager
+               - `omitted`: Action was not applied because this action's manager was
+               disabled.
+        :param datetime updated_at: The date and time that the instance group
+               manager action was modified.
+        :param str action_type: The type of action for the instance group.
+        :param InstanceGroupManagerScheduledActionManagerManager manager:
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        :param datetime last_applied_at: (optional) The date and time the scheduled
+               action was last applied. If empty the action has never been applied.
+        :param datetime next_run_at: (optional) The date and time the scheduled
+               action will next run. If empty the system is currently calculating the next
+               run time.
+        """
+        # pylint: disable=super-init-not-called
+        self.auto_delete = auto_delete
+        self.auto_delete_timeout = auto_delete_timeout
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+        self.status = status
+        self.updated_at = updated_at
+        self.action_type = action_type
+        self.cron_spec = cron_spec
+        self.last_applied_at = last_applied_at
+        self.next_run_at = next_run_at
+        self.manager = manager
+
+    @classmethod
+    def from_dict(
+            cls,
+            _dict: Dict) -> 'InstanceGroupManagerActionScheduledActionManager':
+        """Initialize a InstanceGroupManagerActionScheduledActionManager object from a json dictionary."""
+        args = {}
+        if 'auto_delete' in _dict:
+            args['auto_delete'] = _dict.get('auto_delete')
+        else:
+            raise ValueError(
+                'Required property \'auto_delete\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'auto_delete_timeout' in _dict:
+            args['auto_delete_timeout'] = _dict.get('auto_delete_timeout')
+        else:
+            raise ValueError(
+                'Required property \'auto_delete_timeout\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError(
+                'Required property \'created_at\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError(
+                'Required property \'resource_type\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'updated_at' in _dict:
+            args['updated_at'] = string_to_datetime(_dict.get('updated_at'))
+        else:
+            raise ValueError(
+                'Required property \'updated_at\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'action_type' in _dict:
+            args['action_type'] = _dict.get('action_type')
+        else:
+            raise ValueError(
+                'Required property \'action_type\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'last_applied_at' in _dict:
+            args['last_applied_at'] = string_to_datetime(
+                _dict.get('last_applied_at'))
+        if 'next_run_at' in _dict:
+            args['next_run_at'] = string_to_datetime(_dict.get('next_run_at'))
+        if 'manager' in _dict:
+            args['manager'] = _dict.get('manager')
+        else:
+            raise ValueError(
+                'Required property \'manager\' not present in InstanceGroupManagerActionScheduledActionManager JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionScheduledActionManager object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'auto_delete') and self.auto_delete is not None:
+            _dict['auto_delete'] = self.auto_delete
+        if hasattr(
+                self,
+                'auto_delete_timeout') and self.auto_delete_timeout is not None:
+            _dict['auto_delete_timeout'] = self.auto_delete_timeout
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'updated_at') and self.updated_at is not None:
+            _dict['updated_at'] = datetime_to_string(self.updated_at)
+        if hasattr(self, 'action_type') and self.action_type is not None:
+            _dict['action_type'] = self.action_type
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self,
+                   'last_applied_at') and self.last_applied_at is not None:
+            _dict['last_applied_at'] = datetime_to_string(self.last_applied_at)
+        if hasattr(self, 'next_run_at') and self.next_run_at is not None:
+            _dict['next_run_at'] = datetime_to_string(self.next_run_at)
+        if hasattr(self, 'manager') and self.manager is not None:
+            if isinstance(self.manager, dict):
+                _dict['manager'] = self.manager
+            else:
+                _dict['manager'] = self.manager.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionScheduledActionManager object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+            self,
+            other: 'InstanceGroupManagerActionScheduledActionManager') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+            self,
+            other: 'InstanceGroupManagerActionScheduledActionManager') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE_GROUP_MANAGER_ACTION = 'instance_group_manager_action'
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the instance group action
+        - `active`: Action is ready to be run
+        - `completed`: Action was completed successfully
+        - `failed`: Action could not be completed successfully
+        - `incompatible`: Action parameters are not compatible with the group or manager
+        - `omitted`: Action was not applied because this action's manager was disabled.
+        """
+        ACTIVE = 'active'
+        COMPLETED = 'completed'
+        FAILED = 'failed'
+        INCOMPATIBLE = 'incompatible'
+        OMITTED = 'omitted'
+
+    class ActionTypeEnum(str, Enum):
+        """
+        The type of action for the instance group.
+        """
+        SCHEDULED = 'scheduled'
+
+
+class InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref(
+        InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototype):
+    """
+    InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref.
+
+    :attr int max_membership_count: (optional) The maximum number of members the
+          instance group should have at the scheduled time.
+    :attr int min_membership_count: (optional) The minimum number of members the
+          instance group should have at the scheduled time.
+    :attr str href: The URL for this instance group manager.
+    """
+
+    def __init__(self,
+                 href: str,
+                 *,
+                 max_membership_count: int = None,
+                 min_membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref object.
+
+        :param str href: The URL for this instance group manager.
+        :param int max_membership_count: (optional) The maximum number of members
+               the instance group should have at the scheduled time.
+        :param int min_membership_count: (optional) The minimum number of members
+               the instance group should have at the scheduled time.
+        """
+        # pylint: disable=super-init-not-called
+        self.max_membership_count = max_membership_count
+        self.min_membership_count = min_membership_count
+        self.href = href
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref':
+        """Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'max_membership_count' in _dict:
+            args['max_membership_count'] = _dict.get('max_membership_count')
+        if 'min_membership_count' in _dict:
+            args['min_membership_count'] = _dict.get('min_membership_count')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'max_membership_count'
+                  ) and self.max_membership_count is not None:
+            _dict['max_membership_count'] = self.max_membership_count
+        if hasattr(self, 'min_membership_count'
+                  ) and self.min_membership_count is not None:
+            _dict['min_membership_count'] = self.min_membership_count
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById(
+        InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototype):
+    """
+    InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById.
+
+    :attr int max_membership_count: (optional) The maximum number of members the
+          instance group should have at the scheduled time.
+    :attr int min_membership_count: (optional) The minimum number of members the
+          instance group should have at the scheduled time.
+    :attr str id: The unique identifier for this instance group manager.
+    """
+
+    def __init__(self,
+                 id: str,
+                 *,
+                 max_membership_count: int = None,
+                 min_membership_count: int = None) -> None:
+        """
+        Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById object.
+
+        :param str id: The unique identifier for this instance group manager.
+        :param int max_membership_count: (optional) The maximum number of members
+               the instance group should have at the scheduled time.
+        :param int min_membership_count: (optional) The minimum number of members
+               the instance group should have at the scheduled time.
+        """
+        # pylint: disable=super-init-not-called
+        self.max_membership_count = max_membership_count
+        self.min_membership_count = min_membership_count
+        self.id = id
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById':
+        """Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById object from a json dictionary."""
+        args = {}
+        if 'max_membership_count' in _dict:
+            args['max_membership_count'] = _dict.get('max_membership_count')
+        if 'min_membership_count' in _dict:
+            args['min_membership_count'] = _dict.get('min_membership_count')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'max_membership_count'
+                  ) and self.max_membership_count is not None:
+            _dict['max_membership_count'] = self.max_membership_count
+        if hasattr(self, 'min_membership_count'
+                  ) and self.min_membership_count is not None:
+            _dict['min_membership_count'] = self.min_membership_count
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN(
+        InstancePlacementTargetPrototypeDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN.
+
+    :attr str crn: The CRN for this dedicated host group.
+    """
+
+    def __init__(self, crn: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object.
+
+        :param str crn: The CRN for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref(
+        InstancePlacementTargetPrototypeDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref.
+
+    :attr str href: The URL for this dedicated host group.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object.
+
+        :param str href: The URL for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById(
+        InstancePlacementTargetPrototypeDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById.
+
+    :attr str id: The unique identifier for this dedicated host group.
+    """
+
+    def __init__(self, id: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object.
+
+        :param str id: The unique identifier for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN(
+        InstancePlacementTargetPrototypeDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN.
+
+    :attr str crn: The CRN for this dedicated host.
+    """
+
+    def __init__(self, crn: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN object.
+
+        :param str crn: The CRN for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError(
+                'Required property \'crn\' not present in InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref(
+        InstancePlacementTargetPrototypeDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref.
+
+    :attr str href: The URL for this dedicated host.
+    """
+
+    def __init__(self, href: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref object.
+
+        :param str href: The URL for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError(
+                'Required property \'href\' not present in InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById(
+        InstancePlacementTargetPrototypeDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById.
+
+    :attr str id: The unique identifier for this dedicated host.
+    """
+
+    def __init__(self, id: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById object.
+
+        :param str id: The unique identifier for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById':
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError(
+                'Required property \'id\' not present in InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById'
     ) -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
@@ -67001,25 +73546,25 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
-          key to use to wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
     :attr int iops: (optional) The bandwidth for the volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: The capacity of the volume in gigabytes. The specified
           minimum and maximum capacity values for creating or updating volumes may expand
           in the future.
+    :attr EncryptionKeyIdentity encryption_key: (optional) The identity of the root
+          key to use to wrap the data encryption key for the volume.
+          If this property is not provided, the `encryption` type for the volume will be
+          `provider_managed`.
     """
 
     def __init__(self,
                  profile: 'VolumeProfileIdentity',
                  capacity: int,
                  *,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
                  iops: int = None,
-                 name: str = None) -> None:
+                 name: str = None,
+                 encryption_key: 'EncryptionKeyIdentity' = None) -> None:
         """
         Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object.
 
@@ -67027,20 +73572,20 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         :param int capacity: The capacity of the volume in gigabytes. The specified
                minimum and maximum capacity values for creating or updating volumes may
                expand in the future.
+        :param int iops: (optional) The bandwidth for the volume.
+        :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The identity of the
                root key to use to wrap the data encryption key for the volume.
                If this property is not provided, the `encryption` type for the volume will
                be
                `provider_managed`.
-        :param int iops: (optional) The bandwidth for the volume.
-        :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
-        self.encryption_key = encryption_key
         self.iops = iops
         self.name = name
         self.profile = profile
         self.capacity = capacity
+        self.encryption_key = encryption_key
 
     @classmethod
     def from_dict(
@@ -67048,8 +73593,6 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     ) -> 'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity':
         """Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object from a json dictionary."""
         args = {}
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
         if 'iops' in _dict:
             args['iops'] = _dict.get('iops')
         if 'name' in _dict:
@@ -67066,6 +73609,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
             raise ValueError(
                 'Required property \'capacity\' not present in VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity JSON'
             )
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
         return cls(**args)
 
     @classmethod
@@ -67076,11 +73621,6 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
-            if isinstance(self.encryption_key, dict):
-                _dict['encryption_key'] = self.encryption_key
-            else:
-                _dict['encryption_key'] = self.encryption_key.to_dict()
         if hasattr(self, 'iops') and self.iops is not None:
             _dict['iops'] = self.iops
         if hasattr(self, 'name') and self.name is not None:
@@ -67092,6 +73632,11 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
                 _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'capacity') and self.capacity is not None:
             _dict['capacity'] = self.capacity
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            if isinstance(self.encryption_key, dict):
+                _dict['encryption_key'] = self.encryption_key
+            else:
+                _dict['encryption_key'] = self.encryption_key.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -67115,5 +73660,377 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         self, other:
         'VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity'
     ) -> bool:
-        """Return `true` when self and other are notequal, false otherwise."""
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr InstanceGroupManagerScheduledActionGroupPrototype group:
+    """
+
+    def __init__(self,
+                 group: 'InstanceGroupManagerScheduledActionGroupPrototype',
+                 *,
+                 name: str = None,
+                 cron_spec: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup object.
+
+        :param InstanceGroupManagerScheduledActionGroupPrototype group:
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.cron_spec = cron_spec
+        self.group = group
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup':
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'group' in _dict:
+            args[
+                'group'] = InstanceGroupManagerScheduledActionGroupPrototype.from_dict(
+                    _dict.get('group'))
+        else:
+            raise ValueError(
+                'Required property \'group\' not present in InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr str cron_spec: (optional) The cron specification for a recurring scheduled
+          action. Actions can be applied a maximum of one time within a 5 min period.
+    :attr InstanceGroupManagerScheduledActionByManagerManager manager:
+    """
+
+    def __init__(self,
+                 manager: 'InstanceGroupManagerScheduledActionByManagerManager',
+                 *,
+                 name: str = None,
+                 cron_spec: str = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager object.
+
+        :param InstanceGroupManagerScheduledActionByManagerManager manager:
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param str cron_spec: (optional) The cron specification for a recurring
+               scheduled action. Actions can be applied a maximum of one time within a 5
+               min period.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.cron_spec = cron_spec
+        self.manager = manager
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager':
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'manager' in _dict:
+            args['manager'] = _dict.get('manager')
+        else:
+            raise ValueError(
+                'Required property \'manager\' not present in InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'manager') and self.manager is not None:
+            if isinstance(self.manager, dict):
+                _dict['manager'] = self.manager
+            else:
+                _dict['manager'] = self.manager.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr datetime run_at: (optional) The date and time the scheduled action will
+          run.
+    :attr InstanceGroupManagerScheduledActionGroupPrototype group:
+    """
+
+    def __init__(self,
+                 group: 'InstanceGroupManagerScheduledActionGroupPrototype',
+                 *,
+                 name: str = None,
+                 run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup object.
+
+        :param InstanceGroupManagerScheduledActionGroupPrototype group:
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param datetime run_at: (optional) The date and time the scheduled action
+               will run.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.run_at = run_at
+        self.group = group
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup':
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'run_at' in _dict:
+            args['run_at'] = string_to_datetime(_dict.get('run_at'))
+        if 'group' in _dict:
+            args[
+                'group'] = InstanceGroupManagerScheduledActionGroupPrototype.from_dict(
+                    _dict.get('group'))
+        else:
+            raise ValueError(
+                'Required property \'group\' not present in InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'run_at') and self.run_at is not None:
+            _dict['run_at'] = datetime_to_string(self.run_at)
+        if hasattr(self, 'group') and self.group is not None:
+            _dict['group'] = self.group.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager(
+        InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt):
+    """
+    InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager.
+
+    :attr str name: (optional) The user-defined name for this instance group manager
+          action. Names must be unique within the instance group manager.
+    :attr datetime run_at: (optional) The date and time the scheduled action will
+          run.
+    :attr InstanceGroupManagerScheduledActionByManagerManager manager:
+    """
+
+    def __init__(self,
+                 manager: 'InstanceGroupManagerScheduledActionByManagerManager',
+                 *,
+                 name: str = None,
+                 run_at: datetime = None) -> None:
+        """
+        Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager object.
+
+        :param InstanceGroupManagerScheduledActionByManagerManager manager:
+        :param str name: (optional) The user-defined name for this instance group
+               manager action. Names must be unique within the instance group manager.
+        :param datetime run_at: (optional) The date and time the scheduled action
+               will run.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.run_at = run_at
+        self.manager = manager
+
+    @classmethod
+    def from_dict(
+        cls, _dict: Dict
+    ) -> 'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager':
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'run_at' in _dict:
+            args['run_at'] = string_to_datetime(_dict.get('run_at'))
+        if 'manager' in _dict:
+            args['manager'] = _dict.get('manager')
+        else:
+            raise ValueError(
+                'Required property \'manager\' not present in InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'run_at') and self.run_at is not None:
+            _dict['run_at'] = datetime_to_string(self.run_at)
+        if hasattr(self, 'manager') and self.manager is not None:
+            if isinstance(self.manager, dict):
+                _dict['manager'] = self.manager
+            else:
+                _dict['manager'] = self.manager.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager'
+    ) -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(
+        self, other:
+        'InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager'
+    ) -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
