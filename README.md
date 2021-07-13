@@ -8,7 +8,6 @@ Python client library to interact with various [IBM Cloud Virtual Private Cloud 
 
 This SDK uses [Semantic Versioning](https://semver.org), and as such there may be backward-incompatible changes for any new `0.y.z` version.
 
-**Note** As IBM continues to invest and innovate on the IBM Cloud Virtual Private Cloud (gen 2 compute) infrastructure, we're focusing on delivering maximum value in a single VPC Infrastructure platform. To support this effort, generation 1 compute infrastructure is being deprecated. The end of service date is 26 February 2021. For more information, see the [Start your migration](https://www.ibm.com/cloud/blog/announcements/start-your-vpc-gen1-to-vpc-gen2-migration) blog.
 
 ## Table of Contents
 
@@ -29,7 +28,6 @@ This SDK uses [Semantic Versioning](https://semver.org), and as such there may b
 - [Installation](#installation)
 - [Using the SDK](#using-the-sdk)
 - [Setting up VPC service](#setting-up-vpc-service)
-- [Setting up VPC on Classic service](#setting-up-vpc-on-classic-service)
 - [Questions](#questions)
 - [Issues](#issues)
 - [Open source @ IBM](#open-source--ibm)
@@ -46,7 +44,6 @@ IBM Cloud services:
 Service Name | Imported Class Name
 --- | ---
 [VPC](https://cloud.ibm.com/apidocs/vpc) | VpcV1
-[VPC Gen 1](https://cloud.ibm.com/apidocs/vpc-on-classic) | VpcClassicV1
 
 ## Prerequisites
 
@@ -126,60 +123,6 @@ print(instance['id'], "\t",  instance['name'])
 
 ```
 
-
-## Setting up VPC on Classic service
-```python
-from ibm_vpc import VpcClassicV1
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_cloud_sdk_core import ApiException
-
-authenticator = IAMAuthenticator("YOUR_IBMCLOUD_API_KEY")
-service = VpcClassicV1('2020-06-02', authenticator=authenticator)
-
-#  Listing VPCs
-print("List VPCs")
-try:
-    vpcs = service.list_vpcs().get_result()['vpcs']
-except ApiException as e:
-  print("List VPC failed with status code " + str(e.code) + ": " + e.message)
-for vpc in vpcs:
-    print(vpc['id'], "\t",  vpc['name'])
-print("\n")
-
-#  Listing Subnets
-print("List Subnets")
-try:
-    subnets = service.list_subnets().get_result()['subnets']
-except ApiException as e:
-  print("List subnets failed with status code " + str(e.code) + ": " + e.message)
-for subnet in subnets:
-    print(subnet['id'], "\t",  subnet['name'])
-
-#  Listing Instances
-print("List Instances")
-try:
-    instances = service.list_instances().get_result()['instances']
-except ApiException as e:
-  print("List instances failed with status code " + str(e.code) + ": " + e.message)
-for instance in instances:
-    print(instance['id'], "\t",  instance['name'])
-
-instanceId = instances[0]['id']
-instanceName = instances[0]['name']
-
-#  Updating Instance
-print("Updated Instance")
-try:
-    newInstanceName = instanceName + "-1"
-    instance = service.update_instance(
-        id=instanceId,
-        name=newInstanceName,
-    ).get_result()
-except ApiException as e:
-  print("Update instance failed with status code " + str(e.code) + ": " + e.message)
-print(instance['id'], "\t",  instance['name'])
-
-```
 
 ## Questions
 

@@ -19,5 +19,4 @@ from ibm_cloud_sdk_core import IAMTokenManager, DetailedResponse, BaseService, A
 
 from .common import get_sdk_headers
 from .version import __version__
-from .vpc_classic_v1 import VpcClassicV1
 from .vpc_v1 import VpcV1

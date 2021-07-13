@@ -267,13 +267,13 @@ class TestSubnet():
         store['created_subnet_reserved_ip'] = reserved_ip.get_result()['id']
 
     def test_get_subnet_reserved_ip(self, createGen2Service):
-        reserved_ip = get_subnet_reserved_ip(createGen2Service, store['created_subnet'],
-                                             store['created_subnet_reserved_ip'])
+        reserved_ip = get_subnet_reserved_ip(
+            createGen2Service, store['created_subnet'],  store['created_subnet_reserved_ip'])
         assertGetPatchResponse(reserved_ip)
 
     def test_update_subnet_reserved_ip(self, createGen2Service):
-        reserved_ip = update_subnet_reserved_ip(createGen2Service, store['created_subnet'],
-                                                store['created_subnet_reserved_ip'])
+        reserved_ip = update_subnet_reserved_ip(
+            createGen2Service, store['created_subnet'],  store['created_subnet_reserved_ip'])
         assertGetPatchResponse(reserved_ip)
 
 
@@ -293,7 +293,8 @@ class TestVPCRoutingTables():
         route = create_vpc_routing_table_route(
             createGen2Service,
             store['created_vpc'],
-            store['created_routing_table_id'])
+            store['created_routing_table_id'],
+            store['zone'])
         assertCreateResponse(route)
         store['created_route_id'] = route.get_result()['id']
 
@@ -319,7 +320,7 @@ class TestVPCRoutingTables():
 
     def test_update_vpc_routing_table(self, createGen2Service):
         routing_table = update_vpc_routing_table(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id'])
         assertGetPatchResponse(routing_table)
 
     def test_delete_vpc_routing_table_route(self, createGen2Service):
@@ -360,7 +361,7 @@ class TestEndpointGateways():
 
     def test_list_endpoint_gateway_ips(self, createGen2Service):
         ips = list_endpoint_gateway_ips(
-            createGen2Service, store['created_eg_ip_id'])
+            createGen2Service, store['created_eg_id'])
         assertListResponse(ips, 'ips')
 
     def test_get_endpoint_gateway_ip(self, createGen2Service):
@@ -384,60 +385,6 @@ class TestEndpointGateways():
         assertDeleteResponse(vpc)
 
 
-class TestDedicatedHost():
-    def test_create_dedicated_host_group(self, createGen2Service):
-        dhg = create_dedicated_host_group(createGen2Service)
-        assertCreateResponse(dhg)
-        store['created_dhg'] = dhg.get_result()['id']
-
-    def test_list_dedicated_host_profiles(self, createGen2Service):
-        igs = list_dedicated_host_profiles(createGen2Service)
-        assertListResponse(igs, 'profiles')
-
-    def test_get_dedicated_host_profile(self, createGen2Service):
-        ig = get_dedicated_host_profile(createGen2Service, 'bx2-host-152x608')
-        assertGetPatchResponse(ig)
-
-    def test_create_dedicated_host(self, createGen2Service):
-        dh = create_dedicated_host(
-            createGen2Service,  'bx2-host-152x608', store['created_dhg'])
-        assertCreateResponse(dh)
-        store['created_dh'] = dh.get_result()['id']
-
-    def test_list_dedicated_host_groups(self, createGen2Service):
-        igs = list_dedicated_host_groups(createGen2Service)
-        assertListResponse(igs, 'groups')
-
-    def test_list_dedicated_hosts(self, createGen2Service):
-        igs = list_dedicated_hosts(createGen2Service)
-        assertListResponse(igs, 'dedicated_hosts')
-
-    def test_get_dedicated_host_group(self, createGen2Service):
-        ig = get_dedicated_host_group(createGen2Service, store['created_dhg'])
-        assertGetPatchResponse(ig)
-
-    def test_get_dedicated_host(self, createGen2Service):
-        ig = get_dedicated_host(createGen2Service, store['created_dh'])
-        assertGetPatchResponse(ig)
-
-    def test_update_dedicated_host_group(self, createGen2Service):
-        ig = update_dedicated_host_group(
-            createGen2Service, store['created_dhg'])
-        assertGetPatchResponse(ig)
-
-    def test_update_dedicated_host(self, createGen2Service):
-        ig = update_dedicated_host(createGen2Service, store['created_dh'])
-        assertGetPatchResponse(ig)
-
-    def test_delete_dedicated_host_group(self, createGen2Service):
-        igm = delete_dedicated_host_group(
-            createGen2Service, store['created_dhg'])
-        assertDeleteResponse(igm)
-
-    def test_delete_dedicated_host(self, createGen2Service):
-        igm = delete_dedicated_host(
-            createGen2Service, store['created_dh'])
-        assertDeleteResponse(igm)
 class TestPublicGateways():
     def test_create_pgw(self, createGen2Service):
         pgw = create_public_gateway(
@@ -1183,7 +1130,7 @@ class TestVPCInstanceGroups():
     def test_update_instance_group_manager_policy(self, createGen2Service):
         igmp = update_instance_group_manager_policy(
             createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
-        assert igmp.status_code == 200
+        assertGetPatchResponse(igmp)
 
     def test_list_instance_group_memberships(self, createGen2Service):
         igm = list_instance_group_memberships(
@@ -1199,7 +1146,9 @@ class TestVPCInstanceGroups():
     def test_update_instance_group_membership(self, createGen2Service):
         igm = update_instance_group_membership(
             createGen2Service, store['created_ig'], store['created_mbr'])
-        assertGetPatchResponse(igm)
+        response = igm.get_result()
+        assert igm.status_code == 200
+        assert response['id'] is not None
 
     def test_delete_instance_group_membership(self, createGen2Service):
         igm = delete_instance_group_membership(
@@ -1209,6 +1158,63 @@ class TestVPCInstanceGroups():
     def test_delete_instance_group_memberships(self, createGen2Service):
         igm = delete_instance_group_memberships(
             createGen2Service, store['created_ig'])
+        assertDeleteResponse(igm)
+
+
+class TestDedicatedHost():
+    def test_create_dedicated_host_group(self, createGen2Service):
+        dhg = create_dedicated_host_group(createGen2Service)
+        assertCreateResponse(dhg)
+        store['created_dhg'] = dhg.get_result()['id']
+
+    def test_list_dedicated_host_profiles(self, createGen2Service):
+        igs = list_dedicated_host_profiles(createGen2Service)
+        assertListResponse(igs, 'profiles')
+
+    def test_get_dedicated_host_profile(self, createGen2Service):
+        ig = get_dedicated_host_profile(createGen2Service, 'bx2-host-152x608')
+        response = ig.get_result()
+        assert ig.status_code == 200
+
+    def test_create_dedicated_host(self, createGen2Service):
+        dh = create_dedicated_host(
+            createGen2Service,  'bx2-host-152x608', store['created_dhg'])
+        assertCreateResponse(dh)
+        store['created_dh'] = dh.get_result()['id']
+
+    def test_list_dedicated_host_groups(self, createGen2Service):
+        igs = list_dedicated_host_groups(createGen2Service)
+        assertListResponse(igs, 'groups')
+
+    def test_list_dedicated_hosts(self, createGen2Service):
+        igs = list_dedicated_hosts(createGen2Service)
+        assertListResponse(igs, 'dedicated_hosts')
+
+    def test_get_dedicated_host_group(self, createGen2Service):
+        ig = get_dedicated_host_group(createGen2Service, store['created_dhg'])
+        assertGetPatchResponse(ig)
+
+    def test_get_dedicated_host(self, createGen2Service):
+        ig = get_dedicated_host(createGen2Service, store['created_dh'])
+        assertGetPatchResponse(ig)
+
+    def test_update_dedicated_host_group(self, createGen2Service):
+        ig = update_dedicated_host_group(
+            createGen2Service, store['created_dhg'])
+        assertGetPatchResponse(ig)
+
+    def test_update_dedicated_host(self, createGen2Service):
+        ig = update_dedicated_host(createGen2Service, store['created_dh'])
+        assertGetPatchResponse(ig)
+
+    def test_delete_dedicated_host_group(self, createGen2Service):
+        igm = delete_dedicated_host_group(
+            createGen2Service, store['created_dhg'])
+        assertDeleteResponse(igm)
+
+    def test_delete_dedicated_host(self, createGen2Service):
+        igm = delete_dedicated_host(
+            createGen2Service, store['created_dh'])
         assertDeleteResponse(igm)
 
 
@@ -1279,6 +1285,7 @@ class TestTeardown():
         vpc = delete_vpc(createGen2Service, store['created_vpc'])
         assertDeleteResponse(vpc)
 
+
 # --------------------------------------------------------
 #  test helpers
 # --------------------------------------------------------
@@ -1299,22 +1306,22 @@ def list_floating_ips(service):
 
 def create_floating_ip(service):
 
-    # Construct a dict representation of a ResourceGroupIdentityById model
+    # ResourceGroupIdentityById model
     resource_group_identity_model = {}
     resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = store['zone']
 
-    # Construct a dict representation of a FloatingIPPrototypeFloatingIPByZone model
+    # FloatingIPPrototypeFloatingIPByZone model
     floating_ip_prototype_model = {}
     floating_ip_prototype_model['name'] = generate_name("fip")
     floating_ip_prototype_model[
         'resource_group'] = resource_group_identity_model
     floating_ip_prototype_model['zone'] = zone_identity_model
 
-    # Set up parameter values
+
     floating_ip_prototype = floating_ip_prototype_model
 
     response = service.create_floating_ip(floating_ip_prototype)
@@ -1403,20 +1410,20 @@ def list_images(service):
 
 def create_image(service):
 
-    # Construct a dict representation of a ImageFilePrototype model
+    # ImageFilePrototype model
     image_file_prototype_model = {}
     image_file_prototype_model[
         'href'] = 'cos://us-south/custom-image-vpc-bucket/customImage-0.vhd'
 
-    # Construct a dict representation of a OperatingSystemIdentityByName model
+    # OperatingSystemIdentityByName model
     operating_system_identity_model = {}
     operating_system_identity_model['name'] = 'ubuntu-16-amd64'
 
-    # Construct a dict representation of a ResourceGroupIdentityById model
+    # ResourceGroupIdentityById model
     resource_group_identity_model = {}
     resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-    # Construct a dict representation of a ImagePrototypeImageByFile model
+    # ImagePrototypeImageByFile model
     image_prototype_model = {}
     image_prototype_model['name'] = generate_name('image')
     image_prototype_model['resource_group'] = resource_group_identity_model
@@ -1424,7 +1431,7 @@ def create_image(service):
     image_prototype_model[
         'operating_system'] = operating_system_identity_model
 
-    # Set up parameter values
+
     image_prototype = image_prototype_model
 
     response = service.create_image(image_prototype)
@@ -1514,44 +1521,43 @@ def list_instances(service):
 
 def create_instance(service, vpc, profile, zone, image, subnet):
 
-    # Construct a dict representation of a SubnetIdentityById model
+    # SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
-    # Construct a dict representation of a ImageIdentityById model
+
+
+    # ImageIdentityById model
     image_identity_model = {}
     image_identity_model['id'] = image
 
-    # Construct a dict representation of a InstanceProfileIdentityByName model
+    # InstanceProfileIdentityByName model
     instance_profile_identity_model = {}
     instance_profile_identity_model['name'] = profile
 
-    # Construct a dict representation of a NetworkInterfacePrototype model
+    # NetworkInterfacePrototype model
     network_interface_prototype_model = {}
-
     network_interface_prototype_model['subnet'] = subnet_identity_model
 
-    # Construct a dict representation of a VPCIdentityById model
+    # VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
 
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
 
-    # Construct a dict representation of a InstancePrototypeInstanceByImage model
+    # InstancePrototypeInstanceByImage model
     instance_prototype_model = {}
     # instance_prototype_model['keys'] = [key_identity_model]
     instance_prototype_model['name'] = generate_name('vsi')
-
     instance_prototype_model['profile'] = instance_profile_identity_model
-
     instance_prototype_model['vpc'] = vpc_identity_model
     instance_prototype_model['image'] = image_identity_model
     instance_prototype_model[
         'primary_network_interface'] = network_interface_prototype_model
     instance_prototype_model['zone'] = zone_identity_model
 
-    # Set up parameter values
+
     instance_prototype = instance_prototype_model
 
     response = service.create_instance(instance_prototype)
@@ -1624,13 +1630,14 @@ def list_instance_network_interfaces(service, instance_id):
 # create_instance_network_interface()
 # --------------------------------------------------------
 def create_instance_network_interface(service, instance_id, subnet_id):
-    # Construct a dict representation of a SubnetIdentityById model
+    # SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet_id
 
-    # Set up parameter values
+
     subnet = subnet_identity_model
     name = generate_name('nic')
+
     response = service.create_instance_network_interface(
         instance_id,
         subnet,
@@ -1724,7 +1731,7 @@ def list_instance_volume_attachments(service, instance_id):
 
 
 def create_instance_volume_attachment(service, instance_id, vol_id):
-    # Construct a dict representation of a VolumeIdentityById model
+    # VolumeIdentityById model
     volume_identity_model = {}
     volume_identity_model['id'] = vol_id
 
@@ -1765,7 +1772,7 @@ def get_instance_volume_attachment(service, instance_id, id):
 def update_instance_volume_attachment(service, instance_id, id):
     volume_attachment_patch = {}
     volume_attachment_patch['delete_volume_on_instance_delete'] = True
-    volume_attachment_patch['name'] = generate_name('vol-attachment')
+    volume_attachment_patch['name'] = generate_name('vol-att')
     response = service.update_instance_volume_attachment(
         instance_id,
         id,
@@ -1806,7 +1813,7 @@ def list_load_balancers(service):
 
 def create_load_balancer(service, subnet):
 
-    # Construct a dict representation of a SubnetIdentityById model
+    # SubnetIdentityById model
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet
 
@@ -1876,6 +1883,7 @@ def list_load_balancer_listeners(service, load_balancer_id):
 
 
 def create_load_balancer_listener(service, load_balancer_id):
+
     port = 443
     protocol = 'http'
 
@@ -1917,7 +1925,6 @@ def update_load_balancer_listener(service, load_balancer_id, id):
         load_balancer_listener_patch,
     )
     return response
-
 # --------------------------------------------------------
 # list_load_balancer_listener_policies()
 # --------------------------------------------------------
@@ -1936,7 +1943,6 @@ def create_load_balancer_listener_policy(service, load_balancer_id, listener_id)
     action = 'forward'
     priority = 5
     name = generate_name('list-pol')
-
     response = service.create_load_balancer_listener_policy(
         load_balancer_id,
         listener_id,
@@ -2057,6 +2063,7 @@ def update_load_balancer_listener_policy_rule(service, load_balancer_id, listene
         id,
         load_balancer_listener_policy_rule_patch=load_balancer_listener_policy_rule_patch_model,
     )
+
     return response
 
 
@@ -2074,7 +2081,7 @@ def list_load_balancer_pools(service, load_balancer_id):
 
 def create_load_balancer_pool(service, load_balancer_id):
 
-    # Construct a dict representation of a LoadBalancerPoolHealthMonitorPrototype model
+    # LoadBalancerPoolHealthMonitorPrototype model
     load_balancer_pool_health_monitor_prototype_model = {}
     load_balancer_pool_health_monitor_prototype_model['delay'] = 5
     load_balancer_pool_health_monitor_prototype_model['max_retries'] = 2
@@ -2083,12 +2090,12 @@ def create_load_balancer_pool(service, load_balancer_id):
     load_balancer_pool_health_monitor_prototype_model['type'] = 'http'
     load_balancer_pool_health_monitor_prototype_model['url_path'] = '/'
 
-    # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
+    # LoadBalancerPoolMemberTargetPrototypeByAddress model
     load_balancer_pool_member_target_prototype_model = {}
     load_balancer_pool_member_target_prototype_model[
         'address'] = '192.168.3.4'
 
-    # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
+    # LoadBalancerPoolSessionPersistencePrototype model
     load_balancer_pool_session_persistence_prototype_model = {}
     load_balancer_pool_session_persistence_prototype_model[
         'type'] = 'source_ip'
@@ -2096,7 +2103,6 @@ def create_load_balancer_pool(service, load_balancer_id):
     algorithm = 'least_connections'
     health_monitor = load_balancer_pool_health_monitor_prototype_model
     protocol = 'http'
-    # members = [load_balancer_pool_member_prototype_model]
     name = generate_name('lb-pool')
     session_persistence = load_balancer_pool_session_persistence_prototype_model
 
@@ -2158,7 +2164,7 @@ def list_load_balancer_pool_members(service, load_balancer_id, pool_id):
 
 
 def create_load_balancer_pool_member(service, load_balancer_id, pool_id):
-    # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
+    # LoadBalancerPoolMemberTargetPrototypeByAddress model
     load_balancer_pool_member_target_prototype_model = {}
     load_balancer_pool_member_target_prototype_model[
         'address'] = '192.168.3.4'
@@ -2182,10 +2188,9 @@ def create_load_balancer_pool_member(service, load_balancer_id, pool_id):
 
 
 def replace_load_balancer_pool_members(service, load_balancer_id, pool_id):
-    # Construct a dict representation of a LoadBalancerPoolMemberPrototype model
+    # LoadBalancerPoolMemberPrototype model
     load_balancer_pool_member_prototype_model = {}
     load_balancer_pool_member_prototype_model['port'] = 82
-
     members = [load_balancer_pool_member_prototype_model]
 
     response = service.replace_load_balancer_pool_members(
@@ -2220,6 +2225,7 @@ def get_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
 
 
 def update_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
+
     load_balancer_pool_member_patch = {}
     load_balancer_pool_member_patch['port'] = 80
     load_balancer_pool_member_patch['weight'] = 50
@@ -2247,15 +2253,13 @@ def list_network_acls(service):
 
 
 def create_network_acl(service, source_nacl_id):
-
-    # Construct a dict representation of a NetworkACLPrototypeNetworkACLByRules model
     network_acl_prototype_model = {}
     network_acl_prototype_model['name'] = generate_name('nacl')
     network_acl_reference_model = {}
     network_acl_reference_model['id'] = source_nacl_id
     network_acl_prototype_model['source_network_acl'] = network_acl_reference_model
 
-    # Set up parameter values
+
     network_acl_prototype = network_acl_prototype_model
 
     response = service.create_network_acl(
@@ -2310,7 +2314,7 @@ def list_network_acl_rules(service, network_acl_id):
 
 
 def create_network_acl_rule(service, network_acl_id):
-    # Construct a dict representation of a NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
+    # NetworkACLRulePrototypeNetworkACLRuleProtocolICMP model
     network_acl_rule_prototype_model = {}
     network_acl_rule_prototype_model['action'] = 'allow'
     network_acl_rule_prototype_model['destination'] = '192.168.3.0/24'
@@ -2381,15 +2385,14 @@ def list_public_gateways(service):
 
 def create_public_gateway(service, vpc, zone):
 
-    # Construct a dict representation of a VPCIdentityById model
+    # VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
 
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
 
-    # Set up parameter values
     vpc = vpc_identity_model
     zone = zone_identity_model
     name = generate_name('pgw')
@@ -2448,7 +2451,6 @@ def list_keys(service):
 
 
 def create_key(service):
-
     public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcPJwUpNQr0MplO6UM5mfV4vlvY0RpD6gcXqodzZIjsoG31+hQxoJVU9yQcSjahktHFs7Fk2Mo79jUT3wVC8Pg6A3//IDFkLjVrg/mQVpIf6+GxIYEtVg6Tk4pP3YNoksrugGlpJ4LCR3HMe3fBQTQqTzObbb0cSF6xhW5UBq8vhqIkhYKd3KLGJnnrwsIGcwb5BRk68ZFYhreAomvx4jWjaBFlH98HhE4wUEVvJLRy/qR/0w3XVjTSgOlhXywaAOEkmwye7kgSglegCpHWwYNly+NxLONjqbX9rHbFHUVRShnFKh2+M6XKE3HowT/3Y1lDd2PiVQpJY0oQmebiRxB astha.jain@ibm.com'
     name = generate_name('key')
     type = 'rsa'
@@ -2507,11 +2509,10 @@ def list_security_groups(service):
 
 def create_security_group(service, vpc):
 
-    # Construct a dict representation of a VPCIdentityById model
+    # VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
 
-    # Set up parameter values
     vpc = vpc_identity_model
     name = generate_name('sg')
 
@@ -2608,10 +2609,10 @@ def list_security_group_rules(service, security_group_id):
 
 
 def create_security_group_rule(service, sg_id):
-    # Construct a dict representation of a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
+
+    # SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP model
     security_group_rule_prototype_model = {}
     security_group_rule_prototype_model['direction'] = 'inbound'
-
     security_group_id = sg_id
     security_group_rule_prototype = security_group_rule_prototype_model
 
@@ -2668,15 +2669,16 @@ def list_subnets(service):
 
 
 def create_subnet(service, vpc, zone):
-    # Construct a dict representation of a VPCIdentityById model
+
+    # VPCIdentityById model
     vpc_identity_model = {}
     vpc_identity_model['id'] = vpc
 
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
 
-    # Construct a dict representation of a SubnetPrototypeSubnetByTotalCount model
+    # SubnetPrototypeSubnetByTotalCount model
     subnet_prototype_model = {}
     subnet_prototype_model['ip_version'] = 'both'
     subnet_prototype_model['name'] = generate_name('subnet')
@@ -2737,7 +2739,7 @@ def get_subnet_network_acl(service, id):
 
 def replace_subnet_network_acl(service, id, acl):
 
-    # Construct a dict representation of a NetworkACLIdentityById model
+    # NetworkACLIdentityById model
     network_acl_identity_model = {}
     network_acl_identity_model[
         'id'] = acl
@@ -2773,7 +2775,7 @@ def get_subnet_public_gateway(service, id):
 
 def set_subnet_public_gateway(service, id, pgw):
 
-    # Construct a dict representation of a PublicGatewayIdentityById model
+    # PublicGatewayIdentityById model
     public_gateway_identity_model = {}
     public_gateway_identity_model[
         'id'] = pgw
@@ -2783,10 +2785,11 @@ def set_subnet_public_gateway(service, id, pgw):
         id, public_gateway_identity)
     return response
 
-
 # --------------------------------------------------------
 # vpc_service()
 # --------------------------------------------------------
+
+
 def list_subnet_reserved_ips(service, subnet_id):
     response = service.list_subnet_reserved_ips(subnet_id)
     return response
@@ -2835,10 +2838,11 @@ def update_subnet_reserved_ip(service, subnet_id, id):
 def delete_subnet_reserved_ip(service, subnet_id, id):
     response = service.delete_subnet_reserved_ip(subnet_id, id)
     return response
+
+
 # --------------------------------------------------------
 # list_vpcs()
 # --------------------------------------------------------
-
 
 def list_vpcs(service):
     response = service.list_vpcs()
@@ -2849,10 +2853,11 @@ def list_vpcs(service):
 
 
 def create_vpc(service):
-    # Set up parameter values
+
     address_prefix_management = 'manual'
     classic_access = False
     name = generate_name('vpc')
+    # resource_group = resource_group_identity_model
 
     response = service.create_vpc(
         address_prefix_management=address_prefix_management,
@@ -2926,7 +2931,7 @@ def list_vpc_address_prefixes(service, vpc_id):
 # --------------------------------------------------------
 
 def create_vpc_address_prefix(service, vpc_id, zone):
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
     cidr = '10.0.0.0/24'
@@ -3000,11 +3005,11 @@ def list_vpc_routes(service, vpc_id):
 # create_vpc_route()
 # --------------------------------------------------------
 def create_vpc_route(service, vpc_id, zone):
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
 
-    # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
+    # RouteNextHopPrototypeRouteNextHopIP model
     route_next_hop_prototype_model = {}
     route_next_hop_prototype_model['address'] = '10.5.0.25'
 
@@ -3074,7 +3079,6 @@ def create_ike_policy(service):
     ike_version = 1
     key_lifetime = 28800
     name = generate_name('ike')
-    # resource_group = resource_group_identity_model
 
     response = service.create_ike_policy(
         authentication_algorithm,
@@ -3145,6 +3149,7 @@ def list_ipsec_policies(service):
 
 
 def create_ipsec_policy(service):
+
     authentication_algorithm = 'md5'
     encryption_algorithm = 'triple_des'
     pfs = 'disabled'
@@ -3231,15 +3236,17 @@ def create_vpn_gateway(service, subnet):
     vpn_gateway_prototype_model['subnet'] = subnet_identity_model
     vpn_gateway_prototype_model['mode'] = 'route'
 
+
     vpn_gateway_prototype = vpn_gateway_prototype_model
 
     response = service.create_vpn_gateway(vpn_gateway_prototype)
     return response
 
-
 # --------------------------------------------------------
 # delete_vpn_gateway()
 # --------------------------------------------------------
+
+
 def delete_vpn_gateway(service, id):
     response = service.delete_vpn_gateway(id)
     return response
@@ -3436,16 +3443,15 @@ def list_volumes(service):
 
 
 def create_volume(service, zone):
-
-    # Construct a dict representation of a VolumeProfileIdentityByName model
+    # VolumeProfileIdentityByName model
     volume_profile_identity_model = {}
     volume_profile_identity_model['name'] = 'general-purpose'
 
-    # Construct a dict representation of a ZoneIdentityByName model
+    # ZoneIdentityByName model
     zone_identity_model = {}
     zone_identity_model['name'] = zone
 
-    # Construct a dict representation of a VolumePrototypeVolumeByCapacity model
+    # VolumePrototypeVolumeByCapacity model
     volume_prototype_model = {}
     volume_prototype_model['iops'] = 10000
     volume_prototype_model['name'] = 'my-volume'
@@ -3486,6 +3492,433 @@ def update_volume(service, id):
         id,
         volume_patch=volume_patch_model,
     )
+    return response
+
+# --------------------------------------------------------
+# list_flow_log_collectors()
+# --------------------------------------------------------
+
+
+def list_flow_log_collectors(service):
+    response = service.list_flow_log_collectors()
+    return response
+
+# --------------------------------------------------------
+# create_flow_log_collector()
+# --------------------------------------------------------
+
+
+def create_flow_log_collector(service, target_id):
+
+    # CloudObjectStorageBucketIdentityByName model
+    cloud_object_storage_bucket_identity_model = {}
+    cloud_object_storage_bucket_identity_model[
+        'name'] = generate_name('cos-bucket')
+
+    # FlowLogCollectorPrototypeTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
+    flow_log_collector_prototype_target_model = {}
+    flow_log_collector_prototype_target_model[
+        'id'] = target_id
+
+    storage_bucket = cloud_object_storage_bucket_identity_model
+    target = flow_log_collector_prototype_target_model
+    active = False
+    name = generate_name('flow-log')
+    # resource_group = resource_group_identity_model
+
+    response = service.create_flow_log_collector(
+        storage_bucket,
+        target,
+        active=active,
+        name=name,
+    )
+    return response
+
+# --------------------------------------------------------
+# delete_flow_log_collector()
+# --------------------------------------------------------
+
+
+def delete_flow_log_collector(service, id):
+    response = service.delete_flow_log_collector(id)
+    return response
+
+# --------------------------------------------------------
+# get_flow_log_collector()
+# --------------------------------------------------------
+
+
+def get_flow_log_collector(service, id):
+    response = service.get_flow_log_collector(id)
+    return response
+
+# --------------------------------------------------------
+# update_flow_log_collector()
+# --------------------------------------------------------
+
+
+def update_flow_log_collector(service, id):
+    flow_log_collector_patch_model = {}
+    flow_log_collector_patch_model['name'] = generate_name('flow-log')
+    response = service.update_flow_log_collector(id,
+                                                 flow_log_collector_patch=flow_log_collector_patch_model,
+                                                 )
+    return response
+
+# --------------------------------------------------------
+# list_instance_templates()
+# --------------------------------------------------------
+
+
+def list_instance_templates(service):
+    response = service.list_instance_templates()
+    return response
+
+# --------------------------------------------------------
+# create_instance_template()
+# --------------------------------------------------------
+
+
+def create_instance_template(service, vpc, profile, zone, image, subnet):
+    # SubnetIdentityById model
+    subnet_identity_model = {}
+    subnet_identity_model['id'] = subnet
+
+    # ImageIdentityById model
+    image_identity_model = {}
+    image_identity_model['id'] = image
+
+    # InstanceProfileIdentityByName model
+    instance_profile_identity_model = {}
+    instance_profile_identity_model['name'] = profile
+
+    # NetworkInterfacePrototype model
+    network_interface_prototype_model = {}
+
+    network_interface_prototype_model['subnet'] = subnet_identity_model
+
+    # VPCIdentityById model
+    vpc_identity_model = {}
+    vpc_identity_model['id'] = vpc
+
+    # ZoneIdentityByName model
+    zone_identity_model = {}
+    zone_identity_model['name'] = zone
+
+    instance_template_prototype_model = {}
+    instance_template_prototype_model['name'] = generate_name('template')
+
+    instance_template_prototype_model['profile'] = instance_profile_identity_model
+
+    instance_template_prototype_model['vpc'] = vpc_identity_model
+
+    instance_template_prototype_model['image'] = image_identity_model
+    instance_template_prototype_model[
+        'primary_network_interface'] = network_interface_prototype_model
+    instance_template_prototype_model['zone'] = zone_identity_model
+
+    instance_template_prototype = instance_template_prototype_model
+
+    # Invoke method
+    response = service.create_instance_template(instance_template_prototype)
+    return response
+
+# --------------------------------------------------------
+# delete_instance_template()
+# --------------------------------------------------------
+
+
+def delete_instance_template(service, id):
+    response = service.delete_instance_template(id)
+    return response
+
+# --------------------------------------------------------
+# get_instance_template()
+# --------------------------------------------------------
+
+
+def get_instance_template(service, id):
+    response = service.get_instance_template(id)
+    return response
+
+# --------------------------------------------------------
+# update_instance_template()
+# --------------------------------------------------------
+
+
+def update_instance_template(service, id):
+    instance_template_patch_model = {}
+    instance_template_patch_model['name'] = generate_name("template")
+    response = service.update_instance_template(
+        id,
+        instance_template_patch=instance_template_patch_model,
+    )
+    return response
+
+# --------------------------------------------------------
+# list_instance_groups()
+# --------------------------------------------------------
+
+
+def list_instance_groups(service):
+    response = service.list_instance_groups()
+    return response
+
+# --------------------------------------------------------
+# create_instance_groups()
+# --------------------------------------------------------
+
+
+def create_instance_group(service, instance_template, subnet):
+
+    # InstanceTemplateIdentityById model
+    instance_template_identity_model = {}
+    instance_template_identity_model[
+        'id'] = instance_template
+
+    # SubnetIdentityById model
+    subnet_identity_model = {}
+    subnet_identity_model['id'] = subnet
+
+
+    instance_template = instance_template_identity_model
+    subnets = [subnet_identity_model]
+    name = generate_name("instance-group")
+    membership_count = 2
+
+    # Invoke method
+    response = service.create_instance_group(
+        instance_template,
+        subnets,
+        name=name,
+        membership_count=membership_count,
+    )
+    return response
+# --------------------------------------------------------
+# delete_instance_group)
+# --------------------------------------------------------
+
+
+def delete_instance_group(service, id):
+    response = service.delete_instance_group(id)
+    return response
+
+# --------------------------------------------------------
+# get_instance_group()
+# --------------------------------------------------------
+
+
+def get_instance_group(service, id):
+    response = service.get_instance_group(id)
+    return response
+
+# --------------------------------------------------------
+# update_instance_group()
+# --------------------------------------------------------
+
+
+def update_instance_group(service, id):
+    instance_group_patch_model = {}
+    instance_group_patch_model['name'] = generate_name("instance-group")
+    response = service.update_instance_group(
+        id, instance_group_patch=instance_group_patch_model)
+    return response
+# --------------------------------------------------------
+# delete_instance_group_load_balancer()
+# --------------------------------------------------------
+
+
+def delete_instance_group_load_balancer(service, instance_group_id):
+    response = service.delete_instance_group_load_balancer(
+        instance_group_id)
+    return response
+# --------------------------------------------------------
+# list_instance_group_managers()
+# --------------------------------------------------------
+
+
+def list_instance_group_managers(service, instance_group_id):
+    response = service.list_instance_group_managers(instance_group_id)
+    return response
+# --------------------------------------------------------
+# create_instance_group_manager()
+# --------------------------------------------------------
+
+
+def create_instance_group_manager(service, id):
+    # InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype model
+    instance_group_manager_prototype_model = {}
+    instance_group_manager_prototype_model[
+        'name'] = generate_name("manager")
+    instance_group_manager_prototype_model['management_enabled'] = True
+    instance_group_manager_prototype_model['aggregation_window'] = 120
+    instance_group_manager_prototype_model['cooldown'] = 300
+    instance_group_manager_prototype_model['max_membership_count'] = 2
+    instance_group_manager_prototype_model['min_membership_count'] = 1
+    instance_group_manager_prototype_model['manager_type'] = 'autoscale'
+
+
+    instance_group_id = id
+    instance_group_manager_prototype = instance_group_manager_prototype_model
+
+    # Invoke method
+    response = service.create_instance_group_manager(
+        instance_group_id, instance_group_manager_prototype)
+    return response
+# --------------------------------------------------------
+# delete_instance_group_manager()
+# --------------------------------------------------------
+
+
+def delete_instance_group_manager(service, instance_group_id, id):
+    response = service.delete_instance_group_manager(instance_group_id,
+                                                     id)
+    return response
+# --------------------------------------------------------
+# get_instance_group_manager()
+# --------------------------------------------------------
+
+
+def get_instance_group_manager(service, instance_group_id, id):
+    response = service.get_instance_group_manager(instance_group_id,
+                                                  id)
+    return response
+# --------------------------------------------------------
+# update_instance_group_manager()
+# --------------------------------------------------------
+
+
+def update_instance_group_manager(service, instance_group_id, id):
+    instance_group_manager_patch_model = {}
+    instance_group_manager_patch_model['cooldown'] = 210
+    response = service.update_instance_group_manager(
+        instance_group_id,
+        id,
+        instance_group_manager_patch=instance_group_manager_patch_model,
+    )
+    return response
+# --------------------------------------------------------
+# list_instance_group_manager_policies()
+# --------------------------------------------------------
+
+
+def list_instance_group_manager_policies(service,
+                                         instance_group_id, instance_group_manager_id):
+
+    # Invoke method
+    response = service.list_instance_group_manager_policies(
+        instance_group_id, instance_group_manager_id)
+    return response
+# --------------------------------------------------------
+# create_instance_group_manager_policy()
+# --------------------------------------------------------
+
+
+def create_instance_group_manager_policy(service, instance_group_id,
+                                         instance_group_manager_id):
+
+    instance_group_manager_policy_prototype_model = {}
+    instance_group_manager_policy_prototype_model['name'] = generate_name(
+        "mpolicy")
+    instance_group_manager_policy_prototype_model['metric_type'] = 'cpu'
+    instance_group_manager_policy_prototype_model['metric_value'] = 38
+    instance_group_manager_policy_prototype_model['policy_type'] = 'target'
+
+
+    instance_group_manager_policy_prototype = instance_group_manager_policy_prototype_model
+
+    # Invoke method
+    response = service.create_instance_group_manager_policy(
+        instance_group_id,
+        instance_group_manager_id,
+        instance_group_manager_policy_prototype)
+    return response
+# --------------------------------------------------------
+# delete_instance_group_manager_policy()
+# --------------------------------------------------------
+
+
+def delete_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
+    response = service.delete_instance_group_manager_policy(
+        instance_group_id, instance_group_manager_id, id)
+    return response
+# --------------------------------------------------------
+# get_instance_group_manager_policy()
+# --------------------------------------------------------
+
+
+def get_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
+    # Invoke method
+    response = service.get_instance_group_manager_policy(
+        instance_group_id, instance_group_manager_id, id)
+    return response
+# --------------------------------------------------------
+# update_instance_group_manager_policy()
+# --------------------------------------------------------
+
+
+def update_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
+
+    instance_group_manager_policy_patch_model = {}
+    instance_group_manager_policy_patch_model['metric_type'] = 'cpu'
+    instance_group_manager_policy_patch_model['metric_value'] = 38
+
+    # Invoke method
+    response = service.update_instance_group_manager_policy(
+        instance_group_id,
+        instance_group_manager_id,
+        id,
+        instance_group_manager_policy_patch=instance_group_manager_policy_patch_model,
+    )
+    return response
+# --------------------------------------------------------
+# delete_instance_group_memberships()
+# --------------------------------------------------------
+
+
+def delete_instance_group_memberships(service, instance_group_id):
+    # Invoke method
+    response = service.delete_instance_group_memberships(instance_group_id)
+    return response
+# --------------------------------------------------------
+# list_instance_group_memberships()
+# --------------------------------------------------------
+
+
+def list_instance_group_memberships(service, instance_group_id):
+    response = service.list_instance_group_memberships(instance_group_id)
+    return response
+# --------------------------------------------------------
+# delete_instance_group_membership()
+# --------------------------------------------------------
+
+
+def delete_instance_group_membership(service, instance_group_id, id):
+    response = service.delete_instance_group_membership(instance_group_id,
+                                                        id)
+    return response
+# --------------------------------------------------------
+# get_instance_group_membership()
+# --------------------------------------------------------
+
+
+def get_instance_group_membership(service, instance_group_id, id):
+    response = service.get_instance_group_membership(instance_group_id,
+                                                     id)
+    return response
+# --------------------------------------------------------
+# update_instance_group_membership()
+# --------------------------------------------------------
+
+
+def update_instance_group_membership(service, instance_group_id, id):
+    instance_group_membership_patch_model = {}
+    instance_group_membership_patch_model[
+        'name'] = generate_name("member")
+    response = service.update_instance_group_membership(instance_group_id,
+                                                        id,
+                                                        instance_group_membership_patch=instance_group_membership_patch_model,
+                                                        )
     return response
 
 # --------------------------------------------------------
@@ -3690,11 +4123,11 @@ def list_vpc_routing_table_routes(service, vpc_id, routing_table_id):
 # --------------------------------------------------------
 
 
-def create_vpc_routing_table_route(service, vpc_id, routing_table_id):
+def create_vpc_routing_table_route(service, vpc_id, routing_table_id, zoneName):
     route_next_hop_prototype_model = {'address': '192.168.3.4'}
 
     zone_identity_model = {}
-    zone_identity_model['zone'] = store['zone']
+    zone_identity_model['name'] = zoneName
 
     response = service.create_vpc_routing_table_route(
         vpc_id=vpc_id,
@@ -3731,434 +4164,12 @@ def get_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
 # --------------------------------------------------------
 
 
-def update_vpc_routing_table_route(service, vpc_id, id):
+def update_vpc_routing_table_route(service, vpc_id, table_id, id):
     route_patch_model = {}
     route_patch_model['name'] = generate_name("route")
-    response = service.update_vpc_routing_table_route(vpc_id, id,
+    response = service.update_vpc_routing_table_route(vpc_id, table_id, id,
                                                       route_patch=route_patch_model)
     return response
-
-# --------------------------------------------------------
-# list_flow_log_collectors()
-# --------------------------------------------------------
-
-
-def list_flow_log_collectors(service):
-    response = service.list_flow_log_collectors()
-    return response
-
-# --------------------------------------------------------
-# create_flow_log_collector()
-# --------------------------------------------------------
-
-
-def create_flow_log_collector(service, target_id):
-
-    # Construct a dict representation of a CloudObjectStorageBucketIdentityByName model
-    cloud_object_storage_bucket_identity_model = {}
-    cloud_object_storage_bucket_identity_model[
-        'name'] = generate_name('cos-bucket')
-
-    # Construct a dict representation of a FlowLogCollectorPrototypeTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
-    flow_log_collector_prototype_target_model = {}
-    flow_log_collector_prototype_target_model[
-        'id'] = target_id
-    # Set up parameter values
-    storage_bucket = cloud_object_storage_bucket_identity_model
-    target = flow_log_collector_prototype_target_model
-    active = False
-    name = generate_name('flow-log')
-
-    response = service.create_flow_log_collector(
-        storage_bucket,
-        target,
-        active=active,
-        name=name,
-    )
-    return response
-
-# --------------------------------------------------------
-# delete_flow_log_collector()
-# --------------------------------------------------------
-
-
-def delete_flow_log_collector(service, id):
-    response = service.delete_flow_log_collector(id)
-    return response
-
-# --------------------------------------------------------
-# get_flow_log_collector()
-# --------------------------------------------------------
-
-
-def get_flow_log_collector(service, id):
-    response = service.get_flow_log_collector(id)
-    return response
-
-# --------------------------------------------------------
-# update_flow_log_collector()
-# --------------------------------------------------------
-
-
-def update_flow_log_collector(service, id):
-    flow_log_collector_patch_model = {}
-    flow_log_collector_patch_model['name'] = generate_name('flow-log')
-    response = service.update_flow_log_collector(id,
-                                                 flow_log_collector_patch=flow_log_collector_patch_model,
-                                                 )
-    return response
-
-# --------------------------------------------------------
-# list_instance_templates()
-# --------------------------------------------------------
-
-
-def list_instance_templates(service):
-    response = service.list_instance_templates()
-    return response
-
-# --------------------------------------------------------
-# create_instance_template()
-# --------------------------------------------------------
-
-
-def create_instance_template(service, vpc, profile, zone, image, subnet):
-    # Construct a dict representation of a SubnetIdentityById model
-    subnet_identity_model = {}
-    subnet_identity_model['id'] = subnet
-
-    # Construct a dict representation of a ImageIdentityById model
-    image_identity_model = {}
-    image_identity_model['id'] = image
-
-    # Construct a dict representation of a InstanceProfileIdentityByName model
-    instance_profile_identity_model = {}
-    instance_profile_identity_model['name'] = profile
-
-    # Construct a dict representation of a NetworkInterfacePrototype model
-    network_interface_prototype_model = {}
-
-    network_interface_prototype_model['subnet'] = subnet_identity_model
-
-    # Construct a dict representation of a VPCIdentityById model
-    vpc_identity_model = {}
-    vpc_identity_model['id'] = vpc
-
-    # Construct a dict representation of a ZoneIdentityByName model
-    zone_identity_model = {}
-    zone_identity_model['name'] = zone
-
-    instance_template_prototype_model = {}
-    instance_template_prototype_model['name'] = generate_name('template')
-
-    instance_template_prototype_model['profile'] = instance_profile_identity_model
-
-    instance_template_prototype_model['vpc'] = vpc_identity_model
-
-    instance_template_prototype_model['image'] = image_identity_model
-    instance_template_prototype_model[
-        'primary_network_interface'] = network_interface_prototype_model
-    instance_template_prototype_model['zone'] = zone_identity_model
-
-    instance_template_prototype = instance_template_prototype_model
-
-    # Invoke method
-    response = service.create_instance_template(instance_template_prototype)
-    return response
-
-# --------------------------------------------------------
-# delete_instance_template()
-# --------------------------------------------------------
-
-
-def delete_instance_template(service, id):
-    response = service.delete_instance_template(id)
-    return response
-
-# --------------------------------------------------------
-# get_instance_template()
-# --------------------------------------------------------
-
-
-def get_instance_template(service, id):
-    response = service.get_instance_template(id)
-    return response
-
-# --------------------------------------------------------
-# update_instance_template()
-# --------------------------------------------------------
-
-
-def update_instance_template(service, id):
-    instance_template_patch_model = {}
-    instance_template_patch_model['name'] = generate_name("template")
-    response = service.update_instance_template(
-        id,
-        instance_template_patch=instance_template_patch_model,
-    )
-    return response
-
-# --------------------------------------------------------
-# list_instance_groups()
-# --------------------------------------------------------
-
-
-def list_instance_groups(service):
-    response = service.list_instance_groups()
-    return response
-
-
-def create_instance_group(service, instance_template, subnet):
-
-    # Construct a dict representation of a InstanceTemplateIdentityById model
-    instance_template_identity_model = {}
-    instance_template_identity_model[
-        'id'] = instance_template
-
-    # Construct a dict representation of a SubnetIdentityById model
-    subnet_identity_model = {}
-    subnet_identity_model['id'] = subnet
-
-    # Set up parameter values
-    instance_template = instance_template_identity_model
-    subnets = [subnet_identity_model]
-    name = generate_name("instance-group")
-    membership_count = 2
-
-    # Invoke method
-    response = service.create_instance_group(
-        instance_template,
-        subnets,
-        name=name,
-        membership_count=membership_count,
-    )
-    return response
-# --------------------------------------------------------
-# delete_instance_group)
-# --------------------------------------------------------
-
-
-def delete_instance_group(service, id):
-    response = service.delete_instance_group(id)
-    return response
-
-# --------------------------------------------------------
-# get_instance_group()
-# --------------------------------------------------------
-
-
-def get_instance_group(service, id):
-    response = service.get_instance_group(id)
-    return response
-
-# --------------------------------------------------------
-# update_instance_group()
-# --------------------------------------------------------
-
-
-def update_instance_group(service, id):
-    instance_group_patch_model = {}
-    instance_group_patch_model['name'] = generate_name("instance-group")
-    response = service.update_instance_group(
-        id, instance_group_patch=instance_group_patch_model)
-    return response
-# --------------------------------------------------------
-# delete_instance_group_load_balancer()
-# --------------------------------------------------------
-
-
-def delete_instance_group_load_balancer(service, instance_group_id):
-    response = service.delete_instance_group_load_balancer(
-        instance_group_id)
-    return response
-# --------------------------------------------------------
-# list_instance_group_managers()
-# --------------------------------------------------------
-
-
-def list_instance_group_managers(service, instance_group_id):
-    response = service.list_instance_group_managers(instance_group_id)
-    return response
-# --------------------------------------------------------
-# create_instance_group_manager()
-# --------------------------------------------------------
-
-
-def create_instance_group_manager(service, id):
-    # Construct a dict representation of a InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype model
-    instance_group_manager_prototype_model = {}
-    instance_group_manager_prototype_model[
-        'name'] = generate_name("manager")
-    instance_group_manager_prototype_model['management_enabled'] = True
-    instance_group_manager_prototype_model['aggregation_window'] = 120
-    instance_group_manager_prototype_model['cooldown'] = 300
-    instance_group_manager_prototype_model['max_membership_count'] = 2
-    instance_group_manager_prototype_model['min_membership_count'] = 1
-    instance_group_manager_prototype_model['manager_type'] = 'autoscale'
-
-    # Set up parameter values
-    instance_group_id = id
-    instance_group_manager_prototype = instance_group_manager_prototype_model
-
-    # Invoke method
-    response = service.create_instance_group_manager(
-        instance_group_id, instance_group_manager_prototype)
-    return response
-# --------------------------------------------------------
-# delete_instance_group_manager()
-# --------------------------------------------------------
-
-
-def delete_instance_group_manager(service, instance_group_id, id):
-    response = service.delete_instance_group_manager(instance_group_id,
-                                                     id)
-    return response
-# --------------------------------------------------------
-# get_instance_group_manager()
-# --------------------------------------------------------
-
-
-def get_instance_group_manager(service, instance_group_id, id):
-    response = service.get_instance_group_manager(instance_group_id,
-                                                  id)
-    return response
-# --------------------------------------------------------
-# update_instance_group_manager()
-# --------------------------------------------------------
-
-
-def update_instance_group_manager(service, instance_group_id, id):
-    instance_group_manager_patch_model = {}
-    instance_group_manager_patch_model['cooldown'] = 210
-    response = service.update_instance_group_manager(
-        instance_group_id,
-        id,
-        instance_group_manager_patch=instance_group_manager_patch_model,
-    )
-    return response
-# --------------------------------------------------------
-# list_instance_group_manager_policies()
-# --------------------------------------------------------
-
-
-def list_instance_group_manager_policies(service,
-                                         instance_group_id, instance_group_manager_id):
-
-    # Invoke method
-    response = service.list_instance_group_manager_policies(
-        instance_group_id, instance_group_manager_id)
-    return response
-# --------------------------------------------------------
-# create_instance_group_manager_policy()
-# --------------------------------------------------------
-
-
-def create_instance_group_manager_policy(service, instance_group_id,
-                                         instance_group_manager_id):
-
-    instance_group_manager_policy_prototype_model = {}
-    instance_group_manager_policy_prototype_model['name'] = generate_name(
-        "mpolicy")
-    instance_group_manager_policy_prototype_model['metric_type'] = 'cpu'
-    instance_group_manager_policy_prototype_model['metric_value'] = 38
-    instance_group_manager_policy_prototype_model['policy_type'] = 'target'
-
-    # Set up parameter values
-    instance_group_manager_policy_prototype = instance_group_manager_policy_prototype_model
-
-    # Invoke method
-    response = service.create_instance_group_manager_policy(
-        instance_group_id,
-        instance_group_manager_id,
-        instance_group_manager_policy_prototype)
-    return response
-# --------------------------------------------------------
-# delete_instance_group_manager_policy()
-# --------------------------------------------------------
-
-
-def delete_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
-    response = service.delete_instance_group_manager_policy(
-        instance_group_id, instance_group_manager_id, id)
-    return response
-# --------------------------------------------------------
-# get_instance_group_manager_policy()
-# --------------------------------------------------------
-
-
-def get_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
-    # Invoke method
-    response = service.get_instance_group_manager_policy(
-        instance_group_id, instance_group_manager_id, id)
-    return response
-# --------------------------------------------------------
-# update_instance_group_manager_policy()
-# --------------------------------------------------------
-
-
-def update_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
-    instance_group_manager_policy_patch_model = {}
-    instance_group_manager_policy_patch_model['metric_type'] = 'cpu'
-    instance_group_manager_policy_patch_model['metric_value'] = 38
-
-    # Invoke method
-    response = service.update_instance_group_manager_policy(
-        instance_group_id,
-        instance_group_manager_id,
-        id,
-        instance_group_manager_policy_patch=instance_group_manager_policy_patch_model,
-    )
-    return response
-# --------------------------------------------------------
-# delete_instance_group_memberships()
-# --------------------------------------------------------
-
-
-def delete_instance_group_memberships(service, instance_group_id):
-    # Invoke method
-    response = service.delete_instance_group_memberships(instance_group_id)
-    return response
-# --------------------------------------------------------
-# list_instance_group_memberships()
-# --------------------------------------------------------
-
-
-def list_instance_group_memberships(service, instance_group_id):
-    response = service.list_instance_group_memberships(instance_group_id)
-    return response
-# --------------------------------------------------------
-# delete_instance_group_membership()
-# --------------------------------------------------------
-
-
-def delete_instance_group_membership(service, instance_group_id, id):
-    response = service.delete_instance_group_membership(instance_group_id,
-                                                        id)
-    return response
-# --------------------------------------------------------
-# get_instance_group_membership()
-# --------------------------------------------------------
-
-
-def get_instance_group_membership(service, instance_group_id, id):
-    response = service.get_instance_group_membership(instance_group_id,
-                                                     id)
-    return response
-# --------------------------------------------------------
-# update_instance_group_membership()
-# --------------------------------------------------------
-
-
-def update_instance_group_membership(service, instance_group_id, id):
-    instance_group_membership_patch_model = {}
-    instance_group_membership_patch_model[
-        'name'] = generate_name("member")
-    response = service.update_instance_group_membership(instance_group_id,
-                                                        id,
-                                                        instance_group_membership_patch=instance_group_membership_patch_model,
-                                                        )
-    return response
-
 
 # --------------------------------------------------------
 # dedicated host
@@ -4218,12 +4229,12 @@ def create_dedicated_host(service, profileName, groupId):
     dedicated_host_profile_identity_model = {}
     dedicated_host_profile_identity_model['name'] = profileName
 
-    # Construct a dict representation of a DedicatedHostGroupIdentityById model
+    # DedicatedHostGroupIdentityById model
     dedicated_host_group_identity_model = {
         'id': groupId
     }
 
-    # Construct a dict representation of a DedicatedHostPrototypeDedicatedHostByGroup model
+    # DedicatedHostPrototypeDedicatedHostByGroup model
     dedicated_host_prototype_model = {
         'name': 'my-host',
         'profile': dedicated_host_profile_identity_model,

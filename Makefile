@@ -1,7 +1,3 @@
-# This makefile is used to make it easier to get the project set up
-# to be ready for development work in the local sandbox.
-# example: "make setup"
-
 setup: deps dev_deps install
 
 deps:
@@ -16,8 +12,5 @@ install:
 unit-test:
 	pytest -v test/unit
 
-test-int-gen1:
-	pytest -v test/integration/test_gen1.py --capture=tee-sys
-
-test-int-gen2:
-	pytest -v test/integration/test_gen2.py --capture=tee-sys
+test-int:
+	pytest -v test/integration --capture=tee-sys
