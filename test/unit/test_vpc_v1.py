@@ -4016,7 +4016,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4060,7 +4060,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4083,7 +4083,7 @@ class TestListImages():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=20"}, "images": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/images?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4121,7 +4121,7 @@ class TestCreateImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -4177,7 +4177,7 @@ class TestCreateImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -4308,7 +4308,7 @@ class TestGetImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4336,7 +4336,7 @@ class TestGetImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4378,7 +4378,7 @@ class TestUpdateImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -4415,7 +4415,7 @@ class TestUpdateImage():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/images/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "encryption": "user_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "file": {"checksums": {"sha256": "e992a84f113d3a35d2145ca3e7aca4fc95fe6daf470a08d8af3422ee59c92e15"}, "size": 1}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "minimum_provisioned_size": 24, "name": "my-image", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "visibility": "private"}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -4639,7 +4639,7 @@ class TestListKeys():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/keys')
-        mock_response = '{"keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}]}'
+        mock_response = '{"first": {"href": "href"}, "keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/keys?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4647,10 +4647,14 @@ class TestListKeys():
                       status=200)
 
         # Set up parameter values
+        start = 'testString'
+        limit = 1
         resource_group_id = 'testString'
 
         # Invoke method
         response = _service.list_keys(
+            start=start,
+            limit=limit,
             resource_group_id=resource_group_id,
             headers={}
         )
@@ -4661,6 +4665,8 @@ class TestListKeys():
         # Validate query params
         query_string = responses.calls[0].request.url.split('?',1)[1]
         query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
         assert 'resource_group.id={}'.format(resource_group_id) in query_string
 
 
@@ -4671,7 +4677,7 @@ class TestListKeys():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/keys')
-        mock_response = '{"keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}]}'
+        mock_response = '{"first": {"href": "href"}, "keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/keys?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -4694,7 +4700,7 @@ class TestListKeys():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/keys')
-        mock_response = '{"keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}]}'
+        mock_response = '{"first": {"href": "href"}, "keys": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803", "fingerprint": "SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY", "href": "https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803", "id": "a6b1a881-2ce8-41a3-80fc-36316a73f803", "length": 2048, "name": "my-key", "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "type": "rsa"}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/keys?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5722,7 +5728,7 @@ class TestListInstances():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5737,6 +5743,9 @@ class TestListInstances():
         vpc_id = 'testString'
         vpc_crn = 'testString'
         vpc_name = 'testString'
+        dedicated_host_id = 'testString'
+        dedicated_host_crn = 'testString'
+        dedicated_host_name = 'testString'
 
         # Invoke method
         response = _service.list_instances(
@@ -5747,6 +5756,9 @@ class TestListInstances():
             vpc_id=vpc_id,
             vpc_crn=vpc_crn,
             vpc_name=vpc_name,
+            dedicated_host_id=dedicated_host_id,
+            dedicated_host_crn=dedicated_host_crn,
+            dedicated_host_name=dedicated_host_name,
             headers={}
         )
 
@@ -5763,6 +5775,9 @@ class TestListInstances():
         assert 'vpc.id={}'.format(vpc_id) in query_string
         assert 'vpc.crn={}'.format(vpc_crn) in query_string
         assert 'vpc.name={}'.format(vpc_name) in query_string
+        assert 'dedicated_host.id={}'.format(dedicated_host_id) in query_string
+        assert 'dedicated_host.crn={}'.format(dedicated_host_crn) in query_string
+        assert 'dedicated_host.name={}'.format(dedicated_host_name) in query_string
 
 
     @responses.activate
@@ -5772,7 +5787,7 @@ class TestListInstances():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5795,7 +5810,7 @@ class TestListInstances():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?limit=20"}, "instances": [{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -5833,7 +5848,7 @@ class TestCreateInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -5960,7 +5975,7 @@ class TestCreateInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -6162,7 +6177,7 @@ class TestGetInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances/testString')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -6190,7 +6205,7 @@ class TestGetInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances/testString')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -6232,7 +6247,7 @@ class TestUpdateInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances/testString')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -6274,7 +6289,7 @@ class TestUpdateInstance():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/instances/testString')
-        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"bandwidth": 1000, "boot_volume_attachment": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "disks": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "interface_type": "virtio_blk", "name": "my-instance-disk", "resource_type": "instance_disk", "size": 100}], "gpu": {"count": 1, "manufacturer": "nvidia", "memory": 1, "model": "Tesla V100"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "memory": 8, "name": "my-instance", "network_interfaces": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}], "placement_target": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "id": "bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0", "name": "my-host-group", "resource_type": "dedicated_host_group"}, "primary_network_interface": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e", "id": "10c02d81-0ecb-4dc5-897d-28392913b81e", "name": "my-network-interface", "primary_ipv4_address": "192.168.3.4", "resource_type": "network_interface", "subnet": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16", "name": "bc1-4x16"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "startable": false, "status": "deleting", "status_reasons": [{"code": "cannot_start_storage", "message": "The virtual server instance is unusable because the encryption key for the boot volume\nhas been deleted", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "vcpu": {"architecture": "amd64", "count": 4}, "volume_attachments": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "name": "my-volume-attachment", "volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -7583,13 +7598,13 @@ class TestCreateInstanceVolumeAttachment():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a VolumeIdentityById model
-        volume_identity_model = {}
-        volume_identity_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        # Construct a dict representation of a VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById model
+        volume_attachment_prototype_volume_model = {}
+        volume_attachment_prototype_volume_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
 
         # Set up parameter values
         instance_id = 'testString'
-        volume = volume_identity_model
+        volume = volume_attachment_prototype_volume_model
         delete_volume_on_instance_delete = True
         name = 'my-volume-attachment'
 
@@ -7607,7 +7622,7 @@ class TestCreateInstanceVolumeAttachment():
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['volume'] == volume_identity_model
+        assert req_body['volume'] == volume_attachment_prototype_volume_model
         assert req_body['delete_volume_on_instance_delete'] == True
         assert req_body['name'] == 'my-volume-attachment'
 
@@ -7626,13 +7641,13 @@ class TestCreateInstanceVolumeAttachment():
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a VolumeIdentityById model
-        volume_identity_model = {}
-        volume_identity_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        # Construct a dict representation of a VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById model
+        volume_attachment_prototype_volume_model = {}
+        volume_attachment_prototype_volume_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
 
         # Set up parameter values
         instance_id = 'testString'
-        volume = volume_identity_model
+        volume = volume_attachment_prototype_volume_model
         delete_volume_on_instance_delete = True
         name = 'my-volume-attachment'
 
@@ -9049,7 +9064,7 @@ class TestCreateInstanceGroupManagerAction():
         # Construct a dict representation of a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup model
         instance_group_manager_action_prototype_model = {}
         instance_group_manager_action_prototype_model['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_prototype_model['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_prototype_model['run_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_action_prototype_model['group'] = instance_group_manager_scheduled_action_group_prototype_model
 
         # Set up parameter values
@@ -9094,7 +9109,7 @@ class TestCreateInstanceGroupManagerAction():
         # Construct a dict representation of a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup model
         instance_group_manager_action_prototype_model = {}
         instance_group_manager_action_prototype_model['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_prototype_model['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_prototype_model['run_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_action_prototype_model['group'] = instance_group_manager_scheduled_action_group_prototype_model
 
         # Set up parameter values
@@ -9293,22 +9308,22 @@ class TestUpdateInstanceGroupManagerAction():
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a InstanceGroupManagerScheduledActionGroupPatch model
-        instance_group_manager_scheduled_action_group_patch_model = {}
-        instance_group_manager_scheduled_action_group_patch_model['membership_count'] = 10
+        # Construct a dict representation of a InstanceGroupManagerActionGroupPatch model
+        instance_group_manager_action_group_patch_model = {}
+        instance_group_manager_action_group_patch_model['membership_count'] = 10
 
-        # Construct a dict representation of a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch model
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model = {}
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['min_membership_count'] = 10
+        # Construct a dict representation of a InstanceGroupManagerActionManagerPatch model
+        instance_group_manager_action_manager_patch_model = {}
+        instance_group_manager_action_manager_patch_model['max_membership_count'] = 10
+        instance_group_manager_action_manager_patch_model['min_membership_count'] = 10
 
-        # Construct a dict representation of a InstanceGroupManagerActionPatchScheduledActionPatch model
+        # Construct a dict representation of a InstanceGroupManagerActionPatch model
         instance_group_manager_action_patch_model = {}
-        instance_group_manager_action_patch_model['name'] = 'my-instance-group-manager-action'
         instance_group_manager_action_patch_model['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_patch_model['group'] = instance_group_manager_scheduled_action_group_patch_model
-        instance_group_manager_action_patch_model['manager'] = instance_group_manager_scheduled_action_by_manager_patch_manager_model
-        instance_group_manager_action_patch_model['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_patch_model['group'] = instance_group_manager_action_group_patch_model
+        instance_group_manager_action_patch_model['manager'] = instance_group_manager_action_manager_patch_model
+        instance_group_manager_action_patch_model['name'] = 'my-instance-group-manager-action'
+        instance_group_manager_action_patch_model['run_at'] = "2019-01-01T12:00:00Z"
 
         # Set up parameter values
         instance_group_id = 'testString'
@@ -9347,22 +9362,22 @@ class TestUpdateInstanceGroupManagerAction():
                       content_type='application/json',
                       status=200)
 
-        # Construct a dict representation of a InstanceGroupManagerScheduledActionGroupPatch model
-        instance_group_manager_scheduled_action_group_patch_model = {}
-        instance_group_manager_scheduled_action_group_patch_model['membership_count'] = 10
+        # Construct a dict representation of a InstanceGroupManagerActionGroupPatch model
+        instance_group_manager_action_group_patch_model = {}
+        instance_group_manager_action_group_patch_model['membership_count'] = 10
 
-        # Construct a dict representation of a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch model
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model = {}
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['min_membership_count'] = 10
+        # Construct a dict representation of a InstanceGroupManagerActionManagerPatch model
+        instance_group_manager_action_manager_patch_model = {}
+        instance_group_manager_action_manager_patch_model['max_membership_count'] = 10
+        instance_group_manager_action_manager_patch_model['min_membership_count'] = 10
 
-        # Construct a dict representation of a InstanceGroupManagerActionPatchScheduledActionPatch model
+        # Construct a dict representation of a InstanceGroupManagerActionPatch model
         instance_group_manager_action_patch_model = {}
-        instance_group_manager_action_patch_model['name'] = 'my-instance-group-manager-action'
         instance_group_manager_action_patch_model['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_patch_model['group'] = instance_group_manager_scheduled_action_group_patch_model
-        instance_group_manager_action_patch_model['manager'] = instance_group_manager_scheduled_action_by_manager_patch_manager_model
-        instance_group_manager_action_patch_model['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_patch_model['group'] = instance_group_manager_action_group_patch_model
+        instance_group_manager_action_patch_model['manager'] = instance_group_manager_action_manager_patch_model
+        instance_group_manager_action_patch_model['name'] = 'my-instance-group-manager-action'
+        instance_group_manager_action_patch_model['run_at'] = "2019-01-01T12:00:00Z"
 
         # Set up parameter values
         instance_group_id = 'testString'
@@ -11719,7 +11734,7 @@ class TestListVolumes():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11760,7 +11775,7 @@ class TestListVolumes():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11783,7 +11798,7 @@ class TestListVolumes():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volumes?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "volumes": [{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -11821,7 +11836,7 @@ class TestCreateVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -11878,7 +11893,7 @@ class TestCreateVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -12010,7 +12025,7 @@ class TestGetVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes/testString')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12038,7 +12053,7 @@ class TestGetVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes/testString')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -12080,7 +12095,7 @@ class TestUpdateVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes/testString')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -12117,7 +12132,7 @@ class TestUpdateVolume():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/volumes/testString')
-        mock_response = '{"capacity": 100, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"active": true, "busy": true, "capacity": 1000, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "iops": 10000, "name": "my-volume", "operating_system": {"href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64"}, "profile": {"href": "https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose", "name": "general-purpose"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_snapshot": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "name": "my-snapshot", "resource_type": "snapshot"}, "status": "available", "status_reasons": [{"code": "encryption_key_deleted", "message": "message", "more_info": "https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys"}], "volume_attachments": [{"delete_volume_on_instance_delete": true, "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "device": {"id": "80b3e36e-41f4-40e9-bd56-beae81792a68"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a", "id": "82cbf856-9cbb-45fb-b62f-d7bcef32399a", "instance": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance"}, "name": "my-volume-attachment", "type": "boot"}], "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -12147,6 +12162,517 @@ class TestUpdateVolume():
 # endregion
 ##############################################################################
 # End of Service: Volumes
+##############################################################################
+
+##############################################################################
+# Start of Service: Snapshots
+##############################################################################
+# region
+
+class TestDeleteSnapshots():
+    """
+    Test Class for delete_snapshots
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_delete_snapshots_all_params(self):
+        """
+        delete_snapshots()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        responses.add(responses.DELETE,
+                      url,
+                      status=204)
+
+        # Set up parameter values
+        source_volume_id = 'testString'
+
+        # Invoke method
+        response = _service.delete_snapshots(
+            source_volume_id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 204
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'source_volume.id={}'.format(source_volume_id) in query_string
+
+
+    @responses.activate
+    def test_delete_snapshots_value_error(self):
+        """
+        test_delete_snapshots_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        responses.add(responses.DELETE,
+                      url,
+                      status=204)
+
+        # Set up parameter values
+        source_volume_id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "source_volume_id": source_volume_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_snapshots(**req_copy)
+
+
+
+class TestListSnapshots():
+    """
+    Test Class for list_snapshots
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_list_snapshots_all_params(self):
+        """
+        list_snapshots()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        start = 'testString'
+        limit = 1
+        resource_group_id = 'testString'
+        name = 'testString'
+        source_volume_id = 'testString'
+        source_volume_crn = 'testString'
+        source_image_id = 'testString'
+        source_image_crn = 'testString'
+        sort = 'name'
+
+        # Invoke method
+        response = _service.list_snapshots(
+            start=start,
+            limit=limit,
+            resource_group_id=resource_group_id,
+            name=name,
+            source_volume_id=source_volume_id,
+            source_volume_crn=source_volume_crn,
+            source_image_id=source_image_id,
+            source_image_crn=source_image_crn,
+            sort=sort,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+        assert 'resource_group.id={}'.format(resource_group_id) in query_string
+        assert 'name={}'.format(name) in query_string
+        assert 'source_volume.id={}'.format(source_volume_id) in query_string
+        assert 'source_volume.crn={}'.format(source_volume_crn) in query_string
+        assert 'source_image.id={}'.format(source_image_id) in query_string
+        assert 'source_image.crn={}'.format(source_image_crn) in query_string
+        assert 'sort={}'.format(sort) in query_string
+
+
+    @responses.activate
+    def test_list_snapshots_required_params(self):
+        """
+        test_list_snapshots_required_params()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Invoke method
+        response = _service.list_snapshots()
+
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+
+    @responses.activate
+    def test_list_snapshots_value_error(self):
+        """
+        test_list_snapshots_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_snapshots(**req_copy)
+
+
+
+class TestCreateSnapshot():
+    """
+    Test Class for create_snapshot
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_create_snapshot_all_params(self):
+        """
+        create_snapshot()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a VolumeIdentityById model
+        volume_identity_model = {}
+        volume_identity_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        # Construct a dict representation of a ResourceGroupIdentityById model
+        resource_group_identity_model = {}
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        # Set up parameter values
+        source_volume = volume_identity_model
+        name = 'my-snapshot'
+        resource_group = resource_group_identity_model
+
+        # Invoke method
+        response = _service.create_snapshot(
+            source_volume,
+            name=name,
+            resource_group=resource_group,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['source_volume'] == volume_identity_model
+        assert req_body['name'] == 'my-snapshot'
+        assert req_body['resource_group'] == resource_group_identity_model
+
+
+    @responses.activate
+    def test_create_snapshot_value_error(self):
+        """
+        test_create_snapshot_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a VolumeIdentityById model
+        volume_identity_model = {}
+        volume_identity_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        # Construct a dict representation of a ResourceGroupIdentityById model
+        resource_group_identity_model = {}
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        # Set up parameter values
+        source_volume = volume_identity_model
+        name = 'my-snapshot'
+        resource_group = resource_group_identity_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "source_volume": source_volume,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_snapshot(**req_copy)
+
+
+
+class TestDeleteSnapshot():
+    """
+    Test Class for delete_snapshot
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_delete_snapshot_all_params(self):
+        """
+        delete_snapshot()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=204)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_snapshot(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 204
+
+
+    @responses.activate
+    def test_delete_snapshot_value_error(self):
+        """
+        test_delete_snapshot_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=204)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_snapshot(**req_copy)
+
+
+
+class TestGetSnapshot():
+    """
+    Test Class for get_snapshot
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_get_snapshot_all_params(self):
+        """
+        get_snapshot()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_snapshot(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+
+    @responses.activate
+    def test_get_snapshot_value_error(self):
+        """
+        test_get_snapshot_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_snapshot(**req_copy)
+
+
+
+class TestUpdateSnapshot():
+    """
+    Test Class for update_snapshot
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_update_snapshot_all_params(self):
+        """
+        update_snapshot()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a SnapshotPatch model
+        snapshot_patch_model = {}
+        snapshot_patch_model['name'] = 'my-snapshot'
+
+        # Set up parameter values
+        id = 'testString'
+        snapshot_patch = snapshot_patch_model
+
+        # Invoke method
+        response = _service.update_snapshot(
+            id,
+            snapshot_patch,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == snapshot_patch
+
+
+    @responses.activate
+    def test_update_snapshot_value_error(self):
+        """
+        test_update_snapshot_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/snapshots/testString')
+        mock_response = '{"bootable": true, "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a SnapshotPatch model
+        snapshot_patch_model = {}
+        snapshot_patch_model['name'] = 'my-snapshot'
+
+        # Set up parameter values
+        id = 'testString'
+        snapshot_patch = snapshot_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+            "snapshot_patch": snapshot_patch,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_snapshot(**req_copy)
+
+
+
+# endregion
+##############################################################################
+# End of Service: Snapshots
 ##############################################################################
 
 ##############################################################################
@@ -18514,7 +19040,42 @@ class TestListLoadBalancers():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers')
-        mock_response = '{"load_balancers": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "hostname": "my-load-balancer-123456-us-south-1.lb.bluemix.net", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "id": "dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "is_public": true, "listeners": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "logging": {"datapath": {"active": true}}, "name": "my-load-balancer", "operating_status": "offline", "pools": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "name": "my-load-balancer-pool"}], "private_ips": [{"address": "192.168.3.4"}], "profile": {"family": "network", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancer/profiles/network-fixed", "name": "network-fixed"}, "provisioning_status": "active", "public_ips": [{"address": "192.168.3.4"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "security_groups_supported": false, "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}]}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?limit=20"}, "limit": 20, "load_balancers": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "hostname": "my-load-balancer-123456-us-south-1.lb.bluemix.net", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "id": "dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "is_public": true, "listeners": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "logging": {"datapath": {"active": true}}, "name": "my-load-balancer", "operating_status": "offline", "pools": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "name": "my-load-balancer-pool"}], "private_ips": [{"address": "192.168.3.4"}], "profile": {"family": "network", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancer/profiles/network-fixed", "name": "network-fixed"}, "provisioning_status": "active", "public_ips": [{"address": "192.168.3.4"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "security_groups_supported": false, "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}]}], "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?start=9d5a91a3e2cbd233b5a5b33436855ed&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        start = 'testString'
+        limit = 1
+
+        # Invoke method
+        response = _service.list_load_balancers(
+            start=start,
+            limit=limit,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+
+
+    @responses.activate
+    def test_list_load_balancers_required_params(self):
+        """
+        test_list_load_balancers_required_params()
+        """
+        # Set up mock
+        url = self.preprocess_url(_base_url + '/load_balancers')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?limit=20"}, "limit": 20, "load_balancers": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "hostname": "my-load-balancer-123456-us-south-1.lb.bluemix.net", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "id": "dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "is_public": true, "listeners": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "logging": {"datapath": {"active": true}}, "name": "my-load-balancer", "operating_status": "offline", "pools": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "name": "my-load-balancer-pool"}], "private_ips": [{"address": "192.168.3.4"}], "profile": {"family": "network", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancer/profiles/network-fixed", "name": "network-fixed"}, "provisioning_status": "active", "public_ips": [{"address": "192.168.3.4"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "security_groups_supported": false, "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}]}], "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?start=9d5a91a3e2cbd233b5a5b33436855ed&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -18537,7 +19098,7 @@ class TestListLoadBalancers():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers')
-        mock_response = '{"load_balancers": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "hostname": "my-load-balancer-123456-us-south-1.lb.bluemix.net", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "id": "dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "is_public": true, "listeners": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "logging": {"datapath": {"active": true}}, "name": "my-load-balancer", "operating_status": "offline", "pools": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "name": "my-load-balancer-pool"}], "private_ips": [{"address": "192.168.3.4"}], "profile": {"family": "network", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancer/profiles/network-fixed", "name": "network-fixed"}, "provisioning_status": "active", "public_ips": [{"address": "192.168.3.4"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "security_groups_supported": false, "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}]}]}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?limit=20"}, "limit": 20, "load_balancers": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "hostname": "my-load-balancer-123456-us-south-1.lb.bluemix.net", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "id": "dd754295-e9e0-4c9d-bf6c-58fbc59e5727", "is_public": true, "listeners": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "logging": {"datapath": {"active": true}}, "name": "my-load-balancer", "operating_status": "offline", "pools": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "name": "my-load-balancer-pool"}], "private_ips": [{"address": "192.168.3.4"}], "profile": {"family": "network", "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancer/profiles/network-fixed", "name": "network-fixed"}, "provisioning_status": "active", "public_ips": [{"address": "192.168.3.4"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "security_groups_supported": false, "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet"}]}], "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers?start=9d5a91a3e2cbd233b5a5b33436855ed&limit=20"}, "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -18627,6 +19188,7 @@ class TestCreateLoadBalancer():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
         load_balancer_pool_session_persistence_prototype_model = {}
+        load_balancer_pool_session_persistence_prototype_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
         # Construct a dict representation of a LoadBalancerPoolPrototype model
@@ -18751,6 +19313,7 @@ class TestCreateLoadBalancer():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
         load_balancer_pool_session_persistence_prototype_model = {}
+        load_balancer_pool_session_persistence_prototype_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
         # Construct a dict representation of a LoadBalancerPoolPrototype model
@@ -20496,7 +21059,7 @@ class TestListLoadBalancerPools():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools')
-        mock_response = '{"pools": [{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}]}'
+        mock_response = '{"pools": [{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -20524,7 +21087,7 @@ class TestListLoadBalancerPools():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools')
-        mock_response = '{"pools": [{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}]}'
+        mock_response = '{"pools": [{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -20566,7 +21129,7 @@ class TestCreateLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -20594,6 +21157,7 @@ class TestCreateLoadBalancerPool():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
         load_balancer_pool_session_persistence_prototype_model = {}
+        load_balancer_pool_session_persistence_prototype_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
         # Set up parameter values
@@ -20640,7 +21204,7 @@ class TestCreateLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -20668,6 +21232,7 @@ class TestCreateLoadBalancerPool():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
         load_balancer_pool_session_persistence_prototype_model = {}
+        load_balancer_pool_session_persistence_prototype_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
         # Set up parameter values
@@ -20783,7 +21348,7 @@ class TestGetLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools/testString')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -20813,7 +21378,7 @@ class TestGetLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools/testString')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -20857,7 +21422,7 @@ class TestUpdateLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools/testString')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -20875,6 +21440,7 @@ class TestUpdateLoadBalancerPool():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePatch model
         load_balancer_pool_session_persistence_patch_model = {}
+        load_balancer_pool_session_persistence_patch_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
 
         # Construct a dict representation of a LoadBalancerPoolPatch model
@@ -20914,7 +21480,7 @@ class TestUpdateLoadBalancerPool():
         """
         # Set up mock
         url = self.preprocess_url(_base_url + '/load_balancers/testString/pools/testString')
-        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"type": "source_ip"}}'
+        mock_response = '{"algorithm": "least_connections", "created_at": "2019-01-01T12:00:00.000Z", "health_monitor": {"delay": 5, "max_retries": 2, "port": 22, "timeout": 2, "type": "http", "url_path": "/"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004", "instance_group": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a", "id": "1e09281b-f177-46fb-baf1-bc152b2e391a", "name": "my-instance-group"}, "members": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004", "id": "70294e14-4e61-11e8-bcf4-0242ac110004"}], "name": "my-load-balancer-pool", "protocol": "http", "provisioning_status": "active", "proxy_protocol": "disabled", "session_persistence": {"cookie_name": "my-cookie-name", "type": "source_ip"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -20932,6 +21498,7 @@ class TestUpdateLoadBalancerPool():
 
         # Construct a dict representation of a LoadBalancerPoolSessionPersistencePatch model
         load_balancer_pool_session_persistence_patch_model = {}
+        load_balancer_pool_session_persistence_patch_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
 
         # Construct a dict representation of a LoadBalancerPoolPatch model
@@ -22742,7 +23309,7 @@ class TestUpdateFlowLogCollector():
 # Start of Model Tests
 ##############################################################################
 # region
-class TestAddressPrefix():
+class TestModel_AddressPrefix():
     """
     Test Class for AddressPrefix
     """
@@ -22761,7 +23328,7 @@ class TestAddressPrefix():
         # Construct a json representation of a AddressPrefix model
         address_prefix_model_json = {}
         address_prefix_model_json['cidr'] = '192.168.3.0/24'
-        address_prefix_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        address_prefix_model_json['created_at'] = "2019-01-01T12:00:00Z"
         address_prefix_model_json['has_subnets'] = True
         address_prefix_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/address_prefixes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         address_prefix_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -22784,7 +23351,7 @@ class TestAddressPrefix():
         address_prefix_model_json2 = address_prefix_model.to_dict()
         assert address_prefix_model_json2 == address_prefix_model_json
 
-class TestAddressPrefixCollection():
+class TestModel_AddressPrefixCollection():
     """
     Test Class for AddressPrefixCollection
     """
@@ -22802,7 +23369,7 @@ class TestAddressPrefixCollection():
 
         address_prefix_model = {} # AddressPrefix
         address_prefix_model['cidr'] = '192.168.3.0/24'
-        address_prefix_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        address_prefix_model['created_at'] = "2019-01-01T12:00:00Z"
         address_prefix_model['has_subnets'] = True
         address_prefix_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/address_prefixes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         address_prefix_model['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -22839,7 +23406,7 @@ class TestAddressPrefixCollection():
         address_prefix_collection_model_json2 = address_prefix_collection_model.to_dict()
         assert address_prefix_collection_model_json2 == address_prefix_collection_model_json
 
-class TestAddressPrefixCollectionFirst():
+class TestModel_AddressPrefixCollectionFirst():
     """
     Test Class for AddressPrefixCollectionFirst
     """
@@ -22868,7 +23435,7 @@ class TestAddressPrefixCollectionFirst():
         address_prefix_collection_first_model_json2 = address_prefix_collection_first_model.to_dict()
         assert address_prefix_collection_first_model_json2 == address_prefix_collection_first_model_json
 
-class TestAddressPrefixCollectionNext():
+class TestModel_AddressPrefixCollectionNext():
     """
     Test Class for AddressPrefixCollectionNext
     """
@@ -22897,7 +23464,7 @@ class TestAddressPrefixCollectionNext():
         address_prefix_collection_next_model_json2 = address_prefix_collection_next_model.to_dict()
         assert address_prefix_collection_next_model_json2 == address_prefix_collection_next_model_json
 
-class TestAddressPrefixPatch():
+class TestModel_AddressPrefixPatch():
     """
     Test Class for AddressPrefixPatch
     """
@@ -22927,7 +23494,7 @@ class TestAddressPrefixPatch():
         address_prefix_patch_model_json2 = address_prefix_patch_model.to_dict()
         assert address_prefix_patch_model_json2 == address_prefix_patch_model_json
 
-class TestCertificateInstanceReference():
+class TestModel_CertificateInstanceReference():
     """
     Test Class for CertificateInstanceReference
     """
@@ -22956,7 +23523,7 @@ class TestCertificateInstanceReference():
         certificate_instance_reference_model_json2 = certificate_instance_reference_model.to_dict()
         assert certificate_instance_reference_model_json2 == certificate_instance_reference_model_json
 
-class TestCloudObjectStorageBucketReference():
+class TestModel_CloudObjectStorageBucketReference():
     """
     Test Class for CloudObjectStorageBucketReference
     """
@@ -22985,7 +23552,7 @@ class TestCloudObjectStorageBucketReference():
         cloud_object_storage_bucket_reference_model_json2 = cloud_object_storage_bucket_reference_model.to_dict()
         assert cloud_object_storage_bucket_reference_model_json2 == cloud_object_storage_bucket_reference_model_json
 
-class TestDedicatedHost():
+class TestModel_DedicatedHost():
     """
     Test Class for DedicatedHost
     """
@@ -23013,7 +23580,7 @@ class TestDedicatedHost():
 
         dedicated_host_disk_model = {} # DedicatedHostDisk
         dedicated_host_disk_model['available'] = 38
-        dedicated_host_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['instance_disks'] = [instance_disk_reference_model]
@@ -23067,7 +23634,7 @@ class TestDedicatedHost():
         dedicated_host_model_json = {}
         dedicated_host_model_json['available_memory'] = 128
         dedicated_host_model_json['available_vcpu'] = vcpu_model
-        dedicated_host_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_model_json['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host:1e09281b-f177-46fb-baf1-bc152b2e391a'
         dedicated_host_model_json['disks'] = [dedicated_host_disk_model]
         dedicated_host_model_json['group'] = dedicated_host_group_reference_model
@@ -23103,7 +23670,7 @@ class TestDedicatedHost():
         dedicated_host_model_json2 = dedicated_host_model.to_dict()
         assert dedicated_host_model_json2 == dedicated_host_model_json
 
-class TestDedicatedHostCollection():
+class TestModel_DedicatedHostCollection():
     """
     Test Class for DedicatedHostCollection
     """
@@ -23131,7 +23698,7 @@ class TestDedicatedHostCollection():
 
         dedicated_host_disk_model = {} # DedicatedHostDisk
         dedicated_host_disk_model['available'] = 38
-        dedicated_host_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['instance_disks'] = [instance_disk_reference_model]
@@ -23184,7 +23751,7 @@ class TestDedicatedHostCollection():
         dedicated_host_model = {} # DedicatedHost
         dedicated_host_model['available_memory'] = 128
         dedicated_host_model['available_vcpu'] = vcpu_model
-        dedicated_host_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_model['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host:1e09281b-f177-46fb-baf1-bc152b2e391a'
         dedicated_host_model['disks'] = [dedicated_host_disk_model]
         dedicated_host_model['group'] = dedicated_host_group_reference_model
@@ -23234,7 +23801,7 @@ class TestDedicatedHostCollection():
         dedicated_host_collection_model_json2 = dedicated_host_collection_model.to_dict()
         assert dedicated_host_collection_model_json2 == dedicated_host_collection_model_json
 
-class TestDedicatedHostCollectionFirst():
+class TestModel_DedicatedHostCollectionFirst():
     """
     Test Class for DedicatedHostCollectionFirst
     """
@@ -23263,7 +23830,7 @@ class TestDedicatedHostCollectionFirst():
         dedicated_host_collection_first_model_json2 = dedicated_host_collection_first_model.to_dict()
         assert dedicated_host_collection_first_model_json2 == dedicated_host_collection_first_model_json
 
-class TestDedicatedHostCollectionNext():
+class TestModel_DedicatedHostCollectionNext():
     """
     Test Class for DedicatedHostCollectionNext
     """
@@ -23292,7 +23859,7 @@ class TestDedicatedHostCollectionNext():
         dedicated_host_collection_next_model_json2 = dedicated_host_collection_next_model.to_dict()
         assert dedicated_host_collection_next_model_json2 == dedicated_host_collection_next_model_json
 
-class TestDedicatedHostDisk():
+class TestModel_DedicatedHostDisk():
     """
     Test Class for DedicatedHostDisk
     """
@@ -23317,7 +23884,7 @@ class TestDedicatedHostDisk():
         # Construct a json representation of a DedicatedHostDisk model
         dedicated_host_disk_model_json = {}
         dedicated_host_disk_model_json['available'] = 38
-        dedicated_host_disk_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_disk_model_json['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_disk_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model_json['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model_json['instance_disks'] = [instance_disk_reference_model]
@@ -23344,7 +23911,7 @@ class TestDedicatedHostDisk():
         dedicated_host_disk_model_json2 = dedicated_host_disk_model.to_dict()
         assert dedicated_host_disk_model_json2 == dedicated_host_disk_model_json
 
-class TestDedicatedHostDiskCollection():
+class TestModel_DedicatedHostDiskCollection():
     """
     Test Class for DedicatedHostDiskCollection
     """
@@ -23368,7 +23935,7 @@ class TestDedicatedHostDiskCollection():
 
         dedicated_host_disk_model = {} # DedicatedHostDisk
         dedicated_host_disk_model['available'] = 38
-        dedicated_host_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         dedicated_host_disk_model['instance_disks'] = [instance_disk_reference_model]
@@ -23399,7 +23966,7 @@ class TestDedicatedHostDiskCollection():
         dedicated_host_disk_collection_model_json2 = dedicated_host_disk_collection_model.to_dict()
         assert dedicated_host_disk_collection_model_json2 == dedicated_host_disk_collection_model_json
 
-class TestDedicatedHostDiskPatch():
+class TestModel_DedicatedHostDiskPatch():
     """
     Test Class for DedicatedHostDiskPatch
     """
@@ -23428,7 +23995,7 @@ class TestDedicatedHostDiskPatch():
         dedicated_host_disk_patch_model_json2 = dedicated_host_disk_patch_model.to_dict()
         assert dedicated_host_disk_patch_model_json2 == dedicated_host_disk_patch_model_json
 
-class TestDedicatedHostGroup():
+class TestModel_DedicatedHostGroup():
     """
     Test Class for DedicatedHostGroup
     """
@@ -23467,7 +24034,7 @@ class TestDedicatedHostGroup():
         # Construct a json representation of a DedicatedHostGroup model
         dedicated_host_group_model_json = {}
         dedicated_host_group_model_json['class'] = 'mx2'
-        dedicated_host_group_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_group_model_json['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_group_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
         dedicated_host_group_model_json['dedicated_hosts'] = [dedicated_host_reference_model]
         dedicated_host_group_model_json['family'] = 'balanced'
@@ -23494,7 +24061,7 @@ class TestDedicatedHostGroup():
         dedicated_host_group_model_json2 = dedicated_host_group_model.to_dict()
         assert dedicated_host_group_model_json2 == dedicated_host_group_model_json
 
-class TestDedicatedHostGroupCollection():
+class TestModel_DedicatedHostGroupCollection():
     """
     Test Class for DedicatedHostGroupCollection
     """
@@ -23535,7 +24102,7 @@ class TestDedicatedHostGroupCollection():
 
         dedicated_host_group_model = {} # DedicatedHostGroup
         dedicated_host_group_model['class'] = 'mx2'
-        dedicated_host_group_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        dedicated_host_group_model['created_at'] = "2019-01-01T12:00:00Z"
         dedicated_host_group_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
         dedicated_host_group_model['dedicated_hosts'] = [dedicated_host_reference_model]
         dedicated_host_group_model['family'] = 'balanced'
@@ -23573,7 +24140,7 @@ class TestDedicatedHostGroupCollection():
         dedicated_host_group_collection_model_json2 = dedicated_host_group_collection_model.to_dict()
         assert dedicated_host_group_collection_model_json2 == dedicated_host_group_collection_model_json
 
-class TestDedicatedHostGroupCollectionFirst():
+class TestModel_DedicatedHostGroupCollectionFirst():
     """
     Test Class for DedicatedHostGroupCollectionFirst
     """
@@ -23602,7 +24169,7 @@ class TestDedicatedHostGroupCollectionFirst():
         dedicated_host_group_collection_first_model_json2 = dedicated_host_group_collection_first_model.to_dict()
         assert dedicated_host_group_collection_first_model_json2 == dedicated_host_group_collection_first_model_json
 
-class TestDedicatedHostGroupCollectionNext():
+class TestModel_DedicatedHostGroupCollectionNext():
     """
     Test Class for DedicatedHostGroupCollectionNext
     """
@@ -23631,7 +24198,7 @@ class TestDedicatedHostGroupCollectionNext():
         dedicated_host_group_collection_next_model_json2 = dedicated_host_group_collection_next_model.to_dict()
         assert dedicated_host_group_collection_next_model_json2 == dedicated_host_group_collection_next_model_json
 
-class TestDedicatedHostGroupPatch():
+class TestModel_DedicatedHostGroupPatch():
     """
     Test Class for DedicatedHostGroupPatch
     """
@@ -23660,7 +24227,7 @@ class TestDedicatedHostGroupPatch():
         dedicated_host_group_patch_model_json2 = dedicated_host_group_patch_model.to_dict()
         assert dedicated_host_group_patch_model_json2 == dedicated_host_group_patch_model_json
 
-class TestDedicatedHostGroupPrototypeDedicatedHostByZoneContext():
+class TestModel_DedicatedHostGroupPrototypeDedicatedHostByZoneContext():
     """
     Test Class for DedicatedHostGroupPrototypeDedicatedHostByZoneContext
     """
@@ -23695,7 +24262,7 @@ class TestDedicatedHostGroupPrototypeDedicatedHostByZoneContext():
         dedicated_host_group_prototype_dedicated_host_by_zone_context_model_json2 = dedicated_host_group_prototype_dedicated_host_by_zone_context_model.to_dict()
         assert dedicated_host_group_prototype_dedicated_host_by_zone_context_model_json2 == dedicated_host_group_prototype_dedicated_host_by_zone_context_model_json
 
-class TestDedicatedHostGroupReference():
+class TestModel_DedicatedHostGroupReference():
     """
     Test Class for DedicatedHostGroupReference
     """
@@ -23734,7 +24301,7 @@ class TestDedicatedHostGroupReference():
         dedicated_host_group_reference_model_json2 = dedicated_host_group_reference_model.to_dict()
         assert dedicated_host_group_reference_model_json2 == dedicated_host_group_reference_model_json
 
-class TestDedicatedHostGroupReferenceDeleted():
+class TestModel_DedicatedHostGroupReferenceDeleted():
     """
     Test Class for DedicatedHostGroupReferenceDeleted
     """
@@ -23763,7 +24330,7 @@ class TestDedicatedHostGroupReferenceDeleted():
         dedicated_host_group_reference_deleted_model_json2 = dedicated_host_group_reference_deleted_model.to_dict()
         assert dedicated_host_group_reference_deleted_model_json2 == dedicated_host_group_reference_deleted_model_json
 
-class TestDedicatedHostPatch():
+class TestModel_DedicatedHostPatch():
     """
     Test Class for DedicatedHostPatch
     """
@@ -23793,7 +24360,7 @@ class TestDedicatedHostPatch():
         dedicated_host_patch_model_json2 = dedicated_host_patch_model.to_dict()
         assert dedicated_host_patch_model_json2 == dedicated_host_patch_model_json
 
-class TestDedicatedHostProfile():
+class TestModel_DedicatedHostProfile():
     """
     Test Class for DedicatedHostProfile
     """
@@ -23875,7 +24442,7 @@ class TestDedicatedHostProfile():
         dedicated_host_profile_model_json2 = dedicated_host_profile_model.to_dict()
         assert dedicated_host_profile_model_json2 == dedicated_host_profile_model_json
 
-class TestDedicatedHostProfileCollection():
+class TestModel_DedicatedHostProfileCollection():
     """
     Test Class for DedicatedHostProfileCollection
     """
@@ -23970,7 +24537,7 @@ class TestDedicatedHostProfileCollection():
         dedicated_host_profile_collection_model_json2 = dedicated_host_profile_collection_model.to_dict()
         assert dedicated_host_profile_collection_model_json2 == dedicated_host_profile_collection_model_json
 
-class TestDedicatedHostProfileCollectionFirst():
+class TestModel_DedicatedHostProfileCollectionFirst():
     """
     Test Class for DedicatedHostProfileCollectionFirst
     """
@@ -23999,7 +24566,7 @@ class TestDedicatedHostProfileCollectionFirst():
         dedicated_host_profile_collection_first_model_json2 = dedicated_host_profile_collection_first_model.to_dict()
         assert dedicated_host_profile_collection_first_model_json2 == dedicated_host_profile_collection_first_model_json
 
-class TestDedicatedHostProfileCollectionNext():
+class TestModel_DedicatedHostProfileCollectionNext():
     """
     Test Class for DedicatedHostProfileCollectionNext
     """
@@ -24028,7 +24595,7 @@ class TestDedicatedHostProfileCollectionNext():
         dedicated_host_profile_collection_next_model_json2 = dedicated_host_profile_collection_next_model.to_dict()
         assert dedicated_host_profile_collection_next_model_json2 == dedicated_host_profile_collection_next_model_json
 
-class TestDedicatedHostProfileDisk():
+class TestModel_DedicatedHostProfileDisk():
     """
     Test Class for DedicatedHostProfileDisk
     """
@@ -24078,7 +24645,7 @@ class TestDedicatedHostProfileDisk():
         dedicated_host_profile_disk_model_json2 = dedicated_host_profile_disk_model.to_dict()
         assert dedicated_host_profile_disk_model_json2 == dedicated_host_profile_disk_model_json
 
-class TestDedicatedHostProfileDiskInterface():
+class TestModel_DedicatedHostProfileDiskInterface():
     """
     Test Class for DedicatedHostProfileDiskInterface
     """
@@ -24108,7 +24675,7 @@ class TestDedicatedHostProfileDiskInterface():
         dedicated_host_profile_disk_interface_model_json2 = dedicated_host_profile_disk_interface_model.to_dict()
         assert dedicated_host_profile_disk_interface_model_json2 == dedicated_host_profile_disk_interface_model_json
 
-class TestDedicatedHostProfileDiskQuantity():
+class TestModel_DedicatedHostProfileDiskQuantity():
     """
     Test Class for DedicatedHostProfileDiskQuantity
     """
@@ -24138,7 +24705,7 @@ class TestDedicatedHostProfileDiskQuantity():
         dedicated_host_profile_disk_quantity_model_json2 = dedicated_host_profile_disk_quantity_model.to_dict()
         assert dedicated_host_profile_disk_quantity_model_json2 == dedicated_host_profile_disk_quantity_model_json
 
-class TestDedicatedHostProfileDiskSize():
+class TestModel_DedicatedHostProfileDiskSize():
     """
     Test Class for DedicatedHostProfileDiskSize
     """
@@ -24168,7 +24735,7 @@ class TestDedicatedHostProfileDiskSize():
         dedicated_host_profile_disk_size_model_json2 = dedicated_host_profile_disk_size_model.to_dict()
         assert dedicated_host_profile_disk_size_model_json2 == dedicated_host_profile_disk_size_model_json
 
-class TestDedicatedHostProfileDiskSupportedInterfaces():
+class TestModel_DedicatedHostProfileDiskSupportedInterfaces():
     """
     Test Class for DedicatedHostProfileDiskSupportedInterfaces
     """
@@ -24198,7 +24765,7 @@ class TestDedicatedHostProfileDiskSupportedInterfaces():
         dedicated_host_profile_disk_supported_interfaces_model_json2 = dedicated_host_profile_disk_supported_interfaces_model.to_dict()
         assert dedicated_host_profile_disk_supported_interfaces_model_json2 == dedicated_host_profile_disk_supported_interfaces_model_json
 
-class TestDedicatedHostProfileReference():
+class TestModel_DedicatedHostProfileReference():
     """
     Test Class for DedicatedHostProfileReference
     """
@@ -24228,7 +24795,7 @@ class TestDedicatedHostProfileReference():
         dedicated_host_profile_reference_model_json2 = dedicated_host_profile_reference_model.to_dict()
         assert dedicated_host_profile_reference_model_json2 == dedicated_host_profile_reference_model_json
 
-class TestDedicatedHostProfileVCPUArchitecture():
+class TestModel_DedicatedHostProfileVCPUArchitecture():
     """
     Test Class for DedicatedHostProfileVCPUArchitecture
     """
@@ -24258,7 +24825,7 @@ class TestDedicatedHostProfileVCPUArchitecture():
         dedicated_host_profile_vcpu_architecture_model_json2 = dedicated_host_profile_vcpu_architecture_model.to_dict()
         assert dedicated_host_profile_vcpu_architecture_model_json2 == dedicated_host_profile_vcpu_architecture_model_json
 
-class TestDedicatedHostReference():
+class TestModel_DedicatedHostReference():
     """
     Test Class for DedicatedHostReference
     """
@@ -24297,7 +24864,7 @@ class TestDedicatedHostReference():
         dedicated_host_reference_model_json2 = dedicated_host_reference_model.to_dict()
         assert dedicated_host_reference_model_json2 == dedicated_host_reference_model_json
 
-class TestDedicatedHostReferenceDeleted():
+class TestModel_DedicatedHostReferenceDeleted():
     """
     Test Class for DedicatedHostReferenceDeleted
     """
@@ -24326,7 +24893,7 @@ class TestDedicatedHostReferenceDeleted():
         dedicated_host_reference_deleted_model_json2 = dedicated_host_reference_deleted_model.to_dict()
         assert dedicated_host_reference_deleted_model_json2 == dedicated_host_reference_deleted_model_json
 
-class TestDefaultNetworkACL():
+class TestModel_DefaultNetworkACL():
     """
     Test Class for DefaultNetworkACL
     """
@@ -24355,7 +24922,7 @@ class TestDefaultNetworkACL():
         network_acl_rule_item_model = {} # NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP
         network_acl_rule_item_model['action'] = 'allow'
         network_acl_rule_item_model['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_model['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -24391,7 +24958,7 @@ class TestDefaultNetworkACL():
 
         # Construct a json representation of a DefaultNetworkACL model
         default_network_acl_model_json = {}
-        default_network_acl_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        default_network_acl_model_json['created_at'] = "2019-01-01T12:00:00Z"
         default_network_acl_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::network-acl:a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         default_network_acl_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         default_network_acl_model_json['id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
@@ -24416,7 +24983,7 @@ class TestDefaultNetworkACL():
         default_network_acl_model_json2 = default_network_acl_model.to_dict()
         assert default_network_acl_model_json2 == default_network_acl_model_json
 
-class TestDefaultRoutingTable():
+class TestModel_DefaultRoutingTable():
     """
     Test Class for DefaultRoutingTable
     """
@@ -24449,7 +25016,7 @@ class TestDefaultRoutingTable():
 
         # Construct a json representation of a DefaultRoutingTable model
         default_routing_table_model_json = {}
-        default_routing_table_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        default_routing_table_model_json['created_at'] = "2019-01-01T12:00:00Z"
         default_routing_table_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         default_routing_table_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
         default_routing_table_model_json['is_default'] = True
@@ -24477,7 +25044,7 @@ class TestDefaultRoutingTable():
         default_routing_table_model_json2 = default_routing_table_model.to_dict()
         assert default_routing_table_model_json2 == default_routing_table_model_json
 
-class TestDefaultSecurityGroup():
+class TestModel_DefaultSecurityGroup():
     """
     Test Class for DefaultSecurityGroup
     """
@@ -24519,7 +25086,7 @@ class TestDefaultSecurityGroup():
 
         # Construct a json representation of a DefaultSecurityGroup model
         default_security_group_model_json = {}
-        default_security_group_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        default_security_group_model_json['created_at'] = "2019-01-01T12:00:00Z"
         default_security_group_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         default_security_group_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         default_security_group_model_json['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
@@ -24543,7 +25110,7 @@ class TestDefaultSecurityGroup():
         default_security_group_model_json2 = default_security_group_model.to_dict()
         assert default_security_group_model_json2 == default_security_group_model_json
 
-class TestEncryptionKeyReference():
+class TestModel_EncryptionKeyReference():
     """
     Test Class for EncryptionKeyReference
     """
@@ -24572,7 +25139,7 @@ class TestEncryptionKeyReference():
         encryption_key_reference_model_json2 = encryption_key_reference_model.to_dict()
         assert encryption_key_reference_model_json2 == encryption_key_reference_model_json
 
-class TestEndpointGateway():
+class TestModel_EndpointGateway():
     """
     Test Class for EndpointGateway
     """
@@ -24616,7 +25183,7 @@ class TestEndpointGateway():
 
         # Construct a json representation of a EndpointGateway model
         endpoint_gateway_model_json = {}
-        endpoint_gateway_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        endpoint_gateway_model_json['created_at'] = "2019-01-01T12:00:00Z"
         endpoint_gateway_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5'
         endpoint_gateway_model_json['health_state'] = 'ok'
         endpoint_gateway_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5'
@@ -24646,7 +25213,7 @@ class TestEndpointGateway():
         endpoint_gateway_model_json2 = endpoint_gateway_model.to_dict()
         assert endpoint_gateway_model_json2 == endpoint_gateway_model_json
 
-class TestEndpointGatewayCollection():
+class TestModel_EndpointGatewayCollection():
     """
     Test Class for EndpointGatewayCollection
     """
@@ -24689,7 +25256,7 @@ class TestEndpointGatewayCollection():
         vpc_reference_model['name'] = 'my-vpc'
 
         endpoint_gateway_model = {} # EndpointGateway
-        endpoint_gateway_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        endpoint_gateway_model['created_at'] = "2019-01-01T12:00:00Z"
         endpoint_gateway_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5'
         endpoint_gateway_model['health_state'] = 'ok'
         endpoint_gateway_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5'
@@ -24733,7 +25300,7 @@ class TestEndpointGatewayCollection():
         endpoint_gateway_collection_model_json2 = endpoint_gateway_collection_model.to_dict()
         assert endpoint_gateway_collection_model_json2 == endpoint_gateway_collection_model_json
 
-class TestEndpointGatewayCollectionFirst():
+class TestModel_EndpointGatewayCollectionFirst():
     """
     Test Class for EndpointGatewayCollectionFirst
     """
@@ -24762,7 +25329,7 @@ class TestEndpointGatewayCollectionFirst():
         endpoint_gateway_collection_first_model_json2 = endpoint_gateway_collection_first_model.to_dict()
         assert endpoint_gateway_collection_first_model_json2 == endpoint_gateway_collection_first_model_json
 
-class TestEndpointGatewayCollectionNext():
+class TestModel_EndpointGatewayCollectionNext():
     """
     Test Class for EndpointGatewayCollectionNext
     """
@@ -24791,7 +25358,7 @@ class TestEndpointGatewayCollectionNext():
         endpoint_gateway_collection_next_model_json2 = endpoint_gateway_collection_next_model.to_dict()
         assert endpoint_gateway_collection_next_model_json2 == endpoint_gateway_collection_next_model_json
 
-class TestEndpointGatewayPatch():
+class TestModel_EndpointGatewayPatch():
     """
     Test Class for EndpointGatewayPatch
     """
@@ -24820,7 +25387,7 @@ class TestEndpointGatewayPatch():
         endpoint_gateway_patch_model_json2 = endpoint_gateway_patch_model.to_dict()
         assert endpoint_gateway_patch_model_json2 == endpoint_gateway_patch_model_json
 
-class TestEndpointGatewayReferenceDeleted():
+class TestModel_EndpointGatewayReferenceDeleted():
     """
     Test Class for EndpointGatewayReferenceDeleted
     """
@@ -24849,7 +25416,7 @@ class TestEndpointGatewayReferenceDeleted():
         endpoint_gateway_reference_deleted_model_json2 = endpoint_gateway_reference_deleted_model.to_dict()
         assert endpoint_gateway_reference_deleted_model_json2 == endpoint_gateway_reference_deleted_model_json
 
-class TestFloatingIP():
+class TestModel_FloatingIP():
     """
     Test Class for FloatingIP
     """
@@ -24884,7 +25451,7 @@ class TestFloatingIP():
         # Construct a json representation of a FloatingIP model
         floating_ip_model_json = {}
         floating_ip_model_json['address'] = '203.0.113.1'
-        floating_ip_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        floating_ip_model_json['created_at'] = "2019-01-01T12:00:00Z"
         floating_ip_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model_json['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
@@ -24909,7 +25476,7 @@ class TestFloatingIP():
         floating_ip_model_json2 = floating_ip_model.to_dict()
         assert floating_ip_model_json2 == floating_ip_model_json
 
-class TestFloatingIPCollection():
+class TestModel_FloatingIPCollection():
     """
     Test Class for FloatingIPCollection
     """
@@ -24946,7 +25513,7 @@ class TestFloatingIPCollection():
 
         floating_ip_model = {} # FloatingIP
         floating_ip_model['address'] = '203.0.113.1'
-        floating_ip_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        floating_ip_model['created_at'] = "2019-01-01T12:00:00Z"
         floating_ip_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
@@ -24982,7 +25549,7 @@ class TestFloatingIPCollection():
         floating_ip_collection_model_json2 = floating_ip_collection_model.to_dict()
         assert floating_ip_collection_model_json2 == floating_ip_collection_model_json
 
-class TestFloatingIPCollectionFirst():
+class TestModel_FloatingIPCollectionFirst():
     """
     Test Class for FloatingIPCollectionFirst
     """
@@ -25011,7 +25578,7 @@ class TestFloatingIPCollectionFirst():
         floating_ip_collection_first_model_json2 = floating_ip_collection_first_model.to_dict()
         assert floating_ip_collection_first_model_json2 == floating_ip_collection_first_model_json
 
-class TestFloatingIPCollectionNext():
+class TestModel_FloatingIPCollectionNext():
     """
     Test Class for FloatingIPCollectionNext
     """
@@ -25040,7 +25607,7 @@ class TestFloatingIPCollectionNext():
         floating_ip_collection_next_model_json2 = floating_ip_collection_next_model.to_dict()
         assert floating_ip_collection_next_model_json2 == floating_ip_collection_next_model_json
 
-class TestFloatingIPPatch():
+class TestModel_FloatingIPPatch():
     """
     Test Class for FloatingIPPatch
     """
@@ -25075,7 +25642,7 @@ class TestFloatingIPPatch():
         floating_ip_patch_model_json2 = floating_ip_patch_model.to_dict()
         assert floating_ip_patch_model_json2 == floating_ip_patch_model_json
 
-class TestFloatingIPReference():
+class TestModel_FloatingIPReference():
     """
     Test Class for FloatingIPReference
     """
@@ -25114,7 +25681,7 @@ class TestFloatingIPReference():
         floating_ip_reference_model_json2 = floating_ip_reference_model.to_dict()
         assert floating_ip_reference_model_json2 == floating_ip_reference_model_json
 
-class TestFloatingIPReferenceDeleted():
+class TestModel_FloatingIPReferenceDeleted():
     """
     Test Class for FloatingIPReferenceDeleted
     """
@@ -25143,7 +25710,7 @@ class TestFloatingIPReferenceDeleted():
         floating_ip_reference_deleted_model_json2 = floating_ip_reference_deleted_model.to_dict()
         assert floating_ip_reference_deleted_model_json2 == floating_ip_reference_deleted_model_json
 
-class TestFloatingIPUnpaginatedCollection():
+class TestModel_FloatingIPUnpaginatedCollection():
     """
     Test Class for FloatingIPUnpaginatedCollection
     """
@@ -25177,7 +25744,7 @@ class TestFloatingIPUnpaginatedCollection():
 
         floating_ip_model = {} # FloatingIP
         floating_ip_model['address'] = '203.0.113.1'
-        floating_ip_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        floating_ip_model['created_at'] = "2019-01-01T12:00:00Z"
         floating_ip_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
         floating_ip_model['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
@@ -25206,7 +25773,7 @@ class TestFloatingIPUnpaginatedCollection():
         floating_ip_unpaginated_collection_model_json2 = floating_ip_unpaginated_collection_model.to_dict()
         assert floating_ip_unpaginated_collection_model_json2 == floating_ip_unpaginated_collection_model_json
 
-class TestFlowLogCollector():
+class TestModel_FlowLogCollector():
     """
     Test Class for FlowLogCollector
     """
@@ -25250,7 +25817,7 @@ class TestFlowLogCollector():
         flow_log_collector_model_json = {}
         flow_log_collector_model_json['active'] = True
         flow_log_collector_model_json['auto_delete'] = True
-        flow_log_collector_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        flow_log_collector_model_json['created_at'] = "2019-01-01T12:00:00Z"
         flow_log_collector_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::flow-log-collector:39300233-9995-4806-89a5-3c1b6eb88689'
         flow_log_collector_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/flow_log_collectors/39300233-9995-4806-89a5-3c1b6eb88689'
         flow_log_collector_model_json['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
@@ -25276,7 +25843,7 @@ class TestFlowLogCollector():
         flow_log_collector_model_json2 = flow_log_collector_model.to_dict()
         assert flow_log_collector_model_json2 == flow_log_collector_model_json
 
-class TestFlowLogCollectorCollection():
+class TestModel_FlowLogCollectorCollection():
     """
     Test Class for FlowLogCollectorCollection
     """
@@ -25322,7 +25889,7 @@ class TestFlowLogCollectorCollection():
         flow_log_collector_model = {} # FlowLogCollector
         flow_log_collector_model['active'] = True
         flow_log_collector_model['auto_delete'] = True
-        flow_log_collector_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        flow_log_collector_model['created_at'] = "2019-01-01T12:00:00Z"
         flow_log_collector_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::flow-log-collector:39300233-9995-4806-89a5-3c1b6eb88689'
         flow_log_collector_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/flow_log_collectors/39300233-9995-4806-89a5-3c1b6eb88689'
         flow_log_collector_model['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
@@ -25359,7 +25926,7 @@ class TestFlowLogCollectorCollection():
         flow_log_collector_collection_model_json2 = flow_log_collector_collection_model.to_dict()
         assert flow_log_collector_collection_model_json2 == flow_log_collector_collection_model_json
 
-class TestFlowLogCollectorCollectionFirst():
+class TestModel_FlowLogCollectorCollectionFirst():
     """
     Test Class for FlowLogCollectorCollectionFirst
     """
@@ -25388,7 +25955,7 @@ class TestFlowLogCollectorCollectionFirst():
         flow_log_collector_collection_first_model_json2 = flow_log_collector_collection_first_model.to_dict()
         assert flow_log_collector_collection_first_model_json2 == flow_log_collector_collection_first_model_json
 
-class TestFlowLogCollectorCollectionNext():
+class TestModel_FlowLogCollectorCollectionNext():
     """
     Test Class for FlowLogCollectorCollectionNext
     """
@@ -25417,7 +25984,7 @@ class TestFlowLogCollectorCollectionNext():
         flow_log_collector_collection_next_model_json2 = flow_log_collector_collection_next_model.to_dict()
         assert flow_log_collector_collection_next_model_json2 == flow_log_collector_collection_next_model_json
 
-class TestFlowLogCollectorPatch():
+class TestModel_FlowLogCollectorPatch():
     """
     Test Class for FlowLogCollectorPatch
     """
@@ -25447,7 +26014,7 @@ class TestFlowLogCollectorPatch():
         flow_log_collector_patch_model_json2 = flow_log_collector_patch_model.to_dict()
         assert flow_log_collector_patch_model_json2 == flow_log_collector_patch_model_json
 
-class TestIKEPolicy():
+class TestModel_IKEPolicy():
     """
     Test Class for IKEPolicy
     """
@@ -25478,7 +26045,7 @@ class TestIKEPolicy():
         ike_policy_model_json = {}
         ike_policy_model_json['authentication_algorithm'] = 'md5'
         ike_policy_model_json['connections'] = [vpn_gateway_connection_reference_model]
-        ike_policy_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        ike_policy_model_json['created_at'] = "2019-01-01T12:00:00Z"
         ike_policy_model_json['dh_group'] = 2
         ike_policy_model_json['encryption_algorithm'] = 'triple_des'
         ike_policy_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -25505,7 +26072,7 @@ class TestIKEPolicy():
         ike_policy_model_json2 = ike_policy_model.to_dict()
         assert ike_policy_model_json2 == ike_policy_model_json
 
-class TestIKEPolicyCollection():
+class TestModel_IKEPolicyCollection():
     """
     Test Class for IKEPolicyCollection
     """
@@ -25538,7 +26105,7 @@ class TestIKEPolicyCollection():
         ike_policy_model = {} # IKEPolicy
         ike_policy_model['authentication_algorithm'] = 'md5'
         ike_policy_model['connections'] = [vpn_gateway_connection_reference_model]
-        ike_policy_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        ike_policy_model['created_at'] = "2019-01-01T12:00:00Z"
         ike_policy_model['dh_group'] = 2
         ike_policy_model['encryption_algorithm'] = 'triple_des'
         ike_policy_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ike_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -25576,7 +26143,7 @@ class TestIKEPolicyCollection():
         ike_policy_collection_model_json2 = ike_policy_collection_model.to_dict()
         assert ike_policy_collection_model_json2 == ike_policy_collection_model_json
 
-class TestIKEPolicyCollectionFirst():
+class TestModel_IKEPolicyCollectionFirst():
     """
     Test Class for IKEPolicyCollectionFirst
     """
@@ -25605,7 +26172,7 @@ class TestIKEPolicyCollectionFirst():
         ike_policy_collection_first_model_json2 = ike_policy_collection_first_model.to_dict()
         assert ike_policy_collection_first_model_json2 == ike_policy_collection_first_model_json
 
-class TestIKEPolicyCollectionNext():
+class TestModel_IKEPolicyCollectionNext():
     """
     Test Class for IKEPolicyCollectionNext
     """
@@ -25634,7 +26201,7 @@ class TestIKEPolicyCollectionNext():
         ike_policy_collection_next_model_json2 = ike_policy_collection_next_model.to_dict()
         assert ike_policy_collection_next_model_json2 == ike_policy_collection_next_model_json
 
-class TestIKEPolicyPatch():
+class TestModel_IKEPolicyPatch():
     """
     Test Class for IKEPolicyPatch
     """
@@ -25668,7 +26235,7 @@ class TestIKEPolicyPatch():
         ike_policy_patch_model_json2 = ike_policy_patch_model.to_dict()
         assert ike_policy_patch_model_json2 == ike_policy_patch_model_json
 
-class TestIKEPolicyReference():
+class TestModel_IKEPolicyReference():
     """
     Test Class for IKEPolicyReference
     """
@@ -25706,7 +26273,7 @@ class TestIKEPolicyReference():
         ike_policy_reference_model_json2 = ike_policy_reference_model.to_dict()
         assert ike_policy_reference_model_json2 == ike_policy_reference_model_json
 
-class TestIKEPolicyReferenceDeleted():
+class TestModel_IKEPolicyReferenceDeleted():
     """
     Test Class for IKEPolicyReferenceDeleted
     """
@@ -25735,7 +26302,7 @@ class TestIKEPolicyReferenceDeleted():
         ike_policy_reference_deleted_model_json2 = ike_policy_reference_deleted_model.to_dict()
         assert ike_policy_reference_deleted_model_json2 == ike_policy_reference_deleted_model_json
 
-class TestIP():
+class TestModel_IP():
     """
     Test Class for IP
     """
@@ -25764,7 +26331,7 @@ class TestIP():
         ip_model_json2 = ip_model.to_dict()
         assert ip_model_json2 == ip_model_json
 
-class TestIPsecPolicy():
+class TestModel_IPsecPolicy():
     """
     Test Class for IPsecPolicy
     """
@@ -25795,7 +26362,7 @@ class TestIPsecPolicy():
         i_psec_policy_model_json = {}
         i_psec_policy_model_json['authentication_algorithm'] = 'md5'
         i_psec_policy_model_json['connections'] = [vpn_gateway_connection_reference_model]
-        i_psec_policy_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        i_psec_policy_model_json['created_at'] = "2019-01-01T12:00:00Z"
         i_psec_policy_model_json['encapsulation_mode'] = 'tunnel'
         i_psec_policy_model_json['encryption_algorithm'] = 'triple_des'
         i_psec_policy_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -25822,7 +26389,7 @@ class TestIPsecPolicy():
         i_psec_policy_model_json2 = i_psec_policy_model.to_dict()
         assert i_psec_policy_model_json2 == i_psec_policy_model_json
 
-class TestIPsecPolicyCollection():
+class TestModel_IPsecPolicyCollection():
     """
     Test Class for IPsecPolicyCollection
     """
@@ -25855,7 +26422,7 @@ class TestIPsecPolicyCollection():
         i_psec_policy_model = {} # IPsecPolicy
         i_psec_policy_model['authentication_algorithm'] = 'md5'
         i_psec_policy_model['connections'] = [vpn_gateway_connection_reference_model]
-        i_psec_policy_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        i_psec_policy_model['created_at'] = "2019-01-01T12:00:00Z"
         i_psec_policy_model['encapsulation_mode'] = 'tunnel'
         i_psec_policy_model['encryption_algorithm'] = 'triple_des'
         i_psec_policy_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/ipsec_policies/ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -25893,7 +26460,7 @@ class TestIPsecPolicyCollection():
         i_psec_policy_collection_model_json2 = i_psec_policy_collection_model.to_dict()
         assert i_psec_policy_collection_model_json2 == i_psec_policy_collection_model_json
 
-class TestIPsecPolicyCollectionFirst():
+class TestModel_IPsecPolicyCollectionFirst():
     """
     Test Class for IPsecPolicyCollectionFirst
     """
@@ -25922,7 +26489,7 @@ class TestIPsecPolicyCollectionFirst():
         i_psec_policy_collection_first_model_json2 = i_psec_policy_collection_first_model.to_dict()
         assert i_psec_policy_collection_first_model_json2 == i_psec_policy_collection_first_model_json
 
-class TestIPsecPolicyCollectionNext():
+class TestModel_IPsecPolicyCollectionNext():
     """
     Test Class for IPsecPolicyCollectionNext
     """
@@ -25951,7 +26518,7 @@ class TestIPsecPolicyCollectionNext():
         i_psec_policy_collection_next_model_json2 = i_psec_policy_collection_next_model.to_dict()
         assert i_psec_policy_collection_next_model_json2 == i_psec_policy_collection_next_model_json
 
-class TestIPsecPolicyPatch():
+class TestModel_IPsecPolicyPatch():
     """
     Test Class for IPsecPolicyPatch
     """
@@ -25984,7 +26551,7 @@ class TestIPsecPolicyPatch():
         i_psec_policy_patch_model_json2 = i_psec_policy_patch_model.to_dict()
         assert i_psec_policy_patch_model_json2 == i_psec_policy_patch_model_json
 
-class TestIPsecPolicyReference():
+class TestModel_IPsecPolicyReference():
     """
     Test Class for IPsecPolicyReference
     """
@@ -26022,7 +26589,7 @@ class TestIPsecPolicyReference():
         i_psec_policy_reference_model_json2 = i_psec_policy_reference_model.to_dict()
         assert i_psec_policy_reference_model_json2 == i_psec_policy_reference_model_json
 
-class TestIPsecPolicyReferenceDeleted():
+class TestModel_IPsecPolicyReferenceDeleted():
     """
     Test Class for IPsecPolicyReferenceDeleted
     """
@@ -26051,7 +26618,7 @@ class TestIPsecPolicyReferenceDeleted():
         i_psec_policy_reference_deleted_model_json2 = i_psec_policy_reference_deleted_model.to_dict()
         assert i_psec_policy_reference_deleted_model_json2 == i_psec_policy_reference_deleted_model_json
 
-class TestImage():
+class TestModel_Image():
     """
     Test Class for Image
     """
@@ -26088,6 +26655,16 @@ class TestImage():
         resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['name'] = 'my-resource-group'
 
+        volume_reference_deleted_model = {} # VolumeReferenceDeleted
+        volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        volume_reference_model = {} # VolumeReference
+        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['deleted'] = volume_reference_deleted_model
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['name'] = 'my-volume'
+
         image_status_reason_model = {} # ImageStatusReason
         image_status_reason_model['code'] = 'encryption_key_deleted'
         image_status_reason_model['message'] = 'testString'
@@ -26095,7 +26672,7 @@ class TestImage():
 
         # Construct a json representation of a Image model
         image_model_json = {}
-        image_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        image_model_json['created_at'] = "2019-01-01T12:00:00Z"
         image_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
         image_model_json['encryption'] = 'user_managed'
         image_model_json['encryption_key'] = encryption_key_reference_model
@@ -26106,6 +26683,7 @@ class TestImage():
         image_model_json['name'] = 'my-image'
         image_model_json['operating_system'] = operating_system_model
         image_model_json['resource_group'] = resource_group_reference_model
+        image_model_json['source_volume'] = volume_reference_model
         image_model_json['status'] = 'available'
         image_model_json['status_reasons'] = [image_status_reason_model]
         image_model_json['visibility'] = 'private'
@@ -26125,7 +26703,7 @@ class TestImage():
         image_model_json2 = image_model.to_dict()
         assert image_model_json2 == image_model_json
 
-class TestImageCollection():
+class TestModel_ImageCollection():
     """
     Test Class for ImageCollection
     """
@@ -26165,13 +26743,23 @@ class TestImageCollection():
         resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['name'] = 'my-resource-group'
 
+        volume_reference_deleted_model = {} # VolumeReferenceDeleted
+        volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        volume_reference_model = {} # VolumeReference
+        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['deleted'] = volume_reference_deleted_model
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['name'] = 'my-volume'
+
         image_status_reason_model = {} # ImageStatusReason
         image_status_reason_model['code'] = 'encryption_key_deleted'
         image_status_reason_model['message'] = 'testString'
         image_status_reason_model['more_info'] = 'https://cloud.ibm.com/docs/key-protect?topic=key-protect-restore-keys'
 
         image_model = {} # Image
-        image_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        image_model['created_at'] = "2019-01-01T12:00:00Z"
         image_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
         image_model['encryption'] = 'user_managed'
         image_model['encryption_key'] = encryption_key_reference_model
@@ -26182,6 +26770,7 @@ class TestImageCollection():
         image_model['name'] = 'my-image'
         image_model['operating_system'] = operating_system_model
         image_model['resource_group'] = resource_group_reference_model
+        image_model['source_volume'] = volume_reference_model
         image_model['status'] = 'available'
         image_model['status_reasons'] = [image_status_reason_model]
         image_model['visibility'] = 'private'
@@ -26211,7 +26800,7 @@ class TestImageCollection():
         image_collection_model_json2 = image_collection_model.to_dict()
         assert image_collection_model_json2 == image_collection_model_json
 
-class TestImageCollectionFirst():
+class TestModel_ImageCollectionFirst():
     """
     Test Class for ImageCollectionFirst
     """
@@ -26240,7 +26829,7 @@ class TestImageCollectionFirst():
         image_collection_first_model_json2 = image_collection_first_model.to_dict()
         assert image_collection_first_model_json2 == image_collection_first_model_json
 
-class TestImageCollectionNext():
+class TestModel_ImageCollectionNext():
     """
     Test Class for ImageCollectionNext
     """
@@ -26269,7 +26858,7 @@ class TestImageCollectionNext():
         image_collection_next_model_json2 = image_collection_next_model.to_dict()
         assert image_collection_next_model_json2 == image_collection_next_model_json
 
-class TestImageFile():
+class TestModel_ImageFile():
     """
     Test Class for ImageFile
     """
@@ -26304,7 +26893,7 @@ class TestImageFile():
         image_file_model_json2 = image_file_model.to_dict()
         assert image_file_model_json2 == image_file_model_json
 
-class TestImageFileChecksums():
+class TestModel_ImageFileChecksums():
     """
     Test Class for ImageFileChecksums
     """
@@ -26333,7 +26922,7 @@ class TestImageFileChecksums():
         image_file_checksums_model_json2 = image_file_checksums_model.to_dict()
         assert image_file_checksums_model_json2 == image_file_checksums_model_json
 
-class TestImageFilePrototype():
+class TestModel_ImageFilePrototype():
     """
     Test Class for ImageFilePrototype
     """
@@ -26362,7 +26951,7 @@ class TestImageFilePrototype():
         image_file_prototype_model_json2 = image_file_prototype_model.to_dict()
         assert image_file_prototype_model_json2 == image_file_prototype_model_json
 
-class TestImagePatch():
+class TestModel_ImagePatch():
     """
     Test Class for ImagePatch
     """
@@ -26391,7 +26980,7 @@ class TestImagePatch():
         image_patch_model_json2 = image_patch_model.to_dict()
         assert image_patch_model_json2 == image_patch_model_json
 
-class TestImageReference():
+class TestModel_ImageReference():
     """
     Test Class for ImageReference
     """
@@ -26429,7 +27018,7 @@ class TestImageReference():
         image_reference_model_json2 = image_reference_model.to_dict()
         assert image_reference_model_json2 == image_reference_model_json
 
-class TestImageReferenceDeleted():
+class TestModel_ImageReferenceDeleted():
     """
     Test Class for ImageReferenceDeleted
     """
@@ -26458,7 +27047,7 @@ class TestImageReferenceDeleted():
         image_reference_deleted_model_json2 = image_reference_deleted_model.to_dict()
         assert image_reference_deleted_model_json2 == image_reference_deleted_model_json
 
-class TestImageStatusReason():
+class TestModel_ImageStatusReason():
     """
     Test Class for ImageStatusReason
     """
@@ -26489,7 +27078,7 @@ class TestImageStatusReason():
         image_status_reason_model_json2 = image_status_reason_model.to_dict()
         assert image_status_reason_model_json2 == image_status_reason_model_json
 
-class TestInstance():
+class TestModel_Instance():
     """
     Test Class for Instance
     """
@@ -26505,28 +27094,28 @@ class TestInstance():
         volume_attachment_reference_instance_context_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         volume_attachment_device_model = {} # VolumeAttachmentDevice
-        volume_attachment_device_model['id'] = '80b3e36e-41f4-40e9-bd56-beae81792a68'
+        volume_attachment_device_model['id'] = 'a8a15363-a6f7-4f01-af60-715e85b28141'
 
         volume_reference_deleted_model = {} # VolumeReferenceDeleted
         volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         volume_reference_model = {} # VolumeReference
-        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['crn'] = 'crn:[...]'
         volume_reference_model['deleted'] = volume_reference_deleted_model
-        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['name'] = 'my-volume'
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/49c5d61b-41e7-4c01-9b7a-1a97366c6916'
+        volume_reference_model['id'] = '49c5d61b-41e7-4c01-9b7a-1a97366c6916'
+        volume_reference_model['name'] = 'my-boot-volume'
 
         volume_attachment_reference_instance_context_model = {} # VolumeAttachmentReferenceInstanceContext
         volume_attachment_reference_instance_context_model['deleted'] = volume_attachment_reference_instance_context_deleted_model
         volume_attachment_reference_instance_context_model['device'] = volume_attachment_device_model
-        volume_attachment_reference_instance_context_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a'
-        volume_attachment_reference_instance_context_model['id'] = '82cbf856-9cbb-45fb-b62f-d7bcef32399a'
-        volume_attachment_reference_instance_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_reference_instance_context_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/eb1b7391-2ca2-4ab5-84a8-b92157a633b0/volume_attachments/7389-a8a15363-a6f7-4f01-af60-715e85b28141'
+        volume_attachment_reference_instance_context_model['id'] = 'a8a15363-a6f7-4f01-af60-715e85b28141'
+        volume_attachment_reference_instance_context_model['name'] = 'my-boot-volume-attachment'
         volume_attachment_reference_instance_context_model['volume'] = volume_reference_model
 
         instance_disk_model = {} # InstanceDisk
-        instance_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['interface_type'] = 'virtio_blk'
@@ -26544,10 +27133,10 @@ class TestInstance():
         image_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         image_reference_model = {} # ImageReference
-        image_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['crn'] = 'crn:[...]'
         image_reference_model['deleted'] = image_reference_deleted_model
-        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
-        image_reference_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/9aaf3bcb-dcd7-4de7-bb60-24e39ff9d366'
+        image_reference_model['id'] = '9aaf3bcb-dcd7-4de7-bb60-24e39ff9d366'
         image_reference_model['name'] = 'my-image'
 
         network_interface_instance_context_reference_deleted_model = {} # NetworkInterfaceInstanceContextReferenceDeleted
@@ -26557,29 +27146,40 @@ class TestInstance():
         subnet_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         subnet_reference_model = {} # SubnetReference
-        subnet_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['crn'] = 'crn:[...]'
         subnet_reference_model['deleted'] = subnet_reference_deleted_model
-        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
-        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7389-bea6a632-5e13-42a4-b4b8-31dc877abfe4'
+        subnet_reference_model['id'] = 'bea6a632-5e13-42a4-b4b8-31dc877abfe4'
         subnet_reference_model['name'] = 'my-subnet'
 
         network_interface_instance_context_reference_model = {} # NetworkInterfaceInstanceContextReference
         network_interface_instance_context_reference_model['deleted'] = network_interface_instance_context_reference_deleted_model
-        network_interface_instance_context_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
-        network_interface_instance_context_reference_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
+        network_interface_instance_context_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/e402fa1b-96f6-4aa2-a8d7-703aac843651/network_interfaces/7ca88dfb-8962-469d-b1de-1dd56f4c3275'
+        network_interface_instance_context_reference_model['id'] = '7ca88dfb-8962-469d-b1de-1dd56f4c3275'
         network_interface_instance_context_reference_model['name'] = 'my-network-interface'
-        network_interface_instance_context_reference_model['primary_ipv4_address'] = '192.168.3.4'
+        network_interface_instance_context_reference_model['primary_ipv4_address'] = '10.0.0.32'
         network_interface_instance_context_reference_model['resource_type'] = 'network_interface'
         network_interface_instance_context_reference_model['subnet'] = subnet_reference_model
 
+        dedicated_host_group_reference_deleted_model = {} # DedicatedHostGroupReferenceDeleted
+        dedicated_host_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        instance_placement_target_model = {} # InstancePlacementTargetDedicatedHostGroupReference
+        instance_placement_target_model['crn'] = 'crn:[...]'
+        instance_placement_target_model['deleted'] = dedicated_host_group_reference_deleted_model
+        instance_placement_target_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/0787-8c2a09be-ee18-4af2-8ef4-6a6060732221'
+        instance_placement_target_model['id'] = '0787-8c2a09be-ee18-4af2-8ef4-6a6060732221'
+        instance_placement_target_model['name'] = 'test-new'
+        instance_placement_target_model['resource_type'] = 'dedicated_host'
+
         instance_profile_reference_model = {} # InstanceProfileReference
-        instance_profile_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16'
-        instance_profile_reference_model['name'] = 'bc1-4x16'
+        instance_profile_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bx2-2x8'
+        instance_profile_reference_model['name'] = 'bx2-2x8'
 
         resource_group_reference_model = {} # ResourceGroupReference
-        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['name'] = 'my-resource-group'
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/4bbce614c13444cd8fc5e7e878ef8e21'
+        resource_group_reference_model['id'] = '4bbce614c13444cd8fc5e7e878ef8e21'
+        resource_group_reference_model['name'] = 'Default'
 
         instance_status_reason_model = {} # InstanceStatusReason
         instance_status_reason_model['code'] = 'cannot_start_storage'
@@ -26588,16 +27188,16 @@ class TestInstance():
 
         instance_vcpu_model = {} # InstanceVCPU
         instance_vcpu_model['architecture'] = 'amd64'
-        instance_vcpu_model['count'] = 4
+        instance_vcpu_model['count'] = 2
 
         vpc_reference_deleted_model = {} # VPCReferenceDeleted
         vpc_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         vpc_reference_model = {} # VPCReference
-        vpc_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['crn'] = 'crn:[...]'
         vpc_reference_model['deleted'] = vpc_reference_deleted_model
-        vpc_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b'
-        vpc_reference_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/f0aae929-7047-46d1-92e1-9102b07a7f6f'
+        vpc_reference_model['id'] = 'f0aae929-7047-46d1-92e1-9102b07a7f6f'
         vpc_reference_model['name'] = 'my-vpc'
 
         zone_reference_model = {} # ZoneReference
@@ -26608,7 +27208,7 @@ class TestInstance():
         instance_model_json = {}
         instance_model_json['bandwidth'] = 1000
         instance_model_json['boot_volume_attachment'] = volume_attachment_reference_instance_context_model
-        instance_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_model_json['disks'] = [instance_disk_model]
         instance_model_json['gpu'] = instance_gpu_model
@@ -26618,9 +27218,11 @@ class TestInstance():
         instance_model_json['memory'] = 8
         instance_model_json['name'] = 'my-instance'
         instance_model_json['network_interfaces'] = [network_interface_instance_context_reference_model]
+        instance_model_json['placement_target'] = instance_placement_target_model
         instance_model_json['primary_network_interface'] = network_interface_instance_context_reference_model
         instance_model_json['profile'] = instance_profile_reference_model
         instance_model_json['resource_group'] = resource_group_reference_model
+        instance_model_json['startable'] = True
         instance_model_json['status'] = 'deleting'
         instance_model_json['status_reasons'] = [instance_status_reason_model]
         instance_model_json['vcpu'] = instance_vcpu_model
@@ -26643,7 +27245,7 @@ class TestInstance():
         instance_model_json2 = instance_model.to_dict()
         assert instance_model_json2 == instance_model_json
 
-class TestInstanceAction():
+class TestModel_InstanceAction():
     """
     Test Class for InstanceAction
     """
@@ -26655,12 +27257,12 @@ class TestInstanceAction():
 
         # Construct a json representation of a InstanceAction model
         instance_action_model_json = {}
-        instance_action_model_json['completed_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_action_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_action_model_json['completed_at'] = "2019-01-01T12:00:00Z"
+        instance_action_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_action_model_json['force'] = True
         instance_action_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/actions/109a1b6e-1242-4de1-be44-38705e9474ed'
         instance_action_model_json['id'] = '109a1b6e-1242-4de1-be44-38705e9474ed'
-        instance_action_model_json['started_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_action_model_json['started_at'] = "2019-01-01T12:00:00Z"
         instance_action_model_json['status'] = 'completed'
         instance_action_model_json['type'] = 'reboot'
 
@@ -26679,7 +27281,7 @@ class TestInstanceAction():
         instance_action_model_json2 = instance_action_model.to_dict()
         assert instance_action_model_json2 == instance_action_model_json
 
-class TestInstanceCollection():
+class TestModel_InstanceCollection():
     """
     Test Class for InstanceCollection
     """
@@ -26719,7 +27321,7 @@ class TestInstanceCollection():
         volume_attachment_reference_instance_context_model['volume'] = volume_reference_model
 
         instance_disk_model = {} # InstanceDisk
-        instance_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['interface_type'] = 'virtio_blk'
@@ -26765,6 +27367,17 @@ class TestInstanceCollection():
         network_interface_instance_context_reference_model['resource_type'] = 'network_interface'
         network_interface_instance_context_reference_model['subnet'] = subnet_reference_model
 
+        dedicated_host_group_reference_deleted_model = {} # DedicatedHostGroupReferenceDeleted
+        dedicated_host_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        instance_placement_target_model = {} # InstancePlacementTargetDedicatedHostGroupReference
+        instance_placement_target_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_model['deleted'] = dedicated_host_group_reference_deleted_model
+        instance_placement_target_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_model['id'] = 'bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_model['name'] = 'my-host-group'
+        instance_placement_target_model['resource_type'] = 'dedicated_host_group'
+
         instance_profile_reference_model = {} # InstanceProfileReference
         instance_profile_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bc1-4x16'
         instance_profile_reference_model['name'] = 'bc1-4x16'
@@ -26800,7 +27413,7 @@ class TestInstanceCollection():
         instance_model = {} # Instance
         instance_model['bandwidth'] = 1000
         instance_model['boot_volume_attachment'] = volume_attachment_reference_instance_context_model
-        instance_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_model['disks'] = [instance_disk_model]
         instance_model['gpu'] = instance_gpu_model
@@ -26810,9 +27423,11 @@ class TestInstanceCollection():
         instance_model['memory'] = 8
         instance_model['name'] = 'my-instance'
         instance_model['network_interfaces'] = [network_interface_instance_context_reference_model]
+        instance_model['placement_target'] = instance_placement_target_model
         instance_model['primary_network_interface'] = network_interface_instance_context_reference_model
         instance_model['profile'] = instance_profile_reference_model
         instance_model['resource_group'] = resource_group_reference_model
+        instance_model['startable'] = True
         instance_model['status'] = 'deleting'
         instance_model['status_reasons'] = [instance_status_reason_model]
         instance_model['vcpu'] = instance_vcpu_model
@@ -26846,7 +27461,7 @@ class TestInstanceCollection():
         instance_collection_model_json2 = instance_collection_model.to_dict()
         assert instance_collection_model_json2 == instance_collection_model_json
 
-class TestInstanceCollectionFirst():
+class TestModel_InstanceCollectionFirst():
     """
     Test Class for InstanceCollectionFirst
     """
@@ -26875,7 +27490,7 @@ class TestInstanceCollectionFirst():
         instance_collection_first_model_json2 = instance_collection_first_model.to_dict()
         assert instance_collection_first_model_json2 == instance_collection_first_model_json
 
-class TestInstanceCollectionNext():
+class TestModel_InstanceCollectionNext():
     """
     Test Class for InstanceCollectionNext
     """
@@ -26904,7 +27519,7 @@ class TestInstanceCollectionNext():
         instance_collection_next_model_json2 = instance_collection_next_model.to_dict()
         assert instance_collection_next_model_json2 == instance_collection_next_model_json
 
-class TestInstanceConsoleAccessToken():
+class TestModel_InstanceConsoleAccessToken():
     """
     Test Class for InstanceConsoleAccessToken
     """
@@ -26918,8 +27533,8 @@ class TestInstanceConsoleAccessToken():
         instance_console_access_token_model_json = {}
         instance_console_access_token_model_json['access_token'] = 'VGhpcyBJcyBhIHRva2Vu'
         instance_console_access_token_model_json['console_type'] = 'serial'
-        instance_console_access_token_model_json['created_at'] = datetime_to_string(string_to_datetime("2020-07-27T21:50:14.000Z"))
-        instance_console_access_token_model_json['expires_at'] = datetime_to_string(string_to_datetime("2020-07-27T21:51:14.000Z"))
+        instance_console_access_token_model_json['created_at'] = "2020-07-27T21:50:14Z"
+        instance_console_access_token_model_json['expires_at'] = "2020-07-27T21:51:14Z"
         instance_console_access_token_model_json['force'] = False
         instance_console_access_token_model_json['href'] = 'wss://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/console?access_token=VGhpcyBJcyBhIHRva2Vu'
 
@@ -26938,7 +27553,7 @@ class TestInstanceConsoleAccessToken():
         instance_console_access_token_model_json2 = instance_console_access_token_model.to_dict()
         assert instance_console_access_token_model_json2 == instance_console_access_token_model_json
 
-class TestInstanceDisk():
+class TestModel_InstanceDisk():
     """
     Test Class for InstanceDisk
     """
@@ -26950,7 +27565,7 @@ class TestInstanceDisk():
 
         # Construct a json representation of a InstanceDisk model
         instance_disk_model_json = {}
-        instance_disk_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_disk_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_disk_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model_json['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model_json['interface_type'] = 'virtio_blk'
@@ -26973,7 +27588,7 @@ class TestInstanceDisk():
         instance_disk_model_json2 = instance_disk_model.to_dict()
         assert instance_disk_model_json2 == instance_disk_model_json
 
-class TestInstanceDiskCollection():
+class TestModel_InstanceDiskCollection():
     """
     Test Class for InstanceDiskCollection
     """
@@ -26986,7 +27601,7 @@ class TestInstanceDiskCollection():
         # Construct dict forms of any model objects needed in order to build this model.
 
         instance_disk_model = {} # InstanceDisk
-        instance_disk_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_disk_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_disk_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/disks/10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
         instance_disk_model['interface_type'] = 'virtio_blk'
@@ -27013,7 +27628,7 @@ class TestInstanceDiskCollection():
         instance_disk_collection_model_json2 = instance_disk_collection_model.to_dict()
         assert instance_disk_collection_model_json2 == instance_disk_collection_model_json
 
-class TestInstanceDiskPatch():
+class TestModel_InstanceDiskPatch():
     """
     Test Class for InstanceDiskPatch
     """
@@ -27042,7 +27657,7 @@ class TestInstanceDiskPatch():
         instance_disk_patch_model_json2 = instance_disk_patch_model.to_dict()
         assert instance_disk_patch_model_json2 == instance_disk_patch_model_json
 
-class TestInstanceDiskReference():
+class TestModel_InstanceDiskReference():
     """
     Test Class for InstanceDiskReference
     """
@@ -27080,7 +27695,7 @@ class TestInstanceDiskReference():
         instance_disk_reference_model_json2 = instance_disk_reference_model.to_dict()
         assert instance_disk_reference_model_json2 == instance_disk_reference_model_json
 
-class TestInstanceDiskReferenceDeleted():
+class TestModel_InstanceDiskReferenceDeleted():
     """
     Test Class for InstanceDiskReferenceDeleted
     """
@@ -27109,7 +27724,7 @@ class TestInstanceDiskReferenceDeleted():
         instance_disk_reference_deleted_model_json2 = instance_disk_reference_deleted_model.to_dict()
         assert instance_disk_reference_deleted_model_json2 == instance_disk_reference_deleted_model_json
 
-class TestInstanceGPU():
+class TestModel_InstanceGPU():
     """
     Test Class for InstanceGPU
     """
@@ -27141,7 +27756,7 @@ class TestInstanceGPU():
         instance_gpu_model_json2 = instance_gpu_model.to_dict()
         assert instance_gpu_model_json2 == instance_gpu_model_json
 
-class TestInstanceGroup():
+class TestModel_InstanceGroup():
     """
     Test Class for InstanceGroup
     """
@@ -27209,7 +27824,7 @@ class TestInstanceGroup():
         # Construct a json representation of a InstanceGroup model
         instance_group_model_json = {}
         instance_group_model_json['application_port'] = 22
-        instance_group_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
@@ -27221,7 +27836,7 @@ class TestInstanceGroup():
         instance_group_model_json['resource_group'] = resource_group_reference_model
         instance_group_model_json['status'] = 'deleting'
         instance_group_model_json['subnets'] = [subnet_reference_model]
-        instance_group_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_model_json['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_model_json['vpc'] = vpc_reference_model
 
         # Construct a model instance of InstanceGroup by calling from_dict on the json representation
@@ -27239,7 +27854,7 @@ class TestInstanceGroup():
         instance_group_model_json2 = instance_group_model.to_dict()
         assert instance_group_model_json2 == instance_group_model_json
 
-class TestInstanceGroupCollection():
+class TestModel_InstanceGroupCollection():
     """
     Test Class for InstanceGroupCollection
     """
@@ -27309,7 +27924,7 @@ class TestInstanceGroupCollection():
 
         instance_group_model = {} # InstanceGroup
         instance_group_model['application_port'] = 22
-        instance_group_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-group:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
@@ -27321,7 +27936,7 @@ class TestInstanceGroupCollection():
         instance_group_model['resource_group'] = resource_group_reference_model
         instance_group_model['status'] = 'deleting'
         instance_group_model['subnets'] = [subnet_reference_model]
-        instance_group_model['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_model['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_model['vpc'] = vpc_reference_model
 
         instance_group_collection_next_model = {} # InstanceGroupCollectionNext
@@ -27350,7 +27965,7 @@ class TestInstanceGroupCollection():
         instance_group_collection_model_json2 = instance_group_collection_model.to_dict()
         assert instance_group_collection_model_json2 == instance_group_collection_model_json
 
-class TestInstanceGroupCollectionFirst():
+class TestModel_InstanceGroupCollectionFirst():
     """
     Test Class for InstanceGroupCollectionFirst
     """
@@ -27379,7 +27994,7 @@ class TestInstanceGroupCollectionFirst():
         instance_group_collection_first_model_json2 = instance_group_collection_first_model.to_dict()
         assert instance_group_collection_first_model_json2 == instance_group_collection_first_model_json
 
-class TestInstanceGroupCollectionNext():
+class TestModel_InstanceGroupCollectionNext():
     """
     Test Class for InstanceGroupCollectionNext
     """
@@ -27408,7 +28023,108 @@ class TestInstanceGroupCollectionNext():
         instance_group_collection_next_model_json2 = instance_group_collection_next_model.to_dict()
         assert instance_group_collection_next_model_json2 == instance_group_collection_next_model_json
 
-class TestInstanceGroupManagerActionReference():
+class TestModel_InstanceGroupManagerActionGroupPatch():
+    """
+    Test Class for InstanceGroupManagerActionGroupPatch
+    """
+
+    def test_instance_group_manager_action_group_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerActionGroupPatch
+        """
+
+        # Construct a json representation of a InstanceGroupManagerActionGroupPatch model
+        instance_group_manager_action_group_patch_model_json = {}
+        instance_group_manager_action_group_patch_model_json['membership_count'] = 10
+
+        # Construct a model instance of InstanceGroupManagerActionGroupPatch by calling from_dict on the json representation
+        instance_group_manager_action_group_patch_model = InstanceGroupManagerActionGroupPatch.from_dict(instance_group_manager_action_group_patch_model_json)
+        assert instance_group_manager_action_group_patch_model != False
+
+        # Construct a model instance of InstanceGroupManagerActionGroupPatch by calling from_dict on the json representation
+        instance_group_manager_action_group_patch_model_dict = InstanceGroupManagerActionGroupPatch.from_dict(instance_group_manager_action_group_patch_model_json).__dict__
+        instance_group_manager_action_group_patch_model2 = InstanceGroupManagerActionGroupPatch(**instance_group_manager_action_group_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_action_group_patch_model == instance_group_manager_action_group_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_action_group_patch_model_json2 = instance_group_manager_action_group_patch_model.to_dict()
+        assert instance_group_manager_action_group_patch_model_json2 == instance_group_manager_action_group_patch_model_json
+
+class TestModel_InstanceGroupManagerActionManagerPatch():
+    """
+    Test Class for InstanceGroupManagerActionManagerPatch
+    """
+
+    def test_instance_group_manager_action_manager_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerActionManagerPatch
+        """
+
+        # Construct a json representation of a InstanceGroupManagerActionManagerPatch model
+        instance_group_manager_action_manager_patch_model_json = {}
+        instance_group_manager_action_manager_patch_model_json['max_membership_count'] = 10
+        instance_group_manager_action_manager_patch_model_json['min_membership_count'] = 10
+
+        # Construct a model instance of InstanceGroupManagerActionManagerPatch by calling from_dict on the json representation
+        instance_group_manager_action_manager_patch_model = InstanceGroupManagerActionManagerPatch.from_dict(instance_group_manager_action_manager_patch_model_json)
+        assert instance_group_manager_action_manager_patch_model != False
+
+        # Construct a model instance of InstanceGroupManagerActionManagerPatch by calling from_dict on the json representation
+        instance_group_manager_action_manager_patch_model_dict = InstanceGroupManagerActionManagerPatch.from_dict(instance_group_manager_action_manager_patch_model_json).__dict__
+        instance_group_manager_action_manager_patch_model2 = InstanceGroupManagerActionManagerPatch(**instance_group_manager_action_manager_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_action_manager_patch_model == instance_group_manager_action_manager_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_action_manager_patch_model_json2 = instance_group_manager_action_manager_patch_model.to_dict()
+        assert instance_group_manager_action_manager_patch_model_json2 == instance_group_manager_action_manager_patch_model_json
+
+class TestModel_InstanceGroupManagerActionPatch():
+    """
+    Test Class for InstanceGroupManagerActionPatch
+    """
+
+    def test_instance_group_manager_action_patch_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerActionPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        instance_group_manager_action_group_patch_model = {} # InstanceGroupManagerActionGroupPatch
+        instance_group_manager_action_group_patch_model['membership_count'] = 10
+
+        instance_group_manager_action_manager_patch_model = {} # InstanceGroupManagerActionManagerPatch
+        instance_group_manager_action_manager_patch_model['max_membership_count'] = 10
+        instance_group_manager_action_manager_patch_model['min_membership_count'] = 10
+
+        # Construct a json representation of a InstanceGroupManagerActionPatch model
+        instance_group_manager_action_patch_model_json = {}
+        instance_group_manager_action_patch_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        instance_group_manager_action_patch_model_json['group'] = instance_group_manager_action_group_patch_model
+        instance_group_manager_action_patch_model_json['manager'] = instance_group_manager_action_manager_patch_model
+        instance_group_manager_action_patch_model_json['name'] = 'my-instance-group-manager-action'
+        instance_group_manager_action_patch_model_json['run_at'] = "2019-01-01T12:00:00Z"
+
+        # Construct a model instance of InstanceGroupManagerActionPatch by calling from_dict on the json representation
+        instance_group_manager_action_patch_model = InstanceGroupManagerActionPatch.from_dict(instance_group_manager_action_patch_model_json)
+        assert instance_group_manager_action_patch_model != False
+
+        # Construct a model instance of InstanceGroupManagerActionPatch by calling from_dict on the json representation
+        instance_group_manager_action_patch_model_dict = InstanceGroupManagerActionPatch.from_dict(instance_group_manager_action_patch_model_json).__dict__
+        instance_group_manager_action_patch_model2 = InstanceGroupManagerActionPatch(**instance_group_manager_action_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_action_patch_model == instance_group_manager_action_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_action_patch_model_json2 = instance_group_manager_action_patch_model.to_dict()
+        assert instance_group_manager_action_patch_model_json2 == instance_group_manager_action_patch_model_json
+
+class TestModel_InstanceGroupManagerActionReference():
     """
     Test Class for InstanceGroupManagerActionReference
     """
@@ -27446,7 +28162,7 @@ class TestInstanceGroupManagerActionReference():
         instance_group_manager_action_reference_model_json2 = instance_group_manager_action_reference_model.to_dict()
         assert instance_group_manager_action_reference_model_json2 == instance_group_manager_action_reference_model_json
 
-class TestInstanceGroupManagerActionReferenceDeleted():
+class TestModel_InstanceGroupManagerActionReferenceDeleted():
     """
     Test Class for InstanceGroupManagerActionReferenceDeleted
     """
@@ -27475,7 +28191,7 @@ class TestInstanceGroupManagerActionReferenceDeleted():
         instance_group_manager_action_reference_deleted_model_json2 = instance_group_manager_action_reference_deleted_model.to_dict()
         assert instance_group_manager_action_reference_deleted_model_json2 == instance_group_manager_action_reference_deleted_model_json
 
-class TestInstanceGroupManagerActionsCollection():
+class TestModel_InstanceGroupManagerActionsCollection():
     """
     Test Class for InstanceGroupManagerActionsCollection
     """
@@ -27487,24 +28203,24 @@ class TestInstanceGroupManagerActionsCollection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        instance_group_manager_scheduled_action_group_group_model = {} # InstanceGroupManagerScheduledActionGroupGroup
-        instance_group_manager_scheduled_action_group_group_model['membership_count'] = 10
+        instance_group_manager_scheduled_action_group_model = {} # InstanceGroupManagerScheduledActionGroup
+        instance_group_manager_scheduled_action_group_model['membership_count'] = 10
 
-        instance_group_manager_action_model = {} # InstanceGroupManagerActionScheduledActionGroup
+        instance_group_manager_action_model = {} # InstanceGroupManagerActionScheduledActionGroupTarget
         instance_group_manager_action_model['auto_delete'] = True
         instance_group_manager_action_model['auto_delete_timeout'] = 24
-        instance_group_manager_action_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_action_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_action_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_action_model['name'] = 'my-instance-group-manager-action'
         instance_group_manager_action_model['resource_type'] = 'instance_group_manager_action'
         instance_group_manager_action_model['status'] = 'active'
-        instance_group_manager_action_model['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_model['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_action_model['action_type'] = 'scheduled'
         instance_group_manager_action_model['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_model['last_applied_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_model['next_run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_model['group'] = instance_group_manager_scheduled_action_group_group_model
+        instance_group_manager_action_model['last_applied_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_model['next_run_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_model['group'] = instance_group_manager_scheduled_action_group_model
 
         instance_group_manager_actions_collection_first_model = {} # InstanceGroupManagerActionsCollectionFirst
         instance_group_manager_actions_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions?limit=20'
@@ -27535,7 +28251,7 @@ class TestInstanceGroupManagerActionsCollection():
         instance_group_manager_actions_collection_model_json2 = instance_group_manager_actions_collection_model.to_dict()
         assert instance_group_manager_actions_collection_model_json2 == instance_group_manager_actions_collection_model_json
 
-class TestInstanceGroupManagerActionsCollectionFirst():
+class TestModel_InstanceGroupManagerActionsCollectionFirst():
     """
     Test Class for InstanceGroupManagerActionsCollectionFirst
     """
@@ -27564,7 +28280,7 @@ class TestInstanceGroupManagerActionsCollectionFirst():
         instance_group_manager_actions_collection_first_model_json2 = instance_group_manager_actions_collection_first_model.to_dict()
         assert instance_group_manager_actions_collection_first_model_json2 == instance_group_manager_actions_collection_first_model_json
 
-class TestInstanceGroupManagerActionsCollectionNext():
+class TestModel_InstanceGroupManagerActionsCollectionNext():
     """
     Test Class for InstanceGroupManagerActionsCollectionNext
     """
@@ -27593,7 +28309,7 @@ class TestInstanceGroupManagerActionsCollectionNext():
         instance_group_manager_actions_collection_next_model_json2 = instance_group_manager_actions_collection_next_model.to_dict()
         assert instance_group_manager_actions_collection_next_model_json2 == instance_group_manager_actions_collection_next_model_json
 
-class TestInstanceGroupManagerCollection():
+class TestModel_InstanceGroupManagerCollection():
     """
     Test Class for InstanceGroupManagerCollection
     """
@@ -27618,12 +28334,12 @@ class TestInstanceGroupManagerCollection():
         instance_group_manager_policy_reference_model['name'] = 'my-instance-group-manager-policy'
 
         instance_group_manager_model = {} # InstanceGroupManagerAutoScale
-        instance_group_manager_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
         instance_group_manager_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_model['management_enabled'] = True
         instance_group_manager_model['name'] = 'my-instance-group-manager'
-        instance_group_manager_model['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_model['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_model['aggregation_window'] = 120
         instance_group_manager_model['cooldown'] = 210
         instance_group_manager_model['manager_type'] = 'autoscale'
@@ -27657,7 +28373,7 @@ class TestInstanceGroupManagerCollection():
         instance_group_manager_collection_model_json2 = instance_group_manager_collection_model.to_dict()
         assert instance_group_manager_collection_model_json2 == instance_group_manager_collection_model_json
 
-class TestInstanceGroupManagerCollectionFirst():
+class TestModel_InstanceGroupManagerCollectionFirst():
     """
     Test Class for InstanceGroupManagerCollectionFirst
     """
@@ -27686,7 +28402,7 @@ class TestInstanceGroupManagerCollectionFirst():
         instance_group_manager_collection_first_model_json2 = instance_group_manager_collection_first_model.to_dict()
         assert instance_group_manager_collection_first_model_json2 == instance_group_manager_collection_first_model_json
 
-class TestInstanceGroupManagerCollectionNext():
+class TestModel_InstanceGroupManagerCollectionNext():
     """
     Test Class for InstanceGroupManagerCollectionNext
     """
@@ -27715,7 +28431,7 @@ class TestInstanceGroupManagerCollectionNext():
         instance_group_manager_collection_next_model_json2 = instance_group_manager_collection_next_model.to_dict()
         assert instance_group_manager_collection_next_model_json2 == instance_group_manager_collection_next_model_json
 
-class TestInstanceGroupManagerPatch():
+class TestModel_InstanceGroupManagerPatch():
     """
     Test Class for InstanceGroupManagerPatch
     """
@@ -27749,7 +28465,7 @@ class TestInstanceGroupManagerPatch():
         instance_group_manager_patch_model_json2 = instance_group_manager_patch_model.to_dict()
         assert instance_group_manager_patch_model_json2 == instance_group_manager_patch_model_json
 
-class TestInstanceGroupManagerPolicyCollection():
+class TestModel_InstanceGroupManagerPolicyCollection():
     """
     Test Class for InstanceGroupManagerPolicyCollection
     """
@@ -27768,11 +28484,11 @@ class TestInstanceGroupManagerPolicyCollection():
         instance_group_manager_policy_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
 
         instance_group_manager_policy_model = {} # InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy
-        instance_group_manager_policy_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_policy_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_policy_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/policies/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_policy_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_policy_model['name'] = 'my-instance-group-manager-policy'
-        instance_group_manager_policy_model['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_policy_model['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_policy_model['metric_type'] = 'cpu'
         instance_group_manager_policy_model['metric_value'] = 38
         instance_group_manager_policy_model['policy_type'] = 'target'
@@ -27800,7 +28516,7 @@ class TestInstanceGroupManagerPolicyCollection():
         instance_group_manager_policy_collection_model_json2 = instance_group_manager_policy_collection_model.to_dict()
         assert instance_group_manager_policy_collection_model_json2 == instance_group_manager_policy_collection_model_json
 
-class TestInstanceGroupManagerPolicyCollectionFirst():
+class TestModel_InstanceGroupManagerPolicyCollectionFirst():
     """
     Test Class for InstanceGroupManagerPolicyCollectionFirst
     """
@@ -27829,7 +28545,7 @@ class TestInstanceGroupManagerPolicyCollectionFirst():
         instance_group_manager_policy_collection_first_model_json2 = instance_group_manager_policy_collection_first_model.to_dict()
         assert instance_group_manager_policy_collection_first_model_json2 == instance_group_manager_policy_collection_first_model_json
 
-class TestInstanceGroupManagerPolicyCollectionNext():
+class TestModel_InstanceGroupManagerPolicyCollectionNext():
     """
     Test Class for InstanceGroupManagerPolicyCollectionNext
     """
@@ -27858,7 +28574,7 @@ class TestInstanceGroupManagerPolicyCollectionNext():
         instance_group_manager_policy_collection_next_model_json2 = instance_group_manager_policy_collection_next_model.to_dict()
         assert instance_group_manager_policy_collection_next_model_json2 == instance_group_manager_policy_collection_next_model_json
 
-class TestInstanceGroupManagerPolicyPatch():
+class TestModel_InstanceGroupManagerPolicyPatch():
     """
     Test Class for InstanceGroupManagerPolicyPatch
     """
@@ -27889,7 +28605,7 @@ class TestInstanceGroupManagerPolicyPatch():
         instance_group_manager_policy_patch_model_json2 = instance_group_manager_policy_patch_model.to_dict()
         assert instance_group_manager_policy_patch_model_json2 == instance_group_manager_policy_patch_model_json
 
-class TestInstanceGroupManagerPolicyReference():
+class TestModel_InstanceGroupManagerPolicyReference():
     """
     Test Class for InstanceGroupManagerPolicyReference
     """
@@ -27926,7 +28642,7 @@ class TestInstanceGroupManagerPolicyReference():
         instance_group_manager_policy_reference_model_json2 = instance_group_manager_policy_reference_model.to_dict()
         assert instance_group_manager_policy_reference_model_json2 == instance_group_manager_policy_reference_model_json
 
-class TestInstanceGroupManagerPolicyReferenceDeleted():
+class TestModel_InstanceGroupManagerPolicyReferenceDeleted():
     """
     Test Class for InstanceGroupManagerPolicyReferenceDeleted
     """
@@ -27955,7 +28671,7 @@ class TestInstanceGroupManagerPolicyReferenceDeleted():
         instance_group_manager_policy_reference_deleted_model_json2 = instance_group_manager_policy_reference_deleted_model.to_dict()
         assert instance_group_manager_policy_reference_deleted_model_json2 == instance_group_manager_policy_reference_deleted_model_json
 
-class TestInstanceGroupManagerReference():
+class TestModel_InstanceGroupManagerReference():
     """
     Test Class for InstanceGroupManagerReference
     """
@@ -27992,7 +28708,7 @@ class TestInstanceGroupManagerReference():
         instance_group_manager_reference_model_json2 = instance_group_manager_reference_model.to_dict()
         assert instance_group_manager_reference_model_json2 == instance_group_manager_reference_model_json
 
-class TestInstanceGroupManagerReferenceDeleted():
+class TestModel_InstanceGroupManagerReferenceDeleted():
     """
     Test Class for InstanceGroupManagerReferenceDeleted
     """
@@ -28021,65 +28737,36 @@ class TestInstanceGroupManagerReferenceDeleted():
         instance_group_manager_reference_deleted_model_json2 = instance_group_manager_reference_deleted_model.to_dict()
         assert instance_group_manager_reference_deleted_model_json2 == instance_group_manager_reference_deleted_model_json
 
-class TestInstanceGroupManagerScheduledActionGroupGroup():
+class TestModel_InstanceGroupManagerScheduledActionGroup():
     """
-    Test Class for InstanceGroupManagerScheduledActionGroupGroup
+    Test Class for InstanceGroupManagerScheduledActionGroup
     """
 
-    def test_instance_group_manager_scheduled_action_group_group_serialization(self):
+    def test_instance_group_manager_scheduled_action_group_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionGroupGroup
+        Test serialization/deserialization for InstanceGroupManagerScheduledActionGroup
         """
 
-        # Construct a json representation of a InstanceGroupManagerScheduledActionGroupGroup model
-        instance_group_manager_scheduled_action_group_group_model_json = {}
-        instance_group_manager_scheduled_action_group_group_model_json['membership_count'] = 10
+        # Construct a json representation of a InstanceGroupManagerScheduledActionGroup model
+        instance_group_manager_scheduled_action_group_model_json = {}
+        instance_group_manager_scheduled_action_group_model_json['membership_count'] = 10
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionGroupGroup by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_group_group_model = InstanceGroupManagerScheduledActionGroupGroup.from_dict(instance_group_manager_scheduled_action_group_group_model_json)
-        assert instance_group_manager_scheduled_action_group_group_model != False
+        # Construct a model instance of InstanceGroupManagerScheduledActionGroup by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_group_model = InstanceGroupManagerScheduledActionGroup.from_dict(instance_group_manager_scheduled_action_group_model_json)
+        assert instance_group_manager_scheduled_action_group_model != False
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionGroupGroup by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_group_group_model_dict = InstanceGroupManagerScheduledActionGroupGroup.from_dict(instance_group_manager_scheduled_action_group_group_model_json).__dict__
-        instance_group_manager_scheduled_action_group_group_model2 = InstanceGroupManagerScheduledActionGroupGroup(**instance_group_manager_scheduled_action_group_group_model_dict)
+        # Construct a model instance of InstanceGroupManagerScheduledActionGroup by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_group_model_dict = InstanceGroupManagerScheduledActionGroup.from_dict(instance_group_manager_scheduled_action_group_model_json).__dict__
+        instance_group_manager_scheduled_action_group_model2 = InstanceGroupManagerScheduledActionGroup(**instance_group_manager_scheduled_action_group_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_group_group_model == instance_group_manager_scheduled_action_group_group_model2
+        assert instance_group_manager_scheduled_action_group_model == instance_group_manager_scheduled_action_group_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_group_group_model_json2 = instance_group_manager_scheduled_action_group_group_model.to_dict()
-        assert instance_group_manager_scheduled_action_group_group_model_json2 == instance_group_manager_scheduled_action_group_group_model_json
+        instance_group_manager_scheduled_action_group_model_json2 = instance_group_manager_scheduled_action_group_model.to_dict()
+        assert instance_group_manager_scheduled_action_group_model_json2 == instance_group_manager_scheduled_action_group_model_json
 
-class TestInstanceGroupManagerScheduledActionGroupPatch():
-    """
-    Test Class for InstanceGroupManagerScheduledActionGroupPatch
-    """
-
-    def test_instance_group_manager_scheduled_action_group_patch_serialization(self):
-        """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionGroupPatch
-        """
-
-        # Construct a json representation of a InstanceGroupManagerScheduledActionGroupPatch model
-        instance_group_manager_scheduled_action_group_patch_model_json = {}
-        instance_group_manager_scheduled_action_group_patch_model_json['membership_count'] = 10
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionGroupPatch by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_group_patch_model = InstanceGroupManagerScheduledActionGroupPatch.from_dict(instance_group_manager_scheduled_action_group_patch_model_json)
-        assert instance_group_manager_scheduled_action_group_patch_model != False
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionGroupPatch by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_group_patch_model_dict = InstanceGroupManagerScheduledActionGroupPatch.from_dict(instance_group_manager_scheduled_action_group_patch_model_json).__dict__
-        instance_group_manager_scheduled_action_group_patch_model2 = InstanceGroupManagerScheduledActionGroupPatch(**instance_group_manager_scheduled_action_group_patch_model_dict)
-
-        # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_group_patch_model == instance_group_manager_scheduled_action_group_patch_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_group_patch_model_json2 = instance_group_manager_scheduled_action_group_patch_model.to_dict()
-        assert instance_group_manager_scheduled_action_group_patch_model_json2 == instance_group_manager_scheduled_action_group_patch_model_json
-
-class TestInstanceGroupManagerScheduledActionGroupPrototype():
+class TestModel_InstanceGroupManagerScheduledActionGroupPrototype():
     """
     Test Class for InstanceGroupManagerScheduledActionGroupPrototype
     """
@@ -28108,7 +28795,7 @@ class TestInstanceGroupManagerScheduledActionGroupPrototype():
         instance_group_manager_scheduled_action_group_prototype_model_json2 = instance_group_manager_scheduled_action_group_prototype_model.to_dict()
         assert instance_group_manager_scheduled_action_group_prototype_model_json2 == instance_group_manager_scheduled_action_group_prototype_model_json
 
-class TestInstanceGroupMembership():
+class TestModel_InstanceGroupMembership():
     """
     Test Class for InstanceGroupMembership
     """
@@ -28150,7 +28837,7 @@ class TestInstanceGroupMembership():
 
         # Construct a json representation of a InstanceGroupMembership model
         instance_group_membership_model_json = {}
-        instance_group_membership_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_membership_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_membership_model_json['delete_instance_on_membership_delete'] = True
         instance_group_membership_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/memberships/8b002d86-601f-11ea-898b-000c29475bed'
         instance_group_membership_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
@@ -28159,7 +28846,7 @@ class TestInstanceGroupMembership():
         instance_group_membership_model_json['name'] = 'my-instance-group-membership'
         instance_group_membership_model_json['pool_member'] = load_balancer_pool_member_reference_model
         instance_group_membership_model_json['status'] = 'deleting'
-        instance_group_membership_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_membership_model_json['updated_at'] = "2019-01-01T12:00:00Z"
 
         # Construct a model instance of InstanceGroupMembership by calling from_dict on the json representation
         instance_group_membership_model = InstanceGroupMembership.from_dict(instance_group_membership_model_json)
@@ -28176,7 +28863,7 @@ class TestInstanceGroupMembership():
         instance_group_membership_model_json2 = instance_group_membership_model.to_dict()
         assert instance_group_membership_model_json2 == instance_group_membership_model_json
 
-class TestInstanceGroupMembershipCollection():
+class TestModel_InstanceGroupMembershipCollection():
     """
     Test Class for InstanceGroupMembershipCollection
     """
@@ -28220,7 +28907,7 @@ class TestInstanceGroupMembershipCollection():
         load_balancer_pool_member_reference_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
         instance_group_membership_model = {} # InstanceGroupMembership
-        instance_group_membership_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_membership_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_membership_model['delete_instance_on_membership_delete'] = True
         instance_group_membership_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/memberships/8b002d86-601f-11ea-898b-000c29475bed'
         instance_group_membership_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
@@ -28229,7 +28916,7 @@ class TestInstanceGroupMembershipCollection():
         instance_group_membership_model['name'] = 'my-instance-group-membership'
         instance_group_membership_model['pool_member'] = load_balancer_pool_member_reference_model
         instance_group_membership_model['status'] = 'deleting'
-        instance_group_membership_model['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_membership_model['updated_at'] = "2019-01-01T12:00:00Z"
 
         instance_group_membership_collection_next_model = {} # InstanceGroupMembershipCollectionNext
         instance_group_membership_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/7241e2a8-601f-11ea-8503-000c29475bed/memberships?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
@@ -28257,7 +28944,7 @@ class TestInstanceGroupMembershipCollection():
         instance_group_membership_collection_model_json2 = instance_group_membership_collection_model.to_dict()
         assert instance_group_membership_collection_model_json2 == instance_group_membership_collection_model_json
 
-class TestInstanceGroupMembershipCollectionFirst():
+class TestModel_InstanceGroupMembershipCollectionFirst():
     """
     Test Class for InstanceGroupMembershipCollectionFirst
     """
@@ -28286,7 +28973,7 @@ class TestInstanceGroupMembershipCollectionFirst():
         instance_group_membership_collection_first_model_json2 = instance_group_membership_collection_first_model.to_dict()
         assert instance_group_membership_collection_first_model_json2 == instance_group_membership_collection_first_model_json
 
-class TestInstanceGroupMembershipCollectionNext():
+class TestModel_InstanceGroupMembershipCollectionNext():
     """
     Test Class for InstanceGroupMembershipCollectionNext
     """
@@ -28315,7 +29002,7 @@ class TestInstanceGroupMembershipCollectionNext():
         instance_group_membership_collection_next_model_json2 = instance_group_membership_collection_next_model.to_dict()
         assert instance_group_membership_collection_next_model_json2 == instance_group_membership_collection_next_model_json
 
-class TestInstanceGroupMembershipPatch():
+class TestModel_InstanceGroupMembershipPatch():
     """
     Test Class for InstanceGroupMembershipPatch
     """
@@ -28344,7 +29031,7 @@ class TestInstanceGroupMembershipPatch():
         instance_group_membership_patch_model_json2 = instance_group_membership_patch_model.to_dict()
         assert instance_group_membership_patch_model_json2 == instance_group_membership_patch_model_json
 
-class TestInstanceGroupPatch():
+class TestModel_InstanceGroupPatch():
     """
     Test Class for InstanceGroupPatch
     """
@@ -28393,7 +29080,7 @@ class TestInstanceGroupPatch():
         instance_group_patch_model_json2 = instance_group_patch_model.to_dict()
         assert instance_group_patch_model_json2 == instance_group_patch_model_json
 
-class TestInstanceGroupReference():
+class TestModel_InstanceGroupReference():
     """
     Test Class for InstanceGroupReference
     """
@@ -28431,7 +29118,7 @@ class TestInstanceGroupReference():
         instance_group_reference_model_json2 = instance_group_reference_model.to_dict()
         assert instance_group_reference_model_json2 == instance_group_reference_model_json
 
-class TestInstanceGroupReferenceDeleted():
+class TestModel_InstanceGroupReferenceDeleted():
     """
     Test Class for InstanceGroupReferenceDeleted
     """
@@ -28460,7 +29147,7 @@ class TestInstanceGroupReferenceDeleted():
         instance_group_reference_deleted_model_json2 = instance_group_reference_deleted_model.to_dict()
         assert instance_group_reference_deleted_model_json2 == instance_group_reference_deleted_model_json
 
-class TestInstanceInitialization():
+class TestModel_InstanceInitialization():
     """
     Test Class for InstanceInitialization
     """
@@ -28476,12 +29163,12 @@ class TestInstanceInitialization():
         key_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         key_reference_instance_initialization_context_model = {} # KeyReferenceInstanceInitializationContextKeyReference
-        key_reference_instance_initialization_context_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_reference_instance_initialization_context_model['crn'] = 'crn:[...]'
         key_reference_instance_initialization_context_model['deleted'] = key_reference_deleted_model
-        key_reference_instance_initialization_context_model['fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
-        key_reference_instance_initialization_context_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803'
-        key_reference_instance_initialization_context_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
-        key_reference_instance_initialization_context_model['name'] = 'my-key'
+        key_reference_instance_initialization_context_model['fingerprint'] = 'SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E'
+        key_reference_instance_initialization_context_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/82679077-ac3b-4c10-be16-63e9c21f0f45'
+        key_reference_instance_initialization_context_model['id'] = '82679077-ac3b-4c10-be16-63e9c21f0f45'
+        key_reference_instance_initialization_context_model['name'] = 'my-key-1'
 
         instance_initialization_password_model = {} # InstanceInitializationPassword
         instance_initialization_password_model['encrypted_password'] = 'VGhpcyBpcyBhIG1vY2sgYnl0ZSBhcnJheSB2YWx1ZS4='
@@ -28507,7 +29194,7 @@ class TestInstanceInitialization():
         instance_initialization_model_json2 = instance_initialization_model.to_dict()
         assert instance_initialization_model_json2 == instance_initialization_model_json
 
-class TestInstanceInitializationPassword():
+class TestModel_InstanceInitializationPassword():
     """
     Test Class for InstanceInitializationPassword
     """
@@ -28550,7 +29237,7 @@ class TestInstanceInitializationPassword():
         instance_initialization_password_model_json2 = instance_initialization_password_model.to_dict()
         assert instance_initialization_password_model_json2 == instance_initialization_password_model_json
 
-class TestInstancePatch():
+class TestModel_InstancePatch():
     """
     Test Class for InstancePatch
     """
@@ -28585,7 +29272,7 @@ class TestInstancePatch():
         instance_patch_model_json2 = instance_patch_model.to_dict()
         assert instance_patch_model_json2 == instance_patch_model_json
 
-class TestInstanceProfile():
+class TestModel_InstanceProfile():
     """
     Test Class for InstanceProfile
     """
@@ -28669,7 +29356,7 @@ class TestInstanceProfile():
         instance_profile_model_json2 = instance_profile_model.to_dict()
         assert instance_profile_model_json2 == instance_profile_model_json
 
-class TestInstanceProfileCollection():
+class TestModel_InstanceProfileCollection():
     """
     Test Class for InstanceProfileCollection
     """
@@ -28756,7 +29443,7 @@ class TestInstanceProfileCollection():
         instance_profile_collection_model_json2 = instance_profile_collection_model.to_dict()
         assert instance_profile_collection_model_json2 == instance_profile_collection_model_json
 
-class TestInstanceProfileDisk():
+class TestModel_InstanceProfileDisk():
     """
     Test Class for InstanceProfileDisk
     """
@@ -28802,7 +29489,7 @@ class TestInstanceProfileDisk():
         instance_profile_disk_model_json2 = instance_profile_disk_model.to_dict()
         assert instance_profile_disk_model_json2 == instance_profile_disk_model_json
 
-class TestInstanceProfileDiskSupportedInterfaces():
+class TestModel_InstanceProfileDiskSupportedInterfaces():
     """
     Test Class for InstanceProfileDiskSupportedInterfaces
     """
@@ -28833,7 +29520,7 @@ class TestInstanceProfileDiskSupportedInterfaces():
         instance_profile_disk_supported_interfaces_model_json2 = instance_profile_disk_supported_interfaces_model.to_dict()
         assert instance_profile_disk_supported_interfaces_model_json2 == instance_profile_disk_supported_interfaces_model_json
 
-class TestInstanceProfileOSArchitecture():
+class TestModel_InstanceProfileOSArchitecture():
     """
     Test Class for InstanceProfileOSArchitecture
     """
@@ -28864,7 +29551,7 @@ class TestInstanceProfileOSArchitecture():
         instance_profile_os_architecture_model_json2 = instance_profile_os_architecture_model.to_dict()
         assert instance_profile_os_architecture_model_json2 == instance_profile_os_architecture_model_json
 
-class TestInstanceProfileReference():
+class TestModel_InstanceProfileReference():
     """
     Test Class for InstanceProfileReference
     """
@@ -28894,7 +29581,7 @@ class TestInstanceProfileReference():
         instance_profile_reference_model_json2 = instance_profile_reference_model.to_dict()
         assert instance_profile_reference_model_json2 == instance_profile_reference_model_json
 
-class TestInstanceProfileVCPUArchitecture():
+class TestModel_InstanceProfileVCPUArchitecture():
     """
     Test Class for InstanceProfileVCPUArchitecture
     """
@@ -28925,7 +29612,7 @@ class TestInstanceProfileVCPUArchitecture():
         instance_profile_vcpu_architecture_model_json2 = instance_profile_vcpu_architecture_model.to_dict()
         assert instance_profile_vcpu_architecture_model_json2 == instance_profile_vcpu_architecture_model_json
 
-class TestInstanceReference():
+class TestModel_InstanceReference():
     """
     Test Class for InstanceReference
     """
@@ -28963,7 +29650,7 @@ class TestInstanceReference():
         instance_reference_model_json2 = instance_reference_model.to_dict()
         assert instance_reference_model_json2 == instance_reference_model_json
 
-class TestInstanceReferenceDeleted():
+class TestModel_InstanceReferenceDeleted():
     """
     Test Class for InstanceReferenceDeleted
     """
@@ -28992,7 +29679,7 @@ class TestInstanceReferenceDeleted():
         instance_reference_deleted_model_json2 = instance_reference_deleted_model.to_dict()
         assert instance_reference_deleted_model_json2 == instance_reference_deleted_model_json
 
-class TestInstanceStatusReason():
+class TestModel_InstanceStatusReason():
     """
     Test Class for InstanceStatusReason
     """
@@ -29023,7 +29710,7 @@ class TestInstanceStatusReason():
         instance_status_reason_model_json2 = instance_status_reason_model.to_dict()
         assert instance_status_reason_model_json2 == instance_status_reason_model_json
 
-class TestInstanceTemplateCollection():
+class TestModel_InstanceTemplateCollection():
     """
     Test Class for InstanceTemplateCollection
     """
@@ -29104,7 +29791,7 @@ class TestInstanceTemplateCollection():
         zone_identity_model['name'] = 'us-south-1'
 
         instance_template_model = {} # InstanceTemplateInstanceByImage
-        instance_template_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_template_model['created_at'] = "2019-01-01T12:00:00Z"
         instance_template_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
@@ -29145,7 +29832,7 @@ class TestInstanceTemplateCollection():
         instance_template_collection_model_json2 = instance_template_collection_model.to_dict()
         assert instance_template_collection_model_json2 == instance_template_collection_model_json
 
-class TestInstanceTemplateCollectionFirst():
+class TestModel_InstanceTemplateCollectionFirst():
     """
     Test Class for InstanceTemplateCollectionFirst
     """
@@ -29174,7 +29861,7 @@ class TestInstanceTemplateCollectionFirst():
         instance_template_collection_first_model_json2 = instance_template_collection_first_model.to_dict()
         assert instance_template_collection_first_model_json2 == instance_template_collection_first_model_json
 
-class TestInstanceTemplateCollectionNext():
+class TestModel_InstanceTemplateCollectionNext():
     """
     Test Class for InstanceTemplateCollectionNext
     """
@@ -29203,7 +29890,7 @@ class TestInstanceTemplateCollectionNext():
         instance_template_collection_next_model_json2 = instance_template_collection_next_model.to_dict()
         assert instance_template_collection_next_model_json2 == instance_template_collection_next_model_json
 
-class TestInstanceTemplatePatch():
+class TestModel_InstanceTemplatePatch():
     """
     Test Class for InstanceTemplatePatch
     """
@@ -29232,7 +29919,7 @@ class TestInstanceTemplatePatch():
         instance_template_patch_model_json2 = instance_template_patch_model.to_dict()
         assert instance_template_patch_model_json2 == instance_template_patch_model_json
 
-class TestInstanceTemplateReference():
+class TestModel_InstanceTemplateReference():
     """
     Test Class for InstanceTemplateReference
     """
@@ -29270,7 +29957,7 @@ class TestInstanceTemplateReference():
         instance_template_reference_model_json2 = instance_template_reference_model.to_dict()
         assert instance_template_reference_model_json2 == instance_template_reference_model_json
 
-class TestInstanceTemplateReferenceDeleted():
+class TestModel_InstanceTemplateReferenceDeleted():
     """
     Test Class for InstanceTemplateReferenceDeleted
     """
@@ -29299,7 +29986,7 @@ class TestInstanceTemplateReferenceDeleted():
         instance_template_reference_deleted_model_json2 = instance_template_reference_deleted_model.to_dict()
         assert instance_template_reference_deleted_model_json2 == instance_template_reference_deleted_model_json
 
-class TestInstanceVCPU():
+class TestModel_InstanceVCPU():
     """
     Test Class for InstanceVCPU
     """
@@ -29329,7 +30016,7 @@ class TestInstanceVCPU():
         instance_vcpu_model_json2 = instance_vcpu_model.to_dict()
         assert instance_vcpu_model_json2 == instance_vcpu_model_json
 
-class TestKey():
+class TestModel_Key():
     """
     Test Class for Key
     """
@@ -29342,13 +30029,13 @@ class TestKey():
         # Construct dict forms of any model objects needed in order to build this model.
 
         resource_group_reference_model = {} # ResourceGroupReference
-        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['name'] = 'my-resource-group'
+        resource_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/resource_groups/3fad3f2204eb4998c3964d254ffcd771'
+        resource_group_reference_model['id'] = '3fad3f2204eb4998c3964d254ffcd771'
+        resource_group_reference_model['name'] = 'Default'
 
         # Construct a json representation of a Key model
         key_model_json = {}
-        key_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        key_model_json['created_at'] = "2019-01-01T12:00:00Z"
         key_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803'
         key_model_json['fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
         key_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803'
@@ -29374,7 +30061,7 @@ class TestKey():
         key_model_json2 = key_model.to_dict()
         assert key_model_json2 == key_model_json
 
-class TestKeyCollection():
+class TestModel_KeyCollection():
     """
     Test Class for KeyCollection
     """
@@ -29386,26 +30073,36 @@ class TestKeyCollection():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        page_link_model = {} # PageLink
+        page_link_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys?limit=50'
+
         resource_group_reference_model = {} # ResourceGroupReference
-        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
-        resource_group_reference_model['name'] = 'my-resource-group'
+        resource_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/resource_groups/3fad3f2204eb4998c3964d254ffcd771'
+        resource_group_reference_model['id'] = '3fad3f2204eb4998c3964d254ffcd771'
+        resource_group_reference_model['name'] = 'Default'
 
         key_model = {} # Key
-        key_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        key_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::key:a6b1a881-2ce8-41a3-80fc-36316a73f803'
-        key_model['fingerprint'] = 'SHA256:yxavE4CIOL2NlsqcurRO3xGjkP6m/0mp8ugojH5yxlY'
-        key_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/a6b1a881-2ce8-41a3-80fc-36316a73f803'
-        key_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        key_model['created_at'] = "2019-01-29T03:48:11Z"
+        key_model['crn'] = 'crn:[...]'
+        key_model['fingerprint'] = 'SHA256:RJ+YWs2kupwFGiJuLqY85twmcdLOUcjIc9cA6IR8n8E'
+        key_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys/82679077-ac3b-4c10-be16-63e9c21f0f45'
+        key_model['id'] = '82679077-ac3b-4c10-be16-63e9c21f0f45'
         key_model['length'] = 2048
-        key_model['name'] = 'my-key'
-        key_model['public_key'] = 'AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En'
+        key_model['name'] = 'my-key-1'
+        key_model['public_key'] = 'ssh-rsa AAAAB...n'
         key_model['resource_group'] = resource_group_reference_model
         key_model['type'] = 'rsa'
 
+        key_collection_next_model = {} # KeyCollectionNext
+        key_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
         # Construct a json representation of a KeyCollection model
         key_collection_model_json = {}
+        key_collection_model_json['first'] = page_link_model
         key_collection_model_json['keys'] = [key_model]
+        key_collection_model_json['limit'] = 20
+        key_collection_model_json['next'] = key_collection_next_model
+        key_collection_model_json['total_count'] = 132
 
         # Construct a model instance of KeyCollection by calling from_dict on the json representation
         key_collection_model = KeyCollection.from_dict(key_collection_model_json)
@@ -29422,7 +30119,36 @@ class TestKeyCollection():
         key_collection_model_json2 = key_collection_model.to_dict()
         assert key_collection_model_json2 == key_collection_model_json
 
-class TestKeyPatch():
+class TestModel_KeyCollectionNext():
+    """
+    Test Class for KeyCollectionNext
+    """
+
+    def test_key_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for KeyCollectionNext
+        """
+
+        # Construct a json representation of a KeyCollectionNext model
+        key_collection_next_model_json = {}
+        key_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/keys?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
+        # Construct a model instance of KeyCollectionNext by calling from_dict on the json representation
+        key_collection_next_model = KeyCollectionNext.from_dict(key_collection_next_model_json)
+        assert key_collection_next_model != False
+
+        # Construct a model instance of KeyCollectionNext by calling from_dict on the json representation
+        key_collection_next_model_dict = KeyCollectionNext.from_dict(key_collection_next_model_json).__dict__
+        key_collection_next_model2 = KeyCollectionNext(**key_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert key_collection_next_model == key_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        key_collection_next_model_json2 = key_collection_next_model.to_dict()
+        assert key_collection_next_model_json2 == key_collection_next_model_json
+
+class TestModel_KeyPatch():
     """
     Test Class for KeyPatch
     """
@@ -29451,7 +30177,7 @@ class TestKeyPatch():
         key_patch_model_json2 = key_patch_model.to_dict()
         assert key_patch_model_json2 == key_patch_model_json
 
-class TestKeyReferenceDeleted():
+class TestModel_KeyReferenceDeleted():
     """
     Test Class for KeyReferenceDeleted
     """
@@ -29480,7 +30206,7 @@ class TestKeyReferenceDeleted():
         key_reference_deleted_model_json2 = key_reference_deleted_model.to_dict()
         assert key_reference_deleted_model_json2 == key_reference_deleted_model_json
 
-class TestLoadBalancer():
+class TestModel_LoadBalancer():
     """
     Test Class for LoadBalancer
     """
@@ -29550,7 +30276,7 @@ class TestLoadBalancer():
 
         # Construct a json representation of a LoadBalancer model
         load_balancer_model_json = {}
-        load_balancer_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
         load_balancer_model_json['hostname'] = 'my-load-balancer-123456-us-south-1.lb.bluemix.net'
         load_balancer_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
@@ -29585,7 +30311,7 @@ class TestLoadBalancer():
         load_balancer_model_json2 = load_balancer_model.to_dict()
         assert load_balancer_model_json2 == load_balancer_model_json
 
-class TestLoadBalancerCollection():
+class TestModel_LoadBalancerCollection():
     """
     Test Class for LoadBalancerCollection
     """
@@ -29596,6 +30322,9 @@ class TestLoadBalancerCollection():
         """
 
         # Construct dict forms of any model objects needed in order to build this model.
+
+        load_balancer_collection_first_model = {} # LoadBalancerCollectionFirst
+        load_balancer_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers?limit=20'
 
         load_balancer_listener_reference_deleted_model = {} # LoadBalancerListenerReferenceDeleted
         load_balancer_listener_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
@@ -29654,7 +30383,7 @@ class TestLoadBalancerCollection():
         subnet_reference_model['name'] = 'my-subnet'
 
         load_balancer_model = {} # LoadBalancer
-        load_balancer_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::load-balancer:dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
         load_balancer_model['hostname'] = 'my-load-balancer-123456-us-south-1.lb.bluemix.net'
         load_balancer_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
@@ -29674,9 +30403,16 @@ class TestLoadBalancerCollection():
         load_balancer_model['security_groups_supported'] = True
         load_balancer_model['subnets'] = [subnet_reference_model]
 
+        load_balancer_collection_next_model = {} # LoadBalancerCollectionNext
+        load_balancer_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers?start=9d5a91a3e2cbd233b5a5b33436855ed&limit=20'
+
         # Construct a json representation of a LoadBalancerCollection model
         load_balancer_collection_model_json = {}
+        load_balancer_collection_model_json['first'] = load_balancer_collection_first_model
+        load_balancer_collection_model_json['limit'] = 20
         load_balancer_collection_model_json['load_balancers'] = [load_balancer_model]
+        load_balancer_collection_model_json['next'] = load_balancer_collection_next_model
+        load_balancer_collection_model_json['total_count'] = 132
 
         # Construct a model instance of LoadBalancerCollection by calling from_dict on the json representation
         load_balancer_collection_model = LoadBalancerCollection.from_dict(load_balancer_collection_model_json)
@@ -29693,7 +30429,65 @@ class TestLoadBalancerCollection():
         load_balancer_collection_model_json2 = load_balancer_collection_model.to_dict()
         assert load_balancer_collection_model_json2 == load_balancer_collection_model_json
 
-class TestLoadBalancerListener():
+class TestModel_LoadBalancerCollectionFirst():
+    """
+    Test Class for LoadBalancerCollectionFirst
+    """
+
+    def test_load_balancer_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerCollectionFirst
+        """
+
+        # Construct a json representation of a LoadBalancerCollectionFirst model
+        load_balancer_collection_first_model_json = {}
+        load_balancer_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers?limit=20'
+
+        # Construct a model instance of LoadBalancerCollectionFirst by calling from_dict on the json representation
+        load_balancer_collection_first_model = LoadBalancerCollectionFirst.from_dict(load_balancer_collection_first_model_json)
+        assert load_balancer_collection_first_model != False
+
+        # Construct a model instance of LoadBalancerCollectionFirst by calling from_dict on the json representation
+        load_balancer_collection_first_model_dict = LoadBalancerCollectionFirst.from_dict(load_balancer_collection_first_model_json).__dict__
+        load_balancer_collection_first_model2 = LoadBalancerCollectionFirst(**load_balancer_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_collection_first_model == load_balancer_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_collection_first_model_json2 = load_balancer_collection_first_model.to_dict()
+        assert load_balancer_collection_first_model_json2 == load_balancer_collection_first_model_json
+
+class TestModel_LoadBalancerCollectionNext():
+    """
+    Test Class for LoadBalancerCollectionNext
+    """
+
+    def test_load_balancer_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for LoadBalancerCollectionNext
+        """
+
+        # Construct a json representation of a LoadBalancerCollectionNext model
+        load_balancer_collection_next_model_json = {}
+        load_balancer_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers?start=9d5a91a3e2cbd233b5a5b33436855ed&limit=20'
+
+        # Construct a model instance of LoadBalancerCollectionNext by calling from_dict on the json representation
+        load_balancer_collection_next_model = LoadBalancerCollectionNext.from_dict(load_balancer_collection_next_model_json)
+        assert load_balancer_collection_next_model != False
+
+        # Construct a model instance of LoadBalancerCollectionNext by calling from_dict on the json representation
+        load_balancer_collection_next_model_dict = LoadBalancerCollectionNext.from_dict(load_balancer_collection_next_model_json).__dict__
+        load_balancer_collection_next_model2 = LoadBalancerCollectionNext(**load_balancer_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert load_balancer_collection_next_model == load_balancer_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        load_balancer_collection_next_model_json2 = load_balancer_collection_next_model.to_dict()
+        assert load_balancer_collection_next_model_json2 == load_balancer_collection_next_model_json
+
+class TestModel_LoadBalancerListener():
     """
     Test Class for LoadBalancerListener
     """
@@ -29730,7 +30524,7 @@ class TestLoadBalancerListener():
         load_balancer_listener_model_json['accept_proxy_protocol'] = True
         load_balancer_listener_model_json['certificate_instance'] = certificate_instance_reference_model
         load_balancer_listener_model_json['connection_limit'] = 2000
-        load_balancer_listener_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_model_json['default_pool'] = load_balancer_pool_reference_model
         load_balancer_listener_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_listener_model_json['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -29754,7 +30548,7 @@ class TestLoadBalancerListener():
         load_balancer_listener_model_json2 = load_balancer_listener_model.to_dict()
         assert load_balancer_listener_model_json2 == load_balancer_listener_model_json
 
-class TestLoadBalancerListenerCollection():
+class TestModel_LoadBalancerListenerCollection():
     """
     Test Class for LoadBalancerListenerCollection
     """
@@ -29790,7 +30584,7 @@ class TestLoadBalancerListenerCollection():
         load_balancer_listener_model['accept_proxy_protocol'] = True
         load_balancer_listener_model['certificate_instance'] = certificate_instance_reference_model
         load_balancer_listener_model['connection_limit'] = 2000
-        load_balancer_listener_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_model['default_pool'] = load_balancer_pool_reference_model
         load_balancer_listener_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_listener_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -29818,7 +30612,7 @@ class TestLoadBalancerListenerCollection():
         load_balancer_listener_collection_model_json2 = load_balancer_listener_collection_model.to_dict()
         assert load_balancer_listener_collection_model_json2 == load_balancer_listener_collection_model_json
 
-class TestLoadBalancerListenerPatch():
+class TestModel_LoadBalancerListenerPatch():
     """
     Test Class for LoadBalancerListenerPatch
     """
@@ -29860,7 +30654,7 @@ class TestLoadBalancerListenerPatch():
         load_balancer_listener_patch_model_json2 = load_balancer_listener_patch_model.to_dict()
         assert load_balancer_listener_patch_model_json2 == load_balancer_listener_patch_model_json
 
-class TestLoadBalancerListenerPolicy():
+class TestModel_LoadBalancerListenerPolicy():
     """
     Test Class for LoadBalancerListenerPolicy
     """
@@ -29892,7 +30686,7 @@ class TestLoadBalancerListenerPolicy():
         # Construct a json representation of a LoadBalancerListenerPolicy model
         load_balancer_listener_policy_model_json = {}
         load_balancer_listener_policy_model_json['action'] = 'forward'
-        load_balancer_listener_policy_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_policy_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_policy_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278'
         load_balancer_listener_policy_model_json['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_listener_policy_model_json['name'] = 'my-policy'
@@ -29916,7 +30710,7 @@ class TestLoadBalancerListenerPolicy():
         load_balancer_listener_policy_model_json2 = load_balancer_listener_policy_model.to_dict()
         assert load_balancer_listener_policy_model_json2 == load_balancer_listener_policy_model_json
 
-class TestLoadBalancerListenerPolicyCollection():
+class TestModel_LoadBalancerListenerPolicyCollection():
     """
     Test Class for LoadBalancerListenerPolicyCollection
     """
@@ -29947,7 +30741,7 @@ class TestLoadBalancerListenerPolicyCollection():
 
         load_balancer_listener_policy_model = {} # LoadBalancerListenerPolicy
         load_balancer_listener_policy_model['action'] = 'forward'
-        load_balancer_listener_policy_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_policy_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_policy_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278'
         load_balancer_listener_policy_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_listener_policy_model['name'] = 'my-policy'
@@ -29975,7 +30769,7 @@ class TestLoadBalancerListenerPolicyCollection():
         load_balancer_listener_policy_collection_model_json2 = load_balancer_listener_policy_collection_model.to_dict()
         assert load_balancer_listener_policy_collection_model_json2 == load_balancer_listener_policy_collection_model_json
 
-class TestLoadBalancerListenerPolicyPatch():
+class TestModel_LoadBalancerListenerPolicyPatch():
     """
     Test Class for LoadBalancerListenerPolicyPatch
     """
@@ -30011,7 +30805,7 @@ class TestLoadBalancerListenerPolicyPatch():
         load_balancer_listener_policy_patch_model_json2 = load_balancer_listener_policy_patch_model.to_dict()
         assert load_balancer_listener_policy_patch_model_json2 == load_balancer_listener_policy_patch_model_json
 
-class TestLoadBalancerListenerPolicyPrototype():
+class TestModel_LoadBalancerListenerPolicyPrototype():
     """
     Test Class for LoadBalancerListenerPolicyPrototype
     """
@@ -30055,7 +30849,7 @@ class TestLoadBalancerListenerPolicyPrototype():
         load_balancer_listener_policy_prototype_model_json2 = load_balancer_listener_policy_prototype_model.to_dict()
         assert load_balancer_listener_policy_prototype_model_json2 == load_balancer_listener_policy_prototype_model_json
 
-class TestLoadBalancerListenerPolicyReference():
+class TestModel_LoadBalancerListenerPolicyReference():
     """
     Test Class for LoadBalancerListenerPolicyReference
     """
@@ -30091,7 +30885,7 @@ class TestLoadBalancerListenerPolicyReference():
         load_balancer_listener_policy_reference_model_json2 = load_balancer_listener_policy_reference_model.to_dict()
         assert load_balancer_listener_policy_reference_model_json2 == load_balancer_listener_policy_reference_model_json
 
-class TestLoadBalancerListenerPolicyReferenceDeleted():
+class TestModel_LoadBalancerListenerPolicyReferenceDeleted():
     """
     Test Class for LoadBalancerListenerPolicyReferenceDeleted
     """
@@ -30120,7 +30914,7 @@ class TestLoadBalancerListenerPolicyReferenceDeleted():
         load_balancer_listener_policy_reference_deleted_model_json2 = load_balancer_listener_policy_reference_deleted_model.to_dict()
         assert load_balancer_listener_policy_reference_deleted_model_json2 == load_balancer_listener_policy_reference_deleted_model_json
 
-class TestLoadBalancerListenerPolicyRule():
+class TestModel_LoadBalancerListenerPolicyRule():
     """
     Test Class for LoadBalancerListenerPolicyRule
     """
@@ -30133,7 +30927,7 @@ class TestLoadBalancerListenerPolicyRule():
         # Construct a json representation of a LoadBalancerListenerPolicyRule model
         load_balancer_listener_policy_rule_model_json = {}
         load_balancer_listener_policy_rule_model_json['condition'] = 'contains'
-        load_balancer_listener_policy_rule_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_policy_rule_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_policy_rule_model_json['field'] = 'MY-APP-HEADER'
         load_balancer_listener_policy_rule_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278/rules/873a84b0-84d6-49c6-8948-1fa527b25762'
         load_balancer_listener_policy_rule_model_json['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30156,7 +30950,7 @@ class TestLoadBalancerListenerPolicyRule():
         load_balancer_listener_policy_rule_model_json2 = load_balancer_listener_policy_rule_model.to_dict()
         assert load_balancer_listener_policy_rule_model_json2 == load_balancer_listener_policy_rule_model_json
 
-class TestLoadBalancerListenerPolicyRuleCollection():
+class TestModel_LoadBalancerListenerPolicyRuleCollection():
     """
     Test Class for LoadBalancerListenerPolicyRuleCollection
     """
@@ -30170,7 +30964,7 @@ class TestLoadBalancerListenerPolicyRuleCollection():
 
         load_balancer_listener_policy_rule_model = {} # LoadBalancerListenerPolicyRule
         load_balancer_listener_policy_rule_model['condition'] = 'contains'
-        load_balancer_listener_policy_rule_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_listener_policy_rule_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_listener_policy_rule_model['field'] = 'MY-APP-HEADER'
         load_balancer_listener_policy_rule_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/listeners/70294e14-4e61-11e8-bcf4-0242ac110004/policies/f3187486-7b27-4c79-990c-47d33c0e2278/rules/873a84b0-84d6-49c6-8948-1fa527b25762'
         load_balancer_listener_policy_rule_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30197,7 +30991,7 @@ class TestLoadBalancerListenerPolicyRuleCollection():
         load_balancer_listener_policy_rule_collection_model_json2 = load_balancer_listener_policy_rule_collection_model.to_dict()
         assert load_balancer_listener_policy_rule_collection_model_json2 == load_balancer_listener_policy_rule_collection_model_json
 
-class TestLoadBalancerListenerPolicyRulePatch():
+class TestModel_LoadBalancerListenerPolicyRulePatch():
     """
     Test Class for LoadBalancerListenerPolicyRulePatch
     """
@@ -30229,7 +31023,7 @@ class TestLoadBalancerListenerPolicyRulePatch():
         load_balancer_listener_policy_rule_patch_model_json2 = load_balancer_listener_policy_rule_patch_model.to_dict()
         assert load_balancer_listener_policy_rule_patch_model_json2 == load_balancer_listener_policy_rule_patch_model_json
 
-class TestLoadBalancerListenerPolicyRulePrototype():
+class TestModel_LoadBalancerListenerPolicyRulePrototype():
     """
     Test Class for LoadBalancerListenerPolicyRulePrototype
     """
@@ -30261,7 +31055,7 @@ class TestLoadBalancerListenerPolicyRulePrototype():
         load_balancer_listener_policy_rule_prototype_model_json2 = load_balancer_listener_policy_rule_prototype_model.to_dict()
         assert load_balancer_listener_policy_rule_prototype_model_json2 == load_balancer_listener_policy_rule_prototype_model_json
 
-class TestLoadBalancerListenerPolicyRuleReference():
+class TestModel_LoadBalancerListenerPolicyRuleReference():
     """
     Test Class for LoadBalancerListenerPolicyRuleReference
     """
@@ -30297,7 +31091,7 @@ class TestLoadBalancerListenerPolicyRuleReference():
         load_balancer_listener_policy_rule_reference_model_json2 = load_balancer_listener_policy_rule_reference_model.to_dict()
         assert load_balancer_listener_policy_rule_reference_model_json2 == load_balancer_listener_policy_rule_reference_model_json
 
-class TestLoadBalancerListenerPolicyRuleReferenceDeleted():
+class TestModel_LoadBalancerListenerPolicyRuleReferenceDeleted():
     """
     Test Class for LoadBalancerListenerPolicyRuleReferenceDeleted
     """
@@ -30326,7 +31120,7 @@ class TestLoadBalancerListenerPolicyRuleReferenceDeleted():
         load_balancer_listener_policy_rule_reference_deleted_model_json2 = load_balancer_listener_policy_rule_reference_deleted_model.to_dict()
         assert load_balancer_listener_policy_rule_reference_deleted_model_json2 == load_balancer_listener_policy_rule_reference_deleted_model_json
 
-class TestLoadBalancerListenerPrototypeLoadBalancerContext():
+class TestModel_LoadBalancerListenerPrototypeLoadBalancerContext():
     """
     Test Class for LoadBalancerListenerPrototypeLoadBalancerContext
     """
@@ -30364,7 +31158,7 @@ class TestLoadBalancerListenerPrototypeLoadBalancerContext():
         load_balancer_listener_prototype_load_balancer_context_model_json2 = load_balancer_listener_prototype_load_balancer_context_model.to_dict()
         assert load_balancer_listener_prototype_load_balancer_context_model_json2 == load_balancer_listener_prototype_load_balancer_context_model_json
 
-class TestLoadBalancerListenerReference():
+class TestModel_LoadBalancerListenerReference():
     """
     Test Class for LoadBalancerListenerReference
     """
@@ -30400,7 +31194,7 @@ class TestLoadBalancerListenerReference():
         load_balancer_listener_reference_model_json2 = load_balancer_listener_reference_model.to_dict()
         assert load_balancer_listener_reference_model_json2 == load_balancer_listener_reference_model_json
 
-class TestLoadBalancerListenerReferenceDeleted():
+class TestModel_LoadBalancerListenerReferenceDeleted():
     """
     Test Class for LoadBalancerListenerReferenceDeleted
     """
@@ -30429,7 +31223,7 @@ class TestLoadBalancerListenerReferenceDeleted():
         load_balancer_listener_reference_deleted_model_json2 = load_balancer_listener_reference_deleted_model.to_dict()
         assert load_balancer_listener_reference_deleted_model_json2 == load_balancer_listener_reference_deleted_model_json
 
-class TestLoadBalancerLogging():
+class TestModel_LoadBalancerLogging():
     """
     Test Class for LoadBalancerLogging
     """
@@ -30463,7 +31257,7 @@ class TestLoadBalancerLogging():
         load_balancer_logging_model_json2 = load_balancer_logging_model.to_dict()
         assert load_balancer_logging_model_json2 == load_balancer_logging_model_json
 
-class TestLoadBalancerLoggingDatapath():
+class TestModel_LoadBalancerLoggingDatapath():
     """
     Test Class for LoadBalancerLoggingDatapath
     """
@@ -30492,7 +31286,7 @@ class TestLoadBalancerLoggingDatapath():
         load_balancer_logging_datapath_model_json2 = load_balancer_logging_datapath_model.to_dict()
         assert load_balancer_logging_datapath_model_json2 == load_balancer_logging_datapath_model_json
 
-class TestLoadBalancerPatch():
+class TestModel_LoadBalancerPatch():
     """
     Test Class for LoadBalancerPatch
     """
@@ -30530,7 +31324,7 @@ class TestLoadBalancerPatch():
         load_balancer_patch_model_json2 = load_balancer_patch_model.to_dict()
         assert load_balancer_patch_model_json2 == load_balancer_patch_model_json
 
-class TestLoadBalancerPool():
+class TestModel_LoadBalancerPool():
     """
     Test Class for LoadBalancerPool
     """
@@ -30569,12 +31363,13 @@ class TestLoadBalancerPool():
         load_balancer_pool_member_reference_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
         load_balancer_pool_session_persistence_model = {} # LoadBalancerPoolSessionPersistence
+        load_balancer_pool_session_persistence_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_model['type'] = 'source_ip'
 
         # Construct a json representation of a LoadBalancerPool model
         load_balancer_pool_model_json = {}
         load_balancer_pool_model_json['algorithm'] = 'least_connections'
-        load_balancer_pool_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_pool_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_pool_model_json['health_monitor'] = load_balancer_pool_health_monitor_model
         load_balancer_pool_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_pool_model_json['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30601,7 +31396,7 @@ class TestLoadBalancerPool():
         load_balancer_pool_model_json2 = load_balancer_pool_model.to_dict()
         assert load_balancer_pool_model_json2 == load_balancer_pool_model_json
 
-class TestLoadBalancerPoolCollection():
+class TestModel_LoadBalancerPoolCollection():
     """
     Test Class for LoadBalancerPoolCollection
     """
@@ -30640,11 +31435,12 @@ class TestLoadBalancerPoolCollection():
         load_balancer_pool_member_reference_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
 
         load_balancer_pool_session_persistence_model = {} # LoadBalancerPoolSessionPersistence
+        load_balancer_pool_session_persistence_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_model['type'] = 'source_ip'
 
         load_balancer_pool_model = {} # LoadBalancerPool
         load_balancer_pool_model['algorithm'] = 'least_connections'
-        load_balancer_pool_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_pool_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_pool_model['health_monitor'] = load_balancer_pool_health_monitor_model
         load_balancer_pool_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_pool_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30675,7 +31471,7 @@ class TestLoadBalancerPoolCollection():
         load_balancer_pool_collection_model_json2 = load_balancer_pool_collection_model.to_dict()
         assert load_balancer_pool_collection_model_json2 == load_balancer_pool_collection_model_json
 
-class TestLoadBalancerPoolHealthMonitor():
+class TestModel_LoadBalancerPoolHealthMonitor():
     """
     Test Class for LoadBalancerPoolHealthMonitor
     """
@@ -30709,7 +31505,7 @@ class TestLoadBalancerPoolHealthMonitor():
         load_balancer_pool_health_monitor_model_json2 = load_balancer_pool_health_monitor_model.to_dict()
         assert load_balancer_pool_health_monitor_model_json2 == load_balancer_pool_health_monitor_model_json
 
-class TestLoadBalancerPoolHealthMonitorPatch():
+class TestModel_LoadBalancerPoolHealthMonitorPatch():
     """
     Test Class for LoadBalancerPoolHealthMonitorPatch
     """
@@ -30743,7 +31539,7 @@ class TestLoadBalancerPoolHealthMonitorPatch():
         load_balancer_pool_health_monitor_patch_model_json2 = load_balancer_pool_health_monitor_patch_model.to_dict()
         assert load_balancer_pool_health_monitor_patch_model_json2 == load_balancer_pool_health_monitor_patch_model_json
 
-class TestLoadBalancerPoolHealthMonitorPrototype():
+class TestModel_LoadBalancerPoolHealthMonitorPrototype():
     """
     Test Class for LoadBalancerPoolHealthMonitorPrototype
     """
@@ -30777,7 +31573,7 @@ class TestLoadBalancerPoolHealthMonitorPrototype():
         load_balancer_pool_health_monitor_prototype_model_json2 = load_balancer_pool_health_monitor_prototype_model.to_dict()
         assert load_balancer_pool_health_monitor_prototype_model_json2 == load_balancer_pool_health_monitor_prototype_model_json
 
-class TestLoadBalancerPoolIdentityByName():
+class TestModel_LoadBalancerPoolIdentityByName():
     """
     Test Class for LoadBalancerPoolIdentityByName
     """
@@ -30806,7 +31602,7 @@ class TestLoadBalancerPoolIdentityByName():
         load_balancer_pool_identity_by_name_model_json2 = load_balancer_pool_identity_by_name_model.to_dict()
         assert load_balancer_pool_identity_by_name_model_json2 == load_balancer_pool_identity_by_name_model_json
 
-class TestLoadBalancerPoolMember():
+class TestModel_LoadBalancerPoolMember():
     """
     Test Class for LoadBalancerPoolMember
     """
@@ -30830,7 +31626,7 @@ class TestLoadBalancerPoolMember():
 
         # Construct a json representation of a LoadBalancerPoolMember model
         load_balancer_pool_member_model_json = {}
-        load_balancer_pool_member_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_pool_member_model_json['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_pool_member_model_json['health'] = 'faulted'
         load_balancer_pool_member_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_pool_member_model_json['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30854,7 +31650,7 @@ class TestLoadBalancerPoolMember():
         load_balancer_pool_member_model_json2 = load_balancer_pool_member_model.to_dict()
         assert load_balancer_pool_member_model_json2 == load_balancer_pool_member_model_json
 
-class TestLoadBalancerPoolMemberCollection():
+class TestModel_LoadBalancerPoolMemberCollection():
     """
     Test Class for LoadBalancerPoolMemberCollection
     """
@@ -30877,7 +31673,7 @@ class TestLoadBalancerPoolMemberCollection():
         load_balancer_pool_member_target_model['name'] = 'my-instance'
 
         load_balancer_pool_member_model = {} # LoadBalancerPoolMember
-        load_balancer_pool_member_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        load_balancer_pool_member_model['created_at'] = "2019-01-01T12:00:00Z"
         load_balancer_pool_member_model['health'] = 'faulted'
         load_balancer_pool_member_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/load_balancers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/pools/70294e14-4e61-11e8-bcf4-0242ac110004/members/80294e14-4e61-11e8-bcf4-0242ac110004'
         load_balancer_pool_member_model['id'] = '70294e14-4e61-11e8-bcf4-0242ac110004'
@@ -30905,7 +31701,7 @@ class TestLoadBalancerPoolMemberCollection():
         load_balancer_pool_member_collection_model_json2 = load_balancer_pool_member_collection_model.to_dict()
         assert load_balancer_pool_member_collection_model_json2 == load_balancer_pool_member_collection_model_json
 
-class TestLoadBalancerPoolMemberPatch():
+class TestModel_LoadBalancerPoolMemberPatch():
     """
     Test Class for LoadBalancerPoolMemberPatch
     """
@@ -30941,7 +31737,7 @@ class TestLoadBalancerPoolMemberPatch():
         load_balancer_pool_member_patch_model_json2 = load_balancer_pool_member_patch_model.to_dict()
         assert load_balancer_pool_member_patch_model_json2 == load_balancer_pool_member_patch_model_json
 
-class TestLoadBalancerPoolMemberPrototype():
+class TestModel_LoadBalancerPoolMemberPrototype():
     """
     Test Class for LoadBalancerPoolMemberPrototype
     """
@@ -30977,7 +31773,7 @@ class TestLoadBalancerPoolMemberPrototype():
         load_balancer_pool_member_prototype_model_json2 = load_balancer_pool_member_prototype_model.to_dict()
         assert load_balancer_pool_member_prototype_model_json2 == load_balancer_pool_member_prototype_model_json
 
-class TestLoadBalancerPoolMemberReference():
+class TestModel_LoadBalancerPoolMemberReference():
     """
     Test Class for LoadBalancerPoolMemberReference
     """
@@ -31013,7 +31809,7 @@ class TestLoadBalancerPoolMemberReference():
         load_balancer_pool_member_reference_model_json2 = load_balancer_pool_member_reference_model.to_dict()
         assert load_balancer_pool_member_reference_model_json2 == load_balancer_pool_member_reference_model_json
 
-class TestLoadBalancerPoolMemberReferenceDeleted():
+class TestModel_LoadBalancerPoolMemberReferenceDeleted():
     """
     Test Class for LoadBalancerPoolMemberReferenceDeleted
     """
@@ -31042,7 +31838,7 @@ class TestLoadBalancerPoolMemberReferenceDeleted():
         load_balancer_pool_member_reference_deleted_model_json2 = load_balancer_pool_member_reference_deleted_model.to_dict()
         assert load_balancer_pool_member_reference_deleted_model_json2 == load_balancer_pool_member_reference_deleted_model_json
 
-class TestLoadBalancerPoolPatch():
+class TestModel_LoadBalancerPoolPatch():
     """
     Test Class for LoadBalancerPoolPatch
     """
@@ -31063,6 +31859,7 @@ class TestLoadBalancerPoolPatch():
         load_balancer_pool_health_monitor_patch_model['url_path'] = '/'
 
         load_balancer_pool_session_persistence_patch_model = {} # LoadBalancerPoolSessionPersistencePatch
+        load_balancer_pool_session_persistence_patch_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_patch_model['type'] = 'source_ip'
 
         # Construct a json representation of a LoadBalancerPoolPatch model
@@ -31089,7 +31886,7 @@ class TestLoadBalancerPoolPatch():
         load_balancer_pool_patch_model_json2 = load_balancer_pool_patch_model.to_dict()
         assert load_balancer_pool_patch_model_json2 == load_balancer_pool_patch_model_json
 
-class TestLoadBalancerPoolPrototype():
+class TestModel_LoadBalancerPoolPrototype():
     """
     Test Class for LoadBalancerPoolPrototype
     """
@@ -31118,6 +31915,7 @@ class TestLoadBalancerPoolPrototype():
         load_balancer_pool_member_prototype_model['weight'] = 50
 
         load_balancer_pool_session_persistence_prototype_model = {} # LoadBalancerPoolSessionPersistencePrototype
+        load_balancer_pool_session_persistence_prototype_model['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
         # Construct a json representation of a LoadBalancerPoolPrototype model
@@ -31145,7 +31943,7 @@ class TestLoadBalancerPoolPrototype():
         load_balancer_pool_prototype_model_json2 = load_balancer_pool_prototype_model.to_dict()
         assert load_balancer_pool_prototype_model_json2 == load_balancer_pool_prototype_model_json
 
-class TestLoadBalancerPoolReference():
+class TestModel_LoadBalancerPoolReference():
     """
     Test Class for LoadBalancerPoolReference
     """
@@ -31182,7 +31980,7 @@ class TestLoadBalancerPoolReference():
         load_balancer_pool_reference_model_json2 = load_balancer_pool_reference_model.to_dict()
         assert load_balancer_pool_reference_model_json2 == load_balancer_pool_reference_model_json
 
-class TestLoadBalancerPoolReferenceDeleted():
+class TestModel_LoadBalancerPoolReferenceDeleted():
     """
     Test Class for LoadBalancerPoolReferenceDeleted
     """
@@ -31211,7 +32009,7 @@ class TestLoadBalancerPoolReferenceDeleted():
         load_balancer_pool_reference_deleted_model_json2 = load_balancer_pool_reference_deleted_model.to_dict()
         assert load_balancer_pool_reference_deleted_model_json2 == load_balancer_pool_reference_deleted_model_json
 
-class TestLoadBalancerPoolSessionPersistence():
+class TestModel_LoadBalancerPoolSessionPersistence():
     """
     Test Class for LoadBalancerPoolSessionPersistence
     """
@@ -31223,6 +32021,7 @@ class TestLoadBalancerPoolSessionPersistence():
 
         # Construct a json representation of a LoadBalancerPoolSessionPersistence model
         load_balancer_pool_session_persistence_model_json = {}
+        load_balancer_pool_session_persistence_model_json['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_model_json['type'] = 'source_ip'
 
         # Construct a model instance of LoadBalancerPoolSessionPersistence by calling from_dict on the json representation
@@ -31240,7 +32039,7 @@ class TestLoadBalancerPoolSessionPersistence():
         load_balancer_pool_session_persistence_model_json2 = load_balancer_pool_session_persistence_model.to_dict()
         assert load_balancer_pool_session_persistence_model_json2 == load_balancer_pool_session_persistence_model_json
 
-class TestLoadBalancerPoolSessionPersistencePatch():
+class TestModel_LoadBalancerPoolSessionPersistencePatch():
     """
     Test Class for LoadBalancerPoolSessionPersistencePatch
     """
@@ -31252,6 +32051,7 @@ class TestLoadBalancerPoolSessionPersistencePatch():
 
         # Construct a json representation of a LoadBalancerPoolSessionPersistencePatch model
         load_balancer_pool_session_persistence_patch_model_json = {}
+        load_balancer_pool_session_persistence_patch_model_json['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_patch_model_json['type'] = 'source_ip'
 
         # Construct a model instance of LoadBalancerPoolSessionPersistencePatch by calling from_dict on the json representation
@@ -31269,7 +32069,7 @@ class TestLoadBalancerPoolSessionPersistencePatch():
         load_balancer_pool_session_persistence_patch_model_json2 = load_balancer_pool_session_persistence_patch_model.to_dict()
         assert load_balancer_pool_session_persistence_patch_model_json2 == load_balancer_pool_session_persistence_patch_model_json
 
-class TestLoadBalancerPoolSessionPersistencePrototype():
+class TestModel_LoadBalancerPoolSessionPersistencePrototype():
     """
     Test Class for LoadBalancerPoolSessionPersistencePrototype
     """
@@ -31281,6 +32081,7 @@ class TestLoadBalancerPoolSessionPersistencePrototype():
 
         # Construct a json representation of a LoadBalancerPoolSessionPersistencePrototype model
         load_balancer_pool_session_persistence_prototype_model_json = {}
+        load_balancer_pool_session_persistence_prototype_model_json['cookie_name'] = 'my-cookie-name'
         load_balancer_pool_session_persistence_prototype_model_json['type'] = 'source_ip'
 
         # Construct a model instance of LoadBalancerPoolSessionPersistencePrototype by calling from_dict on the json representation
@@ -31298,7 +32099,7 @@ class TestLoadBalancerPoolSessionPersistencePrototype():
         load_balancer_pool_session_persistence_prototype_model_json2 = load_balancer_pool_session_persistence_prototype_model.to_dict()
         assert load_balancer_pool_session_persistence_prototype_model_json2 == load_balancer_pool_session_persistence_prototype_model_json
 
-class TestLoadBalancerProfile():
+class TestModel_LoadBalancerProfile():
     """
     Test Class for LoadBalancerProfile
     """
@@ -31341,7 +32142,7 @@ class TestLoadBalancerProfile():
         load_balancer_profile_model_json2 = load_balancer_profile_model.to_dict()
         assert load_balancer_profile_model_json2 == load_balancer_profile_model_json
 
-class TestLoadBalancerProfileCollection():
+class TestModel_LoadBalancerProfileCollection():
     """
     Test Class for LoadBalancerProfileCollection
     """
@@ -31397,7 +32198,7 @@ class TestLoadBalancerProfileCollection():
         load_balancer_profile_collection_model_json2 = load_balancer_profile_collection_model.to_dict()
         assert load_balancer_profile_collection_model_json2 == load_balancer_profile_collection_model_json
 
-class TestLoadBalancerProfileCollectionFirst():
+class TestModel_LoadBalancerProfileCollectionFirst():
     """
     Test Class for LoadBalancerProfileCollectionFirst
     """
@@ -31426,7 +32227,7 @@ class TestLoadBalancerProfileCollectionFirst():
         load_balancer_profile_collection_first_model_json2 = load_balancer_profile_collection_first_model.to_dict()
         assert load_balancer_profile_collection_first_model_json2 == load_balancer_profile_collection_first_model_json
 
-class TestLoadBalancerProfileCollectionNext():
+class TestModel_LoadBalancerProfileCollectionNext():
     """
     Test Class for LoadBalancerProfileCollectionNext
     """
@@ -31455,7 +32256,7 @@ class TestLoadBalancerProfileCollectionNext():
         load_balancer_profile_collection_next_model_json2 = load_balancer_profile_collection_next_model.to_dict()
         assert load_balancer_profile_collection_next_model_json2 == load_balancer_profile_collection_next_model_json
 
-class TestLoadBalancerProfileLoggingSupported():
+class TestModel_LoadBalancerProfileLoggingSupported():
     """
     Test Class for LoadBalancerProfileLoggingSupported
     """
@@ -31485,7 +32286,7 @@ class TestLoadBalancerProfileLoggingSupported():
         load_balancer_profile_logging_supported_model_json2 = load_balancer_profile_logging_supported_model.to_dict()
         assert load_balancer_profile_logging_supported_model_json2 == load_balancer_profile_logging_supported_model_json
 
-class TestLoadBalancerProfileReference():
+class TestModel_LoadBalancerProfileReference():
     """
     Test Class for LoadBalancerProfileReference
     """
@@ -31516,7 +32317,7 @@ class TestLoadBalancerProfileReference():
         load_balancer_profile_reference_model_json2 = load_balancer_profile_reference_model.to_dict()
         assert load_balancer_profile_reference_model_json2 == load_balancer_profile_reference_model_json
 
-class TestLoadBalancerReferenceDeleted():
+class TestModel_LoadBalancerReferenceDeleted():
     """
     Test Class for LoadBalancerReferenceDeleted
     """
@@ -31545,7 +32346,7 @@ class TestLoadBalancerReferenceDeleted():
         load_balancer_reference_deleted_model_json2 = load_balancer_reference_deleted_model.to_dict()
         assert load_balancer_reference_deleted_model_json2 == load_balancer_reference_deleted_model_json
 
-class TestLoadBalancerStatistics():
+class TestModel_LoadBalancerStatistics():
     """
     Test Class for LoadBalancerStatistics
     """
@@ -31577,7 +32378,7 @@ class TestLoadBalancerStatistics():
         load_balancer_statistics_model_json2 = load_balancer_statistics_model.to_dict()
         assert load_balancer_statistics_model_json2 == load_balancer_statistics_model_json
 
-class TestNetworkACL():
+class TestModel_NetworkACL():
     """
     Test Class for NetworkACL
     """
@@ -31606,7 +32407,7 @@ class TestNetworkACL():
         network_acl_rule_item_model = {} # NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP
         network_acl_rule_item_model['action'] = 'allow'
         network_acl_rule_item_model['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_model['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -31642,7 +32443,7 @@ class TestNetworkACL():
 
         # Construct a json representation of a NetworkACL model
         network_acl_model_json = {}
-        network_acl_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::network-acl:a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         network_acl_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         network_acl_model_json['id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
@@ -31667,7 +32468,7 @@ class TestNetworkACL():
         network_acl_model_json2 = network_acl_model.to_dict()
         assert network_acl_model_json2 == network_acl_model_json
 
-class TestNetworkACLCollection():
+class TestModel_NetworkACLCollection():
     """
     Test Class for NetworkACLCollection
     """
@@ -31699,7 +32500,7 @@ class TestNetworkACLCollection():
         network_acl_rule_item_model = {} # NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP
         network_acl_rule_item_model['action'] = 'allow'
         network_acl_rule_item_model['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_model['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -31734,7 +32535,7 @@ class TestNetworkACLCollection():
         vpc_reference_model['name'] = 'my-vpc'
 
         network_acl_model = {} # NetworkACL
-        network_acl_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_model['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::network-acl:a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         network_acl_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf'
         network_acl_model['id'] = 'a4e28308-8ee7-46ab-8108-9f881f22bdbf'
@@ -31770,7 +32571,7 @@ class TestNetworkACLCollection():
         network_acl_collection_model_json2 = network_acl_collection_model.to_dict()
         assert network_acl_collection_model_json2 == network_acl_collection_model_json
 
-class TestNetworkACLCollectionFirst():
+class TestModel_NetworkACLCollectionFirst():
     """
     Test Class for NetworkACLCollectionFirst
     """
@@ -31799,7 +32600,7 @@ class TestNetworkACLCollectionFirst():
         network_acl_collection_first_model_json2 = network_acl_collection_first_model.to_dict()
         assert network_acl_collection_first_model_json2 == network_acl_collection_first_model_json
 
-class TestNetworkACLCollectionNext():
+class TestModel_NetworkACLCollectionNext():
     """
     Test Class for NetworkACLCollectionNext
     """
@@ -31828,7 +32629,7 @@ class TestNetworkACLCollectionNext():
         network_acl_collection_next_model_json2 = network_acl_collection_next_model.to_dict()
         assert network_acl_collection_next_model_json2 == network_acl_collection_next_model_json
 
-class TestNetworkACLPatch():
+class TestModel_NetworkACLPatch():
     """
     Test Class for NetworkACLPatch
     """
@@ -31857,7 +32658,7 @@ class TestNetworkACLPatch():
         network_acl_patch_model_json2 = network_acl_patch_model.to_dict()
         assert network_acl_patch_model_json2 == network_acl_patch_model_json
 
-class TestNetworkACLReference():
+class TestModel_NetworkACLReference():
     """
     Test Class for NetworkACLReference
     """
@@ -31895,7 +32696,7 @@ class TestNetworkACLReference():
         network_acl_reference_model_json2 = network_acl_reference_model.to_dict()
         assert network_acl_reference_model_json2 == network_acl_reference_model_json
 
-class TestNetworkACLReferenceDeleted():
+class TestModel_NetworkACLReferenceDeleted():
     """
     Test Class for NetworkACLReferenceDeleted
     """
@@ -31924,7 +32725,7 @@ class TestNetworkACLReferenceDeleted():
         network_acl_reference_deleted_model_json2 = network_acl_reference_deleted_model.to_dict()
         assert network_acl_reference_deleted_model_json2 == network_acl_reference_deleted_model_json
 
-class TestNetworkACLRuleCollection():
+class TestModel_NetworkACLRuleCollection():
     """
     Test Class for NetworkACLRuleCollection
     """
@@ -31954,7 +32755,7 @@ class TestNetworkACLRuleCollection():
         network_acl_rule_item_model = {} # NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP
         network_acl_rule_item_model['action'] = 'allow'
         network_acl_rule_item_model['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_model['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_model['destination'] = '192.168.3.0/24'
         network_acl_rule_item_model['direction'] = 'inbound'
         network_acl_rule_item_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -31991,7 +32792,7 @@ class TestNetworkACLRuleCollection():
         network_acl_rule_collection_model_json2 = network_acl_rule_collection_model.to_dict()
         assert network_acl_rule_collection_model_json2 == network_acl_rule_collection_model_json
 
-class TestNetworkACLRuleCollectionFirst():
+class TestModel_NetworkACLRuleCollectionFirst():
     """
     Test Class for NetworkACLRuleCollectionFirst
     """
@@ -32020,7 +32821,7 @@ class TestNetworkACLRuleCollectionFirst():
         network_acl_rule_collection_first_model_json2 = network_acl_rule_collection_first_model.to_dict()
         assert network_acl_rule_collection_first_model_json2 == network_acl_rule_collection_first_model_json
 
-class TestNetworkACLRuleCollectionNext():
+class TestModel_NetworkACLRuleCollectionNext():
     """
     Test Class for NetworkACLRuleCollectionNext
     """
@@ -32049,7 +32850,7 @@ class TestNetworkACLRuleCollectionNext():
         network_acl_rule_collection_next_model_json2 = network_acl_rule_collection_next_model.to_dict()
         assert network_acl_rule_collection_next_model_json2 == network_acl_rule_collection_next_model_json
 
-class TestNetworkACLRulePatch():
+class TestModel_NetworkACLRulePatch():
     """
     Test Class for NetworkACLRulePatch
     """
@@ -32094,7 +32895,7 @@ class TestNetworkACLRulePatch():
         network_acl_rule_patch_model_json2 = network_acl_rule_patch_model.to_dict()
         assert network_acl_rule_patch_model_json2 == network_acl_rule_patch_model_json
 
-class TestNetworkACLRuleReference():
+class TestModel_NetworkACLRuleReference():
     """
     Test Class for NetworkACLRuleReference
     """
@@ -32131,7 +32932,7 @@ class TestNetworkACLRuleReference():
         network_acl_rule_reference_model_json2 = network_acl_rule_reference_model.to_dict()
         assert network_acl_rule_reference_model_json2 == network_acl_rule_reference_model_json
 
-class TestNetworkACLRuleReferenceDeleted():
+class TestModel_NetworkACLRuleReferenceDeleted():
     """
     Test Class for NetworkACLRuleReferenceDeleted
     """
@@ -32160,7 +32961,7 @@ class TestNetworkACLRuleReferenceDeleted():
         network_acl_rule_reference_deleted_model_json2 = network_acl_rule_reference_deleted_model.to_dict()
         assert network_acl_rule_reference_deleted_model_json2 == network_acl_rule_reference_deleted_model_json
 
-class TestNetworkInterface():
+class TestModel_NetworkInterface():
     """
     Test Class for NetworkInterface
     """
@@ -32176,37 +32977,37 @@ class TestNetworkInterface():
         floating_ip_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         floating_ip_reference_model = {} # FloatingIPReference
-        floating_ip_reference_model['address'] = '203.0.113.1'
-        floating_ip_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model['address'] = '192.0.2.2'
+        floating_ip_reference_model['crn'] = 'crn:[...]'
         floating_ip_reference_model['deleted'] = floating_ip_reference_deleted_model
-        floating_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
-        floating_ip_reference_model['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/181b8670-52bf-47af-a5ca-7aff7f3824d1'
+        floating_ip_reference_model['id'] = '181b8670-52bf-47af-a5ca-7aff7f3824d1'
         floating_ip_reference_model['name'] = 'my-floating-ip'
 
         security_group_reference_deleted_model = {} # SecurityGroupReferenceDeleted
         security_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         security_group_reference_model = {} # SecurityGroupReference
-        security_group_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['crn'] = 'crn:[...]'
         security_group_reference_model['deleted'] = security_group_reference_deleted_model
-        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        security_group_reference_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        security_group_reference_model['name'] = 'my-security-group'
+        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/a929f12d-fb45-4e5e-9864-95e171ae3589'
+        security_group_reference_model['id'] = 'a929f12d-fb45-4e5e-9864-95e171ae3589'
+        security_group_reference_model['name'] = 'before-entrance-mountain-paralegal-photo-uninstall'
 
         subnet_reference_deleted_model = {} # SubnetReferenceDeleted
         subnet_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         subnet_reference_model = {} # SubnetReference
-        subnet_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['crn'] = 'crn:[...]'
         subnet_reference_model['deleted'] = subnet_reference_deleted_model
-        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
-        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/9270d819-c05e-4352-99e4-80c4680cdb7c'
+        subnet_reference_model['id'] = '9270d819-c05e-4352-99e4-80c4680cdb7c'
         subnet_reference_model['name'] = 'my-subnet'
 
         # Construct a json representation of a NetworkInterface model
         network_interface_model_json = {}
         network_interface_model_json['allow_ip_spoofing'] = True
-        network_interface_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_interface_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_interface_model_json['floating_ips'] = [floating_ip_reference_model]
         network_interface_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
         network_interface_model_json['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
@@ -32234,7 +33035,7 @@ class TestNetworkInterface():
         network_interface_model_json2 = network_interface_model.to_dict()
         assert network_interface_model_json2 == network_interface_model_json
 
-class TestNetworkInterfaceCollection():
+class TestModel_NetworkInterfaceCollection():
     """
     Test Class for NetworkInterfaceCollection
     """
@@ -32282,7 +33083,7 @@ class TestNetworkInterfaceCollection():
 
         network_interface_model = {} # NetworkInterface
         network_interface_model['allow_ip_spoofing'] = True
-        network_interface_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_interface_model['created_at'] = "2019-01-01T12:00:00Z"
         network_interface_model['floating_ips'] = [floating_ip_reference_model]
         network_interface_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
         network_interface_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
@@ -32321,7 +33122,7 @@ class TestNetworkInterfaceCollection():
         network_interface_collection_model_json2 = network_interface_collection_model.to_dict()
         assert network_interface_collection_model_json2 == network_interface_collection_model_json
 
-class TestNetworkInterfaceCollectionFirst():
+class TestModel_NetworkInterfaceCollectionFirst():
     """
     Test Class for NetworkInterfaceCollectionFirst
     """
@@ -32350,7 +33151,7 @@ class TestNetworkInterfaceCollectionFirst():
         network_interface_collection_first_model_json2 = network_interface_collection_first_model.to_dict()
         assert network_interface_collection_first_model_json2 == network_interface_collection_first_model_json
 
-class TestNetworkInterfaceCollectionNext():
+class TestModel_NetworkInterfaceCollectionNext():
     """
     Test Class for NetworkInterfaceCollectionNext
     """
@@ -32379,7 +33180,7 @@ class TestNetworkInterfaceCollectionNext():
         network_interface_collection_next_model_json2 = network_interface_collection_next_model.to_dict()
         assert network_interface_collection_next_model_json2 == network_interface_collection_next_model_json
 
-class TestNetworkInterfaceInstanceContextReference():
+class TestModel_NetworkInterfaceInstanceContextReference():
     """
     Test Class for NetworkInterfaceInstanceContextReference
     """
@@ -32429,7 +33230,7 @@ class TestNetworkInterfaceInstanceContextReference():
         network_interface_instance_context_reference_model_json2 = network_interface_instance_context_reference_model.to_dict()
         assert network_interface_instance_context_reference_model_json2 == network_interface_instance_context_reference_model_json
 
-class TestNetworkInterfaceInstanceContextReferenceDeleted():
+class TestModel_NetworkInterfaceInstanceContextReferenceDeleted():
     """
     Test Class for NetworkInterfaceInstanceContextReferenceDeleted
     """
@@ -32458,7 +33259,7 @@ class TestNetworkInterfaceInstanceContextReferenceDeleted():
         network_interface_instance_context_reference_deleted_model_json2 = network_interface_instance_context_reference_deleted_model.to_dict()
         assert network_interface_instance_context_reference_deleted_model_json2 == network_interface_instance_context_reference_deleted_model_json
 
-class TestNetworkInterfacePatch():
+class TestModel_NetworkInterfacePatch():
     """
     Test Class for NetworkInterfacePatch
     """
@@ -32488,7 +33289,7 @@ class TestNetworkInterfacePatch():
         network_interface_patch_model_json2 = network_interface_patch_model.to_dict()
         assert network_interface_patch_model_json2 == network_interface_patch_model_json
 
-class TestNetworkInterfacePrototype():
+class TestModel_NetworkInterfacePrototype():
     """
     Test Class for NetworkInterfacePrototype
     """
@@ -32529,7 +33330,7 @@ class TestNetworkInterfacePrototype():
         network_interface_prototype_model_json2 = network_interface_prototype_model.to_dict()
         assert network_interface_prototype_model_json2 == network_interface_prototype_model_json
 
-class TestNetworkInterfaceReference():
+class TestModel_NetworkInterfaceReference():
     """
     Test Class for NetworkInterfaceReference
     """
@@ -32568,7 +33369,7 @@ class TestNetworkInterfaceReference():
         network_interface_reference_model_json2 = network_interface_reference_model.to_dict()
         assert network_interface_reference_model_json2 == network_interface_reference_model_json
 
-class TestNetworkInterfaceReferenceDeleted():
+class TestModel_NetworkInterfaceReferenceDeleted():
     """
     Test Class for NetworkInterfaceReferenceDeleted
     """
@@ -32597,7 +33398,7 @@ class TestNetworkInterfaceReferenceDeleted():
         network_interface_reference_deleted_model_json2 = network_interface_reference_deleted_model.to_dict()
         assert network_interface_reference_deleted_model_json2 == network_interface_reference_deleted_model_json
 
-class TestNetworkInterfaceReferenceTargetContextDeleted():
+class TestModel_NetworkInterfaceReferenceTargetContextDeleted():
     """
     Test Class for NetworkInterfaceReferenceTargetContextDeleted
     """
@@ -32626,7 +33427,7 @@ class TestNetworkInterfaceReferenceTargetContextDeleted():
         network_interface_reference_target_context_deleted_model_json2 = network_interface_reference_target_context_deleted_model.to_dict()
         assert network_interface_reference_target_context_deleted_model_json2 == network_interface_reference_target_context_deleted_model_json
 
-class TestNetworkInterfaceUnpaginatedCollection():
+class TestModel_NetworkInterfaceUnpaginatedCollection():
     """
     Test Class for NetworkInterfaceUnpaginatedCollection
     """
@@ -32642,42 +33443,42 @@ class TestNetworkInterfaceUnpaginatedCollection():
         floating_ip_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         floating_ip_reference_model = {} # FloatingIPReference
-        floating_ip_reference_model['address'] = '203.0.113.1'
-        floating_ip_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::floating-ip:39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model['address'] = '192.0.2.2'
+        floating_ip_reference_model['crn'] = 'crn:[...]'
         floating_ip_reference_model['deleted'] = floating_ip_reference_deleted_model
-        floating_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/39300233-9995-4806-89a5-3c1b6eb88689'
-        floating_ip_reference_model['id'] = '39300233-9995-4806-89a5-3c1b6eb88689'
+        floating_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/floating_ips/181b8670-52bf-47af-a5ca-7aff7f3824d1'
+        floating_ip_reference_model['id'] = '181b8670-52bf-47af-a5ca-7aff7f3824d1'
         floating_ip_reference_model['name'] = 'my-floating-ip'
 
         security_group_reference_deleted_model = {} # SecurityGroupReferenceDeleted
         security_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         security_group_reference_model = {} # SecurityGroupReference
-        security_group_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['crn'] = 'crn:[...]'
         security_group_reference_model['deleted'] = security_group_reference_deleted_model
-        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        security_group_reference_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
-        security_group_reference_model['name'] = 'my-security-group'
+        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/a929f12d-fb45-4e5e-9864-95e171ae3589'
+        security_group_reference_model['id'] = 'a929f12d-fb45-4e5e-9864-95e171ae3589'
+        security_group_reference_model['name'] = 'before-entrance-mountain-paralegal-photo-uninstall'
 
         subnet_reference_deleted_model = {} # SubnetReferenceDeleted
         subnet_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         subnet_reference_model = {} # SubnetReference
-        subnet_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['crn'] = 'crn:[...]'
         subnet_reference_model['deleted'] = subnet_reference_deleted_model
-        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
-        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/9270d819-c05e-4352-99e4-80c4680cdb7c'
+        subnet_reference_model['id'] = '9270d819-c05e-4352-99e4-80c4680cdb7c'
         subnet_reference_model['name'] = 'my-subnet'
 
         network_interface_model = {} # NetworkInterface
-        network_interface_model['allow_ip_spoofing'] = True
-        network_interface_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_interface_model['allow_ip_spoofing'] = False
+        network_interface_model['created_at'] = "2019-01-31T03:42:32.993000Z"
         network_interface_model['floating_ips'] = [floating_ip_reference_model]
-        network_interface_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e'
-        network_interface_model['id'] = '10c02d81-0ecb-4dc5-897d-28392913b81e'
-        network_interface_model['name'] = 'my-network-interface'
+        network_interface_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/123a490a-9e64-4254-a93b-9a3af3ede270/network_interfaces/35bd3f19-bdd4-434b-ad6a-5e9358d65e20'
+        network_interface_model['id'] = '35bd3f19-bdd4-434b-ad6a-5e9358d65e20'
+        network_interface_model['name'] = 'molecule-find-wild-name-dictionary-trench'
         network_interface_model['port_speed'] = 1000
-        network_interface_model['primary_ipv4_address'] = '192.168.3.4'
+        network_interface_model['primary_ipv4_address'] = '10.0.0.32'
         network_interface_model['resource_type'] = 'network_interface'
         network_interface_model['security_groups'] = [security_group_reference_model]
         network_interface_model['status'] = 'available'
@@ -32703,7 +33504,7 @@ class TestNetworkInterfaceUnpaginatedCollection():
         network_interface_unpaginated_collection_model_json2 = network_interface_unpaginated_collection_model.to_dict()
         assert network_interface_unpaginated_collection_model_json2 == network_interface_unpaginated_collection_model_json
 
-class TestOperatingSystem():
+class TestModel_OperatingSystem():
     """
     Test Class for OperatingSystem
     """
@@ -32739,7 +33540,7 @@ class TestOperatingSystem():
         operating_system_model_json2 = operating_system_model.to_dict()
         assert operating_system_model_json2 == operating_system_model_json
 
-class TestOperatingSystemCollection():
+class TestModel_OperatingSystemCollection():
     """
     Test Class for OperatingSystemCollection
     """
@@ -32789,7 +33590,7 @@ class TestOperatingSystemCollection():
         operating_system_collection_model_json2 = operating_system_collection_model.to_dict()
         assert operating_system_collection_model_json2 == operating_system_collection_model_json
 
-class TestOperatingSystemCollectionFirst():
+class TestModel_OperatingSystemCollectionFirst():
     """
     Test Class for OperatingSystemCollectionFirst
     """
@@ -32818,7 +33619,7 @@ class TestOperatingSystemCollectionFirst():
         operating_system_collection_first_model_json2 = operating_system_collection_first_model.to_dict()
         assert operating_system_collection_first_model_json2 == operating_system_collection_first_model_json
 
-class TestOperatingSystemCollectionNext():
+class TestModel_OperatingSystemCollectionNext():
     """
     Test Class for OperatingSystemCollectionNext
     """
@@ -32847,7 +33648,66 @@ class TestOperatingSystemCollectionNext():
         operating_system_collection_next_model_json2 = operating_system_collection_next_model.to_dict()
         assert operating_system_collection_next_model_json2 == operating_system_collection_next_model_json
 
-class TestPublicGateway():
+class TestModel_OperatingSystemReference():
+    """
+    Test Class for OperatingSystemReference
+    """
+
+    def test_operating_system_reference_serialization(self):
+        """
+        Test serialization/deserialization for OperatingSystemReference
+        """
+
+        # Construct a json representation of a OperatingSystemReference model
+        operating_system_reference_model_json = {}
+        operating_system_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64'
+        operating_system_reference_model_json['name'] = 'ubuntu-16-amd64'
+
+        # Construct a model instance of OperatingSystemReference by calling from_dict on the json representation
+        operating_system_reference_model = OperatingSystemReference.from_dict(operating_system_reference_model_json)
+        assert operating_system_reference_model != False
+
+        # Construct a model instance of OperatingSystemReference by calling from_dict on the json representation
+        operating_system_reference_model_dict = OperatingSystemReference.from_dict(operating_system_reference_model_json).__dict__
+        operating_system_reference_model2 = OperatingSystemReference(**operating_system_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert operating_system_reference_model == operating_system_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        operating_system_reference_model_json2 = operating_system_reference_model.to_dict()
+        assert operating_system_reference_model_json2 == operating_system_reference_model_json
+
+class TestModel_PageLink():
+    """
+    Test Class for PageLink
+    """
+
+    def test_page_link_serialization(self):
+        """
+        Test serialization/deserialization for PageLink
+        """
+
+        # Construct a json representation of a PageLink model
+        page_link_model_json = {}
+        page_link_model_json['href'] = 'testString'
+
+        # Construct a model instance of PageLink by calling from_dict on the json representation
+        page_link_model = PageLink.from_dict(page_link_model_json)
+        assert page_link_model != False
+
+        # Construct a model instance of PageLink by calling from_dict on the json representation
+        page_link_model_dict = PageLink.from_dict(page_link_model_json).__dict__
+        page_link_model2 = PageLink(**page_link_model_dict)
+
+        # Verify the model instances are equivalent
+        assert page_link_model == page_link_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        page_link_model_json2 = page_link_model.to_dict()
+        assert page_link_model_json2 == page_link_model_json
+
+class TestModel_PublicGateway():
     """
     Test Class for PublicGateway
     """
@@ -32891,7 +33751,7 @@ class TestPublicGateway():
 
         # Construct a json representation of a PublicGateway model
         public_gateway_model_json = {}
-        public_gateway_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        public_gateway_model_json['created_at'] = "2019-01-01T12:00:00Z"
         public_gateway_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::public-gateway:dc5431ef-1fc6-4861-adc9-a59d077d1241'
         public_gateway_model_json['floating_ip'] = public_gateway_floating_ip_model
         public_gateway_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/public_gateways/dc5431ef-1fc6-4861-adc9-a59d077d1241'
@@ -32918,7 +33778,7 @@ class TestPublicGateway():
         public_gateway_model_json2 = public_gateway_model.to_dict()
         assert public_gateway_model_json2 == public_gateway_model_json
 
-class TestPublicGatewayCollection():
+class TestModel_PublicGatewayCollection():
     """
     Test Class for PublicGatewayCollection
     """
@@ -32967,7 +33827,7 @@ class TestPublicGatewayCollection():
         zone_reference_model['name'] = 'us-south-1'
 
         public_gateway_model = {} # PublicGateway
-        public_gateway_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        public_gateway_model['created_at'] = "2019-01-01T12:00:00Z"
         public_gateway_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::public-gateway:dc5431ef-1fc6-4861-adc9-a59d077d1241'
         public_gateway_model['floating_ip'] = public_gateway_floating_ip_model
         public_gateway_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/public_gateways/dc5431ef-1fc6-4861-adc9-a59d077d1241'
@@ -33002,7 +33862,7 @@ class TestPublicGatewayCollection():
         public_gateway_collection_model_json2 = public_gateway_collection_model.to_dict()
         assert public_gateway_collection_model_json2 == public_gateway_collection_model_json
 
-class TestPublicGatewayCollectionFirst():
+class TestModel_PublicGatewayCollectionFirst():
     """
     Test Class for PublicGatewayCollectionFirst
     """
@@ -33031,7 +33891,7 @@ class TestPublicGatewayCollectionFirst():
         public_gateway_collection_first_model_json2 = public_gateway_collection_first_model.to_dict()
         assert public_gateway_collection_first_model_json2 == public_gateway_collection_first_model_json
 
-class TestPublicGatewayCollectionNext():
+class TestModel_PublicGatewayCollectionNext():
     """
     Test Class for PublicGatewayCollectionNext
     """
@@ -33060,7 +33920,7 @@ class TestPublicGatewayCollectionNext():
         public_gateway_collection_next_model_json2 = public_gateway_collection_next_model.to_dict()
         assert public_gateway_collection_next_model_json2 == public_gateway_collection_next_model_json
 
-class TestPublicGatewayFloatingIp():
+class TestModel_PublicGatewayFloatingIp():
     """
     Test Class for PublicGatewayFloatingIp
     """
@@ -33099,7 +33959,7 @@ class TestPublicGatewayFloatingIp():
         public_gateway_floating_ip_model_json2 = public_gateway_floating_ip_model.to_dict()
         assert public_gateway_floating_ip_model_json2 == public_gateway_floating_ip_model_json
 
-class TestPublicGatewayPatch():
+class TestModel_PublicGatewayPatch():
     """
     Test Class for PublicGatewayPatch
     """
@@ -33128,7 +33988,7 @@ class TestPublicGatewayPatch():
         public_gateway_patch_model_json2 = public_gateway_patch_model.to_dict()
         assert public_gateway_patch_model_json2 == public_gateway_patch_model_json
 
-class TestPublicGatewayReference():
+class TestModel_PublicGatewayReference():
     """
     Test Class for PublicGatewayReference
     """
@@ -33167,7 +34027,7 @@ class TestPublicGatewayReference():
         public_gateway_reference_model_json2 = public_gateway_reference_model.to_dict()
         assert public_gateway_reference_model_json2 == public_gateway_reference_model_json
 
-class TestPublicGatewayReferenceDeleted():
+class TestModel_PublicGatewayReferenceDeleted():
     """
     Test Class for PublicGatewayReferenceDeleted
     """
@@ -33196,7 +34056,7 @@ class TestPublicGatewayReferenceDeleted():
         public_gateway_reference_deleted_model_json2 = public_gateway_reference_deleted_model.to_dict()
         assert public_gateway_reference_deleted_model_json2 == public_gateway_reference_deleted_model_json
 
-class TestRegion():
+class TestModel_Region():
     """
     Test Class for Region
     """
@@ -33228,7 +34088,7 @@ class TestRegion():
         region_model_json2 = region_model.to_dict()
         assert region_model_json2 == region_model_json
 
-class TestRegionCollection():
+class TestModel_RegionCollection():
     """
     Test Class for RegionCollection
     """
@@ -33265,7 +34125,7 @@ class TestRegionCollection():
         region_collection_model_json2 = region_collection_model.to_dict()
         assert region_collection_model_json2 == region_collection_model_json
 
-class TestRegionReference():
+class TestModel_RegionReference():
     """
     Test Class for RegionReference
     """
@@ -33295,7 +34155,7 @@ class TestRegionReference():
         region_reference_model_json2 = region_reference_model.to_dict()
         assert region_reference_model_json2 == region_reference_model_json
 
-class TestReservedIP():
+class TestModel_ReservedIP():
     """
     Test Class for ReservedIP
     """
@@ -33322,7 +34182,7 @@ class TestReservedIP():
         reserved_ip_model_json = {}
         reserved_ip_model_json['address'] = '192.168.3.4'
         reserved_ip_model_json['auto_delete'] = True
-        reserved_ip_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        reserved_ip_model_json['created_at'] = "2019-01-01T12:00:00Z"
         reserved_ip_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model_json['id'] = '6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model_json['name'] = 'my-reserved-ip'
@@ -33345,7 +34205,7 @@ class TestReservedIP():
         reserved_ip_model_json2 = reserved_ip_model.to_dict()
         assert reserved_ip_model_json2 == reserved_ip_model_json
 
-class TestReservedIPCollection():
+class TestModel_ReservedIPCollection():
     """
     Test Class for ReservedIPCollection
     """
@@ -33377,7 +34237,7 @@ class TestReservedIPCollection():
         reserved_ip_model = {} # ReservedIP
         reserved_ip_model['address'] = '192.168.3.4'
         reserved_ip_model['auto_delete'] = True
-        reserved_ip_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        reserved_ip_model['created_at'] = "2019-01-01T12:00:00Z"
         reserved_ip_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model['id'] = '6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model['name'] = 'my-reserved-ip'
@@ -33408,7 +34268,7 @@ class TestReservedIPCollection():
         reserved_ip_collection_model_json2 = reserved_ip_collection_model.to_dict()
         assert reserved_ip_collection_model_json2 == reserved_ip_collection_model_json
 
-class TestReservedIPCollectionEndpointGatewayContext():
+class TestModel_ReservedIPCollectionEndpointGatewayContext():
     """
     Test Class for ReservedIPCollectionEndpointGatewayContext
     """
@@ -33437,7 +34297,7 @@ class TestReservedIPCollectionEndpointGatewayContext():
         reserved_ip_model = {} # ReservedIP
         reserved_ip_model['address'] = '192.168.3.4'
         reserved_ip_model['auto_delete'] = True
-        reserved_ip_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        reserved_ip_model['created_at'] = "2019-01-01T12:00:00Z"
         reserved_ip_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model['id'] = '6d353a0f-aeb1-4ae1-832e-1110d10981bb'
         reserved_ip_model['name'] = 'my-reserved-ip'
@@ -33471,7 +34331,7 @@ class TestReservedIPCollectionEndpointGatewayContext():
         reserved_ip_collection_endpoint_gateway_context_model_json2 = reserved_ip_collection_endpoint_gateway_context_model.to_dict()
         assert reserved_ip_collection_endpoint_gateway_context_model_json2 == reserved_ip_collection_endpoint_gateway_context_model_json
 
-class TestReservedIPCollectionEndpointGatewayContextFirst():
+class TestModel_ReservedIPCollectionEndpointGatewayContextFirst():
     """
     Test Class for ReservedIPCollectionEndpointGatewayContextFirst
     """
@@ -33500,7 +34360,7 @@ class TestReservedIPCollectionEndpointGatewayContextFirst():
         reserved_ip_collection_endpoint_gateway_context_first_model_json2 = reserved_ip_collection_endpoint_gateway_context_first_model.to_dict()
         assert reserved_ip_collection_endpoint_gateway_context_first_model_json2 == reserved_ip_collection_endpoint_gateway_context_first_model_json
 
-class TestReservedIPCollectionEndpointGatewayContextNext():
+class TestModel_ReservedIPCollectionEndpointGatewayContextNext():
     """
     Test Class for ReservedIPCollectionEndpointGatewayContextNext
     """
@@ -33529,7 +34389,7 @@ class TestReservedIPCollectionEndpointGatewayContextNext():
         reserved_ip_collection_endpoint_gateway_context_next_model_json2 = reserved_ip_collection_endpoint_gateway_context_next_model.to_dict()
         assert reserved_ip_collection_endpoint_gateway_context_next_model_json2 == reserved_ip_collection_endpoint_gateway_context_next_model_json
 
-class TestReservedIPCollectionFirst():
+class TestModel_ReservedIPCollectionFirst():
     """
     Test Class for ReservedIPCollectionFirst
     """
@@ -33558,7 +34418,7 @@ class TestReservedIPCollectionFirst():
         reserved_ip_collection_first_model_json2 = reserved_ip_collection_first_model.to_dict()
         assert reserved_ip_collection_first_model_json2 == reserved_ip_collection_first_model_json
 
-class TestReservedIPCollectionNext():
+class TestModel_ReservedIPCollectionNext():
     """
     Test Class for ReservedIPCollectionNext
     """
@@ -33587,7 +34447,7 @@ class TestReservedIPCollectionNext():
         reserved_ip_collection_next_model_json2 = reserved_ip_collection_next_model.to_dict()
         assert reserved_ip_collection_next_model_json2 == reserved_ip_collection_next_model_json
 
-class TestReservedIPPatch():
+class TestModel_ReservedIPPatch():
     """
     Test Class for ReservedIPPatch
     """
@@ -33617,7 +34477,7 @@ class TestReservedIPPatch():
         reserved_ip_patch_model_json2 = reserved_ip_patch_model.to_dict()
         assert reserved_ip_patch_model_json2 == reserved_ip_patch_model_json
 
-class TestReservedIPReference():
+class TestModel_ReservedIPReference():
     """
     Test Class for ReservedIPReference
     """
@@ -33656,7 +34516,7 @@ class TestReservedIPReference():
         reserved_ip_reference_model_json2 = reserved_ip_reference_model.to_dict()
         assert reserved_ip_reference_model_json2 == reserved_ip_reference_model_json
 
-class TestReservedIPReferenceDeleted():
+class TestModel_ReservedIPReferenceDeleted():
     """
     Test Class for ReservedIPReferenceDeleted
     """
@@ -33685,7 +34545,7 @@ class TestReservedIPReferenceDeleted():
         reserved_ip_reference_deleted_model_json2 = reserved_ip_reference_deleted_model.to_dict()
         assert reserved_ip_reference_deleted_model_json2 == reserved_ip_reference_deleted_model_json
 
-class TestResourceGroupReference():
+class TestModel_ResourceGroupReference():
     """
     Test Class for ResourceGroupReference
     """
@@ -33716,7 +34576,7 @@ class TestResourceGroupReference():
         resource_group_reference_model_json2 = resource_group_reference_model.to_dict()
         assert resource_group_reference_model_json2 == resource_group_reference_model_json
 
-class TestRoute():
+class TestModel_Route():
     """
     Test Class for Route
     """
@@ -33737,7 +34597,7 @@ class TestRoute():
 
         # Construct a json representation of a Route model
         route_model_json = {}
-        route_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        route_model_json['created_at'] = "2019-01-01T12:00:00Z"
         route_model_json['destination'] = '192.168.3.0/24'
         route_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -33761,7 +34621,7 @@ class TestRoute():
         route_model_json2 = route_model.to_dict()
         assert route_model_json2 == route_model_json
 
-class TestRouteCollection():
+class TestModel_RouteCollection():
     """
     Test Class for RouteCollection
     """
@@ -33787,7 +34647,7 @@ class TestRouteCollection():
         zone_reference_model['name'] = 'us-south-1'
 
         route_model = {} # Route
-        route_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        route_model['created_at'] = "2019-01-01T12:00:00Z"
         route_model['destination'] = '192.168.3.0/24'
         route_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -33819,7 +34679,7 @@ class TestRouteCollection():
         route_collection_model_json2 = route_collection_model.to_dict()
         assert route_collection_model_json2 == route_collection_model_json
 
-class TestRouteCollectionFirst():
+class TestModel_RouteCollectionFirst():
     """
     Test Class for RouteCollectionFirst
     """
@@ -33848,7 +34708,7 @@ class TestRouteCollectionFirst():
         route_collection_first_model_json2 = route_collection_first_model.to_dict()
         assert route_collection_first_model_json2 == route_collection_first_model_json
 
-class TestRouteCollectionNext():
+class TestModel_RouteCollectionNext():
     """
     Test Class for RouteCollectionNext
     """
@@ -33877,7 +34737,7 @@ class TestRouteCollectionNext():
         route_collection_next_model_json2 = route_collection_next_model.to_dict()
         assert route_collection_next_model_json2 == route_collection_next_model_json
 
-class TestRoutePatch():
+class TestModel_RoutePatch():
     """
     Test Class for RoutePatch
     """
@@ -33906,7 +34766,7 @@ class TestRoutePatch():
         route_patch_model_json2 = route_patch_model.to_dict()
         assert route_patch_model_json2 == route_patch_model_json
 
-class TestRoutePrototype():
+class TestModel_RoutePrototype():
     """
     Test Class for RoutePrototype
     """
@@ -33947,7 +34807,7 @@ class TestRoutePrototype():
         route_prototype_model_json2 = route_prototype_model.to_dict()
         assert route_prototype_model_json2 == route_prototype_model_json
 
-class TestRouteReference():
+class TestModel_RouteReference():
     """
     Test Class for RouteReference
     """
@@ -33984,7 +34844,7 @@ class TestRouteReference():
         route_reference_model_json2 = route_reference_model.to_dict()
         assert route_reference_model_json2 == route_reference_model_json
 
-class TestRouteReferenceDeleted():
+class TestModel_RouteReferenceDeleted():
     """
     Test Class for RouteReferenceDeleted
     """
@@ -34013,7 +34873,7 @@ class TestRouteReferenceDeleted():
         route_reference_deleted_model_json2 = route_reference_deleted_model.to_dict()
         assert route_reference_deleted_model_json2 == route_reference_deleted_model_json
 
-class TestRoutingTable():
+class TestModel_RoutingTable():
     """
     Test Class for RoutingTable
     """
@@ -34046,7 +34906,7 @@ class TestRoutingTable():
 
         # Construct a json representation of a RoutingTable model
         routing_table_model_json = {}
-        routing_table_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        routing_table_model_json['created_at'] = "2019-01-01T12:00:00Z"
         routing_table_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         routing_table_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
         routing_table_model_json['is_default'] = True
@@ -34074,7 +34934,7 @@ class TestRoutingTable():
         routing_table_model_json2 = routing_table_model.to_dict()
         assert routing_table_model_json2 == routing_table_model_json
 
-class TestRoutingTableCollection():
+class TestModel_RoutingTableCollection():
     """
     Test Class for RoutingTableCollection
     """
@@ -34112,7 +34972,7 @@ class TestRoutingTableCollection():
         subnet_reference_model['name'] = 'my-subnet'
 
         routing_table_model = {} # RoutingTable
-        routing_table_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        routing_table_model['created_at'] = "2019-01-01T12:00:00Z"
         routing_table_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         routing_table_model['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
         routing_table_model['is_default'] = True
@@ -34148,7 +35008,7 @@ class TestRoutingTableCollection():
         routing_table_collection_model_json2 = routing_table_collection_model.to_dict()
         assert routing_table_collection_model_json2 == routing_table_collection_model_json
 
-class TestRoutingTableCollectionFirst():
+class TestModel_RoutingTableCollectionFirst():
     """
     Test Class for RoutingTableCollectionFirst
     """
@@ -34177,7 +35037,7 @@ class TestRoutingTableCollectionFirst():
         routing_table_collection_first_model_json2 = routing_table_collection_first_model.to_dict()
         assert routing_table_collection_first_model_json2 == routing_table_collection_first_model_json
 
-class TestRoutingTableCollectionNext():
+class TestModel_RoutingTableCollectionNext():
     """
     Test Class for RoutingTableCollectionNext
     """
@@ -34206,7 +35066,7 @@ class TestRoutingTableCollectionNext():
         routing_table_collection_next_model_json2 = routing_table_collection_next_model.to_dict()
         assert routing_table_collection_next_model_json2 == routing_table_collection_next_model_json
 
-class TestRoutingTablePatch():
+class TestModel_RoutingTablePatch():
     """
     Test Class for RoutingTablePatch
     """
@@ -34238,7 +35098,7 @@ class TestRoutingTablePatch():
         routing_table_patch_model_json2 = routing_table_patch_model.to_dict()
         assert routing_table_patch_model_json2 == routing_table_patch_model_json
 
-class TestRoutingTableReference():
+class TestModel_RoutingTableReference():
     """
     Test Class for RoutingTableReference
     """
@@ -34276,7 +35136,7 @@ class TestRoutingTableReference():
         routing_table_reference_model_json2 = routing_table_reference_model.to_dict()
         assert routing_table_reference_model_json2 == routing_table_reference_model_json
 
-class TestRoutingTableReferenceDeleted():
+class TestModel_RoutingTableReferenceDeleted():
     """
     Test Class for RoutingTableReferenceDeleted
     """
@@ -34305,7 +35165,7 @@ class TestRoutingTableReferenceDeleted():
         routing_table_reference_deleted_model_json2 = routing_table_reference_deleted_model.to_dict()
         assert routing_table_reference_deleted_model_json2 == routing_table_reference_deleted_model_json
 
-class TestSecurityGroup():
+class TestModel_SecurityGroup():
     """
     Test Class for SecurityGroup
     """
@@ -34368,7 +35228,7 @@ class TestSecurityGroup():
 
         # Construct a json representation of a SecurityGroup model
         security_group_model_json = {}
-        security_group_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        security_group_model_json['created_at'] = "2019-01-01T12:00:00Z"
         security_group_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         security_group_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         security_group_model_json['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
@@ -34394,7 +35254,7 @@ class TestSecurityGroup():
         security_group_model_json2 = security_group_model.to_dict()
         assert security_group_model_json2 == security_group_model_json
 
-class TestSecurityGroupCollection():
+class TestModel_SecurityGroupCollection():
     """
     Test Class for SecurityGroupCollection
     """
@@ -34462,7 +35322,7 @@ class TestSecurityGroupCollection():
         vpc_reference_model['name'] = 'my-vpc'
 
         security_group_model = {} # SecurityGroup
-        security_group_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        security_group_model['created_at'] = "2019-01-01T12:00:00Z"
         security_group_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         security_group_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
         security_group_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
@@ -34496,7 +35356,7 @@ class TestSecurityGroupCollection():
         security_group_collection_model_json2 = security_group_collection_model.to_dict()
         assert security_group_collection_model_json2 == security_group_collection_model_json
 
-class TestSecurityGroupCollectionFirst():
+class TestModel_SecurityGroupCollectionFirst():
     """
     Test Class for SecurityGroupCollectionFirst
     """
@@ -34525,7 +35385,7 @@ class TestSecurityGroupCollectionFirst():
         security_group_collection_first_model_json2 = security_group_collection_first_model.to_dict()
         assert security_group_collection_first_model_json2 == security_group_collection_first_model_json
 
-class TestSecurityGroupCollectionNext():
+class TestModel_SecurityGroupCollectionNext():
     """
     Test Class for SecurityGroupCollectionNext
     """
@@ -34554,7 +35414,7 @@ class TestSecurityGroupCollectionNext():
         security_group_collection_next_model_json2 = security_group_collection_next_model.to_dict()
         assert security_group_collection_next_model_json2 == security_group_collection_next_model_json
 
-class TestSecurityGroupPatch():
+class TestModel_SecurityGroupPatch():
     """
     Test Class for SecurityGroupPatch
     """
@@ -34583,7 +35443,7 @@ class TestSecurityGroupPatch():
         security_group_patch_model_json2 = security_group_patch_model.to_dict()
         assert security_group_patch_model_json2 == security_group_patch_model_json
 
-class TestSecurityGroupReference():
+class TestModel_SecurityGroupReference():
     """
     Test Class for SecurityGroupReference
     """
@@ -34621,7 +35481,7 @@ class TestSecurityGroupReference():
         security_group_reference_model_json2 = security_group_reference_model.to_dict()
         assert security_group_reference_model_json2 == security_group_reference_model_json
 
-class TestSecurityGroupReferenceDeleted():
+class TestModel_SecurityGroupReferenceDeleted():
     """
     Test Class for SecurityGroupReferenceDeleted
     """
@@ -34650,7 +35510,7 @@ class TestSecurityGroupReferenceDeleted():
         security_group_reference_deleted_model_json2 = security_group_reference_deleted_model.to_dict()
         assert security_group_reference_deleted_model_json2 == security_group_reference_deleted_model_json
 
-class TestSecurityGroupRuleCollection():
+class TestModel_SecurityGroupRuleCollection():
     """
     Test Class for SecurityGroupRuleCollection
     """
@@ -34694,7 +35554,7 @@ class TestSecurityGroupRuleCollection():
         security_group_rule_collection_model_json2 = security_group_rule_collection_model.to_dict()
         assert security_group_rule_collection_model_json2 == security_group_rule_collection_model_json
 
-class TestSecurityGroupRulePatch():
+class TestModel_SecurityGroupRulePatch():
     """
     Test Class for SecurityGroupRulePatch
     """
@@ -34734,7 +35594,7 @@ class TestSecurityGroupRulePatch():
         security_group_rule_patch_model_json2 = security_group_rule_patch_model.to_dict()
         assert security_group_rule_patch_model_json2 == security_group_rule_patch_model_json
 
-class TestSecurityGroupTargetCollection():
+class TestModel_SecurityGroupTargetCollection():
     """
     Test Class for SecurityGroupTargetCollection
     """
@@ -34785,7 +35645,7 @@ class TestSecurityGroupTargetCollection():
         security_group_target_collection_model_json2 = security_group_target_collection_model.to_dict()
         assert security_group_target_collection_model_json2 == security_group_target_collection_model_json
 
-class TestSecurityGroupTargetCollectionFirst():
+class TestModel_SecurityGroupTargetCollectionFirst():
     """
     Test Class for SecurityGroupTargetCollectionFirst
     """
@@ -34814,7 +35674,7 @@ class TestSecurityGroupTargetCollectionFirst():
         security_group_target_collection_first_model_json2 = security_group_target_collection_first_model.to_dict()
         assert security_group_target_collection_first_model_json2 == security_group_target_collection_first_model_json
 
-class TestSecurityGroupTargetCollectionNext():
+class TestModel_SecurityGroupTargetCollectionNext():
     """
     Test Class for SecurityGroupTargetCollectionNext
     """
@@ -34843,7 +35703,345 @@ class TestSecurityGroupTargetCollectionNext():
         security_group_target_collection_next_model_json2 = security_group_target_collection_next_model.to_dict()
         assert security_group_target_collection_next_model_json2 == security_group_target_collection_next_model_json
 
-class TestSubnet():
+class TestModel_Snapshot():
+    """
+    Test Class for Snapshot
+    """
+
+    def test_snapshot_serialization(self):
+        """
+        Test serialization/deserialization for Snapshot
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        encryption_key_reference_model = {} # EncryptionKeyReference
+        encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        operating_system_model = {} # OperatingSystem
+        operating_system_model['architecture'] = 'amd64'
+        operating_system_model['dedicated_host_only'] = False
+        operating_system_model['display_name'] = 'Ubuntu Server 16.04 LTS amd64'
+        operating_system_model['family'] = 'Ubuntu Server'
+        operating_system_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64'
+        operating_system_model['name'] = 'ubuntu-16-amd64'
+        operating_system_model['vendor'] = 'Canonical'
+        operating_system_model['version'] = '16.04 LTS'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        image_reference_deleted_model = {} # ImageReferenceDeleted
+        image_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        image_reference_model = {} # ImageReference
+        image_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['deleted'] = image_reference_deleted_model
+        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['name'] = 'my-image'
+
+        volume_reference_deleted_model = {} # VolumeReferenceDeleted
+        volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        volume_reference_model = {} # VolumeReference
+        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['deleted'] = volume_reference_deleted_model
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['name'] = 'my-volume'
+
+        # Construct a json representation of a Snapshot model
+        snapshot_model_json = {}
+        snapshot_model_json['bootable'] = True
+        snapshot_model_json['created_at'] = "2019-01-01T12:00:00Z"
+        snapshot_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model_json['deletable'] = True
+        snapshot_model_json['encryption'] = 'provider_managed'
+        snapshot_model_json['encryption_key'] = encryption_key_reference_model
+        snapshot_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model_json['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model_json['lifecycle_state'] = 'stable'
+        snapshot_model_json['minimum_capacity'] = 1
+        snapshot_model_json['name'] = 'my-snapshot'
+        snapshot_model_json['operating_system'] = operating_system_model
+        snapshot_model_json['resource_group'] = resource_group_reference_model
+        snapshot_model_json['resource_type'] = 'snapshot'
+        snapshot_model_json['size'] = 1
+        snapshot_model_json['source_image'] = image_reference_model
+        snapshot_model_json['source_volume'] = volume_reference_model
+
+        # Construct a model instance of Snapshot by calling from_dict on the json representation
+        snapshot_model = Snapshot.from_dict(snapshot_model_json)
+        assert snapshot_model != False
+
+        # Construct a model instance of Snapshot by calling from_dict on the json representation
+        snapshot_model_dict = Snapshot.from_dict(snapshot_model_json).__dict__
+        snapshot_model2 = Snapshot(**snapshot_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_model == snapshot_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_model_json2 = snapshot_model.to_dict()
+        assert snapshot_model_json2 == snapshot_model_json
+
+class TestModel_SnapshotCollection():
+    """
+    Test Class for SnapshotCollection
+    """
+
+    def test_snapshot_collection_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        snapshot_collection_first_model = {} # SnapshotCollectionFirst
+        snapshot_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20'
+
+        snapshot_collection_next_model = {} # SnapshotCollectionNext
+        snapshot_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
+        encryption_key_reference_model = {} # EncryptionKeyReference
+        encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        operating_system_model = {} # OperatingSystem
+        operating_system_model['architecture'] = 'amd64'
+        operating_system_model['dedicated_host_only'] = False
+        operating_system_model['display_name'] = 'Ubuntu Server 16.04 LTS amd64'
+        operating_system_model['family'] = 'Ubuntu Server'
+        operating_system_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64'
+        operating_system_model['name'] = 'ubuntu-16-amd64'
+        operating_system_model['vendor'] = 'Canonical'
+        operating_system_model['version'] = '16.04 LTS'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        image_reference_deleted_model = {} # ImageReferenceDeleted
+        image_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        image_reference_model = {} # ImageReference
+        image_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['deleted'] = image_reference_deleted_model
+        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['name'] = 'my-image'
+
+        volume_reference_deleted_model = {} # VolumeReferenceDeleted
+        volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        volume_reference_model = {} # VolumeReference
+        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['deleted'] = volume_reference_deleted_model
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['name'] = 'my-volume'
+
+        snapshot_model = {} # Snapshot
+        snapshot_model['bootable'] = True
+        snapshot_model['created_at'] = "2019-01-01T12:00:00Z"
+        snapshot_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model['deletable'] = True
+        snapshot_model['encryption'] = 'provider_managed'
+        snapshot_model['encryption_key'] = encryption_key_reference_model
+        snapshot_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_model['lifecycle_state'] = 'stable'
+        snapshot_model['minimum_capacity'] = 1
+        snapshot_model['name'] = 'my-snapshot'
+        snapshot_model['operating_system'] = operating_system_model
+        snapshot_model['resource_group'] = resource_group_reference_model
+        snapshot_model['resource_type'] = 'snapshot'
+        snapshot_model['size'] = 1
+        snapshot_model['source_image'] = image_reference_model
+        snapshot_model['source_volume'] = volume_reference_model
+
+        # Construct a json representation of a SnapshotCollection model
+        snapshot_collection_model_json = {}
+        snapshot_collection_model_json['first'] = snapshot_collection_first_model
+        snapshot_collection_model_json['limit'] = 20
+        snapshot_collection_model_json['next'] = snapshot_collection_next_model
+        snapshot_collection_model_json['snapshots'] = [snapshot_model]
+        snapshot_collection_model_json['total_count'] = 132
+
+        # Construct a model instance of SnapshotCollection by calling from_dict on the json representation
+        snapshot_collection_model = SnapshotCollection.from_dict(snapshot_collection_model_json)
+        assert snapshot_collection_model != False
+
+        # Construct a model instance of SnapshotCollection by calling from_dict on the json representation
+        snapshot_collection_model_dict = SnapshotCollection.from_dict(snapshot_collection_model_json).__dict__
+        snapshot_collection_model2 = SnapshotCollection(**snapshot_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_collection_model == snapshot_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_collection_model_json2 = snapshot_collection_model.to_dict()
+        assert snapshot_collection_model_json2 == snapshot_collection_model_json
+
+class TestModel_SnapshotCollectionFirst():
+    """
+    Test Class for SnapshotCollectionFirst
+    """
+
+    def test_snapshot_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotCollectionFirst
+        """
+
+        # Construct a json representation of a SnapshotCollectionFirst model
+        snapshot_collection_first_model_json = {}
+        snapshot_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20'
+
+        # Construct a model instance of SnapshotCollectionFirst by calling from_dict on the json representation
+        snapshot_collection_first_model = SnapshotCollectionFirst.from_dict(snapshot_collection_first_model_json)
+        assert snapshot_collection_first_model != False
+
+        # Construct a model instance of SnapshotCollectionFirst by calling from_dict on the json representation
+        snapshot_collection_first_model_dict = SnapshotCollectionFirst.from_dict(snapshot_collection_first_model_json).__dict__
+        snapshot_collection_first_model2 = SnapshotCollectionFirst(**snapshot_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_collection_first_model == snapshot_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_collection_first_model_json2 = snapshot_collection_first_model.to_dict()
+        assert snapshot_collection_first_model_json2 == snapshot_collection_first_model_json
+
+class TestModel_SnapshotCollectionNext():
+    """
+    Test Class for SnapshotCollectionNext
+    """
+
+    def test_snapshot_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotCollectionNext
+        """
+
+        # Construct a json representation of a SnapshotCollectionNext model
+        snapshot_collection_next_model_json = {}
+        snapshot_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
+        # Construct a model instance of SnapshotCollectionNext by calling from_dict on the json representation
+        snapshot_collection_next_model = SnapshotCollectionNext.from_dict(snapshot_collection_next_model_json)
+        assert snapshot_collection_next_model != False
+
+        # Construct a model instance of SnapshotCollectionNext by calling from_dict on the json representation
+        snapshot_collection_next_model_dict = SnapshotCollectionNext.from_dict(snapshot_collection_next_model_json).__dict__
+        snapshot_collection_next_model2 = SnapshotCollectionNext(**snapshot_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_collection_next_model == snapshot_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_collection_next_model_json2 = snapshot_collection_next_model.to_dict()
+        assert snapshot_collection_next_model_json2 == snapshot_collection_next_model_json
+
+class TestModel_SnapshotPatch():
+    """
+    Test Class for SnapshotPatch
+    """
+
+    def test_snapshot_patch_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotPatch
+        """
+
+        # Construct a json representation of a SnapshotPatch model
+        snapshot_patch_model_json = {}
+        snapshot_patch_model_json['name'] = 'my-snapshot'
+
+        # Construct a model instance of SnapshotPatch by calling from_dict on the json representation
+        snapshot_patch_model = SnapshotPatch.from_dict(snapshot_patch_model_json)
+        assert snapshot_patch_model != False
+
+        # Construct a model instance of SnapshotPatch by calling from_dict on the json representation
+        snapshot_patch_model_dict = SnapshotPatch.from_dict(snapshot_patch_model_json).__dict__
+        snapshot_patch_model2 = SnapshotPatch(**snapshot_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_patch_model == snapshot_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_patch_model_json2 = snapshot_patch_model.to_dict()
+        assert snapshot_patch_model_json2 == snapshot_patch_model_json
+
+class TestModel_SnapshotReference():
+    """
+    Test Class for SnapshotReference
+    """
+
+    def test_snapshot_reference_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        snapshot_reference_deleted_model = {} # SnapshotReferenceDeleted
+        snapshot_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a SnapshotReference model
+        snapshot_reference_model_json = {}
+        snapshot_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model_json['deleted'] = snapshot_reference_deleted_model
+        snapshot_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model_json['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model_json['name'] = 'my-snapshot'
+        snapshot_reference_model_json['resource_type'] = 'snapshot'
+
+        # Construct a model instance of SnapshotReference by calling from_dict on the json representation
+        snapshot_reference_model = SnapshotReference.from_dict(snapshot_reference_model_json)
+        assert snapshot_reference_model != False
+
+        # Construct a model instance of SnapshotReference by calling from_dict on the json representation
+        snapshot_reference_model_dict = SnapshotReference.from_dict(snapshot_reference_model_json).__dict__
+        snapshot_reference_model2 = SnapshotReference(**snapshot_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_reference_model == snapshot_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_reference_model_json2 = snapshot_reference_model.to_dict()
+        assert snapshot_reference_model_json2 == snapshot_reference_model_json
+
+class TestModel_SnapshotReferenceDeleted():
+    """
+    Test Class for SnapshotReferenceDeleted
+    """
+
+    def test_snapshot_reference_deleted_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotReferenceDeleted
+        """
+
+        # Construct a json representation of a SnapshotReferenceDeleted model
+        snapshot_reference_deleted_model_json = {}
+        snapshot_reference_deleted_model_json['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a model instance of SnapshotReferenceDeleted by calling from_dict on the json representation
+        snapshot_reference_deleted_model = SnapshotReferenceDeleted.from_dict(snapshot_reference_deleted_model_json)
+        assert snapshot_reference_deleted_model != False
+
+        # Construct a model instance of SnapshotReferenceDeleted by calling from_dict on the json representation
+        snapshot_reference_deleted_model_dict = SnapshotReferenceDeleted.from_dict(snapshot_reference_deleted_model_json).__dict__
+        snapshot_reference_deleted_model2 = SnapshotReferenceDeleted(**snapshot_reference_deleted_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_reference_deleted_model == snapshot_reference_deleted_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_reference_deleted_model_json2 = snapshot_reference_deleted_model.to_dict()
+        assert snapshot_reference_deleted_model_json2 == snapshot_reference_deleted_model_json
+
+class TestModel_Subnet():
     """
     Test Class for Subnet
     """
@@ -34908,7 +36106,7 @@ class TestSubnet():
         # Construct a json representation of a Subnet model
         subnet_model_json = {}
         subnet_model_json['available_ipv4_address_count'] = 15
-        subnet_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        subnet_model_json['created_at'] = "2019-01-01T12:00:00Z"
         subnet_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
         subnet_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
         subnet_model_json['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
@@ -34939,7 +36137,7 @@ class TestSubnet():
         subnet_model_json2 = subnet_model.to_dict()
         assert subnet_model_json2 == subnet_model_json
 
-class TestSubnetCollection():
+class TestModel_SubnetCollection():
     """
     Test Class for SubnetCollection
     """
@@ -35009,7 +36207,7 @@ class TestSubnetCollection():
 
         subnet_model = {} # Subnet
         subnet_model['available_ipv4_address_count'] = 15
-        subnet_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        subnet_model['created_at'] = "2019-01-01T12:00:00Z"
         subnet_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
         subnet_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
         subnet_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
@@ -35048,7 +36246,7 @@ class TestSubnetCollection():
         subnet_collection_model_json2 = subnet_collection_model.to_dict()
         assert subnet_collection_model_json2 == subnet_collection_model_json
 
-class TestSubnetCollectionFirst():
+class TestModel_SubnetCollectionFirst():
     """
     Test Class for SubnetCollectionFirst
     """
@@ -35077,7 +36275,7 @@ class TestSubnetCollectionFirst():
         subnet_collection_first_model_json2 = subnet_collection_first_model.to_dict()
         assert subnet_collection_first_model_json2 == subnet_collection_first_model_json
 
-class TestSubnetCollectionNext():
+class TestModel_SubnetCollectionNext():
     """
     Test Class for SubnetCollectionNext
     """
@@ -35106,7 +36304,7 @@ class TestSubnetCollectionNext():
         subnet_collection_next_model_json2 = subnet_collection_next_model.to_dict()
         assert subnet_collection_next_model_json2 == subnet_collection_next_model_json
 
-class TestSubnetPatch():
+class TestModel_SubnetPatch():
     """
     Test Class for SubnetPatch
     """
@@ -35149,7 +36347,7 @@ class TestSubnetPatch():
         subnet_patch_model_json2 = subnet_patch_model.to_dict()
         assert subnet_patch_model_json2 == subnet_patch_model_json
 
-class TestSubnetReference():
+class TestModel_SubnetReference():
     """
     Test Class for SubnetReference
     """
@@ -35187,7 +36385,7 @@ class TestSubnetReference():
         subnet_reference_model_json2 = subnet_reference_model.to_dict()
         assert subnet_reference_model_json2 == subnet_reference_model_json
 
-class TestSubnetReferenceDeleted():
+class TestModel_SubnetReferenceDeleted():
     """
     Test Class for SubnetReferenceDeleted
     """
@@ -35216,7 +36414,7 @@ class TestSubnetReferenceDeleted():
         subnet_reference_deleted_model_json2 = subnet_reference_deleted_model.to_dict()
         assert subnet_reference_deleted_model_json2 == subnet_reference_deleted_model_json
 
-class TestVCPU():
+class TestModel_VCPU():
     """
     Test Class for VCPU
     """
@@ -35246,7 +36444,7 @@ class TestVCPU():
         vcpu_model_json2 = vcpu_model.to_dict()
         assert vcpu_model_json2 == vcpu_model_json
 
-class TestVPC():
+class TestModel_VPC():
     """
     Test Class for VPC
     """
@@ -35307,7 +36505,7 @@ class TestVPC():
         # Construct a json representation of a VPC model
         vpc_model_json = {}
         vpc_model_json['classic_access'] = False
-        vpc_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpc_model_json['created_at'] = "2019-01-01T12:00:00Z"
         vpc_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
         vpc_model_json['cse_source_ips'] = [vpccse_source_ip_model]
         vpc_model_json['default_network_acl'] = network_acl_reference_model
@@ -35334,7 +36532,7 @@ class TestVPC():
         vpc_model_json2 = vpc_model.to_dict()
         assert vpc_model_json2 == vpc_model_json
 
-class TestVPCCSESourceIP():
+class TestModel_VPCCSESourceIP():
     """
     Test Class for VPCCSESourceIP
     """
@@ -35373,7 +36571,7 @@ class TestVPCCSESourceIP():
         vpccse_source_ip_model_json2 = vpccse_source_ip_model.to_dict()
         assert vpccse_source_ip_model_json2 == vpccse_source_ip_model_json
 
-class TestVPCCollection():
+class TestModel_VPCCollection():
     """
     Test Class for VPCCollection
     """
@@ -35439,7 +36637,7 @@ class TestVPCCollection():
 
         vpc_model = {} # VPC
         vpc_model['classic_access'] = False
-        vpc_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpc_model['created_at'] = "2019-01-01T12:00:00Z"
         vpc_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
         vpc_model['cse_source_ips'] = [vpccse_source_ip_model]
         vpc_model['default_network_acl'] = network_acl_reference_model
@@ -35474,7 +36672,7 @@ class TestVPCCollection():
         vpc_collection_model_json2 = vpc_collection_model.to_dict()
         assert vpc_collection_model_json2 == vpc_collection_model_json
 
-class TestVPCCollectionFirst():
+class TestModel_VPCCollectionFirst():
     """
     Test Class for VPCCollectionFirst
     """
@@ -35503,7 +36701,7 @@ class TestVPCCollectionFirst():
         vpc_collection_first_model_json2 = vpc_collection_first_model.to_dict()
         assert vpc_collection_first_model_json2 == vpc_collection_first_model_json
 
-class TestVPCCollectionNext():
+class TestModel_VPCCollectionNext():
     """
     Test Class for VPCCollectionNext
     """
@@ -35532,7 +36730,7 @@ class TestVPCCollectionNext():
         vpc_collection_next_model_json2 = vpc_collection_next_model.to_dict()
         assert vpc_collection_next_model_json2 == vpc_collection_next_model_json
 
-class TestVPCPatch():
+class TestModel_VPCPatch():
     """
     Test Class for VPCPatch
     """
@@ -35561,7 +36759,7 @@ class TestVPCPatch():
         vpc_patch_model_json2 = vpc_patch_model.to_dict()
         assert vpc_patch_model_json2 == vpc_patch_model_json
 
-class TestVPCReference():
+class TestModel_VPCReference():
     """
     Test Class for VPCReference
     """
@@ -35599,7 +36797,7 @@ class TestVPCReference():
         vpc_reference_model_json2 = vpc_reference_model.to_dict()
         assert vpc_reference_model_json2 == vpc_reference_model_json
 
-class TestVPCReferenceDeleted():
+class TestModel_VPCReferenceDeleted():
     """
     Test Class for VPCReferenceDeleted
     """
@@ -35628,7 +36826,7 @@ class TestVPCReferenceDeleted():
         vpc_reference_deleted_model_json2 = vpc_reference_deleted_model.to_dict()
         assert vpc_reference_deleted_model_json2 == vpc_reference_deleted_model_json
 
-class TestVPNGatewayCollection():
+class TestModel_VPNGatewayCollection():
     """
     Test Class for VPNGatewayCollection
     """
@@ -35682,7 +36880,7 @@ class TestVPNGatewayCollection():
 
         vpn_gateway_model = {} # VPNGatewayRouteMode
         vpn_gateway_model['connections'] = [vpn_gateway_connection_reference_model]
-        vpn_gateway_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_model['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -35717,7 +36915,7 @@ class TestVPNGatewayCollection():
         vpn_gateway_collection_model_json2 = vpn_gateway_collection_model.to_dict()
         assert vpn_gateway_collection_model_json2 == vpn_gateway_collection_model_json
 
-class TestVPNGatewayCollectionFirst():
+class TestModel_VPNGatewayCollectionFirst():
     """
     Test Class for VPNGatewayCollectionFirst
     """
@@ -35746,7 +36944,7 @@ class TestVPNGatewayCollectionFirst():
         vpn_gateway_collection_first_model_json2 = vpn_gateway_collection_first_model.to_dict()
         assert vpn_gateway_collection_first_model_json2 == vpn_gateway_collection_first_model_json
 
-class TestVPNGatewayCollectionNext():
+class TestModel_VPNGatewayCollectionNext():
     """
     Test Class for VPNGatewayCollectionNext
     """
@@ -35775,7 +36973,7 @@ class TestVPNGatewayCollectionNext():
         vpn_gateway_collection_next_model_json2 = vpn_gateway_collection_next_model.to_dict()
         assert vpn_gateway_collection_next_model_json2 == vpn_gateway_collection_next_model_json
 
-class TestVPNGatewayConnectionCollection():
+class TestModel_VPNGatewayConnectionCollection():
     """
     Test Class for VPNGatewayConnectionCollection
     """
@@ -35822,7 +37020,7 @@ class TestVPNGatewayConnectionCollection():
         vpn_gateway_connection_model = {} # VPNGatewayConnectionStaticRouteMode
         vpn_gateway_connection_model['admin_state_up'] = True
         vpn_gateway_connection_model['authentication_mode'] = 'psk'
-        vpn_gateway_connection_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_connection_model['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_connection_model['dead_peer_detection'] = vpn_gateway_connection_dpd_model
         vpn_gateway_connection_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
         vpn_gateway_connection_model['id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
@@ -35856,7 +37054,7 @@ class TestVPNGatewayConnectionCollection():
         vpn_gateway_connection_collection_model_json2 = vpn_gateway_connection_collection_model.to_dict()
         assert vpn_gateway_connection_collection_model_json2 == vpn_gateway_connection_collection_model_json
 
-class TestVPNGatewayConnectionDPD():
+class TestModel_VPNGatewayConnectionDPD():
     """
     Test Class for VPNGatewayConnectionDPD
     """
@@ -35887,7 +37085,7 @@ class TestVPNGatewayConnectionDPD():
         vpn_gateway_connection_dpd_model_json2 = vpn_gateway_connection_dpd_model.to_dict()
         assert vpn_gateway_connection_dpd_model_json2 == vpn_gateway_connection_dpd_model_json
 
-class TestVPNGatewayConnectionDPDPrototype():
+class TestModel_VPNGatewayConnectionDPDPrototype():
     """
     Test Class for VPNGatewayConnectionDPDPrototype
     """
@@ -35918,7 +37116,7 @@ class TestVPNGatewayConnectionDPDPrototype():
         vpn_gateway_connection_dpd_prototype_model_json2 = vpn_gateway_connection_dpd_prototype_model.to_dict()
         assert vpn_gateway_connection_dpd_prototype_model_json2 == vpn_gateway_connection_dpd_prototype_model_json
 
-class TestVPNGatewayConnectionLocalCIDRs():
+class TestModel_VPNGatewayConnectionLocalCIDRs():
     """
     Test Class for VPNGatewayConnectionLocalCIDRs
     """
@@ -35947,7 +37145,7 @@ class TestVPNGatewayConnectionLocalCIDRs():
         vpn_gateway_connection_local_cid_rs_model_json2 = vpn_gateway_connection_local_cid_rs_model.to_dict()
         assert vpn_gateway_connection_local_cid_rs_model_json2 == vpn_gateway_connection_local_cid_rs_model_json
 
-class TestVPNGatewayConnectionPeerCIDRs():
+class TestModel_VPNGatewayConnectionPeerCIDRs():
     """
     Test Class for VPNGatewayConnectionPeerCIDRs
     """
@@ -35976,7 +37174,7 @@ class TestVPNGatewayConnectionPeerCIDRs():
         vpn_gateway_connection_peer_cid_rs_model_json2 = vpn_gateway_connection_peer_cid_rs_model.to_dict()
         assert vpn_gateway_connection_peer_cid_rs_model_json2 == vpn_gateway_connection_peer_cid_rs_model_json
 
-class TestVPNGatewayConnectionReference():
+class TestModel_VPNGatewayConnectionReference():
     """
     Test Class for VPNGatewayConnectionReference
     """
@@ -36014,7 +37212,7 @@ class TestVPNGatewayConnectionReference():
         vpn_gateway_connection_reference_model_json2 = vpn_gateway_connection_reference_model.to_dict()
         assert vpn_gateway_connection_reference_model_json2 == vpn_gateway_connection_reference_model_json
 
-class TestVPNGatewayConnectionReferenceDeleted():
+class TestModel_VPNGatewayConnectionReferenceDeleted():
     """
     Test Class for VPNGatewayConnectionReferenceDeleted
     """
@@ -36043,7 +37241,7 @@ class TestVPNGatewayConnectionReferenceDeleted():
         vpn_gateway_connection_reference_deleted_model_json2 = vpn_gateway_connection_reference_deleted_model.to_dict()
         assert vpn_gateway_connection_reference_deleted_model_json2 == vpn_gateway_connection_reference_deleted_model_json
 
-class TestVPNGatewayConnectionStaticRouteModeTunnel():
+class TestModel_VPNGatewayConnectionStaticRouteModeTunnel():
     """
     Test Class for VPNGatewayConnectionStaticRouteModeTunnel
     """
@@ -36078,7 +37276,7 @@ class TestVPNGatewayConnectionStaticRouteModeTunnel():
         vpn_gateway_connection_static_route_mode_tunnel_model_json2 = vpn_gateway_connection_static_route_mode_tunnel_model.to_dict()
         assert vpn_gateway_connection_static_route_mode_tunnel_model_json2 == vpn_gateway_connection_static_route_mode_tunnel_model_json
 
-class TestVPNGatewayMember():
+class TestModel_VPNGatewayMember():
     """
     Test Class for VPNGatewayMember
     """
@@ -36115,7 +37313,7 @@ class TestVPNGatewayMember():
         vpn_gateway_member_model_json2 = vpn_gateway_member_model.to_dict()
         assert vpn_gateway_member_model_json2 == vpn_gateway_member_model_json
 
-class TestVPNGatewayPatch():
+class TestModel_VPNGatewayPatch():
     """
     Test Class for VPNGatewayPatch
     """
@@ -36144,7 +37342,7 @@ class TestVPNGatewayPatch():
         vpn_gateway_patch_model_json2 = vpn_gateway_patch_model.to_dict()
         assert vpn_gateway_patch_model_json2 == vpn_gateway_patch_model_json
 
-class TestVolume():
+class TestModel_Volume():
     """
     Test Class for Volume
     """
@@ -36159,6 +37357,10 @@ class TestVolume():
         encryption_key_reference_model = {} # EncryptionKeyReference
         encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
+        operating_system_reference_model = {} # OperatingSystemReference
+        operating_system_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64'
+        operating_system_reference_model['name'] = 'ubuntu-16-amd64'
+
         volume_profile_reference_model = {} # VolumeProfileReference
         volume_profile_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose'
         volume_profile_reference_model['name'] = 'general-purpose'
@@ -36167,6 +37369,27 @@ class TestVolume():
         resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['name'] = 'my-resource-group'
+
+        image_reference_deleted_model = {} # ImageReferenceDeleted
+        image_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        image_reference_model = {} # ImageReference
+        image_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['deleted'] = image_reference_deleted_model
+        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['name'] = 'my-image'
+
+        snapshot_reference_deleted_model = {} # SnapshotReferenceDeleted
+        snapshot_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        snapshot_reference_model = {} # SnapshotReference
+        snapshot_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['deleted'] = snapshot_reference_deleted_model
+        snapshot_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['name'] = 'my-snapshot'
+        snapshot_reference_model['resource_type'] = 'snapshot'
 
         volume_status_reason_model = {} # VolumeStatusReason
         volume_status_reason_model['code'] = 'encryption_key_deleted'
@@ -36205,8 +37428,10 @@ class TestVolume():
 
         # Construct a json representation of a Volume model
         volume_model_json = {}
-        volume_model_json['capacity'] = 100
-        volume_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        volume_model_json['active'] = True
+        volume_model_json['busy'] = True
+        volume_model_json['capacity'] = 1000
+        volume_model_json['created_at'] = "2019-01-01T12:00:00Z"
         volume_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
         volume_model_json['encryption'] = 'provider_managed'
         volume_model_json['encryption_key'] = encryption_key_reference_model
@@ -36214,8 +37439,11 @@ class TestVolume():
         volume_model_json['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
         volume_model_json['iops'] = 10000
         volume_model_json['name'] = 'my-volume'
+        volume_model_json['operating_system'] = operating_system_reference_model
         volume_model_json['profile'] = volume_profile_reference_model
         volume_model_json['resource_group'] = resource_group_reference_model
+        volume_model_json['source_image'] = image_reference_model
+        volume_model_json['source_snapshot'] = snapshot_reference_model
         volume_model_json['status'] = 'available'
         volume_model_json['status_reasons'] = [volume_status_reason_model]
         volume_model_json['volume_attachments'] = [volume_attachment_reference_volume_context_model]
@@ -36236,7 +37464,7 @@ class TestVolume():
         volume_model_json2 = volume_model.to_dict()
         assert volume_model_json2 == volume_model_json
 
-class TestVolumeAttachment():
+class TestModel_VolumeAttachment():
     """
     Test Class for VolumeAttachment
     """
@@ -36255,15 +37483,15 @@ class TestVolumeAttachment():
         volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         volume_reference_model = {} # VolumeReference
-        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['crn'] = 'crn:[...]'
         volume_reference_model['deleted'] = volume_reference_deleted_model
-        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['name'] = 'my-volume'
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/ca4b6df3-f5a8-4667-b5f2-f3b9b4160781'
+        volume_reference_model['id'] = 'ca4b6df3-f5a8-4667-b5f2-f3b9b4160781'
+        volume_reference_model['name'] = 'my-data-volume'
 
         # Construct a json representation of a VolumeAttachment model
         volume_attachment_model_json = {}
-        volume_attachment_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        volume_attachment_model_json['created_at'] = "2019-01-01T12:00:00Z"
         volume_attachment_model_json['delete_volume_on_instance_delete'] = True
         volume_attachment_model_json['device'] = volume_attachment_device_model
         volume_attachment_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a'
@@ -36288,7 +37516,7 @@ class TestVolumeAttachment():
         volume_attachment_model_json2 = volume_attachment_model.to_dict()
         assert volume_attachment_model_json2 == volume_attachment_model_json
 
-class TestVolumeAttachmentCollection():
+class TestModel_VolumeAttachmentCollection():
     """
     Test Class for VolumeAttachmentCollection
     """
@@ -36307,19 +37535,19 @@ class TestVolumeAttachmentCollection():
         volume_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
         volume_reference_model = {} # VolumeReference
-        volume_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        volume_reference_model['crn'] = 'crn:[...]'
         volume_reference_model['deleted'] = volume_reference_deleted_model
-        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
-        volume_reference_model['name'] = 'my-volume'
+        volume_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/ac0b16a5-ccc2-47dd-90e2-b9e5f367b6c6'
+        volume_reference_model['id'] = 'ac0b16a5-ccc2-47dd-90e2-b9e5f367b6c6'
+        volume_reference_model['name'] = 'my-boot-volume'
 
         volume_attachment_model = {} # VolumeAttachment
-        volume_attachment_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        volume_attachment_model['created_at'] = "2019-02-28T16:32:05Z"
         volume_attachment_model['delete_volume_on_instance_delete'] = True
         volume_attachment_model['device'] = volume_attachment_device_model
-        volume_attachment_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/volume_attachments/82cbf856-9cbb-45fb-b62f-d7bcef32399a'
-        volume_attachment_model['id'] = '82cbf856-9cbb-45fb-b62f-d7bcef32399a'
-        volume_attachment_model['name'] = 'my-volume-attachment'
+        volume_attachment_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instances/8f06378c-ed0e-481e-b98c-9a6dfbee1ed5/volume_attachments/fdb3642d-c849-4c29-97a9-03b868616f88'
+        volume_attachment_model['id'] = 'fdb3642d-c849-4c29-97a9-03b868616f88'
+        volume_attachment_model['name'] = 'my-boot-volume-attachment'
         volume_attachment_model['status'] = 'attached'
         volume_attachment_model['type'] = 'boot'
         volume_attachment_model['volume'] = volume_reference_model
@@ -36343,7 +37571,7 @@ class TestVolumeAttachmentCollection():
         volume_attachment_collection_model_json2 = volume_attachment_collection_model.to_dict()
         assert volume_attachment_collection_model_json2 == volume_attachment_collection_model_json
 
-class TestVolumeAttachmentDevice():
+class TestModel_VolumeAttachmentDevice():
     """
     Test Class for VolumeAttachmentDevice
     """
@@ -36372,7 +37600,7 @@ class TestVolumeAttachmentDevice():
         volume_attachment_device_model_json2 = volume_attachment_device_model.to_dict()
         assert volume_attachment_device_model_json2 == volume_attachment_device_model_json
 
-class TestVolumeAttachmentPatch():
+class TestModel_VolumeAttachmentPatch():
     """
     Test Class for VolumeAttachmentPatch
     """
@@ -36402,7 +37630,7 @@ class TestVolumeAttachmentPatch():
         volume_attachment_patch_model_json2 = volume_attachment_patch_model.to_dict()
         assert volume_attachment_patch_model_json2 == volume_attachment_patch_model_json
 
-class TestVolumeAttachmentPrototypeInstanceByImageContext():
+class TestModel_VolumeAttachmentPrototypeInstanceByImageContext():
     """
     Test Class for VolumeAttachmentPrototypeInstanceByImageContext
     """
@@ -36448,7 +37676,57 @@ class TestVolumeAttachmentPrototypeInstanceByImageContext():
         volume_attachment_prototype_instance_by_image_context_model_json2 = volume_attachment_prototype_instance_by_image_context_model.to_dict()
         assert volume_attachment_prototype_instance_by_image_context_model_json2 == volume_attachment_prototype_instance_by_image_context_model_json
 
-class TestVolumeAttachmentPrototypeInstanceContext():
+class TestModel_VolumeAttachmentPrototypeInstanceByVolumeContext():
+    """
+    Test Class for VolumeAttachmentPrototypeInstanceByVolumeContext
+    """
+
+    def test_volume_attachment_prototype_instance_by_volume_context_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeInstanceByVolumeContext
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        volume_attachment_volume_prototype_instance_by_volume_context_model = {} # VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+        volume_attachment_volume_prototype_instance_by_volume_context_model['capacity'] = 38
+        volume_attachment_volume_prototype_instance_by_volume_context_model['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['iops'] = 10000
+        volume_attachment_volume_prototype_instance_by_volume_context_model['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_by_volume_context_model['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['source_snapshot'] = snapshot_identity_model
+
+        # Construct a json representation of a VolumeAttachmentPrototypeInstanceByVolumeContext model
+        volume_attachment_prototype_instance_by_volume_context_model_json = {}
+        volume_attachment_prototype_instance_by_volume_context_model_json['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_volume_context_model_json['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_by_volume_context_model_json['volume'] = volume_attachment_volume_prototype_instance_by_volume_context_model
+
+        # Construct a model instance of VolumeAttachmentPrototypeInstanceByVolumeContext by calling from_dict on the json representation
+        volume_attachment_prototype_instance_by_volume_context_model = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(volume_attachment_prototype_instance_by_volume_context_model_json)
+        assert volume_attachment_prototype_instance_by_volume_context_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeInstanceByVolumeContext by calling from_dict on the json representation
+        volume_attachment_prototype_instance_by_volume_context_model_dict = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(volume_attachment_prototype_instance_by_volume_context_model_json).__dict__
+        volume_attachment_prototype_instance_by_volume_context_model2 = VolumeAttachmentPrototypeInstanceByVolumeContext(**volume_attachment_prototype_instance_by_volume_context_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_instance_by_volume_context_model == volume_attachment_prototype_instance_by_volume_context_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_instance_by_volume_context_model_json2 = volume_attachment_prototype_instance_by_volume_context_model.to_dict()
+        assert volume_attachment_prototype_instance_by_volume_context_model_json2 == volume_attachment_prototype_instance_by_volume_context_model_json
+
+class TestModel_VolumeAttachmentPrototypeInstanceContext():
     """
     Test Class for VolumeAttachmentPrototypeInstanceContext
     """
@@ -36484,7 +37762,7 @@ class TestVolumeAttachmentPrototypeInstanceContext():
         volume_attachment_prototype_instance_context_model_json2 = volume_attachment_prototype_instance_context_model.to_dict()
         assert volume_attachment_prototype_instance_context_model_json2 == volume_attachment_prototype_instance_context_model_json
 
-class TestVolumeAttachmentReferenceInstanceContext():
+class TestModel_VolumeAttachmentReferenceInstanceContext():
     """
     Test Class for VolumeAttachmentReferenceInstanceContext
     """
@@ -36536,7 +37814,7 @@ class TestVolumeAttachmentReferenceInstanceContext():
         volume_attachment_reference_instance_context_model_json2 = volume_attachment_reference_instance_context_model.to_dict()
         assert volume_attachment_reference_instance_context_model_json2 == volume_attachment_reference_instance_context_model_json
 
-class TestVolumeAttachmentReferenceInstanceContextDeleted():
+class TestModel_VolumeAttachmentReferenceInstanceContextDeleted():
     """
     Test Class for VolumeAttachmentReferenceInstanceContextDeleted
     """
@@ -36565,7 +37843,7 @@ class TestVolumeAttachmentReferenceInstanceContextDeleted():
         volume_attachment_reference_instance_context_deleted_model_json2 = volume_attachment_reference_instance_context_deleted_model.to_dict()
         assert volume_attachment_reference_instance_context_deleted_model_json2 == volume_attachment_reference_instance_context_deleted_model_json
 
-class TestVolumeAttachmentReferenceVolumeContext():
+class TestModel_VolumeAttachmentReferenceVolumeContext():
     """
     Test Class for VolumeAttachmentReferenceVolumeContext
     """
@@ -36619,7 +37897,7 @@ class TestVolumeAttachmentReferenceVolumeContext():
         volume_attachment_reference_volume_context_model_json2 = volume_attachment_reference_volume_context_model.to_dict()
         assert volume_attachment_reference_volume_context_model_json2 == volume_attachment_reference_volume_context_model_json
 
-class TestVolumeAttachmentReferenceVolumeContextDeleted():
+class TestModel_VolumeAttachmentReferenceVolumeContextDeleted():
     """
     Test Class for VolumeAttachmentReferenceVolumeContextDeleted
     """
@@ -36648,7 +37926,7 @@ class TestVolumeAttachmentReferenceVolumeContextDeleted():
         volume_attachment_reference_volume_context_deleted_model_json2 = volume_attachment_reference_volume_context_deleted_model.to_dict()
         assert volume_attachment_reference_volume_context_deleted_model_json2 == volume_attachment_reference_volume_context_deleted_model_json
 
-class TestVolumeCollection():
+class TestModel_VolumeCollection():
     """
     Test Class for VolumeCollection
     """
@@ -36669,6 +37947,10 @@ class TestVolumeCollection():
         encryption_key_reference_model = {} # EncryptionKeyReference
         encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
+        operating_system_reference_model = {} # OperatingSystemReference
+        operating_system_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64'
+        operating_system_reference_model['name'] = 'ubuntu-16-amd64'
+
         volume_profile_reference_model = {} # VolumeProfileReference
         volume_profile_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose'
         volume_profile_reference_model['name'] = 'general-purpose'
@@ -36677,6 +37959,27 @@ class TestVolumeCollection():
         resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
         resource_group_reference_model['name'] = 'my-resource-group'
+
+        image_reference_deleted_model = {} # ImageReferenceDeleted
+        image_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        image_reference_model = {} # ImageReference
+        image_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['deleted'] = image_reference_deleted_model
+        image_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['id'] = '72b27b5c-f4b0-48bb-b954-5becc7c1dcb8'
+        image_reference_model['name'] = 'my-image'
+
+        snapshot_reference_deleted_model = {} # SnapshotReferenceDeleted
+        snapshot_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        snapshot_reference_model = {} # SnapshotReference
+        snapshot_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['deleted'] = snapshot_reference_deleted_model
+        snapshot_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+        snapshot_reference_model['name'] = 'my-snapshot'
+        snapshot_reference_model['resource_type'] = 'snapshot'
 
         volume_status_reason_model = {} # VolumeStatusReason
         volume_status_reason_model['code'] = 'encryption_key_deleted'
@@ -36714,8 +38017,10 @@ class TestVolumeCollection():
         zone_reference_model['name'] = 'us-south-1'
 
         volume_model = {} # Volume
-        volume_model['capacity'] = 100
-        volume_model['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        volume_model['active'] = True
+        volume_model['busy'] = True
+        volume_model['capacity'] = 1000
+        volume_model['created_at'] = "2019-01-01T12:00:00Z"
         volume_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
         volume_model['encryption'] = 'provider_managed'
         volume_model['encryption_key'] = encryption_key_reference_model
@@ -36723,8 +38028,11 @@ class TestVolumeCollection():
         volume_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
         volume_model['iops'] = 10000
         volume_model['name'] = 'my-volume'
+        volume_model['operating_system'] = operating_system_reference_model
         volume_model['profile'] = volume_profile_reference_model
         volume_model['resource_group'] = resource_group_reference_model
+        volume_model['source_image'] = image_reference_model
+        volume_model['source_snapshot'] = snapshot_reference_model
         volume_model['status'] = 'available'
         volume_model['status_reasons'] = [volume_status_reason_model]
         volume_model['volume_attachments'] = [volume_attachment_reference_volume_context_model]
@@ -36752,7 +38060,7 @@ class TestVolumeCollection():
         volume_collection_model_json2 = volume_collection_model.to_dict()
         assert volume_collection_model_json2 == volume_collection_model_json
 
-class TestVolumeCollectionFirst():
+class TestModel_VolumeCollectionFirst():
     """
     Test Class for VolumeCollectionFirst
     """
@@ -36781,7 +38089,7 @@ class TestVolumeCollectionFirst():
         volume_collection_first_model_json2 = volume_collection_first_model.to_dict()
         assert volume_collection_first_model_json2 == volume_collection_first_model_json
 
-class TestVolumeCollectionNext():
+class TestModel_VolumeCollectionNext():
     """
     Test Class for VolumeCollectionNext
     """
@@ -36810,7 +38118,7 @@ class TestVolumeCollectionNext():
         volume_collection_next_model_json2 = volume_collection_next_model.to_dict()
         assert volume_collection_next_model_json2 == volume_collection_next_model_json
 
-class TestVolumePatch():
+class TestModel_VolumePatch():
     """
     Test Class for VolumePatch
     """
@@ -36839,7 +38147,7 @@ class TestVolumePatch():
         volume_patch_model_json2 = volume_patch_model.to_dict()
         assert volume_patch_model_json2 == volume_patch_model_json
 
-class TestVolumeProfile():
+class TestModel_VolumeProfile():
     """
     Test Class for VolumeProfile
     """
@@ -36870,7 +38178,7 @@ class TestVolumeProfile():
         volume_profile_model_json2 = volume_profile_model.to_dict()
         assert volume_profile_model_json2 == volume_profile_model_json
 
-class TestVolumeProfileCollection():
+class TestModel_VolumeProfileCollection():
     """
     Test Class for VolumeProfileCollection
     """
@@ -36916,7 +38224,7 @@ class TestVolumeProfileCollection():
         volume_profile_collection_model_json2 = volume_profile_collection_model.to_dict()
         assert volume_profile_collection_model_json2 == volume_profile_collection_model_json
 
-class TestVolumeProfileCollectionFirst():
+class TestModel_VolumeProfileCollectionFirst():
     """
     Test Class for VolumeProfileCollectionFirst
     """
@@ -36945,7 +38253,7 @@ class TestVolumeProfileCollectionFirst():
         volume_profile_collection_first_model_json2 = volume_profile_collection_first_model.to_dict()
         assert volume_profile_collection_first_model_json2 == volume_profile_collection_first_model_json
 
-class TestVolumeProfileCollectionNext():
+class TestModel_VolumeProfileCollectionNext():
     """
     Test Class for VolumeProfileCollectionNext
     """
@@ -36974,7 +38282,7 @@ class TestVolumeProfileCollectionNext():
         volume_profile_collection_next_model_json2 = volume_profile_collection_next_model.to_dict()
         assert volume_profile_collection_next_model_json2 == volume_profile_collection_next_model_json
 
-class TestVolumeProfileReference():
+class TestModel_VolumeProfileReference():
     """
     Test Class for VolumeProfileReference
     """
@@ -37004,7 +38312,7 @@ class TestVolumeProfileReference():
         volume_profile_reference_model_json2 = volume_profile_reference_model.to_dict()
         assert volume_profile_reference_model_json2 == volume_profile_reference_model_json
 
-class TestVolumePrototypeInstanceByImageContext():
+class TestModel_VolumePrototypeInstanceByImageContext():
     """
     Test Class for VolumePrototypeInstanceByImageContext
     """
@@ -37045,7 +38353,7 @@ class TestVolumePrototypeInstanceByImageContext():
         volume_prototype_instance_by_image_context_model_json2 = volume_prototype_instance_by_image_context_model.to_dict()
         assert volume_prototype_instance_by_image_context_model_json2 == volume_prototype_instance_by_image_context_model_json
 
-class TestVolumeReference():
+class TestModel_VolumeReference():
     """
     Test Class for VolumeReference
     """
@@ -37083,7 +38391,7 @@ class TestVolumeReference():
         volume_reference_model_json2 = volume_reference_model.to_dict()
         assert volume_reference_model_json2 == volume_reference_model_json
 
-class TestVolumeReferenceDeleted():
+class TestModel_VolumeReferenceDeleted():
     """
     Test Class for VolumeReferenceDeleted
     """
@@ -37112,7 +38420,7 @@ class TestVolumeReferenceDeleted():
         volume_reference_deleted_model_json2 = volume_reference_deleted_model.to_dict()
         assert volume_reference_deleted_model_json2 == volume_reference_deleted_model_json
 
-class TestVolumeStatusReason():
+class TestModel_VolumeStatusReason():
     """
     Test Class for VolumeStatusReason
     """
@@ -37143,7 +38451,7 @@ class TestVolumeStatusReason():
         volume_status_reason_model_json2 = volume_status_reason_model.to_dict()
         assert volume_status_reason_model_json2 == volume_status_reason_model_json
 
-class TestZone():
+class TestModel_Zone():
     """
     Test Class for Zone
     """
@@ -37181,7 +38489,7 @@ class TestZone():
         zone_model_json2 = zone_model.to_dict()
         assert zone_model_json2 == zone_model_json
 
-class TestZoneCollection():
+class TestModel_ZoneCollection():
     """
     Test Class for ZoneCollection
     """
@@ -37222,7 +38530,7 @@ class TestZoneCollection():
         zone_collection_model_json2 = zone_collection_model.to_dict()
         assert zone_collection_model_json2 == zone_collection_model_json
 
-class TestZoneReference():
+class TestModel_ZoneReference():
     """
     Test Class for ZoneReference
     """
@@ -37252,7 +38560,7 @@ class TestZoneReference():
         zone_reference_model_json2 = zone_reference_model.to_dict()
         assert zone_reference_model_json2 == zone_reference_model_json
 
-class TestCertificateInstanceIdentityByCRN():
+class TestModel_CertificateInstanceIdentityByCRN():
     """
     Test Class for CertificateInstanceIdentityByCRN
     """
@@ -37281,7 +38589,7 @@ class TestCertificateInstanceIdentityByCRN():
         certificate_instance_identity_by_crn_model_json2 = certificate_instance_identity_by_crn_model.to_dict()
         assert certificate_instance_identity_by_crn_model_json2 == certificate_instance_identity_by_crn_model_json
 
-class TestCloudObjectStorageBucketIdentityByName():
+class TestModel_CloudObjectStorageBucketIdentityByName():
     """
     Test Class for CloudObjectStorageBucketIdentityByName
     """
@@ -37310,7 +38618,7 @@ class TestCloudObjectStorageBucketIdentityByName():
         cloud_object_storage_bucket_identity_by_name_model_json2 = cloud_object_storage_bucket_identity_by_name_model.to_dict()
         assert cloud_object_storage_bucket_identity_by_name_model_json2 == cloud_object_storage_bucket_identity_by_name_model_json
 
-class TestDedicatedHostGroupIdentityByCRN():
+class TestModel_DedicatedHostGroupIdentityByCRN():
     """
     Test Class for DedicatedHostGroupIdentityByCRN
     """
@@ -37339,7 +38647,7 @@ class TestDedicatedHostGroupIdentityByCRN():
         dedicated_host_group_identity_by_crn_model_json2 = dedicated_host_group_identity_by_crn_model.to_dict()
         assert dedicated_host_group_identity_by_crn_model_json2 == dedicated_host_group_identity_by_crn_model_json
 
-class TestDedicatedHostGroupIdentityByHref():
+class TestModel_DedicatedHostGroupIdentityByHref():
     """
     Test Class for DedicatedHostGroupIdentityByHref
     """
@@ -37368,7 +38676,7 @@ class TestDedicatedHostGroupIdentityByHref():
         dedicated_host_group_identity_by_href_model_json2 = dedicated_host_group_identity_by_href_model.to_dict()
         assert dedicated_host_group_identity_by_href_model_json2 == dedicated_host_group_identity_by_href_model_json
 
-class TestDedicatedHostGroupIdentityById():
+class TestModel_DedicatedHostGroupIdentityById():
     """
     Test Class for DedicatedHostGroupIdentityById
     """
@@ -37397,7 +38705,7 @@ class TestDedicatedHostGroupIdentityById():
         dedicated_host_group_identity_by_id_model_json2 = dedicated_host_group_identity_by_id_model.to_dict()
         assert dedicated_host_group_identity_by_id_model_json2 == dedicated_host_group_identity_by_id_model_json
 
-class TestDedicatedHostProfileIdentityByHref():
+class TestModel_DedicatedHostProfileIdentityByHref():
     """
     Test Class for DedicatedHostProfileIdentityByHref
     """
@@ -37426,7 +38734,7 @@ class TestDedicatedHostProfileIdentityByHref():
         dedicated_host_profile_identity_by_href_model_json2 = dedicated_host_profile_identity_by_href_model.to_dict()
         assert dedicated_host_profile_identity_by_href_model_json2 == dedicated_host_profile_identity_by_href_model_json
 
-class TestDedicatedHostProfileIdentityByName():
+class TestModel_DedicatedHostProfileIdentityByName():
     """
     Test Class for DedicatedHostProfileIdentityByName
     """
@@ -37455,7 +38763,7 @@ class TestDedicatedHostProfileIdentityByName():
         dedicated_host_profile_identity_by_name_model_json2 = dedicated_host_profile_identity_by_name_model.to_dict()
         assert dedicated_host_profile_identity_by_name_model_json2 == dedicated_host_profile_identity_by_name_model_json
 
-class TestDedicatedHostProfileMemoryDependent():
+class TestModel_DedicatedHostProfileMemoryDependent():
     """
     Test Class for DedicatedHostProfileMemoryDependent
     """
@@ -37484,7 +38792,7 @@ class TestDedicatedHostProfileMemoryDependent():
         dedicated_host_profile_memory_dependent_model_json2 = dedicated_host_profile_memory_dependent_model.to_dict()
         assert dedicated_host_profile_memory_dependent_model_json2 == dedicated_host_profile_memory_dependent_model_json
 
-class TestDedicatedHostProfileMemoryEnum():
+class TestModel_DedicatedHostProfileMemoryEnum():
     """
     Test Class for DedicatedHostProfileMemoryEnum
     """
@@ -37515,7 +38823,7 @@ class TestDedicatedHostProfileMemoryEnum():
         dedicated_host_profile_memory_enum_model_json2 = dedicated_host_profile_memory_enum_model.to_dict()
         assert dedicated_host_profile_memory_enum_model_json2 == dedicated_host_profile_memory_enum_model_json
 
-class TestDedicatedHostProfileMemoryFixed():
+class TestModel_DedicatedHostProfileMemoryFixed():
     """
     Test Class for DedicatedHostProfileMemoryFixed
     """
@@ -37545,7 +38853,7 @@ class TestDedicatedHostProfileMemoryFixed():
         dedicated_host_profile_memory_fixed_model_json2 = dedicated_host_profile_memory_fixed_model.to_dict()
         assert dedicated_host_profile_memory_fixed_model_json2 == dedicated_host_profile_memory_fixed_model_json
 
-class TestDedicatedHostProfileMemoryRange():
+class TestModel_DedicatedHostProfileMemoryRange():
     """
     Test Class for DedicatedHostProfileMemoryRange
     """
@@ -37578,7 +38886,7 @@ class TestDedicatedHostProfileMemoryRange():
         dedicated_host_profile_memory_range_model_json2 = dedicated_host_profile_memory_range_model.to_dict()
         assert dedicated_host_profile_memory_range_model_json2 == dedicated_host_profile_memory_range_model_json
 
-class TestDedicatedHostProfileSocketDependent():
+class TestModel_DedicatedHostProfileSocketDependent():
     """
     Test Class for DedicatedHostProfileSocketDependent
     """
@@ -37607,7 +38915,7 @@ class TestDedicatedHostProfileSocketDependent():
         dedicated_host_profile_socket_dependent_model_json2 = dedicated_host_profile_socket_dependent_model.to_dict()
         assert dedicated_host_profile_socket_dependent_model_json2 == dedicated_host_profile_socket_dependent_model_json
 
-class TestDedicatedHostProfileSocketEnum():
+class TestModel_DedicatedHostProfileSocketEnum():
     """
     Test Class for DedicatedHostProfileSocketEnum
     """
@@ -37638,7 +38946,7 @@ class TestDedicatedHostProfileSocketEnum():
         dedicated_host_profile_socket_enum_model_json2 = dedicated_host_profile_socket_enum_model.to_dict()
         assert dedicated_host_profile_socket_enum_model_json2 == dedicated_host_profile_socket_enum_model_json
 
-class TestDedicatedHostProfileSocketFixed():
+class TestModel_DedicatedHostProfileSocketFixed():
     """
     Test Class for DedicatedHostProfileSocketFixed
     """
@@ -37668,7 +38976,7 @@ class TestDedicatedHostProfileSocketFixed():
         dedicated_host_profile_socket_fixed_model_json2 = dedicated_host_profile_socket_fixed_model.to_dict()
         assert dedicated_host_profile_socket_fixed_model_json2 == dedicated_host_profile_socket_fixed_model_json
 
-class TestDedicatedHostProfileSocketRange():
+class TestModel_DedicatedHostProfileSocketRange():
     """
     Test Class for DedicatedHostProfileSocketRange
     """
@@ -37701,7 +39009,7 @@ class TestDedicatedHostProfileSocketRange():
         dedicated_host_profile_socket_range_model_json2 = dedicated_host_profile_socket_range_model.to_dict()
         assert dedicated_host_profile_socket_range_model_json2 == dedicated_host_profile_socket_range_model_json
 
-class TestDedicatedHostProfileVCPUDependent():
+class TestModel_DedicatedHostProfileVCPUDependent():
     """
     Test Class for DedicatedHostProfileVCPUDependent
     """
@@ -37730,7 +39038,7 @@ class TestDedicatedHostProfileVCPUDependent():
         dedicated_host_profile_vcpu_dependent_model_json2 = dedicated_host_profile_vcpu_dependent_model.to_dict()
         assert dedicated_host_profile_vcpu_dependent_model_json2 == dedicated_host_profile_vcpu_dependent_model_json
 
-class TestDedicatedHostProfileVCPUEnum():
+class TestModel_DedicatedHostProfileVCPUEnum():
     """
     Test Class for DedicatedHostProfileVCPUEnum
     """
@@ -37761,7 +39069,7 @@ class TestDedicatedHostProfileVCPUEnum():
         dedicated_host_profile_vcpu_enum_model_json2 = dedicated_host_profile_vcpu_enum_model.to_dict()
         assert dedicated_host_profile_vcpu_enum_model_json2 == dedicated_host_profile_vcpu_enum_model_json
 
-class TestDedicatedHostProfileVCPUFixed():
+class TestModel_DedicatedHostProfileVCPUFixed():
     """
     Test Class for DedicatedHostProfileVCPUFixed
     """
@@ -37791,7 +39099,7 @@ class TestDedicatedHostProfileVCPUFixed():
         dedicated_host_profile_vcpu_fixed_model_json2 = dedicated_host_profile_vcpu_fixed_model.to_dict()
         assert dedicated_host_profile_vcpu_fixed_model_json2 == dedicated_host_profile_vcpu_fixed_model_json
 
-class TestDedicatedHostProfileVCPURange():
+class TestModel_DedicatedHostProfileVCPURange():
     """
     Test Class for DedicatedHostProfileVCPURange
     """
@@ -37824,7 +39132,7 @@ class TestDedicatedHostProfileVCPURange():
         dedicated_host_profile_vcpu_range_model_json2 = dedicated_host_profile_vcpu_range_model.to_dict()
         assert dedicated_host_profile_vcpu_range_model_json2 == dedicated_host_profile_vcpu_range_model_json
 
-class TestDedicatedHostPrototypeDedicatedHostByGroup():
+class TestModel_DedicatedHostPrototypeDedicatedHostByGroup():
     """
     Test Class for DedicatedHostPrototypeDedicatedHostByGroup
     """
@@ -37868,7 +39176,7 @@ class TestDedicatedHostPrototypeDedicatedHostByGroup():
         dedicated_host_prototype_dedicated_host_by_group_model_json2 = dedicated_host_prototype_dedicated_host_by_group_model.to_dict()
         assert dedicated_host_prototype_dedicated_host_by_group_model_json2 == dedicated_host_prototype_dedicated_host_by_group_model_json
 
-class TestDedicatedHostPrototypeDedicatedHostByZone():
+class TestModel_DedicatedHostPrototypeDedicatedHostByZone():
     """
     Test Class for DedicatedHostPrototypeDedicatedHostByZone
     """
@@ -37917,7 +39225,7 @@ class TestDedicatedHostPrototypeDedicatedHostByZone():
         dedicated_host_prototype_dedicated_host_by_zone_model_json2 = dedicated_host_prototype_dedicated_host_by_zone_model.to_dict()
         assert dedicated_host_prototype_dedicated_host_by_zone_model_json2 == dedicated_host_prototype_dedicated_host_by_zone_model_json
 
-class TestEncryptionKeyIdentityByCRN():
+class TestModel_EncryptionKeyIdentityByCRN():
     """
     Test Class for EncryptionKeyIdentityByCRN
     """
@@ -37946,7 +39254,7 @@ class TestEncryptionKeyIdentityByCRN():
         encryption_key_identity_by_crn_model_json2 = encryption_key_identity_by_crn_model.to_dict()
         assert encryption_key_identity_by_crn_model_json2 == encryption_key_identity_by_crn_model_json
 
-class TestEndpointGatewayReservedIPReservedIPPrototypeTargetContext():
+class TestModel_EndpointGatewayReservedIPReservedIPPrototypeTargetContext():
     """
     Test Class for EndpointGatewayReservedIPReservedIPPrototypeTargetContext
     """
@@ -37982,7 +39290,7 @@ class TestEndpointGatewayReservedIPReservedIPPrototypeTargetContext():
         endpoint_gateway_reserved_ip_reserved_ip_prototype_target_context_model_json2 = endpoint_gateway_reserved_ip_reserved_ip_prototype_target_context_model.to_dict()
         assert endpoint_gateway_reserved_ip_reserved_ip_prototype_target_context_model_json2 == endpoint_gateway_reserved_ip_reserved_ip_prototype_target_context_model_json
 
-class TestEndpointGatewayTargetProviderCloudServiceReference():
+class TestModel_EndpointGatewayTargetProviderCloudServiceReference():
     """
     Test Class for EndpointGatewayTargetProviderCloudServiceReference
     """
@@ -38012,7 +39320,7 @@ class TestEndpointGatewayTargetProviderCloudServiceReference():
         endpoint_gateway_target_provider_cloud_service_reference_model_json2 = endpoint_gateway_target_provider_cloud_service_reference_model.to_dict()
         assert endpoint_gateway_target_provider_cloud_service_reference_model_json2 == endpoint_gateway_target_provider_cloud_service_reference_model_json
 
-class TestEndpointGatewayTargetProviderInfrastructureServiceReference():
+class TestModel_EndpointGatewayTargetProviderInfrastructureServiceReference():
     """
     Test Class for EndpointGatewayTargetProviderInfrastructureServiceReference
     """
@@ -38042,7 +39350,7 @@ class TestEndpointGatewayTargetProviderInfrastructureServiceReference():
         endpoint_gateway_target_provider_infrastructure_service_reference_model_json2 = endpoint_gateway_target_provider_infrastructure_service_reference_model.to_dict()
         assert endpoint_gateway_target_provider_infrastructure_service_reference_model_json2 == endpoint_gateway_target_provider_infrastructure_service_reference_model_json
 
-class TestFloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
+class TestModel_FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
     """
     Test Class for FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref
     """
@@ -38071,7 +39379,7 @@ class TestFloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHr
         floating_ip_by_target_network_interface_identity_network_interface_identity_by_href_model_json2 = floating_ip_by_target_network_interface_identity_network_interface_identity_by_href_model.to_dict()
         assert floating_ip_by_target_network_interface_identity_network_interface_identity_by_href_model_json2 == floating_ip_by_target_network_interface_identity_network_interface_identity_by_href_model_json
 
-class TestFloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById():
+class TestModel_FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById():
     """
     Test Class for FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
     """
@@ -38100,7 +39408,7 @@ class TestFloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
         floating_ip_by_target_network_interface_identity_network_interface_identity_by_id_model_json2 = floating_ip_by_target_network_interface_identity_network_interface_identity_by_id_model.to_dict()
         assert floating_ip_by_target_network_interface_identity_network_interface_identity_by_id_model_json2 == floating_ip_by_target_network_interface_identity_network_interface_identity_by_id_model_json
 
-class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
+class TestModel_FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
     """
     Test Class for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref
     """
@@ -38129,7 +39437,7 @@ class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityB
         floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json2 = floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model.to_dict()
         assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json2 == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_href_model_json
 
-class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById():
+class TestModel_FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById():
     """
     Test Class for FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById
     """
@@ -38158,7 +39466,7 @@ class TestFloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityB
         floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json2 = floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model.to_dict()
         assert floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json2 == floating_ip_patch_target_network_interface_identity_network_interface_identity_by_id_model_json
 
-class TestFloatingIPPrototypeFloatingIPByTarget():
+class TestModel_FloatingIPPrototypeFloatingIPByTarget():
     """
     Test Class for FloatingIPPrototypeFloatingIPByTarget
     """
@@ -38197,7 +39505,7 @@ class TestFloatingIPPrototypeFloatingIPByTarget():
         floating_ip_prototype_floating_ip_by_target_model_json2 = floating_ip_prototype_floating_ip_by_target_model.to_dict()
         assert floating_ip_prototype_floating_ip_by_target_model_json2 == floating_ip_prototype_floating_ip_by_target_model_json
 
-class TestFloatingIPPrototypeFloatingIPByZone():
+class TestModel_FloatingIPPrototypeFloatingIPByZone():
     """
     Test Class for FloatingIPPrototypeFloatingIPByZone
     """
@@ -38236,7 +39544,7 @@ class TestFloatingIPPrototypeFloatingIPByZone():
         floating_ip_prototype_floating_ip_by_zone_model_json2 = floating_ip_prototype_floating_ip_by_zone_model.to_dict()
         assert floating_ip_prototype_floating_ip_by_zone_model_json2 == floating_ip_prototype_floating_ip_by_zone_model_json
 
-class TestFloatingIPTargetNetworkInterfaceReference():
+class TestModel_FloatingIPTargetNetworkInterfaceReference():
     """
     Test Class for FloatingIPTargetNetworkInterfaceReference
     """
@@ -38275,7 +39583,7 @@ class TestFloatingIPTargetNetworkInterfaceReference():
         floating_ip_target_network_interface_reference_model_json2 = floating_ip_target_network_interface_reference_model.to_dict()
         assert floating_ip_target_network_interface_reference_model_json2 == floating_ip_target_network_interface_reference_model_json
 
-class TestFloatingIPTargetPublicGatewayReference():
+class TestModel_FloatingIPTargetPublicGatewayReference():
     """
     Test Class for FloatingIPTargetPublicGatewayReference
     """
@@ -38314,7 +39622,7 @@ class TestFloatingIPTargetPublicGatewayReference():
         floating_ip_target_public_gateway_reference_model_json2 = floating_ip_target_public_gateway_reference_model.to_dict()
         assert floating_ip_target_public_gateway_reference_model_json2 == floating_ip_target_public_gateway_reference_model_json
 
-class TestFlowLogCollectorTargetInstanceReference():
+class TestModel_FlowLogCollectorTargetInstanceReference():
     """
     Test Class for FlowLogCollectorTargetInstanceReference
     """
@@ -38352,7 +39660,7 @@ class TestFlowLogCollectorTargetInstanceReference():
         flow_log_collector_target_instance_reference_model_json2 = flow_log_collector_target_instance_reference_model.to_dict()
         assert flow_log_collector_target_instance_reference_model_json2 == flow_log_collector_target_instance_reference_model_json
 
-class TestFlowLogCollectorTargetNetworkInterfaceReferenceTargetContext():
+class TestModel_FlowLogCollectorTargetNetworkInterfaceReferenceTargetContext():
     """
     Test Class for FlowLogCollectorTargetNetworkInterfaceReferenceTargetContext
     """
@@ -38390,7 +39698,7 @@ class TestFlowLogCollectorTargetNetworkInterfaceReferenceTargetContext():
         flow_log_collector_target_network_interface_reference_target_context_model_json2 = flow_log_collector_target_network_interface_reference_target_context_model.to_dict()
         assert flow_log_collector_target_network_interface_reference_target_context_model_json2 == flow_log_collector_target_network_interface_reference_target_context_model_json
 
-class TestFlowLogCollectorTargetSubnetReference():
+class TestModel_FlowLogCollectorTargetSubnetReference():
     """
     Test Class for FlowLogCollectorTargetSubnetReference
     """
@@ -38428,7 +39736,7 @@ class TestFlowLogCollectorTargetSubnetReference():
         flow_log_collector_target_subnet_reference_model_json2 = flow_log_collector_target_subnet_reference_model.to_dict()
         assert flow_log_collector_target_subnet_reference_model_json2 == flow_log_collector_target_subnet_reference_model_json
 
-class TestFlowLogCollectorTargetVPCReference():
+class TestModel_FlowLogCollectorTargetVPCReference():
     """
     Test Class for FlowLogCollectorTargetVPCReference
     """
@@ -38466,7 +39774,7 @@ class TestFlowLogCollectorTargetVPCReference():
         flow_log_collector_target_vpc_reference_model_json2 = flow_log_collector_target_vpc_reference_model.to_dict()
         assert flow_log_collector_target_vpc_reference_model_json2 == flow_log_collector_target_vpc_reference_model_json
 
-class TestIKEPolicyIdentityByHref():
+class TestModel_IKEPolicyIdentityByHref():
     """
     Test Class for IKEPolicyIdentityByHref
     """
@@ -38495,7 +39803,7 @@ class TestIKEPolicyIdentityByHref():
         ike_policy_identity_by_href_model_json2 = ike_policy_identity_by_href_model.to_dict()
         assert ike_policy_identity_by_href_model_json2 == ike_policy_identity_by_href_model_json
 
-class TestIKEPolicyIdentityById():
+class TestModel_IKEPolicyIdentityById():
     """
     Test Class for IKEPolicyIdentityById
     """
@@ -38524,7 +39832,7 @@ class TestIKEPolicyIdentityById():
         ike_policy_identity_by_id_model_json2 = ike_policy_identity_by_id_model.to_dict()
         assert ike_policy_identity_by_id_model_json2 == ike_policy_identity_by_id_model_json
 
-class TestIPsecPolicyIdentityByHref():
+class TestModel_IPsecPolicyIdentityByHref():
     """
     Test Class for IPsecPolicyIdentityByHref
     """
@@ -38553,7 +39861,7 @@ class TestIPsecPolicyIdentityByHref():
         i_psec_policy_identity_by_href_model_json2 = i_psec_policy_identity_by_href_model.to_dict()
         assert i_psec_policy_identity_by_href_model_json2 == i_psec_policy_identity_by_href_model_json
 
-class TestIPsecPolicyIdentityById():
+class TestModel_IPsecPolicyIdentityById():
     """
     Test Class for IPsecPolicyIdentityById
     """
@@ -38582,7 +39890,7 @@ class TestIPsecPolicyIdentityById():
         i_psec_policy_identity_by_id_model_json2 = i_psec_policy_identity_by_id_model.to_dict()
         assert i_psec_policy_identity_by_id_model_json2 == i_psec_policy_identity_by_id_model_json
 
-class TestImageIdentityByCRN():
+class TestModel_ImageIdentityByCRN():
     """
     Test Class for ImageIdentityByCRN
     """
@@ -38611,7 +39919,7 @@ class TestImageIdentityByCRN():
         image_identity_by_crn_model_json2 = image_identity_by_crn_model.to_dict()
         assert image_identity_by_crn_model_json2 == image_identity_by_crn_model_json
 
-class TestImageIdentityByHref():
+class TestModel_ImageIdentityByHref():
     """
     Test Class for ImageIdentityByHref
     """
@@ -38640,7 +39948,7 @@ class TestImageIdentityByHref():
         image_identity_by_href_model_json2 = image_identity_by_href_model.to_dict()
         assert image_identity_by_href_model_json2 == image_identity_by_href_model_json
 
-class TestImageIdentityById():
+class TestModel_ImageIdentityById():
     """
     Test Class for ImageIdentityById
     """
@@ -38669,7 +39977,7 @@ class TestImageIdentityById():
         image_identity_by_id_model_json2 = image_identity_by_id_model.to_dict()
         assert image_identity_by_id_model_json2 == image_identity_by_id_model_json
 
-class TestImagePrototypeImageByFile():
+class TestModel_ImagePrototypeImageByFile():
     """
     Test Class for ImagePrototypeImageByFile
     """
@@ -38717,49 +40025,50 @@ class TestImagePrototypeImageByFile():
         image_prototype_image_by_file_model_json2 = image_prototype_image_by_file_model.to_dict()
         assert image_prototype_image_by_file_model_json2 == image_prototype_image_by_file_model_json
 
-class TestInstanceGroupManagerActionPatchScheduledActionPatch():
+class TestModel_ImagePrototypeImageBySourceVolume():
     """
-    Test Class for InstanceGroupManagerActionPatchScheduledActionPatch
+    Test Class for ImagePrototypeImageBySourceVolume
     """
 
-    def test_instance_group_manager_action_patch_scheduled_action_patch_serialization(self):
+    def test_image_prototype_image_by_source_volume_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerActionPatchScheduledActionPatch
+        Test serialization/deserialization for ImagePrototypeImageBySourceVolume
         """
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        instance_group_manager_scheduled_action_group_patch_model = {} # InstanceGroupManagerScheduledActionGroupPatch
-        instance_group_manager_scheduled_action_group_patch_model['membership_count'] = 10
+        resource_group_identity_model = {} # ResourceGroupIdentityById
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model = {} # InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_patch_manager_model['min_membership_count'] = 10
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
-        # Construct a json representation of a InstanceGroupManagerActionPatchScheduledActionPatch model
-        instance_group_manager_action_patch_scheduled_action_patch_model_json = {}
-        instance_group_manager_action_patch_scheduled_action_patch_model_json['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_patch_scheduled_action_patch_model_json['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_patch_scheduled_action_patch_model_json['group'] = instance_group_manager_scheduled_action_group_patch_model
-        instance_group_manager_action_patch_scheduled_action_patch_model_json['manager'] = instance_group_manager_scheduled_action_by_manager_patch_manager_model
-        instance_group_manager_action_patch_scheduled_action_patch_model_json['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        volume_identity_model = {} # VolumeIdentityById
+        volume_identity_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
 
-        # Construct a model instance of InstanceGroupManagerActionPatchScheduledActionPatch by calling from_dict on the json representation
-        instance_group_manager_action_patch_scheduled_action_patch_model = InstanceGroupManagerActionPatchScheduledActionPatch.from_dict(instance_group_manager_action_patch_scheduled_action_patch_model_json)
-        assert instance_group_manager_action_patch_scheduled_action_patch_model != False
+        # Construct a json representation of a ImagePrototypeImageBySourceVolume model
+        image_prototype_image_by_source_volume_model_json = {}
+        image_prototype_image_by_source_volume_model_json['name'] = 'my-image'
+        image_prototype_image_by_source_volume_model_json['resource_group'] = resource_group_identity_model
+        image_prototype_image_by_source_volume_model_json['encryption_key'] = encryption_key_identity_model
+        image_prototype_image_by_source_volume_model_json['source_volume'] = volume_identity_model
 
-        # Construct a model instance of InstanceGroupManagerActionPatchScheduledActionPatch by calling from_dict on the json representation
-        instance_group_manager_action_patch_scheduled_action_patch_model_dict = InstanceGroupManagerActionPatchScheduledActionPatch.from_dict(instance_group_manager_action_patch_scheduled_action_patch_model_json).__dict__
-        instance_group_manager_action_patch_scheduled_action_patch_model2 = InstanceGroupManagerActionPatchScheduledActionPatch(**instance_group_manager_action_patch_scheduled_action_patch_model_dict)
+        # Construct a model instance of ImagePrototypeImageBySourceVolume by calling from_dict on the json representation
+        image_prototype_image_by_source_volume_model = ImagePrototypeImageBySourceVolume.from_dict(image_prototype_image_by_source_volume_model_json)
+        assert image_prototype_image_by_source_volume_model != False
+
+        # Construct a model instance of ImagePrototypeImageBySourceVolume by calling from_dict on the json representation
+        image_prototype_image_by_source_volume_model_dict = ImagePrototypeImageBySourceVolume.from_dict(image_prototype_image_by_source_volume_model_json).__dict__
+        image_prototype_image_by_source_volume_model2 = ImagePrototypeImageBySourceVolume(**image_prototype_image_by_source_volume_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_action_patch_scheduled_action_patch_model == instance_group_manager_action_patch_scheduled_action_patch_model2
+        assert image_prototype_image_by_source_volume_model == image_prototype_image_by_source_volume_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_action_patch_scheduled_action_patch_model_json2 = instance_group_manager_action_patch_scheduled_action_patch_model.to_dict()
-        assert instance_group_manager_action_patch_scheduled_action_patch_model_json2 == instance_group_manager_action_patch_scheduled_action_patch_model_json
+        image_prototype_image_by_source_volume_model_json2 = image_prototype_image_by_source_volume_model.to_dict()
+        assert image_prototype_image_by_source_volume_model_json2 == image_prototype_image_by_source_volume_model_json
 
-class TestInstanceGroupManagerAutoScale():
+class TestModel_InstanceGroupManagerAutoScale():
     """
     Test Class for InstanceGroupManagerAutoScale
     """
@@ -38782,12 +40091,12 @@ class TestInstanceGroupManagerAutoScale():
 
         # Construct a json representation of a InstanceGroupManagerAutoScale model
         instance_group_manager_auto_scale_model_json = {}
-        instance_group_manager_auto_scale_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_auto_scale_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_auto_scale_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
         instance_group_manager_auto_scale_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_auto_scale_model_json['management_enabled'] = True
         instance_group_manager_auto_scale_model_json['name'] = 'my-instance-group-manager'
-        instance_group_manager_auto_scale_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_auto_scale_model_json['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_auto_scale_model_json['aggregation_window'] = 120
         instance_group_manager_auto_scale_model_json['cooldown'] = 210
         instance_group_manager_auto_scale_model_json['manager_type'] = 'autoscale'
@@ -38810,7 +40119,7 @@ class TestInstanceGroupManagerAutoScale():
         instance_group_manager_auto_scale_model_json2 = instance_group_manager_auto_scale_model.to_dict()
         assert instance_group_manager_auto_scale_model_json2 == instance_group_manager_auto_scale_model_json
 
-class TestInstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype():
+class TestModel_InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype():
     """
     Test Class for InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype
     """
@@ -38842,7 +40151,7 @@ class TestInstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPro
         instance_group_manager_policy_prototype_instance_group_manager_target_policy_prototype_model_json2 = instance_group_manager_policy_prototype_instance_group_manager_target_policy_prototype_model.to_dict()
         assert instance_group_manager_policy_prototype_instance_group_manager_target_policy_prototype_model_json2 == instance_group_manager_policy_prototype_instance_group_manager_target_policy_prototype_model_json
 
-class TestInstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy():
+class TestModel_InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy():
     """
     Test Class for InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy
     """
@@ -38854,11 +40163,11 @@ class TestInstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy():
 
         # Construct a json representation of a InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy model
         instance_group_manager_policy_instance_group_manager_target_policy_model_json = {}
-        instance_group_manager_policy_instance_group_manager_target_policy_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_policy_instance_group_manager_target_policy_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/policies/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['name'] = 'my-instance-group-manager-policy'
-        instance_group_manager_policy_instance_group_manager_target_policy_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_policy_instance_group_manager_target_policy_model_json['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['metric_type'] = 'cpu'
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['metric_value'] = 38
         instance_group_manager_policy_instance_group_manager_target_policy_model_json['policy_type'] = 'target'
@@ -38878,7 +40187,7 @@ class TestInstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy():
         instance_group_manager_policy_instance_group_manager_target_policy_model_json2 = instance_group_manager_policy_instance_group_manager_target_policy_model.to_dict()
         assert instance_group_manager_policy_instance_group_manager_target_policy_model_json2 == instance_group_manager_policy_instance_group_manager_target_policy_model_json
 
-class TestInstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype():
+class TestModel_InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype():
     """
     Test Class for InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype
     """
@@ -38913,7 +40222,7 @@ class TestInstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype():
         instance_group_manager_prototype_instance_group_manager_auto_scale_prototype_model_json2 = instance_group_manager_prototype_instance_group_manager_auto_scale_prototype_model.to_dict()
         assert instance_group_manager_prototype_instance_group_manager_auto_scale_prototype_model_json2 == instance_group_manager_prototype_instance_group_manager_auto_scale_prototype_model_json
 
-class TestInstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype():
+class TestModel_InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype():
     """
     Test Class for InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype
     """
@@ -38944,7 +40253,7 @@ class TestInstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype():
         instance_group_manager_prototype_instance_group_manager_scheduled_prototype_model_json2 = instance_group_manager_prototype_instance_group_manager_scheduled_prototype_model.to_dict()
         assert instance_group_manager_prototype_instance_group_manager_scheduled_prototype_model_json2 == instance_group_manager_prototype_instance_group_manager_scheduled_prototype_model_json
 
-class TestInstanceGroupManagerScheduled():
+class TestModel_InstanceGroupManagerScheduled():
     """
     Test Class for InstanceGroupManagerScheduled
     """
@@ -38968,12 +40277,12 @@ class TestInstanceGroupManagerScheduled():
 
         # Construct a json representation of a InstanceGroupManagerScheduled model
         instance_group_manager_scheduled_model_json = {}
-        instance_group_manager_scheduled_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_scheduled_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_scheduled_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
         instance_group_manager_scheduled_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_group_manager_scheduled_model_json['management_enabled'] = True
         instance_group_manager_scheduled_model_json['name'] = 'my-instance-group-manager'
-        instance_group_manager_scheduled_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_scheduled_model_json['updated_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_scheduled_model_json['actions'] = [instance_group_manager_action_reference_model]
         instance_group_manager_scheduled_model_json['manager_type'] = 'scheduled'
 
@@ -38992,44 +40301,14 @@ class TestInstanceGroupManagerScheduled():
         instance_group_manager_scheduled_model_json2 = instance_group_manager_scheduled_model.to_dict()
         assert instance_group_manager_scheduled_model_json2 == instance_group_manager_scheduled_model_json
 
-class TestInstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch():
+class TestModel_InstanceGroupManagerScheduledActionManagerAutoScale():
     """
-    Test Class for InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch
+    Test Class for InstanceGroupManagerScheduledActionManagerAutoScale
     """
 
-    def test_instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_serialization(self):
+    def test_instance_group_manager_scheduled_action_manager_auto_scale_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch
-        """
-
-        # Construct a json representation of a InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch model
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json = {}
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json['min_membership_count'] = 10
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model = InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch.from_dict(instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json)
-        assert instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model != False
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_dict = InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch.from_dict(instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json).__dict__
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model2 = InstanceGroupManagerScheduledActionByManagerPatchManagerAutoScalePatch(**instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_dict)
-
-        # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model == instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json2 = instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model.to_dict()
-        assert instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json2 == instance_group_manager_scheduled_action_by_manager_patch_manager_auto_scale_patch_model_json
-
-class TestInstanceGroupManagerScheduledActionManagerManagerAutoScale():
-    """
-    Test Class for InstanceGroupManagerScheduledActionManagerManagerAutoScale
-    """
-
-    def test_instance_group_manager_scheduled_action_manager_manager_auto_scale_serialization(self):
-        """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionManagerManagerAutoScale
+        Test serialization/deserialization for InstanceGroupManagerScheduledActionManagerAutoScale
         """
 
         # Construct dict forms of any model objects needed in order to build this model.
@@ -39037,31 +40316,31 @@ class TestInstanceGroupManagerScheduledActionManagerManagerAutoScale():
         instance_group_manager_reference_deleted_model = {} # InstanceGroupManagerReferenceDeleted
         instance_group_manager_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
-        # Construct a json representation of a InstanceGroupManagerScheduledActionManagerManagerAutoScale model
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json = {}
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['deleted'] = instance_group_manager_reference_deleted_model
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['name'] = 'my-instance-group-manager'
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json['min_membership_count'] = 10
+        # Construct a json representation of a InstanceGroupManagerScheduledActionManagerAutoScale model
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json = {}
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['deleted'] = instance_group_manager_reference_deleted_model
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['name'] = 'my-instance-group-manager'
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json['min_membership_count'] = 10
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionManagerManagerAutoScale by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model = InstanceGroupManagerScheduledActionManagerManagerAutoScale.from_dict(instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json)
-        assert instance_group_manager_scheduled_action_manager_manager_auto_scale_model != False
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerAutoScale by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_auto_scale_model = InstanceGroupManagerScheduledActionManagerAutoScale.from_dict(instance_group_manager_scheduled_action_manager_auto_scale_model_json)
+        assert instance_group_manager_scheduled_action_manager_auto_scale_model != False
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionManagerManagerAutoScale by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_dict = InstanceGroupManagerScheduledActionManagerManagerAutoScale.from_dict(instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json).__dict__
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model2 = InstanceGroupManagerScheduledActionManagerManagerAutoScale(**instance_group_manager_scheduled_action_manager_manager_auto_scale_model_dict)
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerAutoScale by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_auto_scale_model_dict = InstanceGroupManagerScheduledActionManagerAutoScale.from_dict(instance_group_manager_scheduled_action_manager_auto_scale_model_json).__dict__
+        instance_group_manager_scheduled_action_manager_auto_scale_model2 = InstanceGroupManagerScheduledActionManagerAutoScale(**instance_group_manager_scheduled_action_manager_auto_scale_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_manager_manager_auto_scale_model == instance_group_manager_scheduled_action_manager_manager_auto_scale_model2
+        assert instance_group_manager_scheduled_action_manager_auto_scale_model == instance_group_manager_scheduled_action_manager_auto_scale_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json2 = instance_group_manager_scheduled_action_manager_manager_auto_scale_model.to_dict()
-        assert instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json2 == instance_group_manager_scheduled_action_manager_manager_auto_scale_model_json
+        instance_group_manager_scheduled_action_manager_auto_scale_model_json2 = instance_group_manager_scheduled_action_manager_auto_scale_model.to_dict()
+        assert instance_group_manager_scheduled_action_manager_auto_scale_model_json2 == instance_group_manager_scheduled_action_manager_auto_scale_model_json
 
-class TestInstancePatchProfileInstanceProfileIdentityByHref():
+class TestModel_InstancePatchProfileInstanceProfileIdentityByHref():
     """
     Test Class for InstancePatchProfileInstanceProfileIdentityByHref
     """
@@ -39090,7 +40369,7 @@ class TestInstancePatchProfileInstanceProfileIdentityByHref():
         instance_patch_profile_instance_profile_identity_by_href_model_json2 = instance_patch_profile_instance_profile_identity_by_href_model.to_dict()
         assert instance_patch_profile_instance_profile_identity_by_href_model_json2 == instance_patch_profile_instance_profile_identity_by_href_model_json
 
-class TestInstancePatchProfileInstanceProfileIdentityByName():
+class TestModel_InstancePatchProfileInstanceProfileIdentityByName():
     """
     Test Class for InstancePatchProfileInstanceProfileIdentityByName
     """
@@ -39119,7 +40398,85 @@ class TestInstancePatchProfileInstanceProfileIdentityByName():
         instance_patch_profile_instance_profile_identity_by_name_model_json2 = instance_patch_profile_instance_profile_identity_by_name_model.to_dict()
         assert instance_patch_profile_instance_profile_identity_by_name_model_json2 == instance_patch_profile_instance_profile_identity_by_name_model_json
 
-class TestInstanceProfileBandwidthDependent():
+class TestModel_InstancePlacementTargetDedicatedHostGroupReference():
+    """
+    Test Class for InstancePlacementTargetDedicatedHostGroupReference
+    """
+
+    def test_instance_placement_target_dedicated_host_group_reference_serialization(self):
+        """
+        Test serialization/deserialization for InstancePlacementTargetDedicatedHostGroupReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        dedicated_host_group_reference_deleted_model = {} # DedicatedHostGroupReferenceDeleted
+        dedicated_host_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a InstancePlacementTargetDedicatedHostGroupReference model
+        instance_placement_target_dedicated_host_group_reference_model_json = {}
+        instance_placement_target_dedicated_host_group_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host-group:bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_dedicated_host_group_reference_model_json['deleted'] = dedicated_host_group_reference_deleted_model
+        instance_placement_target_dedicated_host_group_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_host/groups/bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_dedicated_host_group_reference_model_json['id'] = 'bcc5b834-1258-4b9c-c3b4-43bc9cf5cde0'
+        instance_placement_target_dedicated_host_group_reference_model_json['name'] = 'my-host-group'
+        instance_placement_target_dedicated_host_group_reference_model_json['resource_type'] = 'dedicated_host_group'
+
+        # Construct a model instance of InstancePlacementTargetDedicatedHostGroupReference by calling from_dict on the json representation
+        instance_placement_target_dedicated_host_group_reference_model = InstancePlacementTargetDedicatedHostGroupReference.from_dict(instance_placement_target_dedicated_host_group_reference_model_json)
+        assert instance_placement_target_dedicated_host_group_reference_model != False
+
+        # Construct a model instance of InstancePlacementTargetDedicatedHostGroupReference by calling from_dict on the json representation
+        instance_placement_target_dedicated_host_group_reference_model_dict = InstancePlacementTargetDedicatedHostGroupReference.from_dict(instance_placement_target_dedicated_host_group_reference_model_json).__dict__
+        instance_placement_target_dedicated_host_group_reference_model2 = InstancePlacementTargetDedicatedHostGroupReference(**instance_placement_target_dedicated_host_group_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_placement_target_dedicated_host_group_reference_model == instance_placement_target_dedicated_host_group_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_placement_target_dedicated_host_group_reference_model_json2 = instance_placement_target_dedicated_host_group_reference_model.to_dict()
+        assert instance_placement_target_dedicated_host_group_reference_model_json2 == instance_placement_target_dedicated_host_group_reference_model_json
+
+class TestModel_InstancePlacementTargetDedicatedHostReference():
+    """
+    Test Class for InstancePlacementTargetDedicatedHostReference
+    """
+
+    def test_instance_placement_target_dedicated_host_reference_serialization(self):
+        """
+        Test serialization/deserialization for InstancePlacementTargetDedicatedHostReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        dedicated_host_reference_deleted_model = {} # DedicatedHostReferenceDeleted
+        dedicated_host_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a InstancePlacementTargetDedicatedHostReference model
+        instance_placement_target_dedicated_host_reference_model_json = {}
+        instance_placement_target_dedicated_host_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::dedicated-host:1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_placement_target_dedicated_host_reference_model_json['deleted'] = dedicated_host_reference_deleted_model
+        instance_placement_target_dedicated_host_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/dedicated_hosts/1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_placement_target_dedicated_host_reference_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_placement_target_dedicated_host_reference_model_json['name'] = 'my-host'
+        instance_placement_target_dedicated_host_reference_model_json['resource_type'] = 'dedicated_host'
+
+        # Construct a model instance of InstancePlacementTargetDedicatedHostReference by calling from_dict on the json representation
+        instance_placement_target_dedicated_host_reference_model = InstancePlacementTargetDedicatedHostReference.from_dict(instance_placement_target_dedicated_host_reference_model_json)
+        assert instance_placement_target_dedicated_host_reference_model != False
+
+        # Construct a model instance of InstancePlacementTargetDedicatedHostReference by calling from_dict on the json representation
+        instance_placement_target_dedicated_host_reference_model_dict = InstancePlacementTargetDedicatedHostReference.from_dict(instance_placement_target_dedicated_host_reference_model_json).__dict__
+        instance_placement_target_dedicated_host_reference_model2 = InstancePlacementTargetDedicatedHostReference(**instance_placement_target_dedicated_host_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_placement_target_dedicated_host_reference_model == instance_placement_target_dedicated_host_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_placement_target_dedicated_host_reference_model_json2 = instance_placement_target_dedicated_host_reference_model.to_dict()
+        assert instance_placement_target_dedicated_host_reference_model_json2 == instance_placement_target_dedicated_host_reference_model_json
+
+class TestModel_InstanceProfileBandwidthDependent():
     """
     Test Class for InstanceProfileBandwidthDependent
     """
@@ -39148,7 +40505,7 @@ class TestInstanceProfileBandwidthDependent():
         instance_profile_bandwidth_dependent_model_json2 = instance_profile_bandwidth_dependent_model.to_dict()
         assert instance_profile_bandwidth_dependent_model_json2 == instance_profile_bandwidth_dependent_model_json
 
-class TestInstanceProfileBandwidthEnum():
+class TestModel_InstanceProfileBandwidthEnum():
     """
     Test Class for InstanceProfileBandwidthEnum
     """
@@ -39179,7 +40536,7 @@ class TestInstanceProfileBandwidthEnum():
         instance_profile_bandwidth_enum_model_json2 = instance_profile_bandwidth_enum_model.to_dict()
         assert instance_profile_bandwidth_enum_model_json2 == instance_profile_bandwidth_enum_model_json
 
-class TestInstanceProfileBandwidthFixed():
+class TestModel_InstanceProfileBandwidthFixed():
     """
     Test Class for InstanceProfileBandwidthFixed
     """
@@ -39209,7 +40566,7 @@ class TestInstanceProfileBandwidthFixed():
         instance_profile_bandwidth_fixed_model_json2 = instance_profile_bandwidth_fixed_model.to_dict()
         assert instance_profile_bandwidth_fixed_model_json2 == instance_profile_bandwidth_fixed_model_json
 
-class TestInstanceProfileBandwidthRange():
+class TestModel_InstanceProfileBandwidthRange():
     """
     Test Class for InstanceProfileBandwidthRange
     """
@@ -39242,7 +40599,7 @@ class TestInstanceProfileBandwidthRange():
         instance_profile_bandwidth_range_model_json2 = instance_profile_bandwidth_range_model.to_dict()
         assert instance_profile_bandwidth_range_model_json2 == instance_profile_bandwidth_range_model_json
 
-class TestInstanceProfileDiskQuantityDependent():
+class TestModel_InstanceProfileDiskQuantityDependent():
     """
     Test Class for InstanceProfileDiskQuantityDependent
     """
@@ -39271,7 +40628,7 @@ class TestInstanceProfileDiskQuantityDependent():
         instance_profile_disk_quantity_dependent_model_json2 = instance_profile_disk_quantity_dependent_model.to_dict()
         assert instance_profile_disk_quantity_dependent_model_json2 == instance_profile_disk_quantity_dependent_model_json
 
-class TestInstanceProfileDiskQuantityEnum():
+class TestModel_InstanceProfileDiskQuantityEnum():
     """
     Test Class for InstanceProfileDiskQuantityEnum
     """
@@ -39302,7 +40659,7 @@ class TestInstanceProfileDiskQuantityEnum():
         instance_profile_disk_quantity_enum_model_json2 = instance_profile_disk_quantity_enum_model.to_dict()
         assert instance_profile_disk_quantity_enum_model_json2 == instance_profile_disk_quantity_enum_model_json
 
-class TestInstanceProfileDiskQuantityFixed():
+class TestModel_InstanceProfileDiskQuantityFixed():
     """
     Test Class for InstanceProfileDiskQuantityFixed
     """
@@ -39332,7 +40689,7 @@ class TestInstanceProfileDiskQuantityFixed():
         instance_profile_disk_quantity_fixed_model_json2 = instance_profile_disk_quantity_fixed_model.to_dict()
         assert instance_profile_disk_quantity_fixed_model_json2 == instance_profile_disk_quantity_fixed_model_json
 
-class TestInstanceProfileDiskQuantityRange():
+class TestModel_InstanceProfileDiskQuantityRange():
     """
     Test Class for InstanceProfileDiskQuantityRange
     """
@@ -39365,7 +40722,7 @@ class TestInstanceProfileDiskQuantityRange():
         instance_profile_disk_quantity_range_model_json2 = instance_profile_disk_quantity_range_model.to_dict()
         assert instance_profile_disk_quantity_range_model_json2 == instance_profile_disk_quantity_range_model_json
 
-class TestInstanceProfileDiskSizeDependent():
+class TestModel_InstanceProfileDiskSizeDependent():
     """
     Test Class for InstanceProfileDiskSizeDependent
     """
@@ -39394,7 +40751,7 @@ class TestInstanceProfileDiskSizeDependent():
         instance_profile_disk_size_dependent_model_json2 = instance_profile_disk_size_dependent_model.to_dict()
         assert instance_profile_disk_size_dependent_model_json2 == instance_profile_disk_size_dependent_model_json
 
-class TestInstanceProfileDiskSizeEnum():
+class TestModel_InstanceProfileDiskSizeEnum():
     """
     Test Class for InstanceProfileDiskSizeEnum
     """
@@ -39425,7 +40782,7 @@ class TestInstanceProfileDiskSizeEnum():
         instance_profile_disk_size_enum_model_json2 = instance_profile_disk_size_enum_model.to_dict()
         assert instance_profile_disk_size_enum_model_json2 == instance_profile_disk_size_enum_model_json
 
-class TestInstanceProfileDiskSizeFixed():
+class TestModel_InstanceProfileDiskSizeFixed():
     """
     Test Class for InstanceProfileDiskSizeFixed
     """
@@ -39455,7 +40812,7 @@ class TestInstanceProfileDiskSizeFixed():
         instance_profile_disk_size_fixed_model_json2 = instance_profile_disk_size_fixed_model.to_dict()
         assert instance_profile_disk_size_fixed_model_json2 == instance_profile_disk_size_fixed_model_json
 
-class TestInstanceProfileDiskSizeRange():
+class TestModel_InstanceProfileDiskSizeRange():
     """
     Test Class for InstanceProfileDiskSizeRange
     """
@@ -39488,7 +40845,7 @@ class TestInstanceProfileDiskSizeRange():
         instance_profile_disk_size_range_model_json2 = instance_profile_disk_size_range_model.to_dict()
         assert instance_profile_disk_size_range_model_json2 == instance_profile_disk_size_range_model_json
 
-class TestInstanceProfileIdentityByHref():
+class TestModel_InstanceProfileIdentityByHref():
     """
     Test Class for InstanceProfileIdentityByHref
     """
@@ -39517,7 +40874,7 @@ class TestInstanceProfileIdentityByHref():
         instance_profile_identity_by_href_model_json2 = instance_profile_identity_by_href_model.to_dict()
         assert instance_profile_identity_by_href_model_json2 == instance_profile_identity_by_href_model_json
 
-class TestInstanceProfileIdentityByName():
+class TestModel_InstanceProfileIdentityByName():
     """
     Test Class for InstanceProfileIdentityByName
     """
@@ -39546,7 +40903,7 @@ class TestInstanceProfileIdentityByName():
         instance_profile_identity_by_name_model_json2 = instance_profile_identity_by_name_model.to_dict()
         assert instance_profile_identity_by_name_model_json2 == instance_profile_identity_by_name_model_json
 
-class TestInstanceProfileMemoryDependent():
+class TestModel_InstanceProfileMemoryDependent():
     """
     Test Class for InstanceProfileMemoryDependent
     """
@@ -39575,7 +40932,7 @@ class TestInstanceProfileMemoryDependent():
         instance_profile_memory_dependent_model_json2 = instance_profile_memory_dependent_model.to_dict()
         assert instance_profile_memory_dependent_model_json2 == instance_profile_memory_dependent_model_json
 
-class TestInstanceProfileMemoryEnum():
+class TestModel_InstanceProfileMemoryEnum():
     """
     Test Class for InstanceProfileMemoryEnum
     """
@@ -39606,7 +40963,7 @@ class TestInstanceProfileMemoryEnum():
         instance_profile_memory_enum_model_json2 = instance_profile_memory_enum_model.to_dict()
         assert instance_profile_memory_enum_model_json2 == instance_profile_memory_enum_model_json
 
-class TestInstanceProfileMemoryFixed():
+class TestModel_InstanceProfileMemoryFixed():
     """
     Test Class for InstanceProfileMemoryFixed
     """
@@ -39636,7 +40993,7 @@ class TestInstanceProfileMemoryFixed():
         instance_profile_memory_fixed_model_json2 = instance_profile_memory_fixed_model.to_dict()
         assert instance_profile_memory_fixed_model_json2 == instance_profile_memory_fixed_model_json
 
-class TestInstanceProfileMemoryRange():
+class TestModel_InstanceProfileMemoryRange():
     """
     Test Class for InstanceProfileMemoryRange
     """
@@ -39669,7 +41026,7 @@ class TestInstanceProfileMemoryRange():
         instance_profile_memory_range_model_json2 = instance_profile_memory_range_model.to_dict()
         assert instance_profile_memory_range_model_json2 == instance_profile_memory_range_model_json
 
-class TestInstanceProfilePortSpeedDependent():
+class TestModel_InstanceProfilePortSpeedDependent():
     """
     Test Class for InstanceProfilePortSpeedDependent
     """
@@ -39698,7 +41055,7 @@ class TestInstanceProfilePortSpeedDependent():
         instance_profile_port_speed_dependent_model_json2 = instance_profile_port_speed_dependent_model.to_dict()
         assert instance_profile_port_speed_dependent_model_json2 == instance_profile_port_speed_dependent_model_json
 
-class TestInstanceProfilePortSpeedFixed():
+class TestModel_InstanceProfilePortSpeedFixed():
     """
     Test Class for InstanceProfilePortSpeedFixed
     """
@@ -39728,7 +41085,7 @@ class TestInstanceProfilePortSpeedFixed():
         instance_profile_port_speed_fixed_model_json2 = instance_profile_port_speed_fixed_model.to_dict()
         assert instance_profile_port_speed_fixed_model_json2 == instance_profile_port_speed_fixed_model_json
 
-class TestInstanceProfileVCPUDependent():
+class TestModel_InstanceProfileVCPUDependent():
     """
     Test Class for InstanceProfileVCPUDependent
     """
@@ -39757,7 +41114,7 @@ class TestInstanceProfileVCPUDependent():
         instance_profile_vcpu_dependent_model_json2 = instance_profile_vcpu_dependent_model.to_dict()
         assert instance_profile_vcpu_dependent_model_json2 == instance_profile_vcpu_dependent_model_json
 
-class TestInstanceProfileVCPUEnum():
+class TestModel_InstanceProfileVCPUEnum():
     """
     Test Class for InstanceProfileVCPUEnum
     """
@@ -39788,7 +41145,7 @@ class TestInstanceProfileVCPUEnum():
         instance_profile_vcpu_enum_model_json2 = instance_profile_vcpu_enum_model.to_dict()
         assert instance_profile_vcpu_enum_model_json2 == instance_profile_vcpu_enum_model_json
 
-class TestInstanceProfileVCPUFixed():
+class TestModel_InstanceProfileVCPUFixed():
     """
     Test Class for InstanceProfileVCPUFixed
     """
@@ -39818,7 +41175,7 @@ class TestInstanceProfileVCPUFixed():
         instance_profile_vcpu_fixed_model_json2 = instance_profile_vcpu_fixed_model.to_dict()
         assert instance_profile_vcpu_fixed_model_json2 == instance_profile_vcpu_fixed_model_json
 
-class TestInstanceProfileVCPURange():
+class TestModel_InstanceProfileVCPURange():
     """
     Test Class for InstanceProfileVCPURange
     """
@@ -39851,7 +41208,7 @@ class TestInstanceProfileVCPURange():
         instance_profile_vcpu_range_model_json2 = instance_profile_vcpu_range_model.to_dict()
         assert instance_profile_vcpu_range_model_json2 == instance_profile_vcpu_range_model_json
 
-class TestInstancePrototypeInstanceByImage():
+class TestModel_InstancePrototypeInstanceByImage():
     """
     Test Class for InstancePrototypeInstanceByImage
     """
@@ -39954,7 +41311,7 @@ class TestInstancePrototypeInstanceByImage():
         instance_prototype_instance_by_image_model_json2 = instance_prototype_instance_by_image_model.to_dict()
         assert instance_prototype_instance_by_image_model_json2 == instance_prototype_instance_by_image_model_json
 
-class TestInstancePrototypeInstanceBySourceTemplate():
+class TestModel_InstancePrototypeInstanceBySourceTemplate():
     """
     Test Class for InstancePrototypeInstanceBySourceTemplate
     """
@@ -40061,7 +41418,110 @@ class TestInstancePrototypeInstanceBySourceTemplate():
         instance_prototype_instance_by_source_template_model_json2 = instance_prototype_instance_by_source_template_model.to_dict()
         assert instance_prototype_instance_by_source_template_model_json2 == instance_prototype_instance_by_source_template_model_json
 
-class TestInstanceTemplateIdentityByCRN():
+class TestModel_InstancePrototypeInstanceByVolume():
+    """
+    Test Class for InstancePrototypeInstanceByVolume
+    """
+
+    def test_instance_prototype_instance_by_volume_serialization(self):
+        """
+        Test serialization/deserialization for InstancePrototypeInstanceByVolume
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        key_identity_model = {} # KeyIdentityById
+        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+
+        security_group_identity_model = {} # SecurityGroupIdentityById
+        security_group_identity_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+
+        subnet_identity_model = {} # SubnetIdentityById
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        network_interface_prototype_model = {} # NetworkInterfacePrototype
+        network_interface_prototype_model['allow_ip_spoofing'] = True
+        network_interface_prototype_model['name'] = 'my-network-interface'
+        network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
+        network_interface_prototype_model['security_groups'] = [security_group_identity_model]
+        network_interface_prototype_model['subnet'] = subnet_identity_model
+
+        instance_placement_target_prototype_model = {} # InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById
+        instance_placement_target_prototype_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+
+        instance_profile_identity_model = {} # InstanceProfileIdentityByName
+        instance_profile_identity_model['name'] = 'cc1-16x32'
+
+        resource_group_identity_model = {} # ResourceGroupIdentityById
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        volume_attachment_volume_prototype_instance_context_model = {} # VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById
+        volume_attachment_volume_prototype_instance_context_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        volume_attachment_prototype_instance_context_model = {} # VolumeAttachmentPrototypeInstanceContext
+        volume_attachment_prototype_instance_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_context_model['volume'] = volume_attachment_volume_prototype_instance_context_model
+
+        vpc_identity_model = {} # VPCIdentityById
+        vpc_identity_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        volume_attachment_volume_prototype_instance_by_volume_context_model = {} # VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+        volume_attachment_volume_prototype_instance_by_volume_context_model['capacity'] = 38
+        volume_attachment_volume_prototype_instance_by_volume_context_model['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['iops'] = 10000
+        volume_attachment_volume_prototype_instance_by_volume_context_model['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_by_volume_context_model['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['source_snapshot'] = snapshot_identity_model
+
+        volume_attachment_prototype_instance_by_volume_context_model = {} # VolumeAttachmentPrototypeInstanceByVolumeContext
+        volume_attachment_prototype_instance_by_volume_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_volume_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_by_volume_context_model['volume'] = volume_attachment_volume_prototype_instance_by_volume_context_model
+
+        zone_identity_model = {} # ZoneIdentityByName
+        zone_identity_model['name'] = 'us-south-1'
+
+        # Construct a json representation of a InstancePrototypeInstanceByVolume model
+        instance_prototype_instance_by_volume_model_json = {}
+        instance_prototype_instance_by_volume_model_json['keys'] = [key_identity_model]
+        instance_prototype_instance_by_volume_model_json['name'] = 'my-instance'
+        instance_prototype_instance_by_volume_model_json['network_interfaces'] = [network_interface_prototype_model]
+        instance_prototype_instance_by_volume_model_json['placement_target'] = instance_placement_target_prototype_model
+        instance_prototype_instance_by_volume_model_json['profile'] = instance_profile_identity_model
+        instance_prototype_instance_by_volume_model_json['resource_group'] = resource_group_identity_model
+        instance_prototype_instance_by_volume_model_json['user_data'] = 'testString'
+        instance_prototype_instance_by_volume_model_json['volume_attachments'] = [volume_attachment_prototype_instance_context_model]
+        instance_prototype_instance_by_volume_model_json['vpc'] = vpc_identity_model
+        instance_prototype_instance_by_volume_model_json['boot_volume_attachment'] = volume_attachment_prototype_instance_by_volume_context_model
+        instance_prototype_instance_by_volume_model_json['primary_network_interface'] = network_interface_prototype_model
+        instance_prototype_instance_by_volume_model_json['zone'] = zone_identity_model
+
+        # Construct a model instance of InstancePrototypeInstanceByVolume by calling from_dict on the json representation
+        instance_prototype_instance_by_volume_model = InstancePrototypeInstanceByVolume.from_dict(instance_prototype_instance_by_volume_model_json)
+        assert instance_prototype_instance_by_volume_model != False
+
+        # Construct a model instance of InstancePrototypeInstanceByVolume by calling from_dict on the json representation
+        instance_prototype_instance_by_volume_model_dict = InstancePrototypeInstanceByVolume.from_dict(instance_prototype_instance_by_volume_model_json).__dict__
+        instance_prototype_instance_by_volume_model2 = InstancePrototypeInstanceByVolume(**instance_prototype_instance_by_volume_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_prototype_instance_by_volume_model == instance_prototype_instance_by_volume_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_prototype_instance_by_volume_model_json2 = instance_prototype_instance_by_volume_model.to_dict()
+        assert instance_prototype_instance_by_volume_model_json2 == instance_prototype_instance_by_volume_model_json
+
+class TestModel_InstanceTemplateIdentityByCRN():
     """
     Test Class for InstanceTemplateIdentityByCRN
     """
@@ -40090,7 +41550,7 @@ class TestInstanceTemplateIdentityByCRN():
         instance_template_identity_by_crn_model_json2 = instance_template_identity_by_crn_model.to_dict()
         assert instance_template_identity_by_crn_model_json2 == instance_template_identity_by_crn_model_json
 
-class TestInstanceTemplateIdentityByHref():
+class TestModel_InstanceTemplateIdentityByHref():
     """
     Test Class for InstanceTemplateIdentityByHref
     """
@@ -40119,7 +41579,7 @@ class TestInstanceTemplateIdentityByHref():
         instance_template_identity_by_href_model_json2 = instance_template_identity_by_href_model.to_dict()
         assert instance_template_identity_by_href_model_json2 == instance_template_identity_by_href_model_json
 
-class TestInstanceTemplateIdentityById():
+class TestModel_InstanceTemplateIdentityById():
     """
     Test Class for InstanceTemplateIdentityById
     """
@@ -40148,7 +41608,7 @@ class TestInstanceTemplateIdentityById():
         instance_template_identity_by_id_model_json2 = instance_template_identity_by_id_model.to_dict()
         assert instance_template_identity_by_id_model_json2 == instance_template_identity_by_id_model_json
 
-class TestInstanceTemplatePrototypeInstanceByImage():
+class TestModel_InstanceTemplatePrototypeInstanceByImage():
     """
     Test Class for InstanceTemplatePrototypeInstanceByImage
     """
@@ -40251,7 +41711,7 @@ class TestInstanceTemplatePrototypeInstanceByImage():
         instance_template_prototype_instance_by_image_model_json2 = instance_template_prototype_instance_by_image_model.to_dict()
         assert instance_template_prototype_instance_by_image_model_json2 == instance_template_prototype_instance_by_image_model_json
 
-class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
+class TestModel_InstanceTemplatePrototypeInstanceBySourceTemplate():
     """
     Test Class for InstanceTemplatePrototypeInstanceBySourceTemplate
     """
@@ -40358,7 +41818,110 @@ class TestInstanceTemplatePrototypeInstanceBySourceTemplate():
         instance_template_prototype_instance_by_source_template_model_json2 = instance_template_prototype_instance_by_source_template_model.to_dict()
         assert instance_template_prototype_instance_by_source_template_model_json2 == instance_template_prototype_instance_by_source_template_model_json
 
-class TestInstanceTemplateInstanceByImage():
+class TestModel_InstanceTemplatePrototypeInstanceByVolume():
+    """
+    Test Class for InstanceTemplatePrototypeInstanceByVolume
+    """
+
+    def test_instance_template_prototype_instance_by_volume_serialization(self):
+        """
+        Test serialization/deserialization for InstanceTemplatePrototypeInstanceByVolume
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        key_identity_model = {} # KeyIdentityById
+        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+
+        security_group_identity_model = {} # SecurityGroupIdentityById
+        security_group_identity_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+
+        subnet_identity_model = {} # SubnetIdentityById
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        network_interface_prototype_model = {} # NetworkInterfacePrototype
+        network_interface_prototype_model['allow_ip_spoofing'] = True
+        network_interface_prototype_model['name'] = 'my-network-interface'
+        network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
+        network_interface_prototype_model['security_groups'] = [security_group_identity_model]
+        network_interface_prototype_model['subnet'] = subnet_identity_model
+
+        instance_placement_target_prototype_model = {} # InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById
+        instance_placement_target_prototype_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+
+        instance_profile_identity_model = {} # InstanceProfileIdentityByName
+        instance_profile_identity_model['name'] = 'cc1-16x32'
+
+        resource_group_identity_model = {} # ResourceGroupIdentityById
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        volume_attachment_volume_prototype_instance_context_model = {} # VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById
+        volume_attachment_volume_prototype_instance_context_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        volume_attachment_prototype_instance_context_model = {} # VolumeAttachmentPrototypeInstanceContext
+        volume_attachment_prototype_instance_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_context_model['volume'] = volume_attachment_volume_prototype_instance_context_model
+
+        vpc_identity_model = {} # VPCIdentityById
+        vpc_identity_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        volume_attachment_volume_prototype_instance_by_volume_context_model = {} # VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+        volume_attachment_volume_prototype_instance_by_volume_context_model['capacity'] = 38
+        volume_attachment_volume_prototype_instance_by_volume_context_model['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['iops'] = 10000
+        volume_attachment_volume_prototype_instance_by_volume_context_model['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_by_volume_context_model['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['source_snapshot'] = snapshot_identity_model
+
+        volume_attachment_prototype_instance_by_volume_context_model = {} # VolumeAttachmentPrototypeInstanceByVolumeContext
+        volume_attachment_prototype_instance_by_volume_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_volume_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_by_volume_context_model['volume'] = volume_attachment_volume_prototype_instance_by_volume_context_model
+
+        zone_identity_model = {} # ZoneIdentityByName
+        zone_identity_model['name'] = 'us-south-1'
+
+        # Construct a json representation of a InstanceTemplatePrototypeInstanceByVolume model
+        instance_template_prototype_instance_by_volume_model_json = {}
+        instance_template_prototype_instance_by_volume_model_json['keys'] = [key_identity_model]
+        instance_template_prototype_instance_by_volume_model_json['name'] = 'my-instance'
+        instance_template_prototype_instance_by_volume_model_json['network_interfaces'] = [network_interface_prototype_model]
+        instance_template_prototype_instance_by_volume_model_json['placement_target'] = instance_placement_target_prototype_model
+        instance_template_prototype_instance_by_volume_model_json['profile'] = instance_profile_identity_model
+        instance_template_prototype_instance_by_volume_model_json['resource_group'] = resource_group_identity_model
+        instance_template_prototype_instance_by_volume_model_json['user_data'] = 'testString'
+        instance_template_prototype_instance_by_volume_model_json['volume_attachments'] = [volume_attachment_prototype_instance_context_model]
+        instance_template_prototype_instance_by_volume_model_json['vpc'] = vpc_identity_model
+        instance_template_prototype_instance_by_volume_model_json['boot_volume_attachment'] = volume_attachment_prototype_instance_by_volume_context_model
+        instance_template_prototype_instance_by_volume_model_json['primary_network_interface'] = network_interface_prototype_model
+        instance_template_prototype_instance_by_volume_model_json['zone'] = zone_identity_model
+
+        # Construct a model instance of InstanceTemplatePrototypeInstanceByVolume by calling from_dict on the json representation
+        instance_template_prototype_instance_by_volume_model = InstanceTemplatePrototypeInstanceByVolume.from_dict(instance_template_prototype_instance_by_volume_model_json)
+        assert instance_template_prototype_instance_by_volume_model != False
+
+        # Construct a model instance of InstanceTemplatePrototypeInstanceByVolume by calling from_dict on the json representation
+        instance_template_prototype_instance_by_volume_model_dict = InstanceTemplatePrototypeInstanceByVolume.from_dict(instance_template_prototype_instance_by_volume_model_json).__dict__
+        instance_template_prototype_instance_by_volume_model2 = InstanceTemplatePrototypeInstanceByVolume(**instance_template_prototype_instance_by_volume_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_template_prototype_instance_by_volume_model == instance_template_prototype_instance_by_volume_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_template_prototype_instance_by_volume_model_json2 = instance_template_prototype_instance_by_volume_model.to_dict()
+        assert instance_template_prototype_instance_by_volume_model_json2 == instance_template_prototype_instance_by_volume_model_json
+
+class TestModel_InstanceTemplateInstanceByImage():
     """
     Test Class for InstanceTemplateInstanceByImage
     """
@@ -40434,7 +41997,7 @@ class TestInstanceTemplateInstanceByImage():
 
         # Construct a json representation of a InstanceTemplateInstanceByImage model
         instance_template_instance_by_image_model_json = {}
-        instance_template_instance_by_image_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_template_instance_by_image_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_template_instance_by_image_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_instance_by_image_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_instance_by_image_model_json['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
@@ -40467,7 +42030,7 @@ class TestInstanceTemplateInstanceByImage():
         instance_template_instance_by_image_model_json2 = instance_template_instance_by_image_model.to_dict()
         assert instance_template_instance_by_image_model_json2 == instance_template_instance_by_image_model_json
 
-class TestInstanceTemplateInstanceBySourceTemplate():
+class TestModel_InstanceTemplateInstanceBySourceTemplate():
     """
     Test Class for InstanceTemplateInstanceBySourceTemplate
     """
@@ -40546,7 +42109,7 @@ class TestInstanceTemplateInstanceBySourceTemplate():
 
         # Construct a json representation of a InstanceTemplateInstanceBySourceTemplate model
         instance_template_instance_by_source_template_model_json = {}
-        instance_template_instance_by_source_template_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_template_instance_by_source_template_model_json['created_at'] = "2019-01-01T12:00:00Z"
         instance_template_instance_by_source_template_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_instance_by_source_template_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a'
         instance_template_instance_by_source_template_model_json['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
@@ -40580,7 +42143,116 @@ class TestInstanceTemplateInstanceBySourceTemplate():
         instance_template_instance_by_source_template_model_json2 = instance_template_instance_by_source_template_model.to_dict()
         assert instance_template_instance_by_source_template_model_json2 == instance_template_instance_by_source_template_model_json
 
-class TestKeyIdentityByCRN():
+class TestModel_InstanceTemplateInstanceByVolume():
+    """
+    Test Class for InstanceTemplateInstanceByVolume
+    """
+
+    def test_instance_template_instance_by_volume_serialization(self):
+        """
+        Test serialization/deserialization for InstanceTemplateInstanceByVolume
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        key_identity_model = {} # KeyIdentityById
+        key_identity_model['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+
+        security_group_identity_model = {} # SecurityGroupIdentityById
+        security_group_identity_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+
+        subnet_identity_model = {} # SubnetIdentityById
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        network_interface_prototype_model = {} # NetworkInterfacePrototype
+        network_interface_prototype_model['allow_ip_spoofing'] = True
+        network_interface_prototype_model['name'] = 'my-network-interface'
+        network_interface_prototype_model['primary_ipv4_address'] = '10.0.0.5'
+        network_interface_prototype_model['security_groups'] = [security_group_identity_model]
+        network_interface_prototype_model['subnet'] = subnet_identity_model
+
+        instance_placement_target_prototype_model = {} # InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById
+        instance_placement_target_prototype_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+
+        instance_profile_identity_model = {} # InstanceProfileIdentityByName
+        instance_profile_identity_model['name'] = 'cc1-16x32'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        volume_attachment_volume_prototype_instance_context_model = {} # VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById
+        volume_attachment_volume_prototype_instance_context_model['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        volume_attachment_prototype_instance_context_model = {} # VolumeAttachmentPrototypeInstanceContext
+        volume_attachment_prototype_instance_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_context_model['volume'] = volume_attachment_volume_prototype_instance_context_model
+
+        vpc_identity_model = {} # VPCIdentityById
+        vpc_identity_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        volume_attachment_volume_prototype_instance_by_volume_context_model = {} # VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+        volume_attachment_volume_prototype_instance_by_volume_context_model['capacity'] = 38
+        volume_attachment_volume_prototype_instance_by_volume_context_model['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['iops'] = 10000
+        volume_attachment_volume_prototype_instance_by_volume_context_model['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_by_volume_context_model['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_model['source_snapshot'] = snapshot_identity_model
+
+        volume_attachment_prototype_instance_by_volume_context_model = {} # VolumeAttachmentPrototypeInstanceByVolumeContext
+        volume_attachment_prototype_instance_by_volume_context_model['delete_volume_on_instance_delete'] = True
+        volume_attachment_prototype_instance_by_volume_context_model['name'] = 'my-volume-attachment'
+        volume_attachment_prototype_instance_by_volume_context_model['volume'] = volume_attachment_volume_prototype_instance_by_volume_context_model
+
+        zone_identity_model = {} # ZoneIdentityByName
+        zone_identity_model['name'] = 'us-south-1'
+
+        # Construct a json representation of a InstanceTemplateInstanceByVolume model
+        instance_template_instance_by_volume_model_json = {}
+        instance_template_instance_by_volume_model_json['created_at'] = "2019-01-01T12:00:00Z"
+        instance_template_instance_by_volume_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::instance-template:1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_template_instance_by_volume_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance/templates/1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_template_instance_by_volume_model_json['id'] = 'a6b1a881-2ce8-41a3-80fc-36316a73f803'
+        instance_template_instance_by_volume_model_json['keys'] = [key_identity_model]
+        instance_template_instance_by_volume_model_json['name'] = 'my-instance-template'
+        instance_template_instance_by_volume_model_json['network_interfaces'] = [network_interface_prototype_model]
+        instance_template_instance_by_volume_model_json['placement_target'] = instance_placement_target_prototype_model
+        instance_template_instance_by_volume_model_json['profile'] = instance_profile_identity_model
+        instance_template_instance_by_volume_model_json['resource_group'] = resource_group_reference_model
+        instance_template_instance_by_volume_model_json['user_data'] = 'testString'
+        instance_template_instance_by_volume_model_json['volume_attachments'] = [volume_attachment_prototype_instance_context_model]
+        instance_template_instance_by_volume_model_json['vpc'] = vpc_identity_model
+        instance_template_instance_by_volume_model_json['boot_volume_attachment'] = volume_attachment_prototype_instance_by_volume_context_model
+        instance_template_instance_by_volume_model_json['primary_network_interface'] = network_interface_prototype_model
+        instance_template_instance_by_volume_model_json['zone'] = zone_identity_model
+
+        # Construct a model instance of InstanceTemplateInstanceByVolume by calling from_dict on the json representation
+        instance_template_instance_by_volume_model = InstanceTemplateInstanceByVolume.from_dict(instance_template_instance_by_volume_model_json)
+        assert instance_template_instance_by_volume_model != False
+
+        # Construct a model instance of InstanceTemplateInstanceByVolume by calling from_dict on the json representation
+        instance_template_instance_by_volume_model_dict = InstanceTemplateInstanceByVolume.from_dict(instance_template_instance_by_volume_model_json).__dict__
+        instance_template_instance_by_volume_model2 = InstanceTemplateInstanceByVolume(**instance_template_instance_by_volume_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_template_instance_by_volume_model == instance_template_instance_by_volume_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_template_instance_by_volume_model_json2 = instance_template_instance_by_volume_model.to_dict()
+        assert instance_template_instance_by_volume_model_json2 == instance_template_instance_by_volume_model_json
+
+class TestModel_KeyIdentityByCRN():
     """
     Test Class for KeyIdentityByCRN
     """
@@ -40609,7 +42281,7 @@ class TestKeyIdentityByCRN():
         key_identity_by_crn_model_json2 = key_identity_by_crn_model.to_dict()
         assert key_identity_by_crn_model_json2 == key_identity_by_crn_model_json
 
-class TestKeyIdentityByHref():
+class TestModel_KeyIdentityByHref():
     """
     Test Class for KeyIdentityByHref
     """
@@ -40638,7 +42310,7 @@ class TestKeyIdentityByHref():
         key_identity_by_href_model_json2 = key_identity_by_href_model.to_dict()
         assert key_identity_by_href_model_json2 == key_identity_by_href_model_json
 
-class TestKeyIdentityById():
+class TestModel_KeyIdentityById():
     """
     Test Class for KeyIdentityById
     """
@@ -40667,7 +42339,7 @@ class TestKeyIdentityById():
         key_identity_by_id_model_json2 = key_identity_by_id_model.to_dict()
         assert key_identity_by_id_model_json2 == key_identity_by_id_model_json
 
-class TestKeyIdentityKeyIdentityByFingerprint():
+class TestModel_KeyIdentityKeyIdentityByFingerprint():
     """
     Test Class for KeyIdentityKeyIdentityByFingerprint
     """
@@ -40696,7 +42368,7 @@ class TestKeyIdentityKeyIdentityByFingerprint():
         key_identity_key_identity_by_fingerprint_model_json2 = key_identity_key_identity_by_fingerprint_model.to_dict()
         assert key_identity_key_identity_by_fingerprint_model_json2 == key_identity_key_identity_by_fingerprint_model_json
 
-class TestKeyReferenceInstanceInitializationContextKeyIdentityByFingerprint():
+class TestModel_KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint():
     """
     Test Class for KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint
     """
@@ -40725,7 +42397,7 @@ class TestKeyReferenceInstanceInitializationContextKeyIdentityByFingerprint():
         key_reference_instance_initialization_context_key_identity_by_fingerprint_model_json2 = key_reference_instance_initialization_context_key_identity_by_fingerprint_model.to_dict()
         assert key_reference_instance_initialization_context_key_identity_by_fingerprint_model_json2 == key_reference_instance_initialization_context_key_identity_by_fingerprint_model_json
 
-class TestKeyReferenceInstanceInitializationContextKeyReference():
+class TestModel_KeyReferenceInstanceInitializationContextKeyReference():
     """
     Test Class for KeyReferenceInstanceInitializationContextKeyReference
     """
@@ -40764,7 +42436,7 @@ class TestKeyReferenceInstanceInitializationContextKeyReference():
         key_reference_instance_initialization_context_key_reference_model_json2 = key_reference_instance_initialization_context_key_reference_model.to_dict()
         assert key_reference_instance_initialization_context_key_reference_model_json2 == key_reference_instance_initialization_context_key_reference_model_json
 
-class TestLoadBalancerIdentityByCRN():
+class TestModel_LoadBalancerIdentityByCRN():
     """
     Test Class for LoadBalancerIdentityByCRN
     """
@@ -40793,7 +42465,7 @@ class TestLoadBalancerIdentityByCRN():
         load_balancer_identity_by_crn_model_json2 = load_balancer_identity_by_crn_model.to_dict()
         assert load_balancer_identity_by_crn_model_json2 == load_balancer_identity_by_crn_model_json
 
-class TestLoadBalancerIdentityByHref():
+class TestModel_LoadBalancerIdentityByHref():
     """
     Test Class for LoadBalancerIdentityByHref
     """
@@ -40822,7 +42494,7 @@ class TestLoadBalancerIdentityByHref():
         load_balancer_identity_by_href_model_json2 = load_balancer_identity_by_href_model.to_dict()
         assert load_balancer_identity_by_href_model_json2 == load_balancer_identity_by_href_model_json
 
-class TestLoadBalancerIdentityById():
+class TestModel_LoadBalancerIdentityById():
     """
     Test Class for LoadBalancerIdentityById
     """
@@ -40851,7 +42523,7 @@ class TestLoadBalancerIdentityById():
         load_balancer_identity_by_id_model_json2 = load_balancer_identity_by_id_model.to_dict()
         assert load_balancer_identity_by_id_model_json2 == load_balancer_identity_by_id_model_json
 
-class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch():
+class TestModel_LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch():
     """
     Test Class for LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch
     """
@@ -40881,7 +42553,7 @@ class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirec
         load_balancer_listener_policy_target_patch_load_balancer_listener_policy_redirect_url_patch_model_json2 = load_balancer_listener_policy_target_patch_load_balancer_listener_policy_redirect_url_patch_model.to_dict()
         assert load_balancer_listener_policy_target_patch_load_balancer_listener_policy_redirect_url_patch_model_json2 == load_balancer_listener_policy_target_patch_load_balancer_listener_policy_redirect_url_patch_model_json
 
-class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype():
+class TestModel_LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype():
     """
     Test Class for LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype
     """
@@ -40911,7 +42583,7 @@ class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRed
         load_balancer_listener_policy_target_prototype_load_balancer_listener_policy_redirect_url_prototype_model_json2 = load_balancer_listener_policy_target_prototype_load_balancer_listener_policy_redirect_url_prototype_model.to_dict()
         assert load_balancer_listener_policy_target_prototype_load_balancer_listener_policy_redirect_url_prototype_model_json2 == load_balancer_listener_policy_target_prototype_load_balancer_listener_policy_redirect_url_prototype_model_json
 
-class TestLoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL():
+class TestModel_LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL():
     """
     Test Class for LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL
     """
@@ -40941,7 +42613,7 @@ class TestLoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(
         load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json2 = load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model.to_dict()
         assert load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json2 == load_balancer_listener_policy_target_load_balancer_listener_policy_redirect_url_model_json
 
-class TestLoadBalancerListenerPolicyTargetLoadBalancerPoolReference():
+class TestModel_LoadBalancerListenerPolicyTargetLoadBalancerPoolReference():
     """
     Test Class for LoadBalancerListenerPolicyTargetLoadBalancerPoolReference
     """
@@ -40978,7 +42650,7 @@ class TestLoadBalancerListenerPolicyTargetLoadBalancerPoolReference():
         load_balancer_listener_policy_target_load_balancer_pool_reference_model_json2 = load_balancer_listener_policy_target_load_balancer_pool_reference_model.to_dict()
         assert load_balancer_listener_policy_target_load_balancer_pool_reference_model_json2 == load_balancer_listener_policy_target_load_balancer_pool_reference_model_json
 
-class TestLoadBalancerPoolIdentityByHref():
+class TestModel_LoadBalancerPoolIdentityByHref():
     """
     Test Class for LoadBalancerPoolIdentityByHref
     """
@@ -41007,7 +42679,7 @@ class TestLoadBalancerPoolIdentityByHref():
         load_balancer_pool_identity_by_href_model_json2 = load_balancer_pool_identity_by_href_model.to_dict()
         assert load_balancer_pool_identity_by_href_model_json2 == load_balancer_pool_identity_by_href_model_json
 
-class TestLoadBalancerPoolIdentityById():
+class TestModel_LoadBalancerPoolIdentityById():
     """
     Test Class for LoadBalancerPoolIdentityById
     """
@@ -41036,7 +42708,7 @@ class TestLoadBalancerPoolIdentityById():
         load_balancer_pool_identity_by_id_model_json2 = load_balancer_pool_identity_by_id_model.to_dict()
         assert load_balancer_pool_identity_by_id_model_json2 == load_balancer_pool_identity_by_id_model_json
 
-class TestLoadBalancerPoolMemberTargetPrototypeIP():
+class TestModel_LoadBalancerPoolMemberTargetPrototypeIP():
     """
     Test Class for LoadBalancerPoolMemberTargetPrototypeIP
     """
@@ -41065,7 +42737,7 @@ class TestLoadBalancerPoolMemberTargetPrototypeIP():
         load_balancer_pool_member_target_prototype_ip_model_json2 = load_balancer_pool_member_target_prototype_ip_model.to_dict()
         assert load_balancer_pool_member_target_prototype_ip_model_json2 == load_balancer_pool_member_target_prototype_ip_model_json
 
-class TestLoadBalancerPoolMemberTargetIP():
+class TestModel_LoadBalancerPoolMemberTargetIP():
     """
     Test Class for LoadBalancerPoolMemberTargetIP
     """
@@ -41094,7 +42766,7 @@ class TestLoadBalancerPoolMemberTargetIP():
         load_balancer_pool_member_target_ip_model_json2 = load_balancer_pool_member_target_ip_model.to_dict()
         assert load_balancer_pool_member_target_ip_model_json2 == load_balancer_pool_member_target_ip_model_json
 
-class TestLoadBalancerPoolMemberTargetInstanceReference():
+class TestModel_LoadBalancerPoolMemberTargetInstanceReference():
     """
     Test Class for LoadBalancerPoolMemberTargetInstanceReference
     """
@@ -41132,7 +42804,7 @@ class TestLoadBalancerPoolMemberTargetInstanceReference():
         load_balancer_pool_member_target_instance_reference_model_json2 = load_balancer_pool_member_target_instance_reference_model.to_dict()
         assert load_balancer_pool_member_target_instance_reference_model_json2 == load_balancer_pool_member_target_instance_reference_model_json
 
-class TestLoadBalancerProfileIdentityByHref():
+class TestModel_LoadBalancerProfileIdentityByHref():
     """
     Test Class for LoadBalancerProfileIdentityByHref
     """
@@ -41161,7 +42833,7 @@ class TestLoadBalancerProfileIdentityByHref():
         load_balancer_profile_identity_by_href_model_json2 = load_balancer_profile_identity_by_href_model.to_dict()
         assert load_balancer_profile_identity_by_href_model_json2 == load_balancer_profile_identity_by_href_model_json
 
-class TestLoadBalancerProfileIdentityByName():
+class TestModel_LoadBalancerProfileIdentityByName():
     """
     Test Class for LoadBalancerProfileIdentityByName
     """
@@ -41190,7 +42862,7 @@ class TestLoadBalancerProfileIdentityByName():
         load_balancer_profile_identity_by_name_model_json2 = load_balancer_profile_identity_by_name_model.to_dict()
         assert load_balancer_profile_identity_by_name_model_json2 == load_balancer_profile_identity_by_name_model_json
 
-class TestLoadBalancerProfileSecurityGroupsSupportedDependent():
+class TestModel_LoadBalancerProfileSecurityGroupsSupportedDependent():
     """
     Test Class for LoadBalancerProfileSecurityGroupsSupportedDependent
     """
@@ -41219,7 +42891,7 @@ class TestLoadBalancerProfileSecurityGroupsSupportedDependent():
         load_balancer_profile_security_groups_supported_dependent_model_json2 = load_balancer_profile_security_groups_supported_dependent_model.to_dict()
         assert load_balancer_profile_security_groups_supported_dependent_model_json2 == load_balancer_profile_security_groups_supported_dependent_model_json
 
-class TestLoadBalancerProfileSecurityGroupsSupportedFixed():
+class TestModel_LoadBalancerProfileSecurityGroupsSupportedFixed():
     """
     Test Class for LoadBalancerProfileSecurityGroupsSupportedFixed
     """
@@ -41249,7 +42921,7 @@ class TestLoadBalancerProfileSecurityGroupsSupportedFixed():
         load_balancer_profile_security_groups_supported_fixed_model_json2 = load_balancer_profile_security_groups_supported_fixed_model.to_dict()
         assert load_balancer_profile_security_groups_supported_fixed_model_json2 == load_balancer_profile_security_groups_supported_fixed_model_json
 
-class TestNetworkACLIdentityByCRN():
+class TestModel_NetworkACLIdentityByCRN():
     """
     Test Class for NetworkACLIdentityByCRN
     """
@@ -41278,7 +42950,7 @@ class TestNetworkACLIdentityByCRN():
         network_acl_identity_by_crn_model_json2 = network_acl_identity_by_crn_model.to_dict()
         assert network_acl_identity_by_crn_model_json2 == network_acl_identity_by_crn_model_json
 
-class TestNetworkACLIdentityByHref():
+class TestModel_NetworkACLIdentityByHref():
     """
     Test Class for NetworkACLIdentityByHref
     """
@@ -41307,7 +42979,7 @@ class TestNetworkACLIdentityByHref():
         network_acl_identity_by_href_model_json2 = network_acl_identity_by_href_model.to_dict()
         assert network_acl_identity_by_href_model_json2 == network_acl_identity_by_href_model_json
 
-class TestNetworkACLIdentityById():
+class TestModel_NetworkACLIdentityById():
     """
     Test Class for NetworkACLIdentityById
     """
@@ -41336,7 +43008,7 @@ class TestNetworkACLIdentityById():
         network_acl_identity_by_id_model_json2 = network_acl_identity_by_id_model.to_dict()
         assert network_acl_identity_by_id_model_json2 == network_acl_identity_by_id_model_json
 
-class TestNetworkACLPrototypeNetworkACLByRules():
+class TestModel_NetworkACLPrototypeNetworkACLByRules():
     """
     Test Class for NetworkACLPrototypeNetworkACLByRules
     """
@@ -41384,7 +43056,7 @@ class TestNetworkACLPrototypeNetworkACLByRules():
         network_acl_prototype_network_acl_by_rules_model_json2 = network_acl_prototype_network_acl_by_rules_model.to_dict()
         assert network_acl_prototype_network_acl_by_rules_model_json2 == network_acl_prototype_network_acl_by_rules_model_json
 
-class TestNetworkACLPrototypeNetworkACLBySourceNetworkACL():
+class TestModel_NetworkACLPrototypeNetworkACLBySourceNetworkACL():
     """
     Test Class for NetworkACLPrototypeNetworkACLBySourceNetworkACL
     """
@@ -41427,7 +43099,7 @@ class TestNetworkACLPrototypeNetworkACLBySourceNetworkACL():
         network_acl_prototype_network_acl_by_source_network_acl_model_json2 = network_acl_prototype_network_acl_by_source_network_acl_model.to_dict()
         assert network_acl_prototype_network_acl_by_source_network_acl_model_json2 == network_acl_prototype_network_acl_by_source_network_acl_model_json
 
-class TestNetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref():
+class TestModel_NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref():
     """
     Test Class for NetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref
     """
@@ -41456,7 +43128,7 @@ class TestNetworkACLRuleBeforePatchNetworkACLRuleIdentityByHref():
         network_acl_rule_before_patch_network_acl_rule_identity_by_href_model_json2 = network_acl_rule_before_patch_network_acl_rule_identity_by_href_model.to_dict()
         assert network_acl_rule_before_patch_network_acl_rule_identity_by_href_model_json2 == network_acl_rule_before_patch_network_acl_rule_identity_by_href_model_json
 
-class TestNetworkACLRuleBeforePatchNetworkACLRuleIdentityById():
+class TestModel_NetworkACLRuleBeforePatchNetworkACLRuleIdentityById():
     """
     Test Class for NetworkACLRuleBeforePatchNetworkACLRuleIdentityById
     """
@@ -41485,7 +43157,7 @@ class TestNetworkACLRuleBeforePatchNetworkACLRuleIdentityById():
         network_acl_rule_before_patch_network_acl_rule_identity_by_id_model_json2 = network_acl_rule_before_patch_network_acl_rule_identity_by_id_model.to_dict()
         assert network_acl_rule_before_patch_network_acl_rule_identity_by_id_model_json2 == network_acl_rule_before_patch_network_acl_rule_identity_by_id_model_json
 
-class TestNetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref():
+class TestModel_NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref():
     """
     Test Class for NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref
     """
@@ -41514,7 +43186,7 @@ class TestNetworkACLRuleBeforePrototypeNetworkACLRuleIdentityByHref():
         network_acl_rule_before_prototype_network_acl_rule_identity_by_href_model_json2 = network_acl_rule_before_prototype_network_acl_rule_identity_by_href_model.to_dict()
         assert network_acl_rule_before_prototype_network_acl_rule_identity_by_href_model_json2 == network_acl_rule_before_prototype_network_acl_rule_identity_by_href_model_json
 
-class TestNetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById():
+class TestModel_NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById():
     """
     Test Class for NetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById
     """
@@ -41543,7 +43215,7 @@ class TestNetworkACLRuleBeforePrototypeNetworkACLRuleIdentityById():
         network_acl_rule_before_prototype_network_acl_rule_identity_by_id_model_json2 = network_acl_rule_before_prototype_network_acl_rule_identity_by_id_model.to_dict()
         assert network_acl_rule_before_prototype_network_acl_rule_identity_by_id_model_json2 == network_acl_rule_before_prototype_network_acl_rule_identity_by_id_model_json
 
-class TestNetworkACLRuleItemNetworkACLRuleProtocolAll():
+class TestModel_NetworkACLRuleItemNetworkACLRuleProtocolAll():
     """
     Test Class for NetworkACLRuleItemNetworkACLRuleProtocolAll
     """
@@ -41568,7 +43240,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolAll():
         network_acl_rule_item_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_item_network_acl_rule_protocol_all_model_json['action'] = 'allow'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_network_acl_rule_protocol_all_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_network_acl_rule_protocol_all_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_network_acl_rule_protocol_all_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json['direction'] = 'inbound'
         network_acl_rule_item_network_acl_rule_protocol_all_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -41593,7 +43265,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolAll():
         network_acl_rule_item_network_acl_rule_protocol_all_model_json2 = network_acl_rule_item_network_acl_rule_protocol_all_model.to_dict()
         assert network_acl_rule_item_network_acl_rule_protocol_all_model_json2 == network_acl_rule_item_network_acl_rule_protocol_all_model_json
 
-class TestNetworkACLRuleItemNetworkACLRuleProtocolICMP():
+class TestModel_NetworkACLRuleItemNetworkACLRuleProtocolICMP():
     """
     Test Class for NetworkACLRuleItemNetworkACLRuleProtocolICMP
     """
@@ -41618,7 +43290,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolICMP():
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['action'] = 'allow'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['direction'] = 'inbound'
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -41645,7 +43317,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolICMP():
         network_acl_rule_item_network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_item_network_acl_rule_protocol_icmp_model.to_dict()
         assert network_acl_rule_item_network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_item_network_acl_rule_protocol_icmp_model_json
 
-class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
+class TestModel_NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
     """
     Test Class for NetworkACLRuleItemNetworkACLRuleProtocolTCPUDP
     """
@@ -41670,7 +43342,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json = {}
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['action'] = 'allow'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['direction'] = 'inbound'
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -41699,7 +43371,7 @@ class TestNetworkACLRuleItemNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_item_network_acl_rule_protocol_tcpudp_model.to_dict()
         assert network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_item_network_acl_rule_protocol_tcpudp_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll():
+class TestModel_NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll
     """
@@ -41733,7 +43405,7 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolAll():
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json2 = network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model.to_dict()
         assert network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json2 == network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_all_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP():
+class TestModel_NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP
     """
@@ -41769,7 +43441,7 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolICMP():
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model.to_dict()
         assert network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_icmp_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP():
+class TestModel_NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP
     """
@@ -41807,7 +43479,7 @@ class TestNetworkACLRulePrototypeNetworkACLContextNetworkACLRuleProtocolTCPUDP()
         network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model.to_dict()
         assert network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_prototype_network_acl_context_network_acl_rule_protocol_tcpudp_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLRuleProtocolAll():
+class TestModel_NetworkACLRulePrototypeNetworkACLRuleProtocolAll():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLRuleProtocolAll
     """
@@ -41847,7 +43519,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolAll():
         network_acl_rule_prototype_network_acl_rule_protocol_all_model_json2 = network_acl_rule_prototype_network_acl_rule_protocol_all_model.to_dict()
         assert network_acl_rule_prototype_network_acl_rule_protocol_all_model_json2 == network_acl_rule_prototype_network_acl_rule_protocol_all_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLRuleProtocolICMP():
+class TestModel_NetworkACLRulePrototypeNetworkACLRuleProtocolICMP():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLRuleProtocolICMP
     """
@@ -41889,7 +43561,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolICMP():
         network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_prototype_network_acl_rule_protocol_icmp_model.to_dict()
         assert network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_prototype_network_acl_rule_protocol_icmp_model_json
 
-class TestNetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
+class TestModel_NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
     """
     Test Class for NetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP
     """
@@ -41933,7 +43605,7 @@ class TestNetworkACLRulePrototypeNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model.to_dict()
         assert network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_prototype_network_acl_rule_protocol_tcpudp_model_json
 
-class TestNetworkACLRuleNetworkACLRuleProtocolAll():
+class TestModel_NetworkACLRuleNetworkACLRuleProtocolAll():
     """
     Test Class for NetworkACLRuleNetworkACLRuleProtocolAll
     """
@@ -41958,7 +43630,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolAll():
         network_acl_rule_network_acl_rule_protocol_all_model_json = {}
         network_acl_rule_network_acl_rule_protocol_all_model_json['action'] = 'allow'
         network_acl_rule_network_acl_rule_protocol_all_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_network_acl_rule_protocol_all_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_network_acl_rule_protocol_all_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_network_acl_rule_protocol_all_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_all_model_json['direction'] = 'inbound'
         network_acl_rule_network_acl_rule_protocol_all_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -41983,7 +43655,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolAll():
         network_acl_rule_network_acl_rule_protocol_all_model_json2 = network_acl_rule_network_acl_rule_protocol_all_model.to_dict()
         assert network_acl_rule_network_acl_rule_protocol_all_model_json2 == network_acl_rule_network_acl_rule_protocol_all_model_json
 
-class TestNetworkACLRuleNetworkACLRuleProtocolICMP():
+class TestModel_NetworkACLRuleNetworkACLRuleProtocolICMP():
     """
     Test Class for NetworkACLRuleNetworkACLRuleProtocolICMP
     """
@@ -42008,7 +43680,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolICMP():
         network_acl_rule_network_acl_rule_protocol_icmp_model_json = {}
         network_acl_rule_network_acl_rule_protocol_icmp_model_json['action'] = 'allow'
         network_acl_rule_network_acl_rule_protocol_icmp_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_network_acl_rule_protocol_icmp_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_network_acl_rule_protocol_icmp_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_network_acl_rule_protocol_icmp_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_icmp_model_json['direction'] = 'inbound'
         network_acl_rule_network_acl_rule_protocol_icmp_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -42035,7 +43707,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolICMP():
         network_acl_rule_network_acl_rule_protocol_icmp_model_json2 = network_acl_rule_network_acl_rule_protocol_icmp_model.to_dict()
         assert network_acl_rule_network_acl_rule_protocol_icmp_model_json2 == network_acl_rule_network_acl_rule_protocol_icmp_model_json
 
-class TestNetworkACLRuleNetworkACLRuleProtocolTCPUDP():
+class TestModel_NetworkACLRuleNetworkACLRuleProtocolTCPUDP():
     """
     Test Class for NetworkACLRuleNetworkACLRuleProtocolTCPUDP
     """
@@ -42060,7 +43732,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json = {}
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['action'] = 'allow'
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['before'] = network_acl_rule_reference_model
-        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['created_at'] = "2019-01-01T12:00:00Z"
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['destination'] = '192.168.3.0/24'
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['direction'] = 'inbound'
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/network_acls/a4e28308-8ee7-46ab-8108-9f881f22bdbf/rules/8daca77a-4980-4d33-8f3e-7038797be8f9'
@@ -42089,7 +43761,7 @@ class TestNetworkACLRuleNetworkACLRuleProtocolTCPUDP():
         network_acl_rule_network_acl_rule_protocol_tcpudp_model_json2 = network_acl_rule_network_acl_rule_protocol_tcpudp_model.to_dict()
         assert network_acl_rule_network_acl_rule_protocol_tcpudp_model_json2 == network_acl_rule_network_acl_rule_protocol_tcpudp_model_json
 
-class TestOperatingSystemIdentityByHref():
+class TestModel_OperatingSystemIdentityByHref():
     """
     Test Class for OperatingSystemIdentityByHref
     """
@@ -42118,7 +43790,7 @@ class TestOperatingSystemIdentityByHref():
         operating_system_identity_by_href_model_json2 = operating_system_identity_by_href_model.to_dict()
         assert operating_system_identity_by_href_model_json2 == operating_system_identity_by_href_model_json
 
-class TestOperatingSystemIdentityByName():
+class TestModel_OperatingSystemIdentityByName():
     """
     Test Class for OperatingSystemIdentityByName
     """
@@ -42147,7 +43819,7 @@ class TestOperatingSystemIdentityByName():
         operating_system_identity_by_name_model_json2 = operating_system_identity_by_name_model.to_dict()
         assert operating_system_identity_by_name_model_json2 == operating_system_identity_by_name_model_json
 
-class TestPublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext():
+class TestModel_PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext():
     """
     Test Class for PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext
     """
@@ -42182,7 +43854,7 @@ class TestPublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext():
         public_gateway_floating_ip_prototype_floating_ip_prototype_target_context_model_json2 = public_gateway_floating_ip_prototype_floating_ip_prototype_target_context_model.to_dict()
         assert public_gateway_floating_ip_prototype_floating_ip_prototype_target_context_model_json2 == public_gateway_floating_ip_prototype_floating_ip_prototype_target_context_model_json
 
-class TestPublicGatewayIdentityByCRN():
+class TestModel_PublicGatewayIdentityByCRN():
     """
     Test Class for PublicGatewayIdentityByCRN
     """
@@ -42211,7 +43883,7 @@ class TestPublicGatewayIdentityByCRN():
         public_gateway_identity_by_crn_model_json2 = public_gateway_identity_by_crn_model.to_dict()
         assert public_gateway_identity_by_crn_model_json2 == public_gateway_identity_by_crn_model_json
 
-class TestPublicGatewayIdentityByHref():
+class TestModel_PublicGatewayIdentityByHref():
     """
     Test Class for PublicGatewayIdentityByHref
     """
@@ -42240,7 +43912,7 @@ class TestPublicGatewayIdentityByHref():
         public_gateway_identity_by_href_model_json2 = public_gateway_identity_by_href_model.to_dict()
         assert public_gateway_identity_by_href_model_json2 == public_gateway_identity_by_href_model_json
 
-class TestPublicGatewayIdentityById():
+class TestModel_PublicGatewayIdentityById():
     """
     Test Class for PublicGatewayIdentityById
     """
@@ -42269,7 +43941,7 @@ class TestPublicGatewayIdentityById():
         public_gateway_identity_by_id_model_json2 = public_gateway_identity_by_id_model.to_dict()
         assert public_gateway_identity_by_id_model_json2 == public_gateway_identity_by_id_model_json
 
-class TestReservedIPTargetEndpointGatewayReference():
+class TestModel_ReservedIPTargetEndpointGatewayReference():
     """
     Test Class for ReservedIPTargetEndpointGatewayReference
     """
@@ -42308,7 +43980,7 @@ class TestReservedIPTargetEndpointGatewayReference():
         reserved_ip_target_endpoint_gateway_reference_model_json2 = reserved_ip_target_endpoint_gateway_reference_model.to_dict()
         assert reserved_ip_target_endpoint_gateway_reference_model_json2 == reserved_ip_target_endpoint_gateway_reference_model_json
 
-class TestResourceGroupIdentityById():
+class TestModel_ResourceGroupIdentityById():
     """
     Test Class for ResourceGroupIdentityById
     """
@@ -42337,7 +44009,7 @@ class TestResourceGroupIdentityById():
         resource_group_identity_by_id_model_json2 = resource_group_identity_by_id_model.to_dict()
         assert resource_group_identity_by_id_model_json2 == resource_group_identity_by_id_model_json
 
-class TestRouteNextHopIP():
+class TestModel_RouteNextHopIP():
     """
     Test Class for RouteNextHopIP
     """
@@ -42366,7 +44038,7 @@ class TestRouteNextHopIP():
         route_next_hop_ip_model_json2 = route_next_hop_ip_model.to_dict()
         assert route_next_hop_ip_model_json2 == route_next_hop_ip_model_json
 
-class TestRouteNextHopPrototypeRouteNextHopIP():
+class TestModel_RouteNextHopPrototypeRouteNextHopIP():
     """
     Test Class for RouteNextHopPrototypeRouteNextHopIP
     """
@@ -42395,7 +44067,7 @@ class TestRouteNextHopPrototypeRouteNextHopIP():
         route_next_hop_prototype_route_next_hop_ip_model_json2 = route_next_hop_prototype_route_next_hop_ip_model.to_dict()
         assert route_next_hop_prototype_route_next_hop_ip_model_json2 == route_next_hop_prototype_route_next_hop_ip_model_json
 
-class TestRouteNextHopVPNGatewayConnectionReference():
+class TestModel_RouteNextHopVPNGatewayConnectionReference():
     """
     Test Class for RouteNextHopVPNGatewayConnectionReference
     """
@@ -42433,7 +44105,7 @@ class TestRouteNextHopVPNGatewayConnectionReference():
         route_next_hop_vpn_gateway_connection_reference_model_json2 = route_next_hop_vpn_gateway_connection_reference_model.to_dict()
         assert route_next_hop_vpn_gateway_connection_reference_model_json2 == route_next_hop_vpn_gateway_connection_reference_model_json
 
-class TestRoutingTableIdentityByHref():
+class TestModel_RoutingTableIdentityByHref():
     """
     Test Class for RoutingTableIdentityByHref
     """
@@ -42462,7 +44134,7 @@ class TestRoutingTableIdentityByHref():
         routing_table_identity_by_href_model_json2 = routing_table_identity_by_href_model.to_dict()
         assert routing_table_identity_by_href_model_json2 == routing_table_identity_by_href_model_json
 
-class TestRoutingTableIdentityById():
+class TestModel_RoutingTableIdentityById():
     """
     Test Class for RoutingTableIdentityById
     """
@@ -42491,7 +44163,7 @@ class TestRoutingTableIdentityById():
         routing_table_identity_by_id_model_json2 = routing_table_identity_by_id_model.to_dict()
         assert routing_table_identity_by_id_model_json2 == routing_table_identity_by_id_model_json
 
-class TestSecurityGroupIdentityByCRN():
+class TestModel_SecurityGroupIdentityByCRN():
     """
     Test Class for SecurityGroupIdentityByCRN
     """
@@ -42520,7 +44192,7 @@ class TestSecurityGroupIdentityByCRN():
         security_group_identity_by_crn_model_json2 = security_group_identity_by_crn_model.to_dict()
         assert security_group_identity_by_crn_model_json2 == security_group_identity_by_crn_model_json
 
-class TestSecurityGroupIdentityByHref():
+class TestModel_SecurityGroupIdentityByHref():
     """
     Test Class for SecurityGroupIdentityByHref
     """
@@ -42549,7 +44221,7 @@ class TestSecurityGroupIdentityByHref():
         security_group_identity_by_href_model_json2 = security_group_identity_by_href_model.to_dict()
         assert security_group_identity_by_href_model_json2 == security_group_identity_by_href_model_json
 
-class TestSecurityGroupIdentityById():
+class TestModel_SecurityGroupIdentityById():
     """
     Test Class for SecurityGroupIdentityById
     """
@@ -42578,7 +44250,7 @@ class TestSecurityGroupIdentityById():
         security_group_identity_by_id_model_json2 = security_group_identity_by_id_model.to_dict()
         assert security_group_identity_by_id_model_json2 == security_group_identity_by_id_model_json
 
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
+class TestModel_SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
     """
     Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll
     """
@@ -42615,7 +44287,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolAll():
         security_group_rule_prototype_security_group_rule_protocol_all_model_json2 = security_group_rule_prototype_security_group_rule_protocol_all_model.to_dict()
         assert security_group_rule_prototype_security_group_rule_protocol_all_model_json2 == security_group_rule_prototype_security_group_rule_protocol_all_model_json
 
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP():
+class TestModel_SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP():
     """
     Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP
     """
@@ -42654,7 +44326,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP():
         security_group_rule_prototype_security_group_rule_protocol_icmp_model_json2 = security_group_rule_prototype_security_group_rule_protocol_icmp_model.to_dict()
         assert security_group_rule_prototype_security_group_rule_protocol_icmp_model_json2 == security_group_rule_prototype_security_group_rule_protocol_icmp_model_json
 
-class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP():
+class TestModel_SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP():
     """
     Test Class for SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP
     """
@@ -42693,7 +44365,7 @@ class TestSecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP():
         security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json2 = security_group_rule_prototype_security_group_rule_protocol_tcpudp_model.to_dict()
         assert security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json2 == security_group_rule_prototype_security_group_rule_protocol_tcpudp_model_json
 
-class TestSecurityGroupRuleRemotePatchCIDR():
+class TestModel_SecurityGroupRuleRemotePatchCIDR():
     """
     Test Class for SecurityGroupRuleRemotePatchCIDR
     """
@@ -42722,7 +44394,7 @@ class TestSecurityGroupRuleRemotePatchCIDR():
         security_group_rule_remote_patch_cidr_model_json2 = security_group_rule_remote_patch_cidr_model.to_dict()
         assert security_group_rule_remote_patch_cidr_model_json2 == security_group_rule_remote_patch_cidr_model_json
 
-class TestSecurityGroupRuleRemotePatchIP():
+class TestModel_SecurityGroupRuleRemotePatchIP():
     """
     Test Class for SecurityGroupRuleRemotePatchIP
     """
@@ -42751,7 +44423,7 @@ class TestSecurityGroupRuleRemotePatchIP():
         security_group_rule_remote_patch_ip_model_json2 = security_group_rule_remote_patch_ip_model.to_dict()
         assert security_group_rule_remote_patch_ip_model_json2 == security_group_rule_remote_patch_ip_model_json
 
-class TestSecurityGroupRuleRemotePrototypeCIDR():
+class TestModel_SecurityGroupRuleRemotePrototypeCIDR():
     """
     Test Class for SecurityGroupRuleRemotePrototypeCIDR
     """
@@ -42780,7 +44452,7 @@ class TestSecurityGroupRuleRemotePrototypeCIDR():
         security_group_rule_remote_prototype_cidr_model_json2 = security_group_rule_remote_prototype_cidr_model.to_dict()
         assert security_group_rule_remote_prototype_cidr_model_json2 == security_group_rule_remote_prototype_cidr_model_json
 
-class TestSecurityGroupRuleRemotePrototypeIP():
+class TestModel_SecurityGroupRuleRemotePrototypeIP():
     """
     Test Class for SecurityGroupRuleRemotePrototypeIP
     """
@@ -42809,7 +44481,7 @@ class TestSecurityGroupRuleRemotePrototypeIP():
         security_group_rule_remote_prototype_ip_model_json2 = security_group_rule_remote_prototype_ip_model.to_dict()
         assert security_group_rule_remote_prototype_ip_model_json2 == security_group_rule_remote_prototype_ip_model_json
 
-class TestSecurityGroupRuleRemoteCIDR():
+class TestModel_SecurityGroupRuleRemoteCIDR():
     """
     Test Class for SecurityGroupRuleRemoteCIDR
     """
@@ -42838,7 +44510,7 @@ class TestSecurityGroupRuleRemoteCIDR():
         security_group_rule_remote_cidr_model_json2 = security_group_rule_remote_cidr_model.to_dict()
         assert security_group_rule_remote_cidr_model_json2 == security_group_rule_remote_cidr_model_json
 
-class TestSecurityGroupRuleRemoteIP():
+class TestModel_SecurityGroupRuleRemoteIP():
     """
     Test Class for SecurityGroupRuleRemoteIP
     """
@@ -42867,7 +44539,7 @@ class TestSecurityGroupRuleRemoteIP():
         security_group_rule_remote_ip_model_json2 = security_group_rule_remote_ip_model.to_dict()
         assert security_group_rule_remote_ip_model_json2 == security_group_rule_remote_ip_model_json
 
-class TestSecurityGroupRuleRemoteSecurityGroupReference():
+class TestModel_SecurityGroupRuleRemoteSecurityGroupReference():
     """
     Test Class for SecurityGroupRuleRemoteSecurityGroupReference
     """
@@ -42905,7 +44577,7 @@ class TestSecurityGroupRuleRemoteSecurityGroupReference():
         security_group_rule_remote_security_group_reference_model_json2 = security_group_rule_remote_security_group_reference_model.to_dict()
         assert security_group_rule_remote_security_group_reference_model_json2 == security_group_rule_remote_security_group_reference_model_json
 
-class TestSecurityGroupRuleSecurityGroupRuleProtocolAll():
+class TestModel_SecurityGroupRuleSecurityGroupRuleProtocolAll():
     """
     Test Class for SecurityGroupRuleSecurityGroupRuleProtocolAll
     """
@@ -42944,7 +44616,7 @@ class TestSecurityGroupRuleSecurityGroupRuleProtocolAll():
         security_group_rule_security_group_rule_protocol_all_model_json2 = security_group_rule_security_group_rule_protocol_all_model.to_dict()
         assert security_group_rule_security_group_rule_protocol_all_model_json2 == security_group_rule_security_group_rule_protocol_all_model_json
 
-class TestSecurityGroupRuleSecurityGroupRuleProtocolICMP():
+class TestModel_SecurityGroupRuleSecurityGroupRuleProtocolICMP():
     """
     Test Class for SecurityGroupRuleSecurityGroupRuleProtocolICMP
     """
@@ -42985,7 +44657,7 @@ class TestSecurityGroupRuleSecurityGroupRuleProtocolICMP():
         security_group_rule_security_group_rule_protocol_icmp_model_json2 = security_group_rule_security_group_rule_protocol_icmp_model.to_dict()
         assert security_group_rule_security_group_rule_protocol_icmp_model_json2 == security_group_rule_security_group_rule_protocol_icmp_model_json
 
-class TestSecurityGroupRuleSecurityGroupRuleProtocolTCPUDP():
+class TestModel_SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP():
     """
     Test Class for SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP
     """
@@ -43026,7 +44698,7 @@ class TestSecurityGroupRuleSecurityGroupRuleProtocolTCPUDP():
         security_group_rule_security_group_rule_protocol_tcpudp_model_json2 = security_group_rule_security_group_rule_protocol_tcpudp_model.to_dict()
         assert security_group_rule_security_group_rule_protocol_tcpudp_model_json2 == security_group_rule_security_group_rule_protocol_tcpudp_model_json
 
-class TestSecurityGroupTargetReferenceLoadBalancerReference():
+class TestModel_SecurityGroupTargetReferenceLoadBalancerReference():
     """
     Test Class for SecurityGroupTargetReferenceLoadBalancerReference
     """
@@ -43064,7 +44736,7 @@ class TestSecurityGroupTargetReferenceLoadBalancerReference():
         security_group_target_reference_load_balancer_reference_model_json2 = security_group_target_reference_load_balancer_reference_model.to_dict()
         assert security_group_target_reference_load_balancer_reference_model_json2 == security_group_target_reference_load_balancer_reference_model_json
 
-class TestSecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext():
+class TestModel_SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext():
     """
     Test Class for SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext
     """
@@ -43102,7 +44774,94 @@ class TestSecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext():
         security_group_target_reference_network_interface_reference_target_context_model_json2 = security_group_target_reference_network_interface_reference_target_context_model.to_dict()
         assert security_group_target_reference_network_interface_reference_target_context_model_json2 == security_group_target_reference_network_interface_reference_target_context_model_json
 
-class TestSubnetIdentityByCRN():
+class TestModel_SnapshotIdentityByCRN():
+    """
+    Test Class for SnapshotIdentityByCRN
+    """
+
+    def test_snapshot_identity_by_crn_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotIdentityByCRN
+        """
+
+        # Construct a json representation of a SnapshotIdentityByCRN model
+        snapshot_identity_by_crn_model_json = {}
+        snapshot_identity_by_crn_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+
+        # Construct a model instance of SnapshotIdentityByCRN by calling from_dict on the json representation
+        snapshot_identity_by_crn_model = SnapshotIdentityByCRN.from_dict(snapshot_identity_by_crn_model_json)
+        assert snapshot_identity_by_crn_model != False
+
+        # Construct a model instance of SnapshotIdentityByCRN by calling from_dict on the json representation
+        snapshot_identity_by_crn_model_dict = SnapshotIdentityByCRN.from_dict(snapshot_identity_by_crn_model_json).__dict__
+        snapshot_identity_by_crn_model2 = SnapshotIdentityByCRN(**snapshot_identity_by_crn_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_identity_by_crn_model == snapshot_identity_by_crn_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_identity_by_crn_model_json2 = snapshot_identity_by_crn_model.to_dict()
+        assert snapshot_identity_by_crn_model_json2 == snapshot_identity_by_crn_model_json
+
+class TestModel_SnapshotIdentityByHref():
+    """
+    Test Class for SnapshotIdentityByHref
+    """
+
+    def test_snapshot_identity_by_href_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotIdentityByHref
+        """
+
+        # Construct a json representation of a SnapshotIdentityByHref model
+        snapshot_identity_by_href_model_json = {}
+        snapshot_identity_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+
+        # Construct a model instance of SnapshotIdentityByHref by calling from_dict on the json representation
+        snapshot_identity_by_href_model = SnapshotIdentityByHref.from_dict(snapshot_identity_by_href_model_json)
+        assert snapshot_identity_by_href_model != False
+
+        # Construct a model instance of SnapshotIdentityByHref by calling from_dict on the json representation
+        snapshot_identity_by_href_model_dict = SnapshotIdentityByHref.from_dict(snapshot_identity_by_href_model_json).__dict__
+        snapshot_identity_by_href_model2 = SnapshotIdentityByHref(**snapshot_identity_by_href_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_identity_by_href_model == snapshot_identity_by_href_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_identity_by_href_model_json2 = snapshot_identity_by_href_model.to_dict()
+        assert snapshot_identity_by_href_model_json2 == snapshot_identity_by_href_model_json
+
+class TestModel_SnapshotIdentityById():
+    """
+    Test Class for SnapshotIdentityById
+    """
+
+    def test_snapshot_identity_by_id_serialization(self):
+        """
+        Test serialization/deserialization for SnapshotIdentityById
+        """
+
+        # Construct a json representation of a SnapshotIdentityById model
+        snapshot_identity_by_id_model_json = {}
+        snapshot_identity_by_id_model_json['id'] = 'r134-f6bfa329-0e36-433f-a3bb-0df632e79263'
+
+        # Construct a model instance of SnapshotIdentityById by calling from_dict on the json representation
+        snapshot_identity_by_id_model = SnapshotIdentityById.from_dict(snapshot_identity_by_id_model_json)
+        assert snapshot_identity_by_id_model != False
+
+        # Construct a model instance of SnapshotIdentityById by calling from_dict on the json representation
+        snapshot_identity_by_id_model_dict = SnapshotIdentityById.from_dict(snapshot_identity_by_id_model_json).__dict__
+        snapshot_identity_by_id_model2 = SnapshotIdentityById(**snapshot_identity_by_id_model_dict)
+
+        # Verify the model instances are equivalent
+        assert snapshot_identity_by_id_model == snapshot_identity_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        snapshot_identity_by_id_model_json2 = snapshot_identity_by_id_model.to_dict()
+        assert snapshot_identity_by_id_model_json2 == snapshot_identity_by_id_model_json
+
+class TestModel_SubnetIdentityByCRN():
     """
     Test Class for SubnetIdentityByCRN
     """
@@ -43131,7 +44890,7 @@ class TestSubnetIdentityByCRN():
         subnet_identity_by_crn_model_json2 = subnet_identity_by_crn_model.to_dict()
         assert subnet_identity_by_crn_model_json2 == subnet_identity_by_crn_model_json
 
-class TestSubnetIdentityByHref():
+class TestModel_SubnetIdentityByHref():
     """
     Test Class for SubnetIdentityByHref
     """
@@ -43160,7 +44919,7 @@ class TestSubnetIdentityByHref():
         subnet_identity_by_href_model_json2 = subnet_identity_by_href_model.to_dict()
         assert subnet_identity_by_href_model_json2 == subnet_identity_by_href_model_json
 
-class TestSubnetIdentityById():
+class TestModel_SubnetIdentityById():
     """
     Test Class for SubnetIdentityById
     """
@@ -43189,7 +44948,7 @@ class TestSubnetIdentityById():
         subnet_identity_by_id_model_json2 = subnet_identity_by_id_model.to_dict()
         assert subnet_identity_by_id_model_json2 == subnet_identity_by_id_model_json
 
-class TestSubnetPrototypeSubnetByCIDR():
+class TestModel_SubnetPrototypeSubnetByCIDR():
     """
     Test Class for SubnetPrototypeSubnetByCIDR
     """
@@ -43246,7 +45005,7 @@ class TestSubnetPrototypeSubnetByCIDR():
         subnet_prototype_subnet_by_cidr_model_json2 = subnet_prototype_subnet_by_cidr_model.to_dict()
         assert subnet_prototype_subnet_by_cidr_model_json2 == subnet_prototype_subnet_by_cidr_model_json
 
-class TestSubnetPrototypeSubnetByTotalCount():
+class TestModel_SubnetPrototypeSubnetByTotalCount():
     """
     Test Class for SubnetPrototypeSubnetByTotalCount
     """
@@ -43303,7 +45062,7 @@ class TestSubnetPrototypeSubnetByTotalCount():
         subnet_prototype_subnet_by_total_count_model_json2 = subnet_prototype_subnet_by_total_count_model.to_dict()
         assert subnet_prototype_subnet_by_total_count_model_json2 == subnet_prototype_subnet_by_total_count_model_json
 
-class TestVPCIdentityByCRN():
+class TestModel_VPCIdentityByCRN():
     """
     Test Class for VPCIdentityByCRN
     """
@@ -43332,7 +45091,7 @@ class TestVPCIdentityByCRN():
         vpc_identity_by_crn_model_json2 = vpc_identity_by_crn_model.to_dict()
         assert vpc_identity_by_crn_model_json2 == vpc_identity_by_crn_model_json
 
-class TestVPCIdentityByHref():
+class TestModel_VPCIdentityByHref():
     """
     Test Class for VPCIdentityByHref
     """
@@ -43361,7 +45120,7 @@ class TestVPCIdentityByHref():
         vpc_identity_by_href_model_json2 = vpc_identity_by_href_model.to_dict()
         assert vpc_identity_by_href_model_json2 == vpc_identity_by_href_model_json
 
-class TestVPCIdentityById():
+class TestModel_VPCIdentityById():
     """
     Test Class for VPCIdentityById
     """
@@ -43390,7 +45149,7 @@ class TestVPCIdentityById():
         vpc_identity_by_id_model_json2 = vpc_identity_by_id_model.to_dict()
         assert vpc_identity_by_id_model_json2 == vpc_identity_by_id_model_json
 
-class TestVPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch():
+class TestModel_VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch():
     """
     Test Class for VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch
     """
@@ -43439,7 +45198,7 @@ class TestVPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch():
         vpn_gateway_connection_patch_vpn_gateway_connection_static_route_mode_patch_model_json2 = vpn_gateway_connection_patch_vpn_gateway_connection_static_route_mode_patch_model.to_dict()
         assert vpn_gateway_connection_patch_vpn_gateway_connection_static_route_mode_patch_model_json2 == vpn_gateway_connection_patch_vpn_gateway_connection_static_route_mode_patch_model_json
 
-class TestVPNGatewayConnectionPolicyMode():
+class TestModel_VPNGatewayConnectionPolicyMode():
     """
     Test Class for VPNGatewayConnectionPolicyMode
     """
@@ -43480,7 +45239,7 @@ class TestVPNGatewayConnectionPolicyMode():
         vpn_gateway_connection_policy_mode_model_json = {}
         vpn_gateway_connection_policy_mode_model_json['admin_state_up'] = True
         vpn_gateway_connection_policy_mode_model_json['authentication_mode'] = 'psk'
-        vpn_gateway_connection_policy_mode_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_connection_policy_mode_model_json['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_connection_policy_mode_model_json['dead_peer_detection'] = vpn_gateway_connection_dpd_model
         vpn_gateway_connection_policy_mode_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
         vpn_gateway_connection_policy_mode_model_json['id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
@@ -43510,7 +45269,7 @@ class TestVPNGatewayConnectionPolicyMode():
         vpn_gateway_connection_policy_mode_model_json2 = vpn_gateway_connection_policy_mode_model.to_dict()
         assert vpn_gateway_connection_policy_mode_model_json2 == vpn_gateway_connection_policy_mode_model_json
 
-class TestVPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype():
+class TestModel_VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype():
     """
     Test Class for VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype
     """
@@ -43560,7 +45319,7 @@ class TestVPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype()
         vpn_gateway_connection_prototype_vpn_gateway_connection_policy_mode_prototype_model_json2 = vpn_gateway_connection_prototype_vpn_gateway_connection_policy_mode_prototype_model.to_dict()
         assert vpn_gateway_connection_prototype_vpn_gateway_connection_policy_mode_prototype_model_json2 == vpn_gateway_connection_prototype_vpn_gateway_connection_policy_mode_prototype_model_json
 
-class TestVPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype():
+class TestModel_VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype():
     """
     Test Class for VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype
     """
@@ -43609,7 +45368,7 @@ class TestVPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModeProtot
         vpn_gateway_connection_prototype_vpn_gateway_connection_static_route_mode_prototype_model_json2 = vpn_gateway_connection_prototype_vpn_gateway_connection_static_route_mode_prototype_model.to_dict()
         assert vpn_gateway_connection_prototype_vpn_gateway_connection_static_route_mode_prototype_model_json2 == vpn_gateway_connection_prototype_vpn_gateway_connection_static_route_mode_prototype_model_json
 
-class TestVPNGatewayConnectionStaticRouteMode():
+class TestModel_VPNGatewayConnectionStaticRouteMode():
     """
     Test Class for VPNGatewayConnectionStaticRouteMode
     """
@@ -43657,7 +45416,7 @@ class TestVPNGatewayConnectionStaticRouteMode():
         vpn_gateway_connection_static_route_mode_model_json = {}
         vpn_gateway_connection_static_route_mode_model_json['admin_state_up'] = True
         vpn_gateway_connection_static_route_mode_model_json['authentication_mode'] = 'psk'
-        vpn_gateway_connection_static_route_mode_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_connection_static_route_mode_model_json['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_connection_static_route_mode_model_json['dead_peer_detection'] = vpn_gateway_connection_dpd_model
         vpn_gateway_connection_static_route_mode_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
         vpn_gateway_connection_static_route_mode_model_json['id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
@@ -43687,7 +45446,7 @@ class TestVPNGatewayConnectionStaticRouteMode():
         vpn_gateway_connection_static_route_mode_model_json2 = vpn_gateway_connection_static_route_mode_model.to_dict()
         assert vpn_gateway_connection_static_route_mode_model_json2 == vpn_gateway_connection_static_route_mode_model_json
 
-class TestVPNGatewayPolicyMode():
+class TestModel_VPNGatewayPolicyMode():
     """
     Test Class for VPNGatewayPolicyMode
     """
@@ -43736,7 +45495,7 @@ class TestVPNGatewayPolicyMode():
         # Construct a json representation of a VPNGatewayPolicyMode model
         vpn_gateway_policy_mode_model_json = {}
         vpn_gateway_policy_mode_model_json['connections'] = [vpn_gateway_connection_reference_model]
-        vpn_gateway_policy_mode_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_policy_mode_model_json['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_policy_mode_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_policy_mode_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_policy_mode_model_json['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -43763,7 +45522,7 @@ class TestVPNGatewayPolicyMode():
         vpn_gateway_policy_mode_model_json2 = vpn_gateway_policy_mode_model.to_dict()
         assert vpn_gateway_policy_mode_model_json2 == vpn_gateway_policy_mode_model_json
 
-class TestVPNGatewayPrototypeVPNGatewayPolicyModePrototype():
+class TestModel_VPNGatewayPrototypeVPNGatewayPolicyModePrototype():
     """
     Test Class for VPNGatewayPrototypeVPNGatewayPolicyModePrototype
     """
@@ -43803,7 +45562,7 @@ class TestVPNGatewayPrototypeVPNGatewayPolicyModePrototype():
         vpn_gateway_prototype_vpn_gateway_policy_mode_prototype_model_json2 = vpn_gateway_prototype_vpn_gateway_policy_mode_prototype_model.to_dict()
         assert vpn_gateway_prototype_vpn_gateway_policy_mode_prototype_model_json2 == vpn_gateway_prototype_vpn_gateway_policy_mode_prototype_model_json
 
-class TestVPNGatewayPrototypeVPNGatewayRouteModePrototype():
+class TestModel_VPNGatewayPrototypeVPNGatewayRouteModePrototype():
     """
     Test Class for VPNGatewayPrototypeVPNGatewayRouteModePrototype
     """
@@ -43843,7 +45602,7 @@ class TestVPNGatewayPrototypeVPNGatewayRouteModePrototype():
         vpn_gateway_prototype_vpn_gateway_route_mode_prototype_model_json2 = vpn_gateway_prototype_vpn_gateway_route_mode_prototype_model.to_dict()
         assert vpn_gateway_prototype_vpn_gateway_route_mode_prototype_model_json2 == vpn_gateway_prototype_vpn_gateway_route_mode_prototype_model_json
 
-class TestVPNGatewayRouteMode():
+class TestModel_VPNGatewayRouteMode():
     """
     Test Class for VPNGatewayRouteMode
     """
@@ -43892,7 +45651,7 @@ class TestVPNGatewayRouteMode():
         # Construct a json representation of a VPNGatewayRouteMode model
         vpn_gateway_route_mode_model_json = {}
         vpn_gateway_route_mode_model_json['connections'] = [vpn_gateway_connection_reference_model]
-        vpn_gateway_route_mode_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        vpn_gateway_route_mode_model_json['created_at'] = "2019-01-01T12:00:00Z"
         vpn_gateway_route_mode_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_route_mode_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
         vpn_gateway_route_mode_model_json['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
@@ -43919,7 +45678,52 @@ class TestVPNGatewayRouteMode():
         vpn_gateway_route_mode_model_json2 = vpn_gateway_route_mode_model.to_dict()
         assert vpn_gateway_route_mode_model_json2 == vpn_gateway_route_mode_model_json
 
-class TestVolumeIdentityByCRN():
+class TestModel_VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext():
+    """
+    Test Class for VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+    """
+
+    def test_volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        # Construct a json representation of a VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext model
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json = {}
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['capacity'] = 38
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['iops'] = 10000
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json['source_snapshot'] = snapshot_identity_model
+
+        # Construct a model instance of VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext by calling from_dict on the json representation
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model = VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext.from_dict(volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json)
+        assert volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model != False
+
+        # Construct a model instance of VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext by calling from_dict on the json representation
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_dict = VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext.from_dict(volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json).__dict__
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model2 = VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext(**volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model == volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json2 = volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model.to_dict()
+        assert volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json2 == volume_attachment_volume_prototype_instance_by_volume_context_volume_prototype_instance_by_volume_context_model_json
+
+class TestModel_VolumeIdentityByCRN():
     """
     Test Class for VolumeIdentityByCRN
     """
@@ -43948,7 +45752,7 @@ class TestVolumeIdentityByCRN():
         volume_identity_by_crn_model_json2 = volume_identity_by_crn_model.to_dict()
         assert volume_identity_by_crn_model_json2 == volume_identity_by_crn_model_json
 
-class TestVolumeIdentityByHref():
+class TestModel_VolumeIdentityByHref():
     """
     Test Class for VolumeIdentityByHref
     """
@@ -43977,7 +45781,7 @@ class TestVolumeIdentityByHref():
         volume_identity_by_href_model_json2 = volume_identity_by_href_model.to_dict()
         assert volume_identity_by_href_model_json2 == volume_identity_by_href_model_json
 
-class TestVolumeIdentityById():
+class TestModel_VolumeIdentityById():
     """
     Test Class for VolumeIdentityById
     """
@@ -44006,7 +45810,7 @@ class TestVolumeIdentityById():
         volume_identity_by_id_model_json2 = volume_identity_by_id_model.to_dict()
         assert volume_identity_by_id_model_json2 == volume_identity_by_id_model_json
 
-class TestVolumeProfileIdentityByHref():
+class TestModel_VolumeProfileIdentityByHref():
     """
     Test Class for VolumeProfileIdentityByHref
     """
@@ -44035,7 +45839,7 @@ class TestVolumeProfileIdentityByHref():
         volume_profile_identity_by_href_model_json2 = volume_profile_identity_by_href_model.to_dict()
         assert volume_profile_identity_by_href_model_json2 == volume_profile_identity_by_href_model_json
 
-class TestVolumeProfileIdentityByName():
+class TestModel_VolumeProfileIdentityByName():
     """
     Test Class for VolumeProfileIdentityByName
     """
@@ -44064,7 +45868,7 @@ class TestVolumeProfileIdentityByName():
         volume_profile_identity_by_name_model_json2 = volume_profile_identity_by_name_model.to_dict()
         assert volume_profile_identity_by_name_model_json2 == volume_profile_identity_by_name_model_json
 
-class TestVolumePrototypeVolumeByCapacity():
+class TestModel_VolumePrototypeVolumeByCapacity():
     """
     Test Class for VolumePrototypeVolumeByCapacity
     """
@@ -44113,7 +45917,7 @@ class TestVolumePrototypeVolumeByCapacity():
         volume_prototype_volume_by_capacity_model_json2 = volume_prototype_volume_by_capacity_model.to_dict()
         assert volume_prototype_volume_by_capacity_model_json2 == volume_prototype_volume_by_capacity_model_json
 
-class TestZoneIdentityByHref():
+class TestModel_ZoneIdentityByHref():
     """
     Test Class for ZoneIdentityByHref
     """
@@ -44142,7 +45946,7 @@ class TestZoneIdentityByHref():
         zone_identity_by_href_model_json2 = zone_identity_by_href_model.to_dict()
         assert zone_identity_by_href_model_json2 == zone_identity_by_href_model_json
 
-class TestZoneIdentityByName():
+class TestModel_ZoneIdentityByName():
     """
     Test Class for ZoneIdentityByName
     """
@@ -44171,7 +45975,7 @@ class TestZoneIdentityByName():
         zone_identity_by_name_model_json2 = zone_identity_by_name_model.to_dict()
         assert zone_identity_by_name_model_json2 == zone_identity_by_name_model_json
 
-class TestEndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityByHref():
+class TestModel_EndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityByHref():
     """
     Test Class for EndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityByHref
     """
@@ -44200,7 +46004,7 @@ class TestEndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityByHref():
         endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_href_model_json2 = endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_href_model.to_dict()
         assert endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_href_model_json2 == endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_href_model_json
 
-class TestEndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityById():
+class TestModel_EndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityById():
     """
     Test Class for EndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityById
     """
@@ -44229,7 +46033,7 @@ class TestEndpointGatewayReservedIPReservedIPIdentityReservedIPIdentityById():
         endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_id_model_json2 = endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_id_model.to_dict()
         assert endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_id_model_json2 == endpoint_gateway_reserved_ip_reserved_ip_identity_reserved_ip_identity_by_id_model_json
 
-class TestEndpointGatewayTargetPrototypeProviderCloudServiceIdentityProviderCloudServiceIdentityByCRN():
+class TestModel_EndpointGatewayTargetPrototypeProviderCloudServiceIdentityProviderCloudServiceIdentityByCRN():
     """
     Test Class for EndpointGatewayTargetPrototypeProviderCloudServiceIdentityProviderCloudServiceIdentityByCRN
     """
@@ -44259,7 +46063,7 @@ class TestEndpointGatewayTargetPrototypeProviderCloudServiceIdentityProviderClou
         endpoint_gateway_target_prototype_provider_cloud_service_identity_provider_cloud_service_identity_by_crn_model_json2 = endpoint_gateway_target_prototype_provider_cloud_service_identity_provider_cloud_service_identity_by_crn_model.to_dict()
         assert endpoint_gateway_target_prototype_provider_cloud_service_identity_provider_cloud_service_identity_by_crn_model_json2 == endpoint_gateway_target_prototype_provider_cloud_service_identity_provider_cloud_service_identity_by_crn_model_json
 
-class TestEndpointGatewayTargetPrototypeProviderInfrastructureServiceIdentityProviderInfrastructureServiceIdentityByName():
+class TestModel_EndpointGatewayTargetPrototypeProviderInfrastructureServiceIdentityProviderInfrastructureServiceIdentityByName():
     """
     Test Class for EndpointGatewayTargetPrototypeProviderInfrastructureServiceIdentityProviderInfrastructureServiceIdentityByName
     """
@@ -44289,7 +46093,7 @@ class TestEndpointGatewayTargetPrototypeProviderInfrastructureServiceIdentityPro
         endpoint_gateway_target_prototype_provider_infrastructure_service_identity_provider_infrastructure_service_identity_by_name_model_json2 = endpoint_gateway_target_prototype_provider_infrastructure_service_identity_provider_infrastructure_service_identity_by_name_model.to_dict()
         assert endpoint_gateway_target_prototype_provider_infrastructure_service_identity_provider_infrastructure_service_identity_by_name_model_json2 == endpoint_gateway_target_prototype_provider_infrastructure_service_identity_provider_infrastructure_service_identity_by_name_model_json
 
-class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByCRN():
+class TestModel_FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByCRN():
     """
     Test Class for FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByCRN
     """
@@ -44318,7 +46122,7 @@ class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByCRN()
         flow_log_collector_target_prototype_instance_identity_instance_identity_by_crn_model_json2 = flow_log_collector_target_prototype_instance_identity_instance_identity_by_crn_model.to_dict()
         assert flow_log_collector_target_prototype_instance_identity_instance_identity_by_crn_model_json2 == flow_log_collector_target_prototype_instance_identity_instance_identity_by_crn_model_json
 
-class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByHref():
+class TestModel_FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByHref():
     """
     Test Class for FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByHref
     """
@@ -44347,7 +46151,7 @@ class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityByHref(
         flow_log_collector_target_prototype_instance_identity_instance_identity_by_href_model_json2 = flow_log_collector_target_prototype_instance_identity_instance_identity_by_href_model.to_dict()
         assert flow_log_collector_target_prototype_instance_identity_instance_identity_by_href_model_json2 == flow_log_collector_target_prototype_instance_identity_instance_identity_by_href_model_json
 
-class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityById():
+class TestModel_FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityById():
     """
     Test Class for FlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityById
     """
@@ -44376,7 +46180,7 @@ class TestFlowLogCollectorTargetPrototypeInstanceIdentityInstanceIdentityById():
         flow_log_collector_target_prototype_instance_identity_instance_identity_by_id_model_json2 = flow_log_collector_target_prototype_instance_identity_instance_identity_by_id_model.to_dict()
         assert flow_log_collector_target_prototype_instance_identity_instance_identity_by_id_model_json2 == flow_log_collector_target_prototype_instance_identity_instance_identity_by_id_model_json
 
-class TestFlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
+class TestModel_FlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityByHref():
     """
     Test Class for FlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityByHref
     """
@@ -44405,7 +46209,7 @@ class TestFlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfac
         flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_href_model_json2 = flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_href_model.to_dict()
         assert flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_href_model_json2 == flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_href_model_json
 
-class TestFlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityById():
+class TestModel_FlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityById():
     """
     Test Class for FlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfaceIdentityNetworkInterfaceIdentityById
     """
@@ -44434,7 +46238,7 @@ class TestFlowLogCollectorTargetPrototypeNetworkInterfaceIdentityNetworkInterfac
         flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_id_model_json2 = flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_id_model.to_dict()
         assert flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_id_model_json2 == flow_log_collector_target_prototype_network_interface_identity_network_interface_identity_network_interface_identity_by_id_model_json
 
-class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByCRN():
+class TestModel_FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByCRN():
     """
     Test Class for FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByCRN
     """
@@ -44463,7 +46267,7 @@ class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByCRN():
         flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_crn_model_json2 = flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_crn_model.to_dict()
         assert flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_crn_model_json2 == flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_crn_model_json
 
-class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByHref():
+class TestModel_FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByHref():
     """
     Test Class for FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByHref
     """
@@ -44492,7 +46296,7 @@ class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityByHref():
         flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_href_model_json2 = flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_href_model.to_dict()
         assert flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_href_model_json2 == flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_href_model_json
 
-class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityById():
+class TestModel_FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityById():
     """
     Test Class for FlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityById
     """
@@ -44521,7 +46325,7 @@ class TestFlowLogCollectorTargetPrototypeSubnetIdentitySubnetIdentityById():
         flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_id_model_json2 = flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_id_model.to_dict()
         assert flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_id_model_json2 == flow_log_collector_target_prototype_subnet_identity_subnet_identity_by_id_model_json
 
-class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByCRN():
+class TestModel_FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByCRN():
     """
     Test Class for FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByCRN
     """
@@ -44550,7 +46354,7 @@ class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByCRN():
         flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_crn_model_json2 = flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_crn_model.to_dict()
         assert flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_crn_model_json2 == flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_crn_model_json
 
-class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByHref():
+class TestModel_FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByHref():
     """
     Test Class for FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByHref
     """
@@ -44579,7 +46383,7 @@ class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityByHref():
         flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_href_model_json2 = flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_href_model.to_dict()
         assert flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_href_model_json2 == flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_href_model_json
 
-class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById():
+class TestModel_FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById():
     """
     Test Class for FlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById
     """
@@ -44608,61 +46412,61 @@ class TestFlowLogCollectorTargetPrototypeVPCIdentityVPCIdentityById():
         flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_id_model_json2 = flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_id_model.to_dict()
         assert flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_id_model_json2 == flow_log_collector_target_prototype_vpc_identity_vpc_identity_by_id_model_json
 
-class TestInstanceGroupManagerActionScheduledActionGroup():
+class TestModel_InstanceGroupManagerActionScheduledActionGroupTarget():
     """
-    Test Class for InstanceGroupManagerActionScheduledActionGroup
+    Test Class for InstanceGroupManagerActionScheduledActionGroupTarget
     """
 
-    def test_instance_group_manager_action_scheduled_action_group_serialization(self):
+    def test_instance_group_manager_action_scheduled_action_group_target_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerActionScheduledActionGroup
+        Test serialization/deserialization for InstanceGroupManagerActionScheduledActionGroupTarget
         """
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        instance_group_manager_scheduled_action_group_group_model = {} # InstanceGroupManagerScheduledActionGroupGroup
-        instance_group_manager_scheduled_action_group_group_model['membership_count'] = 10
+        instance_group_manager_scheduled_action_group_model = {} # InstanceGroupManagerScheduledActionGroup
+        instance_group_manager_scheduled_action_group_model['membership_count'] = 10
 
-        # Construct a json representation of a InstanceGroupManagerActionScheduledActionGroup model
-        instance_group_manager_action_scheduled_action_group_model_json = {}
-        instance_group_manager_action_scheduled_action_group_model_json['auto_delete'] = True
-        instance_group_manager_action_scheduled_action_group_model_json['auto_delete_timeout'] = 24
-        instance_group_manager_action_scheduled_action_group_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_group_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions/1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_action_scheduled_action_group_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_action_scheduled_action_group_model_json['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_scheduled_action_group_model_json['resource_type'] = 'instance_group_manager_action'
-        instance_group_manager_action_scheduled_action_group_model_json['status'] = 'active'
-        instance_group_manager_action_scheduled_action_group_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_group_model_json['action_type'] = 'scheduled'
-        instance_group_manager_action_scheduled_action_group_model_json['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_scheduled_action_group_model_json['last_applied_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_group_model_json['next_run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_group_model_json['group'] = instance_group_manager_scheduled_action_group_group_model
+        # Construct a json representation of a InstanceGroupManagerActionScheduledActionGroupTarget model
+        instance_group_manager_action_scheduled_action_group_target_model_json = {}
+        instance_group_manager_action_scheduled_action_group_target_model_json['auto_delete'] = True
+        instance_group_manager_action_scheduled_action_group_target_model_json['auto_delete_timeout'] = 24
+        instance_group_manager_action_scheduled_action_group_target_model_json['created_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_group_target_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions/1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_action_scheduled_action_group_target_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_action_scheduled_action_group_target_model_json['name'] = 'my-instance-group-manager-action'
+        instance_group_manager_action_scheduled_action_group_target_model_json['resource_type'] = 'instance_group_manager_action'
+        instance_group_manager_action_scheduled_action_group_target_model_json['status'] = 'active'
+        instance_group_manager_action_scheduled_action_group_target_model_json['updated_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_group_target_model_json['action_type'] = 'scheduled'
+        instance_group_manager_action_scheduled_action_group_target_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        instance_group_manager_action_scheduled_action_group_target_model_json['last_applied_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_group_target_model_json['next_run_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_group_target_model_json['group'] = instance_group_manager_scheduled_action_group_model
 
-        # Construct a model instance of InstanceGroupManagerActionScheduledActionGroup by calling from_dict on the json representation
-        instance_group_manager_action_scheduled_action_group_model = InstanceGroupManagerActionScheduledActionGroup.from_dict(instance_group_manager_action_scheduled_action_group_model_json)
-        assert instance_group_manager_action_scheduled_action_group_model != False
+        # Construct a model instance of InstanceGroupManagerActionScheduledActionGroupTarget by calling from_dict on the json representation
+        instance_group_manager_action_scheduled_action_group_target_model = InstanceGroupManagerActionScheduledActionGroupTarget.from_dict(instance_group_manager_action_scheduled_action_group_target_model_json)
+        assert instance_group_manager_action_scheduled_action_group_target_model != False
 
-        # Construct a model instance of InstanceGroupManagerActionScheduledActionGroup by calling from_dict on the json representation
-        instance_group_manager_action_scheduled_action_group_model_dict = InstanceGroupManagerActionScheduledActionGroup.from_dict(instance_group_manager_action_scheduled_action_group_model_json).__dict__
-        instance_group_manager_action_scheduled_action_group_model2 = InstanceGroupManagerActionScheduledActionGroup(**instance_group_manager_action_scheduled_action_group_model_dict)
+        # Construct a model instance of InstanceGroupManagerActionScheduledActionGroupTarget by calling from_dict on the json representation
+        instance_group_manager_action_scheduled_action_group_target_model_dict = InstanceGroupManagerActionScheduledActionGroupTarget.from_dict(instance_group_manager_action_scheduled_action_group_target_model_json).__dict__
+        instance_group_manager_action_scheduled_action_group_target_model2 = InstanceGroupManagerActionScheduledActionGroupTarget(**instance_group_manager_action_scheduled_action_group_target_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_action_scheduled_action_group_model == instance_group_manager_action_scheduled_action_group_model2
+        assert instance_group_manager_action_scheduled_action_group_target_model == instance_group_manager_action_scheduled_action_group_target_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_action_scheduled_action_group_model_json2 = instance_group_manager_action_scheduled_action_group_model.to_dict()
-        assert instance_group_manager_action_scheduled_action_group_model_json2 == instance_group_manager_action_scheduled_action_group_model_json
+        instance_group_manager_action_scheduled_action_group_target_model_json2 = instance_group_manager_action_scheduled_action_group_target_model.to_dict()
+        assert instance_group_manager_action_scheduled_action_group_target_model_json2 == instance_group_manager_action_scheduled_action_group_target_model_json
 
-class TestInstanceGroupManagerActionScheduledActionManager():
+class TestModel_InstanceGroupManagerActionScheduledActionManagerTarget():
     """
-    Test Class for InstanceGroupManagerActionScheduledActionManager
+    Test Class for InstanceGroupManagerActionScheduledActionManagerTarget
     """
 
-    def test_instance_group_manager_action_scheduled_action_manager_serialization(self):
+    def test_instance_group_manager_action_scheduled_action_manager_target_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerActionScheduledActionManager
+        Test serialization/deserialization for InstanceGroupManagerActionScheduledActionManagerTarget
         """
 
         # Construct dict forms of any model objects needed in order to build this model.
@@ -44670,109 +46474,109 @@ class TestInstanceGroupManagerActionScheduledActionManager():
         instance_group_manager_reference_deleted_model = {} # InstanceGroupManagerReferenceDeleted
         instance_group_manager_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
-        instance_group_manager_scheduled_action_manager_manager_model = {} # InstanceGroupManagerScheduledActionManagerManagerAutoScale
-        instance_group_manager_scheduled_action_manager_manager_model['deleted'] = instance_group_manager_reference_deleted_model
-        instance_group_manager_scheduled_action_manager_manager_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
-        instance_group_manager_scheduled_action_manager_manager_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_scheduled_action_manager_manager_model['name'] = 'my-instance-group-manager'
-        instance_group_manager_scheduled_action_manager_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_manager_manager_model['min_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_model = {} # InstanceGroupManagerScheduledActionManagerAutoScale
+        instance_group_manager_scheduled_action_manager_model['deleted'] = instance_group_manager_reference_deleted_model
+        instance_group_manager_scheduled_action_manager_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
+        instance_group_manager_scheduled_action_manager_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_scheduled_action_manager_model['name'] = 'my-instance-group-manager'
+        instance_group_manager_scheduled_action_manager_model['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_model['min_membership_count'] = 10
 
-        # Construct a json representation of a InstanceGroupManagerActionScheduledActionManager model
-        instance_group_manager_action_scheduled_action_manager_model_json = {}
-        instance_group_manager_action_scheduled_action_manager_model_json['auto_delete'] = True
-        instance_group_manager_action_scheduled_action_manager_model_json['auto_delete_timeout'] = 24
-        instance_group_manager_action_scheduled_action_manager_model_json['created_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_manager_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions/1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_action_scheduled_action_manager_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
-        instance_group_manager_action_scheduled_action_manager_model_json['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_scheduled_action_manager_model_json['resource_type'] = 'instance_group_manager_action'
-        instance_group_manager_action_scheduled_action_manager_model_json['status'] = 'active'
-        instance_group_manager_action_scheduled_action_manager_model_json['updated_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_manager_model_json['action_type'] = 'scheduled'
-        instance_group_manager_action_scheduled_action_manager_model_json['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_scheduled_action_manager_model_json['last_applied_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_manager_model_json['next_run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_scheduled_action_manager_model_json['manager'] = instance_group_manager_scheduled_action_manager_manager_model
+        # Construct a json representation of a InstanceGroupManagerActionScheduledActionManagerTarget model
+        instance_group_manager_action_scheduled_action_manager_target_model_json = {}
+        instance_group_manager_action_scheduled_action_manager_target_model_json['auto_delete'] = True
+        instance_group_manager_action_scheduled_action_manager_target_model_json['auto_delete_timeout'] = 24
+        instance_group_manager_action_scheduled_action_manager_target_model_json['created_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_manager_target_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/dd754295-e9e0-4c9d-bf6c-58fbc59e5727/managers/4c939b00-601f-11ea-bca2-000c29475bed/actions/1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['name'] = 'my-instance-group-manager-action'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['resource_type'] = 'instance_group_manager_action'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['status'] = 'active'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['updated_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_manager_target_model_json['action_type'] = 'scheduled'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        instance_group_manager_action_scheduled_action_manager_target_model_json['last_applied_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_manager_target_model_json['next_run_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_scheduled_action_manager_target_model_json['manager'] = instance_group_manager_scheduled_action_manager_model
 
-        # Construct a model instance of InstanceGroupManagerActionScheduledActionManager by calling from_dict on the json representation
-        instance_group_manager_action_scheduled_action_manager_model = InstanceGroupManagerActionScheduledActionManager.from_dict(instance_group_manager_action_scheduled_action_manager_model_json)
-        assert instance_group_manager_action_scheduled_action_manager_model != False
+        # Construct a model instance of InstanceGroupManagerActionScheduledActionManagerTarget by calling from_dict on the json representation
+        instance_group_manager_action_scheduled_action_manager_target_model = InstanceGroupManagerActionScheduledActionManagerTarget.from_dict(instance_group_manager_action_scheduled_action_manager_target_model_json)
+        assert instance_group_manager_action_scheduled_action_manager_target_model != False
 
-        # Construct a model instance of InstanceGroupManagerActionScheduledActionManager by calling from_dict on the json representation
-        instance_group_manager_action_scheduled_action_manager_model_dict = InstanceGroupManagerActionScheduledActionManager.from_dict(instance_group_manager_action_scheduled_action_manager_model_json).__dict__
-        instance_group_manager_action_scheduled_action_manager_model2 = InstanceGroupManagerActionScheduledActionManager(**instance_group_manager_action_scheduled_action_manager_model_dict)
-
-        # Verify the model instances are equivalent
-        assert instance_group_manager_action_scheduled_action_manager_model == instance_group_manager_action_scheduled_action_manager_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_action_scheduled_action_manager_model_json2 = instance_group_manager_action_scheduled_action_manager_model.to_dict()
-        assert instance_group_manager_action_scheduled_action_manager_model_json2 == instance_group_manager_action_scheduled_action_manager_model_json
-
-class TestInstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref():
-    """
-    Test Class for InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref
-    """
-
-    def test_instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_serialization(self):
-        """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref
-        """
-
-        # Construct a json representation of a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref model
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json = {}
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json['min_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref.from_dict(instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json)
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model != False
-
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_dict = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref.from_dict(instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json).__dict__
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model2 = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityByHref(**instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_dict)
+        # Construct a model instance of InstanceGroupManagerActionScheduledActionManagerTarget by calling from_dict on the json representation
+        instance_group_manager_action_scheduled_action_manager_target_model_dict = InstanceGroupManagerActionScheduledActionManagerTarget.from_dict(instance_group_manager_action_scheduled_action_manager_target_model_json).__dict__
+        instance_group_manager_action_scheduled_action_manager_target_model2 = InstanceGroupManagerActionScheduledActionManagerTarget(**instance_group_manager_action_scheduled_action_manager_target_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model == instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model2
+        assert instance_group_manager_action_scheduled_action_manager_target_model == instance_group_manager_action_scheduled_action_manager_target_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json2 = instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model.to_dict()
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json2 == instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_href_model_json
+        instance_group_manager_action_scheduled_action_manager_target_model_json2 = instance_group_manager_action_scheduled_action_manager_target_model.to_dict()
+        assert instance_group_manager_action_scheduled_action_manager_target_model_json2 == instance_group_manager_action_scheduled_action_manager_target_model_json
 
-class TestInstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById():
+class TestModel_InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref():
     """
-    Test Class for InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById
+    Test Class for InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref
     """
 
-    def test_instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_serialization(self):
+    def test_instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_serialization(self):
         """
-        Test serialization/deserialization for InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById
+        Test serialization/deserialization for InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref
         """
 
-        # Construct a json representation of a InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById model
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json = {}
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json['min_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        # Construct a json representation of a InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref model
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json = {}
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json['min_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/instance_groups/1e09281b-f177-46fb-baf1-bc152b2e391a/managers/dd754295-e9e0-4c9d-bf6c-58fbc59e5727'
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById.from_dict(instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json)
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model != False
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref.from_dict(instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json)
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model != False
 
-        # Construct a model instance of InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById by calling from_dict on the json representation
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_dict = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById.from_dict(instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json).__dict__
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model2 = InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById(**instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_dict)
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_dict = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref.from_dict(instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json).__dict__
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model2 = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref(**instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_dict)
 
         # Verify the model instances are equivalent
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model == instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model2
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model == instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model2
 
         # Convert model instance back to dict and verify no loss of data
-        instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json2 = instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model.to_dict()
-        assert instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json2 == instance_group_manager_scheduled_action_by_manager_manager_auto_scale_prototype_instance_group_manager_scheduled_action_manager_auto_scale_prototype_instance_group_manager_identity_by_id_model_json
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json2 = instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model.to_dict()
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json2 == instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_href_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN():
+class TestModel_InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById():
+    """
+    Test Class for InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById
+    """
+
+    def test_instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_serialization(self):
+        """
+        Test serialization/deserialization for InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById
+        """
+
+        # Construct a json representation of a InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById model
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json = {}
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json['min_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById.from_dict(instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json)
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model != False
+
+        # Construct a model instance of InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById by calling from_dict on the json representation
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_dict = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById.from_dict(instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json).__dict__
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model2 = InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById(**instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_dict)
+
+        # Verify the model instances are equivalent
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model == instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json2 = instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model.to_dict()
+        assert instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json2 == instance_group_manager_scheduled_action_manager_prototype_auto_scale_prototype_by_id_model_json
+
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN
     """
@@ -44801,7 +46605,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHos
         instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_crn_model_json2 = instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_crn_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_crn_model_json2 == instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_crn_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref():
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref
     """
@@ -44830,7 +46634,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHos
         instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_href_model_json2 = instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_href_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_href_model_json2 == instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_href_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById():
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHostGroupIdentityById
     """
@@ -44859,7 +46663,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostGroupIdentityDedicatedHos
         instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_id_model_json2 = instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_id_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_id_model_json2 == instance_placement_target_prototype_dedicated_host_group_identity_dedicated_host_group_identity_by_id_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN():
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN
     """
@@ -44888,7 +46692,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIden
         instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_crn_model_json2 = instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_crn_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_crn_model_json2 == instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_crn_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref():
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref
     """
@@ -44917,7 +46721,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIden
         instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_href_model_json2 = instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_href_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_href_model_json2 == instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_href_model_json
 
-class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById():
+class TestModel_InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById():
     """
     Test Class for InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById
     """
@@ -44946,7 +46750,7 @@ class TestInstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIden
         instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_id_model_json2 = instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_id_model.to_dict()
         assert instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_id_model_json2 == instance_placement_target_prototype_dedicated_host_identity_dedicated_host_identity_by_id_model_json
 
-class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref():
+class TestModel_LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref():
     """
     Test Class for LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref
     """
@@ -44975,7 +46779,7 @@ class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalan
         load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json2 = load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model.to_dict()
         assert load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json2 == load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json
 
-class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById():
+class TestModel_LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById():
     """
     Test Class for LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById
     """
@@ -45004,7 +46808,7 @@ class TestLoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalan
         load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json2 = load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model.to_dict()
         assert load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json2 == load_balancer_listener_policy_target_patch_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json
 
-class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref():
+class TestModel_LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref():
     """
     Test Class for LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref
     """
@@ -45033,7 +46837,7 @@ class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadB
         load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json2 = load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model.to_dict()
         assert load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json2 == load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_href_model_json
 
-class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById():
+class TestModel_LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById():
     """
     Test Class for LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById
     """
@@ -45062,7 +46866,7 @@ class TestLoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadB
         load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json2 = load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model.to_dict()
         assert load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json2 == load_balancer_listener_policy_target_prototype_load_balancer_pool_identity_load_balancer_pool_identity_by_id_model_json
 
-class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByCRN():
+class TestModel_LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByCRN():
     """
     Test Class for LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByCRN
     """
@@ -45091,7 +46895,7 @@ class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityB
         load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_crn_model_json2 = load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_crn_model.to_dict()
         assert load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_crn_model_json2 == load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_crn_model_json
 
-class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByHref():
+class TestModel_LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByHref():
     """
     Test Class for LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityByHref
     """
@@ -45120,7 +46924,7 @@ class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityB
         load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_href_model_json2 = load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_href_model.to_dict()
         assert load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_href_model_json2 == load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_href_model_json
 
-class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityById():
+class TestModel_LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityById():
     """
     Test Class for LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityById
     """
@@ -45149,7 +46953,7 @@ class TestLoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityB
         load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_id_model_json2 = load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_id_model.to_dict()
         assert load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_id_model_json2 == load_balancer_pool_member_target_prototype_instance_identity_instance_identity_by_id_model_json
 
-class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress():
+class TestModel_PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress():
     """
     Test Class for PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress
     """
@@ -45178,7 +46982,7 @@ class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityBy
         public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_address_model_json2 = public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_address_model.to_dict()
         assert public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_address_model_json2 == public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_address_model_json
 
-class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN():
+class TestModel_PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN():
     """
     Test Class for PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByCRN
     """
@@ -45207,7 +47011,7 @@ class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityBy
         public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_crn_model_json2 = public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_crn_model.to_dict()
         assert public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_crn_model_json2 == public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_crn_model_json
 
-class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref():
+class TestModel_PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref():
     """
     Test Class for PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByHref
     """
@@ -45236,7 +47040,7 @@ class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityBy
         public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_href_model_json2 = public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_href_model.to_dict()
         assert public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_href_model_json2 == public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_href_model_json
 
-class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById():
+class TestModel_PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById():
     """
     Test Class for PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityById
     """
@@ -45265,7 +47069,7 @@ class TestPublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityBy
         public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_id_model_json2 = public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_id_model.to_dict()
         assert public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_id_model_json2 == public_gateway_floating_ip_prototype_floating_ip_identity_floating_ip_identity_by_id_model_json
 
-class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByCRN():
+class TestModel_ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByCRN():
     """
     Test Class for ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByCRN
     """
@@ -45294,7 +47098,7 @@ class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentit
         reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_crn_model_json2 = reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_crn_model.to_dict()
         assert reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_crn_model_json2 == reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_crn_model_json
 
-class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByHref():
+class TestModel_ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByHref():
     """
     Test Class for ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByHref
     """
@@ -45323,7 +47127,7 @@ class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentit
         reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_href_model_json2 = reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_href_model.to_dict()
         assert reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_href_model_json2 == reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_href_model_json
 
-class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityById():
+class TestModel_ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityById():
     """
     Test Class for ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityById
     """
@@ -45352,7 +47156,7 @@ class TestReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentit
         reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json2 = reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model.to_dict()
         assert reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json2 == reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json
 
-class TestRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref():
+class TestModel_RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref():
     """
     Test Class for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref
     """
@@ -45381,7 +47185,7 @@ class TestRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionI
         route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 = route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model.to_dict()
         assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json
 
-class TestRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById():
+class TestModel_RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById():
     """
     Test Class for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById
     """
@@ -45410,7 +47214,7 @@ class TestRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionI
         route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 = route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model.to_dict()
         assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json
 
-class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN():
+class TestModel_SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN():
     """
     Test Class for SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN
     """
@@ -45439,7 +47243,7 @@ class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentity
         security_group_rule_remote_patch_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_remote_patch_security_group_identity_security_group_identity_by_crn_model.to_dict()
         assert security_group_rule_remote_patch_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_remote_patch_security_group_identity_security_group_identity_by_crn_model_json
 
-class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref():
+class TestModel_SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref():
     """
     Test Class for SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByHref
     """
@@ -45468,7 +47272,7 @@ class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentity
         security_group_rule_remote_patch_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_remote_patch_security_group_identity_security_group_identity_by_href_model.to_dict()
         assert security_group_rule_remote_patch_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_remote_patch_security_group_identity_security_group_identity_by_href_model_json
 
-class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById():
+class TestModel_SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById():
     """
     Test Class for SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityById
     """
@@ -45497,7 +47301,7 @@ class TestSecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentity
         security_group_rule_remote_patch_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_remote_patch_security_group_identity_security_group_identity_by_id_model.to_dict()
         assert security_group_rule_remote_patch_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_remote_patch_security_group_identity_security_group_identity_by_id_model_json
 
-class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN():
+class TestModel_SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN():
     """
     Test Class for SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByCRN
     """
@@ -45526,7 +47330,7 @@ class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIden
         security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_crn_model_json2 = security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_crn_model.to_dict()
         assert security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_crn_model_json2 == security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_crn_model_json
 
-class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref():
+class TestModel_SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref():
     """
     Test Class for SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityByHref
     """
@@ -45555,7 +47359,7 @@ class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIden
         security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_href_model_json2 = security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_href_model.to_dict()
         assert security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_href_model_json2 == security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_href_model_json
 
-class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById():
+class TestModel_SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById():
     """
     Test Class for SecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIdentityById
     """
@@ -45584,7 +47388,180 @@ class TestSecurityGroupRuleRemotePrototypeSecurityGroupIdentitySecurityGroupIden
         security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_id_model_json2 = security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_id_model.to_dict()
         assert security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_id_model_json2 == security_group_rule_remote_prototype_security_group_identity_security_group_identity_by_id_model_json
 
-class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByCRN():
+class TestModel_VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN():
+    """
+    Test Class for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN
+    """
+
+    def test_volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN
+        """
+
+        # Construct a json representation of a VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN model
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json = {}
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json)
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_dict = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json).__dict__
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model2 = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByCRN(**volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model == volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json2 = volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model.to_dict()
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json2 == volume_attachment_prototype_volume_volume_identity_volume_identity_by_crn_model_json
+
+class TestModel_VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref():
+    """
+    Test Class for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref
+    """
+
+    def test_volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref
+        """
+
+        # Construct a json representation of a VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref model
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json = {}
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json)
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_dict = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json).__dict__
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model2 = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityByHref(**volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model == volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json2 = volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model.to_dict()
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json2 == volume_attachment_prototype_volume_volume_identity_volume_identity_by_href_model_json
+
+class TestModel_VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById():
+    """
+    Test Class for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById
+    """
+
+    def test_volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById
+        """
+
+        # Construct a json representation of a VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById model
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json = {}
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json['id'] = '1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json)
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_dict = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById.from_dict(volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json).__dict__
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model2 = VolumeAttachmentPrototypeVolumeVolumeIdentityVolumeIdentityById(**volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model == volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json2 = volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model.to_dict()
+        assert volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json2 == volume_attachment_prototype_volume_volume_identity_volume_identity_by_id_model_json
+
+class TestModel_VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity():
+    """
+    Test Class for VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity
+    """
+
+    def test_volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        # Construct a json representation of a VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity model
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json = {}
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json['iops'] = 10000
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json['name'] = 'my-volume'
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json['profile'] = volume_profile_identity_model
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json['capacity'] = 100
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json['encryption_key'] = encryption_key_identity_model
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.from_dict(volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json)
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_dict = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.from_dict(volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json).__dict__
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model2 = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity(**volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model == volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json2 = volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model.to_dict()
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json2 == volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json
+
+class TestModel_VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot():
+    """
+    Test Class for VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot
+    """
+
+    def test_volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        # Construct a json representation of a VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot model
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json = {}
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['iops'] = 10000
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['name'] = 'my-volume'
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['profile'] = volume_profile_identity_model
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['capacity'] = 100
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['encryption_key'] = encryption_key_identity_model
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['source_snapshot'] = snapshot_identity_model
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.from_dict(volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json)
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model != False
+
+        # Construct a model instance of VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_dict = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.from_dict(volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json).__dict__
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model2 = VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot(**volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model == volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json2 = volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model.to_dict()
+        assert volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json2 == volume_attachment_prototype_volume_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json
+
+class TestModel_VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByCRN():
     """
     Test Class for VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByCRN
     """
@@ -45613,7 +47590,7 @@ class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIden
         volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_crn_model_json2 = volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_crn_model.to_dict()
         assert volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_crn_model_json2 == volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_crn_model_json
 
-class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByHref():
+class TestModel_VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByHref():
     """
     Test Class for VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityByHref
     """
@@ -45642,7 +47619,7 @@ class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIden
         volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_href_model_json2 = volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_href_model.to_dict()
         assert volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_href_model_json2 == volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_href_model_json
 
-class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById():
+class TestModel_VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById():
     """
     Test Class for VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIdentityById
     """
@@ -45671,7 +47648,7 @@ class TestVolumeAttachmentVolumePrototypeInstanceContextVolumeIdentityVolumeIden
         volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_id_model_json2 = volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_id_model.to_dict()
         assert volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_id_model_json2 == volume_attachment_volume_prototype_instance_context_volume_identity_volume_identity_by_id_model_json
 
-class TestVolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity():
+class TestModel_VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity():
     """
     Test Class for VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity
     """
@@ -45712,7 +47689,52 @@ class TestVolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceC
         volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json2 = volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model.to_dict()
         assert volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json2 == volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_capacity_model_json
 
-class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup():
+class TestModel_VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot():
+    """
+    Test Class for VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot
+    """
+
+    def test_volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_serialization(self):
+        """
+        Test serialization/deserialization for VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        # Construct a json representation of a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot model
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json = {}
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['iops'] = 10000
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['name'] = 'my-volume'
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['profile'] = volume_profile_identity_model
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['capacity'] = 100
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['encryption_key'] = encryption_key_identity_model
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json['source_snapshot'] = snapshot_identity_model
+
+        # Construct a model instance of VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model = VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.from_dict(volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json)
+        assert volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model != False
+
+        # Construct a model instance of VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_dict = VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.from_dict(volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json).__dict__
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model2 = VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot(**volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model == volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json2 = volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model.to_dict()
+        assert volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json2 == volume_attachment_volume_prototype_instance_context_volume_prototype_instance_context_volume_prototype_instance_context_volume_by_source_snapshot_model_json
+
+class TestModel_InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup():
     """
     Test Class for InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup
     """
@@ -45748,7 +47770,7 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecB
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_group_model_json2 = instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_group_model.to_dict()
         assert instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_group_model_json2 == instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_group_model_json
 
-class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager():
+class TestModel_InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager():
     """
     Test Class for InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager
     """
@@ -45760,16 +47782,16 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecB
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        instance_group_manager_scheduled_action_by_manager_manager_model = {} # InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById
-        instance_group_manager_scheduled_action_by_manager_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_model['min_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_scheduled_action_manager_prototype_model = {} # InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById
+        instance_group_manager_scheduled_action_manager_prototype_model['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_model['min_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
 
         # Construct a json representation of a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager model
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json = {}
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json['name'] = 'my-instance-group-manager-action'
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json['cron_spec'] = '*/5 1,2,3 * * *'
-        instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json['manager'] = instance_group_manager_scheduled_action_by_manager_manager_model
+        instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json['manager'] = instance_group_manager_scheduled_action_manager_prototype_model
 
         # Construct a model instance of InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager by calling from_dict on the json representation
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model = InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager.from_dict(instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json)
@@ -45786,7 +47808,7 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecB
         instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json2 = instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model.to_dict()
         assert instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json2 == instance_group_manager_action_prototype_scheduled_action_prototype_by_cron_spec_by_manager_model_json
 
-class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup():
+class TestModel_InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup():
     """
     Test Class for InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup
     """
@@ -45804,7 +47826,7 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGr
         # Construct a json representation of a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup model
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json = {}
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
+        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json['run_at'] = "2019-01-01T12:00:00Z"
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json['group'] = instance_group_manager_scheduled_action_group_prototype_model
 
         # Construct a model instance of InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup by calling from_dict on the json representation
@@ -45822,7 +47844,7 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGr
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json2 = instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model.to_dict()
         assert instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json2 == instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_group_model_json
 
-class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager():
+class TestModel_InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager():
     """
     Test Class for InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager
     """
@@ -45834,16 +47856,16 @@ class TestInstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByMa
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        instance_group_manager_scheduled_action_by_manager_manager_model = {} # InstanceGroupManagerScheduledActionByManagerManagerAutoScalePrototypeInstanceGroupManagerScheduledActionManagerAutoScalePrototypeInstanceGroupManagerIdentityById
-        instance_group_manager_scheduled_action_by_manager_manager_model['max_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_model['min_membership_count'] = 10
-        instance_group_manager_scheduled_action_by_manager_manager_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
+        instance_group_manager_scheduled_action_manager_prototype_model = {} # InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById
+        instance_group_manager_scheduled_action_manager_prototype_model['max_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_model['min_membership_count'] = 10
+        instance_group_manager_scheduled_action_manager_prototype_model['id'] = '1e09281b-f177-46fb-baf1-bc152b2e391a'
 
         # Construct a json representation of a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager model
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json = {}
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json['name'] = 'my-instance-group-manager-action'
-        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json['run_at'] = datetime_to_string(string_to_datetime("2019-01-01T12:00:00.000Z"))
-        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json['manager'] = instance_group_manager_scheduled_action_by_manager_manager_model
+        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json['run_at'] = "2019-01-01T12:00:00Z"
+        instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json['manager'] = instance_group_manager_scheduled_action_manager_prototype_model
 
         # Construct a model instance of InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager by calling from_dict on the json representation
         instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model = InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager.from_dict(instance_group_manager_action_prototype_scheduled_action_prototype_by_run_at_by_manager_model_json)

@@ -16,7 +16,6 @@
 import pytest
 import os
 import os.path
-from ibm_vpc.vpc_classic_v1 import VpcClassicV1
 from ibm_vpc.vpc_v1 import VpcV1
 
 # Read config file
@@ -27,17 +26,6 @@ def loadConfigFile():
         os.environ['IBM_CREDENTIALS_FILE'] = configFile
     else:
         pytest.skip('External configuration not available, skipping...')
-
-@pytest.fixture(scope="session")
-def createGen1Service():
-    loadConfigFile()
-    service = VpcClassicV1.new_instance()
-    headers = {
-        'Accept': 'application/json'
-    }
-    service.set_default_headers(headers)
-    print('Setup complete.')
-    return service
 
 @pytest.fixture(scope="session")
 def createGen2Service():

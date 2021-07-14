@@ -1,3 +1,2 @@
-requests>=2.0,<3.0
-python_dateutil>=2.5.3
-ibm_cloud_sdk_core>=3.5.2
+python_dateutil>=2.5.3,<3.0.0
+ibm_cloud_sdk_core>=3.10.0
