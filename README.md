@@ -50,8 +50,8 @@ Service Name | Imported Class Name
 [ibm-cloud-onboarding]: https://cloud.ibm.com/registration
 
 * An [IBM Cloud][ibm-cloud-onboarding] account.
-* An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
-* Python 3.5.3 or above.
+* An IAM API key to allow the SDK to access your account. Create an apikey [here](https://cloud.ibm.com/iam/apikeys).
+* Python version 3.5.3 or above.
 
 ## Installation
 
@@ -68,7 +68,7 @@ easy_install --upgrade "ibm-vpc>=0.7.0"
 ```
 
 ## Using the SDK
-For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md)
+For general SDK usage information, see the [IBM Cloud SDK Common README](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md).
 
 ## Setting up VPC service
 ```python
@@ -76,8 +76,8 @@ from ibm_vpc import VpcV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_cloud_sdk_core import ApiException
 
-authenticator = IAMAuthenticator("YOUR_IBMCLOUD_API_KEY")
-service = VpcV1('2020-06-02', authenticator=authenticator)
+authenticator = IAMAuthenticator('apikey')
+service = VpcV1('2021-07-13', authenticator=authenticator)
 
 #  Listing VPCs
 print("List VPCs")
@@ -125,18 +125,16 @@ print(instance['id'], "\t",  instance['name'])
 
 
 ## Questions
-
-If you are having difficulties using this SDK or have a question about the IBM Cloud services,
-please ask a question
-[Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-cloud).
+If you have difficulties using this SDK or you have a question about the IBM Cloud services,
+ask a question at [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-cloud).
 
 ## Issues
 If you encounter an issue with the project, you are welcome to submit a
 [bug report](https://github.com/IBM/vpc-python-sdk/issues).
-Before that, please search for similar issues. It's possible that someone has already reported the problem.
+Before you create a new issue, search for similar issues. It's possible that someone has already reported the problem.
 
 ## Open source @ IBM
-Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+Find more open source projects on the [IBM GitHub Page](http://ibm.github.io/).
 
 ## Contributing
 See [CONTRIBUTING](https://github.com/IBM/vpc-python-sdk/blob/master/CONTRIBUTING.md).
