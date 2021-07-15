@@ -77,7 +77,7 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_cloud_sdk_core import ApiException
 
 authenticator = IAMAuthenticator('apikey')
-service = VpcV1('2021-07-13', authenticator=authenticator)
+service = VpcV1(authenticator=authenticator)
 
 #  Listing VPCs
 print("List VPCs")
