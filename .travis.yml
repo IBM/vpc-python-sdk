@@ -43,8 +43,7 @@ deploy:
 
 - provider: pypi
   user: __token__
-  password:
-    secure: "WeLxaFsQzpJbl2f7O4cmd1wFzaCSO8kLkzQ/FUo2PJ77QYiOPdPDomV1hImfsIIHaEQyOfBtrfj28ZhaNW1fr1GdxfCXaoAUrdrc3/v7K9Fy4GXwoVDKLLf44xon/Cul8s+8dJbkzJJM+qboNqSrocSw6t1vEfl/sZb69+pW+e7cdEvG5dTZRYJexIO8u5N+cxRrlWHfpFcD9bWo9FUuDwHe+5noYcSa5sW3WH3fMjbSeaVEbHAnt4RBc9H/zHMAqE4mXPldb/ukF9uz+Krg91+A9yYRCMGodogRptd74AMQYfQCmpZG/kEKtNUx32ejmMUnAu0ZFesGu+YDLTOJUGpVpF4So3w+ppcIqtfGqyLFiUKlkdbfgx6Av4ZhFfypWTWfhQl/SAbxpSjM/CkmLUxK/doUzT/G/j763ZmheDhFL/vVmGFF7JNTZxCl7J/WiMgeQ03fUvCZ6RmJcuv+zQUWbKgJi/Syplga2DTz6wAi5Lg3jq36FkY+gFko6bCEPmGvxOfbxhLaQ4x0tOcC57sot2wKmKe1DhPUNrVHuru3RNvBRYQ8vy/YJzDx7zoIrMWe3jiXayi1lDogkP1J6PMyGWwWfFzVx7yGeFWetRPBziWvQh9+e3eRtPdbxkMssNH5wt/p/ntp119dhjZIIwJ96/QOglpzdqvU+Pn30N0="
+  password: $PYPI_TOKEN
   repository: https://upload.pypi.org/legacy
   skip_cleanup: true
   on:
