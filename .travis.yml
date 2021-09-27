@@ -27,7 +27,7 @@ script: tox
 
 before_deploy:
 - pip install bump2version
-- nvm install 12
+- nvm install v14.17.0
 - npm install @semantic-release/changelog
 - npm install @semantic-release/exec
 - npm install @semantic-release/git
