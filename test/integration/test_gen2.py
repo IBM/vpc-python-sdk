@@ -1027,6 +1027,30 @@ class TestLoadBalancer():
             createGen2Service, store['created_load_balancer'])
         assertDeleteResponse(load_balancer)
 
+class TestPlacementGroup():
+    def test_create_placement_group(self, createGen2Service):
+        name = 'my-placement-group'
+        pg = create_placement_group(createGen2Service, name)
+        assertCreateResponse(pg)
+        store['created_placement_group'] = pg.get_result()['id']
+
+    def test_list_placement_groups(self, createGen2Service):
+        pgc = list_placement_groups(createGen2Service)
+        assertListResponse(pgc, 'placement_groups')
+
+    def test_get_placement_group(self, createGen2Service):
+        pg = get_placement_group(createGen2Service, store['created_placement_group'])
+        assert pg.status_code == 200
+        assert pg.get_result() is not None
+
+    def test_update_placement_group(self, createGen2Service):
+        pg = update_placement_group(
+            createGen2Service, store['created_placement_group'], 'my-placement-group1')
+        assertGetPatchResponse(pg)
+
+    def test_delete_placement_group(self, createGen2Service):
+        pg = delete_placement_group(createGen2Service, store['created_placement_group'])
+        assertDeleteResponse(pg)
 
 class TestVPCFlowLogs():
     def test_create_flow_log_collector(self, createGen2Service):
@@ -1255,7 +1279,7 @@ class TestTeardown():
     def test_delete_vpn_gateway(self, createGen2Service):
         vpn_gateway = delete_vpn_gateway(
             createGen2Service, store['created_vpn_gateway_id'])
-        assertDeleteResponse(vpn_gateway)
+        assert vpn_gateway.status_code == 202
 
     def test_delete_floating_ip(self, createGen2Service):
         fip = delete_floating_ip(createGen2Service, store['created_fip_id'])
@@ -4269,6 +4293,42 @@ def delete_dedicated_host_group(service, id):
 def delete_dedicated_host(service, id):
     delete_dedicated_host_response = service.delete_dedicated_host(id)
     return delete_dedicated_host_response
+
+# --------------------------------------------------------
+# placement groups
+# --------------------------------------------------------
+
+
+def create_placement_group(service, name):
+    placement_group = service.create_placement_group(
+        strategy='host_spread',
+        name=name,
+    )
+    return placement_group
+
+def list_placement_groups(service):
+    placement_group_collection = service.list_placement_groups()
+    return placement_group_collection
+
+def get_placement_group(service, pgid):
+    placement_group = service.get_placement_group(pgid)
+    return placement_group
+
+def update_placement_group(service, pgid, name):
+    placement_group_patch_model = {
+    'name': name
+    }
+
+    placement_group = service.update_placement_group(
+        pgid,
+        placement_group_patch=placement_group_patch_model
+    )
+    return placement_group
+
+def delete_placement_group(service, pgid):
+    response = service.delete_placement_group(pgid)
+    return response
+
 
 # --------------------------------------------------------
 # Utils

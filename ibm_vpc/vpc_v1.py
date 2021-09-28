@@ -48,7 +48,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2021-06-29',
+                     version: str = '2021-09-21',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -73,7 +73,7 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2021-06-29',
+                 version: str = '2021-09-21',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
@@ -125,10 +125,8 @@ class VpcV1(BaseService):
         :param str resource_group_id: (optional) Filters the collection to
                resources within one of the resource groups identified in a comma-separated
                list of resource group identifiers.
-        :param bool classic_access: (optional) The `classic_access` parameter
-               filters the returned collection by the supplied field. If the supplied
-               field is `true`, only Classic Access VPCs will be returned. If the supplied
-               field is `false`, only VPCs without Classic Access will be returned.
+        :param bool classic_access: (optional) Filters the collection to VPCs with
+               the specified `classic_access` value.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `VPCCollection` object
@@ -2445,11 +2443,10 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str sort: (optional) Sorts the returned collection by the specified
-               field name in ascending order. A `-` may be prepended to the field name to
-               sort in descending order. For example, the value
-               `-created_at` sorts the collection by the `created_at` field in descending
-               order, and the value `name` sorts it by the `name` field in ascending
-               order.
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `ReservedIPCollection` object
@@ -3151,8 +3148,10 @@ class VpcV1(BaseService):
         information necessary to create the new key. The public key value must be
         provided.
 
-        :param str public_key: A unique public SSH key to import, encoded in PEM
-               format. The key (prior to encoding) must be either 2048 or 4096 bits long.
+        :param str public_key: A unique public SSH key to import, in OpenSSH format
+               (consisting of three space-separated fields: the algorithm name,
+               base64-encoded key, and a comment). The algorithm and comment fields may be
+               omitted, as only the key field is imported.
         :param str name: (optional) The unique user-defined name for this key. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
@@ -3483,7 +3482,12 @@ class VpcV1(BaseService):
         """
         Create an instance template.
 
-        This request creates a new instance template.
+        This request creates a new instance template. The prototype object is structured
+        in the same way as a retrieved instance template, and contains the information
+        necessary to provision a new instance from the template.
+        If a `source_template` is specified in the prototype object, its contents are
+        copied into the new template prior to copying any other properties provided in the
+        prototype object.
 
         :param InstanceTemplatePrototype instance_template_prototype: The instance
                template prototype object.
@@ -3686,6 +3690,9 @@ class VpcV1(BaseService):
         dedicated_host_id: str = None,
         dedicated_host_crn: str = None,
         dedicated_host_name: str = None,
+        placement_group_id: str = None,
+        placement_group_crn: str = None,
+        placement_group_name: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -3713,6 +3720,12 @@ class VpcV1(BaseService):
                instances on the dedicated host with the specified CRN.
         :param str dedicated_host_name: (optional) Filters the collection to
                instances on the dedicated host with the specified name.
+        :param str placement_group_id: (optional) Filters the collection to
+               instances in the placement group with the specified identifier.
+        :param str placement_group_crn: (optional) Filters the collection to
+               instances in the placement group with the specified CRN.
+        :param str placement_group_name: (optional) Filters the collection to
+               instances in the placement group with the specified name.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `InstanceCollection` object
@@ -3736,7 +3749,10 @@ class VpcV1(BaseService):
             'vpc.name': vpc_name,
             'dedicated_host.id': dedicated_host_id,
             'dedicated_host.crn': dedicated_host_crn,
-            'dedicated_host.name': dedicated_host_name
+            'dedicated_host.name': dedicated_host_name,
+            'placement_group.id': placement_group_id,
+            'placement_group.crn': placement_group_crn,
+            'placement_group.name': placement_group_name
         }
 
         if 'headers' in kwargs:
@@ -5149,8 +5165,8 @@ class VpcV1(BaseService):
 
         This request creates a new instance group.
 
-        :param InstanceTemplateIdentity instance_template: Instance template to use
-               when creating new instances.
+        :param InstanceTemplateIdentity instance_template: Identifies an instance
+               template by a unique property.
         :param List[SubnetIdentity] subnets: The subnets to use when creating new
                instances.
         :param int application_port: (optional) Required if specifying a load
@@ -7328,6 +7344,276 @@ class VpcV1(BaseService):
         return response
 
     #########################
+    # Placement groups
+    #########################
+
+
+    def list_placement_groups(self,
+        *,
+        start: str = None,
+        limit: int = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all placement groups.
+
+        This request lists all placement groups in the region.
+
+        :param str start: (optional) A server-supplied token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PlacementGroupCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_placement_groups')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/placement_groups'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+
+    def create_placement_group(self,
+        strategy: str,
+        *,
+        name: str = None,
+        resource_group: 'ResourceGroupIdentity' = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a placement group.
+
+        This request creates a new placement group.
+
+        :param str strategy: The strategy for this placement group
+               - `host_spread`: place on different compute hosts
+               - `power_spread`: place on compute hosts that use different power sources
+               The enumerated values for this property may expand in the future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the placement group on which
+               the unexpected strategy was encountered.
+        :param str name: (optional) The unique user-defined name for this placement
+               group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PlacementGroup` object
+        """
+
+        if strategy is None:
+            raise ValueError('strategy must be provided')
+        if resource_group is not None:
+            resource_group = convert_model(resource_group)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_placement_group')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'strategy': strategy,
+            'name': name,
+            'resource_group': resource_group
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/placement_groups'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+
+    def delete_placement_group(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a placement group.
+
+        This request deletes a placement group. This operation cannot be reversed. For
+        this request to succeed, the placement group must not be associated with an
+        instance.
+
+        :param str id: The placement group identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_placement_group')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/placement_groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+
+    def get_placement_group(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a placement group.
+
+        This request retrieves a single placement group specified by identifier in the
+        URL.
+
+        :param str id: The placement group identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PlacementGroup` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_placement_group')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/placement_groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request)
+        return response
+
+
+    def update_placement_group(self,
+        id: str,
+        placement_group_patch: 'PlacementGroupPatch',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a placement group.
+
+        This request updates a placement group with the information provided placement
+        group patch. The placement group patch object is structured in the same way as a
+        retrieved placement group and contains only the information to be updated.
+
+        :param str id: The placement group identifier.
+        :param PlacementGroupPatch placement_group_patch: The placement group
+               patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PlacementGroup` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if placement_group_patch is None:
+            raise ValueError('placement_group_patch must be provided')
+        if isinstance(placement_group_patch, PlacementGroupPatch):
+            placement_group_patch = convert_model(placement_group_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_placement_group')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(placement_group_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/placement_groups/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request)
+        return response
+
+    #########################
     # Volumes
     #########################
 
@@ -7765,11 +8051,10 @@ class VpcV1(BaseService):
                the collection to resources which have no source image or any existent
                source image, respectively.
         :param str sort: (optional) Sorts the returned collection by the specified
-               field name in ascending order. A `-` may be prepended to the field name to
-               sort in descending order. For example, the value
-               `-created_at` sorts the collection by the `created_at` field in descending
-               order, and the value `name` sorts it by the `name` field in ascending
-               order.
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `SnapshotCollection` object
@@ -12353,6 +12638,7 @@ class VpcV1(BaseService):
         certificate_instance: 'CertificateInstanceIdentity' = None,
         connection_limit: int = None,
         default_pool: 'LoadBalancerPoolIdentity' = None,
+        https_redirect: 'LoadBalancerListenerHTTPSRedirectPrototype' = None,
         policies: List['LoadBalancerListenerPolicyPrototype'] = None,
         **kwargs
     ) -> DetailedResponse:
@@ -12365,13 +12651,26 @@ class VpcV1(BaseService):
         :param int port: The listener port number. Each listener in the load
                balancer must have a unique
                `port` and `protocol` combination.
-        :param str protocol: The listener protocol. Load balancers in the `network`
-               family support `tcp`. Load balancers in the `application` family support
-               `tcp`, `http`, and `https`. Each listener in the load balancer must have a
-               unique `port` and `protocol` combination.
+        :param str protocol: The listener protocol. Each listener in the load
+               balancer must have a unique `port` and `protocol` combination.  Additional
+               restrictions:
+               - If this load balancer is in the `network` family, the protocol must be
+               `tcp`.
+               - If this listener has `https_redirect` specified, the protocol must be
+               `http`.
+               - If this listener is a listener's `https_redirect` target, the protocol
+               must be `https`.
         :param bool accept_proxy_protocol: (optional) If set to `true`, this
                listener will accept and forward PROXY protocol information. Supported by
                load balancers in the `application` family (otherwise always `false`).
+               Additional restrictions:
+               - If this listener has `https_redirect` specified, its
+               `accept_proxy_protocol` value must
+                 match the `accept_proxy_protocol` value of the `https_redirect` listener.
+               - If this listener is the target of another listener's `https_redirect`,
+               its
+                 `accept_proxy_protocol` value must match that listener's
+               `accept_proxy_protocol` value.
         :param CertificateInstanceIdentity certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
                `https`
@@ -12383,6 +12682,11 @@ class VpcV1(BaseService):
                - Belong to this load balancer
                - Have the same `protocol` as this listener
                - Not already be the default pool for another listener.
+        :param LoadBalancerListenerHTTPSRedirectPrototype https_redirect:
+               (optional) The target listener that requests will be redirected to. This
+               listener must have a
+               `protocol` of `http`, and the target listener must have a `protocol` of
+               `https`.
         :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) The
                policy prototype objects for this listener.
         :param dict headers: A `dict` containing the request headers
@@ -12400,6 +12704,8 @@ class VpcV1(BaseService):
             certificate_instance = convert_model(certificate_instance)
         if default_pool is not None:
             default_pool = convert_model(default_pool)
+        if https_redirect is not None:
+            https_redirect = convert_model(https_redirect)
         if policies is not None:
             policies = [convert_model(x) for x in policies]
         headers = {}
@@ -12420,6 +12726,7 @@ class VpcV1(BaseService):
             'certificate_instance': certificate_instance,
             'connection_limit': connection_limit,
             'default_pool': default_pool,
+            'https_redirect': https_redirect,
             'policies': policies
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -12453,6 +12760,8 @@ class VpcV1(BaseService):
         Delete a load balancer listener.
 
         This request deletes a load balancer listener. This operation cannot be reversed.
+        For this operation to succeed, the listener must not be the target of another load
+        balancer listener.
 
         :param str load_balancer_id: The load balancer identifier.
         :param str id: The listener identifier.
@@ -12670,20 +12979,22 @@ class VpcV1(BaseService):
         :param str load_balancer_id: The load balancer identifier.
         :param str listener_id: The listener identifier.
         :param str action: The policy action.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the policy on
+               which the unexpected property value was encountered.
         :param int priority: Priority of the policy. Lower value indicates higher
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
         :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
                rule prototype objects for this policy.
-        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
-               `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
-               which
-               pool the load balancer forwards the traffic to. When `action` is
-               `redirect`,
-               `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the
-               url and
-               http status code used in the redirect response.
+        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) - If
+               `action` is `forward`, specify a `LoadBalancerPoolIdentity`.
+               - If `action` is `redirect`, specify a
+               `LoadBalancerListenerPolicyRedirectURLPrototype`.
+               - If `action` is `https_redirect`, specify a
+                 `LoadBalancerListenerPolicyHTTPSRedirectPrototype`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListenerPolicy` object
@@ -12991,7 +13302,7 @@ class VpcV1(BaseService):
                the value must be percent-encoded.
         :param str field: (optional) The field. This is applicable to `header`,
                `query`, and `body` rule types.
-               If the rule type is `header`, this field is required.
+               If the rule type is `header`, this property is required.
                If the rule type is `query`, this is optional. If specified and the rule
                condition is not
                `matches_regex`, the value must be percent-encoded.
@@ -14055,11 +14366,10 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str sort: (optional) Sorts the returned collection by the specified
-               field name in ascending order. A `-` may be prepended to the field name to
-               sort in descending order. For example, the value
-               `-created_at` sorts the collection by the `created_at` field in descending
-               order, and the value `name` sorts it by the `name` field in ascending
-               order.
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `ReservedIPCollectionEndpointGatewayContext` object
@@ -14724,11 +15034,11 @@ class ListSubnetReservedIpsEnums:
 
     class Sort(str, Enum):
         """
-        Sorts the returned collection by the specified field name in ascending order. A
-        `-` may be prepended to the field name to sort in descending order. For example,
-        the value
-        `-created_at` sorts the collection by the `created_at` field in descending order,
-        and the value `name` sorts it by the `name` field in ascending order.
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
         """
         CREATED_AT = 'created_at'
         NAME = 'name'
@@ -14755,11 +15065,11 @@ class ListSnapshotsEnums:
 
     class Sort(str, Enum):
         """
-        Sorts the returned collection by the specified field name in ascending order. A
-        `-` may be prepended to the field name to sort in descending order. For example,
-        the value
-        `-created_at` sorts the collection by the `created_at` field in descending order,
-        and the value `name` sorts it by the `name` field in ascending order.
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
         """
         CREATED_AT = 'created_at'
         NAME = 'name'
@@ -14798,11 +15108,11 @@ class ListEndpointGatewayIpsEnums:
 
     class Sort(str, Enum):
         """
-        Sorts the returned collection by the specified field name in ascending order. A
-        `-` may be prepended to the field name to sort in descending order. For example,
-        the value
-        `-created_at` sorts the collection by the `created_at` field in descending order,
-        and the value `name` sorts it by the `name` field in ascending order.
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
         """
         CREATED_AT = 'created_at'
         NAME = 'name'
@@ -15417,7 +15727,7 @@ class DedicatedHost():
           on this dedicated host.
     :attr List[InstanceReference] instances: The instances that are allocated to
           this dedicated host.
-    :attr str lifecycle_state: The lifecycle state of the dedicated host resource.
+    :attr str lifecycle_state: The lifecycle state of the dedicated host.
     :attr int memory: The total amount of memory in gibibytes for this host.
     :attr str name: The unique user-defined name for this dedicated host. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -15482,8 +15792,7 @@ class DedicatedHost():
                placed on this dedicated host.
         :param List[InstanceReference] instances: The instances that are allocated
                to this dedicated host.
-        :param str lifecycle_state: The lifecycle state of the dedicated host
-               resource.
+        :param str lifecycle_state: The lifecycle state of the dedicated host.
         :param int memory: The total amount of memory in gibibytes for this host.
         :param str name: The unique user-defined name for this dedicated host. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -15696,7 +16005,7 @@ class DedicatedHost():
 
     class LifecycleStateEnum(str, Enum):
         """
-        The lifecycle state of the dedicated host resource.
+        The lifecycle state of the dedicated host.
         """
         DELETING = 'deleting'
         FAILED = 'failed'
@@ -21610,11 +21919,11 @@ class IP():
     """
     IP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -21622,11 +21931,12 @@ class IP():
         """
         Initialize a IP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         self.address = address
 
@@ -23461,7 +23771,7 @@ class Instance():
     Instance.
 
     :attr int bandwidth: The total bandwidth (in megabits per second) shared across
-          the virtual server instance's network interfaces.
+          the virtual server instance's network interfaces and storage volumes.
     :attr VolumeAttachmentReferenceInstanceContext boot_volume_attachment: Boot
           volume attachment.
     :attr datetime created_at: The date and time that the virtual server instance
@@ -23497,6 +23807,12 @@ class Instance():
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the resource on which the unexpected
           reason code was encountered.
+    :attr int total_network_bandwidth: The amount of bandwidth (in megabits per
+          second) allocated exclusively to instance network interfaces.
+    :attr int total_volume_bandwidth: The amount of bandwidth (in megabits per
+          second) allocated exclusively to instance storage volumes. An increase in this
+          value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr InstanceVCPU vcpu: The virtual server instance VCPU configuration.
     :attr List[VolumeAttachmentReferenceInstanceContext] volume_attachments: The
           volume attachments for this virtual server instance, including the boot volume
@@ -23522,6 +23838,8 @@ class Instance():
                  startable: bool,
                  status: str,
                  status_reasons: List['InstanceStatusReason'],
+                 total_network_bandwidth: int,
+                 total_volume_bandwidth: int,
                  vcpu: 'InstanceVCPU',
                  volume_attachments: List['VolumeAttachmentReferenceInstanceContext'],
                  vpc: 'VPCReference',
@@ -23534,7 +23852,8 @@ class Instance():
         Initialize a Instance object.
 
         :param int bandwidth: The total bandwidth (in megabits per second) shared
-               across the virtual server instance's network interfaces.
+               across the virtual server instance's network interfaces and storage
+               volumes.
         :param VolumeAttachmentReferenceInstanceContext boot_volume_attachment:
                Boot volume attachment.
         :param datetime created_at: The date and time that the virtual server
@@ -23565,6 +23884,12 @@ class Instance():
                future. When processing this property, check for and log unknown values.
                Optionally halt processing and surface the error, or bypass the resource on
                which the unexpected reason code was encountered.
+        :param int total_network_bandwidth: The amount of bandwidth (in megabits
+               per second) allocated exclusively to instance network interfaces.
+        :param int total_volume_bandwidth: The amount of bandwidth (in megabits per
+               second) allocated exclusively to instance storage volumes. An increase in
+               this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param InstanceVCPU vcpu: The virtual server instance VCPU configuration.
         :param List[VolumeAttachmentReferenceInstanceContext] volume_attachments:
                The volume attachments for this virtual server instance, including the boot
@@ -23598,6 +23923,8 @@ class Instance():
         self.startable = startable
         self.status = status
         self.status_reasons = status_reasons
+        self.total_network_bandwidth = total_network_bandwidth
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.vcpu = vcpu
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -23677,6 +24004,14 @@ class Instance():
             args['status_reasons'] = [InstanceStatusReason.from_dict(x) for x in _dict.get('status_reasons')]
         else:
             raise ValueError('Required property \'status_reasons\' not present in Instance JSON')
+        if 'total_network_bandwidth' in _dict:
+            args['total_network_bandwidth'] = _dict.get('total_network_bandwidth')
+        else:
+            raise ValueError('Required property \'total_network_bandwidth\' not present in Instance JSON')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
+        else:
+            raise ValueError('Required property \'total_volume_bandwidth\' not present in Instance JSON')
         if 'vcpu' in _dict:
             args['vcpu'] = InstanceVCPU.from_dict(_dict.get('vcpu'))
         else:
@@ -23744,6 +24079,10 @@ class Instance():
             _dict['status'] = self.status
         if hasattr(self, 'status_reasons') and self.status_reasons is not None:
             _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
+        if hasattr(self, 'total_network_bandwidth') and self.total_network_bandwidth is not None:
+            _dict['total_network_bandwidth'] = self.total_network_bandwidth
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'vcpu') and self.vcpu is not None:
             _dict['vcpu'] = self.vcpu.to_dict()
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -27622,8 +27961,8 @@ class InstanceGroupPatch():
     :attr int application_port: (optional) Required if specifying a load balancer
           pool only. Used by the instance group when scaling up instances to supply the
           port for the load balancer pool member.
-    :attr InstanceTemplateIdentity instance_template: (optional) Instance template
-          to use when creating new instances.
+    :attr InstanceTemplateIdentity instance_template: (optional) Identifies an
+          instance template by a unique property.
     :attr LoadBalancerIdentity load_balancer: (optional) The load balancer that the
           load balancer pool used by this group
           is in. Must be supplied when using a load balancer pool.
@@ -27654,8 +27993,8 @@ class InstanceGroupPatch():
         :param int application_port: (optional) Required if specifying a load
                balancer pool only. Used by the instance group when scaling up instances to
                supply the port for the load balancer pool member.
-        :param InstanceTemplateIdentity instance_template: (optional) Instance
-               template to use when creating new instances.
+        :param InstanceTemplateIdentity instance_template: (optional) Identifies an
+               instance template by a unique property.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
                that the load balancer pool used by this group
                is in. Must be supplied when using a load balancer pool.
@@ -27915,20 +28254,20 @@ class InstanceInitialization():
     """
     InstanceInitialization.
 
-    :attr List[KeyReferenceInstanceInitializationContext] keys: The public SSH keys
-          used at instance initialization.
+    :attr List[KeyReference] keys: The public SSH keys used at instance
+          initialization.
     :attr InstanceInitializationPassword password: (optional)
     """
 
     def __init__(self,
-                 keys: List['KeyReferenceInstanceInitializationContext'],
+                 keys: List['KeyReference'],
                  *,
                  password: 'InstanceInitializationPassword' = None) -> None:
         """
         Initialize a InstanceInitialization object.
 
-        :param List[KeyReferenceInstanceInitializationContext] keys: The public SSH
-               keys used at instance initialization.
+        :param List[KeyReference] keys: The public SSH keys used at instance
+               initialization.
         :param InstanceInitializationPassword password: (optional)
         """
         self.keys = keys
@@ -27939,7 +28278,7 @@ class InstanceInitialization():
         """Initialize a InstanceInitialization object from a json dictionary."""
         args = {}
         if 'keys' in _dict:
-            args['keys'] = _dict.get('keys')
+            args['keys'] = [KeyReference.from_dict(x) for x in _dict.get('keys')]
         else:
             raise ValueError('Required property \'keys\' not present in InstanceInitialization JSON')
         if 'password' in _dict:
@@ -27955,13 +28294,7 @@ class InstanceInitialization():
         """Return a json dictionary representing this model."""
         _dict = {}
         if hasattr(self, 'keys') and self.keys is not None:
-            keys_list = []
-            for x in self.keys:
-                if isinstance(x, dict):
-                    keys_list.append(x)
-                else:
-                    keys_list.append(x.to_dict())
-            _dict['keys'] = keys_list
+            _dict['keys'] = [x.to_dict() for x in self.keys]
         if hasattr(self, 'password') and self.password is not None:
             _dict['password'] = self.password.to_dict()
         return _dict
@@ -27990,21 +28323,21 @@ class InstanceInitializationPassword():
 
     :attr bytes encrypted_password: The administrator password at initialization,
           encrypted using `encryption_key`, and returned base64-encoded.
-    :attr KeyReferenceInstanceInitializationContext encryption_key: The public SSH
-          key used to encrypt the administrator password.
+    :attr KeyIdentityByFingerprint encryption_key: The public SSH key used to
+          encrypt the administrator password.
     """
 
     def __init__(self,
                  encrypted_password: bytes,
-                 encryption_key: 'KeyReferenceInstanceInitializationContext') -> None:
+                 encryption_key: 'KeyIdentityByFingerprint') -> None:
         """
         Initialize a InstanceInitializationPassword object.
 
         :param bytes encrypted_password: The administrator password at
                initialization, encrypted using `encryption_key`, and returned
                base64-encoded.
-        :param KeyReferenceInstanceInitializationContext encryption_key: The public
-               SSH key used to encrypt the administrator password.
+        :param KeyIdentityByFingerprint encryption_key: The public SSH key used to
+               encrypt the administrator password.
         """
         self.encrypted_password = encrypted_password
         self.encryption_key = encryption_key
@@ -28018,7 +28351,7 @@ class InstanceInitializationPassword():
         else:
             raise ValueError('Required property \'encrypted_password\' not present in InstanceInitializationPassword JSON')
         if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
+            args['encryption_key'] = KeyIdentityByFingerprint.from_dict(_dict.get('encryption_key'))
         else:
             raise ValueError('Required property \'encryption_key\' not present in InstanceInitializationPassword JSON')
         return cls(**args)
@@ -28034,10 +28367,7 @@ class InstanceInitializationPassword():
         if hasattr(self, 'encrypted_password') and self.encrypted_password is not None:
             _dict['encrypted_password'] = str(base64.b64encode(self.encrypted_password), 'utf-8')
         if hasattr(self, 'encryption_key') and self.encryption_key is not None:
-            if isinstance(self.encryption_key, dict):
-                _dict['encryption_key'] = self.encryption_key
-            else:
-                _dict['encryption_key'] = self.encryption_key.to_dict()
+            _dict['encryption_key'] = self.encryption_key.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -28069,19 +28399,24 @@ class InstancePatch():
           the instance `status` must be `stopping` or `stopped`. In addition, the
           requested
           profile must:
-          - Match the current profile's instance disk support. (Note: If the current
+          - Have matching instance disk support. Any disks associated with the current
           profile
-            supports instance storage disks, the requested profile can have a different
-            instance storage disk configuration.)
+            will be deleted, and any disks associated with the requested profile will be
+            created.
           - Be compatible with any `placement_target` constraints. For example, if the
             instance is placed on a dedicated host, the requested profile `family` must be
             the same as the dedicated host `family`.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     """
 
     def __init__(self,
                  *,
                  name: str = None,
-                 profile: 'InstancePatchProfile' = None) -> None:
+                 profile: 'InstancePatchProfile' = None,
+                 total_volume_bandwidth: int = None) -> None:
         """
         Initialize a InstancePatch object.
 
@@ -28092,19 +28427,24 @@ class InstancePatch():
                the instance `status` must be `stopping` or `stopped`. In addition, the
                requested
                profile must:
-               - Match the current profile's instance disk support. (Note: If the current
-               profile
-                 supports instance storage disks, the requested profile can have a
-               different
-                 instance storage disk configuration.)
+               - Have matching instance disk support. Any disks associated with the
+               current profile
+                 will be deleted, and any disks associated with the requested profile will
+               be
+                 created.
                - Be compatible with any `placement_target` constraints. For example, if
                the
                  instance is placed on a dedicated host, the requested profile `family`
                must be
                  the same as the dedicated host `family`.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         """
         self.name = name
         self.profile = profile
+        self.total_volume_bandwidth = total_volume_bandwidth
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'InstancePatch':
@@ -28114,6 +28454,8 @@ class InstancePatch():
             args['name'] = _dict.get('name')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         return cls(**args)
 
     @classmethod
@@ -28131,6 +28473,8 @@ class InstancePatch():
                 _dict['profile'] = self.profile
             else:
                 _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         return _dict
 
     def _to_dict(self):
@@ -28156,9 +28500,9 @@ class InstancePatchProfile():
     The profile to use for this virtual server instance. For the profile to be changed,
     the instance `status` must be `stopping` or `stopped`. In addition, the requested
     profile must:
-    - Match the current profile's instance disk support. (Note: If the current profile
-      supports instance storage disks, the requested profile can have a different
-      instance storage disk configuration.)
+    - Have matching instance disk support. Any disks associated with the current profile
+      will be deleted, and any disks associated with the requested profile will be
+      created.
     - Be compatible with any `placement_target` constraints. For example, if the
       instance is placed on a dedicated host, the requested profile `family` must be
       the same as the dedicated host `family`.
@@ -28186,7 +28530,7 @@ class InstancePlacementTarget():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstancePlacementTargetDedicatedHostGroupReference', 'InstancePlacementTargetDedicatedHostReference']))
+                  ", ".join(['InstancePlacementTargetDedicatedHostGroupReference', 'InstancePlacementTargetDedicatedHostReference', 'InstancePlacementTargetPlacementGroupReference']))
         raise Exception(msg)
 
 class InstancePlacementTargetPrototype():
@@ -28201,7 +28545,7 @@ class InstancePlacementTargetPrototype():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstancePlacementTargetPrototypeDedicatedHostIdentity', 'InstancePlacementTargetPrototypeDedicatedHostGroupIdentity']))
+                  ", ".join(['InstancePlacementTargetPrototypeDedicatedHostIdentity', 'InstancePlacementTargetPrototypeDedicatedHostGroupIdentity', 'InstancePlacementTargetPrototypePlacementGroupIdentity']))
         raise Exception(msg)
 
 class InstanceProfile():
@@ -28219,6 +28563,7 @@ class InstanceProfile():
           profile.
     :attr InstanceProfileOSArchitecture os_architecture:
     :attr InstanceProfilePortSpeed port_speed:
+    :attr InstanceProfileVolumeBandwidth total_volume_bandwidth:
     :attr InstanceProfileVCPUArchitecture vcpu_architecture:
     :attr InstanceProfileVCPU vcpu_count:
     """
@@ -28231,6 +28576,7 @@ class InstanceProfile():
                  name: str,
                  os_architecture: 'InstanceProfileOSArchitecture',
                  port_speed: 'InstanceProfilePortSpeed',
+                 total_volume_bandwidth: 'InstanceProfileVolumeBandwidth',
                  vcpu_architecture: 'InstanceProfileVCPUArchitecture',
                  vcpu_count: 'InstanceProfileVCPU',
                  *,
@@ -28247,6 +28593,7 @@ class InstanceProfile():
                profile.
         :param InstanceProfileOSArchitecture os_architecture:
         :param InstanceProfilePortSpeed port_speed:
+        :param InstanceProfileVolumeBandwidth total_volume_bandwidth:
         :param InstanceProfileVCPUArchitecture vcpu_architecture:
         :param InstanceProfileVCPU vcpu_count:
         :param str family: (optional) The product family this virtual server
@@ -28260,6 +28607,7 @@ class InstanceProfile():
         self.name = name
         self.os_architecture = os_architecture
         self.port_speed = port_speed
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.vcpu_architecture = vcpu_architecture
         self.vcpu_count = vcpu_count
 
@@ -28297,6 +28645,10 @@ class InstanceProfile():
             args['port_speed'] = _dict.get('port_speed')
         else:
             raise ValueError('Required property \'port_speed\' not present in InstanceProfile JSON')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
+        else:
+            raise ValueError('Required property \'total_volume_bandwidth\' not present in InstanceProfile JSON')
         if 'vcpu_architecture' in _dict:
             args['vcpu_architecture'] = InstanceProfileVCPUArchitecture.from_dict(_dict.get('vcpu_architecture'))
         else:
@@ -28340,6 +28692,11 @@ class InstanceProfile():
                 _dict['port_speed'] = self.port_speed
             else:
                 _dict['port_speed'] = self.port_speed.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            if isinstance(self.total_volume_bandwidth, dict):
+                _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
+            else:
+                _dict['total_volume_bandwidth'] = self.total_volume_bandwidth.to_dict()
         if hasattr(self, 'vcpu_architecture') and self.vcpu_architecture is not None:
             _dict['vcpu_architecture'] = self.vcpu_architecture.to_dict()
         if hasattr(self, 'vcpu_count') and self.vcpu_count is not None:
@@ -28968,18 +29325,35 @@ class InstanceProfileVCPUArchitecture():
         FIXED = 'fixed'
 
 
+class InstanceProfileVolumeBandwidth():
+    """
+    InstanceProfileVolumeBandwidth.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceProfileVolumeBandwidth object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstanceProfileVolumeBandwidthFixed', 'InstanceProfileVolumeBandwidthRange', 'InstanceProfileVolumeBandwidthEnum', 'InstanceProfileVolumeBandwidthDependent']))
+        raise Exception(msg)
+
 class InstancePrototype():
     """
     InstancePrototype.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -28992,6 +29366,10 @@ class InstancePrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29009,6 +29387,7 @@ class InstancePrototype():
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -29016,13 +29395,16 @@ class InstancePrototype():
         Initialize a InstancePrototype object.
 
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -29036,6 +29418,10 @@ class InstancePrototype():
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29307,13 +29693,15 @@ class InstanceTemplate():
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -29323,6 +29711,10 @@ class InstanceTemplate():
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance template.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29344,6 +29736,7 @@ class InstanceTemplate():
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -29359,19 +29752,26 @@ class InstanceTemplate():
         :param ResourceGroupReference resource_group: The resource group for this
                instance template.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29381,7 +29781,7 @@ class InstanceTemplate():
                VPC tied to the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstanceTemplateInstanceByImage', 'InstanceTemplateInstanceByVolume', 'InstanceTemplateInstanceBySourceTemplate']))
+                  ", ".join(['InstanceTemplateInstanceByImage', 'InstanceTemplateInstanceByVolume']))
         raise Exception(msg)
 
 class InstanceTemplateCollection():
@@ -29683,13 +30083,15 @@ class InstanceTemplatePrototype():
     InstanceTemplatePrototype.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -29702,6 +30104,10 @@ class InstanceTemplatePrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29719,6 +30125,7 @@ class InstanceTemplatePrototype():
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -29726,13 +30133,16 @@ class InstanceTemplatePrototype():
         Initialize a InstanceTemplatePrototype object.
 
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -29746,6 +30156,10 @@ class InstanceTemplatePrototype():
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -29994,7 +30408,8 @@ class Key():
     :attr int length: The length of this key (in bits).
     :attr str name: The unique user-defined name for this key. If unspecified, the
           name will be a hyphenated list of randomly-selected words.
-    :attr str public_key: The public SSH key.
+    :attr str public_key: The public SSH key, consisting of two space-separated
+          fields: the algorithm name, and the base64-encoded key.
     :attr ResourceGroupReference resource_group: The resource group for this key.
     :attr str type: The crypto-system used by this key.
     """
@@ -30023,7 +30438,8 @@ class Key():
         :param int length: The length of this key (in bits).
         :param str name: The unique user-defined name for this key. If unspecified,
                the name will be a hyphenated list of randomly-selected words.
-        :param str public_key: The public SSH key.
+        :param str public_key: The public SSH key, consisting of two
+               space-separated fields: the algorithm name, and the base64-encoded key.
         :param ResourceGroupReference resource_group: The resource group for this
                key.
         :param str type: The crypto-system used by this key.
@@ -30144,7 +30560,7 @@ class KeyCollection():
     """
     KeyCollection.
 
-    :attr PageLink first: A link to the first page of resources.
+    :attr KeyCollectionFirst first: A link to the first page of resources.
     :attr List[Key] keys: Collection of keys.
     :attr int limit: The maximum number of resources that can be returned by the
           request.
@@ -30155,7 +30571,7 @@ class KeyCollection():
     """
 
     def __init__(self,
-                 first: 'PageLink',
+                 first: 'KeyCollectionFirst',
                  keys: List['Key'],
                  limit: int,
                  total_count: int,
@@ -30164,7 +30580,7 @@ class KeyCollection():
         """
         Initialize a KeyCollection object.
 
-        :param PageLink first: A link to the first page of resources.
+        :param KeyCollectionFirst first: A link to the first page of resources.
         :param List[Key] keys: Collection of keys.
         :param int limit: The maximum number of resources that can be returned by
                the request.
@@ -30184,7 +30600,7 @@ class KeyCollection():
         """Initialize a KeyCollection object from a json dictionary."""
         args = {}
         if 'first' in _dict:
-            args['first'] = PageLink.from_dict(_dict.get('first'))
+            args['first'] = KeyCollectionFirst.from_dict(_dict.get('first'))
         else:
             raise ValueError('Required property \'first\' not present in KeyCollection JSON')
         if 'keys' in _dict:
@@ -30238,6 +30654,62 @@ class KeyCollection():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'KeyCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class KeyCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a KeyCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'KeyCollectionFirst':
+        """Initialize a KeyCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in KeyCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a KeyCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this KeyCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'KeyCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'KeyCollectionFirst') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -30310,7 +30782,7 @@ class KeyIdentity():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['KeyIdentityById', 'KeyIdentityByCRN', 'KeyIdentityByHref', 'KeyIdentityKeyIdentityByFingerprint']))
+                  ", ".join(['KeyIdentityById', 'KeyIdentityByCRN', 'KeyIdentityByHref', 'KeyIdentityByFingerprint']))
         raise Exception(msg)
 
 class KeyPatch():
@@ -30365,6 +30837,118 @@ class KeyPatch():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'KeyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class KeyReference():
+    """
+    KeyReference.
+
+    :attr str crn: The CRN for this key.
+    :attr KeyReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str fingerprint: The fingerprint for this key.  The value is returned
+          base64-encoded and prefixed with the hash algorithm (always `SHA256`).
+    :attr str href: The URL for this key.
+    :attr str id: The unique identifier for this key.
+    :attr str name: The user-defined name for this key.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 fingerprint: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 *,
+                 deleted: 'KeyReferenceDeleted' = None) -> None:
+        """
+        Initialize a KeyReference object.
+
+        :param str crn: The CRN for this key.
+        :param str fingerprint: The fingerprint for this key.  The value is
+               returned base64-encoded and prefixed with the hash algorithm (always
+               `SHA256`).
+        :param str href: The URL for this key.
+        :param str id: The unique identifier for this key.
+        :param str name: The user-defined name for this key.
+        :param KeyReferenceDeleted deleted: (optional) If present, this property
+               indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        self.crn = crn
+        self.deleted = deleted
+        self.fingerprint = fingerprint
+        self.href = href
+        self.id = id
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'KeyReference':
+        """Initialize a KeyReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in KeyReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = KeyReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'fingerprint' in _dict:
+            args['fingerprint'] = _dict.get('fingerprint')
+        else:
+            raise ValueError('Required property \'fingerprint\' not present in KeyReference JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in KeyReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in KeyReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in KeyReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a KeyReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'fingerprint') and self.fingerprint is not None:
+            _dict['fingerprint'] = self.fingerprint
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this KeyReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'KeyReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'KeyReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -30424,21 +31008,6 @@ class KeyReferenceDeleted():
     def __ne__(self, other: 'KeyReferenceDeleted') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-class KeyReferenceInstanceInitializationContext():
-    """
-    KeyReferenceInstanceInitializationContext.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a KeyReferenceInstanceInitializationContext object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['KeyReferenceInstanceInitializationContextKeyReference', 'KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint']))
-        raise Exception(msg)
 
 class LoadBalancer():
     """
@@ -30958,7 +31527,13 @@ class LoadBalancerListener():
 
     :attr bool accept_proxy_protocol: If set to `true`, this listener will accept
           and forward PROXY protocol information. Supported by load balancers in the
-          `application` family (otherwise always `false`).
+          `application` family (otherwise always `false`). Additional restrictions:
+          - If this listener has `https_redirect` specified, its `accept_proxy_protocol`
+          value must
+            match the `accept_proxy_protocol` value of the `https_redirect` listener.
+          - If this listener is the target of another listener's `https_redirect`, its
+            `accept_proxy_protocol` value must match that listener's
+          `accept_proxy_protocol` value.
     :attr CertificateInstanceReference certificate_instance: (optional) The
           certificate instance used for SSL termination. It is applicable only to `https`
           protocol.
@@ -30967,6 +31542,8 @@ class LoadBalancerListener():
     :attr LoadBalancerPoolReference default_pool: (optional) The default pool
           associated with the listener.
     :attr str href: The listener's canonical URL.
+    :attr LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If provided,
+          the target listener that requests are redirected to.
     :attr str id: The unique identifier for this load balancer listener.
     :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The
           policies for this listener.
@@ -30992,13 +31569,22 @@ class LoadBalancerListener():
                  certificate_instance: 'CertificateInstanceReference' = None,
                  connection_limit: int = None,
                  default_pool: 'LoadBalancerPoolReference' = None,
+                 https_redirect: 'LoadBalancerListenerHTTPSRedirect' = None,
                  policies: List['LoadBalancerListenerPolicyReference'] = None) -> None:
         """
         Initialize a LoadBalancerListener object.
 
         :param bool accept_proxy_protocol: If set to `true`, this listener will
                accept and forward PROXY protocol information. Supported by load balancers
-               in the `application` family (otherwise always `false`).
+               in the `application` family (otherwise always `false`). Additional
+               restrictions:
+               - If this listener has `https_redirect` specified, its
+               `accept_proxy_protocol` value must
+                 match the `accept_proxy_protocol` value of the `https_redirect` listener.
+               - If this listener is the target of another listener's `https_redirect`,
+               its
+                 `accept_proxy_protocol` value must match that listener's
+               `accept_proxy_protocol` value.
         :param datetime created_at: The date and time that this listener was
                created.
         :param str href: The listener's canonical URL.
@@ -31019,6 +31605,8 @@ class LoadBalancerListener():
                listener.
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
                associated with the listener.
+        :param LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If
+               provided, the target listener that requests are redirected to.
         :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
                policies for this listener.
         """
@@ -31028,6 +31616,7 @@ class LoadBalancerListener():
         self.created_at = created_at
         self.default_pool = default_pool
         self.href = href
+        self.https_redirect = https_redirect
         self.id = id
         self.policies = policies
         self.port = port
@@ -31056,6 +31645,8 @@ class LoadBalancerListener():
             args['href'] = _dict.get('href')
         else:
             raise ValueError('Required property \'href\' not present in LoadBalancerListener JSON')
+        if 'https_redirect' in _dict:
+            args['https_redirect'] = LoadBalancerListenerHTTPSRedirect.from_dict(_dict.get('https_redirect'))
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
@@ -31096,6 +31687,8 @@ class LoadBalancerListener():
             _dict['default_pool'] = self.default_pool.to_dict()
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
+        if hasattr(self, 'https_redirect') and self.https_redirect is not None:
+            _dict['https_redirect'] = self.https_redirect.to_dict()
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
         if hasattr(self, 'policies') and self.policies is not None:
@@ -31206,13 +31799,266 @@ class LoadBalancerListenerCollection():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class LoadBalancerListenerHTTPSRedirect():
+    """
+    LoadBalancerListenerHTTPSRedirect.
+
+    :attr int http_status_code: The HTTP status code for this redirect.
+    :attr LoadBalancerListenerReference listener:
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 http_status_code: int,
+                 listener: 'LoadBalancerListenerReference',
+                 *,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerHTTPSRedirect object.
+
+        :param int http_status_code: The HTTP status code for this redirect.
+        :param LoadBalancerListenerReference listener:
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerHTTPSRedirect':
+        """Initialize a LoadBalancerListenerHTTPSRedirect object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        else:
+            raise ValueError('Required property \'http_status_code\' not present in LoadBalancerListenerHTTPSRedirect JSON')
+        if 'listener' in _dict:
+            args['listener'] = LoadBalancerListenerReference.from_dict(_dict.get('listener'))
+        else:
+            raise ValueError('Required property \'listener\' not present in LoadBalancerListenerHTTPSRedirect JSON')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerHTTPSRedirect object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerHTTPSRedirect object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerHTTPSRedirect') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerHTTPSRedirect') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LoadBalancerListenerHTTPSRedirectPatch():
+    """
+    LoadBalancerListenerHTTPSRedirectPatch.
+
+    :attr int http_status_code: (optional) The HTTP status code for this redirect.
+    :attr LoadBalancerListenerIdentity listener: (optional) Identifies a load
+          balancer listener by a unique property.
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 *,
+                 http_status_code: int = None,
+                 listener: 'LoadBalancerListenerIdentity' = None,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerHTTPSRedirectPatch object.
+
+        :param int http_status_code: (optional) The HTTP status code for this
+               redirect.
+        :param LoadBalancerListenerIdentity listener: (optional) Identifies a load
+               balancer listener by a unique property.
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerHTTPSRedirectPatch':
+        """Initialize a LoadBalancerListenerHTTPSRedirectPatch object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        if 'listener' in _dict:
+            args['listener'] = _dict.get('listener')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerHTTPSRedirectPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            if isinstance(self.listener, dict):
+                _dict['listener'] = self.listener
+            else:
+                _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerHTTPSRedirectPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerHTTPSRedirectPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerHTTPSRedirectPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LoadBalancerListenerHTTPSRedirectPrototype():
+    """
+    LoadBalancerListenerHTTPSRedirectPrototype.
+
+    :attr int http_status_code: The HTTP status code for this redirect.
+    :attr LoadBalancerListenerIdentity listener: Identifies a load balancer listener
+          by a unique property.
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 http_status_code: int,
+                 listener: 'LoadBalancerListenerIdentity',
+                 *,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerHTTPSRedirectPrototype object.
+
+        :param int http_status_code: The HTTP status code for this redirect.
+        :param LoadBalancerListenerIdentity listener: Identifies a load balancer
+               listener by a unique property.
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerHTTPSRedirectPrototype':
+        """Initialize a LoadBalancerListenerHTTPSRedirectPrototype object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        else:
+            raise ValueError('Required property \'http_status_code\' not present in LoadBalancerListenerHTTPSRedirectPrototype JSON')
+        if 'listener' in _dict:
+            args['listener'] = _dict.get('listener')
+        else:
+            raise ValueError('Required property \'listener\' not present in LoadBalancerListenerHTTPSRedirectPrototype JSON')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerHTTPSRedirectPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            if isinstance(self.listener, dict):
+                _dict['listener'] = self.listener
+            else:
+                _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerHTTPSRedirectPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerHTTPSRedirectPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerHTTPSRedirectPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LoadBalancerListenerIdentity():
+    """
+    Identifies a load balancer listener by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerListenerIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['LoadBalancerListenerIdentityById', 'LoadBalancerListenerIdentityByHref']))
+        raise Exception(msg)
+
 class LoadBalancerListenerPatch():
     """
     LoadBalancerListenerPatch.
 
     :attr bool accept_proxy_protocol: (optional) If set to `true`, this listener
           will accept and forward PROXY protocol information. Supported by load balancers
-          in the `application` family (otherwise always `false`).
+          in the `application` family (otherwise always `false`). Additional restrictions:
+          - If this listener has `https_redirect` specified, its `accept_proxy_protocol`
+          value must
+            match the `accept_proxy_protocol` value of the `https_redirect` listener.
+          - If this listener is the target of another listener's `https_redirect`, its
+            `accept_proxy_protocol` value must match that listener's
+          `accept_proxy_protocol` value.
     :attr CertificateInstanceIdentity certificate_instance: (optional) The
           certificate instance used for SSL termination. It is applicable only to `https`
           protocol.
@@ -31222,13 +32068,20 @@ class LoadBalancerListenerPatch():
           - Belong to this load balancer
           - Have the same `protocol` as this listener
           - Not already be the default pool for another listener.
+    :attr LoadBalancerListenerHTTPSRedirectPatch https_redirect: (optional) The
+          target listener that requests will be redirected to. This listener must have a
+          `protocol` of `http`, and the target listener must have a `protocol` of `https`.
+          Specify `null` to remove any existing https redirect.
     :attr int port: (optional) The listener port number. Each listener in the load
           balancer must have a unique
           `port` and `protocol` combination.
-    :attr str protocol: (optional) The listener protocol. Load balancers in the
-          `network` family support `tcp`. Load balancers in the `application` family
-          support `tcp`, `http`, and `https`. Each listener in the load balancer must have
-          a unique `port` and `protocol` combination.
+    :attr str protocol: (optional) The listener protocol. Each listener in the load
+          balancer must have a unique `port` and `protocol` combination.  Additional
+          restrictions:
+          - If this load balancer is in the `network` family, the protocol must be `tcp`.
+          - If this listener has `https_redirect` specified, the protocol must be `http`.
+          - If this listener is a listener's `https_redirect` target, the protocol must be
+          `https`.
     """
 
     def __init__(self,
@@ -31237,6 +32090,7 @@ class LoadBalancerListenerPatch():
                  certificate_instance: 'CertificateInstanceIdentity' = None,
                  connection_limit: int = None,
                  default_pool: 'LoadBalancerPoolIdentity' = None,
+                 https_redirect: 'LoadBalancerListenerHTTPSRedirectPatch' = None,
                  port: int = None,
                  protocol: str = None) -> None:
         """
@@ -31245,6 +32099,14 @@ class LoadBalancerListenerPatch():
         :param bool accept_proxy_protocol: (optional) If set to `true`, this
                listener will accept and forward PROXY protocol information. Supported by
                load balancers in the `application` family (otherwise always `false`).
+               Additional restrictions:
+               - If this listener has `https_redirect` specified, its
+               `accept_proxy_protocol` value must
+                 match the `accept_proxy_protocol` value of the `https_redirect` listener.
+               - If this listener is the target of another listener's `https_redirect`,
+               its
+                 `accept_proxy_protocol` value must match that listener's
+               `accept_proxy_protocol` value.
         :param CertificateInstanceIdentity certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
                `https`
@@ -31256,18 +32118,30 @@ class LoadBalancerListenerPatch():
                - Belong to this load balancer
                - Have the same `protocol` as this listener
                - Not already be the default pool for another listener.
+        :param LoadBalancerListenerHTTPSRedirectPatch https_redirect: (optional)
+               The target listener that requests will be redirected to. This listener must
+               have a
+               `protocol` of `http`, and the target listener must have a `protocol` of
+               `https`.
+               Specify `null` to remove any existing https redirect.
         :param int port: (optional) The listener port number. Each listener in the
                load balancer must have a unique
                `port` and `protocol` combination.
-        :param str protocol: (optional) The listener protocol. Load balancers in
-               the `network` family support `tcp`. Load balancers in the `application`
-               family support `tcp`, `http`, and `https`. Each listener in the load
-               balancer must have a unique `port` and `protocol` combination.
+        :param str protocol: (optional) The listener protocol. Each listener in the
+               load balancer must have a unique `port` and `protocol` combination.
+               Additional restrictions:
+               - If this load balancer is in the `network` family, the protocol must be
+               `tcp`.
+               - If this listener has `https_redirect` specified, the protocol must be
+               `http`.
+               - If this listener is a listener's `https_redirect` target, the protocol
+               must be `https`.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.certificate_instance = certificate_instance
         self.connection_limit = connection_limit
         self.default_pool = default_pool
+        self.https_redirect = https_redirect
         self.port = port
         self.protocol = protocol
 
@@ -31283,6 +32157,8 @@ class LoadBalancerListenerPatch():
             args['connection_limit'] = _dict.get('connection_limit')
         if 'default_pool' in _dict:
             args['default_pool'] = _dict.get('default_pool')
+        if 'https_redirect' in _dict:
+            args['https_redirect'] = LoadBalancerListenerHTTPSRedirectPatch.from_dict(_dict.get('https_redirect'))
         if 'port' in _dict:
             args['port'] = _dict.get('port')
         if 'protocol' in _dict:
@@ -31311,6 +32187,8 @@ class LoadBalancerListenerPatch():
                 _dict['default_pool'] = self.default_pool
             else:
                 _dict['default_pool'] = self.default_pool.to_dict()
+        if hasattr(self, 'https_redirect') and self.https_redirect is not None:
+            _dict['https_redirect'] = self.https_redirect.to_dict()
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
         if hasattr(self, 'protocol') and self.protocol is not None:
@@ -31337,10 +32215,12 @@ class LoadBalancerListenerPatch():
 
     class ProtocolEnum(str, Enum):
         """
-        The listener protocol. Load balancers in the `network` family support `tcp`. Load
-        balancers in the `application` family support `tcp`, `http`, and `https`. Each
-        listener in the load balancer must have a unique `port` and `protocol`
-        combination.
+        The listener protocol. Each listener in the load balancer must have a unique
+        `port` and `protocol` combination.  Additional restrictions:
+        - If this load balancer is in the `network` family, the protocol must be `tcp`.
+        - If this listener has `https_redirect` specified, the protocol must be `http`.
+        - If this listener is a listener's `https_redirect` target, the protocol must be
+        `https`.
         """
         HTTP = 'http'
         HTTPS = 'https'
@@ -31352,6 +32232,10 @@ class LoadBalancerListenerPolicy():
     LoadBalancerListenerPolicy.
 
     :attr str action: The policy action.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the policy on which the unexpected
+          property value was encountered.
     :attr datetime created_at: The date and time that this policy was created.
     :attr str href: The listener policy's canonical URL.
     :attr str id: The policy's unique identifier.
@@ -31361,10 +32245,12 @@ class LoadBalancerListenerPolicy():
     :attr str provisioning_status: The provisioning status of this policy.
     :attr List[LoadBalancerListenerPolicyRuleReference] rules: The rules for this
           policy.
-    :attr LoadBalancerListenerPolicyTarget target: (optional)
-          `LoadBalancerPoolReference` is in the response if `action` is `forward`.
-          `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is
-          `redirect`.
+    :attr LoadBalancerListenerPolicyTarget target: (optional) - If `action` is
+          `forward`, the response is a `LoadBalancerPoolReference`
+          - If `action` is `redirect`, the response is a
+          `LoadBalancerListenerPolicyRedirectURL`
+          - If `action` is `https_redirect`, the response is a
+          `LoadBalancerListenerHTTPSRedirect`.
     """
 
     def __init__(self,
@@ -31382,6 +32268,10 @@ class LoadBalancerListenerPolicy():
         Initialize a LoadBalancerListenerPolicy object.
 
         :param str action: The policy action.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the policy on
+               which the unexpected property value was encountered.
         :param datetime created_at: The date and time that this policy was created.
         :param str href: The listener policy's canonical URL.
         :param str id: The policy's unique identifier.
@@ -31391,10 +32281,12 @@ class LoadBalancerListenerPolicy():
         :param str provisioning_status: The provisioning status of this policy.
         :param List[LoadBalancerListenerPolicyRuleReference] rules: The rules for
                this policy.
-        :param LoadBalancerListenerPolicyTarget target: (optional)
-               `LoadBalancerPoolReference` is in the response if `action` is `forward`.
-               `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is
-               `redirect`.
+        :param LoadBalancerListenerPolicyTarget target: (optional) - If `action` is
+               `forward`, the response is a `LoadBalancerPoolReference`
+               - If `action` is `redirect`, the response is a
+               `LoadBalancerListenerPolicyRedirectURL`
+               - If `action` is `https_redirect`, the response is a
+               `LoadBalancerListenerHTTPSRedirect`.
         """
         self.action = action
         self.created_at = created_at
@@ -31498,10 +32390,15 @@ class LoadBalancerListenerPolicy():
     class ActionEnum(str, Enum):
         """
         The policy action.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the policy on which the unexpected
+        property value was encountered.
         """
         FORWARD = 'forward'
         REDIRECT = 'redirect'
         REJECT = 'reject'
+        HTTPS_REDIRECT = 'https_redirect'
 
 
     class ProvisioningStatusEnum(str, Enum):
@@ -31580,11 +32477,12 @@ class LoadBalancerListenerPolicyPatch():
           unique within the load balancer listener the policy resides in.
     :attr int priority: (optional) Priority of the policy. Lower value indicates
           higher priority.
-    :attr LoadBalancerListenerPolicyTargetPatch target: (optional) When `action` is
-          `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
-          balancer forwards the traffic to. When `action` is `redirect`,
-          `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
-          status code used in the redirect response.
+    :attr LoadBalancerListenerPolicyTargetPatch target: (optional) - If `action` is
+          `forward`, specify a `LoadBalancerPoolIdentity`.
+          - If `action` is `redirect`, specify a
+          `LoadBalancerListenerPolicyRedirectURLPatch`.
+          - If `action` is `https_redirect`, specify a
+            `LoadBalancerListenerPolicyHTTPSRedirectPatch`.
     """
 
     def __init__(self,
@@ -31599,12 +32497,12 @@ class LoadBalancerListenerPolicyPatch():
                must be unique within the load balancer listener the policy resides in.
         :param int priority: (optional) Priority of the policy. Lower value
                indicates higher priority.
-        :param LoadBalancerListenerPolicyTargetPatch target: (optional) When
-               `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the
-               load
-               balancer forwards the traffic to. When `action` is `redirect`,
-               `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http
-               status code used in the redirect response.
+        :param LoadBalancerListenerPolicyTargetPatch target: (optional) - If
+               `action` is `forward`, specify a `LoadBalancerPoolIdentity`.
+               - If `action` is `redirect`, specify a
+               `LoadBalancerListenerPolicyRedirectURLPatch`.
+               - If `action` is `https_redirect`, specify a
+                 `LoadBalancerListenerPolicyHTTPSRedirectPatch`.
         """
         self.name = name
         self.priority = priority
@@ -31664,18 +32562,22 @@ class LoadBalancerListenerPolicyPrototype():
     LoadBalancerListenerPolicyPrototype.
 
     :attr str action: The policy action.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the policy on which the unexpected
+          property value was encountered.
     :attr str name: (optional) The user-defined name for this policy. Names must be
           unique within the load balancer listener the policy resides in.
     :attr int priority: Priority of the policy. Lower value indicates higher
           priority.
     :attr List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The rule
           prototype objects for this policy.
-    :attr LoadBalancerListenerPolicyTargetPrototype target: (optional) When `action`
-          is `forward`, `LoadBalancerPoolIdentity` is required to specify which
-          pool the load balancer forwards the traffic to. When `action` is `redirect`,
-          `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the url
-          and
-          http status code used in the redirect response.
+    :attr LoadBalancerListenerPolicyTargetPrototype target: (optional) - If `action`
+          is `forward`, specify a `LoadBalancerPoolIdentity`.
+          - If `action` is `redirect`, specify a
+          `LoadBalancerListenerPolicyRedirectURLPrototype`.
+          - If `action` is `https_redirect`, specify a
+            `LoadBalancerListenerPolicyHTTPSRedirectPrototype`.
     """
 
     def __init__(self,
@@ -31689,20 +32591,22 @@ class LoadBalancerListenerPolicyPrototype():
         Initialize a LoadBalancerListenerPolicyPrototype object.
 
         :param str action: The policy action.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the policy on
+               which the unexpected property value was encountered.
         :param int priority: Priority of the policy. Lower value indicates higher
                priority.
         :param str name: (optional) The user-defined name for this policy. Names
                must be unique within the load balancer listener the policy resides in.
         :param List[LoadBalancerListenerPolicyRulePrototype] rules: (optional) The
                rule prototype objects for this policy.
-        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) When
-               `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify
-               which
-               pool the load balancer forwards the traffic to. When `action` is
-               `redirect`,
-               `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the
-               url and
-               http status code used in the redirect response.
+        :param LoadBalancerListenerPolicyTargetPrototype target: (optional) - If
+               `action` is `forward`, specify a `LoadBalancerPoolIdentity`.
+               - If `action` is `redirect`, specify a
+               `LoadBalancerListenerPolicyRedirectURLPrototype`.
+               - If `action` is `https_redirect`, specify a
+                 `LoadBalancerListenerPolicyHTTPSRedirectPrototype`.
         """
         self.action = action
         self.name = name
@@ -31774,10 +32678,15 @@ class LoadBalancerListenerPolicyPrototype():
     class ActionEnum(str, Enum):
         """
         The policy action.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the policy on which the unexpected
+        property value was encountered.
         """
         FORWARD = 'forward'
         REDIRECT = 'redirect'
         REJECT = 'reject'
+        HTTPS_REDIRECT = 'https_redirect'
 
 
 class LoadBalancerListenerPolicyReference():
@@ -31925,7 +32834,7 @@ class LoadBalancerListenerPolicyRule():
     :attr datetime created_at: The date and time that this rule was created.
     :attr str field: (optional) The field. This is applicable to `header`, `query`,
           and `body` rule types.
-          If the rule type is `header`, this field is required.
+          If the rule type is `header`, this property is required.
           If the rule type is `query`, this is optional. If specified and the rule
           condition is not
           `matches_regex`, the value must be percent-encoded.
@@ -31967,7 +32876,7 @@ class LoadBalancerListenerPolicyRule():
                the value must be percent-encoded.
         :param str field: (optional) The field. This is applicable to `header`,
                `query`, and `body` rule types.
-               If the rule type is `header`, this field is required.
+               If the rule type is `header`, this property is required.
                If the rule type is `query`, this is optional. If specified and the rule
                condition is not
                `matches_regex`, the value must be percent-encoded.
@@ -32159,7 +33068,7 @@ class LoadBalancerListenerPolicyRulePatch():
     :attr str condition: (optional) The condition of the rule.
     :attr str field: (optional) The field. This is applicable to `header`, `query`,
           and `body` rule types.
-          If the rule type is `header`, this field is required.
+          If the rule type is `header`, this property is required.
           If the rule type is `query`, this is optional. If specified and the rule
           condition is not
           `matches_regex`, the value must be percent-encoded.
@@ -32184,7 +33093,7 @@ class LoadBalancerListenerPolicyRulePatch():
         :param str condition: (optional) The condition of the rule.
         :param str field: (optional) The field. This is applicable to `header`,
                `query`, and `body` rule types.
-               If the rule type is `header`, this field is required.
+               If the rule type is `header`, this property is required.
                If the rule type is `query`, this is optional. If specified and the rule
                condition is not
                `matches_regex`, the value must be percent-encoded.
@@ -32280,7 +33189,7 @@ class LoadBalancerListenerPolicyRulePrototype():
     :attr str condition: The condition of the rule.
     :attr str field: (optional) The field. This is applicable to `header`, `query`,
           and `body` rule types.
-          If the rule type is `header`, this field is required.
+          If the rule type is `header`, this property is required.
           If the rule type is `query`, this is optional. If specified and the rule
           condition is not
           `matches_regex`, the value must be percent-encoded.
@@ -32311,7 +33220,7 @@ class LoadBalancerListenerPolicyRulePrototype():
                the value must be percent-encoded.
         :param str field: (optional) The field. This is applicable to `header`,
                `query`, and `body` rule types.
-               If the rule type is `header`, this field is required.
+               If the rule type is `header`, this property is required.
                If the rule type is `query`, this is optional. If specified and the rule
                condition is not
                `matches_regex`, the value must be percent-encoded.
@@ -32540,8 +33449,10 @@ class LoadBalancerListenerPolicyRuleReferenceDeleted():
 
 class LoadBalancerListenerPolicyTarget():
     """
-    `LoadBalancerPoolReference` is in the response if `action` is `forward`.
-    `LoadBalancerListenerPolicyRedirectURL` is in the response if `action` is `redirect`.
+    - If `action` is `forward`, the response is a `LoadBalancerPoolReference`
+    - If `action` is `redirect`, the response is a `LoadBalancerListenerPolicyRedirectURL`
+    - If `action` is `https_redirect`, the response is a
+    `LoadBalancerListenerHTTPSRedirect`.
 
     """
 
@@ -32551,15 +33462,15 @@ class LoadBalancerListenerPolicyTarget():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['LoadBalancerListenerPolicyTargetLoadBalancerPoolReference', 'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL']))
+                  ", ".join(['LoadBalancerListenerPolicyTargetLoadBalancerPoolReference', 'LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL', 'LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect']))
         raise Exception(msg)
 
 class LoadBalancerListenerPolicyTargetPatch():
     """
-    When `action` is `forward`, `LoadBalancerPoolIdentity` specifies which pool the load
-    balancer forwards the traffic to. When `action` is `redirect`,
-    `LoadBalancerListenerPolicyRedirectURLPatch` specifies the url and http status code
-    used in the redirect response.
+    - If `action` is `forward`, specify a `LoadBalancerPoolIdentity`.
+    - If `action` is `redirect`, specify a `LoadBalancerListenerPolicyRedirectURLPatch`.
+    - If `action` is `https_redirect`, specify a
+      `LoadBalancerListenerPolicyHTTPSRedirectPatch`.
 
     """
 
@@ -32569,15 +33480,16 @@ class LoadBalancerListenerPolicyTargetPatch():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity', 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch']))
+                  ", ".join(['LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity', 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch', 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch']))
         raise Exception(msg)
 
 class LoadBalancerListenerPolicyTargetPrototype():
     """
-    When `action` is `forward`, `LoadBalancerPoolIdentity` is required to specify which
-    pool the load balancer forwards the traffic to. When `action` is `redirect`,
-    `LoadBalancerListenerPolicyRedirectURLPrototype` is required to specify the url and
-    http status code used in the redirect response.
+    - If `action` is `forward`, specify a `LoadBalancerPoolIdentity`.
+    - If `action` is `redirect`, specify a
+    `LoadBalancerListenerPolicyRedirectURLPrototype`.
+    - If `action` is `https_redirect`, specify a
+      `LoadBalancerListenerPolicyHTTPSRedirectPrototype`.
 
     """
 
@@ -32587,7 +33499,7 @@ class LoadBalancerListenerPolicyTargetPrototype():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity', 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype']))
+                  ", ".join(['LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity', 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype', 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype']))
         raise Exception(msg)
 
 class LoadBalancerListenerPrototypeLoadBalancerContext():
@@ -32596,7 +33508,13 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
 
     :attr bool accept_proxy_protocol: (optional) If set to `true`, this listener
           will accept and forward PROXY protocol information. Supported by load balancers
-          in the `application` family (otherwise always `false`).
+          in the `application` family (otherwise always `false`). Additional restrictions:
+          - If this listener has `https_redirect` specified, its `accept_proxy_protocol`
+          value must
+            match the `accept_proxy_protocol` value of the `https_redirect` listener.
+          - If this listener is the target of another listener's `https_redirect`, its
+            `accept_proxy_protocol` value must match that listener's
+          `accept_proxy_protocol` value.
     :attr int connection_limit: (optional) The connection limit of the listener.
     :attr LoadBalancerPoolIdentityByName default_pool: (optional) The default pool
           associated with the listener.
@@ -32629,6 +33547,14 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         :param bool accept_proxy_protocol: (optional) If set to `true`, this
                listener will accept and forward PROXY protocol information. Supported by
                load balancers in the `application` family (otherwise always `false`).
+               Additional restrictions:
+               - If this listener has `https_redirect` specified, its
+               `accept_proxy_protocol` value must
+                 match the `accept_proxy_protocol` value of the `https_redirect` listener.
+               - If this listener is the target of another listener's `https_redirect`,
+               its
+                 `accept_proxy_protocol` value must match that listener's
+               `accept_proxy_protocol` value.
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolIdentityByName default_pool: (optional) The default
@@ -37367,6 +38293,7 @@ class NetworkInterface():
     :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
     :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
     :attr str resource_type: The resource type.
     :attr List[SecurityGroupReference] security_groups: Collection of security
           groups.
@@ -37403,6 +38330,7 @@ class NetworkInterface():
         :param str name: The user-defined name for this network interface.
         :param int port_speed: The network interface port speed in Mbps.
         :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: Collection of security
                groups.
@@ -37792,6 +38720,7 @@ class NetworkInterfaceInstanceContextReference():
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
     :attr str resource_type: The resource type.
     :attr SubnetReference subnet: The associated subnet.
     """
@@ -37812,6 +38741,7 @@ class NetworkInterfaceInstanceContextReference():
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
         :param str resource_type: The resource type.
         :param SubnetReference subnet: The associated subnet.
         :param NetworkInterfaceInstanceContextReferenceDeleted deleted: (optional)
@@ -38158,6 +39088,7 @@ class NetworkInterfaceReference():
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
     :attr str resource_type: The resource type.
     """
 
@@ -38176,6 +39107,7 @@ class NetworkInterfaceReference():
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
         :param str resource_type: The resource type.
         :param NetworkInterfaceReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
@@ -38856,9 +39788,299 @@ class OperatingSystemReference():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class PageLink():
+class PlacementGroup():
     """
-    PageLink.
+    PlacementGroup.
+
+    :attr datetime created_at: The date and time that the placement group was
+          created.
+    :attr str crn: The CRN for this placement group.
+    :attr str href: The URL for this placement group.
+    :attr str id: The unique identifier for this placement group.
+    :attr str lifecycle_state: The lifecycle state of the placement group.
+    :attr str name: The user-defined name for this placement group.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          placement group.
+    :attr str resource_type: The resource type.
+    :attr str strategy: The strategy for this placement group
+          - `host_spread`: place on different compute hosts
+          - `power_spread`: place on compute hosts that use different power sources
+          The enumerated values for this property may expand in the future. When
+          processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the placement group on which the
+          unexpected strategy was encountered.
+    """
+
+    def __init__(self,
+                 created_at: datetime,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 lifecycle_state: str,
+                 name: str,
+                 resource_group: 'ResourceGroupReference',
+                 resource_type: str,
+                 strategy: str) -> None:
+        """
+        Initialize a PlacementGroup object.
+
+        :param datetime created_at: The date and time that the placement group was
+               created.
+        :param str crn: The CRN for this placement group.
+        :param str href: The URL for this placement group.
+        :param str id: The unique identifier for this placement group.
+        :param str lifecycle_state: The lifecycle state of the placement group.
+        :param str name: The user-defined name for this placement group.
+        :param ResourceGroupReference resource_group: The resource group for this
+               placement group.
+        :param str resource_type: The resource type.
+        :param str strategy: The strategy for this placement group
+               - `host_spread`: place on different compute hosts
+               - `power_spread`: place on compute hosts that use different power sources
+               The enumerated values for this property may expand in the future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the placement group on which
+               the unexpected strategy was encountered.
+        """
+        self.created_at = created_at
+        self.crn = crn
+        self.href = href
+        self.id = id
+        self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.strategy = strategy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroup':
+        """Initialize a PlacementGroup object from a json dictionary."""
+        args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in PlacementGroup JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in PlacementGroup JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in PlacementGroup JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in PlacementGroup JSON')
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in PlacementGroup JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in PlacementGroup JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
+        else:
+            raise ValueError('Required property \'resource_group\' not present in PlacementGroup JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in PlacementGroup JSON')
+        if 'strategy' in _dict:
+            args['strategy'] = _dict.get('strategy')
+        else:
+            raise ValueError('Required property \'strategy\' not present in PlacementGroup JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PlacementGroup object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'strategy') and self.strategy is not None:
+            _dict['strategy'] = self.strategy
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PlacementGroup object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PlacementGroup') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PlacementGroup') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the placement group.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+        SUSPENDED = 'suspended'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        PLACEMENT_GROUP = 'placement_group'
+
+
+    class StrategyEnum(str, Enum):
+        """
+        The strategy for this placement group
+        - `host_spread`: place on different compute hosts
+        - `power_spread`: place on compute hosts that use different power sources
+        The enumerated values for this property may expand in the future. When processing
+        this property, check for and log unknown values. Optionally halt processing and
+        surface the error, or bypass the placement group on which the unexpected strategy
+        was encountered.
+        """
+        HOST_SPREAD = 'host_spread'
+        POWER_SPREAD = 'power_spread'
+
+
+class PlacementGroupCollection():
+    """
+    PlacementGroupCollection.
+
+    :attr PlacementGroupCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr PlacementGroupCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr List[PlacementGroup] placement_groups: Collection of placement groups.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'PlacementGroupCollectionFirst',
+                 limit: int,
+                 placement_groups: List['PlacementGroup'],
+                 total_count: int,
+                 *,
+                 next: 'PlacementGroupCollectionNext' = None) -> None:
+        """
+        Initialize a PlacementGroupCollection object.
+
+        :param PlacementGroupCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[PlacementGroup] placement_groups: Collection of placement
+               groups.
+        :param int total_count: The total number of resources across all pages.
+        :param PlacementGroupCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.placement_groups = placement_groups
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroupCollection':
+        """Initialize a PlacementGroupCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = PlacementGroupCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in PlacementGroupCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in PlacementGroupCollection JSON')
+        if 'next' in _dict:
+            args['next'] = PlacementGroupCollectionNext.from_dict(_dict.get('next'))
+        if 'placement_groups' in _dict:
+            args['placement_groups'] = [PlacementGroup.from_dict(x) for x in _dict.get('placement_groups')]
+        else:
+            raise ValueError('Required property \'placement_groups\' not present in PlacementGroupCollection JSON')
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in PlacementGroupCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PlacementGroupCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'placement_groups') and self.placement_groups is not None:
+            _dict['placement_groups'] = [x.to_dict() for x in self.placement_groups]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PlacementGroupCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PlacementGroupCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PlacementGroupCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class PlacementGroupCollectionFirst():
+    """
+    A link to the first page of resources.
 
     :attr str href: The URL for a page of resources.
     """
@@ -38866,25 +40088,25 @@ class PageLink():
     def __init__(self,
                  href: str) -> None:
         """
-        Initialize a PageLink object.
+        Initialize a PlacementGroupCollectionFirst object.
 
         :param str href: The URL for a page of resources.
         """
         self.href = href
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'PageLink':
-        """Initialize a PageLink object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroupCollectionFirst':
+        """Initialize a PlacementGroupCollectionFirst object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
-            raise ValueError('Required property \'href\' not present in PageLink JSON')
+            raise ValueError('Required property \'href\' not present in PlacementGroupCollectionFirst JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PageLink object from a json dictionary."""
+        """Initialize a PlacementGroupCollectionFirst object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -38899,16 +40121,185 @@ class PageLink():
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PageLink object."""
+        """Return a `str` version of this PlacementGroupCollectionFirst object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'PageLink') -> bool:
+    def __eq__(self, other: 'PlacementGroupCollectionFirst') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'PageLink') -> bool:
+    def __ne__(self, other: 'PlacementGroupCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class PlacementGroupCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a PlacementGroupCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroupCollectionNext':
+        """Initialize a PlacementGroupCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in PlacementGroupCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PlacementGroupCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PlacementGroupCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PlacementGroupCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PlacementGroupCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class PlacementGroupPatch():
+    """
+    PlacementGroupPatch.
+
+    :attr str name: (optional) The user-defined name for this placement group.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None) -> None:
+        """
+        Initialize a PlacementGroupPatch object.
+
+        :param str name: (optional) The user-defined name for this placement group.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroupPatch':
+        """Initialize a PlacementGroupPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PlacementGroupPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PlacementGroupPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PlacementGroupPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PlacementGroupPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class PlacementGroupReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a PlacementGroupReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PlacementGroupReferenceDeleted':
+        """Initialize a PlacementGroupReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in PlacementGroupReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PlacementGroupReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PlacementGroupReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PlacementGroupReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PlacementGroupReferenceDeleted') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -39895,11 +41286,12 @@ class ReservedIP():
     """
     ReservedIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     :attr bool auto_delete: If set to `true`, this reserved IP will be automatically
           deleted when the target is deleted or when the reserved IP is unbound.
     :attr datetime created_at: The date and time that the reserved IP was created.
@@ -39926,11 +41318,13 @@ class ReservedIP():
         """
         Initialize a ReservedIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         :param bool auto_delete: If set to `true`, this reserved IP will be
                automatically deleted when the target is deleted or when the reserved IP is
                unbound.
@@ -40570,11 +41964,12 @@ class ReservedIPReference():
     """
     ReservedIPReference.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     :attr ReservedIPReferenceDeleted deleted: (optional) If present, this property
           indicates the referenced resource has been deleted and provides
           some supplementary information.
@@ -40595,11 +41990,13 @@ class ReservedIPReference():
         """
         Initialize a ReservedIPReference object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         :param str href: The URL for this reserved IP.
         :param str id: The unique identifier for this reserved IP.
         :param str name: The user-defined or system-provided name for this reserved
@@ -40874,6 +42271,13 @@ class Route():
     """
     Route.
 
+    :attr str action: The action to perform with a packet matching the route:
+          - `delegate`: delegate to the system's built-in routes
+          - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+          Internet-bound
+            routes
+          - `deliver`: deliver the packet to the specified `next_hop`
+          - `drop`: drop the packet.
     :attr datetime created_at: The date and time that the route was created.
     :attr str destination: The destination of the route.
     :attr str href: The URL for this route.
@@ -40889,6 +42293,7 @@ class Route():
     """
 
     def __init__(self,
+                 action: str,
                  created_at: datetime,
                  destination: str,
                  href: str,
@@ -40900,6 +42305,13 @@ class Route():
         """
         Initialize a Route object.
 
+        :param str action: The action to perform with a packet matching the route:
+               - `delegate`: delegate to the system's built-in routes
+               - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+               Internet-bound
+                 routes
+               - `deliver`: deliver the packet to the specified `next_hop`
+               - `drop`: drop the packet.
         :param datetime created_at: The date and time that the route was created.
         :param str destination: The destination of the route.
         :param str href: The URL for this route.
@@ -40913,6 +42325,7 @@ class Route():
                subnets in this zone will be
                subject to this route.).
         """
+        self.action = action
         self.created_at = created_at
         self.destination = destination
         self.href = href
@@ -40926,6 +42339,10 @@ class Route():
     def from_dict(cls, _dict: Dict) -> 'Route':
         """Initialize a Route object from a json dictionary."""
         args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError('Required property \'action\' not present in Route JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -40968,6 +42385,8 @@ class Route():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'destination') and self.destination is not None:
@@ -41006,6 +42425,22 @@ class Route():
     def __ne__(self, other: 'Route') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ActionEnum(str, Enum):
+        """
+        The action to perform with a packet matching the route:
+        - `delegate`: delegate to the system's built-in routes
+        - `delegate_vpc`: delegate to the system's built-in routes, ignoring
+        Internet-bound
+          routes
+        - `deliver`: deliver the packet to the specified `next_hop`
+        - `drop`: drop the packet.
+        """
+        DELEGATE = 'delegate'
+        DELEGATE_VPC = 'delegate_vpc'
+        DELIVER = 'deliver'
+        DROP = 'drop'
+
 
     class LifecycleStateEnum(str, Enum):
         """
@@ -43013,9 +44448,9 @@ class SecurityGroupRule():
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr str protocol: (optional) The protocol to enforce.
     :attr SecurityGroupRuleRemote remote: The IP addresses or security groups from
@@ -43050,8 +44485,8 @@ class SecurityGroupRule():
                any source,
                for outbound rules).
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param str protocol: (optional) The protocol to enforce.
@@ -43106,8 +44541,8 @@ class SecurityGroupRule():
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -43178,9 +44613,9 @@ class SecurityGroupRulePatch():
     :attr str direction: (optional) The direction of traffic to enforce, either
           `inbound` or `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr int port_max: (optional) The inclusive upper bound of the protocol port
           range. Specify `null` to clear an existing upper bound. If a lower bound has
@@ -43216,8 +44651,8 @@ class SecurityGroupRulePatch():
         :param str direction: (optional) The direction of traffic to enforce,
                either `inbound` or `outbound`.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param int port_max: (optional) The inclusive upper bound of the protocol
@@ -43322,8 +44757,8 @@ class SecurityGroupRulePatch():
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -43336,11 +44771,11 @@ class SecurityGroupRulePrototype():
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
+    :attr str protocol: The protocol to enforce.
     :attr SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses or
           security groups from which this rule will allow traffic (or to
           which, for outbound rules). Can be specified as an IP address, a CIDR block, or
@@ -43352,21 +44787,21 @@ class SecurityGroupRulePrototype():
 
     def __init__(self,
                  direction: str,
+                 protocol: str,
                  *,
                  ip_version: str = None,
-                 protocol: str = None,
                  remote: 'SecurityGroupRuleRemotePrototype' = None) -> None:
         """
         Initialize a SecurityGroupRulePrototype object.
 
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
+        :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
         :param SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses
                or security groups from which this rule will allow traffic (or to
                which, for outbound rules). Can be specified as an IP address, a CIDR
@@ -43425,8 +44860,8 @@ class SecurityGroupRulePrototype():
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -47291,12 +48726,14 @@ class Volume():
 
     :attr bool active: Indicates whether a running virtual server instance has an
           attachment to this volume.
+    :attr int bandwidth: The maximum bandwidth (in megabits per second) for the
+          volume.
     :attr bool busy: Indicates whether this volume is performing an operation that
           must be serialized. If an operation specifies that it requires serialization,
           the operation will fail unless this property is `false`.
-    :attr int capacity: The capacity of the volume in gigabytes. The specified
-          minimum and maximum capacity values for creating or updating volumes may expand
-          in the future.
+    :attr int capacity: The capacity to use for the volume (in gigabytes). The
+          specified minimum and maximum capacity values for creating or updating volumes
+          may expand in the future.
     :attr datetime created_at: The date and time that the volume was created.
     :attr str crn: The CRN for this volume.
     :attr str encryption: The type of encryption used on the volume.
@@ -47306,7 +48743,7 @@ class Volume():
           `user_managed`.
     :attr str href: The URL for this volume.
     :attr str id: The unique identifier for this volume.
-    :attr int iops: The bandwidth for the volume.
+    :attr int iops: The maximum I/O operations per second (IOPS) for the volume.
     :attr str name: The unique user-defined name for this volume.
     :attr OperatingSystemReference operating_system: (optional) The operating system
           associated with this volume. If absent, this volume was not
@@ -47337,6 +48774,7 @@ class Volume():
 
     def __init__(self,
                  active: bool,
+                 bandwidth: int,
                  busy: bool,
                  capacity: int,
                  created_at: datetime,
@@ -47362,18 +48800,21 @@ class Volume():
 
         :param bool active: Indicates whether a running virtual server instance has
                an attachment to this volume.
+        :param int bandwidth: The maximum bandwidth (in megabits per second) for
+               the volume.
         :param bool busy: Indicates whether this volume is performing an operation
                that must be serialized. If an operation specifies that it requires
                serialization, the operation will fail unless this property is `false`.
-        :param int capacity: The capacity of the volume in gigabytes. The specified
-               minimum and maximum capacity values for creating or updating volumes may
-               expand in the future.
+        :param int capacity: The capacity to use for the volume (in gigabytes). The
+               specified minimum and maximum capacity values for creating or updating
+               volumes may expand in the future.
         :param datetime created_at: The date and time that the volume was created.
         :param str crn: The CRN for this volume.
         :param str encryption: The type of encryption used on the volume.
         :param str href: The URL for this volume.
         :param str id: The unique identifier for this volume.
-        :param int iops: The bandwidth for the volume.
+        :param int iops: The maximum I/O operations per second (IOPS) for the
+               volume.
         :param str name: The unique user-defined name for this volume.
         :param VolumeProfileReference profile: The profile this volume uses.
         :param ResourceGroupReference resource_group: The resource group for this
@@ -47407,6 +48848,7 @@ class Volume():
                which this volume was cloned.
         """
         self.active = active
+        self.bandwidth = bandwidth
         self.busy = busy
         self.capacity = capacity
         self.created_at = created_at
@@ -47435,6 +48877,10 @@ class Volume():
             args['active'] = _dict.get('active')
         else:
             raise ValueError('Required property \'active\' not present in Volume JSON')
+        if 'bandwidth' in _dict:
+            args['bandwidth'] = _dict.get('bandwidth')
+        else:
+            raise ValueError('Required property \'bandwidth\' not present in Volume JSON')
         if 'busy' in _dict:
             args['busy'] = _dict.get('busy')
         else:
@@ -47515,6 +48961,8 @@ class Volume():
         _dict = {}
         if hasattr(self, 'active') and self.active is not None:
             _dict['active'] = self.active
+        if hasattr(self, 'bandwidth') and self.bandwidth is not None:
+            _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'busy') and self.busy is not None:
             _dict['busy'] = self.busy
         if hasattr(self, 'capacity') and self.capacity is not None:
@@ -47600,6 +49048,9 @@ class VolumeAttachment():
     """
     VolumeAttachment.
 
+    :attr int bandwidth: The maximum bandwidth (in megabits per second) for the
+          volume when attached to this instance. This may be lower than the volume
+          bandwidth depending on the configuration of the instance.
     :attr datetime created_at: The date and time that the volume was attached.
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
@@ -47616,6 +49067,7 @@ class VolumeAttachment():
     """
 
     def __init__(self,
+                 bandwidth: int,
                  created_at: datetime,
                  href: str,
                  id: str,
@@ -47629,6 +49081,9 @@ class VolumeAttachment():
         """
         Initialize a VolumeAttachment object.
 
+        :param int bandwidth: The maximum bandwidth (in megabits per second) for
+               the volume when attached to this instance. This may be lower than the
+               volume bandwidth depending on the configuration of the instance.
         :param datetime created_at: The date and time that the volume was attached.
         :param str href: The URL for this volume attachment.
         :param str id: The unique identifier for this volume attachment.
@@ -47643,6 +49098,7 @@ class VolumeAttachment():
                This property may be absent if the volume attachment's `status` is not
                `attached`.
         """
+        self.bandwidth = bandwidth
         self.created_at = created_at
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
         self.device = device
@@ -47657,6 +49113,10 @@ class VolumeAttachment():
     def from_dict(cls, _dict: Dict) -> 'VolumeAttachment':
         """Initialize a VolumeAttachment object from a json dictionary."""
         args = {}
+        if 'bandwidth' in _dict:
+            args['bandwidth'] = _dict.get('bandwidth')
+        else:
+            raise ValueError('Required property \'bandwidth\' not present in VolumeAttachment JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -47699,6 +49159,8 @@ class VolumeAttachment():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'bandwidth') and self.bandwidth is not None:
+            _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'delete_volume_on_instance_delete') and self.delete_volume_on_instance_delete is not None:
@@ -48819,25 +50281,66 @@ class VolumePatch():
     """
     VolumePatch.
 
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). The volume must be attached as a data volume to a virtual server
+          instance, and the specified value must not be less than the current capacity.
+          The minimum and maximum capacity limits for creating or updating volumes may
+          expand in the future.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
+          The volume must be attached as a data volume to a running virtual server
+          instance.
     :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: (optional) The profile to use for this
+          volume.  The requested profile must be in the same
+          `family` as the current profile.  The volume must be attached as a data volume
+          to a
+           running virtual server instance.
     """
 
     def __init__(self,
                  *,
-                 name: str = None) -> None:
+                 capacity: int = None,
+                 iops: int = None,
+                 name: str = None,
+                 profile: 'VolumeProfileIdentity' = None) -> None:
         """
         Initialize a VolumePatch object.
 
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). The volume must be attached as a data volume to a virtual
+               server instance, and the specified value must not be less than the current
+               capacity.
+               The minimum and maximum capacity limits for creating or updating volumes
+               may expand in the future.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`. The volume must be attached as a data volume to a running virtual
+               server instance.
         :param str name: (optional) The unique user-defined name for this volume.
+        :param VolumeProfileIdentity profile: (optional) The profile to use for
+               this volume.  The requested profile must be in the same
+               `family` as the current profile.  The volume must be attached as a data
+               volume to a
+                running virtual server instance.
         """
+        self.capacity = capacity
+        self.iops = iops
         self.name = name
+        self.profile = profile
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumePatch':
         """Initialize a VolumePatch object from a json dictionary."""
         args = {}
+        if 'capacity' in _dict:
+            args['capacity'] = _dict.get('capacity')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
         return cls(**args)
 
     @classmethod
@@ -48848,8 +50351,17 @@ class VolumePatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'capacity') and self.capacity is not None:
+            _dict['capacity'] = self.capacity
+        if hasattr(self, 'iops') and self.iops is not None:
+            _dict['iops'] = self.iops
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -48874,23 +50386,29 @@ class VolumeProfile():
     """
     VolumeProfile.
 
-    :attr str family: (optional) The product family this volume profile belongs to.
+    :attr str family: The product family this volume profile belongs to.
+          The enumerated values for this property will expand in the future. When
+          processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the volume profile on which the
+          unexpected property value was encountered.
     :attr str href: The URL for this volume profile.
     :attr str name: The globally unique name for this volume profile.
     """
 
     def __init__(self,
+                 family: str,
                  href: str,
-                 name: str,
-                 *,
-                 family: str = None) -> None:
+                 name: str) -> None:
         """
         Initialize a VolumeProfile object.
 
+        :param str family: The product family this volume profile belongs to.
+               The enumerated values for this property will expand in the future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the volume profile on which the
+               unexpected property value was encountered.
         :param str href: The URL for this volume profile.
         :param str name: The globally unique name for this volume profile.
-        :param str family: (optional) The product family this volume profile
-               belongs to.
         """
         self.family = family
         self.href = href
@@ -48902,6 +50420,8 @@ class VolumeProfile():
         args = {}
         if 'family' in _dict:
             args['family'] = _dict.get('family')
+        else:
+            raise ValueError('Required property \'family\' not present in VolumeProfile JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
@@ -48945,6 +50465,18 @@ class VolumeProfile():
     def __ne__(self, other: 'VolumeProfile') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class FamilyEnum(str, Enum):
+        """
+        The product family this volume profile belongs to.
+        The enumerated values for this property will expand in the future. When processing
+        this property, check for and log unknown values. Optionally halt processing and
+        surface the error, or bypass the volume profile on which the unexpected property
+        value was encountered.
+        """
+        TIERED = 'tiered'
+        CUSTOM = 'custom'
+
 
 class VolumeProfileCollection():
     """
@@ -49246,7 +50778,10 @@ class VolumePrototype():
     """
     VolumePrototype.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
+          The volume must be attached as a data volume to a running virtual server
+          instance.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
@@ -49267,7 +50802,10 @@ class VolumePrototype():
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param ZoneIdentity zone: The zone this volume will reside in.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`. The volume must be attached as a data volume to a running virtual
+               server instance.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
@@ -49282,15 +50820,17 @@ class VolumePrototypeInstanceByImageContext():
     """
     VolumePrototypeInstanceByImageContext.
 
-    :attr int capacity: (optional) The capacity of the volume in gigabytes. The
-          specified minimum and maximum capacity values for creating or updating volumes
-          may expand in the future.
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). The only allowed value is the image's `minimum_provisioned_size`,
+          but the allowed values are expected to expand in the future.
+          If unspecified, the capacity will be the image's `minimum_provisioned_size`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
           If this property is not provided but the image is encrypted, the image's
           `encryption_key` will be used. Otherwise, the `encryption` type for the
           volume will be `provider_managed`.
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -49306,15 +50846,19 @@ class VolumePrototypeInstanceByImageContext():
         Initialize a VolumePrototypeInstanceByImageContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int capacity: (optional) The capacity of the volume in gigabytes.
-               The specified minimum and maximum capacity values for creating or updating
-               volumes may expand in the future.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). The only allowed value is the image's
+               `minimum_provisioned_size`, but the allowed values are expected to expand
+               in the future.
+               If unspecified, the capacity will be the image's
+               `minimum_provisioned_size`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
                If this property is not provided but the image is encrypted, the image's
                `encryption_key` will be used. Otherwise, the `encryption` type for the
                volume will be `provider_managed`.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         self.capacity = capacity
@@ -52244,6 +53788,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
     :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
     :attr str resource_type: The resource type.
     """
 
@@ -52262,6 +53807,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
         :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
         :param str resource_type: The resource type.
         :param NetworkInterfaceReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
@@ -54842,6 +56388,22 @@ class InstancePlacementTargetPrototypeDedicatedHostIdentity(InstancePlacementTar
                   ", ".join(['InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityById', 'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByCRN', 'InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentityByHref']))
         raise Exception(msg)
 
+class InstancePlacementTargetPrototypePlacementGroupIdentity(InstancePlacementTargetPrototype):
+    """
+    Identifies a placement group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypePlacementGroupIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById', 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN', 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref']))
+        raise Exception(msg)
+
 class InstancePlacementTargetDedicatedHostGroupReference(InstancePlacementTarget):
     """
     InstancePlacementTargetDedicatedHostGroupReference.
@@ -55082,6 +56644,123 @@ class InstancePlacementTargetDedicatedHostReference(InstancePlacementTarget):
         DEDICATED_HOST = 'dedicated_host'
 
 
+class InstancePlacementTargetPlacementGroupReference(InstancePlacementTarget):
+    """
+    InstancePlacementTargetPlacementGroupReference.
+
+    :attr str crn: The CRN for this placement group.
+    :attr PlacementGroupReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this placement group.
+    :attr str id: The unique identifier for this placement group.
+    :attr str name: The user-defined name for this placement group.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'PlacementGroupReferenceDeleted' = None) -> None:
+        """
+        Initialize a InstancePlacementTargetPlacementGroupReference object.
+
+        :param str crn: The CRN for this placement group.
+        :param str href: The URL for this placement group.
+        :param str id: The unique identifier for this placement group.
+        :param str name: The user-defined name for this placement group.
+        :param str resource_type: The resource type.
+        :param PlacementGroupReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPlacementGroupReference':
+        """Initialize a InstancePlacementTargetPlacementGroupReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in InstancePlacementTargetPlacementGroupReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = PlacementGroupReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in InstancePlacementTargetPlacementGroupReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in InstancePlacementTargetPlacementGroupReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in InstancePlacementTargetPlacementGroupReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in InstancePlacementTargetPlacementGroupReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPlacementGroupReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPlacementGroupReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPlacementGroupReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPlacementGroupReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        PLACEMENT_GROUP = 'placement_group'
+
+
 class InstanceProfileBandwidthDependent(InstanceProfileBandwidth):
     """
     The total bandwidth shared across the network interfaces and storage volumes of an
@@ -55150,7 +56829,7 @@ class InstanceProfileBandwidthDependent(InstanceProfileBandwidth):
 class InstanceProfileBandwidthEnum(InstanceProfileBandwidth):
     """
     The permitted total bandwidth values (in megabits per second) shared across the
-    network interfaces of an instance with this profile.
+    network interfaces and storage volumes of an instance with this profile.
 
     :attr int default: The default value for this profile field.
     :attr str type: The type for this profile field.
@@ -56978,18 +58657,350 @@ class InstanceProfileVCPURange(InstanceProfileVCPU):
         RANGE = 'range'
 
 
+class InstanceProfileVolumeBandwidthDependent(InstanceProfileVolumeBandwidth):
+    """
+    The storage bandwidth shared across the storage volumes of an instance with this
+    profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileVolumeBandwidthDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileVolumeBandwidthDependent':
+        """Initialize a InstanceProfileVolumeBandwidthDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileVolumeBandwidthDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileVolumeBandwidthDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileVolumeBandwidthDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileVolumeBandwidthDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileVolumeBandwidthDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class InstanceProfileVolumeBandwidthEnum(InstanceProfileVolumeBandwidth):
+    """
+    The permitted storage bandwidth values (in megabits per second) shared across the
+    storage volumes of an instance with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a InstanceProfileVolumeBandwidthEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileVolumeBandwidthEnum':
+        """Initialize a InstanceProfileVolumeBandwidthEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileVolumeBandwidthEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileVolumeBandwidthEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in InstanceProfileVolumeBandwidthEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileVolumeBandwidthEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileVolumeBandwidthEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileVolumeBandwidthEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileVolumeBandwidthEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileVolumeBandwidthFixed(InstanceProfileVolumeBandwidth):
+    """
+    The storage bandwidth (in megabits per second) shared across the storage volumes of an
+    instance with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a InstanceProfileVolumeBandwidthFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileVolumeBandwidthFixed':
+        """Initialize a InstanceProfileVolumeBandwidthFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileVolumeBandwidthFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in InstanceProfileVolumeBandwidthFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileVolumeBandwidthFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileVolumeBandwidthFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileVolumeBandwidthFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileVolumeBandwidthFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class InstanceProfileVolumeBandwidthRange(InstanceProfileVolumeBandwidth):
+    """
+    The permitted storage bandwidth range (in megabits per second) shared across the
+    storage volumes of an instance with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileVolumeBandwidthRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileVolumeBandwidthRange':
+        """Initialize a InstanceProfileVolumeBandwidthRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileVolumeBandwidthRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in InstanceProfileVolumeBandwidthRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in InstanceProfileVolumeBandwidthRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in InstanceProfileVolumeBandwidthRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileVolumeBandwidthRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileVolumeBandwidthRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileVolumeBandwidthRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileVolumeBandwidthRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileVolumeBandwidthRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
 class InstancePrototypeInstanceByImage(InstancePrototype):
     """
     InstancePrototypeInstanceByImage.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -57000,6 +59011,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57027,6 +59042,7 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None,
@@ -57041,13 +59057,16 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -57058,6 +59077,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57076,6 +59099,7 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -57100,6 +59124,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -57157,6 +59183,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -57205,13 +59233,15 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     InstancePrototypeInstanceBySourceTemplate.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -57222,6 +59252,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57235,8 +59269,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: (optional) Primary
           network interface.
-    :attr InstanceTemplateIdentity source_template: Identifies an instance template
-          by a unique property.
+    :attr InstanceTemplateIdentity source_template: The template to create this
+          virtual server instance from.
     :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
           reside in.
     """
@@ -57250,6 +59284,7 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None,
@@ -57260,16 +59295,19 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         """
         Initialize a InstancePrototypeInstanceBySourceTemplate object.
 
-        :param InstanceTemplateIdentity source_template: Identifies an instance
-               template by a unique property.
+        :param InstanceTemplateIdentity source_template: The template to create
+               this virtual server instance from.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -57280,6 +59318,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57304,6 +59346,7 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -57329,6 +59372,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -57384,6 +59429,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -57437,13 +59484,15 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
     InstancePrototypeInstanceByVolume.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -57454,6 +59503,10 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57479,6 +59532,7 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -57493,13 +59547,16 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -57510,6 +59567,10 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57525,6 +59586,7 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -57548,6 +59610,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -57603,6 +59667,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -57817,13 +59883,15 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     InstanceTemplatePrototypeInstanceByImage.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -57834,6 +59902,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57861,6 +59933,7 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None,
@@ -57875,13 +59948,16 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -57892,6 +59968,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -57910,6 +59990,7 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -57934,6 +60015,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -57991,6 +60074,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -58039,13 +60124,15 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     InstanceTemplatePrototypeInstanceBySourceTemplate.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -58056,6 +60143,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58069,8 +60160,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
           virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: (optional) Primary
           network interface.
-    :attr InstanceTemplateIdentity source_template: Identifies an instance template
-          by a unique property.
+    :attr InstanceTemplateIdentity source_template: The template to create this
+          virtual server instance from.
     :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
           reside in.
     """
@@ -58084,6 +60175,7 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None,
@@ -58094,16 +60186,19 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         """
         Initialize a InstanceTemplatePrototypeInstanceBySourceTemplate object.
 
-        :param InstanceTemplateIdentity source_template: Identifies an instance
-               template by a unique property.
+        :param InstanceTemplateIdentity source_template: The template to create
+               this virtual server instance from.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -58114,6 +60209,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58138,6 +60237,7 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -58163,6 +60263,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -58218,6 +60320,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -58271,13 +60375,15 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
     InstanceTemplatePrototypeInstanceByVolume.
 
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -58288,6 +60394,10 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
           virtual server instance.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58313,6 +60423,7 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -58327,13 +60438,16 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -58344,6 +60458,10 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58359,6 +60477,7 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -58382,6 +60501,8 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
             args['profile'] = _dict.get('profile')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -58437,6 +60558,8 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -58485,13 +60608,15 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -58501,6 +60626,10 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance template.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58532,6 +60661,7 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None,
@@ -58554,19 +60684,26 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -58589,6 +60726,7 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -58633,6 +60771,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in InstanceTemplateInstanceByImage JSON')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -58695,6 +60835,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                 _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -58738,279 +60880,6 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class InstanceTemplateInstanceBySourceTemplate(InstanceTemplate):
-    """
-    InstanceTemplateInstanceBySourceTemplate.
-
-    :attr datetime created_at: The date and time that the instance template was
-          created.
-    :attr str crn: The CRN for this instance template.
-    :attr str href: The URL for this instance template.
-    :attr str id: The unique identifier for this instance template.
-    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
-    :attr str name: The unique user-defined name for this instance template.
-    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
-          additional network interfaces to create for the virtual server instance.
-    :attr InstancePlacementTargetPrototype placement_target: (optional) The
-          placement restrictions to use for the virtual server instance.
-    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
-    :attr ResourceGroupReference resource_group: The resource group for this
-          instance template.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
-    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
-    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
-    :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
-          (optional) The boot volume attachment for the virtual server instance.
-    :attr ImageIdentity image: (optional) The image to use when provisioning the
-          virtual server instance.
-    :attr NetworkInterfacePrototype primary_network_interface: (optional) Primary
-          network interface.
-    :attr InstanceTemplateIdentity source_template: Identifies an instance template
-          by a unique property.
-    :attr ZoneIdentity zone: (optional) The zone this virtual server instance will
-          reside in.
-    """
-
-    def __init__(self,
-                 created_at: datetime,
-                 crn: str,
-                 href: str,
-                 id: str,
-                 name: str,
-                 resource_group: 'ResourceGroupReference',
-                 source_template: 'InstanceTemplateIdentity',
-                 *,
-                 keys: List['KeyIdentity'] = None,
-                 network_interfaces: List['NetworkInterfacePrototype'] = None,
-                 placement_target: 'InstancePlacementTargetPrototype' = None,
-                 profile: 'InstanceProfileIdentity' = None,
-                 user_data: str = None,
-                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
-                 vpc: 'VPCIdentity' = None,
-                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceByImageContext' = None,
-                 image: 'ImageIdentity' = None,
-                 primary_network_interface: 'NetworkInterfacePrototype' = None,
-                 zone: 'ZoneIdentity' = None) -> None:
-        """
-        Initialize a InstanceTemplateInstanceBySourceTemplate object.
-
-        :param datetime created_at: The date and time that the instance template
-               was created.
-        :param str crn: The CRN for this instance template.
-        :param str href: The URL for this instance template.
-        :param str id: The unique identifier for this instance template.
-        :param str name: The unique user-defined name for this instance template.
-        :param ResourceGroupReference resource_group: The resource group for this
-               instance template.
-        :param InstanceTemplateIdentity source_template: Identifies an instance
-               template by a unique property.
-        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
-        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
-               additional network interfaces to create for the virtual server instance.
-        :param InstancePlacementTargetPrototype placement_target: (optional) The
-               placement restrictions to use for the virtual server instance.
-        :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
-        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
-        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
-        :param VolumeAttachmentPrototypeInstanceByImageContext
-               boot_volume_attachment: (optional) The boot volume attachment for the
-               virtual server instance.
-        :param ImageIdentity image: (optional) The image to use when provisioning
-               the virtual server instance.
-        :param NetworkInterfacePrototype primary_network_interface: (optional)
-               Primary network interface.
-        :param ZoneIdentity zone: (optional) The zone this virtual server instance
-               will reside in.
-        """
-        # pylint: disable=super-init-not-called
-        self.created_at = created_at
-        self.crn = crn
-        self.href = href
-        self.id = id
-        self.keys = keys
-        self.name = name
-        self.network_interfaces = network_interfaces
-        self.placement_target = placement_target
-        self.profile = profile
-        self.resource_group = resource_group
-        self.user_data = user_data
-        self.volume_attachments = volume_attachments
-        self.vpc = vpc
-        self.boot_volume_attachment = boot_volume_attachment
-        self.image = image
-        self.primary_network_interface = primary_network_interface
-        self.source_template = source_template
-        self.zone = zone
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstanceTemplateInstanceBySourceTemplate':
-        """Initialize a InstanceTemplateInstanceBySourceTemplate object from a json dictionary."""
-        args = {}
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError('Required property \'created_at\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError('Required property \'crn\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'keys' in _dict:
-            args['keys'] = _dict.get('keys')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
-        if 'placement_target' in _dict:
-            args['placement_target'] = _dict.get('placement_target')
-        if 'profile' in _dict:
-            args['profile'] = _dict.get('profile')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
-        else:
-            raise ValueError('Required property \'resource_group\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'user_data' in _dict:
-            args['user_data'] = _dict.get('user_data')
-        if 'volume_attachments' in _dict:
-            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
-        if 'vpc' in _dict:
-            args['vpc'] = _dict.get('vpc')
-        if 'boot_volume_attachment' in _dict:
-            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByImageContext.from_dict(_dict.get('boot_volume_attachment'))
-        if 'image' in _dict:
-            args['image'] = _dict.get('image')
-        if 'primary_network_interface' in _dict:
-            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
-        if 'source_template' in _dict:
-            args['source_template'] = _dict.get('source_template')
-        else:
-            raise ValueError('Required property \'source_template\' not present in InstanceTemplateInstanceBySourceTemplate JSON')
-        if 'zone' in _dict:
-            args['zone'] = _dict.get('zone')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstanceTemplateInstanceBySourceTemplate object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'keys') and self.keys is not None:
-            keys_list = []
-            for x in self.keys:
-                if isinstance(x, dict):
-                    keys_list.append(x)
-                else:
-                    keys_list.append(x.to_dict())
-            _dict['keys'] = keys_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
-        if hasattr(self, 'placement_target') and self.placement_target is not None:
-            if isinstance(self.placement_target, dict):
-                _dict['placement_target'] = self.placement_target
-            else:
-                _dict['placement_target'] = self.placement_target.to_dict()
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'user_data') and self.user_data is not None:
-            _dict['user_data'] = self.user_data
-        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
-            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
-            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
-        if hasattr(self, 'image') and self.image is not None:
-            if isinstance(self.image, dict):
-                _dict['image'] = self.image
-            else:
-                _dict['image'] = self.image.to_dict()
-        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
-            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
-        if hasattr(self, 'source_template') and self.source_template is not None:
-            if isinstance(self.source_template, dict):
-                _dict['source_template'] = self.source_template
-            else:
-                _dict['source_template'] = self.source_template.to_dict()
-        if hasattr(self, 'zone') and self.zone is not None:
-            if isinstance(self.zone, dict):
-                _dict['zone'] = self.zone
-            else:
-                _dict['zone'] = self.zone.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstanceTemplateInstanceBySourceTemplate object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstanceTemplateInstanceBySourceTemplate') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstanceTemplateInstanceBySourceTemplate') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class InstanceTemplateInstanceByVolume(InstanceTemplate):
     """
     InstanceTemplateInstanceByVolume.
@@ -59021,13 +60890,15 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Up to 10 keys may be
-          provided; if no keys are provided the instance will be inaccessible unless the
-          image used provides another means of access. For Windows instances, one of the
-          keys will be used to encrypt the administrator password.
-          Keys will be made available to the virtual server instance as cloud-init vendor
-          data. For cloud-init enabled images, these keys will also be added as SSH
-          authorized keys for the administrative user.
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -59037,6 +60908,10 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
           virtual server instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance template.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
     :attr str user_data: (optional) User data to be made available when setting up
           the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -59066,6 +60941,7 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
+                 total_volume_bandwidth: int = None,
                  user_data: str = None,
                  volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
                  vpc: 'VPCIdentity' = None) -> None:
@@ -59088,19 +60964,26 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Up to 10 keys may be
-               provided; if no keys are provided the instance will be inaccessible unless
-               the image used provides another means of access. For Windows instances, one
-               of the keys will be used to encrypt the administrator password.
-               Keys will be made available to the virtual server instance as cloud-init
-               vendor data. For cloud-init enabled images, these keys will also be added
-               as SSH authorized keys for the administrative user.
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
                this virtual server instance.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
         :param str user_data: (optional) User data to be made available when
                setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
@@ -59120,6 +61003,7 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
         self.placement_target = placement_target
         self.profile = profile
         self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
         self.user_data = user_data
         self.volume_attachments = volume_attachments
         self.vpc = vpc
@@ -59163,6 +61047,8 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in InstanceTemplateInstanceByVolume JSON')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
         if 'user_data' in _dict:
             args['user_data'] = _dict.get('user_data')
         if 'volume_attachments' in _dict:
@@ -59223,6 +61109,8 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
                 _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
         if hasattr(self, 'user_data') and self.user_data is not None:
             _dict['user_data'] = self.user_data
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
@@ -59315,6 +61203,66 @@ class KeyIdentityByCRN(KeyIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'KeyIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class KeyIdentityByFingerprint(KeyIdentity):
+    """
+    KeyIdentityByFingerprint.
+
+    :attr str fingerprint: The fingerprint for this key.  The value is returned
+          base64-encoded and prefixed with the hash algorithm (always `SHA256`).
+    """
+
+    def __init__(self,
+                 fingerprint: str) -> None:
+        """
+        Initialize a KeyIdentityByFingerprint object.
+
+        :param str fingerprint: The fingerprint for this key.  The value is
+               returned base64-encoded and prefixed with the hash algorithm (always
+               `SHA256`).
+        """
+        # pylint: disable=super-init-not-called
+        self.fingerprint = fingerprint
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'KeyIdentityByFingerprint':
+        """Initialize a KeyIdentityByFingerprint object from a json dictionary."""
+        args = {}
+        if 'fingerprint' in _dict:
+            args['fingerprint'] = _dict.get('fingerprint')
+        else:
+            raise ValueError('Required property \'fingerprint\' not present in KeyIdentityByFingerprint JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a KeyIdentityByFingerprint object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'fingerprint') and self.fingerprint is not None:
+            _dict['fingerprint'] = self.fingerprint
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this KeyIdentityByFingerprint object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'KeyIdentityByFingerprint') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'KeyIdentityByFingerprint') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -59429,239 +61377,6 @@ class KeyIdentityById(KeyIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'KeyIdentityById') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class KeyIdentityKeyIdentityByFingerprint(KeyIdentity):
-    """
-    KeyIdentityKeyIdentityByFingerprint.
-
-    :attr str fingerprint: The fingerprint for this key.  The value is returned
-          base64-encoded and prefixed with the hash algorithm (always `SHA256`).
-    """
-
-    def __init__(self,
-                 fingerprint: str) -> None:
-        """
-        Initialize a KeyIdentityKeyIdentityByFingerprint object.
-
-        :param str fingerprint: The fingerprint for this key.  The value is
-               returned base64-encoded and prefixed with the hash algorithm (always
-               `SHA256`).
-        """
-        # pylint: disable=super-init-not-called
-        self.fingerprint = fingerprint
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'KeyIdentityKeyIdentityByFingerprint':
-        """Initialize a KeyIdentityKeyIdentityByFingerprint object from a json dictionary."""
-        args = {}
-        if 'fingerprint' in _dict:
-            args['fingerprint'] = _dict.get('fingerprint')
-        else:
-            raise ValueError('Required property \'fingerprint\' not present in KeyIdentityKeyIdentityByFingerprint JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a KeyIdentityKeyIdentityByFingerprint object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'fingerprint') and self.fingerprint is not None:
-            _dict['fingerprint'] = self.fingerprint
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this KeyIdentityKeyIdentityByFingerprint object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'KeyIdentityKeyIdentityByFingerprint') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'KeyIdentityKeyIdentityByFingerprint') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint(KeyReferenceInstanceInitializationContext):
-    """
-    KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint.
-
-    :attr str fingerprint: The fingerprint for this key.  The value is returned
-          base64-encoded and prefixed with the hash algorithm (always `SHA256`).
-    """
-
-    def __init__(self,
-                 fingerprint: str) -> None:
-        """
-        Initialize a KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint object.
-
-        :param str fingerprint: The fingerprint for this key.  The value is
-               returned base64-encoded and prefixed with the hash algorithm (always
-               `SHA256`).
-        """
-        # pylint: disable=super-init-not-called
-        self.fingerprint = fingerprint
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint':
-        """Initialize a KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint object from a json dictionary."""
-        args = {}
-        if 'fingerprint' in _dict:
-            args['fingerprint'] = _dict.get('fingerprint')
-        else:
-            raise ValueError('Required property \'fingerprint\' not present in KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'fingerprint') and self.fingerprint is not None:
-            _dict['fingerprint'] = self.fingerprint
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'KeyReferenceInstanceInitializationContextKeyIdentityByFingerprint') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class KeyReferenceInstanceInitializationContextKeyReference(KeyReferenceInstanceInitializationContext):
-    """
-    KeyReferenceInstanceInitializationContextKeyReference.
-
-    :attr str crn: The CRN for this key.
-    :attr KeyReferenceDeleted deleted: (optional) If present, this property
-          indicates the referenced resource has been deleted and provides
-          some supplementary information.
-    :attr str fingerprint: The fingerprint for this key.  The value is returned
-          base64-encoded and prefixed with the hash algorithm (always `SHA256`).
-    :attr str href: The URL for this key.
-    :attr str id: The unique identifier for this key.
-    :attr str name: The user-defined name for this key.
-    """
-
-    def __init__(self,
-                 crn: str,
-                 fingerprint: str,
-                 href: str,
-                 id: str,
-                 name: str,
-                 *,
-                 deleted: 'KeyReferenceDeleted' = None) -> None:
-        """
-        Initialize a KeyReferenceInstanceInitializationContextKeyReference object.
-
-        :param str crn: The CRN for this key.
-        :param str fingerprint: The fingerprint for this key.  The value is
-               returned base64-encoded and prefixed with the hash algorithm (always
-               `SHA256`).
-        :param str href: The URL for this key.
-        :param str id: The unique identifier for this key.
-        :param str name: The user-defined name for this key.
-        :param KeyReferenceDeleted deleted: (optional) If present, this property
-               indicates the referenced resource has been deleted and provides
-               some supplementary information.
-        """
-        # pylint: disable=super-init-not-called
-        self.crn = crn
-        self.deleted = deleted
-        self.fingerprint = fingerprint
-        self.href = href
-        self.id = id
-        self.name = name
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'KeyReferenceInstanceInitializationContextKeyReference':
-        """Initialize a KeyReferenceInstanceInitializationContextKeyReference object from a json dictionary."""
-        args = {}
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError('Required property \'crn\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON')
-        if 'deleted' in _dict:
-            args['deleted'] = KeyReferenceDeleted.from_dict(_dict.get('deleted'))
-        if 'fingerprint' in _dict:
-            args['fingerprint'] = _dict.get('fingerprint')
-        else:
-            raise ValueError('Required property \'fingerprint\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in KeyReferenceInstanceInitializationContextKeyReference JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a KeyReferenceInstanceInitializationContextKeyReference object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'deleted') and self.deleted is not None:
-            _dict['deleted'] = self.deleted.to_dict()
-        if hasattr(self, 'fingerprint') and self.fingerprint is not None:
-            _dict['fingerprint'] = self.fingerprint
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this KeyReferenceInstanceInitializationContextKeyReference object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'KeyReferenceInstanceInitializationContextKeyReference') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'KeyReferenceInstanceInitializationContextKeyReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -59836,12 +61551,203 @@ class LoadBalancerIdentityById(LoadBalancerIdentity):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class LoadBalancerListenerIdentityByHref(LoadBalancerListenerIdentity):
+    """
+    LoadBalancerListenerIdentityByHref.
+
+    :attr str href: The listener's canonical URL.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a LoadBalancerListenerIdentityByHref object.
+
+        :param str href: The listener's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerIdentityByHref':
+        """Initialize a LoadBalancerListenerIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in LoadBalancerListenerIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LoadBalancerListenerIdentityById(LoadBalancerListenerIdentity):
+    """
+    LoadBalancerListenerIdentityById.
+
+    :attr str id: The unique identifier for this load balancer listener.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a LoadBalancerListenerIdentityById object.
+
+        :param str id: The unique identifier for this load balancer listener.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerIdentityById':
+        """Initialize a LoadBalancerListenerIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in LoadBalancerListenerIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch(LoadBalancerListenerPolicyTargetPatch):
+    """
+    LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch.
+
+    :attr int http_status_code: (optional) The HTTP status code for this redirect.
+    :attr LoadBalancerListenerIdentity listener: (optional) Identifies a load
+          balancer listener by a unique property.
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 *,
+                 http_status_code: int = None,
+                 listener: 'LoadBalancerListenerIdentity' = None,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch object.
+
+        :param int http_status_code: (optional) The HTTP status code for this
+               redirect.
+        :param LoadBalancerListenerIdentity listener: (optional) Identifies a load
+               balancer listener by a unique property.
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        # pylint: disable=super-init-not-called
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch':
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        if 'listener' in _dict:
+            args['listener'] = _dict.get('listener')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            if isinstance(self.listener, dict):
+                _dict['listener'] = self.listener
+            else:
+                _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerHTTPSRedirectPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch(LoadBalancerListenerPolicyTargetPatch):
     """
     LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch.
 
-    :attr int http_status_code: (optional) The http status code in the redirect
-          response.
+    :attr int http_status_code: (optional) The HTTP status code for this redirect.
     :attr str url: (optional) The redirect target URL.
     """
 
@@ -59852,8 +61758,8 @@ class LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURL
         """
         Initialize a LoadBalancerListenerPolicyTargetPatchLoadBalancerListenerPolicyRedirectURLPatch object.
 
-        :param int http_status_code: (optional) The http status code in the
-               redirect response.
+        :param int http_status_code: (optional) The HTTP status code for this
+               redirect.
         :param str url: (optional) The redirect target URL.
         """
         # pylint: disable=super-init-not-called
@@ -59918,11 +61824,92 @@ class LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity(LoadBalancer
                   ", ".join(['LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityById', 'LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref']))
         raise Exception(msg)
 
+class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype(LoadBalancerListenerPolicyTargetPrototype):
+    """
+    LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype.
+
+    :attr int http_status_code: The HTTP status code for this redirect.
+    :attr LoadBalancerListenerIdentity listener: Identifies a load balancer listener
+          by a unique property.
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 http_status_code: int,
+                 listener: 'LoadBalancerListenerIdentity',
+                 *,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype object.
+
+        :param int http_status_code: The HTTP status code for this redirect.
+        :param LoadBalancerListenerIdentity listener: Identifies a load balancer
+               listener by a unique property.
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        # pylint: disable=super-init-not-called
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype':
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        else:
+            raise ValueError('Required property \'http_status_code\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype JSON')
+        if 'listener' in _dict:
+            args['listener'] = _dict.get('listener')
+        else:
+            raise ValueError('Required property \'listener\' not present in LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype JSON')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            if isinstance(self.listener, dict):
+                _dict['listener'] = self.listener
+            else:
+                _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerHTTPSRedirectPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype(LoadBalancerListenerPolicyTargetPrototype):
     """
     LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype.
 
-    :attr int http_status_code: The http status code in the redirect response.
+    :attr int http_status_code: The HTTP status code for this redirect.
     :attr str url: The redirect target URL.
     """
 
@@ -59932,7 +61919,7 @@ class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirec
         """
         Initialize a LoadBalancerListenerPolicyTargetPrototypeLoadBalancerListenerPolicyRedirectURLPrototype object.
 
-        :param int http_status_code: The http status code in the redirect response.
+        :param int http_status_code: The HTTP status code for this redirect.
         :param str url: The redirect target URL.
         """
         # pylint: disable=super-init-not-called
@@ -60001,11 +61988,87 @@ class LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentity(LoadBala
                   ", ".join(['LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityById', 'LoadBalancerListenerPolicyTargetPrototypeLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref']))
         raise Exception(msg)
 
+class LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect(LoadBalancerListenerPolicyTarget):
+    """
+    LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect.
+
+    :attr int http_status_code: The HTTP status code for this redirect.
+    :attr LoadBalancerListenerReference listener:
+    :attr str uri: (optional) The redirect relative target URI.
+    """
+
+    def __init__(self,
+                 http_status_code: int,
+                 listener: 'LoadBalancerListenerReference',
+                 *,
+                 uri: str = None) -> None:
+        """
+        Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect object.
+
+        :param int http_status_code: The HTTP status code for this redirect.
+        :param LoadBalancerListenerReference listener:
+        :param str uri: (optional) The redirect relative target URI.
+        """
+        # pylint: disable=super-init-not-called
+        self.http_status_code = http_status_code
+        self.listener = listener
+        self.uri = uri
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect':
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect object from a json dictionary."""
+        args = {}
+        if 'http_status_code' in _dict:
+            args['http_status_code'] = _dict.get('http_status_code')
+        else:
+            raise ValueError('Required property \'http_status_code\' not present in LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect JSON')
+        if 'listener' in _dict:
+            args['listener'] = LoadBalancerListenerReference.from_dict(_dict.get('listener'))
+        else:
+            raise ValueError('Required property \'listener\' not present in LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect JSON')
+        if 'uri' in _dict:
+            args['uri'] = _dict.get('uri')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'http_status_code') and self.http_status_code is not None:
+            _dict['http_status_code'] = self.http_status_code
+        if hasattr(self, 'listener') and self.listener is not None:
+            _dict['listener'] = self.listener.to_dict()
+        if hasattr(self, 'uri') and self.uri is not None:
+            _dict['uri'] = self.uri
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerListenerPolicyTargetLoadBalancerListenerHTTPSRedirect') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(LoadBalancerListenerPolicyTarget):
     """
     LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL.
 
-    :attr int http_status_code: The http status code in the redirect response.
+    :attr int http_status_code: The HTTP status code for this redirect.
     :attr str url: The redirect target URL.
     """
 
@@ -60015,7 +62078,7 @@ class LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL(Load
         """
         Initialize a LoadBalancerListenerPolicyTargetLoadBalancerListenerPolicyRedirectURL object.
 
-        :param int http_status_code: The http status code in the redirect response.
+        :param int http_status_code: The HTTP status code for this redirect.
         :param str url: The redirect target URL.
         """
         # pylint: disable=super-init-not-called
@@ -60277,11 +62340,11 @@ class LoadBalancerPoolMemberTargetPrototypeIP(LoadBalancerPoolMemberTargetProtot
     """
     LoadBalancerPoolMemberTargetPrototypeIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -60289,11 +62352,12 @@ class LoadBalancerPoolMemberTargetPrototypeIP(LoadBalancerPoolMemberTargetProtot
         """
         Initialize a LoadBalancerPoolMemberTargetPrototypeIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -60358,11 +62422,11 @@ class LoadBalancerPoolMemberTargetIP(LoadBalancerPoolMemberTarget):
     """
     LoadBalancerPoolMemberTargetIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -60370,11 +62434,12 @@ class LoadBalancerPoolMemberTargetIP(LoadBalancerPoolMemberTarget):
         """
         Initialize a LoadBalancerPoolMemberTargetIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -64253,11 +66318,11 @@ class RouteNextHopIP(RouteNextHop):
     """
     RouteNextHopIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -64265,11 +66330,12 @@ class RouteNextHopIP(RouteNextHop):
         """
         Initialize a RouteNextHopIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -64318,11 +66384,11 @@ class RouteNextHopPrototypeRouteNextHopIP(RouteNextHopPrototype):
     """
     The IP address of the next hop to which to route packets.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -64330,11 +66396,12 @@ class RouteNextHopPrototypeRouteNextHopIP(RouteNextHopPrototype):
         """
         Initialize a RouteNextHopPrototypeRouteNextHopIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -64797,12 +66864,18 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr SecurityGroupRuleRemotePrototype remote: (optional)
     :attr str protocol: The protocol to enforce.
+    :attr SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses or
+          security groups from which this rule will allow traffic (or to
+          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
+          a
+          security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to allow
+          traffic
+          from any source (or to any source, for outbound rules).
     """
 
     def __init__(self,
@@ -64818,17 +66891,23 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
                or `outbound`.
         :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param SecurityGroupRuleRemotePrototype remote: (optional)
+        :param SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses
+               or security groups from which this rule will allow traffic (or to
+               which, for outbound rules). Can be specified as an IP address, a CIDR
+               block, or a
+               security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to
+               allow traffic
+               from any source (or to any source, for outbound rules).
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
         self.ip_version = ip_version
-        self.remote = remote
         self.protocol = protocol
+        self.remote = remote
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll':
@@ -64840,12 +66919,12 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
             raise ValueError('Required property \'direction\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError('Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll JSON')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
         return cls(**args)
 
     @classmethod
@@ -64860,13 +66939,13 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
             _dict['direction'] = self.direction
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
             else:
                 _dict['remote'] = self.remote.to_dict()
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         return _dict
 
     def _to_dict(self):
@@ -64898,8 +66977,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -64914,22 +66993,27 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolAll(SecurityGroupRulePr
 
 class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(SecurityGroupRulePrototype):
     """
-    When `protocol` is `icmp`, then the rule may also contain fields to specify an ICMP
-    `type` and `code`. Field `code` may only be specified if `type` is also specified. If
-    type is not specified, then traffic is allowed for all types and codes. If type is
-    specified and code is not specified, then traffic is allowed with the specified type
-    for all codes.
+    When `protocol` is `icmp`, the `type` property may optionally be specified. If
+    specified, then ICMP traffic is allowed only for the specified ICMP type. Further, if
+    `type` is specified, the `code` property may optionally be specified to allow traffic
+    only for the specified ICMP code.
 
+    :attr int code: (optional) The ICMP traffic code to allow.
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr SecurityGroupRuleRemotePrototype remote: (optional)
-    :attr int code: (optional) The ICMP traffic code to allow.
     :attr str protocol: The protocol to enforce.
+    :attr SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses or
+          security groups from which this rule will allow traffic (or to
+          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
+          a
+          security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to allow
+          traffic
+          from any source (or to any source, for outbound rules).
     :attr int type: (optional) The ICMP traffic type to allow.
     """
 
@@ -64937,9 +67021,9 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(SecurityGroupRuleP
                  direction: str,
                  protocol: str,
                  *,
+                 code: int = None,
                  ip_version: str = None,
                  remote: 'SecurityGroupRuleRemotePrototype' = None,
-                 code: int = None,
                  type: int = None) -> None:
         """
         Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP object.
@@ -64947,41 +67031,47 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(SecurityGroupRuleP
         :param str direction: The direction of traffic to enforce, either `inbound`
                or `outbound`.
         :param str protocol: The protocol to enforce.
+        :param int code: (optional) The ICMP traffic code to allow.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param SecurityGroupRuleRemotePrototype remote: (optional)
-        :param int code: (optional) The ICMP traffic code to allow.
+        :param SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses
+               or security groups from which this rule will allow traffic (or to
+               which, for outbound rules). Can be specified as an IP address, a CIDR
+               block, or a
+               security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to
+               allow traffic
+               from any source (or to any source, for outbound rules).
         :param int type: (optional) The ICMP traffic type to allow.
         """
         # pylint: disable=super-init-not-called
+        self.code = code
         self.direction = direction
         self.ip_version = ip_version
-        self.remote = remote
-        self.code = code
         self.protocol = protocol
+        self.remote = remote
         self.type = type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP':
         """Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP object from a json dictionary."""
         args = {}
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
         if 'direction' in _dict:
             args['direction'] = _dict.get('direction')
         else:
             raise ValueError('Required property \'direction\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
-        if 'code' in _dict:
-            args['code'] = _dict.get('code')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError('Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP JSON')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
         if 'type' in _dict:
             args['type'] = _dict.get('type')
         return cls(**args)
@@ -64994,19 +67084,19 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(SecurityGroupRuleP
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
         if hasattr(self, 'direction') and self.direction is not None:
             _dict['direction'] = self.direction
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
         if hasattr(self, 'remote') and self.remote is not None:
             if isinstance(self.remote, dict):
                 _dict['remote'] = self.remote
             else:
                 _dict['remote'] = self.remote.to_dict()
-        if hasattr(self, 'code') and self.code is not None:
-            _dict['code'] = self.code
-        if hasattr(self, 'protocol') and self.protocol is not None:
-            _dict['protocol'] = self.protocol
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -65040,8 +67130,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolICMP(SecurityGroupRuleP
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -65063,14 +67153,20 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr SecurityGroupRuleRemotePrototype remote: (optional)
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
     :attr int port_min: (optional) The inclusive lower bound of TCP/UDP port range.
     :attr str protocol: The protocol to enforce.
+    :attr SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses or
+          security groups from which this rule will allow traffic (or to
+          which, for outbound rules). Can be specified as an IP address, a CIDR block, or
+          a
+          security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to allow
+          traffic
+          from any source (or to any source, for outbound rules).
     """
 
     def __init__(self,
@@ -65078,9 +67174,9 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
                  protocol: str,
                  *,
                  ip_version: str = None,
-                 remote: 'SecurityGroupRuleRemotePrototype' = None,
                  port_max: int = None,
-                 port_min: int = None) -> None:
+                 port_min: int = None,
+                 remote: 'SecurityGroupRuleRemotePrototype' = None) -> None:
         """
         Initialize a SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP object.
 
@@ -65088,23 +67184,29 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
                or `outbound`.
         :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
-        :param SecurityGroupRuleRemotePrototype remote: (optional)
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
                range.
+        :param SecurityGroupRuleRemotePrototype remote: (optional) The IP addresses
+               or security groups from which this rule will allow traffic (or to
+               which, for outbound rules). Can be specified as an IP address, a CIDR
+               block, or a
+               security group. If omitted, a CIDR block of `0.0.0.0/0` will be used to
+               allow traffic
+               from any source (or to any source, for outbound rules).
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
         self.ip_version = ip_version
-        self.remote = remote
         self.port_max = port_max
         self.port_min = port_min
         self.protocol = protocol
+        self.remote = remote
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP':
@@ -65116,8 +67218,6 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
             raise ValueError('Required property \'direction\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
-        if 'remote' in _dict:
-            args['remote'] = _dict.get('remote')
         if 'port_max' in _dict:
             args['port_max'] = _dict.get('port_max')
         if 'port_min' in _dict:
@@ -65126,6 +67226,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
             args['protocol'] = _dict.get('protocol')
         else:
             raise ValueError('Required property \'protocol\' not present in SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP JSON')
+        if 'remote' in _dict:
+            args['remote'] = _dict.get('remote')
         return cls(**args)
 
     @classmethod
@@ -65140,17 +67242,17 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
             _dict['direction'] = self.direction
         if hasattr(self, 'ip_version') and self.ip_version is not None:
             _dict['ip_version'] = self.ip_version
-        if hasattr(self, 'remote') and self.remote is not None:
-            if isinstance(self.remote, dict):
-                _dict['remote'] = self.remote
-            else:
-                _dict['remote'] = self.remote.to_dict()
         if hasattr(self, 'port_max') and self.port_max is not None:
             _dict['port_max'] = self.port_max
         if hasattr(self, 'port_min') and self.port_min is not None:
             _dict['port_min'] = self.port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
+        if hasattr(self, 'remote') and self.remote is not None:
+            if isinstance(self.remote, dict):
+                _dict['remote'] = self.remote
+            else:
+                _dict['remote'] = self.remote.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -65182,8 +67284,8 @@ class SecurityGroupRulePrototypeSecurityGroupRuleProtocolTCPUDP(SecurityGroupRul
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -65266,11 +67368,11 @@ class SecurityGroupRuleRemotePatchIP(SecurityGroupRuleRemotePatch):
     """
     SecurityGroupRuleRemotePatchIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -65278,11 +67380,12 @@ class SecurityGroupRuleRemotePatchIP(SecurityGroupRuleRemotePatch):
         """
         Initialize a SecurityGroupRuleRemotePatchIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -65412,11 +67515,11 @@ class SecurityGroupRuleRemotePrototypeIP(SecurityGroupRuleRemotePrototype):
     """
     SecurityGroupRuleRemotePrototypeIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -65424,11 +67527,12 @@ class SecurityGroupRuleRemotePrototypeIP(SecurityGroupRuleRemotePrototype):
         """
         Initialize a SecurityGroupRuleRemotePrototypeIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -65558,11 +67662,11 @@ class SecurityGroupRuleRemoteIP(SecurityGroupRuleRemote):
     """
     SecurityGroupRuleRemoteIP.
 
-    :attr str address: The IP address. This property may add support for IPv6
-          addresses in the future. When processing a value in this property, verify that
-          the address is in an expected format. If it is not, log an error. Optionally
-          halt processing and surface the error, or bypass the resource on which the
-          unexpected IP address format was encountered.
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
     """
 
     def __init__(self,
@@ -65570,11 +67674,12 @@ class SecurityGroupRuleRemoteIP(SecurityGroupRuleRemote):
         """
         Initialize a SecurityGroupRuleRemoteIP object.
 
-        :param str address: The IP address. This property may add support for IPv6
-               addresses in the future. When processing a value in this property, verify
-               that the address is in an expected format. If it is not, log an error.
-               Optionally halt processing and surface the error, or bypass the resource on
-               which the unexpected IP address format was encountered.
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
         """
         # pylint: disable=super-init-not-called
         self.address = address
@@ -65732,9 +67837,9 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr str protocol: The protocol to enforce.
@@ -65758,8 +67863,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
         :param SecurityGroupRuleRemote remote:
         :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         """
@@ -65853,8 +67958,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -65869,20 +67974,19 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
 
 class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
     """
-    When `protocol` is `icmp`, then the rule may also contain fields to specify an ICMP
-    `type` and `code`. Field `code` may only be specified if `type` is also specified. If
-    type is not specified, then traffic is allowed for all types and codes. If type is
-    specified and code is not specified, then traffic is allowed with the specified type
-    for all codes.
+    When `protocol` is `icmp`, the `type` property may optionally be specified. If
+    specified, then ICMP traffic is allowed only for the specified ICMP type. Further, if
+    `type` is specified, the `code` property may optionally be specified to allow traffic
+    only for the specified ICMP code.
 
     :attr str direction: The direction of traffic to enforce, either `inbound` or
           `outbound`.
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr int code: (optional) The ICMP traffic code to allow.
@@ -65910,8 +68014,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
         :param SecurityGroupRuleRemote remote:
         :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param int code: (optional) The ICMP traffic code to allow.
@@ -66017,8 +68121,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -66042,9 +68146,9 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
     :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this field, if they are used.
-          Alternatively, if `remote` references a security group, then this rule only
-          applies to IP addresses (network interfaces) in that group matching this IP
+          `remote.address` or `remote.cidr_block` must match this property, if they are
+          used. Alternatively, if `remote` references a security group, then this rule
+          only applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
@@ -66072,8 +68176,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
         :param SecurityGroupRuleRemote remote:
         :param str protocol: The protocol to enforce.
         :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this field, if they are
-               used. Alternatively, if `remote` references a security group, then this
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
@@ -66181,8 +68285,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
     class IpVersionEnum(str, Enum):
         """
         The IP version to enforce. The format of `remote.address` or `remote.cidr_block`
-        must match this field, if they are used. Alternatively, if `remote` references a
-        security group, then this rule only applies to IP addresses (network interfaces)
+        must match this property, if they are used. Alternatively, if `remote` references
+        a security group, then this rule only applies to IP addresses (network interfaces)
         in that group matching this IP version.
         """
         IPV4 = 'ipv4'
@@ -68788,7 +70892,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext(VolumeAttach
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -68802,7 +70907,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext(VolumeAttach
         Initialize a VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -68814,14 +70920,15 @@ class VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInsta
     """
     VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext.
 
-    :attr int capacity: (optional) The capacity of the volume in gigabytes. The only
-          allowed value is the source snapshot's `minimum_capacity`, but the allowed
-          values are expected to expand in the future.
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
+          but the allowed values are expected to expand in the future.
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
           If this property is not provided, the snapshot's `encryption_key` will be used.
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
@@ -68842,16 +70949,18 @@ class VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInsta
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param SnapshotIdentity source_snapshot: The snapshot from which to clone
                the volume.
-        :param int capacity: (optional) The capacity of the volume in gigabytes.
-               The only allowed value is the source snapshot's `minimum_capacity`, but the
-               allowed values are expected to expand in the future.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). The only allowed value is the source snapshot's
+               `minimum_capacity`, but the allowed values are expected to expand in the
+               future.
                If unspecified, the capacity will be the source snapshot's
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
                If this property is not provided, the snapshot's `encryption_key` will be
                used.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -68953,7 +71062,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -68967,7 +71077,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -69264,14 +71375,17 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     """
     VolumePrototypeVolumeByCapacity.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
+          The volume must be attached as a data volume to a running virtual server
+          instance.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr ZoneIdentity zone: The zone this volume will reside in.
-    :attr int capacity: The capacity of the volume in gigabytes. The specified
-          minimum and maximum capacity values for creating or updating volumes may expand
-          in the future.
+    :attr int capacity: The capacity to use for the volume (in gigabytes). The
+          specified minimum and maximum capacity values for creating or updating volumes
+          may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
@@ -69292,10 +71406,13 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param ZoneIdentity zone: The zone this volume will reside in.
-        :param int capacity: The capacity of the volume in gigabytes. The specified
-               minimum and maximum capacity values for creating or updating volumes may
-               expand in the future.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int capacity: The capacity to use for the volume (in gigabytes). The
+               specified minimum and maximum capacity values for creating or updating
+               volumes may expand in the future.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`. The volume must be attached as a data volume to a running virtual
+               server instance.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional)
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
@@ -71452,6 +73569,177 @@ class InstancePlacementTargetPrototypeDedicatedHostIdentityDedicatedHostIdentity
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN(InstancePlacementTargetPrototypePlacementGroupIdentity):
+    """
+    InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN.
+
+    :attr str crn: The CRN for this placement group.
+    """
+
+    def __init__(self,
+                 crn: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN object.
+
+        :param str crn: The CRN for this placement group.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN':
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref(InstancePlacementTargetPrototypePlacementGroupIdentity):
+    """
+    InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref.
+
+    :attr str href: The URL for this placement group.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref object.
+
+        :param str href: The URL for this placement group.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref':
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById(InstancePlacementTargetPrototypePlacementGroupIdentity):
+    """
+    InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById.
+
+    :attr str id: The unique identifier for this placement group.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById object.
+
+        :param str id: The unique identifier for this placement group.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById':
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPrototypePlacementGroupIdentityPlacementGroupIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref(LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentity):
     """
     LoadBalancerListenerPolicyTargetPatchLoadBalancerPoolIdentityLoadBalancerPoolIdentityByHref.
@@ -72881,12 +75169,13 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
-    :attr int capacity: The capacity of the volume in gigabytes. The specified
-          minimum and maximum capacity values for creating or updating volumes may expand
-          in the future.
+    :attr int capacity: The capacity to use for the volume (in gigabytes). The
+          specified minimum and maximum capacity values for creating or updating volumes
+          may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
@@ -72904,10 +75193,11 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
         Initialize a VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int capacity: The capacity of the volume in gigabytes. The specified
-               minimum and maximum capacity values for creating or updating volumes may
-               expand in the future.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int capacity: The capacity to use for the volume (in gigabytes). The
+               specified minimum and maximum capacity values for creating or updating
+               volumes may expand in the future.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
@@ -72990,11 +75280,13 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
-    :attr int capacity: (optional) The capacity of the volume in gigabytes. The
-          allowed values are expected to expand in the future.
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
+          but the allowed values are expected to expand in the future.
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
@@ -73017,10 +75309,13 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param SnapshotIdentity source_snapshot: The snapshot from which to clone
                the volume.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
-        :param int capacity: (optional) The capacity of the volume in gigabytes.
-               The allowed values are expected to expand in the future.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). The only allowed value is the source snapshot's
+               `minimum_capacity`, but the allowed values are expected to expand in the
+               future.
                If unspecified, the capacity will be the source snapshot's
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
@@ -73282,12 +75577,13 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
-    :attr int capacity: The capacity of the volume in gigabytes. The specified
-          minimum and maximum capacity values for creating or updating volumes may expand
-          in the future.
+    :attr int capacity: The capacity to use for the volume (in gigabytes). The
+          specified minimum and maximum capacity values for creating or updating volumes
+          may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
           If this property is not provided, the `encryption` type for the volume will be
@@ -73305,10 +75601,11 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int capacity: The capacity of the volume in gigabytes. The specified
-               minimum and maximum capacity values for creating or updating volumes may
-               expand in the future.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int capacity: The capacity to use for the volume (in gigabytes). The
+               specified minimum and maximum capacity values for creating or updating
+               volumes may expand in the future.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
@@ -73391,11 +75688,13 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.
 
-    :attr int iops: (optional) The bandwidth for the volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
+          volume.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
-    :attr int capacity: (optional) The capacity of the volume in gigabytes. The
-          allowed values are expected to expand in the future.
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
+          but the allowed values are expected to expand in the future.
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
@@ -73418,10 +75717,13 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param SnapshotIdentity source_snapshot: The snapshot from which to clone
                the volume.
-        :param int iops: (optional) The bandwidth for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS)
+               for the volume.
         :param str name: (optional) The unique user-defined name for this volume.
-        :param int capacity: (optional) The capacity of the volume in gigabytes.
-               The allowed values are expected to expand in the future.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). The only allowed value is the source snapshot's
+               `minimum_capacity`, but the allowed values are expected to expand in the
+               future.
                If unspecified, the capacity will be the source snapshot's
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
