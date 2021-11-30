@@ -3809,7 +3809,7 @@ class VpcV1(BaseService):
             headers.update(kwargs.get('headers'))
         headers['Accept'] = 'application/json'
 
-        url = '/instances'
+        url = '/instances?generation=2&version=2021-08-17'
         request = self.prepare_request(method='POST',
                                        url=url,
                                        headers=headers,
