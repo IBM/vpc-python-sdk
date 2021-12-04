@@ -14,12 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.35.1-e449803c-20210628-211617
-
+# IBM OpenAPI SDK Code Generator Version: 3.43.0-49eab5c7-20211117-152138
+ 
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
-and manage infrastructure resources, including virtual server instances, subnets, volumes,
-and load balancers.
+and manage virtual server instances, along with subnets, volumes, load balancers, and
+more.
+
+API Version: 2021-11-23
 """
 
 from datetime import datetime
@@ -48,7 +50,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2021-09-21',
+                     version: str = '2021-11-23',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -56,9 +58,9 @@ class VpcV1(BaseService):
         Return a new client for the vpc service using the specified parameters and
                external configuration.
 
-        :param str version: Requests the version of the API as of a date in the
-               format `YYYY-MM-DD`. Any date up to the current date may be provided.
-               Specify the current date to request the latest version.
+        :param str version: Requests the API version as of a date, in format
+               `YYYY-MM-DD`. Any date between `2019-01-01` and the current date may be
+               specified. Specify the current date to request the latest version.
         """
         if version is None:
             raise ValueError('version must be provided')
@@ -73,19 +75,19 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2021-09-21',
+                 version: str = '2021-11-23',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
         """
         Construct a new client for the vpc service.
 
-        :param str version: Requests the version of the API as of a date in the
-               format `YYYY-MM-DD`. Any date up to the current date may be provided.
-               Specify the current date to request the latest version.
+        :param str version: Requests the API version as of a date, in format
+               `YYYY-MM-DD`. Any date between `2019-01-01` and the current date may be
+               specified. Specify the current date to request the latest version.
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
-               Get up to date information from https://github.com/IBM/python-sdk-core/blob/master/README.md
+               Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
                about initializing the authenticator of your choice.
         """
         if version is None:
@@ -123,8 +125,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param bool classic_access: (optional) Filters the collection to VPCs with
                the specified `classic_access` value.
         :param dict headers: A `dict` containing the request headers
@@ -157,7 +158,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -180,6 +181,9 @@ class VpcV1(BaseService):
                default address prefix should be automatically created for each zone in
                this VPC. If `manual`, this VPC will be created with no default address
                prefixes.
+               This property's value is used only when creating the VPC. Since address
+               prefixes are managed identically regardless of whether they were
+               automatically created, the value is not preserved as a VPC property.
         :param bool classic_access: (optional) Indicates whether this VPC should be
                connected to Classic Infrastructure. If true, this VPC's resources will
                have private network connectivity to the account's Classic Infrastructure
@@ -230,7 +234,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -278,7 +282,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -323,7 +327,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -378,7 +382,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -425,7 +429,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -473,7 +477,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -485,8 +489,9 @@ class VpcV1(BaseService):
         Retrieve a VPC's default security group.
 
         This request retrieves the default security group for the VPC specified by the
-        identifier in the URL. The default security group is applied to any new network
-        interfaces in the VPC that do not specify a security group.
+        identifier in the URL. Resources that optionally allow a security group to be
+        specified upon creation will be attached to this security group if a security
+        group is not specified.
 
         :param str id: The VPC identifier.
         :param dict headers: A `dict` containing the request headers
@@ -520,7 +525,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -573,7 +578,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -605,10 +610,9 @@ class VpcV1(BaseService):
                The prefix length of the address prefix's CIDR must be between `/9`
                (8,388,608 addresses) and `/29` (8 addresses).
         :param ZoneIdentity zone: The zone this address prefix will reside in.
-        :param bool is_default: (optional) Indicates whether this is the default
-               prefix for this zone in this VPC. If true, this prefix will become the
-               default prefix for this zone in this VPC. This fails if the VPC currently
-               has a default address prefix for this zone.
+        :param bool is_default: (optional) Indicates whether this will be the
+               default address prefix for this zone in this VPC. If `true`, the VPC must
+               not have a default address prefix for this zone.
         :param str name: (optional) The user-defined name for this address prefix.
                Names must be unique within the VPC the address prefix resides in. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -659,7 +663,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -708,7 +712,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -757,7 +761,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -818,7 +822,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -879,7 +883,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -973,7 +977,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1021,7 +1025,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1070,7 +1074,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1131,7 +1135,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1150,7 +1154,7 @@ class VpcV1(BaseService):
         VPC is associated with a routing table, which controls delivery of packets sent on
         that subnet according to the action of the most specific matching route in the
         table.  If multiple equally-specific routes exist, traffic will be distributed
-        across them.  If no routes match, delivery will be controlled by the system's
+        across them. If no routes match, delivery will be controlled by the system's
         built-in routes.
 
         :param str vpc_id: The VPC identifier.
@@ -1195,7 +1199,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1303,7 +1307,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1353,7 +1357,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1403,7 +1407,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1464,7 +1468,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1526,7 +1530,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1623,7 +1627,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1675,7 +1679,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1729,7 +1733,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1794,7 +1798,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -1822,8 +1826,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str routing_table_id: (optional) Filters the collection to subnets
                attached to the routing table with the specified identifier.
         :param str routing_table_name: (optional) Filters the collection to subnets
@@ -1859,7 +1862,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1910,7 +1913,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -1959,7 +1962,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2004,7 +2007,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2061,7 +2064,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2107,7 +2110,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2164,7 +2167,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2209,7 +2212,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2255,7 +2258,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2313,7 +2316,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2359,7 +2362,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2420,7 +2423,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2481,7 +2484,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2499,14 +2502,14 @@ class VpcV1(BaseService):
         This request reserves a system-selected IP address in a subnet.
 
         :param str subnet_id: The subnet identifier.
-        :param bool auto_delete: (optional) If set to `true`, this reserved IP will
-               be automatically deleted when the target is deleted or when the reserved IP
-               is unbound. The value cannot be set to `true` if the reserved IP is
-               unbound.
+        :param bool auto_delete: (optional) Indicates whether this reserved IP
+               member will be automatically deleted when either
+               `target` is deleted, or the reserved IP is unbound. Must be `false` if the
+               reserved IP is unbound.
         :param str name: (optional) The user-defined name for this reserved IP. If
-               not specified, the name will be a hyphenated list of randomly-selected
-               words. Names must be unique within the subnet the reserved IP resides in.
-               Names beginning with `ibm-` are reserved for provider-owned resources.
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+               Names must be unique within the subnet the reserved IP resides in. Names
+               beginning with `ibm-` are reserved for provider-owned resources.
         :param ReservedIPTargetPrototype target: (optional) The target this
                reserved IP is to be bound to.
         :param dict headers: A `dict` containing the request headers
@@ -2552,7 +2555,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2600,7 +2603,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2650,7 +2653,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2711,7 +2714,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -2742,8 +2745,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
         :param str visibility: (optional) Filters the collection to images with the
@@ -2779,7 +2781,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2831,7 +2833,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2878,7 +2880,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2923,7 +2925,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -2981,7 +2983,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3027,7 +3029,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3072,7 +3074,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -3084,7 +3086,6 @@ class VpcV1(BaseService):
         *,
         start: str = None,
         limit: int = None,
-        resource_group_id: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -3096,9 +3097,6 @@ class VpcV1(BaseService):
         :param str start: (optional) A server-supplied token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
-        :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `KeyCollection` object
@@ -3114,8 +3112,7 @@ class VpcV1(BaseService):
             'version': self.version,
             'generation': self.generation,
             'start': start,
-            'limit': limit,
-            'resource_group.id': resource_group_id
+            'limit': limit
         }
 
         if 'headers' in kwargs:
@@ -3128,7 +3125,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3200,7 +3197,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3244,7 +3241,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3289,7 +3286,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3344,7 +3341,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -3388,7 +3385,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3433,7 +3430,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3471,7 +3468,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3525,7 +3522,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3569,7 +3566,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3615,7 +3612,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3674,7 +3671,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3704,8 +3701,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
         :param str vpc_id: (optional) Filters the collection to resources in the
@@ -3765,7 +3761,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3816,7 +3812,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3863,7 +3859,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3908,7 +3904,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -3965,7 +3961,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4011,7 +4007,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4074,7 +4070,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4142,7 +4138,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4190,7 +4186,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4240,7 +4236,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4299,7 +4295,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4348,7 +4344,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4378,9 +4374,10 @@ class VpcV1(BaseService):
                spoofing is allowed on this interface. If false, source IP spoofing is
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
-        :param str name: (optional) The user-defined name for this network
-               interface. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
         :param str primary_ipv4_address: (optional) The primary IPv4 address. If
                specified, it must be an available address on the network interface's
                subnet. If unspecified, an available address on the subnet will be
@@ -4435,7 +4432,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4487,7 +4484,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4537,7 +4534,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4600,7 +4597,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4649,7 +4646,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4702,7 +4699,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4756,7 +4753,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4812,7 +4809,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4859,7 +4856,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4886,7 +4883,8 @@ class VpcV1(BaseService):
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
-               attachment. If unspecified, the name will be a hyphenated list of
+               attachment. Names must be unique within the instance the volume attachment
+               resides in. If unspecified, the name will be a hyphenated list of
                randomly-selected words.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -4932,7 +4930,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -4981,7 +4979,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5031,7 +5029,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5094,7 +5092,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -5144,7 +5142,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5240,7 +5238,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5285,7 +5283,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5330,7 +5328,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5387,7 +5385,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5432,7 +5430,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5485,7 +5483,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5541,7 +5539,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5589,7 +5587,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5639,7 +5637,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5700,7 +5698,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5758,7 +5756,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5820,7 +5818,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5874,7 +5872,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5929,7 +5927,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -5994,7 +5992,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6052,7 +6050,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6114,7 +6112,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6168,7 +6166,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6223,7 +6221,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6288,7 +6286,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6335,7 +6333,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6388,7 +6386,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6438,7 +6436,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6488,7 +6486,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6549,7 +6547,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -6563,6 +6561,7 @@ class VpcV1(BaseService):
         limit: int = None,
         resource_group_id: str = None,
         zone_name: str = None,
+        name: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -6576,10 +6575,11 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str zone_name: (optional) Filters the collection to resources in the
                zone with the exact specified name.
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `DedicatedHostGroupCollection` object
@@ -6597,7 +6597,8 @@ class VpcV1(BaseService):
             'start': start,
             'limit': limit,
             'resource_group.id': resource_group_id,
-            'zone.name': zone_name
+            'zone.name': zone_name,
+            'name': name
         }
 
         if 'headers' in kwargs:
@@ -6610,7 +6611,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6683,7 +6684,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6727,7 +6728,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6773,7 +6774,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6832,7 +6833,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6880,7 +6881,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6926,7 +6927,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -6937,6 +6938,7 @@ class VpcV1(BaseService):
         limit: int = None,
         resource_group_id: str = None,
         zone_name: str = None,
+        name: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -6950,10 +6952,11 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str zone_name: (optional) Filters the collection to resources in the
                zone with the exact specified name.
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `DedicatedHostCollection` object
@@ -6972,7 +6975,8 @@ class VpcV1(BaseService):
             'start': start,
             'limit': limit,
             'resource_group.id': resource_group_id,
-            'zone.name': zone_name
+            'zone.name': zone_name,
+            'name': name
         }
 
         if 'headers' in kwargs:
@@ -6985,7 +6989,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7034,7 +7038,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7082,7 +7086,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7132,7 +7136,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7193,7 +7197,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7237,7 +7241,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7283,7 +7287,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7340,7 +7344,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -7390,7 +7394,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7460,7 +7464,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7506,7 +7510,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7552,7 +7556,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7610,7 +7614,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -7661,7 +7665,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7706,7 +7710,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7761,7 +7765,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7811,7 +7815,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7856,7 +7860,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7901,7 +7905,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -7958,7 +7962,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -8005,7 +8009,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8032,8 +8036,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
         :param str source_volume_id: (optional) Filters the collection to resources
@@ -8090,7 +8093,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8157,7 +8160,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8201,7 +8204,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8246,7 +8249,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8301,7 +8304,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -8348,7 +8351,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8393,7 +8396,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8440,7 +8443,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8490,7 +8493,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -8517,8 +8520,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `PublicGatewayCollection` object
@@ -8548,7 +8550,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8630,7 +8632,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8677,7 +8679,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8723,7 +8725,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8778,7 +8780,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -8803,8 +8805,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `FloatingIPCollection` object
@@ -8834,7 +8835,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8883,7 +8884,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8929,7 +8930,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -8975,7 +8976,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9030,7 +9031,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -9057,8 +9058,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `NetworkACLCollection` object
@@ -9088,7 +9088,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9138,7 +9138,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9184,7 +9184,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9230,7 +9230,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9285,7 +9285,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9344,7 +9344,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9402,7 +9402,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9450,7 +9450,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9499,7 +9499,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9561,7 +9561,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -9593,8 +9593,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str vpc_id: (optional) Filters the collection to resources in the
                VPC with the specified identifier.
         :param str vpc_crn: (optional) Filters the collection to resources in the
@@ -9633,7 +9632,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9710,7 +9709,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9757,7 +9756,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9803,7 +9802,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9860,7 +9859,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9914,7 +9913,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -9966,7 +9965,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10017,7 +10016,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10069,7 +10068,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10116,7 +10115,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10180,7 +10179,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10230,7 +10229,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10280,7 +10279,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10342,7 +10341,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10396,7 +10395,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10450,7 +10449,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10500,7 +10499,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10554,7 +10553,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -10604,7 +10603,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10684,7 +10683,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10695,7 +10694,9 @@ class VpcV1(BaseService):
         """
         Delete an IKE policy.
 
-        This request deletes an IKE policy. This operation cannot be reversed.
+        This request deletes an IKE policy. This operation cannot be reversed. For this
+        request to succeed, there must not be any VPN gateway connections using this
+        policy.
 
         :param str id: The IKE policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -10728,7 +10729,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10773,7 +10774,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10828,7 +10829,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10873,7 +10874,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10919,7 +10920,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -10994,7 +10995,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11005,7 +11006,9 @@ class VpcV1(BaseService):
         """
         Delete an IPsec policy.
 
-        This request deletes an IPsec policy. This operation cannot be reversed.
+        This request deletes an IPsec policy. This operation cannot be reversed. For this
+        request to succeed, there must not be any VPN gateway connections using this
+        policy.
 
         :param str id: The IPsec policy identifier.
         :param dict headers: A `dict` containing the request headers
@@ -11038,7 +11041,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11084,7 +11087,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11139,7 +11142,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11184,7 +11187,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11205,8 +11208,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str mode: (optional) Filters the collection to VPN gateways with the
                specified mode.
         :param dict headers: A `dict` containing the request headers
@@ -11239,7 +11241,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11288,7 +11290,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11299,9 +11301,10 @@ class VpcV1(BaseService):
         """
         Delete a VPN gateway.
 
-        This request deletes a VPN gateway. A VPN gateway with a `status` of `pending`
-        cannot be deleted. This operation deletes all VPN gateway connections associated
-        with this VPN gateway.  This operation cannot be reversed.
+        This request deletes a VPN gateway. This operation cannot be reversed. For this
+        request to succeed, the VPN gateway must not have a `status` of `pending`, and
+        there must not be any VPC routes using the VPN gateway's connections as a next
+        hop.
 
         :param str id: The VPN gateway identifier.
         :param dict headers: A `dict` containing the request headers
@@ -11334,7 +11337,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11380,7 +11383,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11435,7 +11438,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11485,7 +11488,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11541,7 +11544,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11554,6 +11557,8 @@ class VpcV1(BaseService):
         Delete a VPN gateway connection.
 
         This request deletes a VPN gateway connection. This operation cannot be reversed.
+        For this request to succeed, there must not be VPC routes using this VPN
+        connection as a next hop.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -11589,7 +11594,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11639,7 +11644,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11699,7 +11704,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11748,7 +11753,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11804,7 +11809,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11861,7 +11866,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11919,7 +11924,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -11968,7 +11973,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12024,7 +12029,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12081,7 +12086,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12139,7 +12144,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -12191,7 +12196,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12236,7 +12241,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12282,7 +12287,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12296,6 +12301,7 @@ class VpcV1(BaseService):
         pools: List['LoadBalancerPoolPrototype'] = None,
         profile: 'LoadBalancerProfileIdentity' = None,
         resource_group: 'ResourceGroupIdentity' = None,
+        route_mode: bool = None,
         security_groups: List['SecurityGroupIdentity'] = None,
         **kwargs
     ) -> DetailedResponse:
@@ -12306,6 +12312,7 @@ class VpcV1(BaseService):
 
         :param bool is_public: Indicates whether this load balancer is public or
                private.
+               At present, if route mode is enabled, the load balancer must be private.
         :param List[SubnetIdentity] subnets: The subnets to provision this load
                balancer.
         :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
@@ -12328,6 +12335,10 @@ class VpcV1(BaseService):
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param bool route_mode: (optional) Indicates whether route mode is enabled
+               for this load balancer.
+               At present, public load balancers are not supported with route mode
+               enabled.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this load balancer.
                The load balancer profile must support security groups.
@@ -12373,6 +12384,7 @@ class VpcV1(BaseService):
             'pools': pools,
             'profile': profile,
             'resource_group': resource_group,
+            'route_mode': route_mode,
             'security_groups': security_groups
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -12390,7 +12402,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12434,7 +12446,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12480,7 +12492,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12535,7 +12547,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12580,7 +12592,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12625,13 +12637,12 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
     def create_load_balancer_listener(self,
         load_balancer_id: str,
-        port: int,
         protocol: str,
         *,
         accept_proxy_protocol: bool = None,
@@ -12640,6 +12651,9 @@ class VpcV1(BaseService):
         default_pool: 'LoadBalancerPoolIdentity' = None,
         https_redirect: 'LoadBalancerListenerHTTPSRedirectPrototype' = None,
         policies: List['LoadBalancerListenerPolicyPrototype'] = None,
+        port: int = None,
+        port_max: int = None,
+        port_min: int = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -12648,9 +12662,6 @@ class VpcV1(BaseService):
         This request creates a new listener for a load balancer.
 
         :param str load_balancer_id: The load balancer identifier.
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
-               `port` and `protocol` combination.
         :param str protocol: The listener protocol. Each listener in the load
                balancer must have a unique `port` and `protocol` combination.  Additional
                restrictions:
@@ -12689,6 +12700,22 @@ class VpcV1(BaseService):
                `https`.
         :param List[LoadBalancerListenerPolicyPrototype] policies: (optional) The
                policy prototype objects for this listener.
+        :param int port: (optional) The listener port number, or the inclusive
+               lower bound of the port range. Each listener in the load balancer must have
+               a unique `port` and `protocol` combination.
+               Not supported for load balancers operating with route mode enabled.
+        :param int port_max: (optional) The inclusive upper bound of the range of
+               ports used by this listener. Must not be less than `port_min`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `65535` is supported for `port_max`.
+        :param int port_min: (optional) The inclusive lower bound of the range of
+               ports used by this listener. Must not be greater than `port_max`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `1` is supported for `port_min`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListener` object
@@ -12696,8 +12723,6 @@ class VpcV1(BaseService):
 
         if load_balancer_id is None:
             raise ValueError('load_balancer_id must be provided')
-        if port is None:
-            raise ValueError('port must be provided')
         if protocol is None:
             raise ValueError('protocol must be provided')
         if certificate_instance is not None:
@@ -12720,14 +12745,16 @@ class VpcV1(BaseService):
         }
 
         data = {
-            'port': port,
             'protocol': protocol,
             'accept_proxy_protocol': accept_proxy_protocol,
             'certificate_instance': certificate_instance,
             'connection_limit': connection_limit,
             'default_pool': default_pool,
             'https_redirect': https_redirect,
-            'policies': policies
+            'policies': policies,
+            'port': port,
+            'port_max': port_max,
+            'port_min': port_min
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -12747,7 +12774,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12797,7 +12824,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12847,7 +12874,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12907,7 +12934,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -12956,7 +12983,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13048,7 +13075,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13100,7 +13127,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13153,7 +13180,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13217,7 +13244,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13270,7 +13297,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13359,7 +13386,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13416,7 +13443,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13473,7 +13500,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13541,7 +13568,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13586,7 +13613,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13687,7 +13714,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13736,7 +13763,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13785,7 +13812,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13845,7 +13872,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13894,7 +13921,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -13970,7 +13997,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14034,7 +14061,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14086,7 +14113,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14140,7 +14167,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14204,7 +14231,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -14232,8 +14259,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `EndpointGatewayCollection` object
@@ -14264,7 +14290,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14344,7 +14370,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14404,7 +14430,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14454,7 +14480,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14504,7 +14530,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14557,7 +14583,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14603,7 +14629,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14649,7 +14675,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14705,7 +14731,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
     #########################
@@ -14737,8 +14763,7 @@ class VpcV1(BaseService):
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
-               resources within one of the resource groups identified in a comma-separated
-               list of resource group identifiers.
+               resources in the resource group with the specified identifier.
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
         :param str vpc_id: (optional) Filters the collection to resources in the
@@ -14786,7 +14811,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14873,7 +14898,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14884,8 +14909,10 @@ class VpcV1(BaseService):
         """
         Delete a flow log collector.
 
-        This request stops and deletes a flow log collector. Collected flow logs remain
-        available within the flow log collector's bucket.
+        This request stops and deletes a flow log collector. This operation cannot be
+        reversed.
+        Collected flow logs remain available within the flow log collector's Cloud Object
+        Storage bucket.
 
         :param str id: The flow log collector identifier.
         :param dict headers: A `dict` containing the request headers
@@ -14918,7 +14945,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -14964,7 +14991,7 @@ class VpcV1(BaseService):
                                        headers=headers,
                                        params=params)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -15023,7 +15050,7 @@ class VpcV1(BaseService):
                                        params=params,
                                        data=data)
 
-        response = self.send(request)
+        response = self.send(request, **kwargs)
         return response
 
 
@@ -15040,9 +15067,9 @@ class ListSubnetReservedIpsEnums:
         descending order, and the value `name` sorts it by the `name` property in
         ascending order.
         """
+        ADDRESS = 'address'
         CREATED_AT = 'created_at'
         NAME = 'name'
-        ADDRESS = 'address'
 
 
 class ListImagesEnums:
@@ -15114,9 +15141,9 @@ class ListEndpointGatewayIpsEnums:
         descending order, and the value `name` sorts it by the `name` property in
         ascending order.
         """
+        ADDRESS = 'address'
         CREATED_AT = 'created_at'
         NAME = 'name'
-        ADDRESS = 'address'
 
 
 class ListFlowLogCollectorsEnums:
@@ -15129,10 +15156,10 @@ class ListFlowLogCollectorsEnums:
         Filters the collection to flow log collectors that target the specified resource
         type.
         """
-        VPC = 'vpc'
-        SUBNET = 'subnet'
         INSTANCE = 'instance'
         NETWORK_INTERFACE = 'network_interface'
+        SUBNET = 'subnet'
+        VPC = 'vpc'
 
 
 ##############################################################################
@@ -15729,15 +15756,14 @@ class DedicatedHost():
           this dedicated host.
     :attr str lifecycle_state: The lifecycle state of the dedicated host.
     :attr int memory: The total amount of memory in gibibytes for this host.
-    :attr str name: The unique user-defined name for this dedicated host. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str name: The unique user-defined name for this dedicated host.
     :attr DedicatedHostProfileReference profile: The profile this dedicated host
           uses.
     :attr bool provisionable: Indicates whether this dedicated host is available for
           instance creation.
     :attr ResourceGroupReference resource_group: The resource group for this
           dedicated host.
-    :attr str resource_type: The type of resource referenced.
+    :attr str resource_type: The resource type.
     :attr int socket_count: The total number of sockets for this host.
     :attr str state: The administrative state of the dedicated host.
           The enumerated values for this property are expected to expand in the future.
@@ -15794,15 +15820,14 @@ class DedicatedHost():
                to this dedicated host.
         :param str lifecycle_state: The lifecycle state of the dedicated host.
         :param int memory: The total amount of memory in gibibytes for this host.
-        :param str name: The unique user-defined name for this dedicated host. If
-               unspecified, the name will be a hyphenated list of randomly-selected words.
+        :param str name: The unique user-defined name for this dedicated host.
         :param DedicatedHostProfileReference profile: The profile this dedicated
                host uses.
         :param bool provisionable: Indicates whether this dedicated host is
                available for instance creation.
         :param ResourceGroupReference resource_group: The resource group for this
                dedicated host.
-        :param str resource_type: The type of resource referenced.
+        :param str resource_type: The resource type.
         :param int socket_count: The total number of sockets for this host.
         :param str state: The administrative state of the dedicated host.
                The enumerated values for this property are expected to expand in the
@@ -16011,14 +16036,14 @@ class DedicatedHost():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST = 'dedicated_host'
 
@@ -16273,7 +16298,7 @@ class DedicatedHostDisk():
     :attr str name: The user-defined or system-provided name for this disk.
     :attr bool provisionable: Indicates whether this dedicated host disk is
           available for instance disk creation.
-    :attr str resource_type: The type of resource referenced.
+    :attr str resource_type: The resource type.
     :attr int size: The size of the disk in GB (gigabytes).
     :attr List[str] supported_instance_interface_types: The instance disk interfaces
           supported for this dedicated host disk.
@@ -16311,7 +16336,7 @@ class DedicatedHostDisk():
         :param str name: The user-defined or system-provided name for this disk.
         :param bool provisionable: Indicates whether this dedicated host disk is
                available for instance disk creation.
-        :param str resource_type: The type of resource referenced.
+        :param str resource_type: The resource type.
         :param int size: The size of the disk in GB (gigabytes).
         :param List[str] supported_instance_interface_types: The instance disk
                interfaces supported for this dedicated host disk.
@@ -16454,14 +16479,14 @@ class DedicatedHostDisk():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST_DISK = 'dedicated_host_disk'
 
@@ -16474,8 +16499,8 @@ class DedicatedHostDisk():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        VIRTIO_BLK = 'virtio_blk'
         NVME = 'nvme'
+        VIRTIO_BLK = 'virtio_blk'
 
 
 class DedicatedHostDiskCollection():
@@ -16603,11 +16628,10 @@ class DedicatedHostGroup():
     :attr str family: The dedicated host profile family for hosts in this group.
     :attr str href: The URL for this dedicated host group.
     :attr str id: The unique identifier for this dedicated host group.
-    :attr str name: The unique user-defined name for this dedicated host group. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str name: The unique user-defined name for this dedicated host group.
     :attr ResourceGroupReference resource_group: The resource group for this
           dedicated host group.
-    :attr str resource_type: The type of resource referenced.
+    :attr str resource_type: The resource type.
     :attr List[InstanceProfileReference] supported_instance_profiles: The instance
           profiles usable by instances placed on this dedicated host group.
     :attr ZoneReference zone: The zone this dedicated host group resides in.
@@ -16641,11 +16665,10 @@ class DedicatedHostGroup():
         :param str href: The URL for this dedicated host group.
         :param str id: The unique identifier for this dedicated host group.
         :param str name: The unique user-defined name for this dedicated host
-               group. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+               group.
         :param ResourceGroupReference resource_group: The resource group for this
                dedicated host group.
-        :param str resource_type: The type of resource referenced.
+        :param str resource_type: The resource type.
         :param List[InstanceProfileReference] supported_instance_profiles: The
                instance profiles usable by instances placed on this dedicated host group.
         :param ZoneReference zone: The zone this dedicated host group resides in.
@@ -16773,14 +16796,14 @@ class DedicatedHostGroup():
         """
         The dedicated host profile family for hosts in this group.
         """
-        MEMORY = 'memory'
         BALANCED = 'balanced'
         COMPUTE = 'compute'
+        MEMORY = 'memory'
 
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST_GROUP = 'dedicated_host_group'
 
@@ -17022,8 +17045,7 @@ class DedicatedHostGroupPatch():
     DedicatedHostGroupPatch.
 
     :attr str name: (optional) The unique user-defined name for this dedicated host
-          group. If unspecified, the name will be a hyphenated list of randomly-selected
-          words.
+          group.
     """
 
     def __init__(self,
@@ -17033,8 +17055,7 @@ class DedicatedHostGroupPatch():
         Initialize a DedicatedHostGroupPatch object.
 
         :param str name: (optional) The unique user-defined name for this dedicated
-               host group. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+               host group.
         """
         self.name = name
 
@@ -17081,8 +17102,7 @@ class DedicatedHostGroupPrototypeDedicatedHostByZoneContext():
     DedicatedHostGroupPrototypeDedicatedHostByZoneContext.
 
     :attr str name: (optional) The unique user-defined name for this dedicated host
-          group. If unspecified, the name will be a hyphenated list of randomly-selected
-          words.
+          group.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the host's resource group is used.
     """
@@ -17095,8 +17115,7 @@ class DedicatedHostGroupPrototypeDedicatedHostByZoneContext():
         Initialize a DedicatedHostGroupPrototypeDedicatedHostByZoneContext object.
 
         :param str name: (optional) The unique user-defined name for this dedicated
-               host group. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+               host group.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the host's resource group is used.
         """
@@ -17158,9 +17177,8 @@ class DedicatedHostGroupReference():
           some supplementary information.
     :attr str href: The URL for this dedicated host group.
     :attr str id: The unique identifier for this dedicated host group.
-    :attr str name: The unique user-defined name for this dedicated host group. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str resource_type: The type of resource referenced.
+    :attr str name: The unique user-defined name for this dedicated host group.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -17178,9 +17196,8 @@ class DedicatedHostGroupReference():
         :param str href: The URL for this dedicated host group.
         :param str id: The unique identifier for this dedicated host group.
         :param str name: The unique user-defined name for this dedicated host
-               group. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
-        :param str resource_type: The type of resource referenced.
+               group.
+        :param str resource_type: The resource type.
         :param DedicatedHostGroupReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
                provides
@@ -17263,7 +17280,7 @@ class DedicatedHostGroupReference():
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST_GROUP = 'dedicated_host_group'
 
@@ -17332,7 +17349,6 @@ class DedicatedHostPatch():
     :attr bool instance_placement_enabled: (optional) If set to true, instances can
           be placed on this dedicated host.
     :attr str name: (optional) The unique user-defined name for this dedicated host.
-          If unspecified, the name will be a hyphenated list of randomly-selected words.
     """
 
     def __init__(self,
@@ -17345,8 +17361,7 @@ class DedicatedHostPatch():
         :param bool instance_placement_enabled: (optional) If set to true,
                instances can be placed on this dedicated host.
         :param str name: (optional) The unique user-defined name for this dedicated
-               host. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+               host.
         """
         self.instance_placement_enabled = instance_placement_enabled
         self.name = name
@@ -17571,9 +17586,9 @@ class DedicatedHostProfile():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        MEMORY = 'memory'
         BALANCED = 'balanced'
         COMPUTE = 'compute'
+        MEMORY = 'memory'
 
 
 class DedicatedHostProfileCollection():
@@ -18208,8 +18223,8 @@ class DedicatedHostProfileDiskSupportedInterfaces():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        VIRTIO_BLK = 'virtio_blk'
         NVME = 'nvme'
+        VIRTIO_BLK = 'virtio_blk'
 
 
 class DedicatedHostProfileIdentity():
@@ -18462,9 +18477,8 @@ class DedicatedHostReference():
           some supplementary information.
     :attr str href: The URL for this dedicated host.
     :attr str id: The unique identifier for this dedicated host.
-    :attr str name: The unique user-defined name for this dedicated host. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str resource_type: The type of resource referenced.
+    :attr str name: The unique user-defined name for this dedicated host.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -18481,9 +18495,8 @@ class DedicatedHostReference():
         :param str crn: The CRN for this dedicated host.
         :param str href: The URL for this dedicated host.
         :param str id: The unique identifier for this dedicated host.
-        :param str name: The unique user-defined name for this dedicated host. If
-               unspecified, the name will be a hyphenated list of randomly-selected words.
-        :param str resource_type: The type of resource referenced.
+        :param str name: The unique user-defined name for this dedicated host.
+        :param str resource_type: The resource type.
         :param DedicatedHostReferenceDeleted deleted: (optional) If present, this
                property indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -18565,7 +18578,7 @@ class DedicatedHostReference():
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST = 'dedicated_host'
 
@@ -18642,8 +18655,8 @@ class DefaultNetworkACL():
           network ACL for a VPC. Set to the VPC's
           resource group at creation.
     :attr List[NetworkACLRuleItem] rules: The ordered rules for the default network
-          ACL for a VPC.  Defaults to two rules which allow all inbound and outbound
-          traffic, respectively.  Rules for the default network ACL may be changed, added,
+          ACL for a VPC. Defaults to two rules which allow all inbound and outbound
+          traffic, respectively. Rules for the default network ACL may be changed, added,
           or removed.
     :attr List[SubnetReference] subnets: The subnets to which this network ACL is
           attached.
@@ -18675,8 +18688,8 @@ class DefaultNetworkACL():
                default network ACL for a VPC. Set to the VPC's
                resource group at creation.
         :param List[NetworkACLRuleItem] rules: The ordered rules for the default
-               network ACL for a VPC.  Defaults to two rules which allow all inbound and
-               outbound traffic, respectively.  Rules for the default network ACL may be
+               network ACL for a VPC. Defaults to two rules which allow all inbound and
+               outbound traffic, respectively. Rules for the default network ACL may be
                changed, added, or removed.
         :param List[SubnetReference] subnets: The subnets to which this network ACL
                is attached.
@@ -19012,9 +19025,9 @@ class DefaultRoutingTable():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
@@ -19040,7 +19053,7 @@ class DefaultSecurityGroup():
           security group.
     :attr List[SecurityGroupRule] rules: The rules for the default security group
           for a VPC. Defaults to allowing all outbound traffic, and allowing all inbound
-          traffic from other interfaces in the VPC's default security group. Rules in the
+          traffic from other interfaces in the VPC's default security group. Rules for the
           default security group may be changed, added or removed.
     :attr VPCReference vpc: The VPC this security group is a part of.
     """
@@ -19070,7 +19083,7 @@ class DefaultSecurityGroup():
         :param List[SecurityGroupRule] rules: The rules for the default security
                group for a VPC. Defaults to allowing all outbound traffic, and allowing
                all inbound traffic from other interfaces in the VPC's default security
-               group. Rules in the default security group may be changed, added or
+               group. Rules for the default security group may be changed, added or
                removed.
         :param VPCReference vpc: The VPC this security group is a part of.
         """
@@ -19268,7 +19281,7 @@ class EndpointGateway():
     :attr str name: The unique user-defined name for this endpoint gateway.
     :attr ResourceGroupReference resource_group: The resource group for this
           endpoint gateway.
-    :attr str resource_type: The type of resource referenced.
+    :attr str resource_type: The resource type.
     :attr str service_endpoint: (optional) The fully qualified domain name for the
           target service.
     :attr List[str] service_endpoints: The fully qualified domain names for the
@@ -19317,7 +19330,7 @@ class EndpointGateway():
         :param str name: The unique user-defined name for this endpoint gateway.
         :param ResourceGroupReference resource_group: The resource group for this
                endpoint gateway.
-        :param str resource_type: The type of resource referenced.
+        :param str resource_type: The resource type.
         :param List[str] service_endpoints: The fully qualified domain names for
                the target service.
         :param EndpointGatewayTarget target: The target for this endpoint gateway.
@@ -19470,10 +19483,10 @@ class EndpointGateway():
         state. A resource with a lifecycle state of `failed` or `deleting` will have a
         health state of `inapplicable`. A `pending` resource may also have this state.
         """
-        OK = 'ok'
         DEGRADED = 'degraded'
         FAULTED = 'faulted'
         INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
 
 
     class LifecycleStateEnum(str, Enum):
@@ -19484,14 +19497,14 @@ class EndpointGateway():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         ENDPOINT_GATEWAY = 'endpoint_gateway'
 
@@ -20676,8 +20689,9 @@ class FlowLogCollector():
     FlowLogCollector.
 
     :attr bool active: Indicates whether this collector is active.
-    :attr bool auto_delete: If set to `true`, this flow log collector will be
-          automatically deleted when the target is deleted.
+    :attr bool auto_delete: Indicates whether this flow log collector will be
+          automatically deleted when `target` is deleted. At present, this is always
+          `true`, but may be modifiable in the future.
     :attr datetime created_at: The date and time that the flow log collector was
           created.
     :attr str crn: The CRN for this flow log collector.
@@ -20714,8 +20728,9 @@ class FlowLogCollector():
         Initialize a FlowLogCollector object.
 
         :param bool active: Indicates whether this collector is active.
-        :param bool auto_delete: If set to `true`, this flow log collector will be
-               automatically deleted when the target is deleted.
+        :param bool auto_delete: Indicates whether this flow log collector will be
+               automatically deleted when `target` is deleted. At present, this is always
+               `true`, but may be modifiable in the future.
         :param datetime created_at: The date and time that the flow log collector
                was created.
         :param str crn: The CRN for this flow log collector.
@@ -20866,9 +20881,9 @@ class FlowLogCollector():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
 class FlowLogCollectorCollection():
@@ -21388,9 +21403,9 @@ class IKEPolicy():
         """
         The encryption algorithm.
         """
-        TRIPLE_DES = 'triple_des'
         AES128 = 'aes128'
         AES256 = 'aes256'
+        TRIPLE_DES = 'triple_des'
 
 
     class NegotiationModeEnum(str, Enum):
@@ -21622,21 +21637,6 @@ class IKEPolicyCollectionNext():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class IKEPolicyIdentity():
-    """
-    Identifies an IKE policy by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a IKEPolicyIdentity object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['IKEPolicyIdentityById', 'IKEPolicyIdentityByHref']))
-        raise Exception(msg)
-
 class IKEPolicyPatch():
     """
     IKEPolicyPatch.
@@ -21747,9 +21747,9 @@ class IKEPolicyPatch():
         """
         The encryption algorithm.
         """
-        TRIPLE_DES = 'triple_des'
         AES128 = 'aes128'
         AES256 = 'aes256'
+        TRIPLE_DES = 'triple_des'
 
 
 class IKEPolicyReference():
@@ -22186,9 +22186,9 @@ class IPsecPolicy():
         """
         The encryption algorithm.
         """
-        TRIPLE_DES = 'triple_des'
         AES128 = 'aes128'
         AES256 = 'aes256'
+        TRIPLE_DES = 'triple_des'
 
 
     class PfsEnum(str, Enum):
@@ -22431,21 +22431,6 @@ class IPsecPolicyCollectionNext():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class IPsecPolicyIdentity():
-    """
-    Identifies an IPsec policy by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a IPsecPolicyIdentity object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['IPsecPolicyIdentityById', 'IPsecPolicyIdentityByHref']))
-        raise Exception(msg)
-
 class IPsecPolicyPatch():
     """
     IPsecPolicyPatch.
@@ -22548,9 +22533,9 @@ class IPsecPolicyPatch():
         """
         The encryption algorithm.
         """
-        TRIPLE_DES = 'triple_des'
         AES128 = 'aes128'
         AES256 = 'aes256'
+        TRIPLE_DES = 'triple_des'
 
 
     class PfsEnum(str, Enum):
@@ -22736,7 +22721,7 @@ class Image():
     :attr str encryption: The type of encryption used on the image.
     :attr EncryptionKeyReference encryption_key: (optional) The key that will be
           used to encrypt volumes created from this image (unless an
-          alternate `encryption_key` is provided at volume creation).
+          alternate `encryption_key` is specified at volume creation).
           This property will be present for images with an `encryption` type of
           `user_managed`.
     :attr ImageFile file: Details for the stored image file.
@@ -22837,7 +22822,7 @@ class Image():
                the account.
         :param EncryptionKeyReference encryption_key: (optional) The key that will
                be used to encrypt volumes created from this image (unless an
-               alternate `encryption_key` is provided at volume creation).
+               alternate `encryption_key` is specified at volume creation).
                This property will be present for images with an `encryption` type of
                `user_managed`.
         :param int minimum_provisioned_size: (optional) The minimum size (in
@@ -23014,9 +22999,9 @@ class Image():
         DELETING = 'deleting'
         DEPRECATED = 'deprecated'
         FAILED = 'failed'
-        UNUSABLE = 'unusable'
         PENDING = 'pending'
         TENTATIVE = 'tentative'
+        UNUSABLE = 'unusable'
 
 
     class VisibilityEnum(str, Enum):
@@ -23762,8 +23747,8 @@ class ImageStatusReason():
         """
         ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
         ENCRYPTION_KEY_DISABLED = 'encryption_key_disabled'
-        IMAGE_REQUEST_QUEUED = 'image_request_queued'
         IMAGE_REQUEST_IN_PROGRESS = 'image_request_in_progress'
+        IMAGE_REQUEST_QUEUED = 'image_request_queued'
 
 
 class Instance():
@@ -23777,6 +23762,8 @@ class Instance():
     :attr datetime created_at: The date and time that the virtual server instance
           was created.
     :attr str crn: The CRN for this virtual server instance.
+    :attr DedicatedHostReference dedicated_host: (optional) If present, the
+          dedicated host this virtual server instance has been placed on.
     :attr List[InstanceDisk] disks: The instance disks for this virtual server
           instance.
     :attr InstanceGPU gpu: (optional) The virtual server instance GPU configuration.
@@ -23845,6 +23832,7 @@ class Instance():
                  vpc: 'VPCReference',
                  zone: 'ZoneReference',
                  *,
+                 dedicated_host: 'DedicatedHostReference' = None,
                  gpu: 'InstanceGPU' = None,
                  image: 'ImageReference' = None,
                  placement_target: 'InstancePlacementTarget' = None) -> None:
@@ -23897,6 +23885,8 @@ class Instance():
         :param VPCReference vpc: The VPC this virtual server instance resides in.
         :param ZoneReference zone: The zone this virtual server instance resides
                in.
+        :param DedicatedHostReference dedicated_host: (optional) If present, the
+               dedicated host this virtual server instance has been placed on.
         :param InstanceGPU gpu: (optional) The virtual server instance GPU
                configuration.
         :param ImageReference image: (optional) The image the virtual server
@@ -23908,6 +23898,7 @@ class Instance():
         self.boot_volume_attachment = boot_volume_attachment
         self.created_at = created_at
         self.crn = crn
+        self.dedicated_host = dedicated_host
         self.disks = disks
         self.gpu = gpu
         self.href = href
@@ -23950,6 +23941,8 @@ class Instance():
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError('Required property \'crn\' not present in Instance JSON')
+        if 'dedicated_host' in _dict:
+            args['dedicated_host'] = DedicatedHostReference.from_dict(_dict.get('dedicated_host'))
         if 'disks' in _dict:
             args['disks'] = [InstanceDisk.from_dict(x) for x in _dict.get('disks')]
         else:
@@ -24046,6 +24039,8 @@ class Instance():
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'dedicated_host') and self.dedicated_host is not None:
+            _dict['dedicated_host'] = self.dedicated_host.to_dict()
         if hasattr(self, 'disks') and self.disks is not None:
             _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'gpu') and self.gpu is not None:
@@ -24609,8 +24604,8 @@ class InstanceConsoleAccessToken():
         """
         The instance console type for which this token may be used.
         """
-        VNC = 'vnc'
         SERIAL = 'serial'
+        VNC = 'vnc'
 
 
 class InstanceDisk():
@@ -24745,8 +24740,8 @@ class InstanceDisk():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        VIRTIO_BLK = 'virtio_blk'
         NVME = 'nvme'
+        VIRTIO_BLK = 'virtio_blk'
 
 
     class ResourceTypeEnum(str, Enum):
@@ -25577,7 +25572,7 @@ class InstanceGroupManager():
           created.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
-    :attr bool management_enabled: If set to `true`, this manager will control the
+    :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
@@ -25599,7 +25594,7 @@ class InstanceGroupManager():
                manager was created.
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
-        :param bool management_enabled: If set to `true`, this manager will control
+        :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
@@ -25614,12 +25609,14 @@ class InstanceGroupManagerAction():
     """
     InstanceGroupManagerAction.
 
-    :attr bool auto_delete: If set to `true`, this scheduled action will be
-          automatically deleted after it has finished and the `auto_delete_timeout` time
-          has passed.
-    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
-          before the scheduled action will be automatically deleted once it has finished.
-          If this value is 0, the action will be deleted on completion.
+    :attr bool auto_delete: Indicates whether this scheduled action will be
+          automatically deleted after it has completed and `auto_delete_timeout` hours
+          have passed. At present, this is always
+          `true`, but may be modifiable in the future.
+    :attr int auto_delete_timeout: If `auto_delete` is `true`, and this scheduled
+          action has finished, the hours after which it will be automatically deleted. If
+          the value is `0`, the action will be deleted once it has finished. This value
+          may be modifiable in the future.
     :attr datetime created_at: The date and time that the instance group manager
           action was created.
     :attr str href: The URL for this instance group manager action.
@@ -25650,12 +25647,14 @@ class InstanceGroupManagerAction():
         """
         Initialize a InstanceGroupManagerAction object.
 
-        :param bool auto_delete: If set to `true`, this scheduled action will be
-               automatically deleted after it has finished and the `auto_delete_timeout`
-               time has passed.
-        :param int auto_delete_timeout: Amount of time in hours that are required
-               to pass before the scheduled action will be automatically deleted once it
-               has finished. If this value is 0, the action will be deleted on completion.
+        :param bool auto_delete: Indicates whether this scheduled action will be
+               automatically deleted after it has completed and `auto_delete_timeout`
+               hours have passed. At present, this is always
+               `true`, but may be modifiable in the future.
+        :param int auto_delete_timeout: If `auto_delete` is `true`, and this
+               scheduled action has finished, the hours after which it will be
+               automatically deleted. If the value is `0`, the action will be deleted once
+               it has finished. This value may be modifiable in the future.
         :param datetime created_at: The date and time that the instance group
                manager action was created.
         :param str href: The URL for this instance group manager action.
@@ -26564,7 +26563,7 @@ class InstanceGroupManagerPatch():
           metrics prior to evaluation.
     :attr int cooldown: (optional) The duration of time in seconds to pause further
           scale actions after scaling has taken place.
-    :attr bool management_enabled: (optional) If set to `true`, this manager will
+    :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr int max_membership_count: (optional) The maximum number of members in a
           managed instance group.
@@ -26589,7 +26588,7 @@ class InstanceGroupManagerPatch():
                aggregate metrics prior to evaluation.
         :param int cooldown: (optional) The duration of time in seconds to pause
                further scale actions after scaling has taken place.
-        :param bool management_enabled: (optional) If set to `true`, this manager
+        :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param int max_membership_count: (optional) The maximum number of members
                in a managed instance group.
@@ -27182,7 +27181,7 @@ class InstanceGroupManagerPrototype():
     """
     InstanceGroupManagerPrototype.
 
-    :attr bool management_enabled: (optional) If set to `true`, this manager will
+    :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
           manager. Names must be unique within the instance group.
@@ -27195,7 +27194,7 @@ class InstanceGroupManagerPrototype():
         """
         Initialize a InstanceGroupManagerPrototype object.
 
-        :param bool management_enabled: (optional) If set to `true`, this manager
+        :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
                manager. Names must be unique within the instance group.
@@ -28557,6 +28556,10 @@ class InstanceProfile():
           disks.
     :attr str family: (optional) The product family this virtual server instance
           profile belongs to.
+    :attr InstanceProfileGPU gpu_count: (optional)
+    :attr InstanceProfileGPUManufacturer gpu_manufacturer: (optional)
+    :attr InstanceProfileGPUMemory gpu_memory: (optional)
+    :attr InstanceProfileGPUModel gpu_model: (optional)
     :attr str href: The URL for this virtual server instance profile.
     :attr InstanceProfileMemory memory:
     :attr str name: The globally unique name for this virtual server instance
@@ -28580,7 +28583,11 @@ class InstanceProfile():
                  vcpu_architecture: 'InstanceProfileVCPUArchitecture',
                  vcpu_count: 'InstanceProfileVCPU',
                  *,
-                 family: str = None) -> None:
+                 family: str = None,
+                 gpu_count: 'InstanceProfileGPU' = None,
+                 gpu_manufacturer: 'InstanceProfileGPUManufacturer' = None,
+                 gpu_memory: 'InstanceProfileGPUMemory' = None,
+                 gpu_model: 'InstanceProfileGPUModel' = None) -> None:
         """
         Initialize a InstanceProfile object.
 
@@ -28598,10 +28605,18 @@ class InstanceProfile():
         :param InstanceProfileVCPU vcpu_count:
         :param str family: (optional) The product family this virtual server
                instance profile belongs to.
+        :param InstanceProfileGPU gpu_count: (optional)
+        :param InstanceProfileGPUManufacturer gpu_manufacturer: (optional)
+        :param InstanceProfileGPUMemory gpu_memory: (optional)
+        :param InstanceProfileGPUModel gpu_model: (optional)
         """
         self.bandwidth = bandwidth
         self.disks = disks
         self.family = family
+        self.gpu_count = gpu_count
+        self.gpu_manufacturer = gpu_manufacturer
+        self.gpu_memory = gpu_memory
+        self.gpu_model = gpu_model
         self.href = href
         self.memory = memory
         self.name = name
@@ -28625,6 +28640,14 @@ class InstanceProfile():
             raise ValueError('Required property \'disks\' not present in InstanceProfile JSON')
         if 'family' in _dict:
             args['family'] = _dict.get('family')
+        if 'gpu_count' in _dict:
+            args['gpu_count'] = _dict.get('gpu_count')
+        if 'gpu_manufacturer' in _dict:
+            args['gpu_manufacturer'] = InstanceProfileGPUManufacturer.from_dict(_dict.get('gpu_manufacturer'))
+        if 'gpu_memory' in _dict:
+            args['gpu_memory'] = _dict.get('gpu_memory')
+        if 'gpu_model' in _dict:
+            args['gpu_model'] = InstanceProfileGPUModel.from_dict(_dict.get('gpu_model'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
@@ -28676,6 +28699,20 @@ class InstanceProfile():
             _dict['disks'] = [x.to_dict() for x in self.disks]
         if hasattr(self, 'family') and self.family is not None:
             _dict['family'] = self.family
+        if hasattr(self, 'gpu_count') and self.gpu_count is not None:
+            if isinstance(self.gpu_count, dict):
+                _dict['gpu_count'] = self.gpu_count
+            else:
+                _dict['gpu_count'] = self.gpu_count.to_dict()
+        if hasattr(self, 'gpu_manufacturer') and self.gpu_manufacturer is not None:
+            _dict['gpu_manufacturer'] = self.gpu_manufacturer.to_dict()
+        if hasattr(self, 'gpu_memory') and self.gpu_memory is not None:
+            if isinstance(self.gpu_memory, dict):
+                _dict['gpu_memory'] = self.gpu_memory
+            else:
+                _dict['gpu_memory'] = self.gpu_memory.to_dict()
+        if hasattr(self, 'gpu_model') and self.gpu_model is not None:
+            _dict['gpu_model'] = self.gpu_model.to_dict()
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'memory') and self.memory is not None:
@@ -29003,8 +29040,8 @@ class InstanceProfileDiskSupportedInterfaces():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        VIRTIO_BLK = 'virtio_blk'
         NVME = 'nvme'
+        VIRTIO_BLK = 'virtio_blk'
 
 
     class TypeEnum(str, Enum):
@@ -29022,8 +29059,188 @@ class InstanceProfileDiskSupportedInterfaces():
         processing and surface the error, or bypass the resource on which the unexpected
         property value was encountered.
         """
-        VIRTIO_BLK = 'virtio_blk'
         NVME = 'nvme'
+        VIRTIO_BLK = 'virtio_blk'
+
+
+class InstanceProfileGPU():
+    """
+    InstanceProfileGPU.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceProfileGPU object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstanceProfileGPUFixed', 'InstanceProfileGPURange', 'InstanceProfileGPUEnum', 'InstanceProfileGPUDependent']))
+        raise Exception(msg)
+
+class InstanceProfileGPUManufacturer():
+    """
+    InstanceProfileGPUManufacturer.
+
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The possible GPU manufacturer(s) for an instance with
+          this profile.
+    """
+
+    def __init__(self,
+                 type: str,
+                 values: List[str]) -> None:
+        """
+        Initialize a InstanceProfileGPUManufacturer object.
+
+        :param str type: The type for this profile field.
+        :param List[str] values: The possible GPU manufacturer(s) for an instance
+               with this profile.
+        """
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUManufacturer':
+        """Initialize a InstanceProfileGPUManufacturer object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUManufacturer JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in InstanceProfileGPUManufacturer JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUManufacturer object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUManufacturer object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUManufacturer') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUManufacturer') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileGPUMemory():
+    """
+    InstanceProfileGPUMemory.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstanceProfileGPUMemory object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstanceProfileGPUMemoryFixed', 'InstanceProfileGPUMemoryRange', 'InstanceProfileGPUMemoryEnum', 'InstanceProfileGPUMemoryDependent']))
+        raise Exception(msg)
+
+class InstanceProfileGPUModel():
+    """
+    InstanceProfileGPUModel.
+
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The possible GPU model(s) for an instance with this
+          profile.
+    """
+
+    def __init__(self,
+                 type: str,
+                 values: List[str]) -> None:
+        """
+        Initialize a InstanceProfileGPUModel object.
+
+        :param str type: The type for this profile field.
+        :param List[str] values: The possible GPU model(s) for an instance with
+               this profile.
+        """
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUModel':
+        """Initialize a InstanceProfileGPUModel object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUModel JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in InstanceProfileGPUModel JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUModel object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUModel object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUModel') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUModel') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
 
 
 class InstanceProfileIdentity():
@@ -29354,6 +29571,10 @@ class InstancePrototype():
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -29375,8 +29596,8 @@ class InstancePrototype():
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the
-          VPC tied to the subnets of the instance's network interfaces.
+          part of. If specified, it must match
+          the VPC referenced by the subnets of the instance's network interfaces.
     """
 
     def __init__(self,
@@ -29405,6 +29626,11 @@ class InstancePrototype():
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -29427,8 +29653,8 @@ class InstancePrototype():
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the
-               VPC tied to the subnets of the instance's network interfaces.
+               to be a part of. If specified, it must match
+               the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstancePrototypeInstanceByImage', 'InstancePrototypeInstanceByVolume', 'InstancePrototypeInstanceBySourceTemplate']))
@@ -29702,6 +29928,10 @@ class InstanceTemplate():
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -29720,8 +29950,8 @@ class InstanceTemplate():
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the
-          VPC tied to the subnets of the instance's network interfaces.
+          part of. If specified, it must match
+          the VPC referenced by the subnets of the instance's network interfaces.
     """
 
     def __init__(self,
@@ -29762,6 +29992,11 @@ class InstanceTemplate():
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
@@ -29777,8 +30012,8 @@ class InstanceTemplate():
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the
-               VPC tied to the subnets of the instance's network interfaces.
+               to be a part of. If specified, it must match
+               the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstanceTemplateInstanceByImage', 'InstanceTemplateInstanceByVolume']))
@@ -30092,6 +30327,10 @@ class InstanceTemplatePrototype():
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -30113,8 +30352,8 @@ class InstanceTemplatePrototype():
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the
-          VPC tied to the subnets of the instance's network interfaces.
+          part of. If specified, it must match
+          the VPC referenced by the subnets of the instance's network interfaces.
     """
 
     def __init__(self,
@@ -30143,6 +30382,11 @@ class InstanceTemplatePrototype():
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -30165,8 +30409,8 @@ class InstanceTemplatePrototype():
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the
-               VPC tied to the subnets of the instance's network interfaces.
+               to be a part of. If specified, it must match
+               the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstanceTemplatePrototypeInstanceByImage', 'InstanceTemplatePrototypeInstanceByVolume', 'InstanceTemplatePrototypeInstanceBySourceTemplate']))
@@ -31037,6 +31281,9 @@ class LoadBalancer():
           Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
+    :attr bool route_mode: Indicates whether route mode is enabled for this load
+          balancer.
+          At present, public load balancers are not supported with route mode enabled.
     :attr List[SecurityGroupReference] security_groups: The security groups
           targeting this load balancer.
           Applicable only for load balancers that support security groups.
@@ -31062,6 +31309,7 @@ class LoadBalancer():
                  provisioning_status: str,
                  public_ips: List['IP'],
                  resource_group: 'ResourceGroupReference',
+                 route_mode: bool,
                  security_groups: List['SecurityGroupReference'],
                  security_groups_supported: bool,
                  subnets: List['SubnetReference']) -> None:
@@ -31095,6 +31343,10 @@ class LoadBalancer():
                Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
+        :param bool route_mode: Indicates whether route mode is enabled for this
+               load balancer.
+               At present, public load balancers are not supported with route mode
+               enabled.
         :param List[SecurityGroupReference] security_groups: The security groups
                targeting this load balancer.
                Applicable only for load balancers that support security groups.
@@ -31119,6 +31371,7 @@ class LoadBalancer():
         self.provisioning_status = provisioning_status
         self.public_ips = public_ips
         self.resource_group = resource_group
+        self.route_mode = route_mode
         self.security_groups = security_groups
         self.security_groups_supported = security_groups_supported
         self.subnets = subnets
@@ -31191,6 +31444,10 @@ class LoadBalancer():
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in LoadBalancer JSON')
+        if 'route_mode' in _dict:
+            args['route_mode'] = _dict.get('route_mode')
+        else:
+            raise ValueError('Required property \'route_mode\' not present in LoadBalancer JSON')
         if 'security_groups' in _dict:
             args['security_groups'] = [SecurityGroupReference.from_dict(x) for x in _dict.get('security_groups')]
         else:
@@ -31245,6 +31502,8 @@ class LoadBalancer():
             _dict['public_ips'] = [x.to_dict() for x in self.public_ips]
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'route_mode') and self.route_mode is not None:
+            _dict['route_mode'] = self.route_mode
         if hasattr(self, 'security_groups') and self.security_groups is not None:
             _dict['security_groups'] = [x.to_dict() for x in self.security_groups]
         if hasattr(self, 'security_groups_supported') and self.security_groups_supported is not None:
@@ -31542,14 +31801,22 @@ class LoadBalancerListener():
     :attr LoadBalancerPoolReference default_pool: (optional) The default pool
           associated with the listener.
     :attr str href: The listener's canonical URL.
-    :attr LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If provided,
+    :attr LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If specified,
           the target listener that requests are redirected to.
     :attr str id: The unique identifier for this load balancer listener.
     :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The
           policies for this listener.
-    :attr int port: The listener port number. Each listener in the load balancer
-          must have a unique
-          `port` and `protocol` combination.
+    :attr int port: The listener port number, or the inclusive lower bound of the
+          port range. Each listener in the load balancer must have a unique `port` and
+          `protocol` combination.
+    :attr int port_max: The inclusive upper bound of the range of ports used by this
+          listener.
+          Only load balancers in the `network` family support more than one port per
+          listener.
+    :attr int port_min: The inclusive lower bound of the range of ports used by this
+          listener.
+          Only load balancers in the `network` family support more than one port per
+          listener.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -31563,6 +31830,8 @@ class LoadBalancerListener():
                  href: str,
                  id: str,
                  port: int,
+                 port_max: int,
+                 port_min: int,
                  protocol: str,
                  provisioning_status: str,
                  *,
@@ -31589,9 +31858,17 @@ class LoadBalancerListener():
                created.
         :param str href: The listener's canonical URL.
         :param str id: The unique identifier for this load balancer listener.
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
+        :param int port: The listener port number, or the inclusive lower bound of
+               the port range. Each listener in the load balancer must have a unique
                `port` and `protocol` combination.
+        :param int port_max: The inclusive upper bound of the range of ports used
+               by this listener.
+               Only load balancers in the `network` family support more than one port per
+               listener.
+        :param int port_min: The inclusive lower bound of the range of ports used
+               by this listener.
+               Only load balancers in the `network` family support more than one port per
+               listener.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
                `tcp`, `http`, and `https`. Each listener in the load balancer must have a
@@ -31606,7 +31883,7 @@ class LoadBalancerListener():
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
                associated with the listener.
         :param LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If
-               provided, the target listener that requests are redirected to.
+               specified, the target listener that requests are redirected to.
         :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
                policies for this listener.
         """
@@ -31620,6 +31897,8 @@ class LoadBalancerListener():
         self.id = id
         self.policies = policies
         self.port = port
+        self.port_max = port_max
+        self.port_min = port_min
         self.protocol = protocol
         self.provisioning_status = provisioning_status
 
@@ -31657,6 +31936,14 @@ class LoadBalancerListener():
             args['port'] = _dict.get('port')
         else:
             raise ValueError('Required property \'port\' not present in LoadBalancerListener JSON')
+        if 'port_max' in _dict:
+            args['port_max'] = _dict.get('port_max')
+        else:
+            raise ValueError('Required property \'port_max\' not present in LoadBalancerListener JSON')
+        if 'port_min' in _dict:
+            args['port_min'] = _dict.get('port_min')
+        else:
+            raise ValueError('Required property \'port_min\' not present in LoadBalancerListener JSON')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
@@ -31695,6 +31982,10 @@ class LoadBalancerListener():
             _dict['policies'] = [x.to_dict() for x in self.policies]
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
+        if hasattr(self, 'port_max') and self.port_max is not None:
+            _dict['port_max'] = self.port_max
+        if hasattr(self, 'port_min') and self.port_min is not None:
+            _dict['port_min'] = self.port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
         if hasattr(self, 'provisioning_status') and self.provisioning_status is not None:
@@ -32072,9 +32363,22 @@ class LoadBalancerListenerPatch():
           target listener that requests will be redirected to. This listener must have a
           `protocol` of `http`, and the target listener must have a `protocol` of `https`.
           Specify `null` to remove any existing https redirect.
-    :attr int port: (optional) The listener port number. Each listener in the load
-          balancer must have a unique
+    :attr int port: (optional) The listener port number, or the inclusive lower
+          bound of the port range. Each listener in the load balancer must have a unique
           `port` and `protocol` combination.
+          Not supported for load balancers operating with route mode enabled.
+    :attr int port_max: (optional) The inclusive upper bound of the range of ports
+          used by this listener. Must not be less than `port_min`.
+          At present, only load balancers operating with route mode enabled support
+          different values for `port_min` and `port_max`.  When route mode is enabled,
+          only a value of
+          `65535` is supported for `port_max`.
+    :attr int port_min: (optional) The inclusive lower bound of the range of ports
+          used by this listener. Must not be greater than `port_max`.
+          At present, only load balancers operating with route mode enabled support
+          different values for `port_min` and `port_max`.  When route mode is enabled,
+          only a value of
+          `1` is supported for `port_min`.
     :attr str protocol: (optional) The listener protocol. Each listener in the load
           balancer must have a unique `port` and `protocol` combination.  Additional
           restrictions:
@@ -32092,6 +32396,8 @@ class LoadBalancerListenerPatch():
                  default_pool: 'LoadBalancerPoolIdentity' = None,
                  https_redirect: 'LoadBalancerListenerHTTPSRedirectPatch' = None,
                  port: int = None,
+                 port_max: int = None,
+                 port_min: int = None,
                  protocol: str = None) -> None:
         """
         Initialize a LoadBalancerListenerPatch object.
@@ -32124,9 +32430,22 @@ class LoadBalancerListenerPatch():
                `protocol` of `http`, and the target listener must have a `protocol` of
                `https`.
                Specify `null` to remove any existing https redirect.
-        :param int port: (optional) The listener port number. Each listener in the
-               load balancer must have a unique
-               `port` and `protocol` combination.
+        :param int port: (optional) The listener port number, or the inclusive
+               lower bound of the port range. Each listener in the load balancer must have
+               a unique `port` and `protocol` combination.
+               Not supported for load balancers operating with route mode enabled.
+        :param int port_max: (optional) The inclusive upper bound of the range of
+               ports used by this listener. Must not be less than `port_min`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `65535` is supported for `port_max`.
+        :param int port_min: (optional) The inclusive lower bound of the range of
+               ports used by this listener. Must not be greater than `port_max`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `1` is supported for `port_min`.
         :param str protocol: (optional) The listener protocol. Each listener in the
                load balancer must have a unique `port` and `protocol` combination.
                Additional restrictions:
@@ -32143,6 +32462,8 @@ class LoadBalancerListenerPatch():
         self.default_pool = default_pool
         self.https_redirect = https_redirect
         self.port = port
+        self.port_max = port_max
+        self.port_min = port_min
         self.protocol = protocol
 
     @classmethod
@@ -32161,6 +32482,10 @@ class LoadBalancerListenerPatch():
             args['https_redirect'] = LoadBalancerListenerHTTPSRedirectPatch.from_dict(_dict.get('https_redirect'))
         if 'port' in _dict:
             args['port'] = _dict.get('port')
+        if 'port_max' in _dict:
+            args['port_max'] = _dict.get('port_max')
+        if 'port_min' in _dict:
+            args['port_min'] = _dict.get('port_min')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         return cls(**args)
@@ -32191,6 +32516,10 @@ class LoadBalancerListenerPatch():
             _dict['https_redirect'] = self.https_redirect.to_dict()
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
+        if hasattr(self, 'port_max') and self.port_max is not None:
+            _dict['port_max'] = self.port_max
+        if hasattr(self, 'port_min') and self.port_min is not None:
+            _dict['port_min'] = self.port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
         return _dict
@@ -32396,9 +32725,9 @@ class LoadBalancerListenerPolicy():
         property value was encountered.
         """
         FORWARD = 'forward'
+        HTTPS_REDIRECT = 'https_redirect'
         REDIRECT = 'redirect'
         REJECT = 'reject'
-        HTTPS_REDIRECT = 'https_redirect'
 
 
     class ProvisioningStatusEnum(str, Enum):
@@ -32684,9 +33013,9 @@ class LoadBalancerListenerPolicyPrototype():
         property value was encountered.
         """
         FORWARD = 'forward'
+        HTTPS_REDIRECT = 'https_redirect'
         REDIRECT = 'redirect'
         REJECT = 'reject'
-        HTTPS_REDIRECT = 'https_redirect'
 
 
 class LoadBalancerListenerPolicyReference():
@@ -32998,11 +33327,11 @@ class LoadBalancerListenerPolicyRule():
         Body rules are applied to form-encoded request bodies using the `UTF-8` character
         set.
         """
+        BODY = 'body'
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
         QUERY = 'query'
-        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRuleCollection():
@@ -33175,11 +33504,11 @@ class LoadBalancerListenerPolicyRulePatch():
         Body rules are applied to form-encoded request bodies using the `UTF-8` character
         set.
         """
+        BODY = 'body'
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
         QUERY = 'query'
-        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRulePrototype():
@@ -33302,11 +33631,11 @@ class LoadBalancerListenerPolicyRulePrototype():
         Body rules are applied to form-encoded request bodies using the `UTF-8` character
         set.
         """
+        BODY = 'body'
         HEADER = 'header'
         HOSTNAME = 'hostname'
         PATH = 'path'
         QUERY = 'query'
-        BODY = 'body'
 
 
 class LoadBalancerListenerPolicyRuleReference():
@@ -33518,9 +33847,22 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
     :attr int connection_limit: (optional) The connection limit of the listener.
     :attr LoadBalancerPoolIdentityByName default_pool: (optional) The default pool
           associated with the listener.
-    :attr int port: The listener port number. Each listener in the load balancer
-          must have a unique
+    :attr int port: (optional) The listener port number, or the inclusive lower
+          bound of the port range. Each listener in the load balancer must have a unique
           `port` and `protocol` combination.
+          Not supported for load balancers operating with route mode enabled.
+    :attr int port_max: (optional) The inclusive upper bound of the range of ports
+          used by this listener. Must not be less than `port_min`.
+          At present, only load balancers operating with route mode enabled support
+          different values for `port_min` and `port_max`.  When route mode is enabled,
+          only a value of
+          `65535` is supported for `port_max`.
+    :attr int port_min: (optional) The inclusive lower bound of the range of ports
+          used by this listener. Must not be greater than `port_max`.
+          At present, only load balancers operating with route mode enabled support
+          different values for `port_min` and `port_max`.  When route mode is enabled,
+          only a value of
+          `1` is supported for `port_min`.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -33528,18 +33870,17 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
     """
 
     def __init__(self,
-                 port: int,
                  protocol: str,
                  *,
                  accept_proxy_protocol: bool = None,
                  connection_limit: int = None,
-                 default_pool: 'LoadBalancerPoolIdentityByName' = None) -> None:
+                 default_pool: 'LoadBalancerPoolIdentityByName' = None,
+                 port: int = None,
+                 port_max: int = None,
+                 port_min: int = None) -> None:
         """
         Initialize a LoadBalancerListenerPrototypeLoadBalancerContext object.
 
-        :param int port: The listener port number. Each listener in the load
-               balancer must have a unique
-               `port` and `protocol` combination.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
                `tcp`, `http`, and `https`. Each listener in the load balancer must have a
@@ -33559,11 +33900,29 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
                listener.
         :param LoadBalancerPoolIdentityByName default_pool: (optional) The default
                pool associated with the listener.
+        :param int port: (optional) The listener port number, or the inclusive
+               lower bound of the port range. Each listener in the load balancer must have
+               a unique `port` and `protocol` combination.
+               Not supported for load balancers operating with route mode enabled.
+        :param int port_max: (optional) The inclusive upper bound of the range of
+               ports used by this listener. Must not be less than `port_min`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `65535` is supported for `port_max`.
+        :param int port_min: (optional) The inclusive lower bound of the range of
+               ports used by this listener. Must not be greater than `port_max`.
+               At present, only load balancers operating with route mode enabled support
+               different values for `port_min` and `port_max`.  When route mode is
+               enabled, only a value of
+               `1` is supported for `port_min`.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.connection_limit = connection_limit
         self.default_pool = default_pool
         self.port = port
+        self.port_max = port_max
+        self.port_min = port_min
         self.protocol = protocol
 
     @classmethod
@@ -33578,8 +33937,10 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
             args['default_pool'] = LoadBalancerPoolIdentityByName.from_dict(_dict.get('default_pool'))
         if 'port' in _dict:
             args['port'] = _dict.get('port')
-        else:
-            raise ValueError('Required property \'port\' not present in LoadBalancerListenerPrototypeLoadBalancerContext JSON')
+        if 'port_max' in _dict:
+            args['port_max'] = _dict.get('port_max')
+        if 'port_min' in _dict:
+            args['port_min'] = _dict.get('port_min')
         if 'protocol' in _dict:
             args['protocol'] = _dict.get('protocol')
         else:
@@ -33602,6 +33963,10 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
             _dict['default_pool'] = self.default_pool.to_dict()
         if hasattr(self, 'port') and self.port is not None:
             _dict['port'] = self.port
+        if hasattr(self, 'port_max') and self.port_max is not None:
+            _dict['port_max'] = self.port_max
+        if hasattr(self, 'port_min') and self.port_min is not None:
+            _dict['port_min'] = self.port_min
         if hasattr(self, 'protocol') and self.protocol is not None:
             _dict['protocol'] = self.protocol
         return _dict
@@ -33834,7 +34199,7 @@ class LoadBalancerLoggingDatapath():
     """
     The datapath logging configuration for this load balancer.
 
-    :attr bool active: If set to `true`, datapath logging is active for this load
+    :attr bool active: Indicates whether datapath logging is active for this load
           balancer.
     """
 
@@ -33843,7 +34208,7 @@ class LoadBalancerLoggingDatapath():
         """
         Initialize a LoadBalancerLoggingDatapath object.
 
-        :param bool active: If set to `true`, datapath logging is active for this
+        :param bool active: Indicates whether datapath logging is active for this
                load balancer.
         """
         self.active = active
@@ -34174,8 +34539,8 @@ class LoadBalancerPool():
         property value was encountered.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
     class ProvisioningStatusEnum(str, Enum):
@@ -34391,8 +34756,8 @@ class LoadBalancerPoolHealthMonitor():
         unexpected property value was encountered.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
 class LoadBalancerPoolHealthMonitorPatch():
@@ -34516,8 +34881,8 @@ class LoadBalancerPoolHealthMonitorPatch():
         The protocol type of this load balancer pool health monitor.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
 class LoadBalancerPoolHealthMonitorPrototype():
@@ -34639,8 +35004,8 @@ class LoadBalancerPoolHealthMonitorPrototype():
         The protocol type of this load balancer pool health monitor.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
 class LoadBalancerPoolIdentity():
@@ -35407,8 +35772,8 @@ class LoadBalancerPoolPatch():
         property value was encountered.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
     class ProxyProtocolEnum(str, Enum):
@@ -35581,8 +35946,8 @@ class LoadBalancerPoolPrototype():
         `https`.
         """
         HTTP = 'http'
-        TCP = 'tcp'
         HTTPS = 'https'
+        TCP = 'tcp'
 
 
     class ProxyProtocolEnum(str, Enum):
@@ -35822,9 +36187,9 @@ class LoadBalancerPoolSessionPersistence():
         The session persistence type. The `http_cookie` and `app_cookie` types are
         applicable only to the `http` and `https` protocols.
         """
-        SOURCE_IP = 'source_ip'
         APP_COOKIE = 'app_cookie'
         HTTP_COOKIE = 'http_cookie'
+        SOURCE_IP = 'source_ip'
 
 
 class LoadBalancerPoolSessionPersistencePatch():
@@ -35903,9 +36268,9 @@ class LoadBalancerPoolSessionPersistencePatch():
         The session persistence type. The `http_cookie` and `app_cookie` types are
         applicable only to the `http` and `https` protocols.
         """
-        SOURCE_IP = 'source_ip'
         APP_COOKIE = 'app_cookie'
         HTTP_COOKIE = 'http_cookie'
+        SOURCE_IP = 'source_ip'
 
 
 class LoadBalancerPoolSessionPersistencePrototype():
@@ -35984,9 +36349,9 @@ class LoadBalancerPoolSessionPersistencePrototype():
         The session persistence type. The `http_cookie` and `app_cookie` types are
         applicable only to the `http` and `https` protocols.
         """
-        SOURCE_IP = 'source_ip'
         APP_COOKIE = 'app_cookie'
         HTTP_COOKIE = 'http_cookie'
+        SOURCE_IP = 'source_ip'
 
 
 class LoadBalancerProfile():
@@ -35998,6 +36363,7 @@ class LoadBalancerProfile():
     :attr LoadBalancerProfileLoggingSupported logging_supported: Indicates which
           logging type(s) are supported for a load balancer with this profile.
     :attr str name: The globally unique name for this load balancer profile.
+    :attr LoadBalancerProfileRouteModeSupported route_mode_supported:
     :attr LoadBalancerProfileSecurityGroupsSupported security_groups_supported:
     """
 
@@ -36006,6 +36372,7 @@ class LoadBalancerProfile():
                  href: str,
                  logging_supported: 'LoadBalancerProfileLoggingSupported',
                  name: str,
+                 route_mode_supported: 'LoadBalancerProfileRouteModeSupported',
                  security_groups_supported: 'LoadBalancerProfileSecurityGroupsSupported') -> None:
         """
         Initialize a LoadBalancerProfile object.
@@ -36016,6 +36383,7 @@ class LoadBalancerProfile():
         :param LoadBalancerProfileLoggingSupported logging_supported: Indicates
                which logging type(s) are supported for a load balancer with this profile.
         :param str name: The globally unique name for this load balancer profile.
+        :param LoadBalancerProfileRouteModeSupported route_mode_supported:
         :param LoadBalancerProfileSecurityGroupsSupported
                security_groups_supported:
         """
@@ -36023,6 +36391,7 @@ class LoadBalancerProfile():
         self.href = href
         self.logging_supported = logging_supported
         self.name = name
+        self.route_mode_supported = route_mode_supported
         self.security_groups_supported = security_groups_supported
 
     @classmethod
@@ -36045,6 +36414,10 @@ class LoadBalancerProfile():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in LoadBalancerProfile JSON')
+        if 'route_mode_supported' in _dict:
+            args['route_mode_supported'] = _dict.get('route_mode_supported')
+        else:
+            raise ValueError('Required property \'route_mode_supported\' not present in LoadBalancerProfile JSON')
         if 'security_groups_supported' in _dict:
             args['security_groups_supported'] = _dict.get('security_groups_supported')
         else:
@@ -36067,6 +36440,11 @@ class LoadBalancerProfile():
             _dict['logging_supported'] = self.logging_supported.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'route_mode_supported') and self.route_mode_supported is not None:
+            if isinstance(self.route_mode_supported, dict):
+                _dict['route_mode_supported'] = self.route_mode_supported
+            else:
+                _dict['route_mode_supported'] = self.route_mode_supported.to_dict()
         if hasattr(self, 'security_groups_supported') and self.security_groups_supported is not None:
             if isinstance(self.security_groups_supported, dict):
                 _dict['security_groups_supported'] = self.security_groups_supported
@@ -36475,6 +36853,21 @@ class LoadBalancerProfileReference():
     def __ne__(self, other: 'LoadBalancerProfileReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class LoadBalancerProfileRouteModeSupported():
+    """
+    LoadBalancerProfileRouteModeSupported.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerProfileRouteModeSupported object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['LoadBalancerProfileRouteModeSupportedFixed', 'LoadBalancerProfileRouteModeSupportedDependent']))
+        raise Exception(msg)
 
 class LoadBalancerProfileSecurityGroupsSupported():
     """
@@ -38902,7 +39295,8 @@ class NetworkInterfacePatch():
     :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
-    :attr str name: (optional) The user-defined name for this network interface.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in.
     """
 
     def __init__(self,
@@ -38916,8 +39310,8 @@ class NetworkInterfacePatch():
                spoofing is allowed on this interface. If false, source IP spoofing is
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
-        :param str name: (optional) The user-defined name for this network
-               interface.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
         """
         self.allow_ip_spoofing = allow_ip_spoofing
         self.name = name
@@ -38971,7 +39365,8 @@ class NetworkInterfacePrototype():
     :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
-    :attr str name: (optional) The user-defined name for this network interface. If
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
           specified, it must be an available address on the network interface's subnet. If
@@ -38996,9 +39391,10 @@ class NetworkInterfacePrototype():
                spoofing is allowed on this interface. If false, source IP spoofing is
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
-        :param str name: (optional) The user-defined name for this network
-               interface. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
         :param str primary_ipv4_address: (optional) The primary IPv4 address. If
                specified, it must be an available address on the network interface's
                subnet. If unspecified, an available address on the subnet will be
@@ -39948,9 +40344,9 @@ class PlacementGroup():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
@@ -41292,8 +41688,9 @@ class ReservedIP():
           a value in this property, verify that the address is in an expected format. If
           it is not, log an error. Optionally halt processing and surface the error, or
           bypass the resource on which the unexpected IP address format was encountered.
-    :attr bool auto_delete: If set to `true`, this reserved IP will be automatically
-          deleted when the target is deleted or when the reserved IP is unbound.
+    :attr bool auto_delete: Indicates whether this reserved IP member will be
+          automatically deleted when either
+          `target` is deleted, or the reserved IP is unbound.
     :attr datetime created_at: The date and time that the reserved IP was created.
     :attr str href: The URL for this reserved IP.
     :attr str id: The unique identifier for this reserved IP.
@@ -41325,9 +41722,9 @@ class ReservedIP():
                expected format. If it is not, log an error. Optionally halt processing and
                surface the error, or bypass the resource on which the unexpected IP
                address format was encountered.
-        :param bool auto_delete: If set to `true`, this reserved IP will be
-               automatically deleted when the target is deleted or when the reserved IP is
-               unbound.
+        :param bool auto_delete: Indicates whether this reserved IP member will be
+               automatically deleted when either
+               `target` is deleted, or the reserved IP is unbound.
         :param datetime created_at: The date and time that the reserved IP was
                created.
         :param str href: The URL for this reserved IP.
@@ -41892,9 +42289,10 @@ class ReservedIPPatch():
     """
     ReservedIPPatch.
 
-    :attr bool auto_delete: (optional) If set to `true`, this reserved IP will be
-          automatically deleted when the target is deleted or when the reserved IP is
-          unbound. The value cannot be set to `true` if the reserved IP is unbound.
+    :attr bool auto_delete: (optional) Indicates whether this reserved IP member
+          will be automatically deleted when either
+          `target` is deleted, or the reserved IP is unbound. Must be `false` if the
+          reserved IP is unbound.
     :attr str name: (optional) The user-defined name for this reserved IP. Names
           must be unique within the subnet the reserved IP resides in. Names beginning
           with `ibm-` are reserved for provider-owned resources.
@@ -41907,10 +42305,10 @@ class ReservedIPPatch():
         """
         Initialize a ReservedIPPatch object.
 
-        :param bool auto_delete: (optional) If set to `true`, this reserved IP will
-               be automatically deleted when the target is deleted or when the reserved IP
-               is unbound. The value cannot be set to `true` if the reserved IP is
-               unbound.
+        :param bool auto_delete: (optional) Indicates whether this reserved IP
+               member will be automatically deleted when either
+               `target` is deleted, or the reserved IP is unbound. Must be `false` if the
+               reserved IP is unbound.
         :param str name: (optional) The user-defined name for this reserved IP.
                Names must be unique within the subnet the reserved IP resides in. Names
                beginning with `ibm-` are reserved for provider-owned resources.
@@ -42450,9 +42848,9 @@ class Route():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
 class RouteCollection():
@@ -43271,9 +43669,9 @@ class RoutingTable():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
@@ -44447,12 +44845,12 @@ class SecurityGroupRule():
           `outbound`.
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
-    :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this property, if they are
-          used. Alternatively, if `remote` references a security group, then this rule
-          only applies to IP addresses (network interfaces) in that group matching this IP
+    :attr str ip_version: The IP version to enforce. The format of `remote.address`
+          or `remote.cidr_block` must match this property, if they are used.
+          Alternatively, if `remote` references a security group, then this rule only
+          applies to IP addresses (network interfaces) in that group matching this IP
           version.
-    :attr str protocol: (optional) The protocol to enforce.
+    :attr str protocol: The protocol to enforce.
     :attr SecurityGroupRuleRemote remote: The IP addresses or security groups from
           which this rule allows traffic (or to which,
           for outbound rules). Can be specified as an IP address, a CIDR block, or a
@@ -44466,10 +44864,9 @@ class SecurityGroupRule():
                  direction: str,
                  href: str,
                  id: str,
-                 remote: 'SecurityGroupRuleRemote',
-                 *,
-                 ip_version: str = None,
-                 protocol: str = None) -> None:
+                 ip_version: str,
+                 protocol: str,
+                 remote: 'SecurityGroupRuleRemote') -> None:
         """
         Initialize a SecurityGroupRule object.
 
@@ -44477,6 +44874,12 @@ class SecurityGroupRule():
                or `outbound`.
         :param str href: The URL for this security group rule.
         :param str id: The unique identifier for this security group rule.
+        :param str ip_version: The IP version to enforce. The format of
+               `remote.address` or `remote.cidr_block` must match this property, if they
+               are used. Alternatively, if `remote` references a security group, then this
+               rule only applies to IP addresses (network interfaces) in that group
+               matching this IP version.
+        :param str protocol: The protocol to enforce.
         :param SecurityGroupRuleRemote remote: The IP addresses or security groups
                from which this rule allows traffic (or to which,
                for outbound rules). Can be specified as an IP address, a CIDR block, or a
@@ -44484,12 +44887,6 @@ class SecurityGroupRule():
                group. A CIDR block of `0.0.0.0/0` allows traffic from any source (or to
                any source,
                for outbound rules).
-        :param str ip_version: (optional) The IP version to enforce. The format of
-               `remote.address` or `remote.cidr_block` must match this property, if they
-               are used. Alternatively, if `remote` references a security group, then this
-               rule only applies to IP addresses (network interfaces) in that group
-               matching this IP version.
-        :param str protocol: (optional) The protocol to enforce.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['SecurityGroupRuleSecurityGroupRuleProtocolAll', 'SecurityGroupRuleSecurityGroupRuleProtocolICMP', 'SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP']))
@@ -45172,7 +45569,7 @@ class Snapshot():
     :attr datetime created_at: The date and time that this snapshot was created.
     :attr str crn: The CRN for this snapshot.
     :attr bool deletable: Indicates whether this snapshot can be deleted. This value
-          will not be `true` if any other snapshots depend on it.
+          will always be `true`.
     :attr str encryption: The type of encryption used on the source volume.
     :attr EncryptionKeyReference encryption_key: (optional) The root key used to
           wrap the data encryption key for the source volume.
@@ -45227,7 +45624,7 @@ class Snapshot():
                created.
         :param str crn: The CRN for this snapshot.
         :param bool deletable: Indicates whether this snapshot can be deleted. This
-               value will not be `true` if any other snapshots depend on it.
+               value will always be `true`.
         :param str encryption: The type of encryption used on the source volume.
         :param str href: The URL for this snapshot.
         :param str id: The unique identifier for this snapshot.
@@ -45417,9 +45814,9 @@ class Snapshot():
         FAILED = 'failed'
         PENDING = 'pending'
         STABLE = 'stable'
+        SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
-        SUSPENDED = 'suspended'
 
 
     class ResourceTypeEnum(str, Enum):
@@ -47754,11 +48151,12 @@ class VPNGatewayConnection():
           settings.
     :attr str href: The VPN connection's canonical URL.
     :attr str id: The unique identifier for this VPN gateway connection.
-    :attr IKEPolicyReference ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates
-          autonegotiation.
+    :attr IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+    :attr IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
     :attr str mode: The mode of the VPN gateway.
     :attr str name: The user-defined name for this VPN gateway connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -47802,11 +48200,12 @@ class VPNGatewayConnection():
         :param str psk: The preshared key.
         :param str resource_type: The resource type.
         :param str status: The status of a VPN gateway connection.
-        :param IKEPolicyReference ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates
-               autonegotiation.
+        :param IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+               [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+        :param IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If
+               absent, [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['VPNGatewayConnectionStaticRouteMode', 'VPNGatewayConnectionPolicyMode']))
@@ -47993,6 +48392,89 @@ class VPNGatewayConnectionDPD():
         RESTART = 'restart'
 
 
+class VPNGatewayConnectionDPDPatch():
+    """
+    The Dead Peer Detection settings.
+
+    :attr str action: (optional) Dead Peer Detection actions.
+    :attr int interval: (optional) Dead Peer Detection interval in seconds.
+    :attr int timeout: (optional) Dead Peer Detection timeout in seconds. Must be at
+          least the interval.
+    """
+
+    def __init__(self,
+                 *,
+                 action: str = None,
+                 interval: int = None,
+                 timeout: int = None) -> None:
+        """
+        Initialize a VPNGatewayConnectionDPDPatch object.
+
+        :param str action: (optional) Dead Peer Detection actions.
+        :param int interval: (optional) Dead Peer Detection interval in seconds.
+        :param int timeout: (optional) Dead Peer Detection timeout in seconds. Must
+               be at least the interval.
+        """
+        self.action = action
+        self.interval = interval
+        self.timeout = timeout
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionDPDPatch':
+        """Initialize a VPNGatewayConnectionDPDPatch object from a json dictionary."""
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        if 'interval' in _dict:
+            args['interval'] = _dict.get('interval')
+        if 'timeout' in _dict:
+            args['timeout'] = _dict.get('timeout')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionDPDPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'interval') and self.interval is not None:
+            _dict['interval'] = self.interval
+        if hasattr(self, 'timeout') and self.timeout is not None:
+            _dict['timeout'] = self.timeout
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionDPDPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionDPDPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionDPDPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ActionEnum(str, Enum):
+        """
+        Dead Peer Detection actions.
+        """
+        CLEAR = 'clear'
+        HOLD = 'hold'
+        NONE = 'none'
+        RESTART = 'restart'
+
+
 class VPNGatewayConnectionDPDPrototype():
     """
     The Dead Peer Detection settings.
@@ -48076,6 +48558,70 @@ class VPNGatewayConnectionDPDPrototype():
         RESTART = 'restart'
 
 
+class VPNGatewayConnectionIKEPolicyPatch():
+    """
+    The IKE policy to use. Specify `null` to remove any existing policy, [resulting in
+    auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById', 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref']))
+        raise Exception(msg)
+
+class VPNGatewayConnectionIKEPolicyPrototype():
+    """
+    The IKE policy to use. If unspecified, [auto-negotiation will be
+    used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById', 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref']))
+        raise Exception(msg)
+
+class VPNGatewayConnectionIPsecPolicyPatch():
+    """
+    The IPsec policy to use. Specify `null` to remove any existing policy, [resulting in
+    auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById', 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref']))
+        raise Exception(msg)
+
+class VPNGatewayConnectionIPsecPolicyPrototype():
+    """
+    The IPsec policy to use. If unspecified, [auto-negotiation will be
+    used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById', 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref']))
+        raise Exception(msg)
+
 class VPNGatewayConnectionLocalCIDRs():
     """
     VPNGatewayConnectionLocalCIDRs.
@@ -48137,13 +48683,14 @@ class VPNGatewayConnectionPatch():
 
     :attr bool admin_state_up: (optional) If set to false, the VPN gateway
           connection is shut down.
-    :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The Dead
-          Peer Detection settings.
-    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates
-          autonegotiation.
+    :attr VPNGatewayConnectionDPDPatch dead_peer_detection: (optional) The Dead Peer
+          Detection settings.
+    :attr VPNGatewayConnectionIKEPolicyPatch ike_policy: (optional) The IKE policy
+          to use. Specify `null` to remove any existing policy, [resulting in
+          auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+    :attr VPNGatewayConnectionIPsecPolicyPatch ipsec_policy: (optional) The IPsec
+          policy to use. Specify `null` to remove any existing policy, [resulting in
+          auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
     :attr str name: (optional) The user-defined name for this VPN gateway
           connection.
     :attr str peer_address: (optional) The IP address of the peer VPN gateway.
@@ -48153,9 +48700,9 @@ class VPNGatewayConnectionPatch():
     def __init__(self,
                  *,
                  admin_state_up: bool = None,
-                 dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-                 ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 dead_peer_detection: 'VPNGatewayConnectionDPDPatch' = None,
+                 ike_policy: 'VPNGatewayConnectionIKEPolicyPatch' = None,
+                 ipsec_policy: 'VPNGatewayConnectionIPsecPolicyPatch' = None,
                  name: str = None,
                  peer_address: str = None,
                  psk: str = None) -> None:
@@ -48164,13 +48711,15 @@ class VPNGatewayConnectionPatch():
 
         :param bool admin_state_up: (optional) If set to false, the VPN gateway
                connection is shut down.
-        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
+        :param VPNGatewayConnectionDPDPatch dead_peer_detection: (optional) The
                Dead Peer Detection settings.
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates
-               autonegotiation.
+        :param VPNGatewayConnectionIKEPolicyPatch ike_policy: (optional) The IKE
+               policy to use. Specify `null` to remove any existing policy, [resulting in
+               auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+        :param VPNGatewayConnectionIPsecPolicyPatch ipsec_policy: (optional) The
+               IPsec policy to use. Specify `null` to remove any existing policy,
+               [resulting in
+               auto-negotiation](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
         :param str name: (optional) The user-defined name for this VPN gateway
                connection.
         :param str peer_address: (optional) The IP address of the peer VPN gateway.
@@ -48243,11 +48792,12 @@ class VPNGatewayConnectionPrototype():
           connection is shut down.
     :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The Dead
           Peer Detection settings.
-    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates
-          autonegotiation.
+    :attr VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional) The IKE
+          policy to use. If unspecified, [auto-negotiation will be
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+    :attr VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional) The
+          IPsec policy to use. If unspecified, [auto-negotiation will be
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
     :attr str name: (optional) The user-defined name for this VPN gateway
           connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -48260,8 +48810,8 @@ class VPNGatewayConnectionPrototype():
                  *,
                  admin_state_up: bool = None,
                  dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-                 ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 ike_policy: 'VPNGatewayConnectionIKEPolicyPrototype' = None,
+                 ipsec_policy: 'VPNGatewayConnectionIPsecPolicyPrototype' = None,
                  name: str = None) -> None:
         """
         Initialize a VPNGatewayConnectionPrototype object.
@@ -48272,11 +48822,12 @@ class VPNGatewayConnectionPrototype():
                connection is shut down.
         :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional) The
                Dead Peer Detection settings.
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates
-               autonegotiation.
+        :param VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional) The
+               IKE policy to use. If unspecified, [auto-negotiation will be
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+        :param VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional)
+               The IPsec policy to use. If unspecified, [auto-negotiation will be
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
         :param str name: (optional) The user-defined name for this VPN gateway
                connection.
         """
@@ -48520,8 +49071,8 @@ class VPNGatewayConnectionStaticRouteModeTunnel():
         """
         The status of the VPN Tunnel.
         """
-        UP = 'up'
         DOWN = 'down'
+        UP = 'up'
 
 
 class VPNGatewayMember():
@@ -48630,9 +49181,9 @@ class VPNGatewayMember():
         The status of the VPN gateway member.
         """
         AVAILABLE = 'available'
+        DELETING = 'deleting'
         FAILED = 'failed'
         PENDING = 'pending'
-        DELETING = 'deleting'
 
 
 class VPNGatewayPatch():
@@ -48729,8 +49280,8 @@ class Volume():
     :attr int bandwidth: The maximum bandwidth (in megabits per second) for the
           volume.
     :attr bool busy: Indicates whether this volume is performing an operation that
-          must be serialized. If an operation specifies that it requires serialization,
-          the operation will fail unless this property is `false`.
+          must be serialized. This must be `false` to perform an operation that is
+          specified to require serialization.
     :attr int capacity: The capacity to use for the volume (in gigabytes). The
           specified minimum and maximum capacity values for creating or updating volumes
           may expand in the future.
@@ -48743,7 +49294,8 @@ class Volume():
           `user_managed`.
     :attr str href: The URL for this volume.
     :attr str id: The unique identifier for this volume.
-    :attr int iops: The maximum I/O operations per second (IOPS) for the volume.
+    :attr int iops: The maximum I/O operations per second (IOPS) to use for the
+          volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: The unique user-defined name for this volume.
     :attr OperatingSystemReference operating_system: (optional) The operating system
           associated with this volume. If absent, this volume was not
@@ -48803,8 +49355,8 @@ class Volume():
         :param int bandwidth: The maximum bandwidth (in megabits per second) for
                the volume.
         :param bool busy: Indicates whether this volume is performing an operation
-               that must be serialized. If an operation specifies that it requires
-               serialization, the operation will fail unless this property is `false`.
+               that must be serialized. This must be `false` to perform an operation that
+               is specified to require serialization.
         :param int capacity: The capacity to use for the volume (in gigabytes). The
                specified minimum and maximum capacity values for creating or updating
                volumes may expand in the future.
@@ -48813,8 +49365,9 @@ class Volume():
         :param str encryption: The type of encryption used on the volume.
         :param str href: The URL for this volume.
         :param str id: The unique identifier for this volume.
-        :param int iops: The maximum I/O operations per second (IOPS) for the
-               volume.
+        :param int iops: The maximum I/O operations per second (IOPS) to use for
+               the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: The unique user-defined name for this volume.
         :param VolumeProfileReference profile: The profile this volume uses.
         :param ResourceGroupReference resource_group: The resource group for this
@@ -49052,8 +49605,8 @@ class VolumeAttachment():
           volume when attached to this instance. This may be lower than the volume
           bandwidth depending on the configuration of the instance.
     :attr datetime created_at: The date and time that the volume was attached.
-    :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
-          deleting the instance the volume will also be deleted.
+    :attr bool delete_volume_on_instance_delete: If set to true, when deleting the
+          instance the volume will also be deleted.
     :attr VolumeAttachmentDevice device: (optional) Information about how the volume
           is exposed to the instance operating system.
           This property may be absent if the volume attachment's `status` is not
@@ -49069,6 +49622,7 @@ class VolumeAttachment():
     def __init__(self,
                  bandwidth: int,
                  created_at: datetime,
+                 delete_volume_on_instance_delete: bool,
                  href: str,
                  id: str,
                  name: str,
@@ -49076,7 +49630,6 @@ class VolumeAttachment():
                  type: str,
                  volume: 'VolumeReference',
                  *,
-                 delete_volume_on_instance_delete: bool = None,
                  device: 'VolumeAttachmentDevice' = None) -> None:
         """
         Initialize a VolumeAttachment object.
@@ -49085,14 +49638,14 @@ class VolumeAttachment():
                the volume when attached to this instance. This may be lower than the
                volume bandwidth depending on the configuration of the instance.
         :param datetime created_at: The date and time that the volume was attached.
+        :param bool delete_volume_on_instance_delete: If set to true, when deleting
+               the instance the volume will also be deleted.
         :param str href: The URL for this volume attachment.
         :param str id: The unique identifier for this volume attachment.
         :param str name: The user-defined name for this volume attachment.
         :param str status: The status of this volume attachment.
         :param str type: The type of volume attachment.
         :param VolumeReference volume: The attached volume.
-        :param bool delete_volume_on_instance_delete: (optional) If set to true,
-               when deleting the instance the volume will also be deleted.
         :param VolumeAttachmentDevice device: (optional) Information about how the
                volume is exposed to the instance operating system.
                This property may be absent if the volume attachment's `status` is not
@@ -49123,6 +49676,8 @@ class VolumeAttachment():
             raise ValueError('Required property \'created_at\' not present in VolumeAttachment JSON')
         if 'delete_volume_on_instance_delete' in _dict:
             args['delete_volume_on_instance_delete'] = _dict.get('delete_volume_on_instance_delete')
+        else:
+            raise ValueError('Required property \'delete_volume_on_instance_delete\' not present in VolumeAttachment JSON')
         if 'device' in _dict:
             args['device'] = VolumeAttachmentDevice.from_dict(_dict.get('device'))
         if 'href' in _dict:
@@ -49339,6 +49894,7 @@ class VolumeAttachmentPatch():
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
+          Names must be unique within the instance the volume attachment resides in.
     """
 
     def __init__(self,
@@ -49351,7 +49907,8 @@ class VolumeAttachmentPatch():
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
-               attachment.
+               attachment. Names must be unique within the instance the volume attachment
+               resides in.
         """
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
         self.name = name
@@ -49405,6 +49962,7 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
+          Names must be unique within the instance the volume attachment resides in.
     :attr VolumePrototypeInstanceByImageContext volume: A prototype object for a new
           volume.
     """
@@ -49422,7 +49980,8 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
-               attachment.
+               attachment. Names must be unique within the instance the volume attachment
+               resides in.
         """
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
         self.name = name
@@ -49483,6 +50042,7 @@ class VolumeAttachmentPrototypeInstanceByVolumeContext():
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
+          Names must be unique within the instance the volume attachment resides in.
     :attr VolumeAttachmentVolumePrototypeInstanceByVolumeContext volume: An existing
           volume to attach to the instance, or a prototype object for a new volume.
     """
@@ -49501,7 +50061,8 @@ class VolumeAttachmentPrototypeInstanceByVolumeContext():
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
-               attachment.
+               attachment. Names must be unique within the instance the volume attachment
+               resides in.
         """
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
         self.name = name
@@ -49565,6 +50126,7 @@ class VolumeAttachmentPrototypeInstanceContext():
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
+          Names must be unique within the instance the volume attachment resides in.
     :attr VolumeAttachmentVolumePrototypeInstanceContext volume: An existing volume
           to attach to the instance, or a prototype object for a new volume.
     """
@@ -49582,7 +50144,8 @@ class VolumeAttachmentPrototypeInstanceContext():
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
-               attachment.
+               attachment. Names must be unique within the instance the volume attachment
+               resides in.
         """
         self.delete_volume_on_instance_delete = delete_volume_on_instance_delete
         self.name = name
@@ -50282,8 +50845,9 @@ class VolumePatch():
     VolumePatch.
 
     :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The volume must be attached as a data volume to a virtual server
-          instance, and the specified value must not be less than the current capacity.
+          gigabytes). The volume must be attached as a data volume to a running virtual
+          server instance, and the specified value must not be less than the current
+          capacity.
           The minimum and maximum capacity limits for creating or updating volumes may
           expand in the future.
     :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
@@ -50308,9 +50872,9 @@ class VolumePatch():
         Initialize a VolumePatch object.
 
         :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The volume must be attached as a data volume to a virtual
-               server instance, and the specified value must not be less than the current
-               capacity.
+               gigabytes). The volume must be attached as a data volume to a running
+               virtual server instance, and the specified value must not be less than the
+               current capacity.
                The minimum and maximum capacity limits for creating or updating volumes
                may expand in the future.
         :param int iops: (optional) The maximum I/O operations per second (IOPS) to
@@ -50474,8 +51038,8 @@ class VolumeProfile():
         surface the error, or bypass the volume profile on which the unexpected property
         value was encountered.
         """
-        TIERED = 'tiered'
         CUSTOM = 'custom'
+        TIERED = 'tiered'
 
 
 class VolumeProfileCollection():
@@ -50780,8 +51344,6 @@ class VolumePrototype():
 
     :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
           for the volume. Applicable only to volumes using a profile `family` of `custom`.
-          The volume must be attached as a data volume to a running virtual server
-          instance.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
@@ -50804,8 +51366,7 @@ class VolumePrototype():
         :param ZoneIdentity zone: The zone this volume will reside in.
         :param int iops: (optional) The maximum I/O operations per second (IOPS) to
                use for the volume. Applicable only to volumes using a profile `family` of
-               `custom`. The volume must be attached as a data volume to a running virtual
-               server instance.
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
@@ -50826,11 +51387,11 @@ class VolumePrototypeInstanceByImageContext():
           If unspecified, the capacity will be the image's `minimum_provisioned_size`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided but the image is encrypted, the image's
-          `encryption_key` will be used. Otherwise, the `encryption` type for the
-          volume will be `provider_managed`.
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+          If unspecified, and the image is encrypted, the image's `encryption_key` will be
+          used. Otherwise, the `encryption` type for the volume will be
+          `provider_managed`.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -50854,11 +51415,13 @@ class VolumePrototypeInstanceByImageContext():
                `minimum_provisioned_size`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided but the image is encrypted, the image's
-               `encryption_key` will be used. Otherwise, the `encryption` type for the
-               volume will be `provider_managed`.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+               If unspecified, and the image is encrypted, the image's `encryption_key`
+               will be
+               used. Otherwise, the `encryption` type for the volume will be
+               `provider_managed`.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         self.capacity = capacity
@@ -53091,13 +53654,13 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
     """
     EndpointGatewayReservedIPReservedIPPrototypeTargetContext.
 
-    :attr bool auto_delete: (optional) If set to `true`, this reserved IP will be
-          automatically deleted when the target is deleted or when the reserved IP is
-          unbound.
-    :attr str name: (optional) The user-defined name for this reserved IP. If not
-          specified, the name will be a hyphenated list of randomly-selected words. Names
-          must be unique within the subnet the reserved IP resides in. Names beginning
-          with `ibm-` are reserved for provider-owned resources.
+    :attr bool auto_delete: (optional) Indicates whether this reserved IP member
+          will be automatically deleted when either
+          `target` is deleted, or the reserved IP is unbound.
+    :attr str name: (optional) The user-defined name for this reserved IP. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+          Names must be unique within the subnet the reserved IP resides in. Names
+          beginning with `ibm-` are reserved for provider-owned resources.
     :attr SubnetIdentity subnet: The subnet in which to create this reserved IP.
     """
 
@@ -53111,13 +53674,13 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
 
         :param SubnetIdentity subnet: The subnet in which to create this reserved
                IP.
-        :param bool auto_delete: (optional) If set to `true`, this reserved IP will
-               be automatically deleted when the target is deleted or when the reserved IP
-               is unbound.
+        :param bool auto_delete: (optional) Indicates whether this reserved IP
+               member will be automatically deleted when either
+               `target` is deleted, or the reserved IP is unbound.
         :param str name: (optional) The user-defined name for this reserved IP. If
-               not specified, the name will be a hyphenated list of randomly-selected
-               words. Names must be unique within the subnet the reserved IP resides in.
-               Names beginning with `ibm-` are reserved for provider-owned resources.
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+               Names must be unique within the subnet the reserved IP resides in. Names
+               beginning with `ibm-` are reserved for provider-owned resources.
         """
         # pylint: disable=super-init-not-called
         self.auto_delete = auto_delete
@@ -54489,234 +55052,6 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class IKEPolicyIdentityByHref(IKEPolicyIdentity):
-    """
-    IKEPolicyIdentityByHref.
-
-    :attr str href: The IKE policy's canonical URL.
-    """
-
-    def __init__(self,
-                 href: str) -> None:
-        """
-        Initialize a IKEPolicyIdentityByHref object.
-
-        :param str href: The IKE policy's canonical URL.
-        """
-        # pylint: disable=super-init-not-called
-        self.href = href
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'IKEPolicyIdentityByHref':
-        """Initialize a IKEPolicyIdentityByHref object from a json dictionary."""
-        args = {}
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in IKEPolicyIdentityByHref JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a IKEPolicyIdentityByHref object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this IKEPolicyIdentityByHref object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'IKEPolicyIdentityByHref') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'IKEPolicyIdentityByHref') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class IKEPolicyIdentityById(IKEPolicyIdentity):
-    """
-    IKEPolicyIdentityById.
-
-    :attr str id: The unique identifier for this IKE policy.
-    """
-
-    def __init__(self,
-                 id: str) -> None:
-        """
-        Initialize a IKEPolicyIdentityById object.
-
-        :param str id: The unique identifier for this IKE policy.
-        """
-        # pylint: disable=super-init-not-called
-        self.id = id
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'IKEPolicyIdentityById':
-        """Initialize a IKEPolicyIdentityById object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in IKEPolicyIdentityById JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a IKEPolicyIdentityById object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this IKEPolicyIdentityById object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'IKEPolicyIdentityById') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'IKEPolicyIdentityById') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class IPsecPolicyIdentityByHref(IPsecPolicyIdentity):
-    """
-    IPsecPolicyIdentityByHref.
-
-    :attr str href: The IPsec policy's canonical URL.
-    """
-
-    def __init__(self,
-                 href: str) -> None:
-        """
-        Initialize a IPsecPolicyIdentityByHref object.
-
-        :param str href: The IPsec policy's canonical URL.
-        """
-        # pylint: disable=super-init-not-called
-        self.href = href
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'IPsecPolicyIdentityByHref':
-        """Initialize a IPsecPolicyIdentityByHref object from a json dictionary."""
-        args = {}
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in IPsecPolicyIdentityByHref JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a IPsecPolicyIdentityByHref object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this IPsecPolicyIdentityByHref object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'IPsecPolicyIdentityByHref') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'IPsecPolicyIdentityByHref') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class IPsecPolicyIdentityById(IPsecPolicyIdentity):
-    """
-    IPsecPolicyIdentityById.
-
-    :attr str id: The unique identifier for this IPsec policy.
-    """
-
-    def __init__(self,
-                 id: str) -> None:
-        """
-        Initialize a IPsecPolicyIdentityById object.
-
-        :param str id: The unique identifier for this IPsec policy.
-        """
-        # pylint: disable=super-init-not-called
-        self.id = id
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'IPsecPolicyIdentityById':
-        """Initialize a IPsecPolicyIdentityById object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in IPsecPolicyIdentityById JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a IPsecPolicyIdentityById object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this IPsecPolicyIdentityById object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'IPsecPolicyIdentityById') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'IPsecPolicyIdentityById') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class ImageIdentityByCRN(ImageIdentity):
     """
     ImageIdentityByCRN.
@@ -54899,20 +55234,20 @@ class ImagePrototypeImageByFile(ImagePrototype):
     :attr str encrypted_data_key: (optional) A base64-encoded, encrypted
           representation of the key that was used to encrypt the data for this image.
           That representation is created by wrapping the key's value with the
-          `encryption_key` root key (which must also be provided), using either [Key
+          `encryption_key` root key (which must also be specified), using either [Key
           Protect](https://cloud.ibm.com/docs/key-protect?topic=key-protect-wrap-keys) or
           the
           [Hyper Protect Crypto
           Service](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
-          If this property is not provided, the imported image is treated as unencrypted.
+          If unspecified, the imported image is treated as unencrypted.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key that was
           used to wrap the data key (which is ultimately represented as
           `encrypted_data_key`). Additionally, the root key will be used to encrypt
           volumes
-          created from this image (unless an alternate `encryption_key` is provided at
+          created from this image (unless an alternate `encryption_key` is specified at
           volume
           creation).
-          If this property is not provided, the imported image is treated as unencrypted.
+          If unspecified, the imported image is treated as unencrypted.
     :attr ImageFilePrototype file: The file from which to create the image.
     :attr OperatingSystemIdentity operating_system: The [supported operating
           system](https://cloud.ibm.com/apidocs/vpc#list-operating-systems) included in
@@ -54943,22 +55278,20 @@ class ImagePrototypeImageByFile(ImagePrototype):
         :param str encrypted_data_key: (optional) A base64-encoded, encrypted
                representation of the key that was used to encrypt the data for this image.
                That representation is created by wrapping the key's value with the
-               `encryption_key` root key (which must also be provided), using either [Key
+               `encryption_key` root key (which must also be specified), using either [Key
                Protect](https://cloud.ibm.com/docs/key-protect?topic=key-protect-wrap-keys)
                or the
                [Hyper Protect Crypto
                Service](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
-               If this property is not provided, the imported image is treated as
-               unencrypted.
+               If unspecified, the imported image is treated as unencrypted.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key that
                was used to wrap the data key (which is ultimately represented as
                `encrypted_data_key`). Additionally, the root key will be used to encrypt
                volumes
-               created from this image (unless an alternate `encryption_key` is provided
+               created from this image (unless an alternate `encryption_key` is specified
                at volume
                creation).
-               If this property is not provided, the imported image is treated as
-               unencrypted.
+               If unspecified, the imported image is treated as unencrypted.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -55049,8 +55382,7 @@ class ImagePrototypeImageBySourceVolume(ImagePrototype):
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key used to wrap
           the system-generated data encryption key for the image.
-          If this property is not provided, the root key from `source_volume` will be
-          used.
+          If unspecified, the root key from `source_volume` will be used.
     :attr VolumeIdentity source_volume: The volume from which to create the image.
           The specified volume must:
           - Originate from an image, which will be used to populate this image's
@@ -55080,8 +55412,7 @@ class ImagePrototypeImageBySourceVolume(ImagePrototype):
         :param ResourceGroupIdentity resource_group: (optional)
         :param EncryptionKeyIdentity encryption_key: (optional) The root key used
                to wrap the system-generated data encryption key for the image.
-               If this property is not provided, the root key from `source_volume` will be
-               used.
+               If unspecified, the root key from `source_volume` will be used.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -55176,12 +55507,14 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
     """
     InstanceGroupManagerActionScheduledAction.
 
-    :attr bool auto_delete: If set to `true`, this scheduled action will be
-          automatically deleted after it has finished and the `auto_delete_timeout` time
-          has passed.
-    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
-          before the scheduled action will be automatically deleted once it has finished.
-          If this value is 0, the action will be deleted on completion.
+    :attr bool auto_delete: Indicates whether this scheduled action will be
+          automatically deleted after it has completed and `auto_delete_timeout` hours
+          have passed. At present, this is always
+          `true`, but may be modifiable in the future.
+    :attr int auto_delete_timeout: If `auto_delete` is `true`, and this scheduled
+          action has finished, the hours after which it will be automatically deleted. If
+          the value is `0`, the action will be deleted once it has finished. This value
+          may be modifiable in the future.
     :attr datetime created_at: The date and time that the instance group manager
           action was created.
     :attr str href: The URL for this instance group manager action.
@@ -55201,9 +55534,9 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     :attr datetime last_applied_at: (optional) The date and time the scheduled
-          action was last applied. If empty the action has never been applied.
+          action was last applied. If absent, the action has never been applied.
     :attr datetime next_run_at: (optional) The date and time the scheduled action
-          will next run. If empty the system is currently calculating the next run time.
+          will next run. If absent, the system is currently calculating the next run time.
     """
 
     def __init__(self,
@@ -55224,12 +55557,14 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
         """
         Initialize a InstanceGroupManagerActionScheduledAction object.
 
-        :param bool auto_delete: If set to `true`, this scheduled action will be
-               automatically deleted after it has finished and the `auto_delete_timeout`
-               time has passed.
-        :param int auto_delete_timeout: Amount of time in hours that are required
-               to pass before the scheduled action will be automatically deleted once it
-               has finished. If this value is 0, the action will be deleted on completion.
+        :param bool auto_delete: Indicates whether this scheduled action will be
+               automatically deleted after it has completed and `auto_delete_timeout`
+               hours have passed. At present, this is always
+               `true`, but may be modifiable in the future.
+        :param int auto_delete_timeout: If `auto_delete` is `true`, and this
+               scheduled action has finished, the hours after which it will be
+               automatically deleted. If the value is `0`, the action will be deleted once
+               it has finished. This value may be modifiable in the future.
         :param datetime created_at: The date and time that the instance group
                manager action was created.
         :param str href: The URL for this instance group manager action.
@@ -55253,10 +55588,10 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
         :param datetime last_applied_at: (optional) The date and time the scheduled
-               action was last applied. If empty the action has never been applied.
+               action was last applied. If absent, the action has never been applied.
         :param datetime next_run_at: (optional) The date and time the scheduled
-               action will next run. If empty the system is currently calculating the next
-               run time.
+               action will next run. If absent, the system is currently calculating the
+               next run time.
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
@@ -55301,7 +55636,7 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
           created.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
-    :attr bool management_enabled: If set to `true`, this manager will control the
+    :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
@@ -55340,7 +55675,7 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
                manager was created.
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
-        :param bool management_enabled: If set to `true`, this manager will control
+        :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
@@ -55745,7 +56080,7 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(Instan
     """
     InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype.
 
-    :attr bool management_enabled: (optional) If set to `true`, this manager will
+    :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
           manager. Names must be unique within the instance group.
@@ -55775,7 +56110,7 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(Instan
         :param str manager_type: The type of instance group manager.
         :param int max_membership_count: The maximum number of members in a managed
                instance group.
-        :param bool management_enabled: (optional) If set to `true`, this manager
+        :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
                manager. Names must be unique within the instance group.
@@ -55872,7 +56207,7 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype(Instan
     """
     InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype.
 
-    :attr bool management_enabled: (optional) If set to `true`, this manager will
+    :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
           manager. Names must be unique within the instance group.
@@ -55888,7 +56223,7 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype(Instan
         Initialize a InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype object.
 
         :param str manager_type: The type of instance group manager.
-        :param bool management_enabled: (optional) If set to `true`, this manager
+        :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
                manager. Names must be unique within the instance group.
@@ -55961,7 +56296,7 @@ class InstanceGroupManagerScheduled(InstanceGroupManager):
           created.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
-    :attr bool management_enabled: If set to `true`, this manager will control the
+    :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
     :attr str name: The user-defined name for this instance group manager. Names
           must be unique within the instance group.
@@ -55988,7 +56323,7 @@ class InstanceGroupManagerScheduled(InstanceGroupManager):
                manager was created.
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
-        :param bool management_enabled: If set to `true`, this manager will control
+        :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
                Names must be unique within the instance group.
@@ -56212,8 +56547,8 @@ class InstanceGroupManagerScheduledActionManagerAutoScale(InstanceGroupManagerSc
 
 class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototype(InstanceGroupManagerScheduledActionManagerPrototype):
     """
-    The auto scale manager to update and the property or properties to be updated. Exactly
-    one of `id` or `href` must be provided in addition to at least one of
+    The auto scale manager to update, and one or more properties to be updated. Either
+    `id` or `href` must be specified, in addition to at least one of
     `min_membership_count` and
     `max_membership_count`.
 
@@ -56414,9 +56749,8 @@ class InstancePlacementTargetDedicatedHostGroupReference(InstancePlacementTarget
           some supplementary information.
     :attr str href: The URL for this dedicated host group.
     :attr str id: The unique identifier for this dedicated host group.
-    :attr str name: The unique user-defined name for this dedicated host group. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str resource_type: The type of resource referenced.
+    :attr str name: The unique user-defined name for this dedicated host group.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -56434,9 +56768,8 @@ class InstancePlacementTargetDedicatedHostGroupReference(InstancePlacementTarget
         :param str href: The URL for this dedicated host group.
         :param str id: The unique identifier for this dedicated host group.
         :param str name: The unique user-defined name for this dedicated host
-               group. If unspecified, the name will be a hyphenated list of
-               randomly-selected words.
-        :param str resource_type: The type of resource referenced.
+               group.
+        :param str resource_type: The resource type.
         :param DedicatedHostGroupReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
                provides
@@ -56520,7 +56853,7 @@ class InstancePlacementTargetDedicatedHostGroupReference(InstancePlacementTarget
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST_GROUP = 'dedicated_host_group'
 
@@ -56535,9 +56868,8 @@ class InstancePlacementTargetDedicatedHostReference(InstancePlacementTarget):
           some supplementary information.
     :attr str href: The URL for this dedicated host.
     :attr str id: The unique identifier for this dedicated host.
-    :attr str name: The unique user-defined name for this dedicated host. If
-          unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str resource_type: The type of resource referenced.
+    :attr str name: The unique user-defined name for this dedicated host.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -56554,9 +56886,8 @@ class InstancePlacementTargetDedicatedHostReference(InstancePlacementTarget):
         :param str crn: The CRN for this dedicated host.
         :param str href: The URL for this dedicated host.
         :param str id: The unique identifier for this dedicated host.
-        :param str name: The unique user-defined name for this dedicated host. If
-               unspecified, the name will be a hyphenated list of randomly-selected words.
-        :param str resource_type: The type of resource referenced.
+        :param str name: The unique user-defined name for this dedicated host.
+        :param str resource_type: The resource type.
         :param DedicatedHostReferenceDeleted deleted: (optional) If present, this
                property indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -56639,7 +56970,7 @@ class InstancePlacementTargetDedicatedHostReference(InstancePlacementTarget):
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         DEDICATED_HOST = 'dedicated_host'
 
@@ -57739,6 +58070,661 @@ class InstanceProfileDiskSizeRange(InstanceProfileDiskSize):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceProfileDiskSizeRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class InstanceProfileGPUDependent(InstanceProfileGPU):
+    """
+    The GPU count for an instance with this profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileGPUDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUDependent':
+        """Initialize a InstanceProfileGPUDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class InstanceProfileGPUEnum(InstanceProfileGPU):
+    """
+    The permitted GPU count values for an instance with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a InstanceProfileGPUEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUEnum':
+        """Initialize a InstanceProfileGPUEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileGPUEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in InstanceProfileGPUEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileGPUFixed(InstanceProfileGPU):
+    """
+    The GPU count for an instance with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a InstanceProfileGPUFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUFixed':
+        """Initialize a InstanceProfileGPUFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in InstanceProfileGPUFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class InstanceProfileGPUMemoryDependent(InstanceProfileGPUMemory):
+    """
+    The overall GPU memory value for an instance with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileGPUMemoryDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUMemoryDependent':
+        """Initialize a InstanceProfileGPUMemoryDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUMemoryDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUMemoryDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUMemoryDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUMemoryDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUMemoryDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class InstanceProfileGPUMemoryEnum(InstanceProfileGPUMemory):
+    """
+    The permitted overall GPU memory values in GiB (gibibytes) for an instance with this
+    profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a InstanceProfileGPUMemoryEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUMemoryEnum':
+        """Initialize a InstanceProfileGPUMemoryEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileGPUMemoryEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUMemoryEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in InstanceProfileGPUMemoryEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUMemoryEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUMemoryEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUMemoryEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUMemoryEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class InstanceProfileGPUMemoryFixed(InstanceProfileGPUMemory):
+    """
+    The overall GPU memory in GiB (gibibytes) for an instance with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a InstanceProfileGPUMemoryFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUMemoryFixed':
+        """Initialize a InstanceProfileGPUMemoryFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUMemoryFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in InstanceProfileGPUMemoryFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUMemoryFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUMemoryFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUMemoryFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUMemoryFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class InstanceProfileGPUMemoryRange(InstanceProfileGPUMemory):
+    """
+    The permitted overall GPU memory range in GiB (gibibytes) for an instance with this
+    profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileGPUMemoryRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPUMemoryRange':
+        """Initialize a InstanceProfileGPUMemoryRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileGPUMemoryRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in InstanceProfileGPUMemoryRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in InstanceProfileGPUMemoryRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in InstanceProfileGPUMemoryRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPUMemoryRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPUMemoryRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPUMemoryRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPUMemoryRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPUMemoryRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class InstanceProfileGPURange(InstanceProfileGPU):
+    """
+    The permitted GPU count range for an instance with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a InstanceProfileGPURange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceProfileGPURange':
+        """Initialize a InstanceProfileGPURange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in InstanceProfileGPURange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in InstanceProfileGPURange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in InstanceProfileGPURange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in InstanceProfileGPURange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in InstanceProfileGPURange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceProfileGPURange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceProfileGPURange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceProfileGPURange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceProfileGPURange') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -59001,6 +59987,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -59020,8 +60010,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
           (optional) The boot volume attachment for the virtual server instance.
     :attr ImageIdentity image: The image to use when provisioning the virtual server
@@ -59067,6 +60057,11 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -59086,8 +60081,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -59242,6 +60237,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -59261,8 +60260,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
           (optional) The boot volume attachment for the virtual server instance.
     :attr ImageIdentity image: (optional) The image to use when provisioning the
@@ -59308,6 +60307,11 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -59327,8 +60331,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -59493,6 +60497,10 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -59512,8 +60520,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
           The boot volume attachment for the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
@@ -59557,6 +60565,11 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -59576,8 +60589,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         """
         # pylint: disable=super-init-not-called
         self.keys = keys
@@ -59892,6 +60905,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -59911,8 +60928,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
           (optional) The boot volume attachment for the virtual server instance.
     :attr ImageIdentity image: The image to use when provisioning the virtual server
@@ -59958,6 +60975,11 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -59977,8 +60999,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -60133,6 +61155,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -60152,8 +61178,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
           (optional) The boot volume attachment for the virtual server instance.
     :attr ImageIdentity image: (optional) The image to use when provisioning the
@@ -60199,6 +61225,11 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -60218,8 +61249,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -60384,6 +61415,10 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -60403,8 +61438,8 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
           The boot volume attachment for the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
@@ -60448,6 +61483,11 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -60467,8 +61507,8 @@ class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         """
         # pylint: disable=super-init-not-called
         self.keys = keys
@@ -60617,6 +61657,10 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -60635,8 +61679,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
           (optional) The boot volume attachment for the virtual server instance.
     :attr ImageIdentity image: The image to use when provisioning the virtual server
@@ -60694,6 +61738,11 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
@@ -60709,8 +61758,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         :param VolumeAttachmentPrototypeInstanceByImageContext
                boot_volume_attachment: (optional) The boot volume attachment for the
                virtual server instance.
@@ -60899,6 +61948,10 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -60917,8 +61970,8 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
           (optional) The volume attachments for this virtual server instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If provided, must match the VPC tied to the subnets of the instance's
-          network interfaces.
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
     :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
           The boot volume attachment for the virtual server instance.
     :attr NetworkInterfacePrototype primary_network_interface: Primary network
@@ -60974,6 +62027,11 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
                Keys are optional for other images, but if no keys are specified, the
                instance will be inaccessible unless the specified image provides another
                means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
@@ -60989,8 +62047,8 @@ class InstanceTemplateInstanceByVolume(InstanceTemplate):
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
                (optional) The volume attachments for this virtual server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If provided, must match the VPC tied to the subnets of the
-               instance's network interfaces.
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
         """
         # pylint: disable=super-init-not-called
         self.created_at = created_at
@@ -62699,6 +63757,145 @@ class LoadBalancerProfileIdentityByName(LoadBalancerProfileIdentity):
     def __ne__(self, other: 'LoadBalancerProfileIdentityByName') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class LoadBalancerProfileRouteModeSupportedDependent(LoadBalancerProfileRouteModeSupported):
+    """
+    The route mode support for a load balancer with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a LoadBalancerProfileRouteModeSupportedDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileRouteModeSupportedDependent':
+        """Initialize a LoadBalancerProfileRouteModeSupportedDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileRouteModeSupportedDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileRouteModeSupportedDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileRouteModeSupportedDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileRouteModeSupportedDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileRouteModeSupportedDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class LoadBalancerProfileRouteModeSupportedFixed(LoadBalancerProfileRouteModeSupported):
+    """
+    The route mode support for a load balancer with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr bool value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: bool) -> None:
+        """
+        Initialize a LoadBalancerProfileRouteModeSupportedFixed object.
+
+        :param str type: The type for this profile field.
+        :param bool value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileRouteModeSupportedFixed':
+        """Initialize a LoadBalancerProfileRouteModeSupportedFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileRouteModeSupportedFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in LoadBalancerProfileRouteModeSupportedFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileRouteModeSupportedFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileRouteModeSupportedFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileRouteModeSupportedFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileRouteModeSupportedFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
 
 class LoadBalancerProfileSecurityGroupsSupportedDependent(LoadBalancerProfileSecurityGroupsSupported):
     """
@@ -66151,7 +67348,7 @@ class ReservedIPTargetEndpointGatewayReference(ReservedIPTarget):
     :attr str href: The URL for this endpoint gateway.
     :attr str id: The unique identifier for this endpoint gateway.
     :attr str name: The unique user-defined name for this endpoint gateway.
-    :attr str resource_type: The type of resource referenced.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -66169,7 +67366,7 @@ class ReservedIPTargetEndpointGatewayReference(ReservedIPTarget):
         :param str href: The URL for this endpoint gateway.
         :param str id: The unique identifier for this endpoint gateway.
         :param str name: The unique user-defined name for this endpoint gateway.
-        :param str resource_type: The type of resource referenced.
+        :param str resource_type: The resource type.
         :param EndpointGatewayReferenceDeleted deleted: (optional) If present, this
                property indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -66252,7 +67449,7 @@ class ReservedIPTargetEndpointGatewayReference(ReservedIPTarget):
 
     class ResourceTypeEnum(str, Enum):
         """
-        The type of resource referenced.
+        The resource type.
         """
         ENDPOINT_GATEWAY = 'endpoint_gateway'
 
@@ -67836,10 +69033,10 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
           `outbound`.
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
-    :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this property, if they are
-          used. Alternatively, if `remote` references a security group, then this rule
-          only applies to IP addresses (network interfaces) in that group matching this IP
+    :attr str ip_version: The IP version to enforce. The format of `remote.address`
+          or `remote.cidr_block` must match this property, if they are used.
+          Alternatively, if `remote` references a security group, then this rule only
+          applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr str protocol: The protocol to enforce.
@@ -67849,10 +69046,9 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
                  direction: str,
                  href: str,
                  id: str,
+                 ip_version: str,
                  remote: 'SecurityGroupRuleRemote',
-                 protocol: str,
-                 *,
-                 ip_version: str = None) -> None:
+                 protocol: str) -> None:
         """
         Initialize a SecurityGroupRuleSecurityGroupRuleProtocolAll object.
 
@@ -67860,13 +69056,13 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
                or `outbound`.
         :param str href: The URL for this security group rule.
         :param str id: The unique identifier for this security group rule.
-        :param SecurityGroupRuleRemote remote:
-        :param str protocol: The protocol to enforce.
-        :param str ip_version: (optional) The IP version to enforce. The format of
+        :param str ip_version: The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this property, if they
                are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
+        :param SecurityGroupRuleRemote remote:
+        :param str protocol: The protocol to enforce.
         """
         # pylint: disable=super-init-not-called
         self.direction = direction
@@ -67894,6 +69090,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolAll(SecurityGroupRule):
             raise ValueError('Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
+        else:
+            raise ValueError('Required property \'ip_version\' not present in SecurityGroupRuleSecurityGroupRuleProtocolAll JSON')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         else:
@@ -67983,10 +69181,10 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
           `outbound`.
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
-    :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this property, if they are
-          used. Alternatively, if `remote` references a security group, then this rule
-          only applies to IP addresses (network interfaces) in that group matching this IP
+    :attr str ip_version: The IP version to enforce. The format of `remote.address`
+          or `remote.cidr_block` must match this property, if they are used.
+          Alternatively, if `remote` references a security group, then this rule only
+          applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr int code: (optional) The ICMP traffic code to allow.
@@ -67998,10 +69196,10 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
                  direction: str,
                  href: str,
                  id: str,
+                 ip_version: str,
                  remote: 'SecurityGroupRuleRemote',
                  protocol: str,
                  *,
-                 ip_version: str = None,
                  code: int = None,
                  type: int = None) -> None:
         """
@@ -68011,13 +69209,13 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
                or `outbound`.
         :param str href: The URL for this security group rule.
         :param str id: The unique identifier for this security group rule.
-        :param SecurityGroupRuleRemote remote:
-        :param str protocol: The protocol to enforce.
-        :param str ip_version: (optional) The IP version to enforce. The format of
+        :param str ip_version: The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this property, if they
                are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
+        :param SecurityGroupRuleRemote remote:
+        :param str protocol: The protocol to enforce.
         :param int code: (optional) The ICMP traffic code to allow.
         :param int type: (optional) The ICMP traffic type to allow.
         """
@@ -68049,6 +69247,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolICMP(SecurityGroupRule):
             raise ValueError('Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
+        else:
+            raise ValueError('Required property \'ip_version\' not present in SecurityGroupRuleSecurityGroupRuleProtocolICMP JSON')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         else:
@@ -68145,10 +69345,10 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
           `outbound`.
     :attr str href: The URL for this security group rule.
     :attr str id: The unique identifier for this security group rule.
-    :attr str ip_version: (optional) The IP version to enforce. The format of
-          `remote.address` or `remote.cidr_block` must match this property, if they are
-          used. Alternatively, if `remote` references a security group, then this rule
-          only applies to IP addresses (network interfaces) in that group matching this IP
+    :attr str ip_version: The IP version to enforce. The format of `remote.address`
+          or `remote.cidr_block` must match this property, if they are used.
+          Alternatively, if `remote` references a security group, then this rule only
+          applies to IP addresses (network interfaces) in that group matching this IP
           version.
     :attr SecurityGroupRuleRemote remote:
     :attr int port_max: (optional) The inclusive upper bound of TCP/UDP port range.
@@ -68160,10 +69360,10 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
                  direction: str,
                  href: str,
                  id: str,
+                 ip_version: str,
                  remote: 'SecurityGroupRuleRemote',
                  protocol: str,
                  *,
-                 ip_version: str = None,
                  port_max: int = None,
                  port_min: int = None) -> None:
         """
@@ -68173,13 +69373,13 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
                or `outbound`.
         :param str href: The URL for this security group rule.
         :param str id: The unique identifier for this security group rule.
-        :param SecurityGroupRuleRemote remote:
-        :param str protocol: The protocol to enforce.
-        :param str ip_version: (optional) The IP version to enforce. The format of
+        :param str ip_version: The IP version to enforce. The format of
                `remote.address` or `remote.cidr_block` must match this property, if they
                are used. Alternatively, if `remote` references a security group, then this
                rule only applies to IP addresses (network interfaces) in that group
                matching this IP version.
+        :param SecurityGroupRuleRemote remote:
+        :param str protocol: The protocol to enforce.
         :param int port_max: (optional) The inclusive upper bound of TCP/UDP port
                range.
         :param int port_min: (optional) The inclusive lower bound of TCP/UDP port
@@ -68213,6 +69413,8 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
             raise ValueError('Required property \'id\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON')
         if 'ip_version' in _dict:
             args['ip_version'] = _dict.get('ip_version')
+        else:
+            raise ValueError('Required property \'ip_version\' not present in SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP JSON')
         if 'remote' in _dict:
             args['remote'] = _dict.get('remote')
         else:
@@ -69374,17 +70576,471 @@ class VPCIdentityById(VPCIdentity):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref(VPNGatewayConnectionIKEPolicyPatch):
+    """
+    VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref.
+
+    :attr str href: The IKE policy's canonical URL.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref object.
+
+        :param str href: The IKE policy's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref':
+        """Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById(VPNGatewayConnectionIKEPolicyPatch):
+    """
+    VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById.
+
+    :attr str id: The unique identifier for this IKE policy.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById object.
+
+        :param str id: The unique identifier for this IKE policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById':
+        """Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIKEPolicyPatchIKEPolicyIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref(VPNGatewayConnectionIKEPolicyPrototype):
+    """
+    VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref.
+
+    :attr str href: The IKE policy's canonical URL.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref object.
+
+        :param str href: The IKE policy's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref':
+        """Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById(VPNGatewayConnectionIKEPolicyPrototype):
+    """
+    VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById.
+
+    :attr str id: The unique identifier for this IKE policy.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById object.
+
+        :param str id: The unique identifier for this IKE policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById':
+        """Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref(VPNGatewayConnectionIPsecPolicyPatch):
+    """
+    VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref.
+
+    :attr str href: The IPsec policy's canonical URL.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref object.
+
+        :param str href: The IPsec policy's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref':
+        """Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById(VPNGatewayConnectionIPsecPolicyPatch):
+    """
+    VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById.
+
+    :attr str id: The unique identifier for this IPsec policy.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById object.
+
+        :param str id: The unique identifier for this IPsec policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById':
+        """Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIPsecPolicyPatchIPsecPolicyIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref(VPNGatewayConnectionIPsecPolicyPrototype):
+    """
+    VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref.
+
+    :attr str href: The IPsec policy's canonical URL.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref object.
+
+        :param str href: The IPsec policy's canonical URL.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref':
+        """Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById(VPNGatewayConnectionIPsecPolicyPrototype):
+    """
+    VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById.
+
+    :attr str id: The unique identifier for this IPsec policy.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById object.
+
+        :param str id: The unique identifier for this IPsec policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById':
+        """Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch(VPNGatewayConnectionPatch):
     """
     VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch.
 
     :attr bool admin_state_up: (optional) If set to false, the VPN gateway
           connection is shut down.
-    :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates autonegotiation.
+    :attr VPNGatewayConnectionDPDPatch dead_peer_detection: (optional)
+    :attr VPNGatewayConnectionIKEPolicyPatch ike_policy: (optional)
+    :attr VPNGatewayConnectionIPsecPolicyPatch ipsec_policy: (optional)
     :attr str name: (optional) The user-defined name for this VPN gateway
           connection.
     :attr str peer_address: (optional) The IP address of the peer VPN gateway.
@@ -69396,9 +71052,9 @@ class VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch(VPNGatew
     def __init__(self,
                  *,
                  admin_state_up: bool = None,
-                 dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-                 ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 dead_peer_detection: 'VPNGatewayConnectionDPDPatch' = None,
+                 ike_policy: 'VPNGatewayConnectionIKEPolicyPatch' = None,
+                 ipsec_policy: 'VPNGatewayConnectionIPsecPolicyPatch' = None,
                  name: str = None,
                  peer_address: str = None,
                  psk: str = None,
@@ -69408,11 +71064,9 @@ class VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch(VPNGatew
 
         :param bool admin_state_up: (optional) If set to false, the VPN gateway
                connection is shut down.
-        :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates autonegotiation.
+        :param VPNGatewayConnectionDPDPatch dead_peer_detection: (optional)
+        :param VPNGatewayConnectionIKEPolicyPatch ike_policy: (optional)
+        :param VPNGatewayConnectionIPsecPolicyPatch ipsec_policy: (optional)
         :param str name: (optional) The user-defined name for this VPN gateway
                connection.
         :param str peer_address: (optional) The IP address of the peer VPN gateway.
@@ -69437,7 +71091,7 @@ class VPNGatewayConnectionPatchVPNGatewayConnectionStaticRouteModePatch(VPNGatew
         if 'admin_state_up' in _dict:
             args['admin_state_up'] = _dict.get('admin_state_up')
         if 'dead_peer_detection' in _dict:
-            args['dead_peer_detection'] = VPNGatewayConnectionDPDPrototype.from_dict(_dict.get('dead_peer_detection'))
+            args['dead_peer_detection'] = VPNGatewayConnectionDPDPatch.from_dict(_dict.get('dead_peer_detection'))
         if 'ike_policy' in _dict:
             args['ike_policy'] = _dict.get('ike_policy')
         if 'ipsec_policy' in _dict:
@@ -69522,10 +71176,12 @@ class VPNGatewayConnectionPolicyMode(VPNGatewayConnection):
     :attr VPNGatewayConnectionDPD dead_peer_detection:
     :attr str href: The VPN connection's canonical URL.
     :attr str id: The unique identifier for this VPN gateway connection.
-    :attr IKEPolicyReference ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates autonegotiation.
+    :attr IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+    :attr IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
     :attr str mode: The mode of the VPN gateway.
     :attr str name: The user-defined name for this VPN gateway connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -69574,10 +71230,12 @@ class VPNGatewayConnectionPolicyMode(VPNGatewayConnection):
         :param str status: The status of a VPN gateway connection.
         :param List[str] local_cidrs: The local CIDRs for this resource.
         :param List[str] peer_cidrs: The peer CIDRs for this resource.
-        :param IKEPolicyReference ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates autonegotiation.
+        :param IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+               [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+        :param IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If
+               absent, [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
         """
         # pylint: disable=super-init-not-called
         self.admin_state_up = admin_state_up
@@ -69760,10 +71418,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype(VPNGa
     :attr bool admin_state_up: (optional) If set to false, the VPN gateway
           connection is shut down.
     :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates autonegotiation.
+    :attr VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional)
+    :attr VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional)
     :attr str name: (optional) The user-defined name for this VPN gateway
           connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -69780,8 +71436,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype(VPNGa
                  *,
                  admin_state_up: bool = None,
                  dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-                 ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 ike_policy: 'VPNGatewayConnectionIKEPolicyPrototype' = None,
+                 ipsec_policy: 'VPNGatewayConnectionIPsecPolicyPrototype' = None,
                  name: str = None) -> None:
         """
         Initialize a VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype object.
@@ -69793,10 +71449,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionPolicyModePrototype(VPNGa
         :param bool admin_state_up: (optional) If set to false, the VPN gateway
                connection is shut down.
         :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates autonegotiation.
+        :param VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional)
+        :param VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional)
         :param str name: (optional) The user-defined name for this VPN gateway
                connection.
         """
@@ -69902,10 +71556,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype(
     :attr bool admin_state_up: (optional) If set to false, the VPN gateway
           connection is shut down.
     :attr VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-    :attr IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates autonegotiation.
+    :attr VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional)
+    :attr VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional)
     :attr str name: (optional) The user-defined name for this VPN gateway
           connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -69920,8 +71572,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype(
                  *,
                  admin_state_up: bool = None,
                  dead_peer_detection: 'VPNGatewayConnectionDPDPrototype' = None,
-                 ike_policy: 'IKEPolicyIdentity' = None,
-                 ipsec_policy: 'IPsecPolicyIdentity' = None,
+                 ike_policy: 'VPNGatewayConnectionIKEPolicyPrototype' = None,
+                 ipsec_policy: 'VPNGatewayConnectionIPsecPolicyPrototype' = None,
                  name: str = None,
                  routing_protocol: str = None) -> None:
         """
@@ -69932,10 +71584,8 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype(
         :param bool admin_state_up: (optional) If set to false, the VPN gateway
                connection is shut down.
         :param VPNGatewayConnectionDPDPrototype dead_peer_detection: (optional)
-        :param IKEPolicyIdentity ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyIdentity ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates autonegotiation.
+        :param VPNGatewayConnectionIKEPolicyPrototype ike_policy: (optional)
+        :param VPNGatewayConnectionIPsecPolicyPrototype ipsec_policy: (optional)
         :param str name: (optional) The user-defined name for this VPN gateway
                connection.
         :param str routing_protocol: (optional) Routing protocols are disabled for
@@ -70047,10 +71697,12 @@ class VPNGatewayConnectionStaticRouteMode(VPNGatewayConnection):
     :attr VPNGatewayConnectionDPD dead_peer_detection:
     :attr str href: The VPN connection's canonical URL.
     :attr str id: The unique identifier for this VPN gateway connection.
-    :attr IKEPolicyReference ike_policy: (optional) Optional IKE policy
-          configuration. The absence of a policy indicates autonegotiation.
-    :attr IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-          configuration. The absence of a policy indicates autonegotiation.
+    :attr IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+    :attr IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If absent,
+          [auto-negotiation is
+          used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
     :attr str mode: The mode of the VPN gateway.
     :attr str name: The user-defined name for this VPN gateway connection.
     :attr str peer_address: The IP address of the peer VPN gateway.
@@ -70104,10 +71756,12 @@ class VPNGatewayConnectionStaticRouteMode(VPNGatewayConnection):
         :param List[VPNGatewayConnectionStaticRouteModeTunnel] tunnels: The VPN
                tunnel configuration for this VPN gateway connection (in static route
                mode).
-        :param IKEPolicyReference ike_policy: (optional) Optional IKE policy
-               configuration. The absence of a policy indicates autonegotiation.
-        :param IPsecPolicyReference ipsec_policy: (optional) Optional IPsec policy
-               configuration. The absence of a policy indicates autonegotiation.
+        :param IKEPolicyReference ike_policy: (optional) The IKE policy. If absent,
+               [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ike-auto-negotiation-phase-1).
+        :param IPsecPolicyReference ipsec_policy: (optional) The IPsec policy. If
+               absent, [auto-negotiation is
+               used](https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn&interface=ui#ipsec-auto-negotiation-phase-2).
         """
         # pylint: disable=super-init-not-called
         self.admin_state_up = admin_state_up
@@ -70892,8 +72546,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext(VolumeAttach
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -70907,8 +72561,9 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext(VolumeAttach
         Initialize a VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -70926,9 +72581,9 @@ class VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInsta
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the snapshot's `encryption_key` will be used.
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+          If unspecified, the snapshot's `encryption_key` will be used.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
@@ -70957,10 +72612,10 @@ class VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInsta
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the snapshot's `encryption_key` will be
-               used.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+               If unspecified, the snapshot's `encryption_key` will be used.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -71062,8 +72717,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     """
@@ -71077,8 +72732,9 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         Initialize a VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContext object.
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         """
         # pylint: disable=super-init-not-called
@@ -71377,8 +73033,6 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
 
     :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
           for the volume. Applicable only to volumes using a profile `family` of `custom`.
-          The volume must be attached as a data volume to a running virtual server
-          instance.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
@@ -71388,8 +73042,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
           may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
+          If unspecified, the `encryption` type for the volume will be `provider_managed`.
     """
 
     def __init__(self,
@@ -71411,14 +73064,12 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                volumes may expand in the future.
         :param int iops: (optional) The maximum I/O operations per second (IOPS) to
                use for the volume. Applicable only to volumes using a profile `family` of
-               `custom`. The volume must be attached as a data volume to a running virtual
-               server instance.
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional)
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the `encryption` type for the volume will
-               be
+               If unspecified, the `encryption` type for the volume will be
                `provider_managed`.
         """
         # pylint: disable=super-init-not-called
@@ -72578,12 +74229,14 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
     """
     InstanceGroupManagerActionScheduledActionGroupTarget.
 
-    :attr bool auto_delete: If set to `true`, this scheduled action will be
-          automatically deleted after it has finished and the `auto_delete_timeout` time
-          has passed.
-    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
-          before the scheduled action will be automatically deleted once it has finished.
-          If this value is 0, the action will be deleted on completion.
+    :attr bool auto_delete: Indicates whether this scheduled action will be
+          automatically deleted after it has completed and `auto_delete_timeout` hours
+          have passed. At present, this is always
+          `true`, but may be modifiable in the future.
+    :attr int auto_delete_timeout: If `auto_delete` is `true`, and this scheduled
+          action has finished, the hours after which it will be automatically deleted. If
+          the value is `0`, the action will be deleted once it has finished. This value
+          may be modifiable in the future.
     :attr datetime created_at: The date and time that the instance group manager
           action was created.
     :attr str href: The URL for this instance group manager action.
@@ -72603,9 +74256,9 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     :attr datetime last_applied_at: (optional) The date and time the scheduled
-          action was last applied. If empty the action has never been applied.
+          action was last applied. If absent, the action has never been applied.
     :attr datetime next_run_at: (optional) The date and time the scheduled action
-          will next run. If empty the system is currently calculating the next run time.
+          will next run. If absent, the system is currently calculating the next run time.
     :attr InstanceGroupManagerScheduledActionGroup group:
     """
 
@@ -72628,12 +74281,14 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
         """
         Initialize a InstanceGroupManagerActionScheduledActionGroupTarget object.
 
-        :param bool auto_delete: If set to `true`, this scheduled action will be
-               automatically deleted after it has finished and the `auto_delete_timeout`
-               time has passed.
-        :param int auto_delete_timeout: Amount of time in hours that are required
-               to pass before the scheduled action will be automatically deleted once it
-               has finished. If this value is 0, the action will be deleted on completion.
+        :param bool auto_delete: Indicates whether this scheduled action will be
+               automatically deleted after it has completed and `auto_delete_timeout`
+               hours have passed. At present, this is always
+               `true`, but may be modifiable in the future.
+        :param int auto_delete_timeout: If `auto_delete` is `true`, and this
+               scheduled action has finished, the hours after which it will be
+               automatically deleted. If the value is `0`, the action will be deleted once
+               it has finished. This value may be modifiable in the future.
         :param datetime created_at: The date and time that the instance group
                manager action was created.
         :param str href: The URL for this instance group manager action.
@@ -72658,10 +74313,10 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
         :param datetime last_applied_at: (optional) The date and time the scheduled
-               action was last applied. If empty the action has never been applied.
+               action was last applied. If absent, the action has never been applied.
         :param datetime next_run_at: (optional) The date and time the scheduled
-               action will next run. If empty the system is currently calculating the next
-               run time.
+               action will next run. If absent, the system is currently calculating the
+               next run time.
         """
         # pylint: disable=super-init-not-called
         self.auto_delete = auto_delete
@@ -72825,12 +74480,14 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
     """
     InstanceGroupManagerActionScheduledActionManagerTarget.
 
-    :attr bool auto_delete: If set to `true`, this scheduled action will be
-          automatically deleted after it has finished and the `auto_delete_timeout` time
-          has passed.
-    :attr int auto_delete_timeout: Amount of time in hours that are required to pass
-          before the scheduled action will be automatically deleted once it has finished.
-          If this value is 0, the action will be deleted on completion.
+    :attr bool auto_delete: Indicates whether this scheduled action will be
+          automatically deleted after it has completed and `auto_delete_timeout` hours
+          have passed. At present, this is always
+          `true`, but may be modifiable in the future.
+    :attr int auto_delete_timeout: If `auto_delete` is `true`, and this scheduled
+          action has finished, the hours after which it will be automatically deleted. If
+          the value is `0`, the action will be deleted once it has finished. This value
+          may be modifiable in the future.
     :attr datetime created_at: The date and time that the instance group manager
           action was created.
     :attr str href: The URL for this instance group manager action.
@@ -72850,9 +74507,9 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     :attr datetime last_applied_at: (optional) The date and time the scheduled
-          action was last applied. If empty the action has never been applied.
+          action was last applied. If absent, the action has never been applied.
     :attr datetime next_run_at: (optional) The date and time the scheduled action
-          will next run. If empty the system is currently calculating the next run time.
+          will next run. If absent, the system is currently calculating the next run time.
     :attr InstanceGroupManagerScheduledActionManager manager:
     """
 
@@ -72875,12 +74532,14 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
         """
         Initialize a InstanceGroupManagerActionScheduledActionManagerTarget object.
 
-        :param bool auto_delete: If set to `true`, this scheduled action will be
-               automatically deleted after it has finished and the `auto_delete_timeout`
-               time has passed.
-        :param int auto_delete_timeout: Amount of time in hours that are required
-               to pass before the scheduled action will be automatically deleted once it
-               has finished. If this value is 0, the action will be deleted on completion.
+        :param bool auto_delete: Indicates whether this scheduled action will be
+               automatically deleted after it has completed and `auto_delete_timeout`
+               hours have passed. At present, this is always
+               `true`, but may be modifiable in the future.
+        :param int auto_delete_timeout: If `auto_delete` is `true`, and this
+               scheduled action has finished, the hours after which it will be
+               automatically deleted. If the value is `0`, the action will be deleted once
+               it has finished. This value may be modifiable in the future.
         :param datetime created_at: The date and time that the instance group
                manager action was created.
         :param str href: The URL for this instance group manager action.
@@ -72905,10 +74564,10 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
         :param datetime last_applied_at: (optional) The date and time the scheduled
-               action was last applied. If empty the action has never been applied.
+               action was last applied. If absent, the action has never been applied.
         :param datetime next_run_at: (optional) The date and time the scheduled
-               action will next run. If empty the system is currently calculating the next
-               run time.
+               action will next run. If absent, the system is currently calculating the
+               next run time.
         """
         # pylint: disable=super-init-not-called
         self.auto_delete = auto_delete
@@ -75169,8 +76828,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: The capacity to use for the volume (in gigabytes). The
@@ -75178,8 +76837,7 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
           may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
+          If unspecified, the `encryption` type for the volume will be `provider_managed`.
     """
 
     def __init__(self,
@@ -75196,13 +76854,13 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
         :param int capacity: The capacity to use for the volume (in gigabytes). The
                specified minimum and maximum capacity values for creating or updating
                volumes may expand in the future.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the `encryption` type for the volume will
-               be
+               If unspecified, the `encryption` type for the volume will be
                `provider_managed`.
         """
         # pylint: disable=super-init-not-called
@@ -75280,8 +76938,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
     """
     VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: (optional) The capacity to use for the volume (in
@@ -75290,7 +76948,7 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the snapshot's `encryption_key` will be used.
+          If unspecified, the snapshot's `encryption_key` will be used.
     :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
           volume.
     """
@@ -75309,8 +76967,9 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param SnapshotIdentity source_snapshot: The snapshot from which to clone
                the volume.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param int capacity: (optional) The capacity to use for the volume (in
                gigabytes). The only allowed value is the source snapshot's
@@ -75320,8 +76979,7 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the snapshot's `encryption_key` will be
-               used.
+               If unspecified, the snapshot's `encryption_key` will be used.
         """
         # pylint: disable=super-init-not-called
         self.iops = iops
@@ -75577,8 +77235,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: The capacity to use for the volume (in gigabytes). The
@@ -75586,8 +77244,7 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
           may expand in the future.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the `encryption` type for the volume will be
-          `provider_managed`.
+          If unspecified, the `encryption` type for the volume will be `provider_managed`.
     """
 
     def __init__(self,
@@ -75604,13 +77261,13 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         :param int capacity: The capacity to use for the volume (in gigabytes). The
                specified minimum and maximum capacity values for creating or updating
                volumes may expand in the future.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the `encryption` type for the volume will
-               be
+               If unspecified, the `encryption` type for the volume will be
                `provider_managed`.
         """
         # pylint: disable=super-init-not-called
@@ -75688,8 +77345,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     """
     VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot.
 
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) for the
-          volume.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: (optional) The capacity to use for the volume (in
@@ -75698,7 +77355,7 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
-          If this property is not provided, the snapshot's `encryption_key` will be used.
+          If unspecified, the snapshot's `encryption_key` will be used.
     :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
           volume.
     """
@@ -75717,8 +77374,9 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param SnapshotIdentity source_snapshot: The snapshot from which to clone
                the volume.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS)
-               for the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param int capacity: (optional) The capacity to use for the volume (in
                gigabytes). The only allowed value is the source snapshot's
@@ -75728,8 +77386,7 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
-               If this property is not provided, the snapshot's `encryption_key` will be
-               used.
+               If unspecified, the snapshot's `encryption_key` will be used.
         """
         # pylint: disable=super-init-not-called
         self.iops = iops
