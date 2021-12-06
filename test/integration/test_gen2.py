@@ -1913,8 +1913,8 @@ def create_load_balancer_listener(service, load_balancer_id):
 
     response = service.create_load_balancer_listener(
         load_balancer_id,
-        port,
         protocol,
+        port=port,
     )
     return response
 
