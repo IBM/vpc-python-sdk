@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2021.
+# (C) Copyright IBM Corp. 2021, 2022.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.43.0-49eab5c7-20211117-152138
+# IBM OpenAPI SDK Code Generator Version: 3.44.0-98838c07-20220128-151531
  
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2021-11-23
+API Version: 2022-02-08
 """
 
 from datetime import datetime
@@ -50,7 +50,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2021-11-23',
+                     version: str = '2022-02-08',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2021-11-23',
+                 version: str = '2022-02-08',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
@@ -121,7 +121,7 @@ class VpcV1(BaseService):
         of resources in one or more zones. VPCs are regional, and each VPC can contain
         resources in multiple zones in a region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -542,7 +542,7 @@ class VpcV1(BaseService):
         This request lists all address pool prefixes for a VPC.
 
         :param str vpc_id: The VPC identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -846,7 +846,7 @@ class VpcV1(BaseService):
         :param str vpc_id: The VPC identifier.
         :param str zone_name: (optional) Filters the collection to resources in the
                zone with the exact specified name.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -1158,13 +1158,11 @@ class VpcV1(BaseService):
         built-in routes.
 
         :param str vpc_id: The VPC identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
-        :param bool is_default: (optional) If the supplied value is `true`, filters
-               the routing table collection to only the default routing table. If the
-               supplied value is `false`, filters the routing table collection to exclude
-               the default routing table.
+        :param bool is_default: (optional) Filters the collection to routing tables
+               with the specified `is_default` value.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `RoutingTableCollection` object
@@ -1483,16 +1481,16 @@ class VpcV1(BaseService):
         """
         List all routes in a VPC routing table.
 
-        This request lists all routes in a VPC routing table. If a subnet has been
-        associated with this routing table, delivery of packets sent on a subnet is
-        performed according to the action of the most specific matching route in the table
-        (provided the subnet and route are in the same zone). If multiple equally-specific
-        routes exist, traffic will be distributed across them. If no routes match,
-        delivery will be controlled by the system's built-in routes.
+        This request lists all routes in a VPC routing table. If subnets are associated
+        with this routing table, delivery of packets sent on a subnet is performed
+        according to the action of the most specific matching route in the table (provided
+        the subnet and route are in the same zone). If multiple equally-specific routes
+        exist, traffic will be distributed across them. If no routes match, delivery will
+        be controlled by the system's built-in routes.
 
         :param str vpc_id: The VPC identifier.
         :param str routing_table_id: The routing table identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -1822,7 +1820,7 @@ class VpcV1(BaseService):
         addresses specified in CIDR block notation. Each subnet is within a particular
         zone and cannot span multiple zones or regions.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -2442,7 +2440,7 @@ class VpcV1(BaseService):
         endpoint gateway.
 
         :param str subnet_id: The subnet identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str sort: (optional) Sorts the returned collection by the specified
@@ -2511,7 +2509,8 @@ class VpcV1(BaseService):
                Names must be unique within the subnet the reserved IP resides in. Names
                beginning with `ibm-` are reserved for provider-owned resources.
         :param ReservedIPTargetPrototype target: (optional) The target this
-               reserved IP is to be bound to.
+               reserved IP is to be bound to. The target must be an endpoint gateway not
+               already bound to a reserved IP in the subnet's zone.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `ReservedIP` object
@@ -2734,14 +2733,14 @@ class VpcV1(BaseService):
         """
         List all images.
 
-        This request lists all provisionable images available in the region. An image
-        provides source data for a volume. Images are either system-provided, or created
-        from another source, such as importing from object storage.
+        This request lists all images available in the region. An image provides source
+        data for a volume. Images are either system-provided, or created from another
+        source, such as importing from object storage.
         The images will be sorted by their `created_at` property values, with the newest
         first. Images with identical `created_at` values will be secondarily sorted by
         ascending `id` property values.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -2846,8 +2845,10 @@ class VpcV1(BaseService):
 
         This request deletes an image. This operation cannot be reversed. A
         system-provided image is not allowed to be deleted. Additionally, an image cannot
-        be deleted if it has a
-        `status` of `pending`, `tentative`, or `deleting`.
+        be deleted if it:
+        - has a `status` of `tentative` or `deleting`
+        - has a `status` of `pending` with a `status_reasons` code of
+        `image_request_in_progress`.
 
         :param str id: The image identifier.
         :param dict headers: A `dict` containing the request headers
@@ -2998,7 +2999,7 @@ class VpcV1(BaseService):
 
         This request lists all operating systems in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -3094,7 +3095,7 @@ class VpcV1(BaseService):
         This request lists all keys in the region. A key contains a public SSH key which
         may be installed on instances when they are created. Private keys are not stored.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -3697,7 +3698,7 @@ class VpcV1(BaseService):
 
         This request lists all instances in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -4382,8 +4383,9 @@ class VpcV1(BaseService):
                specified, it must be an available address on the network interface's
                subnet. If unspecified, an available address on the subnet will be
                automatically selected.
-        :param List[SecurityGroupIdentity] security_groups: (optional) Collection
-               of security groups.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `NetworkInterface` object
@@ -4769,7 +4771,7 @@ class VpcV1(BaseService):
         This request associates the specified floating IP with the specified network
         interface, replacing any existing association. For this request to succeed, the
         existing floating IP must not be required by another resource, such as a public
-        gateway. A request body is not required, and if supplied, is ignored.
+        gateway. A request body is not required, and if provided, is ignored.
 
         :param str instance_id: The instance identifier.
         :param str network_interface_id: The network interface identifier.
@@ -4872,10 +4874,10 @@ class VpcV1(BaseService):
         Create a volume attachment on an instance.
 
         This request creates a new volume attachment from a volume attachment prototype
-        object. The prototype object is structured in the same way as a retrieved volume
-        attachment, and contains the information necessary to create the new volume
-        attachment. The creation of a new volume attachment connects a volume to an
-        instance.
+        object, connecting a volume to an instance. For this request to succeed, the
+        specified volume must not be busy. The prototype object is structured in the same
+        way as a retrieved volume attachment, and contains the information necessary to
+        create the new volume attachment.
 
         :param str instance_id: The instance identifier.
         :param VolumeAttachmentPrototypeVolume volume: An existing volume to attach
@@ -4942,8 +4944,9 @@ class VpcV1(BaseService):
         """
         Delete a volume attachment.
 
-        This request deletes a volume attachment. The deletion of a volume attachment
-        detaches a volume from an instance.
+        This request deletes a volume attachment. This operation cannot be reversed, but a
+        new volume attachment may subsequently be created for the volume.  For this
+        request to succeed, the volume must not be busy.
 
         :param str instance_id: The instance identifier.
         :param str id: The volume attachment identifier.
@@ -5111,7 +5114,7 @@ class VpcV1(BaseService):
 
         This request lists all instance groups in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -5172,15 +5175,17 @@ class VpcV1(BaseService):
                supply the port for the load balancer pool member.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
                that the load balancer pool used by this group
-               is in. Must be supplied when using a load balancer pool.
-        :param LoadBalancerPoolIdentity load_balancer_pool: (optional) When
+               is in. Required when using a load balancer pool.
+        :param LoadBalancerPoolIdentity load_balancer_pool: (optional) If
                specified, the load balancer pool will be managed by this
                group. Instances created by this group will have a new load
                balancer pool member in that pool created. Must be used with
                `application_port`.
         :param int membership_count: (optional) The number of instances in the
                instance group.
-        :param str name: (optional) The user-defined name for this instance group.
+        :param str name: (optional) The unique user-defined name for this instance
+               group. If unspecified, the name will be a hyphenated list of
+               randomly-selected words.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -5447,7 +5452,7 @@ class VpcV1(BaseService):
         This request lists all managers for an instance group.
 
         :param str instance_group_id: The instance group identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -5718,7 +5723,7 @@ class VpcV1(BaseService):
         :param str instance_group_id: The instance group identifier.
         :param str instance_group_manager_id: The instance group manager
                identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -6012,7 +6017,7 @@ class VpcV1(BaseService):
         :param str instance_group_id: The instance group identifier.
         :param str instance_group_manager_id: The instance group manager
                identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -6350,7 +6355,7 @@ class VpcV1(BaseService):
         This request lists all instance group memberships for an instance group.
 
         :param str instance_group_id: The instance group identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -6571,7 +6576,7 @@ class VpcV1(BaseService):
         collection of dedicated hosts for placement of instances. Each dedicated host must
         belong to one and only one group. Host groups do not span zones.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -6850,7 +6855,7 @@ class VpcV1(BaseService):
         dedicated host profile specifies the hardware characteristics for a dedicated
         host.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -6948,7 +6953,7 @@ class VpcV1(BaseService):
 
         :param str dedicated_host_group_id: (optional) Filters the collection to
                dedicated host groups with the specified identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -7363,7 +7368,7 @@ class VpcV1(BaseService):
 
         This request lists all placement groups in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -7618,6 +7623,1361 @@ class VpcV1(BaseService):
         return response
 
     #########################
+    # Bare metal servers
+    #########################
+
+
+    def list_bare_metal_server_profiles(self,
+        *,
+        start: str = None,
+        limit: int = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all bare metal server profiles.
+
+        This request lists all bare metal server profiles available in the region. A bare
+        metal server profile specifies the performance characteristics and pricing model
+        for a bare metal server.
+
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerProfileCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_server_profiles')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/bare_metal_server/profiles'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_profile(self,
+        name: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a bare metal server profile.
+
+        This request retrieves a single bare metal server profile specified by the name in
+        the URL.
+
+        :param str name: The bare metal server profile name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerProfile` object
+        """
+
+        if name is None:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_profile')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['name']
+        path_param_values = self.encode_path_vars(name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_server/profiles/{name}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_bare_metal_servers(self,
+        *,
+        start: str = None,
+        limit: int = None,
+        resource_group_id: str = None,
+        name: str = None,
+        vpc_id: str = None,
+        vpc_crn: str = None,
+        vpc_name: str = None,
+        network_interfaces_subnet_id: str = None,
+        network_interfaces_subnet_crn: str = None,
+        network_interfaces_subnet_name: str = None,
+        sort: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all bare metal servers.
+
+        This request lists all bare metal servers in the region.
+
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str resource_group_id: (optional) Filters the collection to
+               resources in the resource group with the specified identifier.
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
+        :param str vpc_id: (optional) Filters the collection to resources in the
+               VPC with the specified identifier.
+        :param str vpc_crn: (optional) Filters the collection to resources in the
+               VPC with the specified CRN.
+        :param str vpc_name: (optional) Filters the collection to resources in the
+               VPC with the exact specified name.
+        :param str network_interfaces_subnet_id: (optional) Filters the collection
+               to bare metal servers on the subnet with the specified identifier.
+        :param str network_interfaces_subnet_crn: (optional) Filters the collection
+               to bare metal servers on the subnet with the specified CRN.
+        :param str network_interfaces_subnet_name: (optional) Filters the
+               collection to bare metal servers on the subnet with the specified name.
+        :param str sort: (optional) Sorts the returned collection by the specified
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_servers')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'resource_group.id': resource_group_id,
+            'name': name,
+            'vpc.id': vpc_id,
+            'vpc.crn': vpc_crn,
+            'vpc.name': vpc_name,
+            'network_interfaces.subnet.id': network_interfaces_subnet_id,
+            'network_interfaces.subnet.crn': network_interfaces_subnet_crn,
+            'network_interfaces.subnet.name': network_interfaces_subnet_name,
+            'sort': sort
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/bare_metal_servers'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_bare_metal_server(self,
+        initialization: 'BareMetalServerInitializationPrototype',
+        primary_network_interface: 'BareMetalServerPrimaryNetworkInterfacePrototype',
+        profile: 'BareMetalServerProfileIdentity',
+        zone: 'ZoneIdentity',
+        *,
+        name: str = None,
+        network_interfaces: List['BareMetalServerNetworkInterfacePrototype'] = None,
+        resource_group: 'ResourceGroupIdentity' = None,
+        vpc: 'VPCIdentity' = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a bare metal server.
+
+        This request provisions a new bare metal server from a prototype object. The
+        prototype object is structured in the same way as a retrieved bare metal server,
+        and contains the information necessary to provision the new bare metal server. The
+        bare metal server is automatically started.
+
+        :param BareMetalServerInitializationPrototype initialization:
+        :param BareMetalServerPrimaryNetworkInterfacePrototype
+               primary_network_interface: Primary network interface for the bare metal
+               server.
+        :param BareMetalServerProfileIdentity profile: The profile to use for this
+               bare metal server.
+        :param ZoneIdentity zone: The zone this bare metal server will reside in.
+        :param str name: (optional) The unique user-defined name for this bare
+               metal server (and default system hostname). If unspecified, the name will
+               be a hyphenated list of randomly-selected words.
+        :param List[BareMetalServerNetworkInterfacePrototype] network_interfaces:
+               (optional) The additional network interfaces to create for the bare metal
+               server.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param VPCIdentity vpc: (optional) The VPC the bare metal server is to be a
+               part of. If specified, it must match the
+               VPC referenced by the subnets of the server's network interfaces.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServer` object
+        """
+
+        if initialization is None:
+            raise ValueError('initialization must be provided')
+        if primary_network_interface is None:
+            raise ValueError('primary_network_interface must be provided')
+        if profile is None:
+            raise ValueError('profile must be provided')
+        if zone is None:
+            raise ValueError('zone must be provided')
+        initialization = convert_model(initialization)
+        primary_network_interface = convert_model(primary_network_interface)
+        profile = convert_model(profile)
+        zone = convert_model(zone)
+        if network_interfaces is not None:
+            network_interfaces = [convert_model(x) for x in network_interfaces]
+        if resource_group is not None:
+            resource_group = convert_model(resource_group)
+        if vpc is not None:
+            vpc = convert_model(vpc)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'initialization': initialization,
+            'primary_network_interface': primary_network_interface,
+            'profile': profile,
+            'zone': zone,
+            'name': name,
+            'network_interfaces': network_interfaces,
+            'resource_group': resource_group,
+            'vpc': vpc
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/bare_metal_servers'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_bare_metal_server_console_access_token(self,
+        bare_metal_server_id: str,
+        console_type: str,
+        *,
+        force: bool = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a console access token for a bare metal server.
+
+        This request creates a new single-use console access token for a bare metal
+        server. All console configuration is provided at token create time, and the token
+        is subsequently used in the `access_token` query parameter for the WebSocket
+        request.  The access token is only valid for a short period of time, and a maximum
+        of one token is valid for a given bare metal server at a time.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str console_type: The bare metal server console type for which this
+               token may be used.
+        :param bool force: (optional) Indicates whether to disconnect an existing
+               serial console session as the serial console cannot be shared.  This has no
+               effect on VNC consoles.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerConsoleAccessToken` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if console_type is None:
+            raise ValueError('console_type must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_bare_metal_server_console_access_token')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'console_type': console_type,
+            'force': force
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/console_access_token'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_bare_metal_server_disks(self,
+        bare_metal_server_id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all disks on a bare metal server.
+
+        This request lists all disks on a bare metal server.  A disk is a block device
+        that is locally attached to the physical server.  By default, the listed disks are
+        sorted by their `created_at` property values, with the newest disk first.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerDiskCollection` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_server_disks')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/disks'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_disk(self,
+        bare_metal_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a bare metal server disk.
+
+        This request retrieves a single disk specified by the identifier in the URL.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str id: The bare metal server disk identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerDisk` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_disk')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/disks/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_bare_metal_server_disk(self,
+        bare_metal_server_id: str,
+        id: str,
+        bare_metal_server_disk_patch: 'BareMetalServerDiskPatch',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a bare metal server disk.
+
+        This request updates the bare metal server disk with the information in a provided
+        patch.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str id: The bare metal server disk identifier.
+        :param BareMetalServerDiskPatch bare_metal_server_disk_patch: The bare
+               metal server disk patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerDisk` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if bare_metal_server_disk_patch is None:
+            raise ValueError('bare_metal_server_disk_patch must be provided')
+        if isinstance(bare_metal_server_disk_patch, BareMetalServerDiskPatch):
+            bare_metal_server_disk_patch = convert_model(bare_metal_server_disk_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_bare_metal_server_disk')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(bare_metal_server_disk_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/disks/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_bare_metal_server_network_interfaces(self,
+        bare_metal_server_id: str,
+        *,
+        start: str = None,
+        limit: int = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all network interfaces on a bare metal server.
+
+        This request lists all network interfaces on a bare metal server. A network
+        interface is an abstract representation of a network interface card and connects a
+        bare metal server to a subnet. While each network interface can attach to only one
+        subnet, multiple network interfaces can be created to attach to multiple subnets.
+        Multiple interfaces may also attach to the same subnet.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerNetworkInterfaceCollection` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_server_network_interfaces')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_bare_metal_server_network_interface(self,
+        bare_metal_server_id: str,
+        bare_metal_server_network_interface_prototype: 'BareMetalServerNetworkInterfacePrototype',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a network interface on a bare metal server.
+
+        This request creates a new network interface from a network interface prototype
+        object. The prototype object is structured in the same way as a retrieved network
+        interface, and contains the information necessary to create the new network
+        interface. Any subnet in the bare metal server's VPC may be specified, even if it
+        is already attached to another network interface. Addresses on the network
+        interface must be within the specified subnet's CIDR blocks.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param BareMetalServerNetworkInterfacePrototype
+               bare_metal_server_network_interface_prototype: The network interface
+               prototype object.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerNetworkInterface` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if bare_metal_server_network_interface_prototype is None:
+            raise ValueError('bare_metal_server_network_interface_prototype must be provided')
+        if isinstance(bare_metal_server_network_interface_prototype, BareMetalServerNetworkInterfacePrototype):
+            bare_metal_server_network_interface_prototype = convert_model(bare_metal_server_network_interface_prototype)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_bare_metal_server_network_interface')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(bare_metal_server_network_interface_prototype)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_bare_metal_server_network_interface(self,
+        bare_metal_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a network interface.
+
+        This request deletes a network interface. This operation cannot be reversed. Any
+        floating IPs associated with the network interface are implicitly disassociated.
+        The primary network interface is not allowed to be deleted.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str id: The network interface identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_bare_metal_server_network_interface')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['bare_metal_server_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_network_interface(self,
+        bare_metal_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a network interface.
+
+        This request retrieves a single network interface specified by the identifier in
+        the URL.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str id: The network interface identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerNetworkInterface` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_network_interface')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_bare_metal_server_network_interface(self,
+        bare_metal_server_id: str,
+        id: str,
+        bare_metal_server_network_interface_patch: 'BareMetalServerNetworkInterfacePatch',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a network interface.
+
+        This request updates a network interface with the information provided in a
+        network interface patch object. The network interface patch object is structured
+        in the same way as a retrieved network interface and needs to contain only the
+        information to be updated.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str id: The network interface identifier.
+        :param BareMetalServerNetworkInterfacePatch
+               bare_metal_server_network_interface_patch: The network interface patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerNetworkInterface` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if bare_metal_server_network_interface_patch is None:
+            raise ValueError('bare_metal_server_network_interface_patch must be provided')
+        if isinstance(bare_metal_server_network_interface_patch, BareMetalServerNetworkInterfacePatch):
+            bare_metal_server_network_interface_patch = convert_model(bare_metal_server_network_interface_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_bare_metal_server_network_interface')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(bare_metal_server_network_interface_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_bare_metal_server_network_interface_floating_ips(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all floating IPs associated with a network interface.
+
+        This request lists all floating IPs associated with a network interface.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `FloatingIPUnpaginatedCollection` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_server_network_interface_floating_ips')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/floating_ips'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def remove_bare_metal_server_network_interface_floating_ip(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Disassociate a floating IP from a network interface.
+
+        This request disassociates the specified floating IP from the specified network
+        interface.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str id: The floating IP identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='remove_bare_metal_server_network_interface_floating_ip')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_network_interface_floating_ip(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve associated floating IP.
+
+        This request a retrieves a specified floating IP address if it is associated with
+        the network interface and bare metal server specified in the URL.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str id: The floating IP identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `FloatingIP` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_network_interface_floating_ip')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def add_bare_metal_server_network_interface_floating_ip(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Associate a floating IP with a network interface.
+
+        This request associates the specified floating IP with the specified network
+        interface. If `enable_infrastructure_nat` is `false`, this adds the IP to any
+        existing associations. If `enable_infrastructure_nat` is `true`, this replaces any
+        existing association.  For this request to succeed, the existing floating IP must
+        not be required by another resource, such as a public gateway. A request body is
+        not required, and if provided, is ignored.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str id: The floating IP identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `FloatingIP` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='add_bare_metal_server_network_interface_floating_ip')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/floating_ips/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PUT',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_bare_metal_server(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a bare metal server.
+
+        This request deletes a bare metal server. This operation cannot be reversed. Any
+        floating IPs associated with the bare metal server's network interfaces are
+        implicitly disassociated.
+
+        :param str id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a bare metal server.
+
+        This request retrieves a single bare metal server specified by the identifier in
+        the URL.
+
+        :param str id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServer` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_bare_metal_server(self,
+        id: str,
+        bare_metal_server_patch: 'BareMetalServerPatch',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a bare metal server.
+
+        This request updates a bare metal server with the information in a provided patch.
+        The bare metal server patch object is structured in the same way as a retrieved
+        bare metal server and contains only the information to be updated.
+
+        :param str id: The bare metal server identifier.
+        :param BareMetalServerPatch bare_metal_server_patch: The bare metal server
+               patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServer` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if bare_metal_server_patch is None:
+            raise ValueError('bare_metal_server_patch must be provided')
+        if isinstance(bare_metal_server_patch, BareMetalServerPatch):
+            bare_metal_server_patch = convert_model(bare_metal_server_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(bare_metal_server_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_initialization(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve initialization configuration for a bare metal server.
+
+        This request retrieves configuration variables used to initialize the bare metal
+        server, such as the image used, SSH keys, and any configured usernames and
+        passwords.  These attributes can subsequently be changed manually by the user and
+        so are not guaranteed to be current.
+
+        :param str id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerInitialization` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_initialization')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}/initialization'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def restart_bare_metal_server(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Restart a bare metal server.
+
+        This request restarts a bare metal server.  It will run immediately regardless of
+        the state of the server.
+
+        :param str id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='restart_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}/restart'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def start_bare_metal_server(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Start a bare metal server.
+
+        This request starts a bare metal server.  It will run immediately provided the
+        server is stopped.
+
+        :param str id: The bare metal server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='start_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}/start'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def stop_bare_metal_server(self,
+        id: str,
+        type: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Stop a bare metal server.
+
+        This request stops a bare metal server. It will run immediately provided the
+        server is running. Note: A soft stop may not complete as it relies on the
+        operating system to perform the operation.
+
+        :param str id: The bare metal server identifier.
+        :param str type: The type of stop operation:
+               - `soft`: signal running operating system to quiesce and shutdown cleanly
+               - `hard`: immediately stop the server.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if type is None:
+            raise ValueError('type must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='stop_bare_metal_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'type': type
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{id}/stop'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
     # Volumes
     #########################
 
@@ -7634,7 +8994,7 @@ class VpcV1(BaseService):
         This request lists all volume profiles available in the region. A volume profile
         specifies the performance characteristics and pricing model for a volume.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -7728,7 +9088,7 @@ class VpcV1(BaseService):
         This request lists all volumes in the region. Volumes are network-connected block
         storage devices that may be attached to one or more instances in the same region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str name: (optional) Filters the collection to resources with the
@@ -8032,7 +9392,7 @@ class VpcV1(BaseService):
         This request lists all snapshots in the region. A snapshot preserves the data of a
         volume at the time the snapshot is created.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -8516,7 +9876,7 @@ class VpcV1(BaseService):
         A public gateway resides in a zone and can be connected to subnets in the same
         zone only.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -8801,7 +10161,7 @@ class VpcV1(BaseService):
         This request lists all floating IPs in the region. Floating IPs allow inbound and
         outbound traffic from the Internet to an instance.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -9054,7 +10414,7 @@ class VpcV1(BaseService):
         allow and deny rules can be defined, and rules are stateless such that reverse
         traffic in response to allowed traffic is not automatically permitted.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -9305,7 +10665,7 @@ class VpcV1(BaseService):
         protocol and port range.
 
         :param str network_acl_id: The network ACL identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str direction: (optional) Filters the collection to rules with the
@@ -9589,7 +10949,7 @@ class VpcV1(BaseService):
         such that reverse traffic in response to allowed traffic is automatically
         permitted.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -9877,7 +11237,7 @@ class VpcV1(BaseService):
         which the rules in the security group are applied.
 
         :param str security_group_id: The security group identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -10031,7 +11391,7 @@ class VpcV1(BaseService):
         This request adds an existing network interface to an existing security group.
         When a network interface is added to a security group, the security group rules
         are applied to the network interface. A request body is not required, and if
-        supplied, is ignored.
+        provided, is ignored.
 
         :param str security_group_id: The security group identifier.
         :param str id: The network interface identifier.
@@ -10359,7 +11719,7 @@ class VpcV1(BaseService):
         rules in the security group are applied.
 
         :param str security_group_id: The security group identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -10408,10 +11768,11 @@ class VpcV1(BaseService):
         Remove a target from a security group.
 
         This request removes a target from a security group. For this request to succeed,
-        the target must be attached to at least one other security group.  The supplied
+        the target must be attached to at least one other security group.  The specified
         target identifier can be:
         - A network interface identifier
         - An application load balancer identifier
+        - An endpoint gateway identifier
         Security groups are stateful, so any changes to a target's security groups are
         applied to new connections. Existing connections are not affected.
 
@@ -10511,12 +11872,13 @@ class VpcV1(BaseService):
         """
         Add a target to a security group.
 
-        This request adds a resource to an existing security group. The supplied target
+        This request adds a resource to an existing security group. The specified target
         identifier can be:
         - A network interface identifier
         - An application load balancer identifier
+        - An endpoint gateway identifier
         When a target is added to a security group, the security group rules are applied
-        to the target. A request body is not required, and if supplied, is ignored.
+        to the target. A request body is not required, and if provided, is ignored.
 
         :param str security_group_id: The security group identifier.
         :param str id: The security group target identifier.
@@ -10572,7 +11934,7 @@ class VpcV1(BaseService):
 
         This request lists all IKE policies in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -10889,7 +12251,7 @@ class VpcV1(BaseService):
 
         This request lists all IPsec policies in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -11204,7 +12566,7 @@ class VpcV1(BaseService):
 
         This request lists all VPN gateways in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -11881,7 +13243,7 @@ class VpcV1(BaseService):
         Set a local CIDR on a VPN gateway connection.
 
         This request adds the specified CIDR to the specified VPN gateway connection. A
-        request body is not required, and if supplied, is ignored. This request succeeds
+        request body is not required, and if provided, is ignored. This request succeeds
         if the CIDR already exists on the specified VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
@@ -12101,7 +13463,7 @@ class VpcV1(BaseService):
         Set a peer CIDR on a VPN gateway connection.
 
         This request adds the specified CIDR to the specified VPN gateway connection. A
-        request body is not required, and if supplied, is ignored. This request succeeds
+        request body is not required, and if provided, is ignored. This request succeeds
         if the CIDR already exists on the specified VPN gateway connection.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
@@ -12165,7 +13527,7 @@ class VpcV1(BaseService):
         balancer profile specifies the performance characteristics and pricing model for a
         load balancer.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -12256,7 +13618,7 @@ class VpcV1(BaseService):
 
         This request lists all load balancers in the region.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param dict headers: A `dict` containing the request headers
@@ -12340,7 +13702,8 @@ class VpcV1(BaseService):
                At present, public load balancers are not supported with route mode
                enabled.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
-               groups to use for this load balancer.
+               groups to use for this load balancer. If unspecified, the VPC's default
+               security group is used.
                The load balancer profile must support security groups.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -12706,16 +14069,21 @@ class VpcV1(BaseService):
                Not supported for load balancers operating with route mode enabled.
         :param int port_max: (optional) The inclusive upper bound of the range of
                ports used by this listener. Must not be less than `port_min`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `65535` is supported for `port_max`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `65535` must be
+               specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         :param int port_min: (optional) The inclusive lower bound of the range of
                ports used by this listener. Must not be greater than `port_max`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `1` is supported for `port_min`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `1` must be specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `LoadBalancerListener` object
@@ -13941,8 +15309,15 @@ class VpcV1(BaseService):
 
         :param str load_balancer_id: The load balancer identifier.
         :param str pool_id: The pool identifier.
-        :param int port: The port number of the application running in the server
-               member.
+        :param int port: The port the member will receive load balancer traffic on.
+               Applies only to load balancer traffic received on a listener with a single
+               port. (If the traffic is received on a listener with a port range, the
+               member will receive the traffic on the same port the listener received it
+               on.)
+               This port will also be used for health checks unless the `port` property of
+               `health_monitor` property is specified.
+               The port must be unique across all members for all pools associated with
+               this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
                instances. Load balancers in the `application` family support IP addresses.
@@ -14255,7 +15630,7 @@ class VpcV1(BaseService):
 
         :param str name: (optional) Filters the collection to resources with the
                exact specified name.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -14301,6 +15676,7 @@ class VpcV1(BaseService):
         ips: List['EndpointGatewayReservedIP'] = None,
         name: str = None,
         resource_group: 'ResourceGroupIdentity' = None,
+        security_groups: List['SecurityGroupIdentity'] = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -14322,6 +15698,9 @@ class VpcV1(BaseService):
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this endpoint gateway. If unspecified, the VPC's default
+               security group is used.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `EndpointGateway` object
@@ -14337,6 +15716,8 @@ class VpcV1(BaseService):
             ips = [convert_model(x) for x in ips]
         if resource_group is not None:
             resource_group = convert_model(resource_group)
+        if security_groups is not None:
+            security_groups = [convert_model(x) for x in security_groups]
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -14353,7 +15734,8 @@ class VpcV1(BaseService):
             'vpc': vpc,
             'ips': ips,
             'name': name,
-            'resource_group': resource_group
+            'resource_group': resource_group,
+            'security_groups': security_groups
         }
         data = {k: v for (k, v) in data.items() if v is not None}
         data = json.dumps(data)
@@ -14388,7 +15770,7 @@ class VpcV1(BaseService):
         This request lists all reserved IPs bound to an endpoint gateway.
 
         :param str endpoint_gateway_id: The endpoint gateway identifier.
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str sort: (optional) Sorts the returned collection by the specified
@@ -14759,7 +16141,7 @@ class VpcV1(BaseService):
         summarizes data sent over one or more network interfaces within a VPC, depending
         on the chosen target.
 
-        :param str start: (optional) A server-supplied token determining what
+        :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
@@ -15083,6 +16465,23 @@ class ListImagesEnums:
         """
         PRIVATE = 'private'
         PUBLIC = 'public'
+
+
+class ListBareMetalServersEnums:
+    """
+    Enums for list_bare_metal_servers parameters.
+    """
+
+    class Sort(str, Enum):
+        """
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
+        """
+        CREATED_AT = 'created_at'
+        NAME = 'name'
 
 
 class ListSnapshotsEnums:
@@ -15592,6 +16991,3459 @@ class AddressPrefixPatch():
     def __ne__(self, other: 'AddressPrefixPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class BareMetalServer():
+    """
+    BareMetalServer.
+
+    :attr int bandwidth: The total bandwidth (in megabits per second) shared across
+          the bare metal server's network interfaces.
+    :attr BareMetalServerBootTarget boot_target: The possible resource types for
+          this property are expected to expand in the future.
+    :attr BareMetalServerCPU cpu: The bare metal server CPU configuration.
+    :attr datetime created_at: The date and time that the bare metal server was
+          created.
+    :attr str crn: The CRN for this bare metal server.
+    :attr List[BareMetalServerDisk] disks: The disks for this bare metal server,
+          including any disks that are associated with the
+          `boot_target`.
+    :attr bool enable_secure_boot: Indicates whether secure boot is enabled. If
+          enabled, the image must support secure boot or the server will fail to boot.
+    :attr str href: The URL for this bare metal server.
+    :attr str id: The unique identifier for this bare metal server.
+    :attr int memory: The amount of memory, truncated to whole gibibytes.
+    :attr str name: The user-defined name for this bare metal server (and default
+          system hostname).
+    :attr List[NetworkInterfaceBareMetalServerContextReference] network_interfaces:
+          The network interfaces for this bare metal server, including the primary network
+          interface.
+    :attr NetworkInterfaceBareMetalServerContextReference primary_network_interface:
+          Primary network interface.
+    :attr BareMetalServerProfileReference profile: The profile this bare metal
+          server uses.
+    :attr ResourceGroupReference resource_group: The resource group for this bare
+          metal server.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the bare metal server.
+    :attr List[BareMetalServerStatusReason] status_reasons: The reasons for the
+          current status (if any).
+          The enumerated reason code values for this property will expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          reason code was encountered.
+    :attr BareMetalServerTrustedPlatformModule trusted_platform_module:
+    :attr VPCReference vpc: The VPC this bare metal server resides in.
+    :attr ZoneReference zone: The zone this bare metal server resides in.
+    """
+
+    def __init__(self,
+                 bandwidth: int,
+                 boot_target: 'BareMetalServerBootTarget',
+                 cpu: 'BareMetalServerCPU',
+                 created_at: datetime,
+                 crn: str,
+                 disks: List['BareMetalServerDisk'],
+                 enable_secure_boot: bool,
+                 href: str,
+                 id: str,
+                 memory: int,
+                 name: str,
+                 network_interfaces: List['NetworkInterfaceBareMetalServerContextReference'],
+                 primary_network_interface: 'NetworkInterfaceBareMetalServerContextReference',
+                 profile: 'BareMetalServerProfileReference',
+                 resource_group: 'ResourceGroupReference',
+                 resource_type: str,
+                 status: str,
+                 status_reasons: List['BareMetalServerStatusReason'],
+                 trusted_platform_module: 'BareMetalServerTrustedPlatformModule',
+                 vpc: 'VPCReference',
+                 zone: 'ZoneReference') -> None:
+        """
+        Initialize a BareMetalServer object.
+
+        :param int bandwidth: The total bandwidth (in megabits per second) shared
+               across the bare metal server's network interfaces.
+        :param BareMetalServerBootTarget boot_target: The possible resource types
+               for this property are expected to expand in the future.
+        :param BareMetalServerCPU cpu: The bare metal server CPU configuration.
+        :param datetime created_at: The date and time that the bare metal server
+               was created.
+        :param str crn: The CRN for this bare metal server.
+        :param List[BareMetalServerDisk] disks: The disks for this bare metal
+               server, including any disks that are associated with the
+               `boot_target`.
+        :param bool enable_secure_boot: Indicates whether secure boot is enabled.
+               If enabled, the image must support secure boot or the server will fail to
+               boot.
+        :param str href: The URL for this bare metal server.
+        :param str id: The unique identifier for this bare metal server.
+        :param int memory: The amount of memory, truncated to whole gibibytes.
+        :param str name: The user-defined name for this bare metal server (and
+               default system hostname).
+        :param List[NetworkInterfaceBareMetalServerContextReference]
+               network_interfaces: The network interfaces for this bare metal server,
+               including the primary network interface.
+        :param NetworkInterfaceBareMetalServerContextReference
+               primary_network_interface: Primary network interface.
+        :param BareMetalServerProfileReference profile: The profile this bare metal
+               server uses.
+        :param ResourceGroupReference resource_group: The resource group for this
+               bare metal server.
+        :param str resource_type: The resource type.
+        :param str status: The status of the bare metal server.
+        :param List[BareMetalServerStatusReason] status_reasons: The reasons for
+               the current status (if any).
+               The enumerated reason code values for this property will expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected reason code was encountered.
+        :param BareMetalServerTrustedPlatformModule trusted_platform_module:
+        :param VPCReference vpc: The VPC this bare metal server resides in.
+        :param ZoneReference zone: The zone this bare metal server resides in.
+        """
+        self.bandwidth = bandwidth
+        self.boot_target = boot_target
+        self.cpu = cpu
+        self.created_at = created_at
+        self.crn = crn
+        self.disks = disks
+        self.enable_secure_boot = enable_secure_boot
+        self.href = href
+        self.id = id
+        self.memory = memory
+        self.name = name
+        self.network_interfaces = network_interfaces
+        self.primary_network_interface = primary_network_interface
+        self.profile = profile
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.status = status
+        self.status_reasons = status_reasons
+        self.trusted_platform_module = trusted_platform_module
+        self.vpc = vpc
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServer':
+        """Initialize a BareMetalServer object from a json dictionary."""
+        args = {}
+        if 'bandwidth' in _dict:
+            args['bandwidth'] = _dict.get('bandwidth')
+        else:
+            raise ValueError('Required property \'bandwidth\' not present in BareMetalServer JSON')
+        if 'boot_target' in _dict:
+            args['boot_target'] = _dict.get('boot_target')
+        else:
+            raise ValueError('Required property \'boot_target\' not present in BareMetalServer JSON')
+        if 'cpu' in _dict:
+            args['cpu'] = BareMetalServerCPU.from_dict(_dict.get('cpu'))
+        else:
+            raise ValueError('Required property \'cpu\' not present in BareMetalServer JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BareMetalServer JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in BareMetalServer JSON')
+        if 'disks' in _dict:
+            args['disks'] = [BareMetalServerDisk.from_dict(x) for x in _dict.get('disks')]
+        else:
+            raise ValueError('Required property \'disks\' not present in BareMetalServer JSON')
+        if 'enable_secure_boot' in _dict:
+            args['enable_secure_boot'] = _dict.get('enable_secure_boot')
+        else:
+            raise ValueError('Required property \'enable_secure_boot\' not present in BareMetalServer JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServer JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BareMetalServer JSON')
+        if 'memory' in _dict:
+            args['memory'] = _dict.get('memory')
+        else:
+            raise ValueError('Required property \'memory\' not present in BareMetalServer JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServer JSON')
+        if 'network_interfaces' in _dict:
+            args['network_interfaces'] = [NetworkInterfaceBareMetalServerContextReference.from_dict(x) for x in _dict.get('network_interfaces')]
+        else:
+            raise ValueError('Required property \'network_interfaces\' not present in BareMetalServer JSON')
+        if 'primary_network_interface' in _dict:
+            args['primary_network_interface'] = NetworkInterfaceBareMetalServerContextReference.from_dict(_dict.get('primary_network_interface'))
+        else:
+            raise ValueError('Required property \'primary_network_interface\' not present in BareMetalServer JSON')
+        if 'profile' in _dict:
+            args['profile'] = BareMetalServerProfileReference.from_dict(_dict.get('profile'))
+        else:
+            raise ValueError('Required property \'profile\' not present in BareMetalServer JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
+        else:
+            raise ValueError('Required property \'resource_group\' not present in BareMetalServer JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServer JSON')
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError('Required property \'status\' not present in BareMetalServer JSON')
+        if 'status_reasons' in _dict:
+            args['status_reasons'] = [BareMetalServerStatusReason.from_dict(x) for x in _dict.get('status_reasons')]
+        else:
+            raise ValueError('Required property \'status_reasons\' not present in BareMetalServer JSON')
+        if 'trusted_platform_module' in _dict:
+            args['trusted_platform_module'] = BareMetalServerTrustedPlatformModule.from_dict(_dict.get('trusted_platform_module'))
+        else:
+            raise ValueError('Required property \'trusted_platform_module\' not present in BareMetalServer JSON')
+        if 'vpc' in _dict:
+            args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
+        else:
+            raise ValueError('Required property \'vpc\' not present in BareMetalServer JSON')
+        if 'zone' in _dict:
+            args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
+        else:
+            raise ValueError('Required property \'zone\' not present in BareMetalServer JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServer object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'bandwidth') and self.bandwidth is not None:
+            _dict['bandwidth'] = self.bandwidth
+        if hasattr(self, 'boot_target') and self.boot_target is not None:
+            if isinstance(self.boot_target, dict):
+                _dict['boot_target'] = self.boot_target
+            else:
+                _dict['boot_target'] = self.boot_target.to_dict()
+        if hasattr(self, 'cpu') and self.cpu is not None:
+            _dict['cpu'] = self.cpu.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
+        if hasattr(self, 'enable_secure_boot') and self.enable_secure_boot is not None:
+            _dict['enable_secure_boot'] = self.enable_secure_boot
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'memory') and self.memory is not None:
+            _dict['memory'] = self.memory
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
+            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
+        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
+            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
+        if hasattr(self, 'profile') and self.profile is not None:
+            _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'status_reasons') and self.status_reasons is not None:
+            _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
+        if hasattr(self, 'trusted_platform_module') and self.trusted_platform_module is not None:
+            _dict['trusted_platform_module'] = self.trusted_platform_module.to_dict()
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServer object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServer') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServer') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BARE_METAL_SERVER = 'bare_metal_server'
+
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the bare metal server.
+        """
+        FAILED = 'failed'
+        MAINTENANCE = 'maintenance'
+        PENDING = 'pending'
+        RESTARTING = 'restarting'
+        RUNNING = 'running'
+        STARTING = 'starting'
+        STOPPED = 'stopped'
+        STOPPING = 'stopping'
+
+
+class BareMetalServerBootTarget():
+    """
+    The possible resource types for this property are expected to expand in the future.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerBootTarget object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerBootTargetBareMetalServerDiskReference']))
+        raise Exception(msg)
+
+class BareMetalServerCPU():
+    """
+    The bare metal server CPU configuration.
+
+    :attr str architecture: The CPU architecture.
+    :attr int core_count: The total number of cores.
+    :attr int socket_count: The total number of CPU sockets.
+    :attr int threads_per_core: The total number of hardware threads per core.
+    """
+
+    def __init__(self,
+                 architecture: str,
+                 core_count: int,
+                 socket_count: int,
+                 threads_per_core: int) -> None:
+        """
+        Initialize a BareMetalServerCPU object.
+
+        :param str architecture: The CPU architecture.
+        :param int core_count: The total number of cores.
+        :param int socket_count: The total number of CPU sockets.
+        :param int threads_per_core: The total number of hardware threads per core.
+        """
+        self.architecture = architecture
+        self.core_count = core_count
+        self.socket_count = socket_count
+        self.threads_per_core = threads_per_core
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCPU':
+        """Initialize a BareMetalServerCPU object from a json dictionary."""
+        args = {}
+        if 'architecture' in _dict:
+            args['architecture'] = _dict.get('architecture')
+        else:
+            raise ValueError('Required property \'architecture\' not present in BareMetalServerCPU JSON')
+        if 'core_count' in _dict:
+            args['core_count'] = _dict.get('core_count')
+        else:
+            raise ValueError('Required property \'core_count\' not present in BareMetalServerCPU JSON')
+        if 'socket_count' in _dict:
+            args['socket_count'] = _dict.get('socket_count')
+        else:
+            raise ValueError('Required property \'socket_count\' not present in BareMetalServerCPU JSON')
+        if 'threads_per_core' in _dict:
+            args['threads_per_core'] = _dict.get('threads_per_core')
+        else:
+            raise ValueError('Required property \'threads_per_core\' not present in BareMetalServerCPU JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCPU object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'architecture') and self.architecture is not None:
+            _dict['architecture'] = self.architecture
+        if hasattr(self, 'core_count') and self.core_count is not None:
+            _dict['core_count'] = self.core_count
+        if hasattr(self, 'socket_count') and self.socket_count is not None:
+            _dict['socket_count'] = self.socket_count
+        if hasattr(self, 'threads_per_core') and self.threads_per_core is not None:
+            _dict['threads_per_core'] = self.threads_per_core
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCPU object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCPU') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCPU') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerCollection():
+    """
+    BareMetalServerCollection.
+
+    :attr List[BareMetalServer] bare_metal_servers: Collection of bare metal
+          servers.
+    :attr BareMetalServerCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr BareMetalServerCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 bare_metal_servers: List['BareMetalServer'],
+                 first: 'BareMetalServerCollectionFirst',
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'BareMetalServerCollectionNext' = None) -> None:
+        """
+        Initialize a BareMetalServerCollection object.
+
+        :param List[BareMetalServer] bare_metal_servers: Collection of bare metal
+               servers.
+        :param BareMetalServerCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param BareMetalServerCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.bare_metal_servers = bare_metal_servers
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCollection':
+        """Initialize a BareMetalServerCollection object from a json dictionary."""
+        args = {}
+        if 'bare_metal_servers' in _dict:
+            args['bare_metal_servers'] = [BareMetalServer.from_dict(x) for x in _dict.get('bare_metal_servers')]
+        else:
+            raise ValueError('Required property \'bare_metal_servers\' not present in BareMetalServerCollection JSON')
+        if 'first' in _dict:
+            args['first'] = BareMetalServerCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in BareMetalServerCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in BareMetalServerCollection JSON')
+        if 'next' in _dict:
+            args['next'] = BareMetalServerCollectionNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in BareMetalServerCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'bare_metal_servers') and self.bare_metal_servers is not None:
+            _dict['bare_metal_servers'] = [x.to_dict() for x in self.bare_metal_servers]
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCollectionFirst':
+        """Initialize a BareMetalServerCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCollectionNext':
+        """Initialize a BareMetalServerCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerConsoleAccessToken():
+    """
+    The bare metal server console access token information.
+
+    :attr str access_token: A URL safe single-use token used to access the console
+          WebSocket.
+    :attr str console_type: The bare metal server console type for which this token
+          may be used.
+    :attr datetime created_at: The date and time that the access token was created.
+    :attr datetime expires_at: The date and time that the access token will expire.
+    :attr bool force: Indicates whether to disconnect an existing serial console
+          session as the serial console cannot be shared.  This has no effect on VNC
+          consoles.
+    :attr str href: The URL to access this bare metal server console.
+    """
+
+    def __init__(self,
+                 access_token: str,
+                 console_type: str,
+                 created_at: datetime,
+                 expires_at: datetime,
+                 force: bool,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerConsoleAccessToken object.
+
+        :param str access_token: A URL safe single-use token used to access the
+               console WebSocket.
+        :param str console_type: The bare metal server console type for which this
+               token may be used.
+        :param datetime created_at: The date and time that the access token was
+               created.
+        :param datetime expires_at: The date and time that the access token will
+               expire.
+        :param bool force: Indicates whether to disconnect an existing serial
+               console session as the serial console cannot be shared.  This has no effect
+               on VNC consoles.
+        :param str href: The URL to access this bare metal server console.
+        """
+        self.access_token = access_token
+        self.console_type = console_type
+        self.created_at = created_at
+        self.expires_at = expires_at
+        self.force = force
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerConsoleAccessToken':
+        """Initialize a BareMetalServerConsoleAccessToken object from a json dictionary."""
+        args = {}
+        if 'access_token' in _dict:
+            args['access_token'] = _dict.get('access_token')
+        else:
+            raise ValueError('Required property \'access_token\' not present in BareMetalServerConsoleAccessToken JSON')
+        if 'console_type' in _dict:
+            args['console_type'] = _dict.get('console_type')
+        else:
+            raise ValueError('Required property \'console_type\' not present in BareMetalServerConsoleAccessToken JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BareMetalServerConsoleAccessToken JSON')
+        if 'expires_at' in _dict:
+            args['expires_at'] = string_to_datetime(_dict.get('expires_at'))
+        else:
+            raise ValueError('Required property \'expires_at\' not present in BareMetalServerConsoleAccessToken JSON')
+        if 'force' in _dict:
+            args['force'] = _dict.get('force')
+        else:
+            raise ValueError('Required property \'force\' not present in BareMetalServerConsoleAccessToken JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerConsoleAccessToken JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerConsoleAccessToken object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'access_token') and self.access_token is not None:
+            _dict['access_token'] = self.access_token
+        if hasattr(self, 'console_type') and self.console_type is not None:
+            _dict['console_type'] = self.console_type
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'expires_at') and self.expires_at is not None:
+            _dict['expires_at'] = datetime_to_string(self.expires_at)
+        if hasattr(self, 'force') and self.force is not None:
+            _dict['force'] = self.force
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerConsoleAccessToken object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerConsoleAccessToken') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerConsoleAccessToken') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ConsoleTypeEnum(str, Enum):
+        """
+        The bare metal server console type for which this token may be used.
+        """
+        SERIAL = 'serial'
+        VNC = 'vnc'
+
+
+class BareMetalServerDisk():
+    """
+    BareMetalServerDisk.
+
+    :attr datetime created_at: The date and time that the disk was created.
+    :attr str href: The URL for this bare metal server disk.
+    :attr str id: The unique identifier for this bare metal server disk.
+    :attr str interface_type: The disk interface used for attaching the disk.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str name: The user-defined name for this disk.
+    :attr str resource_type: The resource type.
+    :attr int size: The size of the disk in GB (gigabytes).
+    """
+
+    def __init__(self,
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 interface_type: str,
+                 name: str,
+                 resource_type: str,
+                 size: int) -> None:
+        """
+        Initialize a BareMetalServerDisk object.
+
+        :param datetime created_at: The date and time that the disk was created.
+        :param str href: The URL for this bare metal server disk.
+        :param str id: The unique identifier for this bare metal server disk.
+        :param str interface_type: The disk interface used for attaching the disk.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str name: The user-defined name for this disk.
+        :param str resource_type: The resource type.
+        :param int size: The size of the disk in GB (gigabytes).
+        """
+        self.created_at = created_at
+        self.href = href
+        self.id = id
+        self.interface_type = interface_type
+        self.name = name
+        self.resource_type = resource_type
+        self.size = size
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerDisk':
+        """Initialize a BareMetalServerDisk object from a json dictionary."""
+        args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BareMetalServerDisk JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerDisk JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BareMetalServerDisk JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerDisk JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerDisk JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerDisk JSON')
+        if 'size' in _dict:
+            args['size'] = _dict.get('size')
+        else:
+            raise ValueError('Required property \'size\' not present in BareMetalServerDisk JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'size') and self.size is not None:
+            _dict['size'] = self.size
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        NVME = 'nvme'
+        SATA = 'sata'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BARE_METAL_SERVER_DISK = 'bare_metal_server_disk'
+
+
+class BareMetalServerDiskCollection():
+    """
+    BareMetalServerDiskCollection.
+
+    :attr List[BareMetalServerDisk] disks: Collection of the bare metal server's
+          disks.
+    """
+
+    def __init__(self,
+                 disks: List['BareMetalServerDisk']) -> None:
+        """
+        Initialize a BareMetalServerDiskCollection object.
+
+        :param List[BareMetalServerDisk] disks: Collection of the bare metal
+               server's disks.
+        """
+        self.disks = disks
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerDiskCollection':
+        """Initialize a BareMetalServerDiskCollection object from a json dictionary."""
+        args = {}
+        if 'disks' in _dict:
+            args['disks'] = [BareMetalServerDisk.from_dict(x) for x in _dict.get('disks')]
+        else:
+            raise ValueError('Required property \'disks\' not present in BareMetalServerDiskCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerDiskCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerDiskCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerDiskCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerDiskCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerDiskPatch():
+    """
+    BareMetalServerDiskPatch.
+
+    :attr str name: (optional) The user-defined name for this disk.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None) -> None:
+        """
+        Initialize a BareMetalServerDiskPatch object.
+
+        :param str name: (optional) The user-defined name for this disk.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerDiskPatch':
+        """Initialize a BareMetalServerDiskPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerDiskPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerDiskPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerDiskPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerDiskPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerDiskReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a BareMetalServerDiskReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerDiskReferenceDeleted':
+        """Initialize a BareMetalServerDiskReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in BareMetalServerDiskReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerDiskReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerDiskReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerDiskReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerDiskReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerInitialization():
+    """
+    BareMetalServerInitialization.
+
+    :attr ImageReference image: The image the bare metal server was provisioned
+          from.
+    :attr List[KeyReference] keys: The public SSH keys used at initialization.
+    :attr List[BareMetalServerInitializationUserAccount] user_accounts: The user
+          accounts that are created at initialization. There can be multiple account types
+          distinguished by the `resource_type` property.
+    """
+
+    def __init__(self,
+                 image: 'ImageReference',
+                 keys: List['KeyReference'],
+                 user_accounts: List['BareMetalServerInitializationUserAccount']) -> None:
+        """
+        Initialize a BareMetalServerInitialization object.
+
+        :param ImageReference image: The image the bare metal server was
+               provisioned from.
+        :param List[KeyReference] keys: The public SSH keys used at initialization.
+        :param List[BareMetalServerInitializationUserAccount] user_accounts: The
+               user accounts that are created at initialization. There can be multiple
+               account types distinguished by the `resource_type` property.
+        """
+        self.image = image
+        self.keys = keys
+        self.user_accounts = user_accounts
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerInitialization':
+        """Initialize a BareMetalServerInitialization object from a json dictionary."""
+        args = {}
+        if 'image' in _dict:
+            args['image'] = ImageReference.from_dict(_dict.get('image'))
+        else:
+            raise ValueError('Required property \'image\' not present in BareMetalServerInitialization JSON')
+        if 'keys' in _dict:
+            args['keys'] = [KeyReference.from_dict(x) for x in _dict.get('keys')]
+        else:
+            raise ValueError('Required property \'keys\' not present in BareMetalServerInitialization JSON')
+        if 'user_accounts' in _dict:
+            args['user_accounts'] = _dict.get('user_accounts')
+        else:
+            raise ValueError('Required property \'user_accounts\' not present in BareMetalServerInitialization JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerInitialization object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'image') and self.image is not None:
+            _dict['image'] = self.image.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            _dict['keys'] = [x.to_dict() for x in self.keys]
+        if hasattr(self, 'user_accounts') and self.user_accounts is not None:
+            user_accounts_list = []
+            for x in self.user_accounts:
+                if isinstance(x, dict):
+                    user_accounts_list.append(x)
+                else:
+                    user_accounts_list.append(x.to_dict())
+            _dict['user_accounts'] = user_accounts_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerInitialization object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerInitialization') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerInitialization') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerInitializationPrototype():
+    """
+    BareMetalServerInitializationPrototype.
+
+    :attr ImageIdentity image: The image to be used when provisioning the bare metal
+          server.
+    :attr List[KeyIdentity] keys: The public SSH keys to install on the bare metal
+          server. Keys will be made available to the bare metal server as cloud-init
+          vendor data. For cloud-init enabled images, these keys will also be added as SSH
+          authorized keys for the administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt the administrator password. Keys are optional for other images, but
+          if no keys are specified, the instance will be inaccessible unless the specified
+          image provides another means of access.
+    :attr str user_data: (optional) User data to be made available when initializing
+          the bare metal server.
+    """
+
+    def __init__(self,
+                 image: 'ImageIdentity',
+                 keys: List['KeyIdentity'],
+                 *,
+                 user_data: str = None) -> None:
+        """
+        Initialize a BareMetalServerInitializationPrototype object.
+
+        :param ImageIdentity image: The image to be used when provisioning the bare
+               metal server.
+        :param List[KeyIdentity] keys: The public SSH keys to install on the bare
+               metal server. Keys will be made available to the bare metal server as
+               cloud-init vendor data. For cloud-init enabled images, these keys will also
+               be added as SSH authorized keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt the administrator password. Keys are optional for other
+               images, but if no keys are specified, the instance will be inaccessible
+               unless the specified image provides another means of access.
+        :param str user_data: (optional) User data to be made available when
+               initializing the bare metal server.
+        """
+        self.image = image
+        self.keys = keys
+        self.user_data = user_data
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerInitializationPrototype':
+        """Initialize a BareMetalServerInitializationPrototype object from a json dictionary."""
+        args = {}
+        if 'image' in _dict:
+            args['image'] = _dict.get('image')
+        else:
+            raise ValueError('Required property \'image\' not present in BareMetalServerInitializationPrototype JSON')
+        if 'keys' in _dict:
+            args['keys'] = _dict.get('keys')
+        else:
+            raise ValueError('Required property \'keys\' not present in BareMetalServerInitializationPrototype JSON')
+        if 'user_data' in _dict:
+            args['user_data'] = _dict.get('user_data')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerInitializationPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'image') and self.image is not None:
+            if isinstance(self.image, dict):
+                _dict['image'] = self.image
+            else:
+                _dict['image'] = self.image.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for x in self.keys:
+                if isinstance(x, dict):
+                    keys_list.append(x)
+                else:
+                    keys_list.append(x.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerInitializationPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerInitializationPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerInitializationPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerInitializationUserAccount():
+    """
+    BareMetalServerInitializationUserAccount.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerInitializationUserAccount object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount']))
+        raise Exception(msg)
+
+class BareMetalServerNetworkInterface():
+    """
+    BareMetalServerNetworkInterface.
+
+    :attr bool allow_ip_spoofing: Indicates whether source IP spoofing is allowed on
+          this interface. If false, source IP spoofing is prevented on this interface. If
+          true, source IP spoofing is allowed on this interface.
+    :attr datetime created_at: The date and time that the network interface was
+          created.
+    :attr bool enable_infrastructure_nat: If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
+          associated with this network interface.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str mac_address: The MAC address of the interface.  If absent, the value
+          is not known.
+    :attr str name: The user-defined name for this network interface.
+    :attr int port_speed: The network interface port speed in Mbps.
+    :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this network interface.
+    :attr str status: The status of the network interface.
+    :attr SubnetReference subnet: The associated subnet.
+    :attr str type: The type of this bare metal server network interface.
+    """
+
+    def __init__(self,
+                 allow_ip_spoofing: bool,
+                 created_at: datetime,
+                 enable_infrastructure_nat: bool,
+                 href: str,
+                 id: str,
+                 interface_type: str,
+                 mac_address: str,
+                 name: str,
+                 port_speed: int,
+                 primary_ipv4_address: str,
+                 resource_type: str,
+                 security_groups: List['SecurityGroupReference'],
+                 status: str,
+                 subnet: 'SubnetReference',
+                 type: str,
+                 *,
+                 floating_ips: List['FloatingIPReference'] = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterface object.
+
+        :param bool allow_ip_spoofing: Indicates whether source IP spoofing is
+               allowed on this interface. If false, source IP spoofing is prevented on
+               this interface. If true, source IP spoofing is allowed on this interface.
+        :param datetime created_at: The date and time that the network interface
+               was created.
+        :param bool enable_infrastructure_nat: If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param str mac_address: The MAC address of the interface.  If absent, the
+               value is not known.
+        :param str name: The user-defined name for this network interface.
+        :param int port_speed: The network interface port speed in Mbps.
+        :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param str resource_type: The resource type.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this network interface.
+        :param str status: The status of the network interface.
+        :param SubnetReference subnet: The associated subnet.
+        :param str type: The type of this bare metal server network interface.
+        :param List[FloatingIPReference] floating_ips: (optional) The floating IPs
+               associated with this network interface.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerNetworkInterfaceByPCI', 'BareMetalServerNetworkInterfaceByVLAN']))
+        raise Exception(msg)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterface':
+        """Initialize a BareMetalServerNetworkInterface object from a json dictionary."""
+        disc_class = cls._get_class_by_discriminator(_dict)
+        if disc_class != cls:
+            return disc_class.from_dict(_dict)
+        msg = ("Cannot convert dictionary into an instance of base class 'BareMetalServerNetworkInterface'. " +
+                "The discriminator value should map to a valid subclass: {1}").format(
+                  ", ".join(['BareMetalServerNetworkInterfaceByPCI', 'BareMetalServerNetworkInterfaceByVLAN']))
+        raise Exception(msg)
+
+    @classmethod
+    def _from_dict(cls, _dict: Dict):
+        """Initialize a BareMetalServerNetworkInterface object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    @classmethod
+    def _get_class_by_discriminator(cls, _dict: Dict) -> object:
+        mapping = {}
+        mapping['pci'] = 'BareMetalServerNetworkInterfaceByPCI'
+        mapping['vlan'] = 'BareMetalServerNetworkInterfaceByVLAN'
+        disc_value = _dict.get('interface_type')
+        if disc_value is None:
+            raise ValueError('Discriminator property \'interface_type\' not found in BareMetalServerNetworkInterface JSON')
+        class_name = mapping.get(disc_value, disc_value)
+        try:
+            disc_class = getattr(sys.modules[__name__], class_name)
+        except AttributeError:
+            disc_class = cls
+        if isinstance(disc_class, object):
+            return disc_class
+        raise TypeError('%s is not a discriminator class' % class_name)
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the network interface.
+        """
+        AVAILABLE = 'available'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+
+
+    class TypeEnum(str, Enum):
+        """
+        The type of this bare metal server network interface.
+        """
+        PRIMARY = 'primary'
+        SECONDARY = 'secondary'
+
+
+class BareMetalServerNetworkInterfaceCollection():
+    """
+    BareMetalServerNetworkInterfaceCollection.
+
+    :attr BareMetalServerNetworkInterfaceCollectionFirst first: A link to the first
+          page of resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr List[BareMetalServerNetworkInterface] network_interfaces: Collection of
+          network interfaces.
+    :attr BareMetalServerNetworkInterfaceCollectionNext next: (optional) A link to
+          the next page of resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'BareMetalServerNetworkInterfaceCollectionFirst',
+                 limit: int,
+                 network_interfaces: List['BareMetalServerNetworkInterface'],
+                 total_count: int,
+                 *,
+                 next: 'BareMetalServerNetworkInterfaceCollectionNext' = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfaceCollection object.
+
+        :param BareMetalServerNetworkInterfaceCollectionFirst first: A link to the
+               first page of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[BareMetalServerNetworkInterface] network_interfaces: Collection
+               of network interfaces.
+        :param int total_count: The total number of resources across all pages.
+        :param BareMetalServerNetworkInterfaceCollectionNext next: (optional) A
+               link to the next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.network_interfaces = network_interfaces
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceCollection':
+        """Initialize a BareMetalServerNetworkInterfaceCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = BareMetalServerNetworkInterfaceCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in BareMetalServerNetworkInterfaceCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in BareMetalServerNetworkInterfaceCollection JSON')
+        if 'network_interfaces' in _dict:
+            args['network_interfaces'] = [BareMetalServerNetworkInterface.from_dict(x) for x in _dict.get('network_interfaces')]
+        else:
+            raise ValueError('Required property \'network_interfaces\' not present in BareMetalServerNetworkInterfaceCollection JSON')
+        if 'next' in _dict:
+            args['next'] = BareMetalServerNetworkInterfaceCollectionNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in BareMetalServerNetworkInterfaceCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfaceCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
+            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfaceCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfaceCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfaceCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerNetworkInterfaceCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfaceCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceCollectionFirst':
+        """Initialize a BareMetalServerNetworkInterfaceCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerNetworkInterfaceCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfaceCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfaceCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfaceCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfaceCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerNetworkInterfaceCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfaceCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceCollectionNext':
+        """Initialize a BareMetalServerNetworkInterfaceCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerNetworkInterfaceCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfaceCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfaceCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfaceCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfaceCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerNetworkInterfacePatch():
+    """
+    BareMetalServerNetworkInterfacePatch.
+
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
+    :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
+          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          the `allowed_vlans` array for one PCI type adapter per bare metal server.
+    :attr bool enable_infrastructure_nat: (optional) If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in.
+    """
+
+    def __init__(self,
+                 *,
+                 allow_ip_spoofing: bool = None,
+                 allowed_vlans: List[int] = None,
+                 enable_infrastructure_nat: bool = None,
+                 name: str = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfacePatch object.
+
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
+        :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
+               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               can only be in the `allowed_vlans` array for one PCI type adapter per bare
+               metal server.
+        :param bool enable_infrastructure_nat: (optional) If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+        """
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.allowed_vlans = allowed_vlans
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfacePatch':
+        """Initialize a BareMetalServerNetworkInterfacePatch object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        if 'allowed_vlans' in _dict:
+            args['allowed_vlans'] = _dict.get('allowed_vlans')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfacePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
+            _dict['allowed_vlans'] = self.allowed_vlans
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfacePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfacePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfacePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerNetworkInterfacePrototype():
+    """
+    BareMetalServerNetworkInterfacePrototype.
+
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
+    :attr bool enable_infrastructure_nat: (optional) If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
+          specified, it must be an available address on the network interface's subnet. If
+          unspecified, an available address on the subnet will be automatically selected.
+    :attr List[SecurityGroupIdentity] security_groups: (optional) The security
+          groups to use for this network interface. If unspecified, the VPC's default
+          security group is used.
+    :attr SubnetIdentity subnet: The associated subnet.
+    """
+
+    def __init__(self,
+                 interface_type: str,
+                 subnet: 'SubnetIdentity',
+                 *,
+                 allow_ip_spoofing: bool = None,
+                 enable_infrastructure_nat: bool = None,
+                 name: str = None,
+                 primary_ipv4_address: str = None,
+                 security_groups: List['SecurityGroupIdentity'] = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfacePrototype object.
+
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param SubnetIdentity subnet: The associated subnet.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
+        :param bool enable_infrastructure_nat: (optional) If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
+               specified, it must be an available address on the network interface's
+               subnet. If unspecified, an available address on the subnet will be
+               automatically selected.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype', 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype']))
+        raise Exception(msg)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfacePrototype':
+        """Initialize a BareMetalServerNetworkInterfacePrototype object from a json dictionary."""
+        disc_class = cls._get_class_by_discriminator(_dict)
+        if disc_class != cls:
+            return disc_class.from_dict(_dict)
+        msg = ("Cannot convert dictionary into an instance of base class 'BareMetalServerNetworkInterfacePrototype'. " +
+                "The discriminator value should map to a valid subclass: {1}").format(
+                  ", ".join(['BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype', 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype']))
+        raise Exception(msg)
+
+    @classmethod
+    def _from_dict(cls, _dict: Dict):
+        """Initialize a BareMetalServerNetworkInterfacePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    @classmethod
+    def _get_class_by_discriminator(cls, _dict: Dict) -> object:
+        mapping = {}
+        mapping['pci'] = 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype'
+        mapping['vlan'] = 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype'
+        disc_value = _dict.get('interface_type')
+        if disc_value is None:
+            raise ValueError('Discriminator property \'interface_type\' not found in BareMetalServerNetworkInterfacePrototype JSON')
+        class_name = mapping.get(disc_value, disc_value)
+        try:
+            disc_class = getattr(sys.modules[__name__], class_name)
+        except AttributeError:
+            disc_class = cls
+        if isinstance(disc_class, object):
+            return disc_class
+        raise TypeError('%s is not a discriminator class' % class_name)
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+class BareMetalServerPatch():
+    """
+    BareMetalServerPatch.
+
+    :attr str name: (optional) The user-defined name for this bare metal server (and
+          default system hostname).
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None) -> None:
+        """
+        Initialize a BareMetalServerPatch object.
+
+        :param str name: (optional) The user-defined name for this bare metal
+               server (and default system hostname).
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerPatch':
+        """Initialize a BareMetalServerPatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerPrimaryNetworkInterfacePrototype():
+    """
+    BareMetalServerPrimaryNetworkInterfacePrototype.
+
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
+    :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
+          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          the `allowed_vlans` array for one PCI type adapter per bare metal server.
+    :attr bool enable_infrastructure_nat: (optional) If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr str interface_type: (optional) The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
+          specified, it must be an available address on the network interface's subnet. If
+          unspecified, an available address on the subnet will be automatically selected.
+    :attr List[SecurityGroupIdentity] security_groups: (optional) The security
+          groups to use for this network interface. If unspecified, the VPC's default
+          security group is used.
+    :attr SubnetIdentity subnet: The associated subnet.
+    """
+
+    def __init__(self,
+                 subnet: 'SubnetIdentity',
+                 *,
+                 allow_ip_spoofing: bool = None,
+                 allowed_vlans: List[int] = None,
+                 enable_infrastructure_nat: bool = None,
+                 interface_type: str = None,
+                 name: str = None,
+                 primary_ipv4_address: str = None,
+                 security_groups: List['SecurityGroupIdentity'] = None) -> None:
+        """
+        Initialize a BareMetalServerPrimaryNetworkInterfacePrototype object.
+
+        :param SubnetIdentity subnet: The associated subnet.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
+        :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
+               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               can only be in the `allowed_vlans` array for one PCI type adapter per bare
+               metal server.
+        :param bool enable_infrastructure_nat: (optional) If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str interface_type: (optional) The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
+               specified, it must be an available address on the network interface's
+               subnet. If unspecified, an available address on the subnet will be
+               automatically selected.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
+        """
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.allowed_vlans = allowed_vlans
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.interface_type = interface_type
+        self.name = name
+        self.primary_ipv4_address = primary_ipv4_address
+        self.security_groups = security_groups
+        self.subnet = subnet
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerPrimaryNetworkInterfacePrototype':
+        """Initialize a BareMetalServerPrimaryNetworkInterfacePrototype object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        if 'allowed_vlans' in _dict:
+            args['allowed_vlans'] = _dict.get('allowed_vlans')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'security_groups' in _dict:
+            args['security_groups'] = _dict.get('security_groups')
+        if 'subnet' in _dict:
+            args['subnet'] = _dict.get('subnet')
+        else:
+            raise ValueError('Required property \'subnet\' not present in BareMetalServerPrimaryNetworkInterfacePrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerPrimaryNetworkInterfacePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
+            _dict['allowed_vlans'] = self.allowed_vlans
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            security_groups_list = []
+            for x in self.security_groups:
+                if isinstance(x, dict):
+                    security_groups_list.append(x)
+                else:
+                    security_groups_list.append(x.to_dict())
+            _dict['security_groups'] = security_groups_list
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerPrimaryNetworkInterfacePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerPrimaryNetworkInterfacePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerPrimaryNetworkInterfacePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        """
+        PCI = 'pci'
+
+
+class BareMetalServerProfile():
+    """
+    BareMetalServerProfile.
+
+    :attr BareMetalServerProfileBandwidth bandwidth:
+    :attr BareMetalServerProfileCPUArchitecture cpu_architecture:
+    :attr BareMetalServerProfileCPUCoreCount cpu_core_count:
+    :attr BareMetalServerProfileCPUSocketCount cpu_socket_count:
+    :attr List[BareMetalServerProfileDisk] disks: Collection of the bare metal
+          server profile's disks.
+    :attr str family: The product family this bare metal server profile belongs to.
+    :attr str href: The URL for this bare metal server profile.
+    :attr BareMetalServerProfileMemory memory:
+    :attr str name: The name for this bare metal server profile.
+    :attr BareMetalServerProfileOSArchitecture os_architecture:
+    :attr str resource_type: The resource type.
+    :attr BareMetalServerProfileSupportedTrustedPlatformModuleModes
+          supported_trusted_platform_module_modes: The supported trusted platform module
+          (TPM) modes for this bare metal server profile.
+    """
+
+    def __init__(self,
+                 bandwidth: 'BareMetalServerProfileBandwidth',
+                 cpu_architecture: 'BareMetalServerProfileCPUArchitecture',
+                 cpu_core_count: 'BareMetalServerProfileCPUCoreCount',
+                 cpu_socket_count: 'BareMetalServerProfileCPUSocketCount',
+                 disks: List['BareMetalServerProfileDisk'],
+                 family: str,
+                 href: str,
+                 memory: 'BareMetalServerProfileMemory',
+                 name: str,
+                 os_architecture: 'BareMetalServerProfileOSArchitecture',
+                 resource_type: str,
+                 supported_trusted_platform_module_modes: 'BareMetalServerProfileSupportedTrustedPlatformModuleModes') -> None:
+        """
+        Initialize a BareMetalServerProfile object.
+
+        :param BareMetalServerProfileBandwidth bandwidth:
+        :param BareMetalServerProfileCPUArchitecture cpu_architecture:
+        :param BareMetalServerProfileCPUCoreCount cpu_core_count:
+        :param BareMetalServerProfileCPUSocketCount cpu_socket_count:
+        :param List[BareMetalServerProfileDisk] disks: Collection of the bare metal
+               server profile's disks.
+        :param str family: The product family this bare metal server profile
+               belongs to.
+        :param str href: The URL for this bare metal server profile.
+        :param BareMetalServerProfileMemory memory:
+        :param str name: The name for this bare metal server profile.
+        :param BareMetalServerProfileOSArchitecture os_architecture:
+        :param str resource_type: The resource type.
+        :param BareMetalServerProfileSupportedTrustedPlatformModuleModes
+               supported_trusted_platform_module_modes: The supported trusted platform
+               module (TPM) modes for this bare metal server profile.
+        """
+        self.bandwidth = bandwidth
+        self.cpu_architecture = cpu_architecture
+        self.cpu_core_count = cpu_core_count
+        self.cpu_socket_count = cpu_socket_count
+        self.disks = disks
+        self.family = family
+        self.href = href
+        self.memory = memory
+        self.name = name
+        self.os_architecture = os_architecture
+        self.resource_type = resource_type
+        self.supported_trusted_platform_module_modes = supported_trusted_platform_module_modes
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfile':
+        """Initialize a BareMetalServerProfile object from a json dictionary."""
+        args = {}
+        if 'bandwidth' in _dict:
+            args['bandwidth'] = _dict.get('bandwidth')
+        else:
+            raise ValueError('Required property \'bandwidth\' not present in BareMetalServerProfile JSON')
+        if 'cpu_architecture' in _dict:
+            args['cpu_architecture'] = BareMetalServerProfileCPUArchitecture.from_dict(_dict.get('cpu_architecture'))
+        else:
+            raise ValueError('Required property \'cpu_architecture\' not present in BareMetalServerProfile JSON')
+        if 'cpu_core_count' in _dict:
+            args['cpu_core_count'] = _dict.get('cpu_core_count')
+        else:
+            raise ValueError('Required property \'cpu_core_count\' not present in BareMetalServerProfile JSON')
+        if 'cpu_socket_count' in _dict:
+            args['cpu_socket_count'] = _dict.get('cpu_socket_count')
+        else:
+            raise ValueError('Required property \'cpu_socket_count\' not present in BareMetalServerProfile JSON')
+        if 'disks' in _dict:
+            args['disks'] = [BareMetalServerProfileDisk.from_dict(x) for x in _dict.get('disks')]
+        else:
+            raise ValueError('Required property \'disks\' not present in BareMetalServerProfile JSON')
+        if 'family' in _dict:
+            args['family'] = _dict.get('family')
+        else:
+            raise ValueError('Required property \'family\' not present in BareMetalServerProfile JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerProfile JSON')
+        if 'memory' in _dict:
+            args['memory'] = _dict.get('memory')
+        else:
+            raise ValueError('Required property \'memory\' not present in BareMetalServerProfile JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerProfile JSON')
+        if 'os_architecture' in _dict:
+            args['os_architecture'] = BareMetalServerProfileOSArchitecture.from_dict(_dict.get('os_architecture'))
+        else:
+            raise ValueError('Required property \'os_architecture\' not present in BareMetalServerProfile JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerProfile JSON')
+        if 'supported_trusted_platform_module_modes' in _dict:
+            args['supported_trusted_platform_module_modes'] = BareMetalServerProfileSupportedTrustedPlatformModuleModes.from_dict(_dict.get('supported_trusted_platform_module_modes'))
+        else:
+            raise ValueError('Required property \'supported_trusted_platform_module_modes\' not present in BareMetalServerProfile JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfile object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'bandwidth') and self.bandwidth is not None:
+            if isinstance(self.bandwidth, dict):
+                _dict['bandwidth'] = self.bandwidth
+            else:
+                _dict['bandwidth'] = self.bandwidth.to_dict()
+        if hasattr(self, 'cpu_architecture') and self.cpu_architecture is not None:
+            _dict['cpu_architecture'] = self.cpu_architecture.to_dict()
+        if hasattr(self, 'cpu_core_count') and self.cpu_core_count is not None:
+            if isinstance(self.cpu_core_count, dict):
+                _dict['cpu_core_count'] = self.cpu_core_count
+            else:
+                _dict['cpu_core_count'] = self.cpu_core_count.to_dict()
+        if hasattr(self, 'cpu_socket_count') and self.cpu_socket_count is not None:
+            if isinstance(self.cpu_socket_count, dict):
+                _dict['cpu_socket_count'] = self.cpu_socket_count
+            else:
+                _dict['cpu_socket_count'] = self.cpu_socket_count.to_dict()
+        if hasattr(self, 'disks') and self.disks is not None:
+            _dict['disks'] = [x.to_dict() for x in self.disks]
+        if hasattr(self, 'family') and self.family is not None:
+            _dict['family'] = self.family
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'memory') and self.memory is not None:
+            if isinstance(self.memory, dict):
+                _dict['memory'] = self.memory
+            else:
+                _dict['memory'] = self.memory.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'os_architecture') and self.os_architecture is not None:
+            _dict['os_architecture'] = self.os_architecture.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'supported_trusted_platform_module_modes') and self.supported_trusted_platform_module_modes is not None:
+            _dict['supported_trusted_platform_module_modes'] = self.supported_trusted_platform_module_modes.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfile object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfile') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfile') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BARE_METAL_SERVER_PROFILE = 'bare_metal_server_profile'
+
+
+class BareMetalServerProfileBandwidth():
+    """
+    BareMetalServerProfileBandwidth.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileBandwidth object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileBandwidthFixed', 'BareMetalServerProfileBandwidthRange', 'BareMetalServerProfileBandwidthEnum', 'BareMetalServerProfileBandwidthDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileCPUArchitecture():
+    """
+    BareMetalServerProfileCPUArchitecture.
+
+    :attr str default: (optional) The default CPU architecture for a bare metal
+          server with this profile.
+    :attr str type: The type for this profile field.
+    :attr str value: The CPU architecture for a bare metal server with this profile.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: str,
+                 *,
+                 default: str = None) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUArchitecture object.
+
+        :param str type: The type for this profile field.
+        :param str value: The CPU architecture for a bare metal server with this
+               profile.
+        :param str default: (optional) The default CPU architecture for a bare
+               metal server with this profile.
+        """
+        self.default = default
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUArchitecture':
+        """Initialize a BareMetalServerProfileCPUArchitecture object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUArchitecture JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileCPUArchitecture JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUArchitecture object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUArchitecture object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUArchitecture') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUArchitecture') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileCPUCoreCount():
+    """
+    BareMetalServerProfileCPUCoreCount.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUCoreCount object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileCPUCoreCountFixed', 'BareMetalServerProfileCPUCoreCountRange', 'BareMetalServerProfileCPUCoreCountEnum', 'BareMetalServerProfileCPUCoreCountDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileCPUSocketCount():
+    """
+    BareMetalServerProfileCPUSocketCount.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUSocketCount object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileCPUSocketCountFixed', 'BareMetalServerProfileCPUSocketCountRange', 'BareMetalServerProfileCPUSocketCountEnum', 'BareMetalServerProfileCPUSocketCountDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileCollection():
+    """
+    BareMetalServerProfileCollection.
+
+    :attr BareMetalServerProfileCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr BareMetalServerProfileCollectionNext next: (optional) A link to the next
+          page of resources. This property is present for all pages
+          except the last page.
+    :attr List[BareMetalServerProfile] profiles: Collection of bare metal server
+          profiles.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'BareMetalServerProfileCollectionFirst',
+                 limit: int,
+                 profiles: List['BareMetalServerProfile'],
+                 total_count: int,
+                 *,
+                 next: 'BareMetalServerProfileCollectionNext' = None) -> None:
+        """
+        Initialize a BareMetalServerProfileCollection object.
+
+        :param BareMetalServerProfileCollectionFirst first: A link to the first
+               page of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[BareMetalServerProfile] profiles: Collection of bare metal
+               server profiles.
+        :param int total_count: The total number of resources across all pages.
+        :param BareMetalServerProfileCollectionNext next: (optional) A link to the
+               next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.profiles = profiles
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCollection':
+        """Initialize a BareMetalServerProfileCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = BareMetalServerProfileCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in BareMetalServerProfileCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in BareMetalServerProfileCollection JSON')
+        if 'next' in _dict:
+            args['next'] = BareMetalServerProfileCollectionNext.from_dict(_dict.get('next'))
+        if 'profiles' in _dict:
+            args['profiles'] = [BareMetalServerProfile.from_dict(x) for x in _dict.get('profiles')]
+        else:
+            raise ValueError('Required property \'profiles\' not present in BareMetalServerProfileCollection JSON')
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in BareMetalServerProfileCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'profiles') and self.profiles is not None:
+            _dict['profiles'] = [x.to_dict() for x in self.profiles]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCollectionFirst':
+        """Initialize a BareMetalServerProfileCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerProfileCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCollectionNext':
+        """Initialize a BareMetalServerProfileCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerProfileCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileDisk():
+    """
+    Disks provided by this profile.
+
+    :attr BareMetalServerProfileDiskQuantity quantity:
+    :attr BareMetalServerProfileDiskSize size:
+    :attr BareMetalServerProfileDiskSupportedInterfaces supported_interface_types:
+    """
+
+    def __init__(self,
+                 quantity: 'BareMetalServerProfileDiskQuantity',
+                 size: 'BareMetalServerProfileDiskSize',
+                 supported_interface_types: 'BareMetalServerProfileDiskSupportedInterfaces') -> None:
+        """
+        Initialize a BareMetalServerProfileDisk object.
+
+        :param BareMetalServerProfileDiskQuantity quantity:
+        :param BareMetalServerProfileDiskSize size:
+        :param BareMetalServerProfileDiskSupportedInterfaces
+               supported_interface_types:
+        """
+        self.quantity = quantity
+        self.size = size
+        self.supported_interface_types = supported_interface_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDisk':
+        """Initialize a BareMetalServerProfileDisk object from a json dictionary."""
+        args = {}
+        if 'quantity' in _dict:
+            args['quantity'] = _dict.get('quantity')
+        else:
+            raise ValueError('Required property \'quantity\' not present in BareMetalServerProfileDisk JSON')
+        if 'size' in _dict:
+            args['size'] = _dict.get('size')
+        else:
+            raise ValueError('Required property \'size\' not present in BareMetalServerProfileDisk JSON')
+        if 'supported_interface_types' in _dict:
+            args['supported_interface_types'] = BareMetalServerProfileDiskSupportedInterfaces.from_dict(_dict.get('supported_interface_types'))
+        else:
+            raise ValueError('Required property \'supported_interface_types\' not present in BareMetalServerProfileDisk JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDisk object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'quantity') and self.quantity is not None:
+            if isinstance(self.quantity, dict):
+                _dict['quantity'] = self.quantity
+            else:
+                _dict['quantity'] = self.quantity.to_dict()
+        if hasattr(self, 'size') and self.size is not None:
+            if isinstance(self.size, dict):
+                _dict['size'] = self.size
+            else:
+                _dict['size'] = self.size.to_dict()
+        if hasattr(self, 'supported_interface_types') and self.supported_interface_types is not None:
+            _dict['supported_interface_types'] = self.supported_interface_types.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDisk object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDisk') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDisk') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileDiskQuantity():
+    """
+    BareMetalServerProfileDiskQuantity.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskQuantity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileDiskQuantityFixed', 'BareMetalServerProfileDiskQuantityRange', 'BareMetalServerProfileDiskQuantityEnum', 'BareMetalServerProfileDiskQuantityDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileDiskSize():
+    """
+    BareMetalServerProfileDiskSize.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSize object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileDiskSizeFixed', 'BareMetalServerProfileDiskSizeRange', 'BareMetalServerProfileDiskSizeEnum', 'BareMetalServerProfileDiskSizeDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileDiskSupportedInterfaces():
+    """
+    BareMetalServerProfileDiskSupportedInterfaces.
+
+    :attr str default: The disk interface used for attaching the disk.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The supported disk interfaces used for attaching the
+          disk.
+    """
+
+    def __init__(self,
+                 default: str,
+                 type: str,
+                 values: List[str]) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSupportedInterfaces object.
+
+        :param str default: The disk interface used for attaching the disk.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        :param str type: The type for this profile field.
+        :param List[str] values: The supported disk interfaces used for attaching
+               the disk.
+        """
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskSupportedInterfaces':
+        """Initialize a BareMetalServerProfileDiskSupportedInterfaces object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileDiskSupportedInterfaces JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskSupportedInterfaces JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileDiskSupportedInterfaces JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskSupportedInterfaces object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskSupportedInterfaces object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskSupportedInterfaces') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class DefaultEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        NVME = 'nvme'
+        SATA = 'sata'
+
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+    class ValuesEnum(str, Enum):
+        """
+        The disk interface used for attaching the disk.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        NVME = 'nvme'
+        SATA = 'sata'
+
+
+class BareMetalServerProfileIdentity():
+    """
+    Identifies a bare metal server profile by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileIdentityByName', 'BareMetalServerProfileIdentityByHref']))
+        raise Exception(msg)
+
+class BareMetalServerProfileMemory():
+    """
+    BareMetalServerProfileMemory.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a BareMetalServerProfileMemory object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['BareMetalServerProfileMemoryFixed', 'BareMetalServerProfileMemoryRange', 'BareMetalServerProfileMemoryEnum', 'BareMetalServerProfileMemoryDependent']))
+        raise Exception(msg)
+
+class BareMetalServerProfileOSArchitecture():
+    """
+    BareMetalServerProfileOSArchitecture.
+
+    :attr str default: The default OS architecture for a bare metal server with this
+          profile.
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The supported OS architecture(s) for a bare metal server
+          with this profile.
+    """
+
+    def __init__(self,
+                 default: str,
+                 type: str,
+                 values: List[str]) -> None:
+        """
+        Initialize a BareMetalServerProfileOSArchitecture object.
+
+        :param str default: The default OS architecture for a bare metal server
+               with this profile.
+        :param str type: The type for this profile field.
+        :param List[str] values: The supported OS architecture(s) for a bare metal
+               server with this profile.
+        """
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileOSArchitecture':
+        """Initialize a BareMetalServerProfileOSArchitecture object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileOSArchitecture JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileOSArchitecture JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileOSArchitecture JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileOSArchitecture object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileOSArchitecture object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileOSArchitecture') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileOSArchitecture') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileReference():
+    """
+    BareMetalServerProfileReference.
+
+    :attr str href: The URL for this bare metal server profile.
+    :attr str name: The name for this bare metal server profile.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 href: str,
+                 name: str,
+                 resource_type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileReference object.
+
+        :param str href: The URL for this bare metal server profile.
+        :param str name: The name for this bare metal server profile.
+        :param str resource_type: The resource type.
+        """
+        self.href = href
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileReference':
+        """Initialize a BareMetalServerProfileReference object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerProfileReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerProfileReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerProfileReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BARE_METAL_SERVER_PROFILE = 'bare_metal_server_profile'
+
+
+class BareMetalServerProfileSupportedTrustedPlatformModuleModes():
+    """
+    The supported trusted platform module (TPM) modes for this bare metal server profile.
+
+    :attr str type: The type for this profile field.
+    :attr List[str] values: The supported trusted platform module (TPM) modes.
+    """
+
+    def __init__(self,
+                 type: str,
+                 values: List[str]) -> None:
+        """
+        Initialize a BareMetalServerProfileSupportedTrustedPlatformModuleModes object.
+
+        :param str type: The type for this profile field.
+        :param List[str] values: The supported trusted platform module (TPM) modes.
+        """
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileSupportedTrustedPlatformModuleModes':
+        """Initialize a BareMetalServerProfileSupportedTrustedPlatformModuleModes object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileSupportedTrustedPlatformModuleModes JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileSupportedTrustedPlatformModuleModes JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileSupportedTrustedPlatformModuleModes object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileSupportedTrustedPlatformModuleModes object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileSupportedTrustedPlatformModuleModes') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileSupportedTrustedPlatformModuleModes') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+    class ValuesEnum(str, Enum):
+        """
+        The mode for the trusted platform module (TPM):
+        - `tpm_2`: Standard TPM 2 capabilities
+        - `tpm_2_with_txt`: Standard TPM 2 with Intel Trusted Execution Technology (TXT)
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        TPM_2 = 'tpm_2'
+        TPM_2_WITH_TXT = 'tpm_2_with_txt'
+
+
+class BareMetalServerStatusReason():
+    """
+    BareMetalServerStatusReason.
+
+    :attr str code: The status reason code:
+          - `cannot_start`: Failed to start due to an internal error
+          - `cannot_start_capacity`: Insufficient capacity within the selected zone
+          - `cannot_start_compute`: An error occurred while allocating compute resources
+          - `cannot_start_ip_address`: An error occurred while allocating an IP address
+          - `cannot_start_network`: An error occurred while allocating network resources.
+    :attr str message: An explanation of the status reason.
+    :attr str more_info: (optional) Link to documentation about this status reason.
+    """
+
+    def __init__(self,
+                 code: str,
+                 message: str,
+                 *,
+                 more_info: str = None) -> None:
+        """
+        Initialize a BareMetalServerStatusReason object.
+
+        :param str code: The status reason code:
+               - `cannot_start`: Failed to start due to an internal error
+               - `cannot_start_capacity`: Insufficient capacity within the selected zone
+               - `cannot_start_compute`: An error occurred while allocating compute
+               resources
+               - `cannot_start_ip_address`: An error occurred while allocating an IP
+               address
+               - `cannot_start_network`: An error occurred while allocating network
+               resources.
+        :param str message: An explanation of the status reason.
+        :param str more_info: (optional) Link to documentation about this status
+               reason.
+        """
+        self.code = code
+        self.message = message
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerStatusReason':
+        """Initialize a BareMetalServerStatusReason object from a json dictionary."""
+        args = {}
+        if 'code' in _dict:
+            args['code'] = _dict.get('code')
+        else:
+            raise ValueError('Required property \'code\' not present in BareMetalServerStatusReason JSON')
+        if 'message' in _dict:
+            args['message'] = _dict.get('message')
+        else:
+            raise ValueError('Required property \'message\' not present in BareMetalServerStatusReason JSON')
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerStatusReason object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerStatusReason object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerStatusReason') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerStatusReason') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class CodeEnum(str, Enum):
+        """
+        The status reason code:
+        - `cannot_start`: Failed to start due to an internal error
+        - `cannot_start_capacity`: Insufficient capacity within the selected zone
+        - `cannot_start_compute`: An error occurred while allocating compute resources
+        - `cannot_start_ip_address`: An error occurred while allocating an IP address
+        - `cannot_start_network`: An error occurred while allocating network resources.
+        """
+        CANNOT_START = 'cannot_start'
+        CANNOT_START_CAPACITY = 'cannot_start_capacity'
+        CANNOT_START_COMPUTE = 'cannot_start_compute'
+        CANNOT_START_IP_ADDRESS = 'cannot_start_ip_address'
+        CANNOT_START_NETWORK = 'cannot_start_network'
+
+
+class BareMetalServerTrustedPlatformModule():
+    """
+    BareMetalServerTrustedPlatformModule.
+
+    :attr bool enabled: Indicates whether the trusted platform module (TPM) is
+          enabled. If enabled, `mode` will also be set.
+    :attr str mode: (optional) The mode for the trusted platform module (TPM):
+          - `tpm_2`: Standard TPM 2 capabilities
+          - `tpm_2_with_txt`: Standard TPM 2 with Intel Trusted Execution Technology (TXT)
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the resource on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self,
+                 enabled: bool,
+                 *,
+                 mode: str = None) -> None:
+        """
+        Initialize a BareMetalServerTrustedPlatformModule object.
+
+        :param bool enabled: Indicates whether the trusted platform module (TPM) is
+               enabled. If enabled, `mode` will also be set.
+        :param str mode: (optional) The mode for the trusted platform module (TPM):
+               - `tpm_2`: Standard TPM 2 capabilities
+               - `tpm_2_with_txt`: Standard TPM 2 with Intel Trusted Execution Technology
+               (TXT)
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the resource on
+               which the unexpected property value was encountered.
+        """
+        self.enabled = enabled
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerTrustedPlatformModule':
+        """Initialize a BareMetalServerTrustedPlatformModule object from a json dictionary."""
+        args = {}
+        if 'enabled' in _dict:
+            args['enabled'] = _dict.get('enabled')
+        else:
+            raise ValueError('Required property \'enabled\' not present in BareMetalServerTrustedPlatformModule JSON')
+        if 'mode' in _dict:
+            args['mode'] = _dict.get('mode')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerTrustedPlatformModule object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'enabled') and self.enabled is not None:
+            _dict['enabled'] = self.enabled
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerTrustedPlatformModule object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerTrustedPlatformModule') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerTrustedPlatformModule') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for the trusted platform module (TPM):
+        - `tpm_2`: Standard TPM 2 capabilities
+        - `tpm_2_with_txt`: Standard TPM 2 with Intel Trusted Execution Technology (TXT)
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the resource on which the unexpected
+        property value was encountered.
+        """
+        TPM_2 = 'tpm_2'
+        TPM_2_WITH_TXT = 'tpm_2_with_txt'
+
 
 class CertificateInstanceIdentity():
     """
@@ -19265,8 +24117,8 @@ class EndpointGateway():
           created.
     :attr str crn: The CRN for this endpoint gateway.
     :attr str health_state: The health of this resource.
-          - `ok`: Healthy
-          - `degraded`: Suffering from compromised performance, capacity, or connectivity
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
           - `faulted`: Completely unreachable, inoperative, or otherwise entirely
           incapacitated
           - `inapplicable`: The health state does not apply because of the current
@@ -19282,6 +24134,8 @@ class EndpointGateway():
     :attr ResourceGroupReference resource_group: The resource group for this
           endpoint gateway.
     :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this endpoint gateway.
     :attr str service_endpoint: (optional) The fully qualified domain name for the
           target service.
     :attr List[str] service_endpoints: The fully qualified domain names for the
@@ -19301,6 +24155,7 @@ class EndpointGateway():
                  name: str,
                  resource_group: 'ResourceGroupReference',
                  resource_type: str,
+                 security_groups: List['SecurityGroupReference'],
                  service_endpoints: List[str],
                  target: 'EndpointGatewayTarget',
                  vpc: 'VPCReference',
@@ -19313,8 +24168,8 @@ class EndpointGateway():
                created.
         :param str crn: The CRN for this endpoint gateway.
         :param str health_state: The health of this resource.
-               - `ok`: Healthy
-               - `degraded`: Suffering from compromised performance, capacity, or
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
                connectivity
                - `faulted`: Completely unreachable, inoperative, or otherwise entirely
                incapacitated
@@ -19331,6 +24186,8 @@ class EndpointGateway():
         :param ResourceGroupReference resource_group: The resource group for this
                endpoint gateway.
         :param str resource_type: The resource type.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this endpoint gateway.
         :param List[str] service_endpoints: The fully qualified domain names for
                the target service.
         :param EndpointGatewayTarget target: The target for this endpoint gateway.
@@ -19348,6 +24205,7 @@ class EndpointGateway():
         self.name = name
         self.resource_group = resource_group
         self.resource_type = resource_type
+        self.security_groups = security_groups
         self.service_endpoint = service_endpoint
         self.service_endpoints = service_endpoints
         self.target = target
@@ -19397,6 +24255,10 @@ class EndpointGateway():
             args['resource_type'] = _dict.get('resource_type')
         else:
             raise ValueError('Required property \'resource_type\' not present in EndpointGateway JSON')
+        if 'security_groups' in _dict:
+            args['security_groups'] = [SecurityGroupReference.from_dict(x) for x in _dict.get('security_groups')]
+        else:
+            raise ValueError('Required property \'security_groups\' not present in EndpointGateway JSON')
         if 'service_endpoint' in _dict:
             args['service_endpoint'] = _dict.get('service_endpoint')
         if 'service_endpoints' in _dict:
@@ -19441,6 +24303,8 @@ class EndpointGateway():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            _dict['security_groups'] = [x.to_dict() for x in self.security_groups]
         if hasattr(self, 'service_endpoint') and self.service_endpoint is not None:
             _dict['service_endpoint'] = self.service_endpoint
         if hasattr(self, 'service_endpoints') and self.service_endpoints is not None:
@@ -19475,8 +24339,8 @@ class EndpointGateway():
     class HealthStateEnum(str, Enum):
         """
         The health of this resource.
-        - `ok`: Healthy
-        - `degraded`: Suffering from compromised performance, capacity, or connectivity
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
         - `faulted`: Completely unreachable, inoperative, or otherwise entirely
         incapacitated
         - `inapplicable`: The health state does not apply because of the current lifecycle
@@ -20329,28 +25193,27 @@ class FloatingIPPatch():
     FloatingIPPatch.
 
     :attr str name: (optional) The unique user-defined name for this floating IP.
-    :attr FloatingIPPatchTargetNetworkInterfaceIdentity target: (optional) A new
-          network interface to bind this floating IP to, replacing any existing binding.
-          For this request to succeed, the existing floating IP must not be required by
-          another
-          resource, such as a public gateway.
+    :attr FloatingIPTargetPatch target: (optional) The network interface to bind the
+          floating IP to, replacing any existing binding. For
+          this request to succeed, the floating IP must not be required by another
+          resource, such
+          as a public gateway.
     """
 
     def __init__(self,
                  *,
                  name: str = None,
-                 target: 'FloatingIPPatchTargetNetworkInterfaceIdentity' = None) -> None:
+                 target: 'FloatingIPTargetPatch' = None) -> None:
         """
         Initialize a FloatingIPPatch object.
 
         :param str name: (optional) The unique user-defined name for this floating
                IP.
-        :param FloatingIPPatchTargetNetworkInterfaceIdentity target: (optional) A
-               new network interface to bind this floating IP to, replacing any existing
-               binding.
-               For this request to succeed, the existing floating IP must not be required
-               by another
-               resource, such as a public gateway.
+        :param FloatingIPTargetPatch target: (optional) The network interface to
+               bind the floating IP to, replacing any existing binding. For
+               this request to succeed, the floating IP must not be required by another
+               resource, such
+               as a public gateway.
         """
         self.name = name
         self.target = target
@@ -20399,23 +25262,6 @@ class FloatingIPPatch():
     def __ne__(self, other: 'FloatingIPPatch') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-class FloatingIPPatchTargetNetworkInterfaceIdentity():
-    """
-    A new network interface to bind this floating IP to, replacing any existing binding.
-    For this request to succeed, the existing floating IP must not be required by another
-    resource, such as a public gateway.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a FloatingIPPatchTargetNetworkInterfaceIdentity object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById', 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref']))
-        raise Exception(msg)
 
 class FloatingIPPrototype():
     """
@@ -20626,6 +25472,23 @@ class FloatingIPTarget():
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['FloatingIPTargetNetworkInterfaceReference', 'FloatingIPTargetPublicGatewayReference']))
+        raise Exception(msg)
+
+class FloatingIPTargetPatch():
+    """
+    The network interface to bind the floating IP to, replacing any existing binding. For
+    this request to succeed, the floating IP must not be required by another resource,
+    such as a public gateway.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a FloatingIPTargetPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['FloatingIPTargetPatchNetworkInterfaceIdentityById', 'FloatingIPTargetPatchNetworkInterfaceIdentityByHref']))
         raise Exception(msg)
 
 class FloatingIPUnpaginatedCollection():
@@ -25574,8 +30437,7 @@ class InstanceGroupManager():
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
-    :attr str name: The user-defined name for this instance group manager. Names
-          must be unique within the instance group.
+    :attr str name: The user-defined name for this instance group manager.
     :attr datetime updated_at: The date and time that the instance group manager was
           updated.
     """
@@ -25597,7 +30459,6 @@ class InstanceGroupManager():
         :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
-               Names must be unique within the instance group.
         :param datetime updated_at: The date and time that the instance group
                manager was updated.
         """
@@ -25622,7 +30483,6 @@ class InstanceGroupManagerAction():
     :attr str href: The URL for this instance group manager action.
     :attr str id: The unique identifier for this instance group manager action.
     :attr str name: The user-defined name for this instance group manager action.
-          Names must be unique within the instance group manager.
     :attr str resource_type: The resource type.
     :attr str status: The status of the instance group action
           - `active`: Action is ready to be run
@@ -25661,7 +30521,7 @@ class InstanceGroupManagerAction():
         :param str id: The unique identifier for this instance group manager
                action.
         :param str name: The user-defined name for this instance group manager
-               action. Names must be unique within the instance group manager.
+               action.
         :param str resource_type: The resource type.
         :param str status: The status of the instance group action
                - `active`: Action is ready to be run
@@ -25834,7 +30694,7 @@ class InstanceGroupManagerActionPatch():
     :attr InstanceGroupManagerActionGroupPatch group: (optional)
     :attr InstanceGroupManagerActionManagerPatch manager: (optional)
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action.
     :attr datetime run_at: (optional) The date and time the scheduled action will
           run.
     """
@@ -25855,7 +30715,7 @@ class InstanceGroupManagerActionPatch():
         :param InstanceGroupManagerActionGroupPatch group: (optional)
         :param InstanceGroupManagerActionManagerPatch manager: (optional)
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action.
         :param datetime run_at: (optional) The date and time the scheduled action
                will run.
         """
@@ -25924,7 +30784,8 @@ class InstanceGroupManagerActionPrototype():
     InstanceGroupManagerActionPrototype.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     """
 
     def __init__(self,
@@ -25934,7 +30795,8 @@ class InstanceGroupManagerActionPrototype():
         Initialize a InstanceGroupManagerActionPrototype object.
 
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstanceGroupManagerActionPrototypeScheduledActionPrototype']))
@@ -25950,7 +30812,6 @@ class InstanceGroupManagerActionReference():
     :attr str href: The URL for this instance group manager action.
     :attr str id: The unique identifier for this instance group manager action.
     :attr str name: The user-defined name for this instance group manager action.
-          Names must be unique within the instance group manager.
     :attr str resource_type: The resource type.
     """
 
@@ -25968,7 +30829,7 @@ class InstanceGroupManagerActionReference():
         :param str id: The unique identifier for this instance group manager
                action.
         :param str name: The user-defined name for this instance group manager
-               action. Names must be unique within the instance group manager.
+               action.
         :param str resource_type: The resource type.
         :param InstanceGroupManagerActionReferenceDeleted deleted: (optional) If
                present, this property indicates the referenced resource has been deleted
@@ -26570,7 +31431,7 @@ class InstanceGroupManagerPatch():
     :attr int min_membership_count: (optional) The minimum number of members in a
           managed instance group.
     :attr str name: (optional) The user-defined name for this instance group
-          manager. Names must be unique within the instance group.
+          manager.
     """
 
     def __init__(self,
@@ -26595,7 +31456,7 @@ class InstanceGroupManagerPatch():
         :param int min_membership_count: (optional) The minimum number of members
                in a managed instance group.
         :param str name: (optional) The user-defined name for this instance group
-               manager. Names must be unique within the instance group.
+               manager.
         """
         self.aggregation_window = aggregation_window
         self.cooldown = cooldown
@@ -26671,7 +31532,6 @@ class InstanceGroupManagerPolicy():
     :attr str href: The URL for this instance group manager policy.
     :attr str id: The unique identifier for this instance group manager policy.
     :attr str name: The user-defined name for this instance group manager policy.
-          Names must be unique within the instance group manager.
     :attr datetime updated_at: The date and time that the instance group manager
           policy was updated.
     """
@@ -26691,7 +31551,7 @@ class InstanceGroupManagerPolicy():
         :param str id: The unique identifier for this instance group manager
                policy.
         :param str name: The user-defined name for this instance group manager
-               policy. Names must be unique within the instance group manager.
+               policy.
         :param datetime updated_at: The date and time that the instance group
                manager policy was updated.
         """
@@ -26930,7 +31790,7 @@ class InstanceGroupManagerPolicyPatch():
     :attr str metric_type: (optional) The type of metric to be evaluated.
     :attr int metric_value: (optional) The metric value to be evaluated.
     :attr str name: (optional) The user-defined name for this instance group manager
-          policy. Names must be unique within the instance group manager.
+          policy.
     """
 
     def __init__(self,
@@ -26944,7 +31804,7 @@ class InstanceGroupManagerPolicyPatch():
         :param str metric_type: (optional) The type of metric to be evaluated.
         :param int metric_value: (optional) The metric value to be evaluated.
         :param str name: (optional) The user-defined name for this instance group
-               manager policy. Names must be unique within the instance group manager.
+               manager policy.
         """
         self.metric_type = metric_type
         self.metric_value = metric_value
@@ -27011,7 +31871,8 @@ class InstanceGroupManagerPolicyPrototype():
     InstanceGroupManagerPolicyPrototype.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          policy. Names must be unique within the instance group manager.
+          policy. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     """
 
     def __init__(self,
@@ -27021,7 +31882,8 @@ class InstanceGroupManagerPolicyPrototype():
         Initialize a InstanceGroupManagerPolicyPrototype object.
 
         :param str name: (optional) The user-defined name for this instance group
-               manager policy. Names must be unique within the instance group manager.
+               manager policy. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype']))
@@ -27037,7 +31899,6 @@ class InstanceGroupManagerPolicyReference():
     :attr str href: The URL for this instance group manager policy.
     :attr str id: The unique identifier for this instance group manager policy.
     :attr str name: The user-defined name for this instance group manager policy.
-          Names must be unique within the instance group manager.
     """
 
     def __init__(self,
@@ -27053,7 +31914,7 @@ class InstanceGroupManagerPolicyReference():
         :param str id: The unique identifier for this instance group manager
                policy.
         :param str name: The user-defined name for this instance group manager
-               policy. Names must be unique within the instance group manager.
+               policy.
         :param InstanceGroupManagerPolicyReferenceDeleted deleted: (optional) If
                present, this property indicates the referenced resource has been deleted
                and provides
@@ -27184,7 +32045,8 @@ class InstanceGroupManagerPrototype():
     :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
-          manager. Names must be unique within the instance group.
+          manager. Names must be unique within the instance group. If unspecified, the
+          name will be a hyphenated list of randomly-selected words.
     """
 
     def __init__(self,
@@ -27197,7 +32059,8 @@ class InstanceGroupManagerPrototype():
         :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
-               manager. Names must be unique within the instance group.
+               manager. Names must be unique within the instance group. If unspecified,
+               the name will be a hyphenated list of randomly-selected words.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype', 'InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype']))
@@ -27212,8 +32075,7 @@ class InstanceGroupManagerReference():
           some supplementary information.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
-    :attr str name: The user-defined name for this instance group manager. Names
-          must be unique within the instance group.
+    :attr str name: The user-defined name for this instance group manager.
     """
 
     def __init__(self,
@@ -27228,7 +32090,6 @@ class InstanceGroupManagerReference():
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
         :param str name: The user-defined name for this instance group manager.
-               Names must be unique within the instance group.
         :param InstanceGroupManagerReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
                provides
@@ -27964,9 +32825,9 @@ class InstanceGroupPatch():
           instance template by a unique property.
     :attr LoadBalancerIdentity load_balancer: (optional) The load balancer that the
           load balancer pool used by this group
-          is in. Must be supplied when using a load balancer pool.
-    :attr LoadBalancerPoolIdentity load_balancer_pool: (optional) When specified,
-          the load balancer pool will be managed by this
+          is in. Required when using a load balancer pool.
+    :attr LoadBalancerPoolIdentity load_balancer_pool: (optional) If specified, the
+          load balancer pool will be managed by this
           group. Instances created by this group will have a new load
           balancer pool member in that pool created. Must be used with
           `application_port`.
@@ -27996,8 +32857,8 @@ class InstanceGroupPatch():
                instance template by a unique property.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
                that the load balancer pool used by this group
-               is in. Must be supplied when using a load balancer pool.
-        :param LoadBalancerPoolIdentity load_balancer_pool: (optional) When
+               is in. Required when using a load balancer pool.
+        :param LoadBalancerPoolIdentity load_balancer_pool: (optional) If
                specified, the load balancer pool will be managed by this
                group. Instances created by this group will have a new load
                balancer pool member in that pool created. Must be used with
@@ -28393,6 +33254,10 @@ class InstancePatch():
 
     :attr str name: (optional) The user-defined name for this virtual server
           instance (and default system hostname).
+    :attr InstancePlacementTargetPatch placement_target: (optional) The placement
+          restrictions to use for the virtual server instance. For the placement
+          restrictions to be changed, the instance `status` must be `stopping` or
+          `stopped`.
     :attr InstancePatchProfile profile: (optional) The profile to use for this
           virtual server instance. For the profile to be changed,
           the instance `status` must be `stopping` or `stopped`. In addition, the
@@ -28414,6 +33279,7 @@ class InstancePatch():
     def __init__(self,
                  *,
                  name: str = None,
+                 placement_target: 'InstancePlacementTargetPatch' = None,
                  profile: 'InstancePatchProfile' = None,
                  total_volume_bandwidth: int = None) -> None:
         """
@@ -28421,6 +33287,11 @@ class InstancePatch():
 
         :param str name: (optional) The user-defined name for this virtual server
                instance (and default system hostname).
+        :param InstancePlacementTargetPatch placement_target: (optional) The
+               placement restrictions to use for the virtual server instance. For the
+               placement
+               restrictions to be changed, the instance `status` must be `stopping` or
+               `stopped`.
         :param InstancePatchProfile profile: (optional) The profile to use for this
                virtual server instance. For the profile to be changed,
                the instance `status` must be `stopping` or `stopped`. In addition, the
@@ -28442,6 +33313,7 @@ class InstancePatch():
                `total_network_bandwidth`.
         """
         self.name = name
+        self.placement_target = placement_target
         self.profile = profile
         self.total_volume_bandwidth = total_volume_bandwidth
 
@@ -28451,6 +33323,8 @@ class InstancePatch():
         args = {}
         if 'name' in _dict:
             args['name'] = _dict.get('name')
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
         if 'total_volume_bandwidth' in _dict:
@@ -28467,6 +33341,11 @@ class InstancePatch():
         _dict = {}
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
         if hasattr(self, 'profile') and self.profile is not None:
             if isinstance(self.profile, dict):
                 _dict['profile'] = self.profile
@@ -28530,6 +33409,21 @@ class InstancePlacementTarget():
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['InstancePlacementTargetDedicatedHostGroupReference', 'InstancePlacementTargetDedicatedHostReference', 'InstancePlacementTargetPlacementGroupReference']))
+        raise Exception(msg)
+
+class InstancePlacementTargetPatch():
+    """
+    InstancePlacementTargetPatch.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstancePlacementTargetPatchDedicatedHostIdentity', 'InstancePlacementTargetPatchDedicatedHostGroupIdentity']))
         raise Exception(msg)
 
 class InstancePlacementTargetPrototype():
@@ -29904,6 +34798,7 @@ class InstanceStatusReason():
         CANNOT_START_COMPUTE = 'cannot_start_compute'
         CANNOT_START_IP_ADDRESS = 'cannot_start_ip_address'
         CANNOT_START_NETWORK = 'cannot_start_network'
+        CANNOT_START_PLACEMENT_GROUP = 'cannot_start_placement_group'
         CANNOT_START_STORAGE = 'cannot_start_storage'
         ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
         STOPPED_FOR_IMAGE_CREATION = 'stopped_for_image_creation'
@@ -31807,16 +36702,15 @@ class LoadBalancerListener():
     :attr List[LoadBalancerListenerPolicyReference] policies: (optional) The
           policies for this listener.
     :attr int port: The listener port number, or the inclusive lower bound of the
-          port range. Each listener in the load balancer must have a unique `port` and
-          `protocol` combination.
+          port range.
     :attr int port_max: The inclusive upper bound of the range of ports used by this
           listener.
-          Only load balancers in the `network` family support more than one port per
-          listener.
+          At present, only load balancers in the `network` family support more than one
+          port per listener.
     :attr int port_min: The inclusive lower bound of the range of ports used by this
           listener.
-          Only load balancers in the `network` family support more than one port per
-          listener.
+          At present, only load balancers in the `network` family support more than one
+          port per listener.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -31859,16 +36753,15 @@ class LoadBalancerListener():
         :param str href: The listener's canonical URL.
         :param str id: The unique identifier for this load balancer listener.
         :param int port: The listener port number, or the inclusive lower bound of
-               the port range. Each listener in the load balancer must have a unique
-               `port` and `protocol` combination.
+               the port range.
         :param int port_max: The inclusive upper bound of the range of ports used
                by this listener.
-               Only load balancers in the `network` family support more than one port per
-               listener.
+               At present, only load balancers in the `network` family support more than
+               one port per listener.
         :param int port_min: The inclusive lower bound of the range of ports used
                by this listener.
-               Only load balancers in the `network` family support more than one port per
-               listener.
+               At present, only load balancers in the `network` family support more than
+               one port per listener.
         :param str protocol: The listener protocol. Load balancers in the `network`
                family support `tcp`. Load balancers in the `application` family support
                `tcp`, `http`, and `https`. Each listener in the load balancer must have a
@@ -32369,16 +37262,20 @@ class LoadBalancerListenerPatch():
           Not supported for load balancers operating with route mode enabled.
     :attr int port_max: (optional) The inclusive upper bound of the range of ports
           used by this listener. Must not be less than `port_min`.
-          At present, only load balancers operating with route mode enabled support
-          different values for `port_min` and `port_max`.  When route mode is enabled,
-          only a value of
-          `65535` is supported for `port_max`.
+          At present, only load balancers operating with route mode enabled, and public
+          load balancers in the `network` family support different values for `port_min`
+          and
+          `port_max`. When route mode is enabled, the value `65535` must be specified.
+          The specified port range must not overlap with port ranges used by other
+          listeners for this load balancer using the same protocol.
     :attr int port_min: (optional) The inclusive lower bound of the range of ports
           used by this listener. Must not be greater than `port_max`.
-          At present, only load balancers operating with route mode enabled support
-          different values for `port_min` and `port_max`.  When route mode is enabled,
-          only a value of
-          `1` is supported for `port_min`.
+          At present, only load balancers operating with route mode enabled, and public
+          load balancers in the `network` family support different values for `port_min`
+          and
+          `port_max`. When route mode is enabled, the value `1` must be specified.
+          The specified port range must not overlap with port ranges used by other
+          listeners for this load balancer using the same protocol.
     :attr str protocol: (optional) The listener protocol. Each listener in the load
           balancer must have a unique `port` and `protocol` combination.  Additional
           restrictions:
@@ -32436,16 +37333,21 @@ class LoadBalancerListenerPatch():
                Not supported for load balancers operating with route mode enabled.
         :param int port_max: (optional) The inclusive upper bound of the range of
                ports used by this listener. Must not be less than `port_min`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `65535` is supported for `port_max`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `65535` must be
+               specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         :param int port_min: (optional) The inclusive lower bound of the range of
                ports used by this listener. Must not be greater than `port_max`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `1` is supported for `port_min`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `1` must be specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         :param str protocol: (optional) The listener protocol. Each listener in the
                load balancer must have a unique `port` and `protocol` combination.
                Additional restrictions:
@@ -33853,16 +38755,20 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
           Not supported for load balancers operating with route mode enabled.
     :attr int port_max: (optional) The inclusive upper bound of the range of ports
           used by this listener. Must not be less than `port_min`.
-          At present, only load balancers operating with route mode enabled support
-          different values for `port_min` and `port_max`.  When route mode is enabled,
-          only a value of
-          `65535` is supported for `port_max`.
+          At present, only load balancers operating with route mode enabled, and public
+          load balancers in the `network` family support different values for `port_min`
+          and
+          `port_max`. When route mode is enabled, the value `65535` must be specified.
+          The specified port range must not overlap with port ranges used by other
+          listeners for this load balancer using the same protocol.
     :attr int port_min: (optional) The inclusive lower bound of the range of ports
           used by this listener. Must not be greater than `port_max`.
-          At present, only load balancers operating with route mode enabled support
-          different values for `port_min` and `port_max`.  When route mode is enabled,
-          only a value of
-          `1` is supported for `port_min`.
+          At present, only load balancers operating with route mode enabled, and public
+          load balancers in the `network` family support different values for `port_min`
+          and
+          `port_max`. When route mode is enabled, the value `1` must be specified.
+          The specified port range must not overlap with port ranges used by other
+          listeners for this load balancer using the same protocol.
     :attr str protocol: The listener protocol. Load balancers in the `network`
           family support `tcp`. Load balancers in the `application` family support `tcp`,
           `http`, and `https`. Each listener in the load balancer must have a unique
@@ -33906,16 +38812,21 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
                Not supported for load balancers operating with route mode enabled.
         :param int port_max: (optional) The inclusive upper bound of the range of
                ports used by this listener. Must not be less than `port_min`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `65535` is supported for `port_max`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `65535` must be
+               specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         :param int port_min: (optional) The inclusive lower bound of the range of
                ports used by this listener. Must not be greater than `port_max`.
-               At present, only load balancers operating with route mode enabled support
-               different values for `port_min` and `port_max`.  When route mode is
-               enabled, only a value of
-               `1` is supported for `port_min`.
+               At present, only load balancers operating with route mode enabled, and
+               public load balancers in the `network` family support different values for
+               `port_min` and
+               `port_max`. When route mode is enabled, the value `1` must be specified.
+               The specified port range must not overlap with port ranges used by other
+               listeners for this load balancer using the same protocol.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.connection_limit = connection_limit
@@ -35087,7 +39998,12 @@ class LoadBalancerPoolMember():
     :attr str health: Health of the server member in the pool.
     :attr str href: The member's canonical URL.
     :attr str id: The unique identifier for this load balancer pool member.
-    :attr int port: The port number of the application running in the server member.
+    :attr int port: The port the member will receive load balancer traffic on.
+          Applies only to load balancer traffic received on a listener with a single port.
+          (If the traffic is received on a listener with a port range, the member will
+          receive the traffic on the same port the listener received it on.)
+          This port will also be used for health checks unless the `port` property of
+          `health_monitor` property is specified.
     :attr str provisioning_status: The provisioning status of this member.
     :attr LoadBalancerPoolMemberTarget target: The pool member target. Load
           balancers in the `network` family support virtual server
@@ -35114,8 +40030,13 @@ class LoadBalancerPoolMember():
         :param str health: Health of the server member in the pool.
         :param str href: The member's canonical URL.
         :param str id: The unique identifier for this load balancer pool member.
-        :param int port: The port number of the application running in the server
-               member.
+        :param int port: The port the member will receive load balancer traffic on.
+               Applies only to load balancer traffic received on a listener with a single
+               port. (If the traffic is received on a listener with a port range, the
+               member will receive the traffic on the same port the listener received it
+               on.)
+               This port will also be used for health checks unless the `port` property of
+               `health_monitor` property is specified.
         :param str provisioning_status: The provisioning status of this member.
         :param LoadBalancerPoolMemberTarget target: The pool member target. Load
                balancers in the `network` family support virtual server
@@ -35297,8 +40218,14 @@ class LoadBalancerPoolMemberPatch():
     """
     LoadBalancerPoolMemberPatch.
 
-    :attr int port: (optional) The port number of the application running in the
-          server member.
+    :attr int port: (optional) The port the member will receive load balancer
+          traffic on. Applies only to load balancer traffic received on a listener with a
+          single port. (If the traffic is received on a listener with a port range, the
+          member will receive the traffic on the same port the listener received it on.)
+          This port will also be used for health checks unless the `port` property of
+          `health_monitor` property is specified.
+          The port must be unique across all members for all pools associated with this
+          pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: (optional) The pool member
           target. Load balancers in the `network` family support virtual server
           instances. Load balancers in the `application` family support IP addresses.
@@ -35315,8 +40242,15 @@ class LoadBalancerPoolMemberPatch():
         """
         Initialize a LoadBalancerPoolMemberPatch object.
 
-        :param int port: (optional) The port number of the application running in
-               the server member.
+        :param int port: (optional) The port the member will receive load balancer
+               traffic on. Applies only to load balancer traffic received on a listener
+               with a single port. (If the traffic is received on a listener with a port
+               range, the member will receive the traffic on the same port the listener
+               received it on.)
+               This port will also be used for health checks unless the `port` property of
+               `health_monitor` property is specified.
+               The port must be unique across all members for all pools associated with
+               this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
                member target. Load balancers in the `network` family support virtual
                server
@@ -35382,7 +40316,14 @@ class LoadBalancerPoolMemberPrototype():
     """
     LoadBalancerPoolMemberPrototype.
 
-    :attr int port: The port number of the application running in the server member.
+    :attr int port: The port the member will receive load balancer traffic on.
+          Applies only to load balancer traffic received on a listener with a single port.
+          (If the traffic is received on a listener with a port range, the member will
+          receive the traffic on the same port the listener received it on.)
+          This port will also be used for health checks unless the `port` property of
+          `health_monitor` property is specified.
+          The port must be unique across all members for all pools associated with this
+          pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: The pool member target. Load
           balancers in the `network` family support virtual server
           instances. Load balancers in the `application` family support IP addresses.
@@ -35399,8 +40340,15 @@ class LoadBalancerPoolMemberPrototype():
         """
         Initialize a LoadBalancerPoolMemberPrototype object.
 
-        :param int port: The port number of the application running in the server
-               member.
+        :param int port: The port the member will receive load balancer traffic on.
+               Applies only to load balancer traffic received on a listener with a single
+               port. (If the traffic is received on a listener with a port range, the
+               member will receive the traffic on the same port the listener received it
+               on.)
+               This port will also be used for health checks unless the `port` property of
+               `health_monitor` property is specified.
+               The port must be unique across all members for all pools associated with
+               this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
                instances. Load balancers in the `application` family support IP addresses.
@@ -38688,8 +43636,8 @@ class NetworkInterface():
     :attr str primary_ipv4_address: The primary IPv4 address.
           If the address has not yet been selected, the value will be `0.0.0.0`.
     :attr str resource_type: The resource type.
-    :attr List[SecurityGroupReference] security_groups: Collection of security
-          groups.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this network interface.
     :attr str status: The status of the network interface.
     :attr SubnetReference subnet: The associated subnet.
     :attr str type: The type of this network interface as it relates to an instance.
@@ -38725,8 +43673,8 @@ class NetworkInterface():
         :param str primary_ipv4_address: The primary IPv4 address.
                If the address has not yet been selected, the value will be `0.0.0.0`.
         :param str resource_type: The resource type.
-        :param List[SecurityGroupReference] security_groups: Collection of security
-               groups.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this network interface.
         :param str status: The status of the network interface.
         :param SubnetReference subnet: The associated subnet.
         :param str type: The type of this network interface as it relates to an
@@ -38882,6 +43830,193 @@ class NetworkInterface():
         PRIMARY = 'primary'
         SECONDARY = 'secondary'
 
+
+class NetworkInterfaceBareMetalServerContextReference():
+    """
+    NetworkInterfaceBareMetalServerContextReference.
+
+    :attr NetworkInterfaceBareMetalServerContextReferenceDeleted deleted: (optional)
+          If present, this property indicates the referenced resource has been deleted and
+          provides
+          some supplementary information.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
+    :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr str resource_type: The resource type.
+    :attr SubnetReference subnet: The associated subnet.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 primary_ipv4_address: str,
+                 resource_type: str,
+                 subnet: 'SubnetReference',
+                 *,
+                 deleted: 'NetworkInterfaceBareMetalServerContextReferenceDeleted' = None) -> None:
+        """
+        Initialize a NetworkInterfaceBareMetalServerContextReference object.
+
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
+        :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param str resource_type: The resource type.
+        :param SubnetReference subnet: The associated subnet.
+        :param NetworkInterfaceBareMetalServerContextReferenceDeleted deleted:
+               (optional) If present, this property indicates the referenced resource has
+               been deleted and provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.primary_ipv4_address = primary_ipv4_address
+        self.resource_type = resource_type
+        self.subnet = subnet
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceBareMetalServerContextReference':
+        """Initialize a NetworkInterfaceBareMetalServerContextReference object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = NetworkInterfaceBareMetalServerContextReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        else:
+            raise ValueError('Required property \'primary_ipv4_address\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        if 'subnet' in _dict:
+            args['subnet'] = SubnetReference.from_dict(_dict.get('subnet'))
+        else:
+            raise ValueError('Required property \'subnet\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkInterfaceBareMetalServerContextReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            _dict['subnet'] = self.subnet.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkInterfaceBareMetalServerContextReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkInterfaceBareMetalServerContextReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkInterfaceBareMetalServerContextReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
+class NetworkInterfaceBareMetalServerContextReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a NetworkInterfaceBareMetalServerContextReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceBareMetalServerContextReferenceDeleted':
+        """Initialize a NetworkInterfaceBareMetalServerContextReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in NetworkInterfaceBareMetalServerContextReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkInterfaceBareMetalServerContextReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkInterfaceBareMetalServerContextReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkInterfaceBareMetalServerContextReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkInterfaceBareMetalServerContextReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 class NetworkInterfaceCollection():
     """
@@ -39371,8 +44506,9 @@ class NetworkInterfacePrototype():
     :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
           specified, it must be an available address on the network interface's subnet. If
           unspecified, an available address on the subnet will be automatically selected.
-    :attr List[SecurityGroupIdentity] security_groups: (optional) Collection of
-          security groups.
+    :attr List[SecurityGroupIdentity] security_groups: (optional) The security
+          groups to use for this network interface. If unspecified, the VPC's default
+          security group is used.
     :attr SubnetIdentity subnet: The associated subnet.
     """
 
@@ -39399,8 +44535,9 @@ class NetworkInterfacePrototype():
                specified, it must be an available address on the network interface's
                subnet. If unspecified, an available address on the subnet will be
                automatically selected.
-        :param List[SecurityGroupIdentity] security_groups: (optional) Collection
-               of security groups.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
         """
         self.allow_ip_spoofing = allow_ip_spoofing
         self.name = name
@@ -41229,7 +46366,7 @@ class PublicGatewayIdentity():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['PublicGatewayIdentityById', 'PublicGatewayIdentityByCRN', 'PublicGatewayIdentityByHref']))
+                  ", ".join(['PublicGatewayIdentityPublicGatewayIdentityById', 'PublicGatewayIdentityPublicGatewayIdentityByCRN', 'PublicGatewayIdentityPublicGatewayIdentityByHref']))
         raise Exception(msg)
 
 class PublicGatewayPatch():
@@ -42560,7 +47697,8 @@ class ReservedIPTarget():
 
 class ReservedIPTargetPrototype():
     """
-    The target this reserved IP is to be bound to.
+    The target this reserved IP is to be bound to. The target must be an endpoint gateway
+    not already bound to a reserved IP in the subnet's zone.
 
     """
 
@@ -45557,7 +50695,7 @@ class SecurityGroupTargetReference():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext', 'SecurityGroupTargetReferenceLoadBalancerReference']))
+                  ", ".join(['SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext', 'SecurityGroupTargetReferenceLoadBalancerReference', 'SecurityGroupTargetReferenceEndpointGatewayReference']))
         raise Exception(msg)
 
 class Snapshot():
@@ -45566,6 +50704,10 @@ class Snapshot():
 
     :attr bool bootable: Indicates if a boot volume attachment can be created with a
           volume created from this snapshot.
+    :attr datetime captured_at: (optional) The date and time the data capture for
+          this snapshot was completed.
+          If absent, this snapshot's data has not yet been captured. Additionally, this
+          property may be absent for snapshots created before 1 January 2022.
     :attr datetime created_at: The date and time that this snapshot was created.
     :attr str crn: The CRN for this snapshot.
     :attr bool deletable: Indicates whether this snapshot can be deleted. This value
@@ -45612,6 +50754,7 @@ class Snapshot():
                  size: int,
                  source_volume: 'VolumeReference',
                  *,
+                 captured_at: datetime = None,
                  encryption_key: 'EncryptionKeyReference' = None,
                  operating_system: 'OperatingSystem' = None,
                  source_image: 'ImageReference' = None) -> None:
@@ -45640,6 +50783,10 @@ class Snapshot():
         :param VolumeReference source_volume: The source volume this snapshot was
                created from (may be
                [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
+        :param datetime captured_at: (optional) The date and time the data capture
+               for this snapshot was completed.
+               If absent, this snapshot's data has not yet been captured. Additionally,
+               this property may be absent for snapshots created before 1 January 2022.
         :param EncryptionKeyReference encryption_key: (optional) The root key used
                to wrap the data encryption key for the source volume.
                This property will be present for volumes with an `encryption` type of
@@ -45651,6 +50798,7 @@ class Snapshot():
                provisioned.
         """
         self.bootable = bootable
+        self.captured_at = captured_at
         self.created_at = created_at
         self.crn = crn
         self.deletable = deletable
@@ -45676,6 +50824,8 @@ class Snapshot():
             args['bootable'] = _dict.get('bootable')
         else:
             raise ValueError('Required property \'bootable\' not present in Snapshot JSON')
+        if 'captured_at' in _dict:
+            args['captured_at'] = string_to_datetime(_dict.get('captured_at'))
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -45746,6 +50896,8 @@ class Snapshot():
         _dict = {}
         if hasattr(self, 'bootable') and self.bootable is not None:
             _dict['bootable'] = self.bootable
+        if hasattr(self, 'captured_at') and self.captured_at is not None:
+            _dict['captured_at'] = datetime_to_string(self.captured_at)
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
@@ -46301,7 +51453,7 @@ class Subnet():
     :attr str name: The user-defined name for this subnet.
     :attr NetworkACLReference network_acl: The network ACL for this subnet.
     :attr PublicGatewayReference public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
+          use for internet-bound traffic for this subnet.
     :attr ResourceGroupReference resource_group: The resource group for this subnet.
     :attr RoutingTableReference routing_table: The routing table for this subnet.
     :attr str status: The status of the subnet.
@@ -46360,7 +51512,7 @@ class Subnet():
         :param VPCReference vpc: The VPC this subnet is a part of.
         :param ZoneReference zone: The zone this subnet resides in.
         :param PublicGatewayReference public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+               to use for internet-bound traffic for this subnet.
         """
         self.available_ipv4_address_count = available_ipv4_address_count
         self.created_at = created_at
@@ -46761,8 +51913,8 @@ class SubnetPatch():
           unique within the VPC the subnet resides in.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
           subnet.
-    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
+    :attr SubnetPublicGatewayPatch public_gateway: (optional) The public gateway to
+          use for internet-bound traffic for this subnet.
     :attr RoutingTableIdentity routing_table: (optional) The routing table to use
           for this subnet.  The routing table properties
           `route_direct_link_ingress`, `route_transit_gateway_ingress`, and
@@ -46773,7 +51925,7 @@ class SubnetPatch():
                  *,
                  name: str = None,
                  network_acl: 'NetworkACLIdentity' = None,
-                 public_gateway: 'PublicGatewayIdentity' = None,
+                 public_gateway: 'SubnetPublicGatewayPatch' = None,
                  routing_table: 'RoutingTableIdentity' = None) -> None:
         """
         Initialize a SubnetPatch object.
@@ -46782,8 +51934,8 @@ class SubnetPatch():
                must be unique within the VPC the subnet resides in.
         :param NetworkACLIdentity network_acl: (optional) The network ACL to use
                for this subnet.
-        :param PublicGatewayIdentity public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+        :param SubnetPublicGatewayPatch public_gateway: (optional) The public
+               gateway to use for internet-bound traffic for this subnet.
         :param RoutingTableIdentity routing_table: (optional) The routing table to
                use for this subnet.  The routing table properties
                `route_direct_link_ingress`, `route_transit_gateway_ingress`, and
@@ -46863,8 +52015,9 @@ class SubnetPrototype():
           hyphenated list of randomly-selected words.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
           subnet.
-    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
+    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to use
+          for internet-bound traffic for this subnet. If
+          unspecified, the subnet will not be attached to a public gateway.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
@@ -46896,7 +52049,8 @@ class SubnetPrototype():
         :param NetworkACLIdentity network_acl: (optional) The network ACL to use
                for this subnet.
         :param PublicGatewayIdentity public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+               to use for internet-bound traffic for this subnet. If
+               unspecified, the subnet will not be attached to a public gateway.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -46918,6 +52072,21 @@ class SubnetPrototype():
         """
         IPV4 = 'ipv4'
 
+
+class SubnetPublicGatewayPatch():
+    """
+    The public gateway to use for internet-bound traffic for this subnet.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a SubnetPublicGatewayPatch object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['SubnetPublicGatewayPatchPublicGatewayIdentityById', 'SubnetPublicGatewayPatchPublicGatewayIdentityByCRN', 'SubnetPublicGatewayPatchPublicGatewayIdentityByHref']))
+        raise Exception(msg)
 
 class SubnetReference():
     """
@@ -51964,6 +57133,3402 @@ class ZoneReference():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class BareMetalServerBootTargetBareMetalServerDiskReference(BareMetalServerBootTarget):
+    """
+    BareMetalServerBootTargetBareMetalServerDiskReference.
+
+    :attr BareMetalServerDiskReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this bare metal server disk.
+    :attr str id: The unique identifier for this bare metal server disk.
+    :attr str name: The user-defined name for this disk.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'BareMetalServerDiskReferenceDeleted' = None) -> None:
+        """
+        Initialize a BareMetalServerBootTargetBareMetalServerDiskReference object.
+
+        :param str href: The URL for this bare metal server disk.
+        :param str id: The unique identifier for this bare metal server disk.
+        :param str name: The user-defined name for this disk.
+        :param str resource_type: The resource type.
+        :param BareMetalServerDiskReferenceDeleted deleted: (optional) If present,
+               this property indicates the referenced resource has been deleted and
+               provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerBootTargetBareMetalServerDiskReference':
+        """Initialize a BareMetalServerBootTargetBareMetalServerDiskReference object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = BareMetalServerDiskReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerBootTargetBareMetalServerDiskReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BareMetalServerBootTargetBareMetalServerDiskReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerBootTargetBareMetalServerDiskReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerBootTargetBareMetalServerDiskReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerBootTargetBareMetalServerDiskReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerBootTargetBareMetalServerDiskReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerBootTargetBareMetalServerDiskReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerBootTargetBareMetalServerDiskReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BARE_METAL_SERVER_DISK = 'bare_metal_server_disk'
+
+
+class BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount(BareMetalServerInitializationUserAccount):
+    """
+    BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount.
+
+    :attr bytes encrypted_password: The password at initialization, encrypted using
+          `encryption_key`, and returned base64-encoded.
+    :attr KeyReference encryption_key: The public SSH key used to encrypt the
+          password.
+    :attr str resource_type: The resource type.
+    :attr str username: The username for the account created at initialization.
+    """
+
+    def __init__(self,
+                 encrypted_password: bytes,
+                 encryption_key: 'KeyReference',
+                 resource_type: str,
+                 username: str) -> None:
+        """
+        Initialize a BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount object.
+
+        :param bytes encrypted_password: The password at initialization, encrypted
+               using `encryption_key`, and returned base64-encoded.
+        :param KeyReference encryption_key: The public SSH key used to encrypt the
+               password.
+        :param str resource_type: The resource type.
+        :param str username: The username for the account created at
+               initialization.
+        """
+        # pylint: disable=super-init-not-called
+        self.encrypted_password = encrypted_password
+        self.encryption_key = encryption_key
+        self.resource_type = resource_type
+        self.username = username
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount':
+        """Initialize a BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount object from a json dictionary."""
+        args = {}
+        if 'encrypted_password' in _dict:
+            args['encrypted_password'] = base64.b64decode(_dict.get('encrypted_password'))
+        else:
+            raise ValueError('Required property \'encrypted_password\' not present in BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount JSON')
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = KeyReference.from_dict(_dict.get('encryption_key'))
+        else:
+            raise ValueError('Required property \'encryption_key\' not present in BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount JSON')
+        if 'username' in _dict:
+            args['username'] = _dict.get('username')
+        else:
+            raise ValueError('Required property \'username\' not present in BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'encrypted_password') and self.encrypted_password is not None:
+            _dict['encrypted_password'] = str(base64.b64encode(self.encrypted_password), 'utf-8')
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            _dict['encryption_key'] = self.encryption_key.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerInitializationUserAccountBareMetalServerInitializationHostUserAccount') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        HOST_USER_ACCOUNT = 'host_user_account'
+
+
+class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
+    """
+    BareMetalServerNetworkInterfaceByPCI.
+
+    :attr bool allow_ip_spoofing: Indicates whether source IP spoofing is allowed on
+          this interface. If false, source IP spoofing is prevented on this interface. If
+          true, source IP spoofing is allowed on this interface.
+    :attr datetime created_at: The date and time that the network interface was
+          created.
+    :attr bool enable_infrastructure_nat: If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
+          associated with this network interface.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str mac_address: The MAC address of the interface.  If absent, the value
+          is not known.
+    :attr str name: The user-defined name for this network interface.
+    :attr int port_speed: The network interface port speed in Mbps.
+    :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this network interface.
+    :attr str status: The status of the network interface.
+    :attr SubnetReference subnet: The associated subnet.
+    :attr str type: The type of this bare metal server network interface.
+    :attr List[int] allowed_vlans: Indicates what VLAN IDs (for VLAN type only) can
+          use this physical (PCI type) interface. A given VLAN can only be in the
+          `allowed_vlans` array for one PCI type adapter per bare metal server.
+    """
+
+    def __init__(self,
+                 allow_ip_spoofing: bool,
+                 created_at: datetime,
+                 enable_infrastructure_nat: bool,
+                 href: str,
+                 id: str,
+                 interface_type: str,
+                 mac_address: str,
+                 name: str,
+                 port_speed: int,
+                 primary_ipv4_address: str,
+                 resource_type: str,
+                 security_groups: List['SecurityGroupReference'],
+                 status: str,
+                 subnet: 'SubnetReference',
+                 type: str,
+                 allowed_vlans: List[int],
+                 *,
+                 floating_ips: List['FloatingIPReference'] = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfaceByPCI object.
+
+        :param bool allow_ip_spoofing: Indicates whether source IP spoofing is
+               allowed on this interface. If false, source IP spoofing is prevented on
+               this interface. If true, source IP spoofing is allowed on this interface.
+        :param datetime created_at: The date and time that the network interface
+               was created.
+        :param bool enable_infrastructure_nat: If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param str mac_address: The MAC address of the interface.  If absent, the
+               value is not known.
+        :param str name: The user-defined name for this network interface.
+        :param int port_speed: The network interface port speed in Mbps.
+        :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param str resource_type: The resource type.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this network interface.
+        :param str status: The status of the network interface.
+        :param SubnetReference subnet: The associated subnet.
+        :param str type: The type of this bare metal server network interface.
+        :param List[int] allowed_vlans: Indicates what VLAN IDs (for VLAN type
+               only) can use this physical (PCI type) interface. A given VLAN can only be
+               in the `allowed_vlans` array for one PCI type adapter per bare metal
+               server.
+        :param List[FloatingIPReference] floating_ips: (optional) The floating IPs
+               associated with this network interface.
+        """
+        # pylint: disable=super-init-not-called
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.created_at = created_at
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.floating_ips = floating_ips
+        self.href = href
+        self.id = id
+        self.interface_type = interface_type
+        self.mac_address = mac_address
+        self.name = name
+        self.port_speed = port_speed
+        self.primary_ipv4_address = primary_ipv4_address
+        self.resource_type = resource_type
+        self.security_groups = security_groups
+        self.status = status
+        self.subnet = subnet
+        self.type = type
+        self.allowed_vlans = allowed_vlans
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceByPCI':
+        """Initialize a BareMetalServerNetworkInterfaceByPCI object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        else:
+            raise ValueError('Required property \'allow_ip_spoofing\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        else:
+            raise ValueError('Required property \'enable_infrastructure_nat\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'floating_ips' in _dict:
+            args['floating_ips'] = [FloatingIPReference.from_dict(x) for x in _dict.get('floating_ips')]
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'mac_address' in _dict:
+            args['mac_address'] = _dict.get('mac_address')
+        else:
+            raise ValueError('Required property \'mac_address\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'port_speed' in _dict:
+            args['port_speed'] = _dict.get('port_speed')
+        else:
+            raise ValueError('Required property \'port_speed\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        else:
+            raise ValueError('Required property \'primary_ipv4_address\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'security_groups' in _dict:
+            args['security_groups'] = [SecurityGroupReference.from_dict(x) for x in _dict.get('security_groups')]
+        else:
+            raise ValueError('Required property \'security_groups\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError('Required property \'status\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'subnet' in _dict:
+            args['subnet'] = SubnetReference.from_dict(_dict.get('subnet'))
+        else:
+            raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'allowed_vlans' in _dict:
+            args['allowed_vlans'] = _dict.get('allowed_vlans')
+        else:
+            raise ValueError('Required property \'allowed_vlans\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfaceByPCI object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
+            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'mac_address') and self.mac_address is not None:
+            _dict['mac_address'] = self.mac_address
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'port_speed') and self.port_speed is not None:
+            _dict['port_speed'] = self.port_speed
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            _dict['security_groups'] = [x.to_dict() for x in self.security_groups]
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
+            _dict['allowed_vlans'] = self.allowed_vlans
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfaceByPCI object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfaceByPCI') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfaceByPCI') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the network interface.
+        """
+        AVAILABLE = 'available'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+
+
+    class TypeEnum(str, Enum):
+        """
+        The type of this bare metal server network interface.
+        """
+        PRIMARY = 'primary'
+        SECONDARY = 'secondary'
+
+
+class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
+    """
+    BareMetalServerNetworkInterfaceByVLAN.
+
+    :attr bool allow_ip_spoofing: Indicates whether source IP spoofing is allowed on
+          this interface. If false, source IP spoofing is prevented on this interface. If
+          true, source IP spoofing is allowed on this interface.
+    :attr datetime created_at: The date and time that the network interface was
+          created.
+    :attr bool enable_infrastructure_nat: If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
+          associated with this network interface.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str mac_address: The MAC address of the interface.  If absent, the value
+          is not known.
+    :attr str name: The user-defined name for this network interface.
+    :attr int port_speed: The network interface port speed in Mbps.
+    :attr str primary_ipv4_address: The primary IPv4 address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this network interface.
+    :attr str status: The status of the network interface.
+    :attr SubnetReference subnet: The associated subnet.
+    :attr str type: The type of this bare metal server network interface.
+    :attr bool allow_interface_to_float: Indicates if the interface can float to any
+          other server within the same
+          `resource_group`. The interface will float automatically if the network detects
+          a GARP or RARP on another bare metal server in the resource group.  Applies only
+          to `vlan` type interfaces.
+    :attr int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
+          traffic on this interface.
+    """
+
+    def __init__(self,
+                 allow_ip_spoofing: bool,
+                 created_at: datetime,
+                 enable_infrastructure_nat: bool,
+                 href: str,
+                 id: str,
+                 interface_type: str,
+                 mac_address: str,
+                 name: str,
+                 port_speed: int,
+                 primary_ipv4_address: str,
+                 resource_type: str,
+                 security_groups: List['SecurityGroupReference'],
+                 status: str,
+                 subnet: 'SubnetReference',
+                 type: str,
+                 allow_interface_to_float: bool,
+                 vlan: int,
+                 *,
+                 floating_ips: List['FloatingIPReference'] = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfaceByVLAN object.
+
+        :param bool allow_ip_spoofing: Indicates whether source IP spoofing is
+               allowed on this interface. If false, source IP spoofing is prevented on
+               this interface. If true, source IP spoofing is allowed on this interface.
+        :param datetime created_at: The date and time that the network interface
+               was created.
+        :param bool enable_infrastructure_nat: If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param str mac_address: The MAC address of the interface.  If absent, the
+               value is not known.
+        :param str name: The user-defined name for this network interface.
+        :param int port_speed: The network interface port speed in Mbps.
+        :param str primary_ipv4_address: The primary IPv4 address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param str resource_type: The resource type.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this network interface.
+        :param str status: The status of the network interface.
+        :param SubnetReference subnet: The associated subnet.
+        :param str type: The type of this bare metal server network interface.
+        :param bool allow_interface_to_float: Indicates if the interface can float
+               to any other server within the same
+               `resource_group`. The interface will float automatically if the network
+               detects a GARP or RARP on another bare metal server in the resource group.
+               Applies only to `vlan` type interfaces.
+        :param int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
+               traffic on this interface.
+        :param List[FloatingIPReference] floating_ips: (optional) The floating IPs
+               associated with this network interface.
+        """
+        # pylint: disable=super-init-not-called
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.created_at = created_at
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.floating_ips = floating_ips
+        self.href = href
+        self.id = id
+        self.interface_type = interface_type
+        self.mac_address = mac_address
+        self.name = name
+        self.port_speed = port_speed
+        self.primary_ipv4_address = primary_ipv4_address
+        self.resource_type = resource_type
+        self.security_groups = security_groups
+        self.status = status
+        self.subnet = subnet
+        self.type = type
+        self.allow_interface_to_float = allow_interface_to_float
+        self.vlan = vlan
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceByVLAN':
+        """Initialize a BareMetalServerNetworkInterfaceByVLAN object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        else:
+            raise ValueError('Required property \'allow_ip_spoofing\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        else:
+            raise ValueError('Required property \'enable_infrastructure_nat\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'floating_ips' in _dict:
+            args['floating_ips'] = [FloatingIPReference.from_dict(x) for x in _dict.get('floating_ips')]
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'mac_address' in _dict:
+            args['mac_address'] = _dict.get('mac_address')
+        else:
+            raise ValueError('Required property \'mac_address\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'port_speed' in _dict:
+            args['port_speed'] = _dict.get('port_speed')
+        else:
+            raise ValueError('Required property \'port_speed\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        else:
+            raise ValueError('Required property \'primary_ipv4_address\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'security_groups' in _dict:
+            args['security_groups'] = [SecurityGroupReference.from_dict(x) for x in _dict.get('security_groups')]
+        else:
+            raise ValueError('Required property \'security_groups\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError('Required property \'status\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'subnet' in _dict:
+            args['subnet'] = SubnetReference.from_dict(_dict.get('subnet'))
+        else:
+            raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'allow_interface_to_float' in _dict:
+            args['allow_interface_to_float'] = _dict.get('allow_interface_to_float')
+        else:
+            raise ValueError('Required property \'allow_interface_to_float\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'vlan' in _dict:
+            args['vlan'] = _dict.get('vlan')
+        else:
+            raise ValueError('Required property \'vlan\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfaceByVLAN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'floating_ips') and self.floating_ips is not None:
+            _dict['floating_ips'] = [x.to_dict() for x in self.floating_ips]
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'mac_address') and self.mac_address is not None:
+            _dict['mac_address'] = self.mac_address
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'port_speed') and self.port_speed is not None:
+            _dict['port_speed'] = self.port_speed
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            _dict['security_groups'] = [x.to_dict() for x in self.security_groups]
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'allow_interface_to_float') and self.allow_interface_to_float is not None:
+            _dict['allow_interface_to_float'] = self.allow_interface_to_float
+        if hasattr(self, 'vlan') and self.vlan is not None:
+            _dict['vlan'] = self.vlan
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfaceByVLAN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfaceByVLAN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfaceByVLAN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the network interface.
+        """
+        AVAILABLE = 'available'
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+
+
+    class TypeEnum(str, Enum):
+        """
+        The type of this bare metal server network interface.
+        """
+        PRIMARY = 'primary'
+        SECONDARY = 'secondary'
+
+
+class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype(BareMetalServerNetworkInterfacePrototype):
+    """
+    BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype.
+
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
+    :attr bool enable_infrastructure_nat: (optional) If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
+          specified, it must be an available address on the network interface's subnet. If
+          unspecified, an available address on the subnet will be automatically selected.
+    :attr List[SecurityGroupIdentity] security_groups: (optional) The security
+          groups to use for this network interface. If unspecified, the VPC's default
+          security group is used.
+    :attr SubnetIdentity subnet: The associated subnet.
+    :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
+          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          the `allowed_vlans` array for one PCI type adapter per bare metal server.
+    """
+
+    def __init__(self,
+                 interface_type: str,
+                 subnet: 'SubnetIdentity',
+                 *,
+                 allow_ip_spoofing: bool = None,
+                 enable_infrastructure_nat: bool = None,
+                 name: str = None,
+                 primary_ipv4_address: str = None,
+                 security_groups: List['SecurityGroupIdentity'] = None,
+                 allowed_vlans: List[int] = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype object.
+
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param SubnetIdentity subnet: The associated subnet.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
+        :param bool enable_infrastructure_nat: (optional) If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
+               specified, it must be an available address on the network interface's
+               subnet. If unspecified, an available address on the subnet will be
+               automatically selected.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
+        :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
+               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               can only be in the `allowed_vlans` array for one PCI type adapter per bare
+               metal server.
+        """
+        # pylint: disable=super-init-not-called
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.interface_type = interface_type
+        self.name = name
+        self.primary_ipv4_address = primary_ipv4_address
+        self.security_groups = security_groups
+        self.subnet = subnet
+        self.allowed_vlans = allowed_vlans
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype':
+        """Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'security_groups' in _dict:
+            args['security_groups'] = _dict.get('security_groups')
+        if 'subnet' in _dict:
+            args['subnet'] = _dict.get('subnet')
+        else:
+            raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
+        if 'allowed_vlans' in _dict:
+            args['allowed_vlans'] = _dict.get('allowed_vlans')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            security_groups_list = []
+            for x in self.security_groups:
+                if isinstance(x, dict):
+                    security_groups_list.append(x)
+                else:
+                    security_groups_list.append(x.to_dict())
+            _dict['security_groups'] = security_groups_list
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
+            _dict['allowed_vlans'] = self.allowed_vlans
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype(BareMetalServerNetworkInterfacePrototype):
+    """
+    BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype.
+
+    :attr bool allow_ip_spoofing: (optional) Indicates whether source IP spoofing is
+          allowed on this interface. If false, source IP spoofing is prevented on this
+          interface. If true, source IP spoofing is allowed on this interface.
+    :attr bool enable_infrastructure_nat: (optional) If `true`:
+             - The VPC infrastructure performs any needed NAT operations.
+             - A single floating IP can be assigned to the network interface.
+          If `false`:
+             - The packet is passed unmodified to/from the network interface,
+               allowing the workload to perform any needed NAT operations.
+             - Multiple floating IPs can be assigned to the network interface.
+             - `allow_ip_spoofing` must be set to `false`.
+    :attr str interface_type: The network interface type:
+          - `pci`: a physical PCI device which can only be created or deleted when the
+          bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the pci interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
+          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
+          its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
+    :attr str name: (optional) The user-defined name for network interface. Names
+          must be unique within the instance the network interface resides in. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
+          specified, it must be an available address on the network interface's subnet. If
+          unspecified, an available address on the subnet will be automatically selected.
+    :attr List[SecurityGroupIdentity] security_groups: (optional) The security
+          groups to use for this network interface. If unspecified, the VPC's default
+          security group is used.
+    :attr SubnetIdentity subnet: The associated subnet.
+    :attr bool allow_interface_to_float: (optional) Indicates if the interface can
+          float to any other server within the same
+          `resource_group`. The interface will float automatically if the network detects
+          a GARP or RARP on another bare metal server in the resource group.  Applies only
+          to `vlan` type interfaces.
+    :attr int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
+          traffic on this interface.
+    """
+
+    def __init__(self,
+                 interface_type: str,
+                 subnet: 'SubnetIdentity',
+                 vlan: int,
+                 *,
+                 allow_ip_spoofing: bool = None,
+                 enable_infrastructure_nat: bool = None,
+                 name: str = None,
+                 primary_ipv4_address: str = None,
+                 security_groups: List['SecurityGroupIdentity'] = None,
+                 allow_interface_to_float: bool = None) -> None:
+        """
+        Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype object.
+
+        :param str interface_type: The network interface type:
+               - `pci`: a physical PCI device which can only be created or deleted when
+               the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the pci interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
+               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
+               in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
+        :param SubnetIdentity subnet: The associated subnet.
+        :param int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
+               traffic on this interface.
+        :param bool allow_ip_spoofing: (optional) Indicates whether source IP
+               spoofing is allowed on this interface. If false, source IP spoofing is
+               prevented on this interface. If true, source IP spoofing is allowed on this
+               interface.
+        :param bool enable_infrastructure_nat: (optional) If `true`:
+                  - The VPC infrastructure performs any needed NAT operations.
+                  - A single floating IP can be assigned to the network interface.
+               If `false`:
+                  - The packet is passed unmodified to/from the network interface,
+                    allowing the workload to perform any needed NAT operations.
+                  - Multiple floating IPs can be assigned to the network interface.
+                  - `allow_ip_spoofing` must be set to `false`.
+        :param str name: (optional) The user-defined name for network interface.
+               Names must be unique within the instance the network interface resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
+               specified, it must be an available address on the network interface's
+               subnet. If unspecified, an available address on the subnet will be
+               automatically selected.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this network interface. If unspecified, the VPC's default
+               security group is used.
+        :param bool allow_interface_to_float: (optional) Indicates if the interface
+               can float to any other server within the same
+               `resource_group`. The interface will float automatically if the network
+               detects a GARP or RARP on another bare metal server in the resource group.
+               Applies only to `vlan` type interfaces.
+        """
+        # pylint: disable=super-init-not-called
+        self.allow_ip_spoofing = allow_ip_spoofing
+        self.enable_infrastructure_nat = enable_infrastructure_nat
+        self.interface_type = interface_type
+        self.name = name
+        self.primary_ipv4_address = primary_ipv4_address
+        self.security_groups = security_groups
+        self.subnet = subnet
+        self.allow_interface_to_float = allow_interface_to_float
+        self.vlan = vlan
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype':
+        """Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype object from a json dictionary."""
+        args = {}
+        if 'allow_ip_spoofing' in _dict:
+            args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
+        if 'enable_infrastructure_nat' in _dict:
+            args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'primary_ipv4_address' in _dict:
+            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'security_groups' in _dict:
+            args['security_groups'] = _dict.get('security_groups')
+        if 'subnet' in _dict:
+            args['subnet'] = _dict.get('subnet')
+        else:
+            raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
+        if 'allow_interface_to_float' in _dict:
+            args['allow_interface_to_float'] = _dict.get('allow_interface_to_float')
+        if 'vlan' in _dict:
+            args['vlan'] = _dict.get('vlan')
+        else:
+            raise ValueError('Required property \'vlan\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allow_ip_spoofing') and self.allow_ip_spoofing is not None:
+            _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
+        if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
+            _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
+            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            security_groups_list = []
+            for x in self.security_groups:
+                if isinstance(x, dict):
+                    security_groups_list.append(x)
+                else:
+                    security_groups_list.append(x.to_dict())
+            _dict['security_groups'] = security_groups_list
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'allow_interface_to_float') and self.allow_interface_to_float is not None:
+            _dict['allow_interface_to_float'] = self.allow_interface_to_float
+        if hasattr(self, 'vlan') and self.vlan is not None:
+            _dict['vlan'] = self.vlan
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class InterfaceTypeEnum(str, Enum):
+        """
+        The network interface type:
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the pci interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        PCI = 'pci'
+        VLAN = 'vlan'
+
+
+class BareMetalServerProfileBandwidthDependent(BareMetalServerProfileBandwidth):
+    """
+    The total bandwidth shared across the network interfaces of a bare metal server with
+    this profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileBandwidthDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileBandwidthDependent':
+        """Initialize a BareMetalServerProfileBandwidthDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileBandwidthDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileBandwidthDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileBandwidthDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileBandwidthDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileBandwidthDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileBandwidthEnum(BareMetalServerProfileBandwidth):
+    """
+    The permitted total bandwidth values (in megabits per second) shared across the
+    network interfaces of a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileBandwidthEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileBandwidthEnum':
+        """Initialize a BareMetalServerProfileBandwidthEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileBandwidthEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileBandwidthEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileBandwidthEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileBandwidthEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileBandwidthEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileBandwidthEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileBandwidthEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileBandwidthFixed(BareMetalServerProfileBandwidth):
+    """
+    The total bandwidth (in megabits per second) shared across the network interfaces of a
+    bare metal server with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileBandwidthFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileBandwidthFixed':
+        """Initialize a BareMetalServerProfileBandwidthFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileBandwidthFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileBandwidthFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileBandwidthFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileBandwidthFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileBandwidthFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileBandwidthFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileBandwidthRange(BareMetalServerProfileBandwidth):
+    """
+    The permitted total bandwidth range (in megabits per second) shared across the network
+    interfaces of a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileBandwidthRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileBandwidthRange':
+        """Initialize a BareMetalServerProfileBandwidthRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileBandwidthRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileBandwidthRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileBandwidthRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileBandwidthRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileBandwidthRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileBandwidthRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileBandwidthRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileBandwidthRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileBandwidthRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class BareMetalServerProfileCPUCoreCountDependent(BareMetalServerProfileCPUCoreCount):
+    """
+    The CPU core count for a bare metal server with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUCoreCountDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUCoreCountDependent':
+        """Initialize a BareMetalServerProfileCPUCoreCountDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUCoreCountDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUCoreCountDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUCoreCountDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUCoreCountDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUCoreCountDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileCPUCoreCountEnum(BareMetalServerProfileCPUCoreCount):
+    """
+    The permitted values for CPU cores for a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUCoreCountEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUCoreCountEnum':
+        """Initialize a BareMetalServerProfileCPUCoreCountEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileCPUCoreCountEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUCoreCountEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileCPUCoreCountEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUCoreCountEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUCoreCountEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUCoreCountEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUCoreCountEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileCPUCoreCountFixed(BareMetalServerProfileCPUCoreCount):
+    """
+    The CPU core count for a bare metal server with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUCoreCountFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUCoreCountFixed':
+        """Initialize a BareMetalServerProfileCPUCoreCountFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUCoreCountFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileCPUCoreCountFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUCoreCountFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUCoreCountFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUCoreCountFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUCoreCountFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileCPUCoreCountRange(BareMetalServerProfileCPUCoreCount):
+    """
+    The permitted range for the number of CPU cores for a bare metal server with this
+    profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUCoreCountRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUCoreCountRange':
+        """Initialize a BareMetalServerProfileCPUCoreCountRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileCPUCoreCountRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileCPUCoreCountRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileCPUCoreCountRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileCPUCoreCountRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUCoreCountRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUCoreCountRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUCoreCountRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUCoreCountRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUCoreCountRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class BareMetalServerProfileCPUSocketCountDependent(BareMetalServerProfileCPUSocketCount):
+    """
+    The CPU socket count for a bare metal server with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUSocketCountDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUSocketCountDependent':
+        """Initialize a BareMetalServerProfileCPUSocketCountDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUSocketCountDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUSocketCountDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUSocketCountDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUSocketCountDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUSocketCountDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileCPUSocketCountEnum(BareMetalServerProfileCPUSocketCount):
+    """
+    The permitted values for CPU sockets for a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUSocketCountEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUSocketCountEnum':
+        """Initialize a BareMetalServerProfileCPUSocketCountEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileCPUSocketCountEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUSocketCountEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileCPUSocketCountEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUSocketCountEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUSocketCountEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUSocketCountEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUSocketCountEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileCPUSocketCountFixed(BareMetalServerProfileCPUSocketCount):
+    """
+    The number of CPU sockets for a bare metal server with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUSocketCountFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUSocketCountFixed':
+        """Initialize a BareMetalServerProfileCPUSocketCountFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUSocketCountFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileCPUSocketCountFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUSocketCountFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUSocketCountFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUSocketCountFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUSocketCountFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileCPUSocketCountRange(BareMetalServerProfileCPUSocketCount):
+    """
+    The permitted range for the number of CPU sockets for a bare metal server with this
+    profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileCPUSocketCountRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileCPUSocketCountRange':
+        """Initialize a BareMetalServerProfileCPUSocketCountRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileCPUSocketCountRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileCPUSocketCountRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileCPUSocketCountRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileCPUSocketCountRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileCPUSocketCountRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileCPUSocketCountRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileCPUSocketCountRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileCPUSocketCountRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileCPUSocketCountRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class BareMetalServerProfileDiskQuantityDependent(BareMetalServerProfileDiskQuantity):
+    """
+    The number of disks of this configuration for a bare metal server with this profile
+    depends on its bare metal server configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskQuantityDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskQuantityDependent':
+        """Initialize a BareMetalServerProfileDiskQuantityDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskQuantityDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskQuantityDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskQuantityDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskQuantityDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskQuantityDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileDiskQuantityEnum(BareMetalServerProfileDiskQuantity):
+    """
+    The permitted the number of disks of this configuration for a bare metal server with
+    this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskQuantityEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskQuantityEnum':
+        """Initialize a BareMetalServerProfileDiskQuantityEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileDiskQuantityEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskQuantityEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileDiskQuantityEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskQuantityEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskQuantityEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskQuantityEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskQuantityEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileDiskQuantityFixed(BareMetalServerProfileDiskQuantity):
+    """
+    The number of disks of this configuration for a bare metal server with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskQuantityFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskQuantityFixed':
+        """Initialize a BareMetalServerProfileDiskQuantityFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskQuantityFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileDiskQuantityFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskQuantityFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskQuantityFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskQuantityFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskQuantityFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileDiskQuantityRange(BareMetalServerProfileDiskQuantity):
+    """
+    The permitted range for the number of disks of this configuration for a bare metal
+    server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskQuantityRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskQuantityRange':
+        """Initialize a BareMetalServerProfileDiskQuantityRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileDiskQuantityRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileDiskQuantityRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileDiskQuantityRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileDiskQuantityRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskQuantityRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskQuantityRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskQuantityRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskQuantityRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskQuantityRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class BareMetalServerProfileDiskSizeDependent(BareMetalServerProfileDiskSize):
+    """
+    The disk size in GB (gigabytes) of this configuration for a bare metal server with
+    this profile depends on its bare metal server configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSizeDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskSizeDependent':
+        """Initialize a BareMetalServerProfileDiskSizeDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskSizeDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskSizeDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskSizeDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskSizeDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskSizeDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileDiskSizeEnum(BareMetalServerProfileDiskSize):
+    """
+    The permitted disk size in GB (gigabytes) of this configuration for a bare metal
+    server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSizeEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskSizeEnum':
+        """Initialize a BareMetalServerProfileDiskSizeEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileDiskSizeEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskSizeEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileDiskSizeEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskSizeEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskSizeEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskSizeEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskSizeEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileDiskSizeFixed(BareMetalServerProfileDiskSize):
+    """
+    The size of the disk in GB (gigabytes).
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSizeFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskSizeFixed':
+        """Initialize a BareMetalServerProfileDiskSizeFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskSizeFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileDiskSizeFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskSizeFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskSizeFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskSizeFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskSizeFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileDiskSizeRange(BareMetalServerProfileDiskSize):
+    """
+    The permitted range for the disk size of this configuration in GB (gigabytes) for a
+    bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileDiskSizeRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileDiskSizeRange':
+        """Initialize a BareMetalServerProfileDiskSizeRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileDiskSizeRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileDiskSizeRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileDiskSizeRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileDiskSizeRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileDiskSizeRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileDiskSizeRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileDiskSizeRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileDiskSizeRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileDiskSizeRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
+class BareMetalServerProfileIdentityByHref(BareMetalServerProfileIdentity):
+    """
+    BareMetalServerProfileIdentityByHref.
+
+    :attr str href: The URL for this bare metal server profile.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BareMetalServerProfileIdentityByHref object.
+
+        :param str href: The URL for this bare metal server profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileIdentityByHref':
+        """Initialize a BareMetalServerProfileIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BareMetalServerProfileIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileIdentityByName(BareMetalServerProfileIdentity):
+    """
+    BareMetalServerProfileIdentityByName.
+
+    :attr str name: The name for this bare metal server profile.
+    """
+
+    def __init__(self,
+                 name: str) -> None:
+        """
+        Initialize a BareMetalServerProfileIdentityByName object.
+
+        :param str name: The name for this bare metal server profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileIdentityByName':
+        """Initialize a BareMetalServerProfileIdentityByName object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BareMetalServerProfileIdentityByName JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileIdentityByName object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileIdentityByName object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileIdentityByName') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileIdentityByName') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BareMetalServerProfileMemoryDependent(BareMetalServerProfileMemory):
+    """
+    The memory value for a bare metal server with this profile depends on its
+    configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileMemoryDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileMemoryDependent':
+        """Initialize a BareMetalServerProfileMemoryDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileMemoryDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileMemoryDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileMemoryDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileMemoryDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileMemoryDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class BareMetalServerProfileMemoryEnum(BareMetalServerProfileMemory):
+    """
+    The permitted memory values (in gibibytes) for a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr str type: The type for this profile field.
+    :attr List[int] values: The permitted values for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 type: str,
+                 values: List[int]) -> None:
+        """
+        Initialize a BareMetalServerProfileMemoryEnum object.
+
+        :param int default: The default value for this profile field.
+        :param str type: The type for this profile field.
+        :param List[int] values: The permitted values for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.type = type
+        self.values = values
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileMemoryEnum':
+        """Initialize a BareMetalServerProfileMemoryEnum object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileMemoryEnum JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileMemoryEnum JSON')
+        if 'values' in _dict:
+            args['values'] = _dict.get('values')
+        else:
+            raise ValueError('Required property \'values\' not present in BareMetalServerProfileMemoryEnum JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileMemoryEnum object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'values') and self.values is not None:
+            _dict['values'] = self.values
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileMemoryEnum object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileMemoryEnum') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileMemoryEnum') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        ENUM = 'enum'
+
+
+class BareMetalServerProfileMemoryFixed(BareMetalServerProfileMemory):
+    """
+    The memory (in gibibytes) for a bare metal server with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr int value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: int) -> None:
+        """
+        Initialize a BareMetalServerProfileMemoryFixed object.
+
+        :param str type: The type for this profile field.
+        :param int value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileMemoryFixed':
+        """Initialize a BareMetalServerProfileMemoryFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileMemoryFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in BareMetalServerProfileMemoryFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileMemoryFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileMemoryFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileMemoryFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileMemoryFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class BareMetalServerProfileMemoryRange(BareMetalServerProfileMemory):
+    """
+    The permitted memory range (in gibibytes) for a bare metal server with this profile.
+
+    :attr int default: The default value for this profile field.
+    :attr int max: The maximum value for this profile field.
+    :attr int min: The minimum value for this profile field.
+    :attr int step: The increment step value for this profile field.
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 default: int,
+                 max: int,
+                 min: int,
+                 step: int,
+                 type: str) -> None:
+        """
+        Initialize a BareMetalServerProfileMemoryRange object.
+
+        :param int default: The default value for this profile field.
+        :param int max: The maximum value for this profile field.
+        :param int min: The minimum value for this profile field.
+        :param int step: The increment step value for this profile field.
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.default = default
+        self.max = max
+        self.min = min
+        self.step = step
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfileMemoryRange':
+        """Initialize a BareMetalServerProfileMemoryRange object from a json dictionary."""
+        args = {}
+        if 'default' in _dict:
+            args['default'] = _dict.get('default')
+        else:
+            raise ValueError('Required property \'default\' not present in BareMetalServerProfileMemoryRange JSON')
+        if 'max' in _dict:
+            args['max'] = _dict.get('max')
+        else:
+            raise ValueError('Required property \'max\' not present in BareMetalServerProfileMemoryRange JSON')
+        if 'min' in _dict:
+            args['min'] = _dict.get('min')
+        else:
+            raise ValueError('Required property \'min\' not present in BareMetalServerProfileMemoryRange JSON')
+        if 'step' in _dict:
+            args['step'] = _dict.get('step')
+        else:
+            raise ValueError('Required property \'step\' not present in BareMetalServerProfileMemoryRange JSON')
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in BareMetalServerProfileMemoryRange JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerProfileMemoryRange object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default') and self.default is not None:
+            _dict['default'] = self.default
+        if hasattr(self, 'max') and self.max is not None:
+            _dict['max'] = self.max
+        if hasattr(self, 'min') and self.min is not None:
+            _dict['min'] = self.min
+        if hasattr(self, 'step') and self.step is not None:
+            _dict['step'] = self.step
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerProfileMemoryRange object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerProfileMemoryRange') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerProfileMemoryRange') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        RANGE = 'range'
+
+
 class CertificateInstanceIdentityByCRN(CertificateInstanceIdentity):
     """
     CertificateInstanceIdentityByCRN.
@@ -54058,120 +62623,6 @@ class FloatingIPByTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById(Flo
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref(FloatingIPPatchTargetNetworkInterfaceIdentity):
-    """
-    FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref.
-
-    :attr str href: The URL for this network interface.
-    """
-
-    def __init__(self,
-                 href: str) -> None:
-        """
-        Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object.
-
-        :param str href: The URL for this network interface.
-        """
-        # pylint: disable=super-init-not-called
-        self.href = href
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref':
-        """Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object from a json dictionary."""
-        args = {}
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityByHref') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById(FloatingIPPatchTargetNetworkInterfaceIdentity):
-    """
-    FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById.
-
-    :attr str id: The unique identifier for this network interface.
-    """
-
-    def __init__(self,
-                 id: str) -> None:
-        """
-        Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object.
-
-        :param str id: The unique identifier for this network interface.
-        """
-        # pylint: disable=super-init-not-called
-        self.id = id
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById':
-        """Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object from a json dictionary."""
-        args = {}
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'FloatingIPPatchTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class FloatingIPPrototypeFloatingIPByTarget(FloatingIPPrototype):
     """
     FloatingIPPrototypeFloatingIPByTarget.
@@ -54337,6 +62788,120 @@ class FloatingIPPrototypeFloatingIPByZone(FloatingIPPrototype):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'FloatingIPPrototypeFloatingIPByZone') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class FloatingIPTargetPatchNetworkInterfaceIdentityByHref(FloatingIPTargetPatch):
+    """
+    FloatingIPTargetPatchNetworkInterfaceIdentityByHref.
+
+    :attr str href: The URL for this network interface.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityByHref object.
+
+        :param str href: The URL for this network interface.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'FloatingIPTargetPatchNetworkInterfaceIdentityByHref':
+        """Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in FloatingIPTargetPatchNetworkInterfaceIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this FloatingIPTargetPatchNetworkInterfaceIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'FloatingIPTargetPatchNetworkInterfaceIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'FloatingIPTargetPatchNetworkInterfaceIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class FloatingIPTargetPatchNetworkInterfaceIdentityById(FloatingIPTargetPatch):
+    """
+    FloatingIPTargetPatchNetworkInterfaceIdentityById.
+
+    :attr str id: The unique identifier for this network interface.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityById object.
+
+        :param str id: The unique identifier for this network interface.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'FloatingIPTargetPatchNetworkInterfaceIdentityById':
+        """Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in FloatingIPTargetPatchNetworkInterfaceIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a FloatingIPTargetPatchNetworkInterfaceIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this FloatingIPTargetPatchNetworkInterfaceIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'FloatingIPTargetPatchNetworkInterfaceIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'FloatingIPTargetPatchNetworkInterfaceIdentityById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -55486,7 +64051,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototype(InstanceGroupM
     InstanceGroupManagerActionPrototypeScheduledActionPrototype.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     """
 
     def __init__(self,
@@ -55496,7 +64062,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototype(InstanceGroupM
         Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototype object.
 
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
@@ -55520,7 +64087,6 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
     :attr str href: The URL for this instance group manager action.
     :attr str id: The unique identifier for this instance group manager action.
     :attr str name: The user-defined name for this instance group manager action.
-          Names must be unique within the instance group manager.
     :attr str resource_type: The resource type.
     :attr str status: The status of the instance group action
           - `active`: Action is ready to be run
@@ -55571,7 +64137,7 @@ class InstanceGroupManagerActionScheduledAction(InstanceGroupManagerAction):
         :param str id: The unique identifier for this instance group manager
                action.
         :param str name: The user-defined name for this instance group manager
-               action. Names must be unique within the instance group manager.
+               action.
         :param str resource_type: The resource type.
         :param str status: The status of the instance group action
                - `active`: Action is ready to be run
@@ -55638,8 +64204,7 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
-    :attr str name: The user-defined name for this instance group manager. Names
-          must be unique within the instance group.
+    :attr str name: The user-defined name for this instance group manager.
     :attr datetime updated_at: The date and time that the instance group manager was
           updated.
     :attr int aggregation_window: The time window in seconds to aggregate metrics
@@ -55678,7 +64243,6 @@ class InstanceGroupManagerAutoScale(InstanceGroupManager):
         :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
-               Names must be unique within the instance group.
         :param datetime updated_at: The date and time that the instance group
                manager was updated.
         :param int aggregation_window: The time window in seconds to aggregate
@@ -55825,7 +64389,8 @@ class InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototy
     InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototype.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          policy. Names must be unique within the instance group manager.
+          policy. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr str metric_type: The type of metric to be evaluated.
     :attr int metric_value: The metric value to be evaluated.
     :attr str policy_type: The type of policy for the instance group.
@@ -55844,7 +64409,8 @@ class InstanceGroupManagerPolicyPrototypeInstanceGroupManagerTargetPolicyPrototy
         :param int metric_value: The metric value to be evaluated.
         :param str policy_type: The type of policy for the instance group.
         :param str name: (optional) The user-defined name for this instance group
-               manager policy. Names must be unique within the instance group manager.
+               manager policy. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -55934,7 +64500,6 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(InstanceGroupMa
     :attr str href: The URL for this instance group manager policy.
     :attr str id: The unique identifier for this instance group manager policy.
     :attr str name: The user-defined name for this instance group manager policy.
-          Names must be unique within the instance group manager.
     :attr datetime updated_at: The date and time that the instance group manager
           policy was updated.
     :attr str metric_type: The type of metric to be evaluated.
@@ -55960,7 +64525,7 @@ class InstanceGroupManagerPolicyInstanceGroupManagerTargetPolicy(InstanceGroupMa
         :param str id: The unique identifier for this instance group manager
                policy.
         :param str name: The user-defined name for this instance group manager
-               policy. Names must be unique within the instance group manager.
+               policy.
         :param datetime updated_at: The date and time that the instance group
                manager policy was updated.
         :param str metric_type: The type of metric to be evaluated.
@@ -56083,7 +64648,8 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(Instan
     :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
-          manager. Names must be unique within the instance group.
+          manager. Names must be unique within the instance group. If unspecified, the
+          name will be a hyphenated list of randomly-selected words.
     :attr int aggregation_window: (optional) The time window in seconds to aggregate
           metrics prior to evaluation.
     :attr int cooldown: (optional) The duration of time in seconds to pause further
@@ -56113,7 +64679,8 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype(Instan
         :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
-               manager. Names must be unique within the instance group.
+               manager. Names must be unique within the instance group. If unspecified,
+               the name will be a hyphenated list of randomly-selected words.
         :param int aggregation_window: (optional) The time window in seconds to
                aggregate metrics prior to evaluation.
         :param int cooldown: (optional) The duration of time in seconds to pause
@@ -56210,7 +64777,8 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype(Instan
     :attr bool management_enabled: (optional) Indicates whether this manager will
           control the instance group.
     :attr str name: (optional) The user-defined name for this instance group
-          manager. Names must be unique within the instance group.
+          manager. Names must be unique within the instance group. If unspecified, the
+          name will be a hyphenated list of randomly-selected words.
     :attr str manager_type: The type of instance group manager.
     """
 
@@ -56226,7 +64794,8 @@ class InstanceGroupManagerPrototypeInstanceGroupManagerScheduledPrototype(Instan
         :param bool management_enabled: (optional) Indicates whether this manager
                will control the instance group.
         :param str name: (optional) The user-defined name for this instance group
-               manager. Names must be unique within the instance group.
+               manager. Names must be unique within the instance group. If unspecified,
+               the name will be a hyphenated list of randomly-selected words.
         """
         # pylint: disable=super-init-not-called
         self.management_enabled = management_enabled
@@ -56298,8 +64867,7 @@ class InstanceGroupManagerScheduled(InstanceGroupManager):
     :attr str id: The unique identifier for this instance group manager.
     :attr bool management_enabled: Indicates whether this manager will control the
           instance group.
-    :attr str name: The user-defined name for this instance group manager. Names
-          must be unique within the instance group.
+    :attr str name: The user-defined name for this instance group manager.
     :attr datetime updated_at: The date and time that the instance group manager was
           updated.
     :attr List[InstanceGroupManagerActionReference] actions: The actions of the
@@ -56326,7 +64894,6 @@ class InstanceGroupManagerScheduled(InstanceGroupManager):
         :param bool management_enabled: Indicates whether this manager will control
                the instance group.
         :param str name: The user-defined name for this instance group manager.
-               Names must be unique within the instance group.
         :param datetime updated_at: The date and time that the instance group
                manager was updated.
         :param List[InstanceGroupManagerActionReference] actions: The actions of
@@ -56441,8 +65008,7 @@ class InstanceGroupManagerScheduledActionManagerAutoScale(InstanceGroupManagerSc
           some supplementary information.
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
-    :attr str name: The user-defined name for this instance group manager. Names
-          must be unique within the instance group.
+    :attr str name: The user-defined name for this instance group manager.
     :attr int max_membership_count: (optional) The maximum number of members the
           instance group should have at the scheduled time.
     :attr int min_membership_count: (optional) The minimum number of members the
@@ -56463,7 +65029,6 @@ class InstanceGroupManagerScheduledActionManagerAutoScale(InstanceGroupManagerSc
         :param str href: The URL for this instance group manager.
         :param str id: The unique identifier for this instance group manager.
         :param str name: The user-defined name for this instance group manager.
-               Names must be unique within the instance group.
         :param InstanceGroupManagerReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
                provides
@@ -56690,6 +65255,38 @@ class InstancePatchProfileInstanceProfileIdentityByName(InstancePatchProfile):
     def __ne__(self, other: 'InstancePatchProfileInstanceProfileIdentityByName') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostGroupIdentity(InstancePlacementTargetPatch):
+    """
+    Identifies a dedicated host group by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById', 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN', 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref']))
+        raise Exception(msg)
+
+class InstancePlacementTargetPatchDedicatedHostIdentity(InstancePlacementTargetPatch):
+    """
+    Identifies a dedicated host by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById', 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN', 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref']))
+        raise Exception(msg)
 
 class InstancePlacementTargetPrototypeDedicatedHostGroupIdentity(InstancePlacementTargetPrototype):
     """
@@ -67150,9 +75747,9 @@ class PublicGatewayFloatingIPPrototypeFloatingIPPrototypeTargetContext(PublicGat
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class PublicGatewayIdentityByCRN(PublicGatewayIdentity):
+class PublicGatewayIdentityPublicGatewayIdentityByCRN(PublicGatewayIdentity):
     """
-    PublicGatewayIdentityByCRN.
+    PublicGatewayIdentityPublicGatewayIdentityByCRN.
 
     :attr str crn: The CRN for this public gateway.
     """
@@ -67160,7 +75757,7 @@ class PublicGatewayIdentityByCRN(PublicGatewayIdentity):
     def __init__(self,
                  crn: str) -> None:
         """
-        Initialize a PublicGatewayIdentityByCRN object.
+        Initialize a PublicGatewayIdentityPublicGatewayIdentityByCRN object.
 
         :param str crn: The CRN for this public gateway.
         """
@@ -67168,18 +75765,18 @@ class PublicGatewayIdentityByCRN(PublicGatewayIdentity):
         self.crn = crn
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityByCRN':
-        """Initialize a PublicGatewayIdentityByCRN object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityPublicGatewayIdentityByCRN':
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityByCRN object from a json dictionary."""
         args = {}
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
         else:
-            raise ValueError('Required property \'crn\' not present in PublicGatewayIdentityByCRN JSON')
+            raise ValueError('Required property \'crn\' not present in PublicGatewayIdentityPublicGatewayIdentityByCRN JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayIdentityByCRN object from a json dictionary."""
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityByCRN object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -67194,22 +75791,22 @@ class PublicGatewayIdentityByCRN(PublicGatewayIdentity):
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayIdentityByCRN object."""
+        """Return a `str` version of this PublicGatewayIdentityPublicGatewayIdentityByCRN object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'PublicGatewayIdentityByCRN') -> bool:
+    def __eq__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityByCRN') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'PublicGatewayIdentityByCRN') -> bool:
+    def __ne__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityByCRN') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class PublicGatewayIdentityByHref(PublicGatewayIdentity):
+class PublicGatewayIdentityPublicGatewayIdentityByHref(PublicGatewayIdentity):
     """
-    PublicGatewayIdentityByHref.
+    PublicGatewayIdentityPublicGatewayIdentityByHref.
 
     :attr str href: The URL for this public gateway.
     """
@@ -67217,7 +75814,7 @@ class PublicGatewayIdentityByHref(PublicGatewayIdentity):
     def __init__(self,
                  href: str) -> None:
         """
-        Initialize a PublicGatewayIdentityByHref object.
+        Initialize a PublicGatewayIdentityPublicGatewayIdentityByHref object.
 
         :param str href: The URL for this public gateway.
         """
@@ -67225,18 +75822,18 @@ class PublicGatewayIdentityByHref(PublicGatewayIdentity):
         self.href = href
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityByHref':
-        """Initialize a PublicGatewayIdentityByHref object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityPublicGatewayIdentityByHref':
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
-            raise ValueError('Required property \'href\' not present in PublicGatewayIdentityByHref JSON')
+            raise ValueError('Required property \'href\' not present in PublicGatewayIdentityPublicGatewayIdentityByHref JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayIdentityByHref object from a json dictionary."""
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -67251,22 +75848,22 @@ class PublicGatewayIdentityByHref(PublicGatewayIdentity):
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayIdentityByHref object."""
+        """Return a `str` version of this PublicGatewayIdentityPublicGatewayIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'PublicGatewayIdentityByHref') -> bool:
+    def __eq__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityByHref') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'PublicGatewayIdentityByHref') -> bool:
+    def __ne__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityByHref') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class PublicGatewayIdentityById(PublicGatewayIdentity):
+class PublicGatewayIdentityPublicGatewayIdentityById(PublicGatewayIdentity):
     """
-    PublicGatewayIdentityById.
+    PublicGatewayIdentityPublicGatewayIdentityById.
 
     :attr str id: The unique identifier for this public gateway.
     """
@@ -67274,7 +75871,7 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
     def __init__(self,
                  id: str) -> None:
         """
-        Initialize a PublicGatewayIdentityById object.
+        Initialize a PublicGatewayIdentityPublicGatewayIdentityById object.
 
         :param str id: The unique identifier for this public gateway.
         """
@@ -67282,18 +75879,18 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
         self.id = id
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityById':
-        """Initialize a PublicGatewayIdentityById object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'PublicGatewayIdentityPublicGatewayIdentityById':
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in PublicGatewayIdentityById JSON')
+            raise ValueError('Required property \'id\' not present in PublicGatewayIdentityPublicGatewayIdentityById JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a PublicGatewayIdentityById object from a json dictionary."""
+        """Initialize a PublicGatewayIdentityPublicGatewayIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -67308,16 +75905,16 @@ class PublicGatewayIdentityById(PublicGatewayIdentity):
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this PublicGatewayIdentityById object."""
+        """Return a `str` version of this PublicGatewayIdentityPublicGatewayIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'PublicGatewayIdentityById') -> bool:
+    def __eq__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityById') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'PublicGatewayIdentityById') -> bool:
+    def __ne__(self, other: 'PublicGatewayIdentityPublicGatewayIdentityById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -69502,6 +78099,123 @@ class SecurityGroupRuleSecurityGroupRuleProtocolTCPUDP(SecurityGroupRule):
         UDP = 'udp'
 
 
+class SecurityGroupTargetReferenceEndpointGatewayReference(SecurityGroupTargetReference):
+    """
+    SecurityGroupTargetReferenceEndpointGatewayReference.
+
+    :attr str crn: The CRN for this endpoint gateway.
+    :attr EndpointGatewayReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this endpoint gateway.
+    :attr str id: The unique identifier for this endpoint gateway.
+    :attr str name: The unique user-defined name for this endpoint gateway.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'EndpointGatewayReferenceDeleted' = None) -> None:
+        """
+        Initialize a SecurityGroupTargetReferenceEndpointGatewayReference object.
+
+        :param str crn: The CRN for this endpoint gateway.
+        :param str href: The URL for this endpoint gateway.
+        :param str id: The unique identifier for this endpoint gateway.
+        :param str name: The unique user-defined name for this endpoint gateway.
+        :param str resource_type: The resource type.
+        :param EndpointGatewayReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetReferenceEndpointGatewayReference':
+        """Initialize a SecurityGroupTargetReferenceEndpointGatewayReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in SecurityGroupTargetReferenceEndpointGatewayReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = EndpointGatewayReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in SecurityGroupTargetReferenceEndpointGatewayReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in SecurityGroupTargetReferenceEndpointGatewayReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in SecurityGroupTargetReferenceEndpointGatewayReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SecurityGroupTargetReferenceEndpointGatewayReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetReferenceEndpointGatewayReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetReferenceEndpointGatewayReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupTargetReferenceEndpointGatewayReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupTargetReferenceEndpointGatewayReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        ENDPOINT_GATEWAY = 'endpoint_gateway'
+
+
 class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetReference):
     """
     SecurityGroupTargetReferenceLoadBalancerReference.
@@ -70063,8 +78777,9 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
           hyphenated list of randomly-selected words.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
           subnet. If unspecified, the default network ACL for the VPC is used.
-    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
+    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to use
+          for internet-bound traffic for this subnet. If unspecified, the subnet will not
+          be attached to a public gateway.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr RoutingTableIdentity routing_table: (optional) The routing table to use
           for this subnet. If unspecified, the default routing table for the VPC is used.
@@ -70112,7 +78827,8 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
                for this subnet. If unspecified, the default network ACL for the VPC is
                used.
         :param PublicGatewayIdentity public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+               to use for internet-bound traffic for this subnet. If unspecified, the
+               subnet will not be attached to a public gateway.
         :param ResourceGroupIdentity resource_group: (optional)
         :param RoutingTableIdentity routing_table: (optional) The routing table to
                use for this subnet. If unspecified, the default routing table for the VPC
@@ -70241,8 +78957,9 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
           hyphenated list of randomly-selected words.
     :attr NetworkACLIdentity network_acl: (optional) The network ACL to use for this
           subnet. If unspecified, the default network ACL for the VPC is used.
-    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to
-          handle internet bound traffic for this subnet.
+    :attr PublicGatewayIdentity public_gateway: (optional) The public gateway to use
+          for internet-bound traffic for this subnet. If unspecified, the subnet will not
+          be attached to a public gateway.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr RoutingTableIdentity routing_table: (optional) The routing table to use
           for this subnet. If unspecified, the default routing table for the VPC is used.
@@ -70285,7 +79002,8 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
                for this subnet. If unspecified, the default network ACL for the VPC is
                used.
         :param PublicGatewayIdentity public_gateway: (optional) The public gateway
-               to handle internet bound traffic for this subnet.
+               to use for internet-bound traffic for this subnet. If unspecified, the
+               subnet will not be attached to a public gateway.
         :param ResourceGroupIdentity resource_group: (optional)
         :param RoutingTableIdentity routing_table: (optional) The routing table to
                use for this subnet. If unspecified, the default routing table for the VPC
@@ -70404,6 +79122,177 @@ class SubnetPrototypeSubnetByTotalCount(SubnetPrototype):
         """
         IPV4 = 'ipv4'
 
+
+class SubnetPublicGatewayPatchPublicGatewayIdentityByCRN(SubnetPublicGatewayPatch):
+    """
+    SubnetPublicGatewayPatchPublicGatewayIdentityByCRN.
+
+    :attr str crn: The CRN for this public gateway.
+    """
+
+    def __init__(self,
+                 crn: str) -> None:
+        """
+        Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByCRN object.
+
+        :param str crn: The CRN for this public gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SubnetPublicGatewayPatchPublicGatewayIdentityByCRN':
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in SubnetPublicGatewayPatchPublicGatewayIdentityByCRN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SubnetPublicGatewayPatchPublicGatewayIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class SubnetPublicGatewayPatchPublicGatewayIdentityByHref(SubnetPublicGatewayPatch):
+    """
+    SubnetPublicGatewayPatchPublicGatewayIdentityByHref.
+
+    :attr str href: The URL for this public gateway.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByHref object.
+
+        :param str href: The URL for this public gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SubnetPublicGatewayPatchPublicGatewayIdentityByHref':
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in SubnetPublicGatewayPatchPublicGatewayIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SubnetPublicGatewayPatchPublicGatewayIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class SubnetPublicGatewayPatchPublicGatewayIdentityById(SubnetPublicGatewayPatch):
+    """
+    SubnetPublicGatewayPatchPublicGatewayIdentityById.
+
+    :attr str id: The unique identifier for this public gateway.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityById object.
+
+        :param str id: The unique identifier for this public gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SubnetPublicGatewayPatchPublicGatewayIdentityById':
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in SubnetPublicGatewayPatchPublicGatewayIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SubnetPublicGatewayPatchPublicGatewayIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SubnetPublicGatewayPatchPublicGatewayIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 class VPCIdentityByCRN(VPCIdentity):
     """
@@ -74175,7 +83064,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec(Inst
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     """
@@ -74188,7 +83078,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec(Inst
         Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpec object.
 
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param str cron_spec: (optional) The cron specification for a recurring
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
@@ -74203,7 +83094,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt(Instanc
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr datetime run_at: (optional) The date and time the scheduled action will
           run.
     """
@@ -74216,7 +83108,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt(Instanc
         Initialize a InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAt object.
 
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param datetime run_at: (optional) The date and time the scheduled action
                will run.
         """
@@ -74242,7 +83135,6 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
     :attr str href: The URL for this instance group manager action.
     :attr str id: The unique identifier for this instance group manager action.
     :attr str name: The user-defined name for this instance group manager action.
-          Names must be unique within the instance group manager.
     :attr str resource_type: The resource type.
     :attr str status: The status of the instance group action
           - `active`: Action is ready to be run
@@ -74295,7 +83187,7 @@ class InstanceGroupManagerActionScheduledActionGroupTarget(InstanceGroupManagerA
         :param str id: The unique identifier for this instance group manager
                action.
         :param str name: The user-defined name for this instance group manager
-               action. Names must be unique within the instance group manager.
+               action.
         :param str resource_type: The resource type.
         :param str status: The status of the instance group action
                - `active`: Action is ready to be run
@@ -74493,7 +83385,6 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
     :attr str href: The URL for this instance group manager action.
     :attr str id: The unique identifier for this instance group manager action.
     :attr str name: The user-defined name for this instance group manager action.
-          Names must be unique within the instance group manager.
     :attr str resource_type: The resource type.
     :attr str status: The status of the instance group action
           - `active`: Action is ready to be run
@@ -74546,7 +83437,7 @@ class InstanceGroupManagerActionScheduledActionManagerTarget(InstanceGroupManage
         :param str id: The unique identifier for this instance group manager
                action.
         :param str name: The user-defined name for this instance group manager
-               action. Names must be unique within the instance group manager.
+               action.
         :param str resource_type: The resource type.
         :param str status: The status of the instance group action
                - `active`: Action is ready to be run
@@ -74883,6 +83774,348 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById(
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN(InstancePlacementTargetPatchDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN.
+
+    :attr str crn: The CRN for this dedicated host group.
+    """
+
+    def __init__(self,
+                 crn: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object.
+
+        :param str crn: The CRN for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref(InstancePlacementTargetPatchDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref.
+
+    :attr str href: The URL for this dedicated host group.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object.
+
+        :param str href: The URL for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById(InstancePlacementTargetPatchDedicatedHostGroupIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById.
+
+    :attr str id: The unique identifier for this dedicated host group.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object.
+
+        :param str id: The unique identifier for this dedicated host group.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostGroupIdentityDedicatedHostGroupIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN(InstancePlacementTargetPatchDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN.
+
+    :attr str crn: The CRN for this dedicated host.
+    """
+
+    def __init__(self,
+                 crn: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN object.
+
+        :param str crn: The CRN for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref(InstancePlacementTargetPatchDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref.
+
+    :attr str href: The URL for this dedicated host.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref object.
+
+        :param str href: The URL for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById(InstancePlacementTargetPatchDedicatedHostIdentity):
+    """
+    InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById.
+
+    :attr str id: The unique identifier for this dedicated host.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById object.
+
+        :param str id: The unique identifier for this dedicated host.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById':
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePlacementTargetPatchDedicatedHostIdentityDedicatedHostIdentityById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -77472,7 +86705,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGro
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGroup.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     :attr InstanceGroupManagerScheduledActionGroupPrototype group:
@@ -77488,7 +86722,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByGro
 
         :param InstanceGroupManagerScheduledActionGroupPrototype group:
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param str cron_spec: (optional) The cron specification for a recurring
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
@@ -77551,7 +86786,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByMan
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByManager.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr str cron_spec: (optional) The cron specification for a recurring scheduled
           action. Actions can be applied a maximum of one time within a 5 min period.
     :attr InstanceGroupManagerScheduledActionManagerPrototype manager:
@@ -77567,7 +86803,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByCronSpecByMan
 
         :param InstanceGroupManagerScheduledActionManagerPrototype manager:
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param str cron_spec: (optional) The cron specification for a recurring
                scheduled action. Actions can be applied a maximum of one time within a 5
                min period.
@@ -77633,7 +86870,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup(
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr datetime run_at: (optional) The date and time the scheduled action will
           run.
     :attr InstanceGroupManagerScheduledActionGroupPrototype group:
@@ -77649,7 +86887,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByGroup(
 
         :param InstanceGroupManagerScheduledActionGroupPrototype group:
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param datetime run_at: (optional) The date and time the scheduled action
                will run.
         """
@@ -77711,7 +86950,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManage
     InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManager.
 
     :attr str name: (optional) The user-defined name for this instance group manager
-          action. Names must be unique within the instance group manager.
+          action. Names must be unique within the instance group manager. If unspecified,
+          the name will be a hyphenated list of randomly-selected words.
     :attr datetime run_at: (optional) The date and time the scheduled action will
           run.
     :attr InstanceGroupManagerScheduledActionManagerPrototype manager:
@@ -77727,7 +86967,8 @@ class InstanceGroupManagerActionPrototypeScheduledActionPrototypeByRunAtByManage
 
         :param InstanceGroupManagerScheduledActionManagerPrototype manager:
         :param str name: (optional) The user-defined name for this instance group
-               manager action. Names must be unique within the instance group manager.
+               manager action. Names must be unique within the instance group manager. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
         :param datetime run_at: (optional) The date and time the scheduled action
                will run.
         """
