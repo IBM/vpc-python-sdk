@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2021, 2022.
+# (C) Copyright IBM Corp. 2020, 2021, 2022.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically pr
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2022-02-08
+API Version: 2022-03-29
 """
 
 from datetime import datetime
@@ -50,7 +50,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2022-02-08',
+                     version: str = '2022-03-29',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -58,9 +58,9 @@ class VpcV1(BaseService):
         Return a new client for the vpc service using the specified parameters and
                external configuration.
 
-        :param str version: Requests the API version as of a date, in format
-               `YYYY-MM-DD`. Any date between `2019-01-01` and the current date may be
-               specified. Specify the current date to request the latest version.
+        :param str version: The API version, in format `YYYY-MM-DD`. For the API
+               behavior documented here, specify any date between `2022-03-29` and today's
+               date (UTC).
         """
         if version is None:
             raise ValueError('version must be provided')
@@ -75,16 +75,16 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2022-02-08',
+                 version: str = '2022-03-29',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
         """
         Construct a new client for the vpc service.
 
-        :param str version: Requests the API version as of a date, in format
-               `YYYY-MM-DD`. Any date between `2019-01-01` and the current date may be
-               specified. Specify the current date to request the latest version.
+        :param str version: The API version, in format `YYYY-MM-DD`. For the API
+               behavior documented here, specify any date between `2022-03-29` and today's
+               date (UTC).
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
                Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
@@ -178,13 +178,12 @@ class VpcV1(BaseService):
         necessary to create the new VPC.
 
         :param str address_prefix_management: (optional) Indicates whether a
-               default address prefix should be automatically created for each zone in
-               this VPC. If `manual`, this VPC will be created with no default address
+               default address prefix will be automatically created for each zone in this
+               VPC. If `manual`, this VPC will be created with no default address
                prefixes.
-               This property's value is used only when creating the VPC. Since address
-               prefixes are managed identically regardless of whether they were
-               automatically created, the value is not preserved as a VPC property.
-        :param bool classic_access: (optional) Indicates whether this VPC should be
+               Since address prefixes are managed identically regardless of whether they
+               were automatically created, the value is not preserved as a VPC property.
+        :param bool classic_access: (optional) Indicates whether this VPC will be
                connected to Classic Infrastructure. If true, this VPC's resources will
                have private network connectivity to the account's Classic Infrastructure
                resources. Only one VPC, per region, may be connected in this way. This
@@ -1228,10 +1227,10 @@ class VpcV1(BaseService):
                VPC must not already have a routing table with this property set to `true`.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_transit_gateway_ingress: (optional) If set to `true`,
                this routing table will be used to route traffic that originates from
                [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this
@@ -1239,10 +1238,10 @@ class VpcV1(BaseService):
                with this property set to `true`.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
                If [Classic
                Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
                is enabled for this VPC, and this property is set to `true`, its incoming
@@ -2436,8 +2435,8 @@ class VpcV1(BaseService):
         """
         List all reserved IPs in a subnet.
 
-        This request lists reserved IPs in a subnet that are unbound or bound to an
-        endpoint gateway.
+        This request lists all reserved IPs in a subnet. A reserved IP resource will exist
+        for every address in the subnet which is not available for use.
 
         :param str subnet_id: The subnet identifier.
         :param str start: (optional) A server-provided token determining what
@@ -2489,6 +2488,7 @@ class VpcV1(BaseService):
     def create_subnet_reserved_ip(self,
         subnet_id: str,
         *,
+        address: str = None,
         auto_delete: bool = None,
         name: str = None,
         target: 'ReservedIPTargetPrototype' = None,
@@ -2497,9 +2497,14 @@ class VpcV1(BaseService):
         """
         Reserve an IP in a subnet.
 
-        This request reserves a system-selected IP address in a subnet.
+        This request reserves an IP address in a subnet. If the provided prototype object
+        includes an `address`, the address must not already be reserved.
 
         :param str subnet_id: The subnet identifier.
+        :param str address: (optional) The IP address to reserve, which must not
+               already be reserved on the subnet.
+               If unspecified, an available address on the subnet will automatically be
+               selected.
         :param bool auto_delete: (optional) Indicates whether this reserved IP
                member will be automatically deleted when either
                `target` is deleted, or the reserved IP is unbound. Must be `false` if the
@@ -2532,6 +2537,7 @@ class VpcV1(BaseService):
         }
 
         data = {
+            'address': address,
             'auto_delete': auto_delete,
             'name': name,
             'target': target
@@ -4355,7 +4361,7 @@ class VpcV1(BaseService):
         *,
         allow_ip_spoofing: bool = None,
         name: str = None,
-        primary_ipv4_address: str = None,
+        primary_ip: 'NetworkInterfaceIPPrototype' = None,
         security_groups: List['SecurityGroupIdentity'] = None,
         **kwargs
     ) -> DetailedResponse:
@@ -4379,10 +4385,14 @@ class VpcV1(BaseService):
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using
+               an existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must
+               be available on the network interface's subnet. Otherwise, an available
+               address on the
+               subnet will be automatically selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
@@ -4396,6 +4406,8 @@ class VpcV1(BaseService):
         if subnet is None:
             raise ValueError('subnet must be provided')
         subnet = convert_model(subnet)
+        if primary_ip is not None:
+            primary_ip = convert_model(primary_ip)
         if security_groups is not None:
             security_groups = [convert_model(x) for x in security_groups]
         headers = {}
@@ -4413,7 +4425,7 @@ class VpcV1(BaseService):
             'subnet': subnet,
             'allow_ip_spoofing': allow_ip_spoofing,
             'name': name,
-            'primary_ipv4_address': primary_ipv4_address,
+            'primary_ip': primary_ip,
             'security_groups': security_groups
         }
         data = {k: v for (k, v) in data.items() if v is not None}
@@ -4815,6 +4827,117 @@ class VpcV1(BaseService):
         return response
 
 
+    def list_instance_network_interface_ips(self,
+        instance_id: str,
+        network_interface_id: str,
+        *,
+        start: str = None,
+        limit: int = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all reserved IPs bound to a network interface.
+
+        This request lists all reserved IPs bound to a network interface.
+
+        :param str instance_id: The instance identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ReservedIPCollectionNetworkInterfaceContext` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_instance_network_interface_ips')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id', 'network_interface_id']
+        path_param_values = self.encode_path_vars(instance_id, network_interface_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/ips'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_instance_network_interface_ip(self,
+        instance_id: str,
+        network_interface_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve bound reserved IP.
+
+        This request a retrieves the specified reserved IP address if it is bound to the
+        network interface and instance specified in the URL.
+
+        :param str instance_id: The instance identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str id: The reserved IP identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ReservedIP` object
+        """
+
+        if instance_id is None:
+            raise ValueError('instance_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_instance_network_interface_ip')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['instance_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(instance_id, network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{instance_id}/network_interfaces/{network_interface_id}/ips/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
     def list_instance_volume_attachments(self,
         instance_id: str,
         **kwargs
@@ -5166,8 +5289,11 @@ class VpcV1(BaseService):
 
         This request creates a new instance group.
 
-        :param InstanceTemplateIdentity instance_template: Identifies an instance
-               template by a unique property.
+        :param InstanceTemplateIdentity instance_template: Instance template to use
+               when creating new instances.
+               Instance groups are not compatible with instance templates that specify
+               `true` for
+               `default_trusted_profile.auto_link`.
         :param List[SubnetIdentity] subnets: The subnets to use when creating new
                instances.
         :param int application_port: (optional) Required if specifying a load
@@ -8630,6 +8756,109 @@ class VpcV1(BaseService):
         return response
 
 
+    def list_bare_metal_server_network_interface_ips(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all reserved IPs bound to a network interface.
+
+        This request lists all reserved IPs bound to a network interface.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ReservedIPCollectionNetworkInterfaceContext` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_bare_metal_server_network_interface_ips')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/ips'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_bare_metal_server_network_interface_ip(self,
+        bare_metal_server_id: str,
+        network_interface_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve bound reserved IP.
+
+        This request a retrieves the specified reserved IP address if it is bound to the
+        network interface and bare metal server specified in the URL.
+
+        :param str bare_metal_server_id: The bare metal server identifier.
+        :param str network_interface_id: The network interface identifier.
+        :param str id: The reserved IP identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ReservedIP` object
+        """
+
+        if bare_metal_server_id is None:
+            raise ValueError('bare_metal_server_id must be provided')
+        if network_interface_id is None:
+            raise ValueError('network_interface_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_bare_metal_server_network_interface_ip')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['bare_metal_server_id', 'network_interface_id', 'id']
+        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/ips/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
     def delete_bare_metal_server(self,
         id: str,
         **kwargs
@@ -9181,6 +9410,8 @@ class VpcV1(BaseService):
 
     def delete_volume(self,
         id: str,
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9190,6 +9421,8 @@ class VpcV1(BaseService):
         to succeed, the volume must not be attached to any instances.
 
         :param str id: The volume identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -9197,7 +9430,9 @@ class VpcV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='delete_volume')
@@ -9272,6 +9507,8 @@ class VpcV1(BaseService):
     def update_volume(self,
         id: str,
         volume_patch: 'VolumePatch',
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9283,6 +9520,9 @@ class VpcV1(BaseService):
 
         :param str id: The volume identifier.
         :param VolumePatch volume_patch: The volume patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Volume` object
@@ -9294,7 +9534,9 @@ class VpcV1(BaseService):
             raise ValueError('volume_patch must be provided')
         if isinstance(volume_patch, VolumePatch):
             volume_patch = convert_model(volume_patch)
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='update_volume')
@@ -9458,10 +9700,7 @@ class VpcV1(BaseService):
 
 
     def create_snapshot(self,
-        source_volume: 'VolumeIdentity',
-        *,
-        name: str = None,
-        resource_group: 'ResourceGroupIdentity' = None,
+        snapshot_prototype: 'SnapshotPrototype',
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9471,24 +9710,16 @@ class VpcV1(BaseService):
         prototype object is structured in the same way as a retrieved snapshot, and
         contains the information necessary to provision the new snapshot.
 
-        :param VolumeIdentity source_volume: The volume to snapshot.
-        :param str name: (optional) The unique user-defined name for this snapshot.
-               If unspecified, the name will be a hyphenated list of randomly-selected
-               words.
-        :param ResourceGroupIdentity resource_group: (optional) The resource group
-               to use. If unspecified, the account's [default resource
-               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
-               used.
+        :param SnapshotPrototype snapshot_prototype: The snapshot prototype object.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Snapshot` object
         """
 
-        if source_volume is None:
-            raise ValueError('source_volume must be provided')
-        source_volume = convert_model(source_volume)
-        if resource_group is not None:
-            resource_group = convert_model(resource_group)
+        if snapshot_prototype is None:
+            raise ValueError('snapshot_prototype must be provided')
+        if isinstance(snapshot_prototype, SnapshotPrototype):
+            snapshot_prototype = convert_model(snapshot_prototype)
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
@@ -9500,13 +9731,7 @@ class VpcV1(BaseService):
             'generation': self.generation
         }
 
-        data = {
-            'source_volume': source_volume,
-            'name': name,
-            'resource_group': resource_group
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
+        data = json.dumps(snapshot_prototype)
         headers['content-type'] = 'application/json'
 
         if 'headers' in kwargs:
@@ -9526,6 +9751,8 @@ class VpcV1(BaseService):
 
     def delete_snapshot(self,
         id: str,
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9534,6 +9761,8 @@ class VpcV1(BaseService):
         This request deletes a snapshot. This operation cannot be reversed.
 
         :param str id: The snapshot identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -9541,7 +9770,9 @@ class VpcV1(BaseService):
 
         if id is None:
             raise ValueError('id must be provided')
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='delete_snapshot')
@@ -9616,6 +9847,8 @@ class VpcV1(BaseService):
     def update_snapshot(self,
         id: str,
         snapshot_patch: 'SnapshotPatch',
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9625,6 +9858,9 @@ class VpcV1(BaseService):
 
         :param str id: The snapshot identifier.
         :param SnapshotPatch snapshot_patch: The snapshot patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Snapshot` object
@@ -9636,7 +9872,9 @@ class VpcV1(BaseService):
             raise ValueError('snapshot_patch must be provided')
         if isinstance(snapshot_patch, SnapshotPatch):
             snapshot_patch = convert_model(snapshot_patch)
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='update_snapshot')
@@ -10153,6 +10391,7 @@ class VpcV1(BaseService):
         start: str = None,
         limit: int = None,
         resource_group_id: str = None,
+        sort: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -10166,6 +10405,11 @@ class VpcV1(BaseService):
         :param int limit: (optional) The number of resources to return on a page.
         :param str resource_group_id: (optional) Filters the collection to
                resources in the resource group with the specified identifier.
+        :param str sort: (optional) Sorts the returned collection by the specified
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `FloatingIPCollection` object
@@ -10182,7 +10426,8 @@ class VpcV1(BaseService):
             'generation': self.generation,
             'start': start,
             'limit': limit,
-            'resource_group.id': resource_group_id
+            'resource_group.id': resource_group_id,
+            'sort': sort
         }
 
         if 'headers' in kwargs:
@@ -11223,215 +11468,6 @@ class VpcV1(BaseService):
         return response
 
 
-    def list_security_group_network_interfaces(self,
-        security_group_id: str,
-        *,
-        start: str = None,
-        limit: int = None,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        List all network interfaces associated with a security group.
-
-        This request lists all network interfaces associated with a security group, to
-        which the rules in the security group are applied.
-
-        :param str security_group_id: The security group identifier.
-        :param str start: (optional) A server-provided token determining what
-               resource to start the page on.
-        :param int limit: (optional) The number of resources to return on a page.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `NetworkInterfaceCollection` object
-        """
-
-        if security_group_id is None:
-            raise ValueError('security_group_id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='list_security_group_network_interfaces')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation,
-            'start': start,
-            'limit': limit
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['security_group_id']
-        path_param_values = self.encode_path_vars(security_group_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/security_groups/{security_group_id}/network_interfaces'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
-    def remove_security_group_network_interface(self,
-        security_group_id: str,
-        id: str,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        Remove a network interface from a security group.
-
-        This request removes a network interface from a security group. Security groups
-        are stateful, so any changes to a network interface's security groups are applied
-        to new connections. Existing connections are not affected. If the network
-        interface being removed has no other security groups, it will be attached to the
-        VPC's default security group.
-
-        :param str security_group_id: The security group identifier.
-        :param str id: The network interface identifier.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if security_group_id is None:
-            raise ValueError('security_group_id must be provided')
-        if id is None:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='remove_security_group_network_interface')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-
-        path_param_keys = ['security_group_id', 'id']
-        path_param_values = self.encode_path_vars(security_group_id, id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(**path_param_dict)
-        request = self.prepare_request(method='DELETE',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
-    def get_security_group_network_interface(self,
-        security_group_id: str,
-        id: str,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        Retrieve a network interface in a security group.
-
-        This request retrieves a single network interface specified by the identifier in
-        the URL path. The network interface must be an existing member of the security
-        group.
-
-        :param str security_group_id: The security group identifier.
-        :param str id: The network interface identifier.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `NetworkInterface` object
-        """
-
-        if security_group_id is None:
-            raise ValueError('security_group_id must be provided')
-        if id is None:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='get_security_group_network_interface')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['security_group_id', 'id']
-        path_param_values = self.encode_path_vars(security_group_id, id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
-    def add_security_group_network_interface(self,
-        security_group_id: str,
-        id: str,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        Add a network interface to a security group.
-
-        This request adds an existing network interface to an existing security group.
-        When a network interface is added to a security group, the security group rules
-        are applied to the network interface. A request body is not required, and if
-        provided, is ignored.
-
-        :param str security_group_id: The security group identifier.
-        :param str id: The network interface identifier.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `NetworkInterface` object
-        """
-
-        if security_group_id is None:
-            raise ValueError('security_group_id must be provided')
-        if id is None:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='add_security_group_network_interface')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['security_group_id', 'id']
-        path_param_values = self.encode_path_vars(security_group_id, id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/security_groups/{security_group_id}/network_interfaces/{id}'.format(**path_param_dict)
-        request = self.prepare_request(method='PUT',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
     def list_security_group_rules(self,
         security_group_id: str,
         **kwargs
@@ -11492,10 +11528,10 @@ class VpcV1(BaseService):
         retrieved security group rule and contains the information necessary to create the
         rule. As part of creating a new rule in a security group, the rule is applied to
         all the networking interfaces in the security group. Rules specify which IP
-        traffic a security group should allow. Security group rules are stateful, such
-        that reverse traffic in response to allowed traffic is automatically permitted. A
-        rule allowing inbound TCP traffic on port 80 also allows outbound TCP traffic on
-        port 80 without the need for an additional rule.
+        traffic a security group will allow. Security group rules are stateful, such that
+        reverse traffic in response to allowed traffic is automatically permitted. A rule
+        allowing inbound TCP traffic on port 80 also allows outbound TCP traffic on port
+        80 without the need for an additional rule.
 
         :param str security_group_id: The security group identifier.
         :param SecurityGroupRulePrototype security_group_rule_prototype: The
@@ -13776,7 +13812,8 @@ class VpcV1(BaseService):
         """
         Delete a load balancer.
 
-        This request deletes a load balancer. This operation cannot be reversed.
+        This request deletes a load balancer. This operation cannot be reversed. A load
+        balancer cannot be deleted if its `provisioning_status` is `delete_pending`.
 
         :param str id: The load balancer identifier.
         :param dict headers: A `dict` containing the request headers
@@ -14028,12 +14065,10 @@ class VpcV1(BaseService):
         :param str protocol: The listener protocol. Each listener in the load
                balancer must have a unique `port` and `protocol` combination.  Additional
                restrictions:
-               - If this load balancer is in the `network` family, the protocol must be
-               `tcp`.
-               - If this listener has `https_redirect` specified, the protocol must be
-               `http`.
-               - If this listener is a listener's `https_redirect` target, the protocol
-               must be `https`.
+               - If this load balancer is in the `network` family:
+                 - The protocol must be `tcp` or `udp` (if `udp_supported` is `true`).
+                 - If `default_pool` is set, the pool protocol must match.
+               - If `https_redirect` is set, the protocol must be `http`.
         :param bool accept_proxy_protocol: (optional) If set to `true`, this
                listener will accept and forward PROXY protocol information. Supported by
                load balancers in the `application` family (otherwise always `false`).
@@ -14052,10 +14087,11 @@ class VpcV1(BaseService):
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
-               associated with the listener. The specified pool must:
+               for this listener. The specified pool must:
                - Belong to this load balancer
-               - Have the same `protocol` as this listener
-               - Not already be the default pool for another listener.
+               - Have the same `protocol` as this listener, or have a compatible protocol.
+                 At present, the compatible protocols are `http` and `https`.
+               - Not already be the `default_pool` for another listener.
         :param LoadBalancerListenerHTTPSRedirectPrototype https_redirect:
                (optional) The target listener that requests will be redirected to. This
                listener must have a
@@ -15007,9 +15043,9 @@ class VpcV1(BaseService):
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
         :param str protocol: The protocol used for this load balancer pool. Load
-               balancers in the `network` family support `tcp`. Load balancers in the
-               `application` family support `tcp`, `http`, and
-               `https`.
+               balancers in the `network` family support `tcp` and `udp` (if
+               `udp_supported` is `true`). Load balancers in the
+               `application` family support `tcp`, `http`, and `https`.
         :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
                members for this load balancer pool. For load balancers in the `network`
                family, the same `port` and `target` tuple cannot be shared by a pool
@@ -16198,7 +16234,7 @@ class VpcV1(BaseService):
 
 
     def create_flow_log_collector(self,
-        storage_bucket: 'CloudObjectStorageBucketIdentity',
+        storage_bucket: 'LegacyCloudObjectStorageBucketIdentity',
         target: 'FlowLogCollectorTargetPrototype',
         *,
         active: bool = None,
@@ -16214,8 +16250,8 @@ class VpcV1(BaseService):
         retrieved flow log collector, and contains the information necessary to create and
         start the new flow log collector.
 
-        :param CloudObjectStorageBucketIdentity storage_bucket: The Cloud Object
-               Storage bucket where the collected flows will be logged.
+        :param LegacyCloudObjectStorageBucketIdentity storage_bucket: The Cloud
+               Object Storage bucket where the collected flows will be logged.
                The bucket must exist and an IAM service authorization must grant
                `IBM Cloud Flow Logs` resources of `VPC Infrastructure Services` writer
                access to the bucket.
@@ -16487,6 +16523,23 @@ class ListBareMetalServersEnums:
 class ListSnapshotsEnums:
     """
     Enums for list_snapshots parameters.
+    """
+
+    class Sort(str, Enum):
+        """
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
+        """
+        CREATED_AT = 'created_at'
+        NAME = 'name'
+
+
+class ListFloatingIpsEnums:
+    """
+    Enums for list_floating_ips parameters.
     """
 
     class Sort(str, Enum):
@@ -18308,8 +18361,7 @@ class BareMetalServerNetworkInterface():
           is not known.
     :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr List[SecurityGroupReference] security_groups: The security groups
           targeting this network interface.
@@ -18328,7 +18380,7 @@ class BareMetalServerNetworkInterface():
                  mac_address: str,
                  name: str,
                  port_speed: int,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  security_groups: List['SecurityGroupReference'],
                  status: str,
@@ -18373,8 +18425,7 @@ class BareMetalServerNetworkInterface():
                value is not known.
         :param str name: The user-defined name for this network interface.
         :param int port_speed: The network interface port speed in Mbps.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: The security groups
                targeting this network interface.
@@ -18824,9 +18875,14 @@ class BareMetalServerNetworkInterfacePrototype():
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
-          specified, it must be an available address on the network interface's subnet. If
-          unspecified, an available address on the subnet will be automatically selected.
+    :attr NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP address
+          to bind to the network interface. This can be specified using
+          an existing reserved IP, or a prototype object for a new reserved IP.
+          If an existing reserved IP or a prototype object with an address is specified,
+          it must
+          be available on the network interface's subnet. Otherwise, an available address
+          on the
+          subnet will be automatically selected and reserved.
     :attr List[SecurityGroupIdentity] security_groups: (optional) The security
           groups to use for this network interface. If unspecified, the VPC's default
           security group is used.
@@ -18840,7 +18896,7 @@ class BareMetalServerNetworkInterfacePrototype():
                  allow_ip_spoofing: bool = None,
                  enable_infrastructure_nat: bool = None,
                  name: str = None,
-                 primary_ipv4_address: str = None,
+                 primary_ip: 'NetworkInterfaceIPPrototype' = None,
                  security_groups: List['SecurityGroupIdentity'] = None) -> None:
         """
         Initialize a BareMetalServerNetworkInterfacePrototype object.
@@ -18877,10 +18933,14 @@ class BareMetalServerNetworkInterfacePrototype():
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using
+               an existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must
+               be available on the network interface's subnet. Otherwise, an available
+               address on the
+               subnet will be automatically selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
@@ -19030,9 +19090,14 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
-          specified, it must be an available address on the network interface's subnet. If
-          unspecified, an available address on the subnet will be automatically selected.
+    :attr NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP address
+          to bind to the network interface. This can be specified using
+          an existing reserved IP, or a prototype object for a new reserved IP.
+          If an existing reserved IP or a prototype object with an address is specified,
+          it must
+          be available on the network interface's subnet. Otherwise, an available address
+          on the
+          subnet will be automatically selected and reserved.
     :attr List[SecurityGroupIdentity] security_groups: (optional) The security
           groups to use for this network interface. If unspecified, the VPC's default
           security group is used.
@@ -19047,7 +19112,7 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
                  enable_infrastructure_nat: bool = None,
                  interface_type: str = None,
                  name: str = None,
-                 primary_ipv4_address: str = None,
+                 primary_ip: 'NetworkInterfaceIPPrototype' = None,
                  security_groups: List['SecurityGroupIdentity'] = None) -> None:
         """
         Initialize a BareMetalServerPrimaryNetworkInterfacePrototype object.
@@ -19081,10 +19146,14 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using
+               an existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must
+               be available on the network interface's subnet. Otherwise, an available
+               address on the
+               subnet will be automatically selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
@@ -19094,7 +19163,7 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
         self.enable_infrastructure_nat = enable_infrastructure_nat
         self.interface_type = interface_type
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
 
@@ -19112,8 +19181,8 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
             args['interface_type'] = _dict.get('interface_type')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = _dict.get('primary_ip')
         if 'security_groups' in _dict:
             args['security_groups'] = _dict.get('security_groups')
         if 'subnet' in _dict:
@@ -19140,8 +19209,11 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
             _dict['interface_type'] = self.interface_type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            if isinstance(self.primary_ip, dict):
+                _dict['primary_ip'] = self.primary_ip
+            else:
+                _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'security_groups') and self.security_groups is not None:
             security_groups_list = []
             for x in self.security_groups:
@@ -20513,77 +20585,6 @@ class CertificateInstanceReference():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'CertificateInstanceReference') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class CloudObjectStorageBucketIdentity():
-    """
-    Identifies a Cloud Object Storage bucket by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a CloudObjectStorageBucketIdentity object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['CloudObjectStorageBucketIdentityByName']))
-        raise Exception(msg)
-
-class CloudObjectStorageBucketReference():
-    """
-    CloudObjectStorageBucketReference.
-
-    :attr str name: The globally unique name of this COS bucket.
-    """
-
-    def __init__(self,
-                 name: str) -> None:
-        """
-        Initialize a CloudObjectStorageBucketReference object.
-
-        :param str name: The globally unique name of this COS bucket.
-        """
-        self.name = name
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'CloudObjectStorageBucketReference':
-        """Initialize a CloudObjectStorageBucketReference object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in CloudObjectStorageBucketReference JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a CloudObjectStorageBucketReference object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this CloudObjectStorageBucketReference object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'CloudObjectStorageBucketReference') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'CloudObjectStorageBucketReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -23665,24 +23666,27 @@ class DefaultRoutingTable():
           [Direct Link](https://cloud.ibm.com/docs/dl/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr bool route_transit_gateway_ingress: Indicates whether this routing table
           is used to route traffic that originates from from [Transit
           Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr bool route_vpc_zone_ingress: Indicates whether this routing table is used
           to route traffic that originates from subnets in other zones in this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr List[RouteReference] routes: The routes for the default routing table for
           this VPC. The table is created with no routes, but routes may be added, changed,
           or removed with a subsequent request.
@@ -23722,28 +23726,28 @@ class DefaultRoutingTable():
                [Direct Link](https://cloud.ibm.com/docs/dl/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_transit_gateway_ingress: Indicates whether this routing
                table is used to route traffic that originates from from [Transit
                Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_vpc_zone_ingress: Indicates whether this routing table is
                used to route traffic that originates from subnets in other zones in this
                VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param List[RouteReference] routes: The routes for the default routing
                table for this VPC. The table is created with no routes, but routes may be
                added, changed, or removed with a subsequent request.
@@ -25564,8 +25568,8 @@ class FlowLogCollector():
     :attr str name: The unique user-defined name for this flow log collector.
     :attr ResourceGroupReference resource_group: The resource group for this flow
           log collector.
-    :attr CloudObjectStorageBucketReference storage_bucket: The Cloud Object Storage
-          bucket where the collected flows are logged.
+    :attr LegacyCloudObjectStorageBucketReference storage_bucket: The Cloud Object
+          Storage bucket where the collected flows are logged.
     :attr FlowLogCollectorTarget target: The target this collector is collecting
           flow logs for. If the target is an instance,
           subnet, or VPC, flow logs will not be collected for any network interfaces
@@ -25584,7 +25588,7 @@ class FlowLogCollector():
                  lifecycle_state: str,
                  name: str,
                  resource_group: 'ResourceGroupReference',
-                 storage_bucket: 'CloudObjectStorageBucketReference',
+                 storage_bucket: 'LegacyCloudObjectStorageBucketReference',
                  target: 'FlowLogCollectorTarget',
                  vpc: 'VPCReference') -> None:
         """
@@ -25603,8 +25607,8 @@ class FlowLogCollector():
         :param str name: The unique user-defined name for this flow log collector.
         :param ResourceGroupReference resource_group: The resource group for this
                flow log collector.
-        :param CloudObjectStorageBucketReference storage_bucket: The Cloud Object
-               Storage bucket where the collected flows are logged.
+        :param LegacyCloudObjectStorageBucketReference storage_bucket: The Cloud
+               Object Storage bucket where the collected flows are logged.
         :param FlowLogCollectorTarget target: The target this collector is
                collecting flow logs for. If the target is an instance,
                subnet, or VPC, flow logs will not be collected for any network interfaces
@@ -25668,7 +25672,7 @@ class FlowLogCollector():
         else:
             raise ValueError('Required property \'resource_group\' not present in FlowLogCollector JSON')
         if 'storage_bucket' in _dict:
-            args['storage_bucket'] = CloudObjectStorageBucketReference.from_dict(_dict.get('storage_bucket'))
+            args['storage_bucket'] = LegacyCloudObjectStorageBucketReference.from_dict(_dict.get('storage_bucket'))
         else:
             raise ValueError('Required property \'storage_bucket\' not present in FlowLogCollector JSON')
         if 'target' in _dict:
@@ -26069,6 +26073,63 @@ class FlowLogCollectorTargetPrototype():
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['FlowLogCollectorTargetPrototypeNetworkInterfaceIdentity', 'FlowLogCollectorTargetPrototypeInstanceIdentity', 'FlowLogCollectorTargetPrototypeSubnetIdentity', 'FlowLogCollectorTargetPrototypeVPCIdentity']))
         raise Exception(msg)
+
+class GenericResourceReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a GenericResourceReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'GenericResourceReferenceDeleted':
+        """Initialize a GenericResourceReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in GenericResourceReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a GenericResourceReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this GenericResourceReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'GenericResourceReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'GenericResourceReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 class IKEPolicy():
     """
@@ -28216,7 +28277,7 @@ class ImageFilePrototype():
     """
     ImageFilePrototype.
 
-    :attr str href: The Cloud Object Store (COS) location of the image file.
+    :attr str href: The Cloud Object Storage location of the image file.
     """
 
     def __init__(self,
@@ -28224,7 +28285,7 @@ class ImageFilePrototype():
         """
         Initialize a ImageFilePrototype object.
 
-        :param str href: The Cloud Object Store (COS) location of the image file.
+        :param str href: The Cloud Object Storage location of the image file.
         """
         self.href = href
 
@@ -28618,6 +28679,8 @@ class Instance():
     """
     Instance.
 
+    :attr InstanceAvailabilityPolicy availability_policy: The availability policy
+          for this virtual server instance.
     :attr int bandwidth: The total bandwidth (in megabits per second) shared across
           the virtual server instance's network interfaces and storage volumes.
     :attr VolumeAttachmentReferenceInstanceContext boot_volume_attachment: Boot
@@ -28635,6 +28698,8 @@ class Instance():
     :attr ImageReference image: (optional) The image the virtual server instance was
           provisioned from.
     :attr int memory: The amount of memory, truncated to whole gibibytes.
+    :attr InstanceMetadataService metadata_service: The metadata service
+          configuration.
     :attr str name: The user-defined name for this virtual server instance (and
           default system hostname).
     :attr List[NetworkInterfaceInstanceContextReference] network_interfaces: The
@@ -28672,6 +28737,7 @@ class Instance():
     """
 
     def __init__(self,
+                 availability_policy: 'InstanceAvailabilityPolicy',
                  bandwidth: int,
                  boot_volume_attachment: 'VolumeAttachmentReferenceInstanceContext',
                  created_at: datetime,
@@ -28680,6 +28746,7 @@ class Instance():
                  href: str,
                  id: str,
                  memory: int,
+                 metadata_service: 'InstanceMetadataService',
                  name: str,
                  network_interfaces: List['NetworkInterfaceInstanceContextReference'],
                  primary_network_interface: 'NetworkInterfaceInstanceContextReference',
@@ -28702,6 +28769,8 @@ class Instance():
         """
         Initialize a Instance object.
 
+        :param InstanceAvailabilityPolicy availability_policy: The availability
+               policy for this virtual server instance.
         :param int bandwidth: The total bandwidth (in megabits per second) shared
                across the virtual server instance's network interfaces and storage
                volumes.
@@ -28715,6 +28784,8 @@ class Instance():
         :param str href: The URL for this virtual server instance.
         :param str id: The unique identifier for this virtual server instance.
         :param int memory: The amount of memory, truncated to whole gibibytes.
+        :param InstanceMetadataService metadata_service: The metadata service
+               configuration.
         :param str name: The user-defined name for this virtual server instance
                (and default system hostname).
         :param List[NetworkInterfaceInstanceContextReference] network_interfaces:
@@ -28757,6 +28828,7 @@ class Instance():
         :param InstancePlacementTarget placement_target: (optional) The placement
                restrictions for the virtual server instance.
         """
+        self.availability_policy = availability_policy
         self.bandwidth = bandwidth
         self.boot_volume_attachment = boot_volume_attachment
         self.created_at = created_at
@@ -28768,6 +28840,7 @@ class Instance():
         self.id = id
         self.image = image
         self.memory = memory
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -28788,6 +28861,10 @@ class Instance():
     def from_dict(cls, _dict: Dict) -> 'Instance':
         """Initialize a Instance object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPolicy.from_dict(_dict.get('availability_policy'))
+        else:
+            raise ValueError('Required property \'availability_policy\' not present in Instance JSON')
         if 'bandwidth' in _dict:
             args['bandwidth'] = _dict.get('bandwidth')
         else:
@@ -28826,6 +28903,10 @@ class Instance():
             args['memory'] = _dict.get('memory')
         else:
             raise ValueError('Required property \'memory\' not present in Instance JSON')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataService.from_dict(_dict.get('metadata_service'))
+        else:
+            raise ValueError('Required property \'metadata_service\' not present in Instance JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -28894,6 +28975,8 @@ class Instance():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
         if hasattr(self, 'bandwidth') and self.bandwidth is not None:
             _dict['bandwidth'] = self.bandwidth
         if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
@@ -28916,6 +28999,8 @@ class Instance():
             _dict['image'] = self.image.to_dict()
         if hasattr(self, 'memory') and self.memory is not None:
             _dict['memory'] = self.memory
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -29129,6 +29214,262 @@ class InstanceAction():
         """
         REBOOT = 'reboot'
         START = 'start'
+        STOP = 'stop'
+
+
+class InstanceAvailabilityPolicy():
+    """
+    InstanceAvailabilityPolicy.
+
+    :attr str host_failure: The action to perform if the compute host experiences a
+          failure.
+          - `restart`: Automatically restart the virtual server instance after host
+          failure
+          - `stop`: Leave the virtual server instance stopped after host failure
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the instance on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self,
+                 host_failure: str) -> None:
+        """
+        Initialize a InstanceAvailabilityPolicy object.
+
+        :param str host_failure: The action to perform if the compute host
+               experiences a failure.
+               - `restart`: Automatically restart the virtual server instance after host
+               failure
+               - `stop`: Leave the virtual server instance stopped after host failure
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the instance on
+               which the unexpected property value was encountered.
+        """
+        self.host_failure = host_failure
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceAvailabilityPolicy':
+        """Initialize a InstanceAvailabilityPolicy object from a json dictionary."""
+        args = {}
+        if 'host_failure' in _dict:
+            args['host_failure'] = _dict.get('host_failure')
+        else:
+            raise ValueError('Required property \'host_failure\' not present in InstanceAvailabilityPolicy JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceAvailabilityPolicy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'host_failure') and self.host_failure is not None:
+            _dict['host_failure'] = self.host_failure
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceAvailabilityPolicy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceAvailabilityPolicy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceAvailabilityPolicy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HostFailureEnum(str, Enum):
+        """
+        The action to perform if the compute host experiences a failure.
+        - `restart`: Automatically restart the virtual server instance after host failure
+        - `stop`: Leave the virtual server instance stopped after host failure
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the instance on which the unexpected
+        property value was encountered.
+        """
+        RESTART = 'restart'
+        STOP = 'stop'
+
+
+class InstanceAvailabilityPolicyPatch():
+    """
+    InstanceAvailabilityPolicyPatch.
+
+    :attr str host_failure: (optional) The action to perform if the compute host
+          experiences a failure.
+          - `restart`: Automatically restart the virtual server instance after host
+          failure
+          - `stop`: Leave the virtual server instance stopped after host failure
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the instance on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self,
+                 *,
+                 host_failure: str = None) -> None:
+        """
+        Initialize a InstanceAvailabilityPolicyPatch object.
+
+        :param str host_failure: (optional) The action to perform if the compute
+               host experiences a failure.
+               - `restart`: Automatically restart the virtual server instance after host
+               failure
+               - `stop`: Leave the virtual server instance stopped after host failure
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the instance on
+               which the unexpected property value was encountered.
+        """
+        self.host_failure = host_failure
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceAvailabilityPolicyPatch':
+        """Initialize a InstanceAvailabilityPolicyPatch object from a json dictionary."""
+        args = {}
+        if 'host_failure' in _dict:
+            args['host_failure'] = _dict.get('host_failure')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceAvailabilityPolicyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'host_failure') and self.host_failure is not None:
+            _dict['host_failure'] = self.host_failure
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceAvailabilityPolicyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceAvailabilityPolicyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceAvailabilityPolicyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HostFailureEnum(str, Enum):
+        """
+        The action to perform if the compute host experiences a failure.
+        - `restart`: Automatically restart the virtual server instance after host failure
+        - `stop`: Leave the virtual server instance stopped after host failure
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the instance on which the unexpected
+        property value was encountered.
+        """
+        RESTART = 'restart'
+        STOP = 'stop'
+
+
+class InstanceAvailabilityPrototype():
+    """
+    InstanceAvailabilityPrototype.
+
+    :attr str host_failure: (optional) The action to perform if the compute host
+          experiences a failure.
+          - `restart`: Automatically restart the virtual server instance after host
+          failure
+          - `stop`: Leave the virtual server instance stopped after host failure
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the instance on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self,
+                 *,
+                 host_failure: str = None) -> None:
+        """
+        Initialize a InstanceAvailabilityPrototype object.
+
+        :param str host_failure: (optional) The action to perform if the compute
+               host experiences a failure.
+               - `restart`: Automatically restart the virtual server instance after host
+               failure
+               - `stop`: Leave the virtual server instance stopped after host failure
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the instance on
+               which the unexpected property value was encountered.
+        """
+        self.host_failure = host_failure
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceAvailabilityPrototype':
+        """Initialize a InstanceAvailabilityPrototype object from a json dictionary."""
+        args = {}
+        if 'host_failure' in _dict:
+            args['host_failure'] = _dict.get('host_failure')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceAvailabilityPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'host_failure') and self.host_failure is not None:
+            _dict['host_failure'] = self.host_failure
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceAvailabilityPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceAvailabilityPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceAvailabilityPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HostFailureEnum(str, Enum):
+        """
+        The action to perform if the compute host experiences a failure.
+        - `restart`: Automatically restart the virtual server instance after host failure
+        - `stop`: Leave the virtual server instance stopped after host failure
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the instance on which the unexpected
+        property value was encountered.
+        """
+        RESTART = 'restart'
         STOP = 'stop'
 
 
@@ -29470,6 +29811,83 @@ class InstanceConsoleAccessToken():
         SERIAL = 'serial'
         VNC = 'vnc'
 
+
+class InstanceDefaultTrustedProfilePrototype():
+    """
+    InstanceDefaultTrustedProfilePrototype.
+
+    :attr bool auto_link: (optional) If set to `true`, the system will create a link
+          to the specified `target` trusted profile during instance creation. Regardless
+          of whether a link is created by the system or manually using the IAM Identity
+          service, it will be automatically deleted when the instance is deleted.
+    :attr TrustedProfileIdentity target: The default IAM trusted profile to use for
+          this virtual server instance.
+    """
+
+    def __init__(self,
+                 target: 'TrustedProfileIdentity',
+                 *,
+                 auto_link: bool = None) -> None:
+        """
+        Initialize a InstanceDefaultTrustedProfilePrototype object.
+
+        :param TrustedProfileIdentity target: The default IAM trusted profile to
+               use for this virtual server instance.
+        :param bool auto_link: (optional) If set to `true`, the system will create
+               a link to the specified `target` trusted profile during instance creation.
+               Regardless of whether a link is created by the system or manually using the
+               IAM Identity service, it will be automatically deleted when the instance is
+               deleted.
+        """
+        self.auto_link = auto_link
+        self.target = target
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceDefaultTrustedProfilePrototype':
+        """Initialize a InstanceDefaultTrustedProfilePrototype object from a json dictionary."""
+        args = {}
+        if 'auto_link' in _dict:
+            args['auto_link'] = _dict.get('auto_link')
+        if 'target' in _dict:
+            args['target'] = _dict.get('target')
+        else:
+            raise ValueError('Required property \'target\' not present in InstanceDefaultTrustedProfilePrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceDefaultTrustedProfilePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'auto_link') and self.auto_link is not None:
+            _dict['auto_link'] = self.auto_link
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceDefaultTrustedProfilePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceDefaultTrustedProfilePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceDefaultTrustedProfilePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 class InstanceDisk():
     """
@@ -30565,8 +30983,8 @@ class InstanceGroupManagerActionGroupPatch():
     """
     InstanceGroupManagerActionGroupPatch.
 
-    :attr int membership_count: (optional) The number of members the instance group
-          should have at the scheduled time.
+    :attr int membership_count: (optional) The desired number of instance group
+          members at the scheduled time.
     """
 
     def __init__(self,
@@ -30575,8 +30993,8 @@ class InstanceGroupManagerActionGroupPatch():
         """
         Initialize a InstanceGroupManagerActionGroupPatch object.
 
-        :param int membership_count: (optional) The number of members the instance
-               group should have at the scheduled time.
+        :param int membership_count: (optional) The desired number of instance
+               group members at the scheduled time.
         """
         self.membership_count = membership_count
 
@@ -30622,10 +31040,10 @@ class InstanceGroupManagerActionManagerPatch():
     """
     InstanceGroupManagerActionManagerPatch.
 
-    :attr int max_membership_count: (optional) The maximum number of members the
-          instance group should have at the scheduled time.
-    :attr int min_membership_count: (optional) The minimum number of members the
-          instance group should have at the scheduled time.
+    :attr int max_membership_count: (optional) The desired maximum number of
+          instance group members at the scheduled time.
+    :attr int min_membership_count: (optional) The desired minimum number of
+          instance group members at the scheduled time.
     """
 
     def __init__(self,
@@ -30635,10 +31053,10 @@ class InstanceGroupManagerActionManagerPatch():
         """
         Initialize a InstanceGroupManagerActionManagerPatch object.
 
-        :param int max_membership_count: (optional) The maximum number of members
-               the instance group should have at the scheduled time.
-        :param int min_membership_count: (optional) The minimum number of members
-               the instance group should have at the scheduled time.
+        :param int max_membership_count: (optional) The desired maximum number of
+               instance group members at the scheduled time.
+        :param int min_membership_count: (optional) The desired minimum number of
+               instance group members at the scheduled time.
         """
         self.max_membership_count = max_membership_count
         self.min_membership_count = min_membership_count
@@ -32217,8 +32635,8 @@ class InstanceGroupManagerScheduledActionGroup():
     """
     InstanceGroupManagerScheduledActionGroup.
 
-    :attr int membership_count: The number of members the instance group should have
-          at the scheduled time.
+    :attr int membership_count: The desired number of instance group members at the
+          scheduled time.
     """
 
     def __init__(self,
@@ -32226,8 +32644,8 @@ class InstanceGroupManagerScheduledActionGroup():
         """
         Initialize a InstanceGroupManagerScheduledActionGroup object.
 
-        :param int membership_count: The number of members the instance group
-               should have at the scheduled time.
+        :param int membership_count: The desired number of instance group members
+               at the scheduled time.
         """
         self.membership_count = membership_count
 
@@ -32275,8 +32693,8 @@ class InstanceGroupManagerScheduledActionGroupPrototype():
     """
     InstanceGroupManagerScheduledActionGroupPrototype.
 
-    :attr int membership_count: The number of members the instance group should have
-          at the scheduled time.
+    :attr int membership_count: The desired number of instance group members at the
+          scheduled time.
     """
 
     def __init__(self,
@@ -32284,8 +32702,8 @@ class InstanceGroupManagerScheduledActionGroupPrototype():
         """
         Initialize a InstanceGroupManagerScheduledActionGroupPrototype object.
 
-        :param int membership_count: The number of members the instance group
-               should have at the scheduled time.
+        :param int membership_count: The desired number of instance group members
+               at the scheduled time.
         """
         self.membership_count = membership_count
 
@@ -32821,8 +33239,11 @@ class InstanceGroupPatch():
     :attr int application_port: (optional) Required if specifying a load balancer
           pool only. Used by the instance group when scaling up instances to supply the
           port for the load balancer pool member.
-    :attr InstanceTemplateIdentity instance_template: (optional) Identifies an
-          instance template by a unique property.
+    :attr InstanceTemplateIdentity instance_template: (optional) Instance template
+          to use when creating new instances.
+          Instance groups are not compatible with instance templates that specify `true`
+          for
+          `default_trusted_profile.auto_link`.
     :attr LoadBalancerIdentity load_balancer: (optional) The load balancer that the
           load balancer pool used by this group
           is in. Required when using a load balancer pool.
@@ -32853,8 +33274,11 @@ class InstanceGroupPatch():
         :param int application_port: (optional) Required if specifying a load
                balancer pool only. Used by the instance group when scaling up instances to
                supply the port for the load balancer pool member.
-        :param InstanceTemplateIdentity instance_template: (optional) Identifies an
-               instance template by a unique property.
+        :param InstanceTemplateIdentity instance_template: (optional) Instance
+               template to use when creating new instances.
+               Instance groups are not compatible with instance templates that specify
+               `true` for
+               `default_trusted_profile.auto_link`.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
                that the load balancer pool used by this group
                is in. Required when using a load balancer pool.
@@ -33114,6 +33538,10 @@ class InstanceInitialization():
     """
     InstanceInitialization.
 
+    :attr InstanceInitializationDefaultTrustedProfile default_trusted_profile:
+          (optional) The default trusted profile configuration specified at virtual server
+          instance
+          creation. If absent, no default trusted profile was specified.
     :attr List[KeyReference] keys: The public SSH keys used at instance
           initialization.
     :attr InstanceInitializationPassword password: (optional)
@@ -33122,14 +33550,20 @@ class InstanceInitialization():
     def __init__(self,
                  keys: List['KeyReference'],
                  *,
+                 default_trusted_profile: 'InstanceInitializationDefaultTrustedProfile' = None,
                  password: 'InstanceInitializationPassword' = None) -> None:
         """
         Initialize a InstanceInitialization object.
 
         :param List[KeyReference] keys: The public SSH keys used at instance
                initialization.
+        :param InstanceInitializationDefaultTrustedProfile default_trusted_profile:
+               (optional) The default trusted profile configuration specified at virtual
+               server instance
+               creation. If absent, no default trusted profile was specified.
         :param InstanceInitializationPassword password: (optional)
         """
+        self.default_trusted_profile = default_trusted_profile
         self.keys = keys
         self.password = password
 
@@ -33137,6 +33571,8 @@ class InstanceInitialization():
     def from_dict(cls, _dict: Dict) -> 'InstanceInitialization':
         """Initialize a InstanceInitialization object from a json dictionary."""
         args = {}
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceInitializationDefaultTrustedProfile.from_dict(_dict.get('default_trusted_profile'))
         if 'keys' in _dict:
             args['keys'] = [KeyReference.from_dict(x) for x in _dict.get('keys')]
         else:
@@ -33153,6 +33589,8 @@ class InstanceInitialization():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'keys') and self.keys is not None:
             _dict['keys'] = [x.to_dict() for x in self.keys]
         if hasattr(self, 'password') and self.password is not None:
@@ -33174,6 +33612,80 @@ class InstanceInitialization():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceInitialization') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstanceInitializationDefaultTrustedProfile():
+    """
+    InstanceInitializationDefaultTrustedProfile.
+
+    :attr bool auto_link: If set to `true`, the system created a link to the
+          specified `target` trusted profile during instance creation. Regardless of
+          whether a link was created by the system or manually using the IAM Identity
+          service, it will be automatically deleted when the instance is deleted.
+    :attr TrustedProfileReference target: The default IAM trusted profile to use for
+          this virtual server instance.
+    """
+
+    def __init__(self,
+                 auto_link: bool,
+                 target: 'TrustedProfileReference') -> None:
+        """
+        Initialize a InstanceInitializationDefaultTrustedProfile object.
+
+        :param bool auto_link: If set to `true`, the system created a link to the
+               specified `target` trusted profile during instance creation. Regardless of
+               whether a link was created by the system or manually using the IAM Identity
+               service, it will be automatically deleted when the instance is deleted.
+        :param TrustedProfileReference target: The default IAM trusted profile to
+               use for this virtual server instance.
+        """
+        self.auto_link = auto_link
+        self.target = target
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceInitializationDefaultTrustedProfile':
+        """Initialize a InstanceInitializationDefaultTrustedProfile object from a json dictionary."""
+        args = {}
+        if 'auto_link' in _dict:
+            args['auto_link'] = _dict.get('auto_link')
+        else:
+            raise ValueError('Required property \'auto_link\' not present in InstanceInitializationDefaultTrustedProfile JSON')
+        if 'target' in _dict:
+            args['target'] = TrustedProfileReference.from_dict(_dict.get('target'))
+        else:
+            raise ValueError('Required property \'target\' not present in InstanceInitializationDefaultTrustedProfile JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceInitializationDefaultTrustedProfile object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'auto_link') and self.auto_link is not None:
+            _dict['auto_link'] = self.auto_link
+        if hasattr(self, 'target') and self.target is not None:
+            _dict['target'] = self.target.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceInitializationDefaultTrustedProfile object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceInitializationDefaultTrustedProfile') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceInitializationDefaultTrustedProfile') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -33248,10 +33760,186 @@ class InstanceInitializationPassword():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class InstanceMetadataService():
+    """
+    InstanceMetadataService.
+
+    :attr bool enabled: Indicates whether the metadata service endpoint is available
+          to the virtual server instance.
+    """
+
+    def __init__(self,
+                 enabled: bool) -> None:
+        """
+        Initialize a InstanceMetadataService object.
+
+        :param bool enabled: Indicates whether the metadata service endpoint is
+               available to the virtual server instance.
+        """
+        self.enabled = enabled
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceMetadataService':
+        """Initialize a InstanceMetadataService object from a json dictionary."""
+        args = {}
+        if 'enabled' in _dict:
+            args['enabled'] = _dict.get('enabled')
+        else:
+            raise ValueError('Required property \'enabled\' not present in InstanceMetadataService JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceMetadataService object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'enabled') and self.enabled is not None:
+            _dict['enabled'] = self.enabled
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceMetadataService object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceMetadataService') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceMetadataService') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstanceMetadataServicePatch():
+    """
+    InstanceMetadataServicePatch.
+
+    :attr bool enabled: (optional) Indicates whether the metadata service endpoint
+          is available to the virtual server instance.
+    """
+
+    def __init__(self,
+                 *,
+                 enabled: bool = None) -> None:
+        """
+        Initialize a InstanceMetadataServicePatch object.
+
+        :param bool enabled: (optional) Indicates whether the metadata service
+               endpoint is available to the virtual server instance.
+        """
+        self.enabled = enabled
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceMetadataServicePatch':
+        """Initialize a InstanceMetadataServicePatch object from a json dictionary."""
+        args = {}
+        if 'enabled' in _dict:
+            args['enabled'] = _dict.get('enabled')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceMetadataServicePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'enabled') and self.enabled is not None:
+            _dict['enabled'] = self.enabled
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceMetadataServicePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceMetadataServicePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceMetadataServicePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstanceMetadataServicePrototype():
+    """
+    InstanceMetadataServicePrototype.
+
+    :attr bool enabled: (optional) Indicates whether the metadata service endpoint
+          is available to the virtual server instance.
+    """
+
+    def __init__(self,
+                 *,
+                 enabled: bool = None) -> None:
+        """
+        Initialize a InstanceMetadataServicePrototype object.
+
+        :param bool enabled: (optional) Indicates whether the metadata service
+               endpoint is available to the virtual server instance.
+        """
+        self.enabled = enabled
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceMetadataServicePrototype':
+        """Initialize a InstanceMetadataServicePrototype object from a json dictionary."""
+        args = {}
+        if 'enabled' in _dict:
+            args['enabled'] = _dict.get('enabled')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceMetadataServicePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'enabled') and self.enabled is not None:
+            _dict['enabled'] = self.enabled
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceMetadataServicePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceMetadataServicePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceMetadataServicePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class InstancePatch():
     """
     InstancePatch.
 
+    :attr InstanceAvailabilityPolicyPatch availability_policy: (optional) The
+          availability policy for this virtual server instance.
+    :attr InstanceMetadataServicePatch metadata_service: (optional) The metadata
+          service configuration.
     :attr str name: (optional) The user-defined name for this virtual server
           instance (and default system hostname).
     :attr InstancePlacementTargetPatch placement_target: (optional) The placement
@@ -33278,6 +33966,8 @@ class InstancePatch():
 
     def __init__(self,
                  *,
+                 availability_policy: 'InstanceAvailabilityPolicyPatch' = None,
+                 metadata_service: 'InstanceMetadataServicePatch' = None,
                  name: str = None,
                  placement_target: 'InstancePlacementTargetPatch' = None,
                  profile: 'InstancePatchProfile' = None,
@@ -33285,6 +33975,10 @@ class InstancePatch():
         """
         Initialize a InstancePatch object.
 
+        :param InstanceAvailabilityPolicyPatch availability_policy: (optional) The
+               availability policy for this virtual server instance.
+        :param InstanceMetadataServicePatch metadata_service: (optional) The
+               metadata service configuration.
         :param str name: (optional) The user-defined name for this virtual server
                instance (and default system hostname).
         :param InstancePlacementTargetPatch placement_target: (optional) The
@@ -33312,6 +34006,8 @@ class InstancePatch():
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
         """
+        self.availability_policy = availability_policy
+        self.metadata_service = metadata_service
         self.name = name
         self.placement_target = placement_target
         self.profile = profile
@@ -33321,6 +34017,10 @@ class InstancePatch():
     def from_dict(cls, _dict: Dict) -> 'InstancePatch':
         """Initialize a InstancePatch object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPolicyPatch.from_dict(_dict.get('availability_policy'))
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePatch.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'placement_target' in _dict:
@@ -33339,6 +34039,10 @@ class InstancePatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'placement_target') and self.placement_target is not None:
@@ -34455,6 +35159,16 @@ class InstancePrototype():
     """
     InstancePrototype.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance
+          This property's value is used when provisioning the virtual server instance, but
+          not
+          subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -34469,6 +35183,8 @@ class InstancePrototype():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -34477,7 +35193,8 @@ class InstancePrototype():
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will
+          be used, but this default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
@@ -34496,7 +35213,10 @@ class InstancePrototype():
 
     def __init__(self,
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -34509,6 +35229,16 @@ class InstancePrototype():
         """
         Initialize a InstancePrototype object.
 
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance
+               This property's value is used when provisioning the virtual server
+               instance, but not
+               subsequently managed. Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -34525,6 +35255,8 @@ class InstancePrototype():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -34533,7 +35265,8 @@ class InstancePrototype():
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will
+               be used, but this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -34551,7 +35284,7 @@ class InstancePrototype():
                the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstancePrototypeInstanceByImage', 'InstancePrototypeInstanceByVolume', 'InstancePrototypeInstanceBySourceTemplate']))
+                  ", ".join(['InstancePrototypeInstanceByImage', 'InstancePrototypeInstanceBySourceSnapshot', 'InstancePrototypeInstanceBySourceTemplate']))
         raise Exception(msg)
 
 class InstanceReference():
@@ -34801,6 +35534,7 @@ class InstanceStatusReason():
         CANNOT_START_PLACEMENT_GROUP = 'cannot_start_placement_group'
         CANNOT_START_STORAGE = 'cannot_start_storage'
         ENCRYPTION_KEY_DELETED = 'encryption_key_deleted'
+        STOPPED_BY_HOST_FAILURE = 'stopped_by_host_failure'
         STOPPED_FOR_IMAGE_CREATION = 'stopped_for_image_creation'
 
 
@@ -34808,9 +35542,19 @@ class InstanceTemplate():
     """
     InstanceTemplate.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
     :attr datetime created_at: The date and time that the instance template was
           created.
     :attr str crn: The CRN for this instance template.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance
+          This property's value is used when provisioning the virtual server instance, but
+          not
+          subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
@@ -34827,13 +35571,16 @@ class InstanceTemplate():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will
+          be used, but this default value is expected to change in the future.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance template.
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
@@ -34857,7 +35604,10 @@ class InstanceTemplate():
                  name: str,
                  resource_group: 'ResourceGroupReference',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
@@ -34876,6 +35626,16 @@ class InstanceTemplate():
         :param str name: The unique user-defined name for this instance template.
         :param ResourceGroupReference resource_group: The resource group for this
                instance template.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance
+               This property's value is used when provisioning the virtual server
+               instance, but not
+               subsequently managed. Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -34892,12 +35652,15 @@ class InstanceTemplate():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will
+               be used, but this default value is expected to change in the future.
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
@@ -34911,7 +35674,7 @@ class InstanceTemplate():
                the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstanceTemplateInstanceByImage', 'InstanceTemplateInstanceByVolume']))
+                  ", ".join(['InstanceTemplateInstanceByImage']))
         raise Exception(msg)
 
 class InstanceTemplateCollection():
@@ -35212,6 +35975,16 @@ class InstanceTemplatePrototype():
     """
     InstanceTemplatePrototype.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance
+          This property's value is used when provisioning the virtual server instance, but
+          not
+          subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -35226,6 +35999,8 @@ class InstanceTemplatePrototype():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -35234,7 +36009,8 @@ class InstanceTemplatePrototype():
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will
+          be used, but this default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
@@ -35253,7 +36029,10 @@ class InstanceTemplatePrototype():
 
     def __init__(self,
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -35266,6 +36045,16 @@ class InstanceTemplatePrototype():
         """
         Initialize a InstanceTemplatePrototype object.
 
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance
+               This property's value is used when provisioning the virtual server
+               instance, but not
+               subsequently managed. Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -35282,6 +36071,8 @@ class InstanceTemplatePrototype():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -35290,7 +36081,8 @@ class InstanceTemplatePrototype():
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will
+               be used, but this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -35308,7 +36100,7 @@ class InstanceTemplatePrototype():
                the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstanceTemplatePrototypeInstanceByImage', 'InstanceTemplatePrototypeInstanceByVolume', 'InstanceTemplatePrototypeInstanceBySourceTemplate']))
+                  ", ".join(['InstanceTemplatePrototypeInstanceByImage', 'InstanceTemplatePrototypeInstanceBySourceTemplate']))
         raise Exception(msg)
 
 class InstanceTemplateReference():
@@ -36148,6 +36940,78 @@ class KeyReferenceDeleted():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class LegacyCloudObjectStorageBucketIdentity():
+    """
+    Identifies a Cloud Object Storage bucket by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LegacyCloudObjectStorageBucketIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName']))
+        raise Exception(msg)
+
+class LegacyCloudObjectStorageBucketReference():
+    """
+    LegacyCloudObjectStorageBucketReference.
+
+    :attr str name: The globally unique name of this Cloud Object Storage bucket.
+    """
+
+    def __init__(self,
+                 name: str) -> None:
+        """
+        Initialize a LegacyCloudObjectStorageBucketReference object.
+
+        :param str name: The globally unique name of this Cloud Object Storage
+               bucket.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LegacyCloudObjectStorageBucketReference':
+        """Initialize a LegacyCloudObjectStorageBucketReference object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in LegacyCloudObjectStorageBucketReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LegacyCloudObjectStorageBucketReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LegacyCloudObjectStorageBucketReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LegacyCloudObjectStorageBucketReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LegacyCloudObjectStorageBucketReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class LoadBalancer():
     """
     LoadBalancer.
@@ -36166,8 +37030,8 @@ class LoadBalancer():
     :attr str name: The unique user-defined name for this load balancer.
     :attr str operating_status: The operating status of this load balancer.
     :attr List[LoadBalancerPoolReference] pools: The pools of this load balancer.
-    :attr List[IP] private_ips: The private IP addresses assigned to this load
-          balancer.
+    :attr List[LoadBalancerPrivateIpsItem] private_ips: The private IP addresses
+          assigned to this load balancer.
     :attr LoadBalancerProfileReference profile: The profile to use for this load
           balancer.
     :attr str provisioning_status: The provisioning status of this load balancer.
@@ -36176,6 +37040,7 @@ class LoadBalancer():
           Applicable only for public load balancers.
     :attr ResourceGroupReference resource_group: The resource group for this load
           balancer.
+    :attr str resource_type: The resource type.
     :attr bool route_mode: Indicates whether route mode is enabled for this load
           balancer.
           At present, public load balancers are not supported with route mode enabled.
@@ -36185,6 +37050,7 @@ class LoadBalancer():
     :attr bool security_groups_supported: Indicates whether this load balancer
           supports security groups.
     :attr List[SubnetReference] subnets: The subnets this load balancer is part of.
+    :attr bool udp_supported: Indicates whether this load balancer supports UDP.
     """
 
     def __init__(self,
@@ -36199,15 +37065,17 @@ class LoadBalancer():
                  name: str,
                  operating_status: str,
                  pools: List['LoadBalancerPoolReference'],
-                 private_ips: List['IP'],
+                 private_ips: List['LoadBalancerPrivateIpsItem'],
                  profile: 'LoadBalancerProfileReference',
                  provisioning_status: str,
                  public_ips: List['IP'],
                  resource_group: 'ResourceGroupReference',
+                 resource_type: str,
                  route_mode: bool,
                  security_groups: List['SecurityGroupReference'],
                  security_groups_supported: bool,
-                 subnets: List['SubnetReference']) -> None:
+                 subnets: List['SubnetReference'],
+                 udp_supported: bool) -> None:
         """
         Initialize a LoadBalancer object.
 
@@ -36227,8 +37095,8 @@ class LoadBalancer():
         :param str operating_status: The operating status of this load balancer.
         :param List[LoadBalancerPoolReference] pools: The pools of this load
                balancer.
-        :param List[IP] private_ips: The private IP addresses assigned to this load
-               balancer.
+        :param List[LoadBalancerPrivateIpsItem] private_ips: The private IP
+               addresses assigned to this load balancer.
         :param LoadBalancerProfileReference profile: The profile to use for this
                load balancer.
         :param str provisioning_status: The provisioning status of this load
@@ -36238,6 +37106,7 @@ class LoadBalancer():
                Applicable only for public load balancers.
         :param ResourceGroupReference resource_group: The resource group for this
                load balancer.
+        :param str resource_type: The resource type.
         :param bool route_mode: Indicates whether route mode is enabled for this
                load balancer.
                At present, public load balancers are not supported with route mode
@@ -36249,6 +37118,8 @@ class LoadBalancer():
                supports security groups.
         :param List[SubnetReference] subnets: The subnets this load balancer is
                part of.
+        :param bool udp_supported: Indicates whether this load balancer supports
+               UDP.
         """
         self.created_at = created_at
         self.crn = crn
@@ -36266,10 +37137,12 @@ class LoadBalancer():
         self.provisioning_status = provisioning_status
         self.public_ips = public_ips
         self.resource_group = resource_group
+        self.resource_type = resource_type
         self.route_mode = route_mode
         self.security_groups = security_groups
         self.security_groups_supported = security_groups_supported
         self.subnets = subnets
+        self.udp_supported = udp_supported
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancer':
@@ -36320,7 +37193,7 @@ class LoadBalancer():
         else:
             raise ValueError('Required property \'pools\' not present in LoadBalancer JSON')
         if 'private_ips' in _dict:
-            args['private_ips'] = [IP.from_dict(x) for x in _dict.get('private_ips')]
+            args['private_ips'] = [LoadBalancerPrivateIpsItem.from_dict(x) for x in _dict.get('private_ips')]
         else:
             raise ValueError('Required property \'private_ips\' not present in LoadBalancer JSON')
         if 'profile' in _dict:
@@ -36339,6 +37212,10 @@ class LoadBalancer():
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in LoadBalancer JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in LoadBalancer JSON')
         if 'route_mode' in _dict:
             args['route_mode'] = _dict.get('route_mode')
         else:
@@ -36355,6 +37232,10 @@ class LoadBalancer():
             args['subnets'] = [SubnetReference.from_dict(x) for x in _dict.get('subnets')]
         else:
             raise ValueError('Required property \'subnets\' not present in LoadBalancer JSON')
+        if 'udp_supported' in _dict:
+            args['udp_supported'] = _dict.get('udp_supported')
+        else:
+            raise ValueError('Required property \'udp_supported\' not present in LoadBalancer JSON')
         return cls(**args)
 
     @classmethod
@@ -36397,6 +37278,8 @@ class LoadBalancer():
             _dict['public_ips'] = [x.to_dict() for x in self.public_ips]
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'route_mode') and self.route_mode is not None:
             _dict['route_mode'] = self.route_mode
         if hasattr(self, 'security_groups') and self.security_groups is not None:
@@ -36405,6 +37288,8 @@ class LoadBalancer():
             _dict['security_groups_supported'] = self.security_groups_supported
         if hasattr(self, 'subnets') and self.subnets is not None:
             _dict['subnets'] = [x.to_dict() for x in self.subnets]
+        if hasattr(self, 'udp_supported') and self.udp_supported is not None:
+            _dict['udp_supported'] = self.udp_supported
         return _dict
 
     def _to_dict(self):
@@ -36443,6 +37328,13 @@ class LoadBalancer():
         FAILED = 'failed'
         MAINTENANCE_PENDING = 'maintenance_pending'
         UPDATE_PENDING = 'update_pending'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        LOAD_BALANCER = 'load_balancer'
 
 
 class LoadBalancerCollection():
@@ -36693,8 +37585,8 @@ class LoadBalancerListener():
           protocol.
     :attr int connection_limit: (optional) The connection limit of the listener.
     :attr datetime created_at: The date and time that this listener was created.
-    :attr LoadBalancerPoolReference default_pool: (optional) The default pool
-          associated with the listener.
+    :attr LoadBalancerPoolReference default_pool: (optional) The default pool for
+          this listener. If absent, this listener has no default pool.
     :attr str href: The listener's canonical URL.
     :attr LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If specified,
           the target listener that requests are redirected to.
@@ -36712,9 +37604,14 @@ class LoadBalancerListener():
           At present, only load balancers in the `network` family support more than one
           port per listener.
     :attr str protocol: The listener protocol. Load balancers in the `network`
-          family support `tcp`. Load balancers in the `application` family support `tcp`,
-          `http`, and `https`. Each listener in the load balancer must have a unique
-          `port` and `protocol` combination.
+          family support `tcp` and
+          `udp` (if `udp_supported` is `true`). Load balancers in the `application` family
+          support `tcp`, `http`, and `https`. Each listener in the load balancer must have
+          a unique `port` and `protocol` combination.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the listener on which the unexpected
+          property value was encountered.
     :attr str provisioning_status: The provisioning status of this listener.
     """
 
@@ -36763,9 +37660,14 @@ class LoadBalancerListener():
                At present, only load balancers in the `network` family support more than
                one port per listener.
         :param str protocol: The listener protocol. Load balancers in the `network`
-               family support `tcp`. Load balancers in the `application` family support
-               `tcp`, `http`, and `https`. Each listener in the load balancer must have a
-               unique `port` and `protocol` combination.
+               family support `tcp` and
+               `udp` (if `udp_supported` is `true`). Load balancers in the `application`
+               family support `tcp`, `http`, and `https`. Each listener in the load
+               balancer must have a unique `port` and `protocol` combination.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the listener on
+               which the unexpected property value was encountered.
         :param str provisioning_status: The provisioning status of this listener.
         :param CertificateInstanceReference certificate_instance: (optional) The
                certificate instance used for SSL termination. It is applicable only to
@@ -36774,7 +37676,7 @@ class LoadBalancerListener():
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolReference default_pool: (optional) The default pool
-               associated with the listener.
+               for this listener. If absent, this listener has no default pool.
         :param LoadBalancerListenerHTTPSRedirect https_redirect: (optional) If
                specified, the target listener that requests are redirected to.
         :param List[LoadBalancerListenerPolicyReference] policies: (optional) The
@@ -36905,14 +37807,19 @@ class LoadBalancerListener():
 
     class ProtocolEnum(str, Enum):
         """
-        The listener protocol. Load balancers in the `network` family support `tcp`. Load
-        balancers in the `application` family support `tcp`, `http`, and `https`. Each
-        listener in the load balancer must have a unique `port` and `protocol`
-        combination.
+        The listener protocol. Load balancers in the `network` family support `tcp` and
+        `udp` (if `udp_supported` is `true`). Load balancers in the `application` family
+        support `tcp`, `http`, and `https`. Each listener in the load balancer must have a
+        unique `port` and `protocol` combination.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the listener on which the unexpected
+        property value was encountered.
         """
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
     class ProvisioningStatusEnum(str, Enum):
@@ -37247,11 +38154,13 @@ class LoadBalancerListenerPatch():
           certificate instance used for SSL termination. It is applicable only to `https`
           protocol.
     :attr int connection_limit: (optional) The connection limit of the listener.
-    :attr LoadBalancerPoolIdentity default_pool: (optional) The default pool
-          associated with the listener. The specified pool must:
+    :attr LoadBalancerPoolIdentity default_pool: (optional) The default pool for
+          this listener. The specified pool must:
           - Belong to this load balancer
-          - Have the same `protocol` as this listener
-          - Not already be the default pool for another listener.
+          - Have the same `protocol` as this listener, or have a compatible protocol.
+            At present, the compatible protocols are `http` and `https`.
+          - Not already be the `default_pool` for another listener
+          Specify `null` to remove an existing default pool.
     :attr LoadBalancerListenerHTTPSRedirectPatch https_redirect: (optional) The
           target listener that requests will be redirected to. This listener must have a
           `protocol` of `http`, and the target listener must have a `protocol` of `https`.
@@ -37279,10 +38188,12 @@ class LoadBalancerListenerPatch():
     :attr str protocol: (optional) The listener protocol. Each listener in the load
           balancer must have a unique `port` and `protocol` combination.  Additional
           restrictions:
-          - If this load balancer is in the `network` family, the protocol must be `tcp`.
-          - If this listener has `https_redirect` specified, the protocol must be `http`.
+          - If this load balancer is in the `network` family, the protocol must be `tcp`
+            or `udp` (if `udp_supported` is `true`) , and it cannot be changed while
+            `default_pool` is set.
+          - If `https_redirect` is set, the protocol must be `http`.
           - If this listener is a listener's `https_redirect` target, the protocol must be
-          `https`.
+            `https`.
     """
 
     def __init__(self,
@@ -37317,10 +38228,12 @@ class LoadBalancerListenerPatch():
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolIdentity default_pool: (optional) The default pool
-               associated with the listener. The specified pool must:
+               for this listener. The specified pool must:
                - Belong to this load balancer
-               - Have the same `protocol` as this listener
-               - Not already be the default pool for another listener.
+               - Have the same `protocol` as this listener, or have a compatible protocol.
+                 At present, the compatible protocols are `http` and `https`.
+               - Not already be the `default_pool` for another listener
+               Specify `null` to remove an existing default pool.
         :param LoadBalancerListenerHTTPSRedirectPatch https_redirect: (optional)
                The target listener that requests will be redirected to. This listener must
                have a
@@ -37352,11 +38265,13 @@ class LoadBalancerListenerPatch():
                load balancer must have a unique `port` and `protocol` combination.
                Additional restrictions:
                - If this load balancer is in the `network` family, the protocol must be
-               `tcp`.
-               - If this listener has `https_redirect` specified, the protocol must be
-               `http`.
+               `tcp`
+                 or `udp` (if `udp_supported` is `true`) , and it cannot be changed while
+                 `default_pool` is set.
+               - If `https_redirect` is set, the protocol must be `http`.
                - If this listener is a listener's `https_redirect` target, the protocol
-               must be `https`.
+               must be
+                 `https`.
         """
         self.accept_proxy_protocol = accept_proxy_protocol
         self.certificate_instance = certificate_instance
@@ -37448,14 +38363,17 @@ class LoadBalancerListenerPatch():
         """
         The listener protocol. Each listener in the load balancer must have a unique
         `port` and `protocol` combination.  Additional restrictions:
-        - If this load balancer is in the `network` family, the protocol must be `tcp`.
-        - If this listener has `https_redirect` specified, the protocol must be `http`.
+        - If this load balancer is in the `network` family, the protocol must be `tcp`
+          or `udp` (if `udp_supported` is `true`) , and it cannot be changed while
+          `default_pool` is set.
+        - If `https_redirect` is set, the protocol must be `http`.
         - If this listener is a listener's `https_redirect` target, the protocol must be
-        `https`.
+          `https`.
         """
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
 class LoadBalancerListenerPolicy():
@@ -38748,7 +39666,13 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
           `accept_proxy_protocol` value.
     :attr int connection_limit: (optional) The connection limit of the listener.
     :attr LoadBalancerPoolIdentityByName default_pool: (optional) The default pool
-          associated with the listener.
+          for this listener. If specified, the pool's protocol must match the
+          listener's protocol, or the protocols must be compatible. At present, the
+          compatible
+          protocols are `http` and `https`.
+          If unspecified, this listener will be created with no default pool, but one may
+          be
+          subsequently set.
     :attr int port: (optional) The listener port number, or the inclusive lower
           bound of the port range. Each listener in the load balancer must have a unique
           `port` and `protocol` combination.
@@ -38770,9 +39694,14 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
           The specified port range must not overlap with port ranges used by other
           listeners for this load balancer using the same protocol.
     :attr str protocol: The listener protocol. Load balancers in the `network`
-          family support `tcp`. Load balancers in the `application` family support `tcp`,
-          `http`, and `https`. Each listener in the load balancer must have a unique
-          `port` and `protocol` combination.
+          family support `tcp` and
+          `udp` (if `udp_supported` is `true`). Load balancers in the `application` family
+          support `tcp`, `http`, and `https`. Each listener in the load balancer must have
+          a unique `port` and `protocol` combination.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the listener on which the unexpected
+          property value was encountered.
     """
 
     def __init__(self,
@@ -38788,9 +39717,14 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         Initialize a LoadBalancerListenerPrototypeLoadBalancerContext object.
 
         :param str protocol: The listener protocol. Load balancers in the `network`
-               family support `tcp`. Load balancers in the `application` family support
-               `tcp`, `http`, and `https`. Each listener in the load balancer must have a
-               unique `port` and `protocol` combination.
+               family support `tcp` and
+               `udp` (if `udp_supported` is `true`). Load balancers in the `application`
+               family support `tcp`, `http`, and `https`. Each listener in the load
+               balancer must have a unique `port` and `protocol` combination.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the listener on
+               which the unexpected property value was encountered.
         :param bool accept_proxy_protocol: (optional) If set to `true`, this
                listener will accept and forward PROXY protocol information. Supported by
                load balancers in the `application` family (otherwise always `false`).
@@ -38805,7 +39739,13 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
         :param int connection_limit: (optional) The connection limit of the
                listener.
         :param LoadBalancerPoolIdentityByName default_pool: (optional) The default
-               pool associated with the listener.
+               pool for this listener. If specified, the pool's protocol must match the
+               listener's protocol, or the protocols must be compatible. At present, the
+               compatible
+               protocols are `http` and `https`.
+               If unspecified, this listener will be created with no default pool, but one
+               may be
+               subsequently set.
         :param int port: (optional) The listener port number, or the inclusive
                lower bound of the port range. Each listener in the load balancer must have
                a unique `port` and `protocol` combination.
@@ -38902,14 +39842,19 @@ class LoadBalancerListenerPrototypeLoadBalancerContext():
 
     class ProtocolEnum(str, Enum):
         """
-        The listener protocol. Load balancers in the `network` family support `tcp`. Load
-        balancers in the `application` family support `tcp`, `http`, and `https`. Each
-        listener in the load balancer must have a unique `port` and `protocol`
-        combination.
+        The listener protocol. Load balancers in the `network` family support `tcp` and
+        `udp` (if `udp_supported` is `true`). Load balancers in the `application` family
+        support `tcp`, `http`, and `https`. Each listener in the load balancer must have a
+        unique `port` and `protocol` combination.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the listener on which the unexpected
+        property value was encountered.
         """
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
 class LoadBalancerListenerReference():
@@ -39452,6 +40397,7 @@ class LoadBalancerPool():
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
     class ProvisioningStatusEnum(str, Enum):
@@ -40590,11 +41536,13 @@ class LoadBalancerPoolPatch():
     :attr LoadBalancerPoolHealthMonitorPatch health_monitor: (optional) The health
           monitor of this pool.
     :attr str name: (optional) The user-defined name for this load balancer pool.
-    :attr str protocol: (optional) The protocol used for this load balancer pool.
-          The enumerated values for this property are expected to expand in the future.
-          When processing this property, check for and log unknown values. Optionally halt
-          processing and surface the error, or bypass the pool on which the unexpected
-          property value was encountered.
+    :attr str protocol: (optional) The protocol to use for this load balancer pool.
+          Load balancers in the `network` family support `tcp` and `udp` (if
+          `udp_supported` is `true`). Load balancers in the `application` family support
+          `tcp`, `http` and `https`.
+          If this pool is associated with a load balancer listener, the specified protocol
+          must be compatible with the listener's protocol. At present, the compatible
+          protocols are `http` and `https`.
     :attr str proxy_protocol: (optional) The PROXY protocol setting for this pool:
           - `v1`: Enabled with version 1 (human-readable header format)
           - `v2`: Enabled with version 2 (binary header format)
@@ -40621,12 +41569,13 @@ class LoadBalancerPoolPatch():
                health monitor of this pool.
         :param str name: (optional) The user-defined name for this load balancer
                pool.
-        :param str protocol: (optional) The protocol used for this load balancer
-               pool.
-               The enumerated values for this property are expected to expand in the
-               future. When processing this property, check for and log unknown values.
-               Optionally halt processing and surface the error, or bypass the pool on
-               which the unexpected property value was encountered.
+        :param str protocol: (optional) The protocol to use for this load balancer
+               pool. Load balancers in the `network` family support `tcp` and `udp` (if
+               `udp_supported` is `true`). Load balancers in the `application` family
+               support `tcp`, `http` and `https`.
+               If this pool is associated with a load balancer listener, the specified
+               protocol must be compatible with the listener's protocol. At present, the
+               compatible protocols are `http` and `https`.
         :param str proxy_protocol: (optional) The PROXY protocol setting for this
                pool:
                - `v1`: Enabled with version 1 (human-readable header format)
@@ -40713,15 +41662,17 @@ class LoadBalancerPoolPatch():
 
     class ProtocolEnum(str, Enum):
         """
-        The protocol used for this load balancer pool.
-        The enumerated values for this property are expected to expand in the future. When
-        processing this property, check for and log unknown values. Optionally halt
-        processing and surface the error, or bypass the pool on which the unexpected
-        property value was encountered.
+        The protocol to use for this load balancer pool. Load balancers in the `network`
+        family support `tcp` and `udp` (if `udp_supported` is `true`). Load balancers in
+        the `application` family support `tcp`, `http` and `https`.
+        If this pool is associated with a load balancer listener, the specified protocol
+        must be compatible with the listener's protocol. At present, the compatible
+        protocols are `http` and `https`.
         """
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
     class ProxyProtocolEnum(str, Enum):
@@ -40752,9 +41703,9 @@ class LoadBalancerPoolPrototype():
     :attr str name: (optional) The user-defined name for this load balancer pool. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr str protocol: The protocol used for this load balancer pool. Load
-          balancers in the `network` family support `tcp`. Load balancers in the
-          `application` family support `tcp`, `http`, and
-          `https`.
+          balancers in the `network` family support `tcp` and `udp` (if `udp_supported` is
+          `true`). Load balancers in the
+          `application` family support `tcp`, `http`, and `https`.
     :attr str proxy_protocol: (optional) The PROXY protocol setting for this pool:
           - `v1`: Enabled with version 1 (human-readable header format)
           - `v2`: Enabled with version 2 (binary header format)
@@ -40781,9 +41732,9 @@ class LoadBalancerPoolPrototype():
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
         :param str protocol: The protocol used for this load balancer pool. Load
-               balancers in the `network` family support `tcp`. Load balancers in the
-               `application` family support `tcp`, `http`, and
-               `https`.
+               balancers in the `network` family support `tcp` and `udp` (if
+               `udp_supported` is `true`). Load balancers in the
+               `application` family support `tcp`, `http`, and `https`.
         :param List[LoadBalancerPoolMemberPrototype] members: (optional) The
                members for this load balancer pool. For load balancers in the `network`
                family, the same `port` and `target` tuple cannot be shared by a pool
@@ -40889,13 +41840,14 @@ class LoadBalancerPoolPrototype():
     class ProtocolEnum(str, Enum):
         """
         The protocol used for this load balancer pool. Load balancers in the `network`
-        family support `tcp`. Load balancers in the `application` family support `tcp`,
-        `http`, and
-        `https`.
+        family support `tcp` and `udp` (if `udp_supported` is `true`). Load balancers in
+        the
+        `application` family support `tcp`, `http`, and `https`.
         """
         HTTP = 'http'
         HTTPS = 'https'
         TCP = 'tcp'
+        UDP = 'udp'
 
 
     class ProxyProtocolEnum(str, Enum):
@@ -41302,6 +42254,134 @@ class LoadBalancerPoolSessionPersistencePrototype():
         SOURCE_IP = 'source_ip'
 
 
+class LoadBalancerPrivateIpsItem():
+    """
+    LoadBalancerPrivateIpsItem.
+
+    :attr str address: The IP address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
+    :attr ReservedIPReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this reserved IP.
+    :attr str id: The unique identifier for this reserved IP.
+    :attr str name: The user-defined or system-provided name for this reserved IP.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 address: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'ReservedIPReferenceDeleted' = None) -> None:
+        """
+        Initialize a LoadBalancerPrivateIpsItem object.
+
+        :param str address: The IP address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
+        :param str href: The URL for this reserved IP.
+        :param str id: The unique identifier for this reserved IP.
+        :param str name: The user-defined or system-provided name for this reserved
+               IP.
+        :param str resource_type: The resource type.
+        :param ReservedIPReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        self.address = address
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerPrivateIpsItem':
+        """Initialize a LoadBalancerPrivateIpsItem object from a json dictionary."""
+        args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        else:
+            raise ValueError('Required property \'address\' not present in LoadBalancerPrivateIpsItem JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = ReservedIPReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in LoadBalancerPrivateIpsItem JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in LoadBalancerPrivateIpsItem JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in LoadBalancerPrivateIpsItem JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in LoadBalancerPrivateIpsItem JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerPrivateIpsItem object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerPrivateIpsItem object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerPrivateIpsItem') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerPrivateIpsItem') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        SUBNET_RESERVED_IP = 'subnet_reserved_ip'
+
+
 class LoadBalancerProfile():
     """
     LoadBalancerProfile.
@@ -41313,6 +42393,7 @@ class LoadBalancerProfile():
     :attr str name: The globally unique name for this load balancer profile.
     :attr LoadBalancerProfileRouteModeSupported route_mode_supported:
     :attr LoadBalancerProfileSecurityGroupsSupported security_groups_supported:
+    :attr LoadBalancerProfileUDPSupported udp_supported:
     """
 
     def __init__(self,
@@ -41321,7 +42402,8 @@ class LoadBalancerProfile():
                  logging_supported: 'LoadBalancerProfileLoggingSupported',
                  name: str,
                  route_mode_supported: 'LoadBalancerProfileRouteModeSupported',
-                 security_groups_supported: 'LoadBalancerProfileSecurityGroupsSupported') -> None:
+                 security_groups_supported: 'LoadBalancerProfileSecurityGroupsSupported',
+                 udp_supported: 'LoadBalancerProfileUDPSupported') -> None:
         """
         Initialize a LoadBalancerProfile object.
 
@@ -41334,6 +42416,7 @@ class LoadBalancerProfile():
         :param LoadBalancerProfileRouteModeSupported route_mode_supported:
         :param LoadBalancerProfileSecurityGroupsSupported
                security_groups_supported:
+        :param LoadBalancerProfileUDPSupported udp_supported:
         """
         self.family = family
         self.href = href
@@ -41341,6 +42424,7 @@ class LoadBalancerProfile():
         self.name = name
         self.route_mode_supported = route_mode_supported
         self.security_groups_supported = security_groups_supported
+        self.udp_supported = udp_supported
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfile':
@@ -41370,6 +42454,10 @@ class LoadBalancerProfile():
             args['security_groups_supported'] = _dict.get('security_groups_supported')
         else:
             raise ValueError('Required property \'security_groups_supported\' not present in LoadBalancerProfile JSON')
+        if 'udp_supported' in _dict:
+            args['udp_supported'] = _dict.get('udp_supported')
+        else:
+            raise ValueError('Required property \'udp_supported\' not present in LoadBalancerProfile JSON')
         return cls(**args)
 
     @classmethod
@@ -41398,6 +42486,11 @@ class LoadBalancerProfile():
                 _dict['security_groups_supported'] = self.security_groups_supported
             else:
                 _dict['security_groups_supported'] = self.security_groups_supported.to_dict()
+        if hasattr(self, 'udp_supported') and self.udp_supported is not None:
+            if isinstance(self.udp_supported, dict):
+                _dict['udp_supported'] = self.udp_supported
+            else:
+                _dict['udp_supported'] = self.udp_supported.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -41830,6 +42923,21 @@ class LoadBalancerProfileSecurityGroupsSupported():
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['LoadBalancerProfileSecurityGroupsSupportedFixed', 'LoadBalancerProfileSecurityGroupsSupportedDependent']))
+        raise Exception(msg)
+
+class LoadBalancerProfileUDPSupported():
+    """
+    LoadBalancerProfileUDPSupported.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a LoadBalancerProfileUDPSupported object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['LoadBalancerProfileUDPSupportedFixed', 'LoadBalancerProfileUDPSupportedDependent']))
         raise Exception(msg)
 
 class LoadBalancerReferenceDeleted():
@@ -43633,8 +44741,7 @@ class NetworkInterface():
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr List[SecurityGroupReference] security_groups: The security groups
           targeting this network interface.
@@ -43650,7 +44757,7 @@ class NetworkInterface():
                  id: str,
                  name: str,
                  port_speed: int,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  security_groups: List['SecurityGroupReference'],
                  status: str,
@@ -43670,8 +44777,7 @@ class NetworkInterface():
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
         :param int port_speed: The network interface port speed in Mbps.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: The security groups
                targeting this network interface.
@@ -43689,7 +44795,7 @@ class NetworkInterface():
         self.id = id
         self.name = name
         self.port_speed = port_speed
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
         self.security_groups = security_groups
         self.status = status
@@ -43726,10 +44832,10 @@ class NetworkInterface():
             args['port_speed'] = _dict.get('port_speed')
         else:
             raise ValueError('Required property \'port_speed\' not present in NetworkInterface JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in NetworkInterface JSON')
+            raise ValueError('Required property \'primary_ip\' not present in NetworkInterface JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -43774,8 +44880,8 @@ class NetworkInterface():
             _dict['name'] = self.name
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'security_groups') and self.security_groups is not None:
@@ -43842,8 +44948,7 @@ class NetworkInterfaceBareMetalServerContextReference():
     :attr str href: The URL for this network interface.
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr SubnetReference subnet: The associated subnet.
     """
@@ -43852,7 +44957,7 @@ class NetworkInterfaceBareMetalServerContextReference():
                  href: str,
                  id: str,
                  name: str,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  subnet: 'SubnetReference',
                  *,
@@ -43863,8 +44968,7 @@ class NetworkInterfaceBareMetalServerContextReference():
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param SubnetReference subnet: The associated subnet.
         :param NetworkInterfaceBareMetalServerContextReferenceDeleted deleted:
@@ -43876,7 +44980,7 @@ class NetworkInterfaceBareMetalServerContextReference():
         self.href = href
         self.id = id
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
         self.subnet = subnet
 
@@ -43898,10 +45002,10 @@ class NetworkInterfaceBareMetalServerContextReference():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
+            raise ValueError('Required property \'primary_ip\' not present in NetworkInterfaceBareMetalServerContextReference JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -43928,8 +45032,8 @@ class NetworkInterfaceBareMetalServerContextReference():
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'subnet') and self.subnet is not None:
@@ -44018,223 +45122,20 @@ class NetworkInterfaceBareMetalServerContextReferenceDeleted():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class NetworkInterfaceCollection():
+class NetworkInterfaceIPPrototype():
     """
-    NetworkInterfaceCollection.
+    NetworkInterfaceIPPrototype.
 
-    :attr NetworkInterfaceCollectionFirst first: A link to the first page of
-          resources.
-    :attr int limit: The maximum number of resources that can be returned by the
-          request.
-    :attr List[NetworkInterface] network_interfaces: Collection of network
-          interfaces.
-    :attr NetworkInterfaceCollectionNext next: (optional) A link to the next page of
-          resources. This property is present for all pages
-          except the last page.
-    :attr int total_count: The total number of resources across all pages.
     """
 
-    def __init__(self,
-                 first: 'NetworkInterfaceCollectionFirst',
-                 limit: int,
-                 network_interfaces: List['NetworkInterface'],
-                 total_count: int,
-                 *,
-                 next: 'NetworkInterfaceCollectionNext' = None) -> None:
+    def __init__(self) -> None:
         """
-        Initialize a NetworkInterfaceCollection object.
+        Initialize a NetworkInterfaceIPPrototype object.
 
-        :param NetworkInterfaceCollectionFirst first: A link to the first page of
-               resources.
-        :param int limit: The maximum number of resources that can be returned by
-               the request.
-        :param List[NetworkInterface] network_interfaces: Collection of network
-               interfaces.
-        :param int total_count: The total number of resources across all pages.
-        :param NetworkInterfaceCollectionNext next: (optional) A link to the next
-               page of resources. This property is present for all pages
-               except the last page.
         """
-        self.first = first
-        self.limit = limit
-        self.network_interfaces = network_interfaces
-        self.next = next
-        self.total_count = total_count
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceCollection':
-        """Initialize a NetworkInterfaceCollection object from a json dictionary."""
-        args = {}
-        if 'first' in _dict:
-            args['first'] = NetworkInterfaceCollectionFirst.from_dict(_dict.get('first'))
-        else:
-            raise ValueError('Required property \'first\' not present in NetworkInterfaceCollection JSON')
-        if 'limit' in _dict:
-            args['limit'] = _dict.get('limit')
-        else:
-            raise ValueError('Required property \'limit\' not present in NetworkInterfaceCollection JSON')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterface.from_dict(x) for x in _dict.get('network_interfaces')]
-        else:
-            raise ValueError('Required property \'network_interfaces\' not present in NetworkInterfaceCollection JSON')
-        if 'next' in _dict:
-            args['next'] = NetworkInterfaceCollectionNext.from_dict(_dict.get('next'))
-        if 'total_count' in _dict:
-            args['total_count'] = _dict.get('total_count')
-        else:
-            raise ValueError('Required property \'total_count\' not present in NetworkInterfaceCollection JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a NetworkInterfaceCollection object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'first') and self.first is not None:
-            _dict['first'] = self.first.to_dict()
-        if hasattr(self, 'limit') and self.limit is not None:
-            _dict['limit'] = self.limit
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
-        if hasattr(self, 'next') and self.next is not None:
-            _dict['next'] = self.next.to_dict()
-        if hasattr(self, 'total_count') and self.total_count is not None:
-            _dict['total_count'] = self.total_count
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this NetworkInterfaceCollection object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'NetworkInterfaceCollection') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'NetworkInterfaceCollection') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class NetworkInterfaceCollectionFirst():
-    """
-    A link to the first page of resources.
-
-    :attr str href: The URL for a page of resources.
-    """
-
-    def __init__(self,
-                 href: str) -> None:
-        """
-        Initialize a NetworkInterfaceCollectionFirst object.
-
-        :param str href: The URL for a page of resources.
-        """
-        self.href = href
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceCollectionFirst':
-        """Initialize a NetworkInterfaceCollectionFirst object from a json dictionary."""
-        args = {}
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in NetworkInterfaceCollectionFirst JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a NetworkInterfaceCollectionFirst object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this NetworkInterfaceCollectionFirst object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'NetworkInterfaceCollectionFirst') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'NetworkInterfaceCollectionFirst') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class NetworkInterfaceCollectionNext():
-    """
-    A link to the next page of resources. This property is present for all pages except
-    the last page.
-
-    :attr str href: The URL for a page of resources.
-    """
-
-    def __init__(self,
-                 href: str) -> None:
-        """
-        Initialize a NetworkInterfaceCollectionNext object.
-
-        :param str href: The URL for a page of resources.
-        """
-        self.href = href
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceCollectionNext':
-        """Initialize a NetworkInterfaceCollectionNext object from a json dictionary."""
-        args = {}
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in NetworkInterfaceCollectionNext JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a NetworkInterfaceCollectionNext object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this NetworkInterfaceCollectionNext object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'NetworkInterfaceCollectionNext') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'NetworkInterfaceCollectionNext') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['NetworkInterfaceIPPrototypeReservedIPIdentity', 'NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext']))
+        raise Exception(msg)
 
 class NetworkInterfaceInstanceContextReference():
     """
@@ -44247,8 +45148,7 @@ class NetworkInterfaceInstanceContextReference():
     :attr str href: The URL for this network interface.
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr SubnetReference subnet: The associated subnet.
     """
@@ -44257,7 +45157,7 @@ class NetworkInterfaceInstanceContextReference():
                  href: str,
                  id: str,
                  name: str,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  subnet: 'SubnetReference',
                  *,
@@ -44268,8 +45168,7 @@ class NetworkInterfaceInstanceContextReference():
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param SubnetReference subnet: The associated subnet.
         :param NetworkInterfaceInstanceContextReferenceDeleted deleted: (optional)
@@ -44281,7 +45180,7 @@ class NetworkInterfaceInstanceContextReference():
         self.href = href
         self.id = id
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
         self.subnet = subnet
 
@@ -44303,10 +45202,10 @@ class NetworkInterfaceInstanceContextReference():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in NetworkInterfaceInstanceContextReference JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in NetworkInterfaceInstanceContextReference JSON')
+            raise ValueError('Required property \'primary_ip\' not present in NetworkInterfaceInstanceContextReference JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -44333,8 +45232,8 @@ class NetworkInterfaceInstanceContextReference():
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'subnet') and self.subnet is not None:
@@ -44503,9 +45402,14 @@ class NetworkInterfacePrototype():
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
-          specified, it must be an available address on the network interface's subnet. If
-          unspecified, an available address on the subnet will be automatically selected.
+    :attr NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP address
+          to bind to the network interface. This can be specified using
+          an existing reserved IP, or a prototype object for a new reserved IP.
+          If an existing reserved IP or a prototype object with an address is specified,
+          it must
+          be available on the network interface's subnet. Otherwise, an available address
+          on the
+          subnet will be automatically selected and reserved.
     :attr List[SecurityGroupIdentity] security_groups: (optional) The security
           groups to use for this network interface. If unspecified, the VPC's default
           security group is used.
@@ -44517,7 +45421,7 @@ class NetworkInterfacePrototype():
                  *,
                  allow_ip_spoofing: bool = None,
                  name: str = None,
-                 primary_ipv4_address: str = None,
+                 primary_ip: 'NetworkInterfaceIPPrototype' = None,
                  security_groups: List['SecurityGroupIdentity'] = None) -> None:
         """
         Initialize a NetworkInterfacePrototype object.
@@ -44531,17 +45435,21 @@ class NetworkInterfacePrototype():
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using
+               an existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must
+               be available on the network interface's subnet. Otherwise, an available
+               address on the
+               subnet will be automatically selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
         """
         self.allow_ip_spoofing = allow_ip_spoofing
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
 
@@ -44553,8 +45461,8 @@ class NetworkInterfacePrototype():
             args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = _dict.get('primary_ip')
         if 'security_groups' in _dict:
             args['security_groups'] = _dict.get('security_groups')
         if 'subnet' in _dict:
@@ -44575,8 +45483,11 @@ class NetworkInterfacePrototype():
             _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            if isinstance(self.primary_ip, dict):
+                _dict['primary_ip'] = self.primary_ip
+            else:
+                _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'security_groups') and self.security_groups is not None:
             security_groups_list = []
             for x in self.security_groups:
@@ -44609,125 +45520,6 @@ class NetworkInterfacePrototype():
     def __ne__(self, other: 'NetworkInterfacePrototype') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-class NetworkInterfaceReference():
-    """
-    NetworkInterfaceReference.
-
-    :attr NetworkInterfaceReferenceDeleted deleted: (optional) If present, this
-          property indicates the referenced resource has been deleted and provides
-          some supplementary information.
-    :attr str href: The URL for this network interface.
-    :attr str id: The unique identifier for this network interface.
-    :attr str name: The user-defined name for this network interface.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
-    :attr str resource_type: The resource type.
-    """
-
-    def __init__(self,
-                 href: str,
-                 id: str,
-                 name: str,
-                 primary_ipv4_address: str,
-                 resource_type: str,
-                 *,
-                 deleted: 'NetworkInterfaceReferenceDeleted' = None) -> None:
-        """
-        Initialize a NetworkInterfaceReference object.
-
-        :param str href: The URL for this network interface.
-        :param str id: The unique identifier for this network interface.
-        :param str name: The user-defined name for this network interface.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
-        :param str resource_type: The resource type.
-        :param NetworkInterfaceReferenceDeleted deleted: (optional) If present,
-               this property indicates the referenced resource has been deleted and
-               provides
-               some supplementary information.
-        """
-        self.deleted = deleted
-        self.href = href
-        self.id = id
-        self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
-        self.resource_type = resource_type
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceReference':
-        """Initialize a NetworkInterfaceReference object from a json dictionary."""
-        args = {}
-        if 'deleted' in _dict:
-            args['deleted'] = NetworkInterfaceReferenceDeleted.from_dict(_dict.get('deleted'))
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in NetworkInterfaceReference JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in NetworkInterfaceReference JSON')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in NetworkInterfaceReference JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
-        else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in NetworkInterfaceReference JSON')
-        if 'resource_type' in _dict:
-            args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in NetworkInterfaceReference JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a NetworkInterfaceReference object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'deleted') and self.deleted is not None:
-            _dict['deleted'] = self.deleted.to_dict()
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this NetworkInterfaceReference object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'NetworkInterfaceReference') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'NetworkInterfaceReference') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class ResourceTypeEnum(str, Enum):
-        """
-        The resource type.
-        """
-        NETWORK_INTERFACE = 'network_interface'
-
 
 class NetworkInterfaceReferenceDeleted():
     """
@@ -46831,11 +47623,12 @@ class ReservedIP():
     :attr datetime created_at: The date and time that the reserved IP was created.
     :attr str href: The URL for this reserved IP.
     :attr str id: The unique identifier for this reserved IP.
+    :attr str lifecycle_state: The lifecycle state of the reserved IP.
     :attr str name: The user-defined or system-provided name for this reserved IP.
-    :attr str owner: The owner of a reserved IP, defining whether it is managed by
-          the user or the provider.
+    :attr str owner: The owner of the reserved IP.
     :attr str resource_type: The resource type.
     :attr ReservedIPTarget target: (optional) The target of this reserved IP.
+          If absent, this reserved IP is provider-owned or unbound.
     """
 
     def __init__(self,
@@ -46844,6 +47637,7 @@ class ReservedIP():
                  created_at: datetime,
                  href: str,
                  id: str,
+                 lifecycle_state: str,
                  name: str,
                  owner: str,
                  resource_type: str,
@@ -46866,18 +47660,20 @@ class ReservedIP():
                created.
         :param str href: The URL for this reserved IP.
         :param str id: The unique identifier for this reserved IP.
+        :param str lifecycle_state: The lifecycle state of the reserved IP.
         :param str name: The user-defined or system-provided name for this reserved
                IP.
-        :param str owner: The owner of a reserved IP, defining whether it is
-               managed by the user or the provider.
+        :param str owner: The owner of the reserved IP.
         :param str resource_type: The resource type.
         :param ReservedIPTarget target: (optional) The target of this reserved IP.
+               If absent, this reserved IP is provider-owned or unbound.
         """
         self.address = address
         self.auto_delete = auto_delete
         self.created_at = created_at
         self.href = href
         self.id = id
+        self.lifecycle_state = lifecycle_state
         self.name = name
         self.owner = owner
         self.resource_type = resource_type
@@ -46907,6 +47703,10 @@ class ReservedIP():
             args['id'] = _dict.get('id')
         else:
             raise ValueError('Required property \'id\' not present in ReservedIP JSON')
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in ReservedIP JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -46941,6 +47741,8 @@ class ReservedIP():
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'owner') and self.owner is not None:
@@ -46972,10 +47774,22 @@ class ReservedIP():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the reserved IP.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
     class OwnerEnum(str, Enum):
         """
-        The owner of a reserved IP, defining whether it is managed by the user or the
-        provider.
+        The owner of the reserved IP.
         """
         PROVIDER = 'provider'
         USER = 'user'
@@ -47365,6 +48179,224 @@ class ReservedIPCollectionFirst():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class ReservedIPCollectionNetworkInterfaceContext():
+    """
+    ReservedIPCollectionNetworkInterfaceContext.
+
+    :attr ReservedIPCollectionNetworkInterfaceContextFirst first: A link to the
+          first page of resources.
+    :attr List[ReservedIP] ips: Collection of reserved IPs bound to a network
+          interface.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr ReservedIPCollectionNetworkInterfaceContextNext next: (optional) A link to
+          the next page of resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'ReservedIPCollectionNetworkInterfaceContextFirst',
+                 ips: List['ReservedIP'],
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'ReservedIPCollectionNetworkInterfaceContextNext' = None) -> None:
+        """
+        Initialize a ReservedIPCollectionNetworkInterfaceContext object.
+
+        :param ReservedIPCollectionNetworkInterfaceContextFirst first: A link to
+               the first page of resources.
+        :param List[ReservedIP] ips: Collection of reserved IPs bound to a network
+               interface.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param ReservedIPCollectionNetworkInterfaceContextNext next: (optional) A
+               link to the next page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.ips = ips
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPCollectionNetworkInterfaceContext':
+        """Initialize a ReservedIPCollectionNetworkInterfaceContext object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = ReservedIPCollectionNetworkInterfaceContextFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in ReservedIPCollectionNetworkInterfaceContext JSON')
+        if 'ips' in _dict:
+            args['ips'] = [ReservedIP.from_dict(x) for x in _dict.get('ips')]
+        else:
+            raise ValueError('Required property \'ips\' not present in ReservedIPCollectionNetworkInterfaceContext JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in ReservedIPCollectionNetworkInterfaceContext JSON')
+        if 'next' in _dict:
+            args['next'] = ReservedIPCollectionNetworkInterfaceContextNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in ReservedIPCollectionNetworkInterfaceContext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPCollectionNetworkInterfaceContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'ips') and self.ips is not None:
+            _dict['ips'] = [x.to_dict() for x in self.ips]
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPCollectionNetworkInterfaceContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPCollectionNetworkInterfaceContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPCollectionNetworkInterfaceContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class ReservedIPCollectionNetworkInterfaceContextFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a ReservedIPCollectionNetworkInterfaceContextFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPCollectionNetworkInterfaceContextFirst':
+        """Initialize a ReservedIPCollectionNetworkInterfaceContextFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPCollectionNetworkInterfaceContextFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPCollectionNetworkInterfaceContextFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPCollectionNetworkInterfaceContextFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPCollectionNetworkInterfaceContextFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPCollectionNetworkInterfaceContextFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class ReservedIPCollectionNetworkInterfaceContextNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a ReservedIPCollectionNetworkInterfaceContextNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPCollectionNetworkInterfaceContextNext':
+        """Initialize a ReservedIPCollectionNetworkInterfaceContextNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPCollectionNetworkInterfaceContextNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPCollectionNetworkInterfaceContextNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPCollectionNetworkInterfaceContextNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPCollectionNetworkInterfaceContextNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPCollectionNetworkInterfaceContextNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class ReservedIPCollectionNext():
     """
     A link to the next page of resources. This property is present for all pages except
@@ -47683,6 +48715,7 @@ class ReservedIPReferenceDeleted():
 class ReservedIPTarget():
     """
     The target of this reserved IP.
+    If absent, this reserved IP is provider-owned or unbound.
 
     """
 
@@ -47692,7 +48725,7 @@ class ReservedIPTarget():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['ReservedIPTargetEndpointGatewayReference']))
+                  ", ".join(['ReservedIPTargetEndpointGatewayReference', 'ReservedIPTargetNetworkInterfaceReferenceTargetContext', 'ReservedIPTargetLoadBalancerReference', 'ReservedIPTargetVPNGatewayReference', 'ReservedIPTargetGenericResourceReference']))
         raise Exception(msg)
 
 class ReservedIPTargetPrototype():
@@ -48601,24 +49634,27 @@ class RoutingTable():
           [Direct Link](https://cloud.ibm.com/docs/dl/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr bool route_transit_gateway_ingress: Indicates whether this routing table
           is used to route traffic that originates from from [Transit
           Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr bool route_vpc_zone_ingress: Indicates whether this routing table is used
           to route traffic that originates from subnets in other zones in this VPC.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr List[RouteReference] routes: The routes for this routing table.
     :attr List[SubnetReference] subnets: The subnets to which this routing table is
           attached.
@@ -48654,28 +49690,28 @@ class RoutingTable():
                [Direct Link](https://cloud.ibm.com/docs/dl/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_transit_gateway_ingress: Indicates whether this routing
                table is used to route traffic that originates from from [Transit
                Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_vpc_zone_ingress: Indicates whether this routing table is
                used to route traffic that originates from subnets in other zones in this
                VPC.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param List[RouteReference] routes: The routes for this routing table.
         :param List[SubnetReference] subnets: The subnets to which this routing
                table is attached.
@@ -49063,9 +50099,10 @@ class RoutingTablePatch():
           table. Updating to `false` deselects this routing table.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     :attr bool route_transit_gateway_ingress: (optional) Indicates whether this
           routing table is used to route traffic that originates from
           [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this VPC.
@@ -49075,9 +50112,10 @@ class RoutingTablePatch():
           routing table. Updating to `false` deselects this routing table.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
           If [Classic
           Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
           is enabled for this VPC, and this property is set to `true`, its incoming
@@ -49090,9 +50128,10 @@ class RoutingTablePatch():
           table.
           Incoming traffic will be routed according to the routing table with one
           exception: routes with an `action` of `deliver` are treated as `drop` unless the
-          `next_hop` is an IP address within the VPC's address prefix ranges. Therefore,
-          if an incoming packet matches a route with a `next_hop` of an internet-bound IP
-          address or a VPN gateway connection, the packet will be dropped.
+          `next_hop` is an IP address bound to a network interface on a subnet in the
+          route's `zone`. Therefore, if an incoming packet matches a route with a
+          `next_hop` of an internet-bound IP address or a VPN gateway connection, the
+          packet will be dropped.
     """
 
     def __init__(self,
@@ -49114,10 +50153,10 @@ class RoutingTablePatch():
                this routing table. Updating to `false` deselects this routing table.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         :param bool route_transit_gateway_ingress: (optional) Indicates whether
                this routing table is used to route traffic that originates from
                [Transit Gateway](https://cloud.ibm.com/cloud/transit-gateway/) to this
@@ -49127,10 +50166,10 @@ class RoutingTablePatch():
                this routing table. Updating to `false` deselects this routing table.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
                If [Classic
                Access](https://cloud.ibm.com/docs/vpc?topic=vpc-setting-up-access-to-classic-infrastructure)
                is enabled for this VPC, and this property is set to `true`, its incoming
@@ -49143,10 +50182,10 @@ class RoutingTablePatch():
                `false` deselects this routing table.
                Incoming traffic will be routed according to the routing table with one
                exception: routes with an `action` of `deliver` are treated as `drop`
-               unless the `next_hop` is an IP address within the VPC's address prefix
-               ranges. Therefore, if an incoming packet matches a route with a `next_hop`
-               of an internet-bound IP address or a VPN gateway connection, the packet
-               will be dropped.
+               unless the `next_hop` is an IP address bound to a network interface on a
+               subnet in the route's `zone`. Therefore, if an incoming packet matches a
+               route with a `next_hop` of an internet-bound IP address or a VPN gateway
+               connection, the packet will be dropped.
         """
         self.name = name
         self.route_direct_link_ingress = route_direct_link_ingress
@@ -49377,8 +50416,6 @@ class SecurityGroup():
     :attr str id: The unique identifier for this security group.
     :attr str name: The user-defined name for this security group. Names must be
           unique within the VPC the security group resides in.
-    :attr List[NetworkInterfaceReference] network_interfaces: The network interfaces
-          for this security group.
     :attr ResourceGroupReference resource_group: The resource group for this
           security group.
     :attr List[SecurityGroupRule] rules: The rules for this security group. If no
@@ -49394,7 +50431,6 @@ class SecurityGroup():
                  href: str,
                  id: str,
                  name: str,
-                 network_interfaces: List['NetworkInterfaceReference'],
                  resource_group: 'ResourceGroupReference',
                  rules: List['SecurityGroupRule'],
                  targets: List['SecurityGroupTargetReference'],
@@ -49409,8 +50445,6 @@ class SecurityGroup():
         :param str id: The unique identifier for this security group.
         :param str name: The user-defined name for this security group. Names must
                be unique within the VPC the security group resides in.
-        :param List[NetworkInterfaceReference] network_interfaces: The network
-               interfaces for this security group.
         :param ResourceGroupReference resource_group: The resource group for this
                security group.
         :param List[SecurityGroupRule] rules: The rules for this security group. If
@@ -49424,7 +50458,6 @@ class SecurityGroup():
         self.href = href
         self.id = id
         self.name = name
-        self.network_interfaces = network_interfaces
         self.resource_group = resource_group
         self.rules = rules
         self.targets = targets
@@ -49454,10 +50487,6 @@ class SecurityGroup():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in SecurityGroup JSON')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterfaceReference.from_dict(x) for x in _dict.get('network_interfaces')]
-        else:
-            raise ValueError('Required property \'network_interfaces\' not present in SecurityGroup JSON')
         if 'resource_group' in _dict:
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
@@ -49494,8 +50523,6 @@ class SecurityGroup():
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'rules') and self.rules is not None:
@@ -50709,7 +51736,7 @@ class Snapshot():
           If absent, this snapshot's data has not yet been captured. Additionally, this
           property may be absent for snapshots created before 1 January 2022.
     :attr datetime created_at: The date and time that this snapshot was created.
-    :attr str crn: The CRN for this snapshot.
+    :attr str crn: The CRN of this snapshot.
     :attr bool deletable: Indicates whether this snapshot can be deleted. This value
           will always be `true`.
     :attr str encryption: The type of encryption used on the source volume.
@@ -50729,13 +51756,16 @@ class Snapshot():
     :attr ResourceGroupReference resource_group: The resource group for this
           snapshot.
     :attr str resource_type: The resource type.
+    :attr List[str] service_tags: The service tags prefixed with `is.snapshot:`
+          associated with this snapshot.
     :attr int size: The size of this snapshot rounded up to the next gigabyte.
     :attr ImageReference source_image: (optional) If present, the image from which
-          the data on this volume was most directly
+          the data on this snapshot was most directly
           provisioned.
     :attr VolumeReference source_volume: The source volume this snapshot was created
           from (may be
           [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
+    :attr List[str] user_tags: The user tags associated with this snapshot.
     """
 
     def __init__(self,
@@ -50751,8 +51781,10 @@ class Snapshot():
                  name: str,
                  resource_group: 'ResourceGroupReference',
                  resource_type: str,
+                 service_tags: List[str],
                  size: int,
                  source_volume: 'VolumeReference',
+                 user_tags: List[str],
                  *,
                  captured_at: datetime = None,
                  encryption_key: 'EncryptionKeyReference' = None,
@@ -50765,7 +51797,7 @@ class Snapshot():
                with a volume created from this snapshot.
         :param datetime created_at: The date and time that this snapshot was
                created.
-        :param str crn: The CRN for this snapshot.
+        :param str crn: The CRN of this snapshot.
         :param bool deletable: Indicates whether this snapshot can be deleted. This
                value will always be `true`.
         :param str encryption: The type of encryption used on the source volume.
@@ -50779,10 +51811,13 @@ class Snapshot():
         :param ResourceGroupReference resource_group: The resource group for this
                snapshot.
         :param str resource_type: The resource type.
+        :param List[str] service_tags: The service tags prefixed with
+               `is.snapshot:` associated with this snapshot.
         :param int size: The size of this snapshot rounded up to the next gigabyte.
         :param VolumeReference source_volume: The source volume this snapshot was
                created from (may be
                [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
+        :param List[str] user_tags: The user tags associated with this snapshot.
         :param datetime captured_at: (optional) The date and time the data capture
                for this snapshot was completed.
                If absent, this snapshot's data has not yet been captured. Additionally,
@@ -50794,7 +51829,7 @@ class Snapshot():
         :param OperatingSystem operating_system: (optional) The operating system
                included in this image.
         :param ImageReference source_image: (optional) If present, the image from
-               which the data on this volume was most directly
+               which the data on this snapshot was most directly
                provisioned.
         """
         self.bootable = bootable
@@ -50812,9 +51847,11 @@ class Snapshot():
         self.operating_system = operating_system
         self.resource_group = resource_group
         self.resource_type = resource_type
+        self.service_tags = service_tags
         self.size = size
         self.source_image = source_image
         self.source_volume = source_volume
+        self.user_tags = user_tags
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'Snapshot':
@@ -50874,6 +51911,10 @@ class Snapshot():
             args['resource_type'] = _dict.get('resource_type')
         else:
             raise ValueError('Required property \'resource_type\' not present in Snapshot JSON')
+        if 'service_tags' in _dict:
+            args['service_tags'] = _dict.get('service_tags')
+        else:
+            raise ValueError('Required property \'service_tags\' not present in Snapshot JSON')
         if 'size' in _dict:
             args['size'] = _dict.get('size')
         else:
@@ -50884,6 +51925,10 @@ class Snapshot():
             args['source_volume'] = VolumeReference.from_dict(_dict.get('source_volume'))
         else:
             raise ValueError('Required property \'source_volume\' not present in Snapshot JSON')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
+        else:
+            raise ValueError('Required property \'user_tags\' not present in Snapshot JSON')
         return cls(**args)
 
     @classmethod
@@ -50924,12 +51969,16 @@ class Snapshot():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'service_tags') and self.service_tags is not None:
+            _dict['service_tags'] = self.service_tags
         if hasattr(self, 'size') and self.size is not None:
             _dict['size'] = self.size
         if hasattr(self, 'source_image') and self.source_image is not None:
             _dict['source_image'] = self.source_image.to_dict()
         if hasattr(self, 'source_volume') and self.source_volume is not None:
             _dict['source_volume'] = self.source_volume.to_dict()
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
         return _dict
 
     def _to_dict(self):
@@ -51213,17 +52262,23 @@ class SnapshotPatch():
     SnapshotPatch.
 
     :attr str name: (optional) The user-defined name for this snapshot.
+    :attr List[str] user_tags: (optional) The user tags associated with this
+          snapshot.
     """
 
     def __init__(self,
                  *,
-                 name: str = None) -> None:
+                 name: str = None,
+                 user_tags: List[str] = None) -> None:
         """
         Initialize a SnapshotPatch object.
 
         :param str name: (optional) The user-defined name for this snapshot.
+        :param List[str] user_tags: (optional) The user tags associated with this
+               snapshot.
         """
         self.name = name
+        self.user_tags = user_tags
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SnapshotPatch':
@@ -51231,6 +52286,8 @@ class SnapshotPatch():
         args = {}
         if 'name' in _dict:
             args['name'] = _dict.get('name')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
         return cls(**args)
 
     @classmethod
@@ -51243,6 +52300,8 @@ class SnapshotPatch():
         _dict = {}
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
         return _dict
 
     def _to_dict(self):
@@ -51263,11 +52322,46 @@ class SnapshotPatch():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class SnapshotPrototype():
+    """
+    SnapshotPrototype.
+
+    :attr str name: (optional) The unique user-defined name for this snapshot. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr ResourceGroupIdentity resource_group: (optional) The resource group to
+          use. If unspecified, the account's [default resource
+          group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr List[str] user_tags: (optional) The user tags associated with this
+          snapshot.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 user_tags: List[str] = None) -> None:
+        """
+        Initialize a SnapshotPrototype object.
+
+        :param str name: (optional) The unique user-defined name for this snapshot.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param List[str] user_tags: (optional) The user tags associated with this
+               snapshot.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['SnapshotPrototypeSnapshotBySourceVolume']))
+        raise Exception(msg)
+
 class SnapshotReference():
     """
     SnapshotReference.
 
-    :attr str crn: The CRN for this snapshot.
+    :attr str crn: The CRN of this snapshot.
     :attr SnapshotReferenceDeleted deleted: (optional) If present, this property
           indicates the referenced resource has been deleted and provides
           some supplementary information.
@@ -51288,7 +52382,7 @@ class SnapshotReference():
         """
         Initialize a SnapshotReference object.
 
-        :param str crn: The CRN for this snapshot.
+        :param str crn: The CRN of this snapshot.
         :param str href: The URL for this snapshot.
         :param str id: The unique identifier for this snapshot.
         :param str name: The user-defined name for this snapshot.
@@ -51459,8 +52553,8 @@ class Subnet():
     :attr str status: The status of the subnet.
     :attr int total_ipv4_address_count: The total number of IPv4 addresses in this
           subnet.
-          Note: This is calculated as 2<sup>(32 − prefix length)</sup>. For example, the
-          prefix length `/24` gives:<br> 2<sup>(32 − 24)</sup> = 2<sup>8</sup> = 256
+          Note: This is calculated as 2<sup>(32 - prefix length)</sup>. For example, the
+          prefix length `/24` gives:<br> 2<sup>(32 - 24)</sup> = 2<sup>8</sup> = 256
           addresses.
     :attr VPCReference vpc: The VPC this subnet is a part of.
     :attr ZoneReference zone: The zone this subnet resides in.
@@ -51506,8 +52600,8 @@ class Subnet():
         :param str status: The status of the subnet.
         :param int total_ipv4_address_count: The total number of IPv4 addresses in
                this subnet.
-               Note: This is calculated as 2<sup>(32 − prefix length)</sup>. For example,
-               the prefix length `/24` gives:<br> 2<sup>(32 − 24)</sup> = 2<sup>8</sup> =
+               Note: This is calculated as 2<sup>(32 - prefix length)</sup>. For example,
+               the prefix length `/24` gives:<br> 2<sup>(32 - 24)</sup> = 2<sup>8</sup> =
                256 addresses.
         :param VPCReference vpc: The VPC this subnet is a part of.
         :param ZoneReference zone: The zone this subnet resides in.
@@ -52243,6 +53337,104 @@ class SubnetReferenceDeleted():
     def __ne__(self, other: 'SubnetReferenceDeleted') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class TrustedProfileIdentity():
+    """
+    Identifies a trusted profile by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a TrustedProfileIdentity object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['TrustedProfileIdentityTrustedProfileById', 'TrustedProfileIdentityTrustedProfileByCRN']))
+        raise Exception(msg)
+
+class TrustedProfileReference():
+    """
+    TrustedProfileReference.
+
+    :attr str crn: The CRN for this trusted profile.
+    :attr str id: The unique identifier for this trusted profile.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 id: str,
+                 resource_type: str) -> None:
+        """
+        Initialize a TrustedProfileReference object.
+
+        :param str crn: The CRN for this trusted profile.
+        :param str id: The unique identifier for this trusted profile.
+        :param str resource_type: The resource type.
+        """
+        self.crn = crn
+        self.id = id
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TrustedProfileReference':
+        """Initialize a TrustedProfileReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in TrustedProfileReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in TrustedProfileReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in TrustedProfileReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TrustedProfileReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TrustedProfileReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TrustedProfileReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TrustedProfileReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        TRUSTED_PROFILE = 'trusted_profile'
+
 
 class VCPU():
     """
@@ -54249,9 +55441,8 @@ class VPNGatewayMember():
     VPNGatewayMember.
 
     :attr IP private_ip: (optional) The private IP address assigned to the VPN
-          gateway member. This
-          property will be present only when the VPN gateway status is
-          `available`.
+          gateway member.
+          This property will be present only when the VPN gateway status is `available`.
     :attr IP public_ip: The public IP address assigned to the VPN gateway member.
     :attr str role: The high availability role assigned to the VPN gateway member.
     :attr str status: The status of the VPN gateway member.
@@ -54272,8 +55463,8 @@ class VPNGatewayMember():
                member.
         :param str status: The status of the VPN gateway member.
         :param IP private_ip: (optional) The private IP address assigned to the VPN
-               gateway member. This
-               property will be present only when the VPN gateway status is
+               gateway member.
+               This property will be present only when the VPN gateway status is
                `available`.
         """
         self.private_ip = private_ip
@@ -54440,6 +55631,63 @@ class VPNGatewayPrototype():
                   ", ".join(['VPNGatewayPrototypeVPNGatewayRouteModePrototype', 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype']))
         raise Exception(msg)
 
+class VPNGatewayReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a VPNGatewayReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayReferenceDeleted':
+        """Initialize a VPNGatewayReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in VPNGatewayReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class Volume():
     """
     Volume.
@@ -54488,6 +55736,7 @@ class Volume():
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the resource on which the unexpected
           reason code was encountered.
+    :attr List[str] user_tags: Tags for this resource.
     :attr List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
           volume attachments for this volume.
     :attr ZoneReference zone: The zone this volume resides in.
@@ -54509,6 +55758,7 @@ class Volume():
                  resource_group: 'ResourceGroupReference',
                  status: str,
                  status_reasons: List['VolumeStatusReason'],
+                 user_tags: List[str],
                  volume_attachments: List['VolumeAttachmentReferenceVolumeContext'],
                  zone: 'ZoneReference',
                  *,
@@ -54552,6 +55802,7 @@ class Volume():
                future. When processing this property, check for and log unknown values.
                Optionally halt processing and surface the error, or bypass the resource on
                which the unexpected reason code was encountered.
+        :param List[str] user_tags: Tags for this resource.
         :param List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
                volume attachments for this volume.
         :param ZoneReference zone: The zone this volume resides in.
@@ -54588,6 +55839,7 @@ class Volume():
         self.source_snapshot = source_snapshot
         self.status = status
         self.status_reasons = status_reasons
+        self.user_tags = user_tags
         self.volume_attachments = volume_attachments
         self.zone = zone
 
@@ -54663,6 +55915,10 @@ class Volume():
             args['status_reasons'] = [VolumeStatusReason.from_dict(x) for x in _dict.get('status_reasons')]
         else:
             raise ValueError('Required property \'status_reasons\' not present in Volume JSON')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
+        else:
+            raise ValueError('Required property \'user_tags\' not present in Volume JSON')
         if 'volume_attachments' in _dict:
             args['volume_attachments'] = [VolumeAttachmentReferenceVolumeContext.from_dict(x) for x in _dict.get('volume_attachments')]
         else:
@@ -54719,6 +55975,8 @@ class Volume():
             _dict['status'] = self.status
         if hasattr(self, 'status_reasons') and self.status_reasons is not None:
             _dict['status_reasons'] = [x.to_dict() for x in self.status_reasons]
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
         if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
             _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
         if hasattr(self, 'zone') and self.zone is not None:
@@ -55204,29 +56462,28 @@ class VolumeAttachmentPrototypeInstanceByImageContext():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class VolumeAttachmentPrototypeInstanceByVolumeContext():
+class VolumeAttachmentPrototypeInstanceBySourceSnapshotContext():
     """
-    VolumeAttachmentPrototypeInstanceByVolumeContext.
+    VolumeAttachmentPrototypeInstanceBySourceSnapshotContext.
 
     :attr bool delete_volume_on_instance_delete: (optional) If set to true, when
           deleting the instance the volume will also be deleted.
     :attr str name: (optional) The user-defined name for this volume attachment.
           Names must be unique within the instance the volume attachment resides in.
-    :attr VolumeAttachmentVolumePrototypeInstanceByVolumeContext volume: An existing
-          volume to attach to the instance, or a prototype object for a new volume.
+    :attr VolumePrototypeInstanceBySourceSnapshotContext volume: A prototype object
+          for a new volume from a snapshot.
     """
 
     def __init__(self,
-                 volume: 'VolumeAttachmentVolumePrototypeInstanceByVolumeContext',
+                 volume: 'VolumePrototypeInstanceBySourceSnapshotContext',
                  *,
                  delete_volume_on_instance_delete: bool = None,
                  name: str = None) -> None:
         """
-        Initialize a VolumeAttachmentPrototypeInstanceByVolumeContext object.
+        Initialize a VolumeAttachmentPrototypeInstanceBySourceSnapshotContext object.
 
-        :param VolumeAttachmentVolumePrototypeInstanceByVolumeContext volume: An
-               existing volume to attach to the instance, or a prototype object for a new
-               volume.
+        :param VolumePrototypeInstanceBySourceSnapshotContext volume: A prototype
+               object for a new volume from a snapshot.
         :param bool delete_volume_on_instance_delete: (optional) If set to true,
                when deleting the instance the volume will also be deleted.
         :param str name: (optional) The user-defined name for this volume
@@ -55238,22 +56495,22 @@ class VolumeAttachmentPrototypeInstanceByVolumeContext():
         self.volume = volume
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentPrototypeInstanceByVolumeContext':
-        """Initialize a VolumeAttachmentPrototypeInstanceByVolumeContext object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext':
+        """Initialize a VolumeAttachmentPrototypeInstanceBySourceSnapshotContext object from a json dictionary."""
         args = {}
         if 'delete_volume_on_instance_delete' in _dict:
             args['delete_volume_on_instance_delete'] = _dict.get('delete_volume_on_instance_delete')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'volume' in _dict:
-            args['volume'] = _dict.get('volume')
+            args['volume'] = VolumePrototypeInstanceBySourceSnapshotContext.from_dict(_dict.get('volume'))
         else:
-            raise ValueError('Required property \'volume\' not present in VolumeAttachmentPrototypeInstanceByVolumeContext JSON')
+            raise ValueError('Required property \'volume\' not present in VolumeAttachmentPrototypeInstanceBySourceSnapshotContext JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a VolumeAttachmentPrototypeInstanceByVolumeContext object from a json dictionary."""
+        """Initialize a VolumeAttachmentPrototypeInstanceBySourceSnapshotContext object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -55264,10 +56521,7 @@ class VolumeAttachmentPrototypeInstanceByVolumeContext():
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'volume') and self.volume is not None:
-            if isinstance(self.volume, dict):
-                _dict['volume'] = self.volume
-            else:
-                _dict['volume'] = self.volume.to_dict()
+            _dict['volume'] = self.volume.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -55275,16 +56529,16 @@ class VolumeAttachmentPrototypeInstanceByVolumeContext():
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this VolumeAttachmentPrototypeInstanceByVolumeContext object."""
+        """Return a `str` version of this VolumeAttachmentPrototypeInstanceBySourceSnapshotContext object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'VolumeAttachmentPrototypeInstanceByVolumeContext') -> bool:
+    def __eq__(self, other: 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'VolumeAttachmentPrototypeInstanceByVolumeContext') -> bool:
+    def __ne__(self, other: 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -55760,21 +57014,6 @@ class VolumeAttachmentReferenceVolumeContextDeleted():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class VolumeAttachmentVolumePrototypeInstanceByVolumeContext():
-    """
-    An existing volume to attach to the instance, or a prototype object for a new volume.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a VolumeAttachmentVolumePrototypeInstanceByVolumeContext object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext']))
-        raise Exception(msg)
-
 class VolumeAttachmentVolumePrototypeInstanceContext():
     """
     An existing volume to attach to the instance, or a prototype object for a new volume.
@@ -56014,9 +57253,10 @@ class VolumePatch():
     VolumePatch.
 
     :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The volume must be attached as a data volume to a running virtual
-          server instance, and the specified value must not be less than the current
-          capacity.
+          gigabytes). The volume must be attached to a running virtual server instance,
+          and the specified value must not be less than the current capacity.
+          Additionally, if the volume is attached as a boot volume, the maximum value is
+          250 gigabytes.
           The minimum and maximum capacity limits for creating or updating volumes may
           expand in the future.
     :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
@@ -56025,10 +57265,12 @@ class VolumePatch():
           instance.
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: (optional) The profile to use for this
-          volume.  The requested profile must be in the same
-          `family` as the current profile.  The volume must be attached as a data volume
-          to a
-           running virtual server instance.
+          volume. The requested profile must be in the same
+          `family` as the current profile. The volume must be attached as a data volume to
+          a
+          running virtual server instance, and must have a `capacity` within the range
+          supported by the specified profile.
+    :attr List[str] user_tags: (optional) Tags for this resource.
     """
 
     def __init__(self,
@@ -56036,14 +57278,16 @@ class VolumePatch():
                  capacity: int = None,
                  iops: int = None,
                  name: str = None,
-                 profile: 'VolumeProfileIdentity' = None) -> None:
+                 profile: 'VolumeProfileIdentity' = None,
+                 user_tags: List[str] = None) -> None:
         """
         Initialize a VolumePatch object.
 
         :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The volume must be attached as a data volume to a running
-               virtual server instance, and the specified value must not be less than the
-               current capacity.
+               gigabytes). The volume must be attached to a running virtual server
+               instance, and the specified value must not be less than the current
+               capacity. Additionally, if the volume is attached as a boot volume, the
+               maximum value is 250 gigabytes.
                The minimum and maximum capacity limits for creating or updating volumes
                may expand in the future.
         :param int iops: (optional) The maximum I/O operations per second (IOPS) to
@@ -56052,15 +57296,19 @@ class VolumePatch():
                server instance.
         :param str name: (optional) The unique user-defined name for this volume.
         :param VolumeProfileIdentity profile: (optional) The profile to use for
-               this volume.  The requested profile must be in the same
-               `family` as the current profile.  The volume must be attached as a data
+               this volume. The requested profile must be in the same
+               `family` as the current profile. The volume must be attached as a data
                volume to a
-                running virtual server instance.
+               running virtual server instance, and must have a `capacity` within the
+               range
+               supported by the specified profile.
+        :param List[str] user_tags: (optional) Tags for this resource.
         """
         self.capacity = capacity
         self.iops = iops
         self.name = name
         self.profile = profile
+        self.user_tags = user_tags
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumePatch':
@@ -56074,6 +57322,8 @@ class VolumePatch():
             args['name'] = _dict.get('name')
         if 'profile' in _dict:
             args['profile'] = _dict.get('profile')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
         return cls(**args)
 
     @classmethod
@@ -56095,6 +57345,8 @@ class VolumePatch():
                 _dict['profile'] = self.profile
             else:
                 _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
         return _dict
 
     def _to_dict(self):
@@ -56518,6 +57770,7 @@ class VolumePrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
+    :attr List[str] user_tags: (optional) Tags for this resource.
     :attr ZoneIdentity zone: The zone this volume will reside in.
     """
 
@@ -56527,7 +57780,8 @@ class VolumePrototype():
                  *,
                  iops: int = None,
                  name: str = None,
-                 resource_group: 'ResourceGroupIdentity' = None) -> None:
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 user_tags: List[str] = None) -> None:
         """
         Initialize a VolumePrototype object.
 
@@ -56541,6 +57795,7 @@ class VolumePrototype():
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
+        :param List[str] user_tags: (optional) Tags for this resource.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['VolumePrototypeVolumeByCapacity']))
@@ -56551,8 +57806,8 @@ class VolumePrototypeInstanceByImageContext():
     VolumePrototypeInstanceByImageContext.
 
     :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The only allowed value is the image's `minimum_provisioned_size`,
-          but the allowed values are expected to expand in the future.
+          gigabytes). Must be at least the image's
+          `minimum_provisioned_size`. The maximum value may increase in the future.
           If unspecified, the capacity will be the image's `minimum_provisioned_size`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
@@ -56577,9 +57832,8 @@ class VolumePrototypeInstanceByImageContext():
 
         :param VolumeProfileIdentity profile: The profile to use for this volume.
         :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The only allowed value is the image's
-               `minimum_provisioned_size`, but the allowed values are expected to expand
-               in the future.
+               gigabytes). Must be at least the image's
+               `minimum_provisioned_size`. The maximum value may increase in the future.
                If unspecified, the capacity will be the image's
                `minimum_provisioned_size`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
@@ -56658,6 +57912,130 @@ class VolumePrototypeInstanceByImageContext():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'VolumePrototypeInstanceByImageContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VolumePrototypeInstanceBySourceSnapshotContext():
+    """
+    VolumePrototypeInstanceBySourceSnapshotContext.
+
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). Must be at least the snapshot's
+          `minimum_capacity`. The maximum value may increase in the future.
+          If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
+    :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
+          wrap the data encryption key for the volume.
+          If unspecified, the snapshot's `encryption_key` will be used.
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
+    :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
+          volume.
+    """
+
+    def __init__(self,
+                 profile: 'VolumeProfileIdentity',
+                 source_snapshot: 'SnapshotIdentity',
+                 *,
+                 capacity: int = None,
+                 encryption_key: 'EncryptionKeyIdentity' = None,
+                 iops: int = None,
+                 name: str = None) -> None:
+        """
+        Initialize a VolumePrototypeInstanceBySourceSnapshotContext object.
+
+        :param VolumeProfileIdentity profile: The profile to use for this volume.
+        :param SnapshotIdentity source_snapshot: The snapshot from which to clone
+               the volume.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). Must be at least the snapshot's
+               `minimum_capacity`. The maximum value may increase in the future.
+               If unspecified, the capacity will be the source snapshot's
+               `minimum_capacity`.
+        :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
+               to wrap the data encryption key for the volume.
+               If unspecified, the snapshot's `encryption_key` will be used.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
+        :param str name: (optional) The unique user-defined name for this volume.
+        """
+        self.capacity = capacity
+        self.encryption_key = encryption_key
+        self.iops = iops
+        self.name = name
+        self.profile = profile
+        self.source_snapshot = source_snapshot
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumePrototypeInstanceBySourceSnapshotContext':
+        """Initialize a VolumePrototypeInstanceBySourceSnapshotContext object from a json dictionary."""
+        args = {}
+        if 'capacity' in _dict:
+            args['capacity'] = _dict.get('capacity')
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        else:
+            raise ValueError('Required property \'profile\' not present in VolumePrototypeInstanceBySourceSnapshotContext JSON')
+        if 'source_snapshot' in _dict:
+            args['source_snapshot'] = _dict.get('source_snapshot')
+        else:
+            raise ValueError('Required property \'source_snapshot\' not present in VolumePrototypeInstanceBySourceSnapshotContext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumePrototypeInstanceBySourceSnapshotContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'capacity') and self.capacity is not None:
+            _dict['capacity'] = self.capacity
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            if isinstance(self.encryption_key, dict):
+                _dict['encryption_key'] = self.encryption_key
+            else:
+                _dict['encryption_key'] = self.encryption_key.to_dict()
+        if hasattr(self, 'iops') and self.iops is not None:
+            _dict['iops'] = self.iops
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'source_snapshot') and self.source_snapshot is not None:
+            if isinstance(self.source_snapshot, dict):
+                _dict['source_snapshot'] = self.source_snapshot
+            else:
+                _dict['source_snapshot'] = self.source_snapshot.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumePrototypeInstanceBySourceSnapshotContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumePrototypeInstanceBySourceSnapshotContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumePrototypeInstanceBySourceSnapshotContext') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -57380,8 +58758,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
           is not known.
     :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr List[SecurityGroupReference] security_groups: The security groups
           targeting this network interface.
@@ -57403,7 +58780,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
                  mac_address: str,
                  name: str,
                  port_speed: int,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  security_groups: List['SecurityGroupReference'],
                  status: str,
@@ -57449,8 +58826,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
                value is not known.
         :param str name: The user-defined name for this network interface.
         :param int port_speed: The network interface port speed in Mbps.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: The security groups
                targeting this network interface.
@@ -57475,7 +58851,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         self.mac_address = mac_address
         self.name = name
         self.port_speed = port_speed
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
         self.security_groups = security_groups
         self.status = status
@@ -57525,10 +58901,10 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             args['port_speed'] = _dict.get('port_speed')
         else:
             raise ValueError('Required property \'port_speed\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+            raise ValueError('Required property \'primary_ip\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -57583,8 +58959,8 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             _dict['name'] = self.name
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'security_groups') and self.security_groups is not None:
@@ -57704,8 +59080,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
           is not known.
     :attr str name: The user-defined name for this network interface.
     :attr int port_speed: The network interface port speed in Mbps.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     :attr List[SecurityGroupReference] security_groups: The security groups
           targeting this network interface.
@@ -57731,7 +59106,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
                  mac_address: str,
                  name: str,
                  port_speed: int,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  security_groups: List['SecurityGroupReference'],
                  status: str,
@@ -57778,8 +59153,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
                value is not known.
         :param str name: The user-defined name for this network interface.
         :param int port_speed: The network interface port speed in Mbps.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param List[SecurityGroupReference] security_groups: The security groups
                targeting this network interface.
@@ -57807,7 +59181,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
         self.mac_address = mac_address
         self.name = name
         self.port_speed = port_speed
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
         self.security_groups = security_groups
         self.status = status
@@ -57858,10 +59232,10 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             args['port_speed'] = _dict.get('port_speed')
         else:
             raise ValueError('Required property \'port_speed\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+            raise ValueError('Required property \'primary_ip\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -57920,8 +59294,8 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             _dict['name'] = self.name
         if hasattr(self, 'port_speed') and self.port_speed is not None:
             _dict['port_speed'] = self.port_speed
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         if hasattr(self, 'security_groups') and self.security_groups is not None:
@@ -58036,9 +59410,12 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
-          specified, it must be an available address on the network interface's subnet. If
-          unspecified, an available address on the subnet will be automatically selected.
+    :attr NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP address
+          to bind to the network interface. This can be specified using an existing
+          reserved IP, or a prototype object for a new reserved IP.
+          If an existing reserved IP or a prototype object with an address is specified,
+          it must be available on the network interface's subnet. Otherwise, an available
+          address on the subnet will be automatically selected and reserved.
     :attr List[SecurityGroupIdentity] security_groups: (optional) The security
           groups to use for this network interface. If unspecified, the VPC's default
           security group is used.
@@ -58055,7 +59432,7 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
                  allow_ip_spoofing: bool = None,
                  enable_infrastructure_nat: bool = None,
                  name: str = None,
-                 primary_ipv4_address: str = None,
+                 primary_ip: 'NetworkInterfaceIPPrototype' = None,
                  security_groups: List['SecurityGroupIdentity'] = None,
                  allowed_vlans: List[int] = None) -> None:
         """
@@ -58093,10 +59470,13 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using an
+               existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must be available on the network interface's subnet.
+               Otherwise, an available address on the subnet will be automatically
+               selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
@@ -58110,7 +59490,7 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
         self.enable_infrastructure_nat = enable_infrastructure_nat
         self.interface_type = interface_type
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
         self.allowed_vlans = allowed_vlans
@@ -58129,8 +59509,8 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
             raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = _dict.get('primary_ip')
         if 'security_groups' in _dict:
             args['security_groups'] = _dict.get('security_groups')
         if 'subnet' in _dict:
@@ -58157,8 +59537,11 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
             _dict['interface_type'] = self.interface_type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            if isinstance(self.primary_ip, dict):
+                _dict['primary_ip'] = self.primary_ip
+            else:
+                _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'security_groups') and self.security_groups is not None:
             security_groups_list = []
             for x in self.security_groups:
@@ -58249,9 +59632,12 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
-    :attr str primary_ipv4_address: (optional) The primary IPv4 address. If
-          specified, it must be an available address on the network interface's subnet. If
-          unspecified, an available address on the subnet will be automatically selected.
+    :attr NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP address
+          to bind to the network interface. This can be specified using an existing
+          reserved IP, or a prototype object for a new reserved IP.
+          If an existing reserved IP or a prototype object with an address is specified,
+          it must be available on the network interface's subnet. Otherwise, an available
+          address on the subnet will be automatically selected and reserved.
     :attr List[SecurityGroupIdentity] security_groups: (optional) The security
           groups to use for this network interface. If unspecified, the VPC's default
           security group is used.
@@ -58273,7 +59659,7 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
                  allow_ip_spoofing: bool = None,
                  enable_infrastructure_nat: bool = None,
                  name: str = None,
-                 primary_ipv4_address: str = None,
+                 primary_ip: 'NetworkInterfaceIPPrototype' = None,
                  security_groups: List['SecurityGroupIdentity'] = None,
                  allow_interface_to_float: bool = None) -> None:
         """
@@ -58313,10 +59699,13 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
-        :param str primary_ipv4_address: (optional) The primary IPv4 address. If
-               specified, it must be an available address on the network interface's
-               subnet. If unspecified, an available address on the subnet will be
-               automatically selected.
+        :param NetworkInterfaceIPPrototype primary_ip: (optional) The primary IP
+               address to bind to the network interface. This can be specified using an
+               existing reserved IP, or a prototype object for a new reserved IP.
+               If an existing reserved IP or a prototype object with an address is
+               specified, it must be available on the network interface's subnet.
+               Otherwise, an available address on the subnet will be automatically
+               selected and reserved.
         :param List[SecurityGroupIdentity] security_groups: (optional) The security
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
@@ -58331,7 +59720,7 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
         self.enable_infrastructure_nat = enable_infrastructure_nat
         self.interface_type = interface_type
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
         self.allow_interface_to_float = allow_interface_to_float
@@ -58351,8 +59740,8 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
             raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = _dict.get('primary_ip')
         if 'security_groups' in _dict:
             args['security_groups'] = _dict.get('security_groups')
         if 'subnet' in _dict:
@@ -58383,8 +59772,11 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
             _dict['interface_type'] = self.interface_type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            if isinstance(self.primary_ip, dict):
+                _dict['primary_ip'] = self.primary_ip
+            else:
+                _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'security_groups') and self.security_groups is not None:
             security_groups_list = []
             for x in self.security_groups:
@@ -60586,63 +61978,6 @@ class CertificateInstanceIdentityByCRN(CertificateInstanceIdentity):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class CloudObjectStorageBucketIdentityByName(CloudObjectStorageBucketIdentity):
-    """
-    CloudObjectStorageBucketIdentityByName.
-
-    :attr str name: The globally unique name of this COS bucket.
-    """
-
-    def __init__(self,
-                 name: str) -> None:
-        """
-        Initialize a CloudObjectStorageBucketIdentityByName object.
-
-        :param str name: The globally unique name of this COS bucket.
-        """
-        # pylint: disable=super-init-not-called
-        self.name = name
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'CloudObjectStorageBucketIdentityByName':
-        """Initialize a CloudObjectStorageBucketIdentityByName object from a json dictionary."""
-        args = {}
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in CloudObjectStorageBucketIdentityByName JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a CloudObjectStorageBucketIdentityByName object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this CloudObjectStorageBucketIdentityByName object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'CloudObjectStorageBucketIdentityByName') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'CloudObjectStorageBucketIdentityByName') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class DedicatedHostGroupIdentityByCRN(DedicatedHostGroupIdentity):
     """
     DedicatedHostGroupIdentityByCRN.
@@ -62219,6 +63554,10 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
     """
     EndpointGatewayReservedIPReservedIPPrototypeTargetContext.
 
+    :attr str address: (optional) The IP address to reserve, which must not already
+          be reserved on the subnet.
+          If unspecified, an available address on the subnet will automatically be
+          selected.
     :attr bool auto_delete: (optional) Indicates whether this reserved IP member
           will be automatically deleted when either
           `target` is deleted, or the reserved IP is unbound.
@@ -62232,6 +63571,7 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
     def __init__(self,
                  subnet: 'SubnetIdentity',
                  *,
+                 address: str = None,
                  auto_delete: bool = None,
                  name: str = None) -> None:
         """
@@ -62239,6 +63579,10 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
 
         :param SubnetIdentity subnet: The subnet in which to create this reserved
                IP.
+        :param str address: (optional) The IP address to reserve, which must not
+               already be reserved on the subnet.
+               If unspecified, an available address on the subnet will automatically be
+               selected.
         :param bool auto_delete: (optional) Indicates whether this reserved IP
                member will be automatically deleted when either
                `target` is deleted, or the reserved IP is unbound.
@@ -62248,6 +63592,7 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
                beginning with `ibm-` are reserved for provider-owned resources.
         """
         # pylint: disable=super-init-not-called
+        self.address = address
         self.auto_delete = auto_delete
         self.name = name
         self.subnet = subnet
@@ -62256,6 +63601,8 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
     def from_dict(cls, _dict: Dict) -> 'EndpointGatewayReservedIPReservedIPPrototypeTargetContext':
         """Initialize a EndpointGatewayReservedIPReservedIPPrototypeTargetContext object from a json dictionary."""
         args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
         if 'auto_delete' in _dict:
             args['auto_delete'] = _dict.get('auto_delete')
         if 'name' in _dict:
@@ -62274,6 +63621,8 @@ class EndpointGatewayReservedIPReservedIPPrototypeTargetContext(EndpointGatewayR
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
         if hasattr(self, 'auto_delete') and self.auto_delete is not None:
             _dict['auto_delete'] = self.auto_delete
         if hasattr(self, 'name') and self.name is not None:
@@ -62915,8 +64264,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
     :attr str href: The URL for this network interface.
     :attr str id: The unique identifier for this network interface.
     :attr str name: The user-defined name for this network interface.
-    :attr str primary_ipv4_address: The primary IPv4 address.
-          If the address has not yet been selected, the value will be `0.0.0.0`.
+    :attr ReservedIPReference primary_ip:
     :attr str resource_type: The resource type.
     """
 
@@ -62924,7 +64272,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
                  href: str,
                  id: str,
                  name: str,
-                 primary_ipv4_address: str,
+                 primary_ip: 'ReservedIPReference',
                  resource_type: str,
                  *,
                  deleted: 'NetworkInterfaceReferenceDeleted' = None) -> None:
@@ -62934,8 +64282,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
         :param str name: The user-defined name for this network interface.
-        :param str primary_ipv4_address: The primary IPv4 address.
-               If the address has not yet been selected, the value will be `0.0.0.0`.
+        :param ReservedIPReference primary_ip:
         :param str resource_type: The resource type.
         :param NetworkInterfaceReferenceDeleted deleted: (optional) If present,
                this property indicates the referenced resource has been deleted and
@@ -62947,7 +64294,7 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
         self.href = href
         self.id = id
         self.name = name
-        self.primary_ipv4_address = primary_ipv4_address
+        self.primary_ip = primary_ip
         self.resource_type = resource_type
 
     @classmethod
@@ -62968,10 +64315,10 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in FloatingIPTargetNetworkInterfaceReference JSON')
-        if 'primary_ipv4_address' in _dict:
-            args['primary_ipv4_address'] = _dict.get('primary_ipv4_address')
+        if 'primary_ip' in _dict:
+            args['primary_ip'] = ReservedIPReference.from_dict(_dict.get('primary_ip'))
         else:
-            raise ValueError('Required property \'primary_ipv4_address\' not present in FloatingIPTargetNetworkInterfaceReference JSON')
+            raise ValueError('Required property \'primary_ip\' not present in FloatingIPTargetNetworkInterfaceReference JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         else:
@@ -62994,8 +64341,8 @@ class FloatingIPTargetNetworkInterfaceReference(FloatingIPTarget):
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'primary_ipv4_address') and self.primary_ipv4_address is not None:
-            _dict['primary_ipv4_address'] = self.primary_ipv4_address
+        if hasattr(self, 'primary_ip') and self.primary_ip is not None:
+            _dict['primary_ip'] = self.primary_ip.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
         return _dict
@@ -65009,10 +66356,10 @@ class InstanceGroupManagerScheduledActionManagerAutoScale(InstanceGroupManagerSc
     :attr str href: The URL for this instance group manager.
     :attr str id: The unique identifier for this instance group manager.
     :attr str name: The user-defined name for this instance group manager.
-    :attr int max_membership_count: (optional) The maximum number of members the
-          instance group should have at the scheduled time.
-    :attr int min_membership_count: (optional) The minimum number of members the
-          instance group should have at the scheduled time.
+    :attr int max_membership_count: (optional) The desired maximum number of
+          instance group members at the scheduled time.
+    :attr int min_membership_count: (optional) The desired minimum number of
+          instance group members at the scheduled time.
     """
 
     def __init__(self,
@@ -65033,10 +66380,10 @@ class InstanceGroupManagerScheduledActionManagerAutoScale(InstanceGroupManagerSc
                this property indicates the referenced resource has been deleted and
                provides
                some supplementary information.
-        :param int max_membership_count: (optional) The maximum number of members
-               the instance group should have at the scheduled time.
-        :param int min_membership_count: (optional) The minimum number of members
-               the instance group should have at the scheduled time.
+        :param int max_membership_count: (optional) The desired maximum number of
+               instance group members at the scheduled time.
+        :param int min_membership_count: (optional) The desired minimum number of
+               instance group members at the scheduled time.
         """
         # pylint: disable=super-init-not-called
         self.deleted = deleted
@@ -65117,10 +66464,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototype(Inst
     `min_membership_count` and
     `max_membership_count`.
 
-    :attr int max_membership_count: (optional) The maximum number of members the
-          instance group should have at the scheduled time.
-    :attr int min_membership_count: (optional) The minimum number of members the
-          instance group should have at the scheduled time.
+    :attr int max_membership_count: (optional) The desired maximum number of
+          instance group members at the scheduled time.
+    :attr int min_membership_count: (optional) The desired minimum number of
+          instance group members at the scheduled time.
     """
 
     def __init__(self,
@@ -65130,10 +66477,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototype(Inst
         """
         Initialize a InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototype object.
 
-        :param int max_membership_count: (optional) The maximum number of members
-               the instance group should have at the scheduled time.
-        :param int min_membership_count: (optional) The minimum number of members
-               the instance group should have at the scheduled time.
+        :param int max_membership_count: (optional) The desired maximum number of
+               instance group members at the scheduled time.
+        :param int min_membership_count: (optional) The desired minimum number of
+               instance group members at the scheduled time.
         """
         # pylint: disable=super-init-not-called
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
@@ -68574,6 +69921,15 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     """
     InstancePrototypeInstanceByImage.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -68588,6 +69944,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -68596,7 +69954,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
           megabits per second) allocated exclusively to instance storage volumes. An
@@ -68623,7 +69982,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                  primary_network_interface: 'NetworkInterfacePrototype',
                  zone: 'ZoneIdentity',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -68643,6 +70005,15 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                interface.
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -68659,6 +70030,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -68667,7 +70040,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional)
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
@@ -68685,7 +70059,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                virtual server instance.
         """
         # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.default_trusted_profile = default_trusted_profile
         self.keys = keys
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -68704,8 +70081,14 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     def from_dict(cls, _dict: Dict) -> 'InstancePrototypeInstanceByImage':
         """Initialize a InstancePrototypeInstanceByImage object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'network_interfaces' in _dict:
@@ -68748,6 +70131,10 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'keys') and self.keys is not None:
             keys_list = []
             for x in self.keys:
@@ -68756,6 +70143,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -68820,10 +70209,19 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
+class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
     """
-    InstancePrototypeInstanceBySourceTemplate.
+    InstancePrototypeInstanceBySourceSnapshot.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -68838,6 +70236,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -68846,7 +70246,288 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
+    :attr str user_data: (optional) User data to be made available when setting up
+          the virtual server instance.
+    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
+          (optional) The volume attachments for this virtual server instance.
+    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
+    :attr VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+          boot_volume_attachment: The boot volume attachment for the virtual server
+          instance.
+    :attr NetworkInterfacePrototype primary_network_interface: Primary network
+          interface.
+    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
+    """
+
+    def __init__(self,
+                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext',
+                 primary_network_interface: 'NetworkInterfacePrototype',
+                 zone: 'ZoneIdentity',
+                 *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
+                 keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
+                 name: str = None,
+                 network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
+                 profile: 'InstanceProfileIdentity' = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 total_volume_bandwidth: int = None,
+                 user_data: str = None,
+                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
+                 vpc: 'VPCIdentity' = None) -> None:
+        """
+        Initialize a InstancePrototypeInstanceBySourceSnapshot object.
+
+        :param VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+               boot_volume_attachment: The boot volume attachment for the virtual server
+               instance.
+        :param NetworkInterfacePrototype primary_network_interface: Primary network
+               interface.
+        :param ZoneIdentity zone: The zone this virtual server instance will reside
+               in.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
+        :param str name: (optional) The unique user-defined name for this virtual
+               server instance (and default system hostname). If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
+               additional network interfaces to create for the virtual server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
+        :param InstanceProfileIdentity profile: (optional) The profile to use for
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
+        :param str user_data: (optional) User data to be made available when
+               setting up the virtual server instance.
+        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
+               (optional) The volume attachments for this virtual server instance.
+        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
+        """
+        # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.default_trusted_profile = default_trusted_profile
+        self.keys = keys
+        self.metadata_service = metadata_service
+        self.name = name
+        self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
+        self.profile = profile
+        self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
+        self.user_data = user_data
+        self.volume_attachments = volume_attachments
+        self.vpc = vpc
+        self.boot_volume_attachment = boot_volume_attachment
+        self.primary_network_interface = primary_network_interface
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstancePrototypeInstanceBySourceSnapshot':
+        """Initialize a InstancePrototypeInstanceBySourceSnapshot object from a json dictionary."""
+        args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
+        if 'keys' in _dict:
+            args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'network_interfaces' in _dict:
+            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
+        if 'user_data' in _dict:
+            args['user_data'] = _dict.get('user_data')
+        if 'volume_attachments' in _dict:
+            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
+        if 'vpc' in _dict:
+            args['vpc'] = _dict.get('vpc')
+        if 'boot_volume_attachment' in _dict:
+            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceBySourceSnapshotContext.from_dict(_dict.get('boot_volume_attachment'))
+        else:
+            raise ValueError('Required property \'boot_volume_attachment\' not present in InstancePrototypeInstanceBySourceSnapshot JSON')
+        if 'primary_network_interface' in _dict:
+            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
+        else:
+            raise ValueError('Required property \'primary_network_interface\' not present in InstancePrototypeInstanceBySourceSnapshot JSON')
+        if 'zone' in _dict:
+            args['zone'] = _dict.get('zone')
+        else:
+            raise ValueError('Required property \'zone\' not present in InstancePrototypeInstanceBySourceSnapshot JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstancePrototypeInstanceBySourceSnapshot object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for x in self.keys:
+                if isinstance(x, dict):
+                    keys_list.append(x)
+                else:
+                    keys_list.append(x.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
+            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
+        if hasattr(self, 'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
+            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            if isinstance(self.vpc, dict):
+                _dict['vpc'] = self.vpc
+            else:
+                _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
+            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
+        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
+            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstancePrototypeInstanceBySourceSnapshot object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstancePrototypeInstanceBySourceSnapshot') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstancePrototypeInstanceBySourceSnapshot') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
+    """
+    InstancePrototypeInstanceBySourceTemplate.
+
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
+    :attr str name: (optional) The unique user-defined name for this virtual server
+          instance (and default system hostname). If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
+          additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
+    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
           megabits per second) allocated exclusively to instance storage volumes. An
@@ -68874,7 +70555,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     def __init__(self,
                  source_template: 'InstanceTemplateIdentity',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -68893,6 +70577,15 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
 
         :param InstanceTemplateIdentity source_template: The template to create
                this virtual server instance from.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -68909,6 +70602,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -68917,7 +70612,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional)
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
@@ -68941,7 +70637,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                will reside in.
         """
         # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.default_trusted_profile = default_trusted_profile
         self.keys = keys
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -68961,8 +70660,14 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     def from_dict(cls, _dict: Dict) -> 'InstancePrototypeInstanceBySourceTemplate':
         """Initialize a InstancePrototypeInstanceBySourceTemplate object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'network_interfaces' in _dict:
@@ -69003,6 +70708,10 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'keys') and self.keys is not None:
             keys_list = []
             for x in self.keys:
@@ -69011,6 +70720,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -69077,243 +70788,6 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstancePrototypeInstanceBySourceTemplate') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class InstancePrototypeInstanceByVolume(InstancePrototype):
-    """
-    InstancePrototypeInstanceByVolume.
-
-    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Keys will be made available
-          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
-          images, these keys will also be added as SSH authorized keys for the
-          administrative user.
-          For Windows images, at least one key must be specified, and one will be chosen
-          to encrypt [the administrator
-          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
-          are optional for other images, but if no keys are specified, the instance will
-          be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
-          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-          property.
-    :attr str name: (optional) The unique user-defined name for this virtual server
-          instance (and default system hostname). If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
-    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
-          additional network interfaces to create for the virtual server instance.
-    :attr InstancePlacementTargetPrototype placement_target: (optional) The
-          placement restrictions to use for the virtual server instance.
-    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
-    :attr ResourceGroupIdentity resource_group: (optional)
-    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
-          megabits per second) allocated exclusively to instance storage volumes. An
-          increase in this value will result in a corresponding decrease to
-          `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
-    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
-    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If specified, it must match the VPC referenced by the subnets of the
-          instance's network interfaces.
-    :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
-          The boot volume attachment for the virtual server instance.
-    :attr NetworkInterfacePrototype primary_network_interface: Primary network
-          interface.
-    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
-    """
-
-    def __init__(self,
-                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceByVolumeContext',
-                 primary_network_interface: 'NetworkInterfacePrototype',
-                 zone: 'ZoneIdentity',
-                 *,
-                 keys: List['KeyIdentity'] = None,
-                 name: str = None,
-                 network_interfaces: List['NetworkInterfacePrototype'] = None,
-                 placement_target: 'InstancePlacementTargetPrototype' = None,
-                 profile: 'InstanceProfileIdentity' = None,
-                 resource_group: 'ResourceGroupIdentity' = None,
-                 total_volume_bandwidth: int = None,
-                 user_data: str = None,
-                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
-                 vpc: 'VPCIdentity' = None) -> None:
-        """
-        Initialize a InstancePrototypeInstanceByVolume object.
-
-        :param VolumeAttachmentPrototypeInstanceByVolumeContext
-               boot_volume_attachment: The boot volume attachment for the virtual server
-               instance.
-        :param NetworkInterfacePrototype primary_network_interface: Primary network
-               interface.
-        :param ZoneIdentity zone: The zone this virtual server instance will reside
-               in.
-        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Keys will be made
-               available to the virtual server instance as cloud-init vendor data. For
-               cloud-init enabled images, these keys will also be added as SSH authorized
-               keys for the administrative user.
-               For Windows images, at least one key must be specified, and one will be
-               chosen to encrypt [the administrator
-               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
-               Keys are optional for other images, but if no keys are specified, the
-               instance will be inaccessible unless the specified image provides another
-               means of access.
-               This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
-               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-               property.
-        :param str name: (optional) The unique user-defined name for this virtual
-               server instance (and default system hostname). If unspecified, the name
-               will be a hyphenated list of randomly-selected words.
-        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
-               additional network interfaces to create for the virtual server instance.
-        :param InstancePlacementTargetPrototype placement_target: (optional) The
-               placement restrictions to use for the virtual server instance.
-        :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
-        :param ResourceGroupIdentity resource_group: (optional)
-        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
-               megabits per second) allocated exclusively to instance storage volumes. An
-               increase in this value will result in a corresponding decrease to
-               `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
-        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
-        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If specified, it must match the VPC referenced by the
-               subnets of the instance's network interfaces.
-        """
-        # pylint: disable=super-init-not-called
-        self.keys = keys
-        self.name = name
-        self.network_interfaces = network_interfaces
-        self.placement_target = placement_target
-        self.profile = profile
-        self.resource_group = resource_group
-        self.total_volume_bandwidth = total_volume_bandwidth
-        self.user_data = user_data
-        self.volume_attachments = volume_attachments
-        self.vpc = vpc
-        self.boot_volume_attachment = boot_volume_attachment
-        self.primary_network_interface = primary_network_interface
-        self.zone = zone
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstancePrototypeInstanceByVolume':
-        """Initialize a InstancePrototypeInstanceByVolume object from a json dictionary."""
-        args = {}
-        if 'keys' in _dict:
-            args['keys'] = _dict.get('keys')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
-        if 'placement_target' in _dict:
-            args['placement_target'] = _dict.get('placement_target')
-        if 'profile' in _dict:
-            args['profile'] = _dict.get('profile')
-        if 'resource_group' in _dict:
-            args['resource_group'] = _dict.get('resource_group')
-        if 'total_volume_bandwidth' in _dict:
-            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
-        if 'user_data' in _dict:
-            args['user_data'] = _dict.get('user_data')
-        if 'volume_attachments' in _dict:
-            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
-        if 'vpc' in _dict:
-            args['vpc'] = _dict.get('vpc')
-        if 'boot_volume_attachment' in _dict:
-            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(_dict.get('boot_volume_attachment'))
-        else:
-            raise ValueError('Required property \'boot_volume_attachment\' not present in InstancePrototypeInstanceByVolume JSON')
-        if 'primary_network_interface' in _dict:
-            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
-        else:
-            raise ValueError('Required property \'primary_network_interface\' not present in InstancePrototypeInstanceByVolume JSON')
-        if 'zone' in _dict:
-            args['zone'] = _dict.get('zone')
-        else:
-            raise ValueError('Required property \'zone\' not present in InstancePrototypeInstanceByVolume JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstancePrototypeInstanceByVolume object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'keys') and self.keys is not None:
-            keys_list = []
-            for x in self.keys:
-                if isinstance(x, dict):
-                    keys_list.append(x)
-                else:
-                    keys_list.append(x.to_dict())
-            _dict['keys'] = keys_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
-        if hasattr(self, 'placement_target') and self.placement_target is not None:
-            if isinstance(self.placement_target, dict):
-                _dict['placement_target'] = self.placement_target
-            else:
-                _dict['placement_target'] = self.placement_target.to_dict()
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
-            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
-        if hasattr(self, 'user_data') and self.user_data is not None:
-            _dict['user_data'] = self.user_data
-        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
-            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
-            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
-        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
-            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
-        if hasattr(self, 'zone') and self.zone is not None:
-            if isinstance(self.zone, dict):
-                _dict['zone'] = self.zone
-            else:
-                _dict['zone'] = self.zone.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstancePrototypeInstanceByVolume object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstancePrototypeInstanceByVolume') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstancePrototypeInstanceByVolume') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -69492,6 +70966,15 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     """
     InstanceTemplatePrototypeInstanceByImage.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -69506,6 +70989,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -69514,7 +70999,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
           megabits per second) allocated exclusively to instance storage volumes. An
@@ -69541,7 +71027,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                  primary_network_interface: 'NetworkInterfacePrototype',
                  zone: 'ZoneIdentity',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -69561,6 +71050,15 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                interface.
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -69577,6 +71075,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -69585,7 +71085,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional)
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
@@ -69603,7 +71104,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                virtual server instance.
         """
         # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.default_trusted_profile = default_trusted_profile
         self.keys = keys
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -69622,8 +71126,14 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     def from_dict(cls, _dict: Dict) -> 'InstanceTemplatePrototypeInstanceByImage':
         """Initialize a InstanceTemplatePrototypeInstanceByImage object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'network_interfaces' in _dict:
@@ -69666,6 +71176,10 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'keys') and self.keys is not None:
             keys_list = []
             for x in self.keys:
@@ -69674,6 +71188,8 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -69742,6 +71258,15 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     """
     InstanceTemplatePrototypeInstanceBySourceTemplate.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
           administrative user of the virtual server instance. Keys will be made available
           to the virtual server instance as cloud-init vendor data. For cloud-init enabled
@@ -69756,6 +71281,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -69764,7 +71291,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
     :attr ResourceGroupIdentity resource_group: (optional)
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
           megabits per second) allocated exclusively to instance storage volumes. An
@@ -69792,7 +71320,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     def __init__(self,
                  source_template: 'InstanceTemplateIdentity',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  name: str = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
@@ -69811,6 +71342,15 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
 
         :param InstanceTemplateIdentity source_template: The template to create
                this virtual server instance from.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -69827,6 +71367,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -69835,7 +71377,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
         :param ResourceGroupIdentity resource_group: (optional)
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
@@ -69859,7 +71402,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                will reside in.
         """
         # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.default_trusted_profile = default_trusted_profile
         self.keys = keys
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -69879,8 +71425,14 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     def from_dict(cls, _dict: Dict) -> 'InstanceTemplatePrototypeInstanceBySourceTemplate':
         """Initialize a InstanceTemplatePrototypeInstanceBySourceTemplate object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'network_interfaces' in _dict:
@@ -69921,6 +71473,10 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'keys') and self.keys is not None:
             keys_list = []
             for x in self.keys:
@@ -69929,6 +71485,8 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -69998,250 +71556,22 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class InstanceTemplatePrototypeInstanceByVolume(InstanceTemplatePrototype):
-    """
-    InstanceTemplatePrototypeInstanceByVolume.
-
-    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Keys will be made available
-          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
-          images, these keys will also be added as SSH authorized keys for the
-          administrative user.
-          For Windows images, at least one key must be specified, and one will be chosen
-          to encrypt [the administrator
-          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
-          are optional for other images, but if no keys are specified, the instance will
-          be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
-          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-          property.
-    :attr str name: (optional) The unique user-defined name for this virtual server
-          instance (and default system hostname). If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
-    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
-          additional network interfaces to create for the virtual server instance.
-    :attr InstancePlacementTargetPrototype placement_target: (optional) The
-          placement restrictions to use for the virtual server instance.
-    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
-    :attr ResourceGroupIdentity resource_group: (optional)
-    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
-          megabits per second) allocated exclusively to instance storage volumes. An
-          increase in this value will result in a corresponding decrease to
-          `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
-    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
-    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If specified, it must match the VPC referenced by the subnets of the
-          instance's network interfaces.
-    :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
-          The boot volume attachment for the virtual server instance.
-    :attr NetworkInterfacePrototype primary_network_interface: Primary network
-          interface.
-    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
-    """
-
-    def __init__(self,
-                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceByVolumeContext',
-                 primary_network_interface: 'NetworkInterfacePrototype',
-                 zone: 'ZoneIdentity',
-                 *,
-                 keys: List['KeyIdentity'] = None,
-                 name: str = None,
-                 network_interfaces: List['NetworkInterfacePrototype'] = None,
-                 placement_target: 'InstancePlacementTargetPrototype' = None,
-                 profile: 'InstanceProfileIdentity' = None,
-                 resource_group: 'ResourceGroupIdentity' = None,
-                 total_volume_bandwidth: int = None,
-                 user_data: str = None,
-                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
-                 vpc: 'VPCIdentity' = None) -> None:
-        """
-        Initialize a InstanceTemplatePrototypeInstanceByVolume object.
-
-        :param VolumeAttachmentPrototypeInstanceByVolumeContext
-               boot_volume_attachment: The boot volume attachment for the virtual server
-               instance.
-        :param NetworkInterfacePrototype primary_network_interface: Primary network
-               interface.
-        :param ZoneIdentity zone: The zone this virtual server instance will reside
-               in.
-        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Keys will be made
-               available to the virtual server instance as cloud-init vendor data. For
-               cloud-init enabled images, these keys will also be added as SSH authorized
-               keys for the administrative user.
-               For Windows images, at least one key must be specified, and one will be
-               chosen to encrypt [the administrator
-               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
-               Keys are optional for other images, but if no keys are specified, the
-               instance will be inaccessible unless the specified image provides another
-               means of access.
-               This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
-               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-               property.
-        :param str name: (optional) The unique user-defined name for this virtual
-               server instance (and default system hostname). If unspecified, the name
-               will be a hyphenated list of randomly-selected words.
-        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
-               additional network interfaces to create for the virtual server instance.
-        :param InstancePlacementTargetPrototype placement_target: (optional) The
-               placement restrictions to use for the virtual server instance.
-        :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
-        :param ResourceGroupIdentity resource_group: (optional)
-        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
-               megabits per second) allocated exclusively to instance storage volumes. An
-               increase in this value will result in a corresponding decrease to
-               `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
-        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
-        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If specified, it must match the VPC referenced by the
-               subnets of the instance's network interfaces.
-        """
-        # pylint: disable=super-init-not-called
-        self.keys = keys
-        self.name = name
-        self.network_interfaces = network_interfaces
-        self.placement_target = placement_target
-        self.profile = profile
-        self.resource_group = resource_group
-        self.total_volume_bandwidth = total_volume_bandwidth
-        self.user_data = user_data
-        self.volume_attachments = volume_attachments
-        self.vpc = vpc
-        self.boot_volume_attachment = boot_volume_attachment
-        self.primary_network_interface = primary_network_interface
-        self.zone = zone
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstanceTemplatePrototypeInstanceByVolume':
-        """Initialize a InstanceTemplatePrototypeInstanceByVolume object from a json dictionary."""
-        args = {}
-        if 'keys' in _dict:
-            args['keys'] = _dict.get('keys')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
-        if 'placement_target' in _dict:
-            args['placement_target'] = _dict.get('placement_target')
-        if 'profile' in _dict:
-            args['profile'] = _dict.get('profile')
-        if 'resource_group' in _dict:
-            args['resource_group'] = _dict.get('resource_group')
-        if 'total_volume_bandwidth' in _dict:
-            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
-        if 'user_data' in _dict:
-            args['user_data'] = _dict.get('user_data')
-        if 'volume_attachments' in _dict:
-            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
-        if 'vpc' in _dict:
-            args['vpc'] = _dict.get('vpc')
-        if 'boot_volume_attachment' in _dict:
-            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(_dict.get('boot_volume_attachment'))
-        else:
-            raise ValueError('Required property \'boot_volume_attachment\' not present in InstanceTemplatePrototypeInstanceByVolume JSON')
-        if 'primary_network_interface' in _dict:
-            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
-        else:
-            raise ValueError('Required property \'primary_network_interface\' not present in InstanceTemplatePrototypeInstanceByVolume JSON')
-        if 'zone' in _dict:
-            args['zone'] = _dict.get('zone')
-        else:
-            raise ValueError('Required property \'zone\' not present in InstanceTemplatePrototypeInstanceByVolume JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstanceTemplatePrototypeInstanceByVolume object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'keys') and self.keys is not None:
-            keys_list = []
-            for x in self.keys:
-                if isinstance(x, dict):
-                    keys_list.append(x)
-                else:
-                    keys_list.append(x.to_dict())
-            _dict['keys'] = keys_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
-        if hasattr(self, 'placement_target') and self.placement_target is not None:
-            if isinstance(self.placement_target, dict):
-                _dict['placement_target'] = self.placement_target
-            else:
-                _dict['placement_target'] = self.placement_target.to_dict()
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
-            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
-        if hasattr(self, 'user_data') and self.user_data is not None:
-            _dict['user_data'] = self.user_data
-        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
-            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
-            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
-        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
-            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
-        if hasattr(self, 'zone') and self.zone is not None:
-            if isinstance(self.zone, dict):
-                _dict['zone'] = self.zone
-            else:
-                _dict['zone'] = self.zone.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstanceTemplatePrototypeInstanceByVolume object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstanceTemplatePrototypeInstanceByVolume') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstanceTemplatePrototypeInstanceByVolume') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class InstanceTemplateInstanceByImage(InstanceTemplate):
     """
     InstanceTemplateInstanceByImage.
 
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
     :attr datetime created_at: The date and time that the instance template was
           created.
     :attr str crn: The CRN for this instance template.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
     :attr str href: The URL for this instance template.
     :attr str id: The unique identifier for this instance template.
     :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
@@ -70258,13 +71588,16 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+          Configuration options for the instance metadata service.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
     :attr InstancePlacementTargetPrototype placement_target: (optional) The
           placement restrictions to use for the virtual server instance.
     :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance template.
     :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
@@ -70298,7 +71631,10 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                  primary_network_interface: 'NetworkInterfacePrototype',
                  zone: 'ZoneIdentity',
                  *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
                  keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
                  network_interfaces: List['NetworkInterfacePrototype'] = None,
                  placement_target: 'InstancePlacementTargetPrototype' = None,
                  profile: 'InstanceProfileIdentity' = None,
@@ -70324,6 +71660,15 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                interface.
         :param ZoneIdentity zone: The zone this virtual server instance will reside
                in.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
         :param List[KeyIdentity] keys: (optional) The public SSH keys for the
                administrative user of the virtual server instance. Keys will be made
                available to the virtual server instance as cloud-init vendor data. For
@@ -70340,12 +71685,15 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+               Configuration options for the instance metadata service.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
                placement restrictions to use for the virtual server instance.
         :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
         :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
@@ -70362,11 +71710,14 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                virtual server instance.
         """
         # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
         self.created_at = created_at
         self.crn = crn
+        self.default_trusted_profile = default_trusted_profile
         self.href = href
         self.id = id
         self.keys = keys
+        self.metadata_service = metadata_service
         self.name = name
         self.network_interfaces = network_interfaces
         self.placement_target = placement_target
@@ -70385,6 +71736,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
     def from_dict(cls, _dict: Dict) -> 'InstanceTemplateInstanceByImage':
         """Initialize a InstanceTemplateInstanceByImage object from a json dictionary."""
         args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -70393,6 +71746,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             args['crn'] = _dict.get('crn')
         else:
             raise ValueError('Required property \'crn\' not present in InstanceTemplateInstanceByImage JSON')
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
@@ -70403,6 +71758,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
             raise ValueError('Required property \'id\' not present in InstanceTemplateInstanceByImage JSON')
         if 'keys' in _dict:
             args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -70449,10 +71806,14 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'crn') and self.crn is not None:
             _dict['crn'] = self.crn
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
         if hasattr(self, 'href') and self.href is not None:
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
@@ -70465,6 +71826,8 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                 else:
                     keys_list.append(x.to_dict())
             _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
@@ -70523,284 +71886,6 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceTemplateInstanceByImage') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class InstanceTemplateInstanceByVolume(InstanceTemplate):
-    """
-    InstanceTemplateInstanceByVolume.
-
-    :attr datetime created_at: The date and time that the instance template was
-          created.
-    :attr str crn: The CRN for this instance template.
-    :attr str href: The URL for this instance template.
-    :attr str id: The unique identifier for this instance template.
-    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
-          administrative user of the virtual server instance. Keys will be made available
-          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
-          images, these keys will also be added as SSH authorized keys for the
-          administrative user.
-          For Windows images, at least one key must be specified, and one will be chosen
-          to encrypt [the administrator
-          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
-          are optional for other images, but if no keys are specified, the instance will
-          be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
-          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-          property.
-    :attr str name: The unique user-defined name for this instance template.
-    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
-          additional network interfaces to create for the virtual server instance.
-    :attr InstancePlacementTargetPrototype placement_target: (optional) The
-          placement restrictions to use for the virtual server instance.
-    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
-          virtual server instance.
-    :attr ResourceGroupReference resource_group: The resource group for this
-          instance template.
-    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
-          megabits per second) allocated exclusively to instance storage volumes. An
-          increase in this value will result in a corresponding decrease to
-          `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
-    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
-    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
-          part of. If specified, it must match the VPC referenced by the subnets of the
-          instance's network interfaces.
-    :attr VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
-          The boot volume attachment for the virtual server instance.
-    :attr NetworkInterfacePrototype primary_network_interface: Primary network
-          interface.
-    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
-    """
-
-    def __init__(self,
-                 created_at: datetime,
-                 crn: str,
-                 href: str,
-                 id: str,
-                 name: str,
-                 resource_group: 'ResourceGroupReference',
-                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceByVolumeContext',
-                 primary_network_interface: 'NetworkInterfacePrototype',
-                 zone: 'ZoneIdentity',
-                 *,
-                 keys: List['KeyIdentity'] = None,
-                 network_interfaces: List['NetworkInterfacePrototype'] = None,
-                 placement_target: 'InstancePlacementTargetPrototype' = None,
-                 profile: 'InstanceProfileIdentity' = None,
-                 total_volume_bandwidth: int = None,
-                 user_data: str = None,
-                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
-                 vpc: 'VPCIdentity' = None) -> None:
-        """
-        Initialize a InstanceTemplateInstanceByVolume object.
-
-        :param datetime created_at: The date and time that the instance template
-               was created.
-        :param str crn: The CRN for this instance template.
-        :param str href: The URL for this instance template.
-        :param str id: The unique identifier for this instance template.
-        :param str name: The unique user-defined name for this instance template.
-        :param ResourceGroupReference resource_group: The resource group for this
-               instance template.
-        :param VolumeAttachmentPrototypeInstanceByVolumeContext
-               boot_volume_attachment: The boot volume attachment for the virtual server
-               instance.
-        :param NetworkInterfacePrototype primary_network_interface: Primary network
-               interface.
-        :param ZoneIdentity zone: The zone this virtual server instance will reside
-               in.
-        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
-               administrative user of the virtual server instance. Keys will be made
-               available to the virtual server instance as cloud-init vendor data. For
-               cloud-init enabled images, these keys will also be added as SSH authorized
-               keys for the administrative user.
-               For Windows images, at least one key must be specified, and one will be
-               chosen to encrypt [the administrator
-               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
-               Keys are optional for other images, but if no keys are specified, the
-               instance will be inaccessible unless the specified image provides another
-               means of access.
-               This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
-               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
-               property.
-        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
-               additional network interfaces to create for the virtual server instance.
-        :param InstancePlacementTargetPrototype placement_target: (optional) The
-               placement restrictions to use for the virtual server instance.
-        :param InstanceProfileIdentity profile: (optional) The profile to use for
-               this virtual server instance.
-        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
-               megabits per second) allocated exclusively to instance storage volumes. An
-               increase in this value will result in a corresponding decrease to
-               `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
-        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
-        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
-               to be a part of. If specified, it must match the VPC referenced by the
-               subnets of the instance's network interfaces.
-        """
-        # pylint: disable=super-init-not-called
-        self.created_at = created_at
-        self.crn = crn
-        self.href = href
-        self.id = id
-        self.keys = keys
-        self.name = name
-        self.network_interfaces = network_interfaces
-        self.placement_target = placement_target
-        self.profile = profile
-        self.resource_group = resource_group
-        self.total_volume_bandwidth = total_volume_bandwidth
-        self.user_data = user_data
-        self.volume_attachments = volume_attachments
-        self.vpc = vpc
-        self.boot_volume_attachment = boot_volume_attachment
-        self.primary_network_interface = primary_network_interface
-        self.zone = zone
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstanceTemplateInstanceByVolume':
-        """Initialize a InstanceTemplateInstanceByVolume object from a json dictionary."""
-        args = {}
-        if 'created_at' in _dict:
-            args['created_at'] = string_to_datetime(_dict.get('created_at'))
-        else:
-            raise ValueError('Required property \'created_at\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'crn' in _dict:
-            args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError('Required property \'crn\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'href' in _dict:
-            args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'id' in _dict:
-            args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'keys' in _dict:
-            args['keys'] = _dict.get('keys')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'network_interfaces' in _dict:
-            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
-        if 'placement_target' in _dict:
-            args['placement_target'] = _dict.get('placement_target')
-        if 'profile' in _dict:
-            args['profile'] = _dict.get('profile')
-        if 'resource_group' in _dict:
-            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
-        else:
-            raise ValueError('Required property \'resource_group\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'total_volume_bandwidth' in _dict:
-            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
-        if 'user_data' in _dict:
-            args['user_data'] = _dict.get('user_data')
-        if 'volume_attachments' in _dict:
-            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
-        if 'vpc' in _dict:
-            args['vpc'] = _dict.get('vpc')
-        if 'boot_volume_attachment' in _dict:
-            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(_dict.get('boot_volume_attachment'))
-        else:
-            raise ValueError('Required property \'boot_volume_attachment\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'primary_network_interface' in _dict:
-            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
-        else:
-            raise ValueError('Required property \'primary_network_interface\' not present in InstanceTemplateInstanceByVolume JSON')
-        if 'zone' in _dict:
-            args['zone'] = _dict.get('zone')
-        else:
-            raise ValueError('Required property \'zone\' not present in InstanceTemplateInstanceByVolume JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstanceTemplateInstanceByVolume object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'keys') and self.keys is not None:
-            keys_list = []
-            for x in self.keys:
-                if isinstance(x, dict):
-                    keys_list.append(x)
-                else:
-                    keys_list.append(x.to_dict())
-            _dict['keys'] = keys_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
-            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
-        if hasattr(self, 'placement_target') and self.placement_target is not None:
-            if isinstance(self.placement_target, dict):
-                _dict['placement_target'] = self.placement_target
-            else:
-                _dict['placement_target'] = self.placement_target.to_dict()
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
-            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
-        if hasattr(self, 'user_data') and self.user_data is not None:
-            _dict['user_data'] = self.user_data
-        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
-            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
-            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
-        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
-            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
-        if hasattr(self, 'zone') and self.zone is not None:
-            if isinstance(self.zone, dict):
-                _dict['zone'] = self.zone
-            else:
-                _dict['zone'] = self.zone.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstanceTemplateInstanceByVolume object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstanceTemplateInstanceByVolume') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstanceTemplateInstanceByVolume') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -71032,6 +72117,64 @@ class KeyIdentityById(KeyIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'KeyIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName(LegacyCloudObjectStorageBucketIdentity):
+    """
+    LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName.
+
+    :attr str name: The globally unique name of this Cloud Object Storage bucket.
+    """
+
+    def __init__(self,
+                 name: str) -> None:
+        """
+        Initialize a LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName object.
+
+        :param str name: The globally unique name of this Cloud Object Storage
+               bucket.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName':
+        """Initialize a LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LegacyCloudObjectStorageBucketIdentityCloudObjectStorageBucketIdentityByName') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -72623,6 +73766,144 @@ class LoadBalancerProfileSecurityGroupsSupportedFixed(LoadBalancerProfileSecurit
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'LoadBalancerProfileSecurityGroupsSupportedFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        FIXED = 'fixed'
+
+
+class LoadBalancerProfileUDPSupportedDependent(LoadBalancerProfileUDPSupported):
+    """
+    The UDP support for a load balancer with this profile depends on its configuration.
+
+    :attr str type: The type for this profile field.
+    """
+
+    def __init__(self,
+                 type: str) -> None:
+        """
+        Initialize a LoadBalancerProfileUDPSupportedDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileUDPSupportedDependent':
+        """Initialize a LoadBalancerProfileUDPSupportedDependent object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileUDPSupportedDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileUDPSupportedDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileUDPSupportedDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileUDPSupportedDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileUDPSupportedDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+        DEPENDENT = 'dependent'
+
+
+class LoadBalancerProfileUDPSupportedFixed(LoadBalancerProfileUDPSupported):
+    """
+    The UDP support for a load balancer with this profile.
+
+    :attr str type: The type for this profile field.
+    :attr bool value: The value for this profile field.
+    """
+
+    def __init__(self,
+                 type: str,
+                 value: bool) -> None:
+        """
+        Initialize a LoadBalancerProfileUDPSupportedFixed object.
+
+        :param str type: The type for this profile field.
+        :param bool value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileUDPSupportedFixed':
+        """Initialize a LoadBalancerProfileUDPSupportedFixed object from a json dictionary."""
+        args = {}
+        if 'type' in _dict:
+            args['type'] = _dict.get('type')
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileUDPSupportedFixed JSON')
+        if 'value' in _dict:
+            args['value'] = _dict.get('value')
+        else:
+            raise ValueError('Required property \'value\' not present in LoadBalancerProfileUDPSupportedFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileUDPSupportedFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileUDPSupportedFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileUDPSupportedFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileUDPSupportedFixed') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -75542,6 +76823,110 @@ class NetworkACLRuleNetworkACLRuleProtocolTCPUDP(NetworkACLRule):
         UDP = 'udp'
 
 
+class NetworkInterfaceIPPrototypeReservedIPIdentity(NetworkInterfaceIPPrototype):
+    """
+    Identifies a reserved IP by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a NetworkInterfaceIPPrototypeReservedIPIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById', 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref']))
+        raise Exception(msg)
+
+class NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext(NetworkInterfaceIPPrototype):
+    """
+    NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext.
+
+    :attr str address: (optional) The IP address to reserve, which must not already
+          be reserved on the subnet.
+          If unspecified, an available address on the subnet will automatically be
+          selected.
+    :attr bool auto_delete: (optional) Indicates whether this reserved IP member
+          will be automatically deleted when either
+          `target` is deleted, or the reserved IP is unbound.
+    :attr str name: (optional) The user-defined name for this reserved IP. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+          Names must be unique within the subnet the reserved IP resides in. Names
+          beginning with `ibm-` are reserved for provider-owned resources.
+    """
+
+    def __init__(self,
+                 *,
+                 address: str = None,
+                 auto_delete: bool = None,
+                 name: str = None) -> None:
+        """
+        Initialize a NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext object.
+
+        :param str address: (optional) The IP address to reserve, which must not
+               already be reserved on the subnet.
+               If unspecified, an available address on the subnet will automatically be
+               selected.
+        :param bool auto_delete: (optional) Indicates whether this reserved IP
+               member will be automatically deleted when either
+               `target` is deleted, or the reserved IP is unbound.
+        :param str name: (optional) The user-defined name for this reserved IP. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+               Names must be unique within the subnet the reserved IP resides in. Names
+               beginning with `ibm-` are reserved for provider-owned resources.
+        """
+        # pylint: disable=super-init-not-called
+        self.address = address
+        self.auto_delete = auto_delete
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext':
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext object from a json dictionary."""
+        args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        if 'auto_delete' in _dict:
+            args['auto_delete'] = _dict.get('auto_delete')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        if hasattr(self, 'auto_delete') and self.auto_delete is not None:
+            _dict['auto_delete'] = self.auto_delete
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkInterfaceIPPrototypeReservedIPPrototypeNetworkInterfaceContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class OperatingSystemIdentityByHref(OperatingSystemIdentity):
     """
     OperatingSystemIdentityByHref.
@@ -76049,6 +77434,436 @@ class ReservedIPTargetEndpointGatewayReference(ReservedIPTarget):
         The resource type.
         """
         ENDPOINT_GATEWAY = 'endpoint_gateway'
+
+
+class ReservedIPTargetGenericResourceReference(ReservedIPTarget):
+    """
+    Identifying information for a resource that is not native to the VPC API.
+
+    :attr str crn: The CRN for the resource.
+    :attr GenericResourceReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'GenericResourceReferenceDeleted' = None) -> None:
+        """
+        Initialize a ReservedIPTargetGenericResourceReference object.
+
+        :param str crn: The CRN for the resource.
+        :param str resource_type: The resource type.
+        :param GenericResourceReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPTargetGenericResourceReference':
+        """Initialize a ReservedIPTargetGenericResourceReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in ReservedIPTargetGenericResourceReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = GenericResourceReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPTargetGenericResourceReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPTargetGenericResourceReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPTargetGenericResourceReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPTargetGenericResourceReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPTargetGenericResourceReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        CLOUD_RESOURCE = 'cloud_resource'
+
+
+class ReservedIPTargetLoadBalancerReference(ReservedIPTarget):
+    """
+    ReservedIPTargetLoadBalancerReference.
+
+    :attr str crn: The load balancer's CRN.
+    :attr LoadBalancerReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The load balancer's canonical URL.
+    :attr str id: The unique identifier for this load balancer.
+    :attr str name: The unique user-defined name for this load balancer.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'LoadBalancerReferenceDeleted' = None) -> None:
+        """
+        Initialize a ReservedIPTargetLoadBalancerReference object.
+
+        :param str crn: The load balancer's CRN.
+        :param str href: The load balancer's canonical URL.
+        :param str id: The unique identifier for this load balancer.
+        :param str name: The unique user-defined name for this load balancer.
+        :param str resource_type: The resource type.
+        :param LoadBalancerReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPTargetLoadBalancerReference':
+        """Initialize a ReservedIPTargetLoadBalancerReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in ReservedIPTargetLoadBalancerReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = LoadBalancerReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPTargetLoadBalancerReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in ReservedIPTargetLoadBalancerReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in ReservedIPTargetLoadBalancerReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPTargetLoadBalancerReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPTargetLoadBalancerReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPTargetLoadBalancerReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPTargetLoadBalancerReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPTargetLoadBalancerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        LOAD_BALANCER = 'load_balancer'
+
+
+class ReservedIPTargetNetworkInterfaceReferenceTargetContext(ReservedIPTarget):
+    """
+    ReservedIPTargetNetworkInterfaceReferenceTargetContext.
+
+    :attr NetworkInterfaceReferenceTargetContextDeleted deleted: (optional) If
+          present, this property indicates the referenced resource has been deleted and
+          provides
+          some supplementary information.
+    :attr str href: The URL for this network interface.
+    :attr str id: The unique identifier for this network interface.
+    :attr str name: The user-defined name for this network interface.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'NetworkInterfaceReferenceTargetContextDeleted' = None) -> None:
+        """
+        Initialize a ReservedIPTargetNetworkInterfaceReferenceTargetContext object.
+
+        :param str href: The URL for this network interface.
+        :param str id: The unique identifier for this network interface.
+        :param str name: The user-defined name for this network interface.
+        :param str resource_type: The resource type.
+        :param NetworkInterfaceReferenceTargetContextDeleted deleted: (optional) If
+               present, this property indicates the referenced resource has been deleted
+               and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPTargetNetworkInterfaceReferenceTargetContext':
+        """Initialize a ReservedIPTargetNetworkInterfaceReferenceTargetContext object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = NetworkInterfaceReferenceTargetContextDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPTargetNetworkInterfaceReferenceTargetContext JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in ReservedIPTargetNetworkInterfaceReferenceTargetContext JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in ReservedIPTargetNetworkInterfaceReferenceTargetContext JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPTargetNetworkInterfaceReferenceTargetContext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPTargetNetworkInterfaceReferenceTargetContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPTargetNetworkInterfaceReferenceTargetContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPTargetNetworkInterfaceReferenceTargetContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPTargetNetworkInterfaceReferenceTargetContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        NETWORK_INTERFACE = 'network_interface'
+
+
+class ReservedIPTargetVPNGatewayReference(ReservedIPTarget):
+    """
+    ReservedIPTargetVPNGatewayReference.
+
+    :attr str crn: The VPN gateway's CRN.
+    :attr VPNGatewayReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The VPN gateway's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway.
+    :attr str name: The user-defined name for this VPN gateway.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'VPNGatewayReferenceDeleted' = None) -> None:
+        """
+        Initialize a ReservedIPTargetVPNGatewayReference object.
+
+        :param str crn: The VPN gateway's CRN.
+        :param str href: The VPN gateway's canonical URL.
+        :param str id: The unique identifier for this VPN gateway.
+        :param str name: The user-defined name for this VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPNGatewayReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPTargetVPNGatewayReference':
+        """Initialize a ReservedIPTargetVPNGatewayReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in ReservedIPTargetVPNGatewayReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = VPNGatewayReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPTargetVPNGatewayReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in ReservedIPTargetVPNGatewayReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in ReservedIPTargetVPNGatewayReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPTargetVPNGatewayReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPTargetVPNGatewayReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPTargetVPNGatewayReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPTargetVPNGatewayReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPTargetVPNGatewayReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_GATEWAY = 'vpn_gateway'
 
 
 class ResourceGroupIdentityById(ResourceGroupIdentity):
@@ -78227,6 +80042,7 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
     :attr str href: The load balancer's canonical URL.
     :attr str id: The unique identifier for this load balancer.
     :attr str name: The unique user-defined name for this load balancer.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -78234,6 +80050,7 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
                  href: str,
                  id: str,
                  name: str,
+                 resource_type: str,
                  *,
                  deleted: 'LoadBalancerReferenceDeleted' = None) -> None:
         """
@@ -78243,6 +80060,7 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
         :param str href: The load balancer's canonical URL.
         :param str id: The unique identifier for this load balancer.
         :param str name: The unique user-defined name for this load balancer.
+        :param str resource_type: The resource type.
         :param LoadBalancerReferenceDeleted deleted: (optional) If present, this
                property indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -78253,6 +80071,7 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
         self.href = href
         self.id = id
         self.name = name
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetReferenceLoadBalancerReference':
@@ -78276,6 +80095,10 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SecurityGroupTargetReferenceLoadBalancerReference JSON')
         return cls(**args)
 
     @classmethod
@@ -78296,6 +80119,8 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -78315,6 +80140,13 @@ class SecurityGroupTargetReferenceLoadBalancerReference(SecurityGroupTargetRefer
     def __ne__(self, other: 'SecurityGroupTargetReferenceLoadBalancerReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        LOAD_BALANCER = 'load_balancer'
+
 
 class SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext(SecurityGroupTargetReference):
     """
@@ -78429,7 +80261,7 @@ class SnapshotIdentityByCRN(SnapshotIdentity):
     """
     SnapshotIdentityByCRN.
 
-    :attr str crn: The CRN for this snapshot.
+    :attr str crn: The CRN of this snapshot.
     """
 
     def __init__(self,
@@ -78437,7 +80269,7 @@ class SnapshotIdentityByCRN(SnapshotIdentity):
         """
         Initialize a SnapshotIdentityByCRN object.
 
-        :param str crn: The CRN for this snapshot.
+        :param str crn: The CRN of this snapshot.
         """
         # pylint: disable=super-init-not-called
         self.crn = crn
@@ -78593,6 +80425,100 @@ class SnapshotIdentityById(SnapshotIdentity):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'SnapshotIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class SnapshotPrototypeSnapshotBySourceVolume(SnapshotPrototype):
+    """
+    SnapshotPrototypeSnapshotBySourceVolume.
+
+    :attr str name: (optional) The unique user-defined name for this snapshot. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr List[str] user_tags: (optional) The user tags associated with this
+          snapshot.
+    :attr VolumeIdentity source_volume: The volume to create this snapshot from.
+    """
+
+    def __init__(self,
+                 source_volume: 'VolumeIdentity',
+                 *,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 user_tags: List[str] = None) -> None:
+        """
+        Initialize a SnapshotPrototypeSnapshotBySourceVolume object.
+
+        :param VolumeIdentity source_volume: The volume to create this snapshot
+               from.
+        :param str name: (optional) The unique user-defined name for this snapshot.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param List[str] user_tags: (optional) The user tags associated with this
+               snapshot.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.user_tags = user_tags
+        self.source_volume = source_volume
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotPrototypeSnapshotBySourceVolume':
+        """Initialize a SnapshotPrototypeSnapshotBySourceVolume object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
+        if 'source_volume' in _dict:
+            args['source_volume'] = _dict.get('source_volume')
+        else:
+            raise ValueError('Required property \'source_volume\' not present in SnapshotPrototypeSnapshotBySourceVolume JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotPrototypeSnapshotBySourceVolume object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
+        if hasattr(self, 'source_volume') and self.source_volume is not None:
+            if isinstance(self.source_volume, dict):
+                _dict['source_volume'] = self.source_volume
+            else:
+                _dict['source_volume'] = self.source_volume.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotPrototypeSnapshotBySourceVolume object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotPrototypeSnapshotBySourceVolume') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotPrototypeSnapshotBySourceVolume') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -78789,10 +80715,10 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
     :attr str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
           format. The prefix length of the subnet's CIDR must be between `/9` (8,388,608
           addresses) and `/29` (8 addresses). The IPv4 range of the subnet's CIDR must
-          fall within an existing address prefix in the VPC. The subnet will be created in
-          the zone of the address prefix that contains the IPv4 CIDR. If zone is
-          specified, it must match the zone of the address prefix that contains the
-          subnet's IPv4 CIDR.
+          fall within an existing address prefix in the VPC and must not overlap with any
+          existing subnet. The subnet will be created in the zone of the address prefix
+          that contains the IPv4 CIDR. If zone is specified, it must match the zone of the
+          address prefix that contains the subnet's IPv4 CIDR.
     :attr ZoneIdentity zone: (optional) The zone this subnet will reside in.
     """
 
@@ -78814,10 +80740,11 @@ class SubnetPrototypeSubnetByCIDR(SubnetPrototype):
         :param str ipv4_cidr_block: The IPv4 range of the subnet, expressed in CIDR
                format. The prefix length of the subnet's CIDR must be between `/9`
                (8,388,608 addresses) and `/29` (8 addresses). The IPv4 range of the
-               subnet's CIDR must fall within an existing address prefix in the VPC. The
-               subnet will be created in the zone of the address prefix that contains the
-               IPv4 CIDR. If zone is specified, it must match the zone of the address
-               prefix that contains the subnet's IPv4 CIDR.
+               subnet's CIDR must fall within an existing address prefix in the VPC and
+               must not overlap with any existing subnet. The subnet will be created in
+               the zone of the address prefix that contains the IPv4 CIDR. If zone is
+               specified, it must match the zone of the address prefix that contains the
+               subnet's IPv4 CIDR.
         :param str ip_version: (optional) The IP version(s) to support for this
                subnet.
         :param str name: (optional) The user-defined name for this subnet. Names
@@ -79291,6 +81218,120 @@ class SubnetPublicGatewayPatchPublicGatewayIdentityById(SubnetPublicGatewayPatch
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'SubnetPublicGatewayPatchPublicGatewayIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class TrustedProfileIdentityTrustedProfileByCRN(TrustedProfileIdentity):
+    """
+    TrustedProfileIdentityTrustedProfileByCRN.
+
+    :attr str crn: The CRN for this trusted profile.
+    """
+
+    def __init__(self,
+                 crn: str) -> None:
+        """
+        Initialize a TrustedProfileIdentityTrustedProfileByCRN object.
+
+        :param str crn: The CRN for this trusted profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TrustedProfileIdentityTrustedProfileByCRN':
+        """Initialize a TrustedProfileIdentityTrustedProfileByCRN object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in TrustedProfileIdentityTrustedProfileByCRN JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TrustedProfileIdentityTrustedProfileByCRN object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TrustedProfileIdentityTrustedProfileByCRN object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TrustedProfileIdentityTrustedProfileByCRN') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TrustedProfileIdentityTrustedProfileByCRN') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class TrustedProfileIdentityTrustedProfileById(TrustedProfileIdentity):
+    """
+    TrustedProfileIdentityTrustedProfileById.
+
+    :attr str id: The unique identifier for this trusted profile.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a TrustedProfileIdentityTrustedProfileById object.
+
+        :param str id: The unique identifier for this trusted profile.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TrustedProfileIdentityTrustedProfileById':
+        """Initialize a TrustedProfileIdentityTrustedProfileById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in TrustedProfileIdentityTrustedProfileById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TrustedProfileIdentityTrustedProfileById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TrustedProfileIdentityTrustedProfileById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TrustedProfileIdentityTrustedProfileById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TrustedProfileIdentityTrustedProfileById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -81460,132 +83501,6 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContext(VolumeAttach
                   ", ".join(['VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeByCapacity', 'VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototypeInstanceContextVolumeBySourceSnapshot']))
         raise Exception(msg)
 
-class VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext(VolumeAttachmentVolumePrototypeInstanceByVolumeContext):
-    """
-    VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext.
-
-    :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
-          but the allowed values are expected to expand in the future.
-          If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
-    :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
-          wrap the data encryption key for the volume.
-          If unspecified, the snapshot's `encryption_key` will be used.
-    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
-          for the volume. Applicable only to volumes using a profile `family` of `custom`.
-    :attr str name: (optional) The unique user-defined name for this volume.
-    :attr VolumeProfileIdentity profile: The profile to use for this volume.
-    :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
-          volume.
-    """
-
-    def __init__(self,
-                 profile: 'VolumeProfileIdentity',
-                 source_snapshot: 'SnapshotIdentity',
-                 *,
-                 capacity: int = None,
-                 encryption_key: 'EncryptionKeyIdentity' = None,
-                 iops: int = None,
-                 name: str = None) -> None:
-        """
-        Initialize a VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext object.
-
-        :param VolumeProfileIdentity profile: The profile to use for this volume.
-        :param SnapshotIdentity source_snapshot: The snapshot from which to clone
-               the volume.
-        :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The only allowed value is the source snapshot's
-               `minimum_capacity`, but the allowed values are expected to expand in the
-               future.
-               If unspecified, the capacity will be the source snapshot's
-               `minimum_capacity`.
-        :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
-               to wrap the data encryption key for the volume.
-               If unspecified, the snapshot's `encryption_key` will be used.
-        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
-               use for the volume. Applicable only to volumes using a profile `family` of
-               `custom`.
-        :param str name: (optional) The unique user-defined name for this volume.
-        """
-        # pylint: disable=super-init-not-called
-        self.capacity = capacity
-        self.encryption_key = encryption_key
-        self.iops = iops
-        self.name = name
-        self.profile = profile
-        self.source_snapshot = source_snapshot
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext':
-        """Initialize a VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext object from a json dictionary."""
-        args = {}
-        if 'capacity' in _dict:
-            args['capacity'] = _dict.get('capacity')
-        if 'encryption_key' in _dict:
-            args['encryption_key'] = _dict.get('encryption_key')
-        if 'iops' in _dict:
-            args['iops'] = _dict.get('iops')
-        if 'name' in _dict:
-            args['name'] = _dict.get('name')
-        if 'profile' in _dict:
-            args['profile'] = _dict.get('profile')
-        else:
-            raise ValueError('Required property \'profile\' not present in VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext JSON')
-        if 'source_snapshot' in _dict:
-            args['source_snapshot'] = _dict.get('source_snapshot')
-        else:
-            raise ValueError('Required property \'source_snapshot\' not present in VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'capacity') and self.capacity is not None:
-            _dict['capacity'] = self.capacity
-        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
-            if isinstance(self.encryption_key, dict):
-                _dict['encryption_key'] = self.encryption_key
-            else:
-                _dict['encryption_key'] = self.encryption_key.to_dict()
-        if hasattr(self, 'iops') and self.iops is not None:
-            _dict['iops'] = self.iops
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'profile') and self.profile is not None:
-            if isinstance(self.profile, dict):
-                _dict['profile'] = self.profile
-            else:
-                _dict['profile'] = self.profile.to_dict()
-        if hasattr(self, 'source_snapshot') and self.source_snapshot is not None:
-            if isinstance(self.source_snapshot, dict):
-                _dict['source_snapshot'] = self.source_snapshot
-            else:
-                _dict['source_snapshot'] = self.source_snapshot.to_dict()
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VolumeAttachmentVolumePrototypeInstanceByVolumeContextVolumePrototypeInstanceByVolumeContext') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
 class VolumeAttachmentVolumePrototypeInstanceContextVolumeIdentity(VolumeAttachmentVolumePrototypeInstanceContext):
     """
     Identifies a volume by a unique property.
@@ -81925,6 +83840,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
+    :attr List[str] user_tags: (optional) Tags for this resource.
     :attr ZoneIdentity zone: The zone this volume will reside in.
     :attr int capacity: The capacity to use for the volume (in gigabytes). The
           specified minimum and maximum capacity values for creating or updating volumes
@@ -81942,6 +83858,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                  iops: int = None,
                  name: str = None,
                  resource_group: 'ResourceGroupIdentity' = None,
+                 user_tags: List[str] = None,
                  encryption_key: 'EncryptionKeyIdentity' = None) -> None:
         """
         Initialize a VolumePrototypeVolumeByCapacity object.
@@ -81956,6 +83873,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional)
+        :param List[str] user_tags: (optional) Tags for this resource.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
                If unspecified, the `encryption` type for the volume will be
@@ -81966,6 +83884,7 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
         self.name = name
         self.profile = profile
         self.resource_group = resource_group
+        self.user_tags = user_tags
         self.zone = zone
         self.capacity = capacity
         self.encryption_key = encryption_key
@@ -81984,6 +83903,8 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
             raise ValueError('Required property \'profile\' not present in VolumePrototypeVolumeByCapacity JSON')
         if 'resource_group' in _dict:
             args['resource_group'] = _dict.get('resource_group')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
         if 'zone' in _dict:
             args['zone'] = _dict.get('zone')
         else:
@@ -82018,6 +83939,8 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                 _dict['resource_group'] = self.resource_group
             else:
                 _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
         if hasattr(self, 'zone') and self.zone is not None:
             if isinstance(self.zone, dict):
                 _dict['zone'] = self.zone
@@ -83625,10 +85548,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHre
     """
     InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref.
 
-    :attr int max_membership_count: (optional) The maximum number of members the
-          instance group should have at the scheduled time.
-    :attr int min_membership_count: (optional) The minimum number of members the
-          instance group should have at the scheduled time.
+    :attr int max_membership_count: (optional) The desired maximum number of
+          instance group members at the scheduled time.
+    :attr int min_membership_count: (optional) The desired minimum number of
+          instance group members at the scheduled time.
     :attr str href: The URL for this instance group manager.
     """
 
@@ -83641,10 +85564,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHre
         Initialize a InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeByHref object.
 
         :param str href: The URL for this instance group manager.
-        :param int max_membership_count: (optional) The maximum number of members
-               the instance group should have at the scheduled time.
-        :param int min_membership_count: (optional) The minimum number of members
-               the instance group should have at the scheduled time.
+        :param int max_membership_count: (optional) The desired maximum number of
+               instance group members at the scheduled time.
+        :param int min_membership_count: (optional) The desired minimum number of
+               instance group members at the scheduled time.
         """
         # pylint: disable=super-init-not-called
         self.max_membership_count = max_membership_count
@@ -83703,10 +85626,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById(
     """
     InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById.
 
-    :attr int max_membership_count: (optional) The maximum number of members the
-          instance group should have at the scheduled time.
-    :attr int min_membership_count: (optional) The minimum number of members the
-          instance group should have at the scheduled time.
+    :attr int max_membership_count: (optional) The desired maximum number of
+          instance group members at the scheduled time.
+    :attr int min_membership_count: (optional) The desired minimum number of
+          instance group members at the scheduled time.
     :attr str id: The unique identifier for this instance group manager.
     """
 
@@ -83719,10 +85642,10 @@ class InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById(
         Initialize a InstanceGroupManagerScheduledActionManagerPrototypeAutoScalePrototypeById object.
 
         :param str id: The unique identifier for this instance group manager.
-        :param int max_membership_count: (optional) The maximum number of members
-               the instance group should have at the scheduled time.
-        :param int min_membership_count: (optional) The minimum number of members
-               the instance group should have at the scheduled time.
+        :param int max_membership_count: (optional) The desired maximum number of
+               instance group members at the scheduled time.
+        :param int min_membership_count: (optional) The desired minimum number of
+               instance group members at the scheduled time.
         """
         # pylint: disable=super-init-not-called
         self.max_membership_count = max_membership_count
@@ -85031,6 +86954,120 @@ class LoadBalancerPoolMemberTargetPrototypeInstanceIdentityInstanceIdentityById(
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref(NetworkInterfaceIPPrototypeReservedIPIdentity):
+    """
+    NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref.
+
+    :attr str href: The URL for this reserved IP.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref object.
+
+        :param str href: The URL for this reserved IP.
+        """
+        # pylint: disable=super-init-not-called
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref':
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityByHref') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById(NetworkInterfaceIPPrototypeReservedIPIdentity):
+    """
+    NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById.
+
+    :attr str id: The unique identifier for this reserved IP.
+    """
+
+    def __init__(self,
+                 id: str) -> None:
+        """
+        Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById object.
+
+        :param str id: The unique identifier for this reserved IP.
+        """
+        # pylint: disable=super-init-not-called
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById':
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById object from a json dictionary."""
+        args = {}
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NetworkInterfaceIPPrototypeReservedIPIdentityReservedIPIdentityById') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress(PublicGatewayFloatingIPPrototypeFloatingIPIdentity):
     """
     PublicGatewayFloatingIPPrototypeFloatingIPIdentityFloatingIPIdentityByAddress.
@@ -86176,8 +88213,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
-          but the allowed values are expected to expand in the future.
+          gigabytes). Must be at least the snapshot's
+          `minimum_capacity`. The maximum value may increase in the future.
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
@@ -86205,9 +88242,8 @@ class VolumeAttachmentPrototypeVolumeVolumePrototypeInstanceContextVolumePrototy
                `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The only allowed value is the source snapshot's
-               `minimum_capacity`, but the allowed values are expected to expand in the
-               future.
+               gigabytes). Must be at least the snapshot's
+               `minimum_capacity`. The maximum value may increase in the future.
                If unspecified, the capacity will be the source snapshot's
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
@@ -86583,8 +88619,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr int capacity: (optional) The capacity to use for the volume (in
-          gigabytes). The only allowed value is the source snapshot's `minimum_capacity`,
-          but the allowed values are expected to expand in the future.
+          gigabytes). Must be at least the snapshot's
+          `minimum_capacity`. The maximum value may increase in the future.
           If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
           wrap the data encryption key for the volume.
@@ -86612,9 +88648,8 @@ class VolumeAttachmentVolumePrototypeInstanceContextVolumePrototypeInstanceConte
                `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param int capacity: (optional) The capacity to use for the volume (in
-               gigabytes). The only allowed value is the source snapshot's
-               `minimum_capacity`, but the allowed values are expected to expand in the
-               future.
+               gigabytes). Must be at least the snapshot's
+               `minimum_capacity`. The maximum value may increase in the future.
                If unspecified, the capacity will be the source snapshot's
                `minimum_capacity`.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2020.
+# (C) Copyright IBM Corp. 2020, 2021, 2022.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -379,11 +379,6 @@ class TestEndpointGateways():
             createGen2Service, store['created_eg_id'])
         assertDeleteResponse(vpc)
 
-    def test_delete_subnet_reserved_ip(self, createGen2Service):
-        vpc = delete_subnet_reserved_ip(
-            createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip'])
-        assertDeleteResponse(vpc)
-
 
 class TestPublicGateways():
     def test_create_pgw(self, createGen2Service):
@@ -540,6 +535,18 @@ class TestBareMetalServers():
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
         assertGetPatchResponse(fips)
 
+    def test_list_bare_metal_server_network_interface_ips(self, createGen2Service):
+        pytest.skip("no env")
+        ips = list_bare_metal_server_network_interface_ips(
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'])
+        assertListResponse(ips, 'ips')
+
+    def test_get_bare_metal_server_network_interface_ip(self, createGen2Service):
+        pytest.skip("no env")
+        ips = get_bare_metal_server_network_interface_ip(
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_subnet_reserved_ip'])
+        assertGetPatchResponse(ips)
+    
     def test_delete_bare_metal_server_nic_fip(self, createGen2Service):
         fips = remove_bare_metal_server_network_interface_floating_ip(
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
@@ -667,6 +674,21 @@ class TestInstances():
             createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
         assertDeleteResponse(fips)
 
+    def test_list_instance_network_interface_ips(self, createGen2Service):
+        ips = list_instance_network_interface_ips(
+            createGen2Service, store['created_instance_id'], store['nic_id'])
+        assertListResponse(ips, 'ips')
+
+    def test_get_instance_network_interface_ip(self, createGen2Service):
+        fips = get_instance_network_interface_ip(
+            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_subnet_reserved_ip'])
+        assertGetPatchResponse(fips)
+
+    def test_delete_subnet_reserved_ip(self, createGen2Service):
+        vpc = delete_subnet_reserved_ip(
+            createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip'])
+        assertDeleteResponse(vpc)
+
     def test_delete_instance_network_interface(self, createGen2Service):
         nics = delete_instance_network_interface(
             createGen2Service, store['created_instance_id'], store['created_nic'])
@@ -716,28 +738,6 @@ class TestSecurityGroups():
     def test_get_sg(self, createGen2Service):
         sg = get_security_group(createGen2Service, store['created_sg_id'])
         assertGetPatchResponse(sg)
-
-    def test_update_sg_network_interface(self, createGen2Service):
-        sg_network_interface = add_security_group_network_interface(
-            createGen2Service, store['created_sg_id'], store['network_interface_id'])
-        assertCreateResponse(sg_network_interface)
-        store['created_sg_network_interface_id'] = sg_network_interface.get_result()[
-            'id']
-
-    def test_list_sg_network_interface(self, createGen2Service):
-        sg_network_interface = list_security_group_network_interfaces(
-            createGen2Service, store['created_sg_id'])
-        assert sg_network_interface.status_code == 200
-
-    def test_get_sg_network_interface(self, createGen2Service):
-        sg_network_interface = get_security_group_network_interface(
-            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
-        assertGetPatchResponse(sg_network_interface)
-
-    def test_delete_sg_network_interface(self, createGen2Service):
-        sg_network_interface = remove_security_group_network_interface(
-            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
-        assert sg_network_interface.status_code == 204
 
     def test_create_sg_rule(self, createGen2Service):
         sg_rule = create_security_group_rule(
@@ -989,7 +989,8 @@ class TestLoadBalancer():
         profiles = list_load_balancer_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
 
-    def test_get_load_balancer(self, createGen2Service):
+    def test_get_load_balancer_profile(self, createGen2Service):
+        pytest.skip("no env")
         profile = get_load_balancer_profile(createGen2Service)
         assertGetPatchResponse(profile)
 
@@ -1212,7 +1213,7 @@ class TestVPCInstanceTemplates():
 
     def test_list_instance_templates(self, createGen2Service):
         its = list_instance_templates(createGen2Service)
-        assertListResponse(its, 'instance_templates')
+        assertListResponse(its, 'templates')
 
     def test_get_instance_template(self, createGen2Service):
         it = get_instance_template(createGen2Service, store['created_it'])
@@ -1747,6 +1748,22 @@ def add_bare_metal_server_network_interface_floating_ip(service, bare_metal_serv
     )
     return add_bare_metal_server_network_interface_floating_ip_response
 
+def list_bare_metal_server_network_interface_ips(service, bare_metal_server_id, network_interface_id):
+    list_bare_metal_server_network_interface_floating_ip_response = service.list_bare_metal_server_network_interface_ips(
+        bare_metal_server_id,
+        network_interface_id
+    )
+    return list_bare_metal_server_network_interface_floating_ip_response
+
+
+def get_bare_metal_server_network_interface_ip(service, bare_metal_server_id, network_interface_id, id):
+    get_bare_metal_server_network_interface_ip_response = service.get_bare_metal_server_network_interface_ip(
+        bare_metal_server_id,
+        network_interface_id,
+        id
+    )
+    return get_bare_metal_server_network_interface_ip_response
+
 
 def remove_bare_metal_server_network_interface_floating_ip(service, bare_metal_server_id, network_interface_id, id):
     remove_bare_metal_server_network_interface_floating_ip_response = service.remove_bare_metal_server_network_interface_floating_ip(
@@ -2196,6 +2213,26 @@ def add_instance_network_interface_floating_ip(service, instance_id, network_int
     return response
 
 # --------------------------------------------------------
+# list_instance_network_interface_ips()
+# --------------------------------------------------------
+
+
+def list_instance_network_interface_ips(service, instance_id, network_interface_id):
+    response = service.list_instance_network_interface_ips(
+        instance_id, network_interface_id)
+    return response
+
+# --------------------------------------------------------
+# get_instance_network_interface_ip()
+# --------------------------------------------------------
+
+
+def get_instance_network_interface_ip(service, instance_id, network_interface_id, id):
+    response = service.get_instance_network_interface_ip(
+        instance_id, network_interface_id, id)
+    return response
+
+# --------------------------------------------------------
 # list_instance_volume_attachments()
 # --------------------------------------------------------
 
@@ -2273,7 +2310,7 @@ def list_load_balancer_profiles(service):
 
 
 def get_load_balancer_profile(service):
-    name = 'network-small'
+    name = 'network-fixed'
     response = service.get_load_balancer_profile(name)
     return response
 # --------------------------------------------------------
