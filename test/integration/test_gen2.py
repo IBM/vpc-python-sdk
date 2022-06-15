@@ -546,7 +546,7 @@ class TestBareMetalServers():
         ips = get_bare_metal_server_network_interface_ip(
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_subnet_reserved_ip'])
         assertGetPatchResponse(ips)
-    
+
     def test_delete_bare_metal_server_nic_fip(self, createGen2Service):
         fips = remove_bare_metal_server_network_interface_floating_ip(
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
@@ -5171,19 +5171,14 @@ def delete_placement_group(service, pgid):
 # Utils
 # --------------------------------------------------------
 
-
 def generate_name(r_type):
     names = ("cloudy", "jumble", "lavender", "mayfly", "green",  "yellow", "fox", "unrest", "red", "windy", "foggy", "hatchet", "mushily", "beach", "slacker")
     return "psdk-" + names[random.randint(0, len(names) - 1)] + "-" + r_type
-
 
 def assertListResponse(output, rType):
     response = output.get_result()
     assert output.status_code == 200
     assert response[rType] is not None
-
-#
-
 
 def assertGetPatchResponse(output):
     response = output.get_result()
