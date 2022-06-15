@@ -19,7 +19,7 @@ from ibm_cloud_sdk_core.api_exception import ApiException
 from ibm_cloud_sdk_core.authenticators.no_auth_authenticator import NoAuthAuthenticator
 import json
 import pytest
-import namegenerator
+import random
 from ibm_vpc.vpc_v1 import *
 
 store = {}
@@ -739,6 +739,27 @@ class TestSecurityGroups():
         sg = get_security_group(createGen2Service, store['created_sg_id'])
         assertGetPatchResponse(sg)
 
+    def test_create_sg_target(self, createGen2Service):
+        sg_network_interface = create_security_group_target_binding(
+            createGen2Service, store['created_sg_id'], store['network_interface_id'])
+        assertCreateResponse(sg_network_interface)
+        store['created_sg_network_interface_id'] = sg_network_interface.get_result()[
+            'id']
+
+    def test_list_sg_targets(self, createGen2Service):
+        sg_network_interface = list_security_group_targets(
+            createGen2Service, store['created_sg_id'])
+        assert sg_network_interface.status_code == 200
+
+    def test_get_sg_target(self, createGen2Service):
+        sg_network_interface = get_security_group_target(
+            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
+        assertGetPatchResponse(sg_network_interface)
+
+    def test_delete_sg_target(self, createGen2Service):
+        sg_network_interface = delete_security_group_target_binding(
+            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
+        assert sg_network_interface.status_code == 204
     def test_create_sg_rule(self, createGen2Service):
         sg_rule = create_security_group_rule(
             createGen2Service, store['created_sg_id'])
@@ -3334,45 +3355,48 @@ def update_security_group(service, id):
     )
     return response
 
+
+
 # --------------------------------------------------------
-# list_security_group_network_interfaces()
+# list_security_group_targets()
 # --------------------------------------------------------
 
 
-def list_security_group_network_interfaces(service, security_group_id):
-    response = service.list_security_group_network_interfaces(
+def list_security_group_targets(service, security_group_id):
+    response = service.list_security_group_targets(
         security_group_id)
     return response
 
 # --------------------------------------------------------
-# remove_security_group_network_interface()
+# delete_security_group_target_binding()
 # --------------------------------------------------------
 
 
-def remove_security_group_network_interface(service, security_group_id, id):
-    response = service.remove_security_group_network_interface(
+def delete_security_group_target_binding(service, security_group_id, id):
+    response = service.delete_security_group_target_binding(
         security_group_id, id)
     return response
 
 # --------------------------------------------------------
-# get_security_group_network_interface()
+# get_security_group_target()
 # --------------------------------------------------------
 
 
-def get_security_group_network_interface(service, security_group_id, id):
-    response = service.get_security_group_network_interface(
+def get_security_group_target(service, security_group_id, id):
+    response = service.get_security_group_target(
         security_group_id, id)
     return response
 
 # --------------------------------------------------------
-# add_security_group_network_interface()
+# create_security_group_target_binding()
 # --------------------------------------------------------
 
 
-def add_security_group_network_interface(service, security_group_id, id):
-    response = service.add_security_group_network_interface(
+def create_security_group_target_binding(service, security_group_id, id):
+    response = service.create_security_group_target_binding(
         security_group_id, id)
     return response
+
 
 # --------------------------------------------------------
 # list_security_group_rules()
@@ -5149,7 +5173,8 @@ def delete_placement_group(service, pgid):
 
 
 def generate_name(r_type):
-    return "psdk-" + namegenerator.gen() + "-" + r_type
+    names = ("cloudy", "jumble", "lavender", "mayfly", "green",  "yellow", "fox", "unrest", "red", "windy", "foggy", "hatchet", "mushily", "beach", "slacker")
+    return "psdk-" + names[random.randint(0, len(names) - 1)] + "-" + r_type
 
 
 def assertListResponse(output, rType):

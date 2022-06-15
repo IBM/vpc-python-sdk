@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.44.0-98838c07-20220128-151531
+# IBM OpenAPI SDK Code Generator Version: 3.50.0-af9e48c4-20220523-163800
  
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2022-03-29
+API Version: 2022-05-31
 """
 
 from datetime import datetime
@@ -50,7 +50,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2022-03-29',
+                     version: str = '2022-05-31',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -59,7 +59,7 @@ class VpcV1(BaseService):
                external configuration.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2022-03-29` and today's
+               behavior documented here, specify any date between `2022-06-10` and today's
                date (UTC).
         """
         if version is None:
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2022-03-29',
+                 version: str = '2022-05-31',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
@@ -83,7 +83,7 @@ class VpcV1(BaseService):
         Construct a new client for the vpc service.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2022-03-29` and today's
+               behavior documented here, specify any date between `2022-06-10` and today's
                date (UTC).
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
@@ -2570,7 +2570,7 @@ class VpcV1(BaseService):
         **kwargs
     ) -> DetailedResponse:
         """
-        Release a reserved IP.
+        Delete a reserved IP.
 
         This request releases a reserved IP. This operation cannot be reversed.
 
@@ -7859,7 +7859,6 @@ class VpcV1(BaseService):
         network_interfaces_subnet_id: str = None,
         network_interfaces_subnet_crn: str = None,
         network_interfaces_subnet_name: str = None,
-        sort: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -7886,11 +7885,6 @@ class VpcV1(BaseService):
                to bare metal servers on the subnet with the specified CRN.
         :param str network_interfaces_subnet_name: (optional) Filters the
                collection to bare metal servers on the subnet with the specified name.
-        :param str sort: (optional) Sorts the returned collection by the specified
-               property name in ascending order. A `-` may be prepended to the name to
-               sort in descending order. For example, the value `-created_at` sorts the
-               collection by the `created_at` property in descending order, and the value
-               `name` sorts it by the `name` property in ascending order.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `BareMetalServerCollection` object
@@ -7914,8 +7908,7 @@ class VpcV1(BaseService):
             'vpc.name': vpc_name,
             'network_interfaces.subnet.id': network_interfaces_subnet_id,
             'network_interfaces.subnet.crn': network_interfaces_subnet_crn,
-            'network_interfaces.subnet.name': network_interfaces_subnet_name,
-            'sort': sort
+            'network_interfaces.subnet.name': network_interfaces_subnet_name
         }
 
         if 'headers' in kwargs:
@@ -9619,6 +9612,7 @@ class VpcV1(BaseService):
         *,
         start: str = None,
         limit: int = None,
+        tag: str = None,
         resource_group_id: str = None,
         name: str = None,
         source_volume_id: str = None,
@@ -9637,6 +9631,8 @@ class VpcV1(BaseService):
         :param str start: (optional) A server-provided token determining what
                resource to start the page on.
         :param int limit: (optional) The number of resources to return on a page.
+        :param str tag: (optional) Filters the collection to resources with the
+               exact tag value.
         :param str resource_group_id: (optional) Filters the collection to
                resources in the resource group with the specified identifier.
         :param str name: (optional) Filters the collection to resources with the
@@ -9676,6 +9672,7 @@ class VpcV1(BaseService):
             'generation': self.generation,
             'start': start,
             'limit': limit,
+            'tag': tag,
             'resource_group.id': resource_group_id,
             'name': name,
             'source_volume.id': source_volume_id,
@@ -10498,7 +10495,7 @@ class VpcV1(BaseService):
         **kwargs
     ) -> DetailedResponse:
         """
-        Release a floating IP.
+        Delete a floating IP.
 
         This request disassociates (if associated) and releases a floating IP. This
         operation cannot be reversed. For this request to succeed, the floating IP must
@@ -11326,9 +11323,8 @@ class VpcV1(BaseService):
         Delete a security group.
 
         This request deletes a security group. A security group cannot be deleted if it is
-        referenced by any network interfaces or other security group rules. Additionally,
-        a VPC's default security group cannot be deleted. This operation cannot be
-        reversed.
+        referenced by any security group targets or rules. Additionally, a VPC's default
+        security group cannot be deleted. This operation cannot be reversed.
 
         :param str id: The security group identifier.
         :param dict headers: A `dict` containing the request headers
@@ -13712,7 +13708,10 @@ class VpcV1(BaseService):
                private.
                At present, if route mode is enabled, the load balancer must be private.
         :param List[SubnetIdentity] subnets: The subnets to provision this load
-               balancer.
+               balancer in.  The load balancer's availability will depend on the
+               availability of the zones the specified subnets reside in.
+               Load balancers in the `network` family allow only one subnet to be
+               specified.
         :param List[LoadBalancerListenerPrototypeLoadBalancerContext] listeners:
                (optional) The listeners of this load balancer.
         :param LoadBalancerLogging logging: (optional) The logging configuration to
@@ -13728,7 +13727,8 @@ class VpcV1(BaseService):
         :param List[LoadBalancerPoolPrototype] pools: (optional) The pools of this
                load balancer.
         :param LoadBalancerProfileIdentity profile: (optional) The profile to use
-               for this load balancer.
+               for this load balancer
+               If unspecified, `application` will be used.
         :param ResourceGroupIdentity resource_group: (optional) The resource group
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
@@ -15356,7 +15356,12 @@ class VpcV1(BaseService):
                this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
-               instances. Load balancers in the `application` family support IP addresses.
+               instances in the same zone as the load balancer's subnet. Load balancers in
+               the
+               `application` family support any IP address in the VPC. If the load
+               balancer has
+               `route mode` enabled, the member must be in a zone the load balancer has a
+               subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
                `weighted_round_robin`.
@@ -16501,23 +16506,6 @@ class ListImagesEnums:
         """
         PRIVATE = 'private'
         PUBLIC = 'public'
-
-
-class ListBareMetalServersEnums:
-    """
-    Enums for list_bare_metal_servers parameters.
-    """
-
-    class Sort(str, Enum):
-        """
-        Sorts the returned collection by the specified property name in ascending order. A
-        `-` may be prepended to the name to sort in descending order. For example, the
-        value `-created_at` sorts the collection by the `created_at` property in
-        descending order, and the value `name` sorts it by the `name` property in
-        ascending order.
-        """
-        CREATED_AT = 'created_at'
-        NAME = 'name'
 
 
 class ListSnapshotsEnums:
@@ -18331,13 +18319,13 @@ class BareMetalServerNetworkInterface():
     :attr datetime created_at: The date and time that the network interface was
           created.
     :attr bool enable_infrastructure_nat: If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
           associated with this network interface.
     :attr str href: The URL for this network interface.
@@ -18348,11 +18336,11 @@ class BareMetalServerNetworkInterface():
             server is stopped
             - Has an `allowed_vlans` property which controls the VLANs that will be
           permitted
-              to use the pci interface
+              to use the PCI interface
             - Cannot directly use an IEEE 802.1q VLAN tag.
           - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
+          its
+            array of `allowed_vlans`.
             - Must use an IEEE 802.1q tag.
             - Has its own security groups and does not inherit those of the PCI device
           through
@@ -18397,13 +18385,13 @@ class BareMetalServerNetworkInterface():
         :param datetime created_at: The date and time that the network interface
                was created.
         :param bool enable_infrastructure_nat: If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
         :param str interface_type: The network interface type:
@@ -18412,11 +18400,11 @@ class BareMetalServerNetworkInterface():
                  server is stopped
                  - Has an `allowed_vlans` property which controls the VLANs that will be
                permitted
-                   to use the pci interface
+                   to use the PCI interface
                  - Cannot directly use an IEEE 802.1q VLAN tag.
                - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
-                  of `allowed_vlans`.
+               in its
+                 array of `allowed_vlans`.
                  - Must use an IEEE 802.1q tag.
                  - Has its own security groups and does not inherit those of the PCI
                device through
@@ -18480,11 +18468,10 @@ class BareMetalServerNetworkInterface():
           server is stopped
           - Has an `allowed_vlans` property which controls the VLANs that will be
         permitted
-            to use the pci interface
+            to use the PCI interface
           - Cannot directly use an IEEE 802.1q VLAN tag.
         - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
-        array
-           of `allowed_vlans`.
+          array of `allowed_vlans`.
           - Must use an IEEE 802.1q tag.
           - Has its own security groups and does not inherit those of the PCI device
         through
@@ -18745,16 +18732,16 @@ class BareMetalServerNetworkInterfacePatch():
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
     :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
-          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          only) can use this physical (PCI type) interface.  A given VLAN can only be in
           the `allowed_vlans` array for one PCI type adapter per bare metal server.
     :attr bool enable_infrastructure_nat: (optional) If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in.
     """
@@ -18773,17 +18760,17 @@ class BareMetalServerNetworkInterfacePatch():
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
         :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
-               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               VLAN type only) can use this physical (PCI type) interface.  A given VLAN
                can only be in the `allowed_vlans` array for one PCI type adapter per bare
                metal server.
         :param bool enable_infrastructure_nat: (optional) If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str name: (optional) The user-defined name for network interface.
                Names must be unique within the instance the network interface resides in.
         """
@@ -18850,24 +18837,24 @@ class BareMetalServerNetworkInterfacePrototype():
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
     :attr bool enable_infrastructure_nat: (optional) If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr str interface_type: The network interface type:
           - `pci`: a physical PCI device which can only be created or deleted when the
           bare metal
             server is stopped
             - Has an `allowed_vlans` property which controls the VLANs that will be
           permitted
-              to use the pci interface
+              to use the PCI interface
             - Cannot directly use an IEEE 802.1q VLAN tag.
           - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
+          its
+            array of `allowed_vlans`.
             - Must use an IEEE 802.1q tag.
             - Has its own security groups and does not inherit those of the PCI device
           through
@@ -18907,11 +18894,11 @@ class BareMetalServerNetworkInterfacePrototype():
                  server is stopped
                  - Has an `allowed_vlans` property which controls the VLANs that will be
                permitted
-                   to use the pci interface
+                   to use the PCI interface
                  - Cannot directly use an IEEE 802.1q VLAN tag.
                - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
-                  of `allowed_vlans`.
+               in its
+                 array of `allowed_vlans`.
                  - Must use an IEEE 802.1q tag.
                  - Has its own security groups and does not inherit those of the PCI
                device through
@@ -18922,13 +18909,13 @@ class BareMetalServerNetworkInterfacePrototype():
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
         :param bool enable_infrastructure_nat: (optional) If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str name: (optional) The user-defined name for network interface.
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
@@ -18990,11 +18977,10 @@ class BareMetalServerNetworkInterfacePrototype():
           server is stopped
           - Has an `allowed_vlans` property which controls the VLANs that will be
         permitted
-            to use the pci interface
+            to use the PCI interface
           - Cannot directly use an IEEE 802.1q VLAN tag.
         - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
-        array
-           of `allowed_vlans`.
+          array of `allowed_vlans`.
           - Must use an IEEE 802.1q tag.
           - Has its own security groups and does not inherit those of the PCI device
         through
@@ -19069,23 +19055,23 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
     :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
-          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          only) can use this physical (PCI type) interface.  A given VLAN can only be in
           the `allowed_vlans` array for one PCI type adapter per bare metal server.
     :attr bool enable_infrastructure_nat: (optional) If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr str interface_type: (optional) The network interface type:
           - `pci`: a physical PCI device which can only be created or deleted when the
           bare metal
             server is stopped
             - Has an `allowed_vlans` property which controls the VLANs that will be
           permitted
-              to use the pci interface
+              to use the PCI interface
             - Cannot directly use an IEEE 802.1q VLAN tag.
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
@@ -19123,24 +19109,24 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
         :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
-               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               VLAN type only) can use this physical (PCI type) interface.  A given VLAN
                can only be in the `allowed_vlans` array for one PCI type adapter per bare
                metal server.
         :param bool enable_infrastructure_nat: (optional) If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str interface_type: (optional) The network interface type:
                - `pci`: a physical PCI device which can only be created or deleted when
                the bare metal
                  server is stopped
                  - Has an `allowed_vlans` property which controls the VLANs that will be
                permitted
-                   to use the pci interface
+                   to use the PCI interface
                  - Cannot directly use an IEEE 802.1q VLAN tag.
         :param str name: (optional) The user-defined name for network interface.
                Names must be unique within the instance the network interface resides in.
@@ -19255,7 +19241,7 @@ class BareMetalServerPrimaryNetworkInterfacePrototype():
           server is stopped
           - Has an `allowed_vlans` property which controls the VLANs that will be
         permitted
-            to use the pci interface
+            to use the PCI interface
           - Cannot directly use an IEEE 802.1q VLAN tag.
         """
         PCI = 'pci'
@@ -23911,6 +23897,8 @@ class DefaultSecurityGroup():
           for a VPC. Defaults to allowing all outbound traffic, and allowing all inbound
           traffic from other interfaces in the VPC's default security group. Rules for the
           default security group may be changed, added or removed.
+    :attr List[SecurityGroupTargetReference] targets: The targets for this security
+          group.
     :attr VPCReference vpc: The VPC this security group is a part of.
     """
 
@@ -23922,6 +23910,7 @@ class DefaultSecurityGroup():
                  name: str,
                  resource_group: 'ResourceGroupReference',
                  rules: List['SecurityGroupRule'],
+                 targets: List['SecurityGroupTargetReference'],
                  vpc: 'VPCReference') -> None:
         """
         Initialize a DefaultSecurityGroup object.
@@ -23941,6 +23930,8 @@ class DefaultSecurityGroup():
                all inbound traffic from other interfaces in the VPC's default security
                group. Rules for the default security group may be changed, added or
                removed.
+        :param List[SecurityGroupTargetReference] targets: The targets for this
+               security group.
         :param VPCReference vpc: The VPC this security group is a part of.
         """
         self.created_at = created_at
@@ -23950,6 +23941,7 @@ class DefaultSecurityGroup():
         self.name = name
         self.resource_group = resource_group
         self.rules = rules
+        self.targets = targets
         self.vpc = vpc
 
     @classmethod
@@ -23984,6 +23976,10 @@ class DefaultSecurityGroup():
             args['rules'] = [SecurityGroupRule.from_dict(x) for x in _dict.get('rules')]
         else:
             raise ValueError('Required property \'rules\' not present in DefaultSecurityGroup JSON')
+        if 'targets' in _dict:
+            args['targets'] = _dict.get('targets')
+        else:
+            raise ValueError('Required property \'targets\' not present in DefaultSecurityGroup JSON')
         if 'vpc' in _dict:
             args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
         else:
@@ -24012,6 +24008,14 @@ class DefaultSecurityGroup():
             _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'rules') and self.rules is not None:
             _dict['rules'] = [x.to_dict() for x in self.rules]
+        if hasattr(self, 'targets') and self.targets is not None:
+            targets_list = []
+            for x in self.targets:
+                if isinstance(x, dict):
+                    targets_list.append(x)
+                else:
+                    targets_list.append(x.to_dict())
+            _dict['targets'] = targets_list
         if hasattr(self, 'vpc') and self.vpc is not None:
             _dict['vpc'] = self.vpc.to_dict()
         return _dict
@@ -28713,6 +28717,7 @@ class Instance():
           instance.
     :attr ResourceGroupReference resource_group: The resource group for this
           instance.
+    :attr str resource_type: The resource type.
     :attr bool startable: Indicates whether the state of the virtual server instance
           permits a start request.
     :attr str status: The status of the virtual server instance.
@@ -28752,6 +28757,7 @@ class Instance():
                  primary_network_interface: 'NetworkInterfaceInstanceContextReference',
                  profile: 'InstanceProfileReference',
                  resource_group: 'ResourceGroupReference',
+                 resource_type: str,
                  startable: bool,
                  status: str,
                  status_reasons: List['InstanceStatusReason'],
@@ -28797,6 +28803,7 @@ class Instance():
                server instance.
         :param ResourceGroupReference resource_group: The resource group for this
                instance.
+        :param str resource_type: The resource type.
         :param bool startable: Indicates whether the state of the virtual server
                instance permits a start request.
         :param str status: The status of the virtual server instance.
@@ -28847,6 +28854,7 @@ class Instance():
         self.primary_network_interface = primary_network_interface
         self.profile = profile
         self.resource_group = resource_group
+        self.resource_type = resource_type
         self.startable = startable
         self.status = status
         self.status_reasons = status_reasons
@@ -28929,6 +28937,10 @@ class Instance():
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in Instance JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in Instance JSON')
         if 'startable' in _dict:
             args['startable'] = _dict.get('startable')
         else:
@@ -29016,6 +29028,8 @@ class Instance():
             _dict['profile'] = self.profile.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'startable') and self.startable is not None:
             _dict['startable'] = self.startable
         if hasattr(self, 'status') and self.status is not None:
@@ -29053,6 +29067,13 @@ class Instance():
     def __ne__(self, other: 'Instance') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        INSTANCE = 'instance'
+
 
     class StatusEnum(str, Enum):
         """
@@ -33762,7 +33783,7 @@ class InstanceInitializationPassword():
 
 class InstanceMetadataService():
     """
-    InstanceMetadataService.
+    The metadata service configuration.
 
     :attr bool enabled: Indicates whether the metadata service endpoint is available
           to the virtual server instance.
@@ -33820,10 +33841,10 @@ class InstanceMetadataService():
 
 class InstanceMetadataServicePatch():
     """
-    InstanceMetadataServicePatch.
+    The metadata service configuration.
 
     :attr bool enabled: (optional) Indicates whether the metadata service endpoint
-          is available to the virtual server instance.
+          will be available to the virtual server instance.
     """
 
     def __init__(self,
@@ -33833,7 +33854,7 @@ class InstanceMetadataServicePatch():
         Initialize a InstanceMetadataServicePatch object.
 
         :param bool enabled: (optional) Indicates whether the metadata service
-               endpoint is available to the virtual server instance.
+               endpoint will be available to the virtual server instance.
         """
         self.enabled = enabled
 
@@ -33877,10 +33898,10 @@ class InstanceMetadataServicePatch():
 
 class InstanceMetadataServicePrototype():
     """
-    InstanceMetadataServicePrototype.
+    The metadata service configuration.
 
     :attr bool enabled: (optional) Indicates whether the metadata service endpoint
-          is available to the virtual server instance.
+          will be available to the virtual server instance.
     """
 
     def __init__(self,
@@ -33890,7 +33911,7 @@ class InstanceMetadataServicePrototype():
         Initialize a InstanceMetadataServicePrototype object.
 
         :param bool enabled: (optional) Indicates whether the metadata service
-               endpoint is available to the virtual server instance.
+               endpoint will be available to the virtual server instance.
         """
         self.enabled = enabled
 
@@ -35183,8 +35204,8 @@ class InstancePrototype():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
-    :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional) The metadata
+          service configuration.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -35255,8 +35276,8 @@ class InstancePrototype():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
-        :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
+        :param InstanceMetadataServicePrototype metadata_service: (optional) The
+               metadata service configuration.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -35571,8 +35592,8 @@ class InstanceTemplate():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
-    :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional) The metadata
+          service configuration.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -35652,8 +35673,8 @@ class InstanceTemplate():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
-        :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
+        :param InstanceMetadataServicePrototype metadata_service: (optional) The
+               metadata service configuration.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
@@ -35674,7 +35695,7 @@ class InstanceTemplate():
                the VPC referenced by the subnets of the instance's network interfaces.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['InstanceTemplateInstanceByImage']))
+                  ", ".join(['InstanceTemplateInstanceByImage', 'InstanceTemplateInstanceBySourceSnapshot']))
         raise Exception(msg)
 
 class InstanceTemplateCollection():
@@ -35999,8 +36020,8 @@ class InstanceTemplatePrototype():
           not subsequently managed. Accordingly, it is reflected as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
-    :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional) The metadata
+          service configuration.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -36071,8 +36092,8 @@ class InstanceTemplatePrototype():
                [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
-        :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
+        :param InstanceMetadataServicePrototype metadata_service: (optional) The
+               metadata service configuration.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -37032,8 +37053,7 @@ class LoadBalancer():
     :attr List[LoadBalancerPoolReference] pools: The pools of this load balancer.
     :attr List[LoadBalancerPrivateIpsItem] private_ips: The private IP addresses
           assigned to this load balancer.
-    :attr LoadBalancerProfileReference profile: The profile to use for this load
-          balancer.
+    :attr LoadBalancerProfileReference profile: The profile for this load balancer.
     :attr str provisioning_status: The provisioning status of this load balancer.
     :attr List[IP] public_ips: The public IP addresses assigned to this load
           balancer.
@@ -37097,8 +37117,8 @@ class LoadBalancer():
                balancer.
         :param List[LoadBalancerPrivateIpsItem] private_ips: The private IP
                addresses assigned to this load balancer.
-        :param LoadBalancerProfileReference profile: The profile to use for this
-               load balancer.
+        :param LoadBalancerProfileReference profile: The profile for this load
+               balancer.
         :param str provisioning_status: The provisioning status of this load
                balancer.
         :param List[IP] public_ips: The public IP addresses assigned to this load
@@ -40953,7 +40973,10 @@ class LoadBalancerPoolMember():
     :attr str provisioning_status: The provisioning status of this member.
     :attr LoadBalancerPoolMemberTarget target: The pool member target. Load
           balancers in the `network` family support virtual server
-          instances. Load balancers in the `application` family support IP addresses.
+          instances in the same zone as the load balancer's subnet. Load balancers in the
+          `application` family support any IP address in the VPC. If the load balancer has
+          `route mode` enabled, the member must be in a zone the load balancer has a
+          subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
           `weighted_round_robin`.
@@ -40986,7 +41009,12 @@ class LoadBalancerPoolMember():
         :param str provisioning_status: The provisioning status of this member.
         :param LoadBalancerPoolMemberTarget target: The pool member target. Load
                balancers in the `network` family support virtual server
-               instances. Load balancers in the `application` family support IP addresses.
+               instances in the same zone as the load balancer's subnet. Load balancers in
+               the
+               `application` family support any IP address in the VPC. If the load
+               balancer has
+               `route mode` enabled, the member must be in a zone the load balancer has a
+               subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
                `weighted_round_robin`.
@@ -41174,7 +41202,10 @@ class LoadBalancerPoolMemberPatch():
           pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: (optional) The pool member
           target. Load balancers in the `network` family support virtual server
-          instances. Load balancers in the `application` family support IP addresses.
+          instances in the same zone as the load balancer's subnet. Load balancers in the
+          `application` family support any IP address in the VPC. If the load balancer has
+          `route mode` enabled, the member must be in a zone the load balancer has a
+          subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
           `weighted_round_robin`.
@@ -41200,7 +41231,12 @@ class LoadBalancerPoolMemberPatch():
         :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
                member target. Load balancers in the `network` family support virtual
                server
-               instances. Load balancers in the `application` family support IP addresses.
+               instances in the same zone as the load balancer's subnet. Load balancers in
+               the
+               `application` family support any IP address in the VPC. If the load
+               balancer has
+               `route mode` enabled, the member must be in a zone the load balancer has a
+               subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
                `weighted_round_robin`.
@@ -41272,7 +41308,10 @@ class LoadBalancerPoolMemberPrototype():
           pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: The pool member target. Load
           balancers in the `network` family support virtual server
-          instances. Load balancers in the `application` family support IP addresses.
+          instances in the same zone as the load balancer's subnet. Load balancers in the
+          `application` family support any IP address in the VPC. If the load balancer has
+          `route mode` enabled, the member must be in a zone the load balancer has a
+          subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
           `weighted_round_robin`.
@@ -41297,7 +41336,12 @@ class LoadBalancerPoolMemberPrototype():
                this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
-               instances. Load balancers in the `application` family support IP addresses.
+               instances in the same zone as the load balancer's subnet. Load balancers in
+               the
+               `application` family support any IP address in the VPC. If the load
+               balancer has
+               `route mode` enabled, the member must be in a zone the load balancer has a
+               subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
                `weighted_round_robin`.
@@ -41499,7 +41543,9 @@ class LoadBalancerPoolMemberReferenceDeleted():
 class LoadBalancerPoolMemberTarget():
     """
     The pool member target. Load balancers in the `network` family support virtual server
-    instances. Load balancers in the `application` family support IP addresses.
+    instances in the same zone as the load balancer's subnet. Load balancers in the
+    `application` family support any IP address in the VPC. If the load balancer has
+    `route mode` enabled, the member must be in a zone the load balancer has a subnet in.
 
     """
 
@@ -41515,7 +41561,9 @@ class LoadBalancerPoolMemberTarget():
 class LoadBalancerPoolMemberTargetPrototype():
     """
     The pool member target. Load balancers in the `network` family support virtual server
-    instances. Load balancers in the `application` family support IP addresses.
+    instances in the same zone as the load balancer's subnet. Load balancers in the
+    `application` family support any IP address in the VPC. If the load balancer has
+    `route mode` enabled, the member must be in a zone the load balancer has a subnet in.
 
     """
 
@@ -45702,8 +45750,7 @@ class OperatingSystem():
           used on dedicated hosts or dedicated host groups.
     :attr str display_name: A unique, display-friendly name for the operating
           system.
-    :attr str family: The name of the software family this operating system belongs
-          to.
+    :attr str family: The software family for this operating system.
     :attr str href: The URL for this operating system.
     :attr str name: The globally unique name for this operating system.
     :attr str vendor: The vendor of the operating system.
@@ -45727,8 +45774,7 @@ class OperatingSystem():
                be used on dedicated hosts or dedicated host groups.
         :param str display_name: A unique, display-friendly name for the operating
                system.
-        :param str family: The name of the software family this operating system
-               belongs to.
+        :param str family: The software family for this operating system.
         :param str href: The URL for this operating system.
         :param str name: The globally unique name for this operating system.
         :param str vendor: The vendor of the operating system.
@@ -51756,8 +51802,9 @@ class Snapshot():
     :attr ResourceGroupReference resource_group: The resource group for this
           snapshot.
     :attr str resource_type: The resource type.
-    :attr List[str] service_tags: The service tags prefixed with `is.snapshot:`
-          associated with this snapshot.
+    :attr List[str] service_tags: The [service
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) prefixed with
+          `is.snapshot:` associated with this snapshot.
     :attr int size: The size of this snapshot rounded up to the next gigabyte.
     :attr ImageReference source_image: (optional) If present, the image from which
           the data on this snapshot was most directly
@@ -51765,7 +51812,9 @@ class Snapshot():
     :attr VolumeReference source_volume: The source volume this snapshot was created
           from (may be
           [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
-    :attr List[str] user_tags: The user tags associated with this snapshot.
+    :attr List[str] user_tags: The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          snapshot.
     """
 
     def __init__(self,
@@ -51811,13 +51860,16 @@ class Snapshot():
         :param ResourceGroupReference resource_group: The resource group for this
                snapshot.
         :param str resource_type: The resource type.
-        :param List[str] service_tags: The service tags prefixed with
+        :param List[str] service_tags: The [service
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) prefixed with
                `is.snapshot:` associated with this snapshot.
         :param int size: The size of this snapshot rounded up to the next gigabyte.
         :param VolumeReference source_volume: The source volume this snapshot was
                created from (may be
                [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
-        :param List[str] user_tags: The user tags associated with this snapshot.
+        :param List[str] user_tags: The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this snapshot.
         :param datetime captured_at: (optional) The date and time the data capture
                for this snapshot was completed.
                If absent, this snapshot's data has not yet been captured. Additionally,
@@ -52262,7 +52314,8 @@ class SnapshotPatch():
     SnapshotPatch.
 
     :attr str name: (optional) The user-defined name for this snapshot.
-    :attr List[str] user_tags: (optional) The user tags associated with this
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
           snapshot.
     """
 
@@ -52274,8 +52327,9 @@ class SnapshotPatch():
         Initialize a SnapshotPatch object.
 
         :param str name: (optional) The user-defined name for this snapshot.
-        :param List[str] user_tags: (optional) The user tags associated with this
-               snapshot.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this snapshot.
         """
         self.name = name
         self.user_tags = user_tags
@@ -52331,7 +52385,8 @@ class SnapshotPrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
-    :attr List[str] user_tags: (optional) The user tags associated with this
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
           snapshot.
     """
 
@@ -52350,8 +52405,9 @@ class SnapshotPrototype():
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
-        :param List[str] user_tags: (optional) The user tags associated with this
-               snapshot.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this snapshot.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['SnapshotPrototypeSnapshotBySourceVolume']))
@@ -52549,6 +52605,7 @@ class Subnet():
     :attr PublicGatewayReference public_gateway: (optional) The public gateway to
           use for internet-bound traffic for this subnet.
     :attr ResourceGroupReference resource_group: The resource group for this subnet.
+    :attr str resource_type: The resource type.
     :attr RoutingTableReference routing_table: The routing table for this subnet.
     :attr str status: The status of the subnet.
     :attr int total_ipv4_address_count: The total number of IPv4 addresses in this
@@ -52571,6 +52628,7 @@ class Subnet():
                  name: str,
                  network_acl: 'NetworkACLReference',
                  resource_group: 'ResourceGroupReference',
+                 resource_type: str,
                  routing_table: 'RoutingTableReference',
                  status: str,
                  total_ipv4_address_count: int,
@@ -52595,6 +52653,7 @@ class Subnet():
         :param NetworkACLReference network_acl: The network ACL for this subnet.
         :param ResourceGroupReference resource_group: The resource group for this
                subnet.
+        :param str resource_type: The resource type.
         :param RoutingTableReference routing_table: The routing table for this
                subnet.
         :param str status: The status of the subnet.
@@ -52619,6 +52678,7 @@ class Subnet():
         self.network_acl = network_acl
         self.public_gateway = public_gateway
         self.resource_group = resource_group
+        self.resource_type = resource_type
         self.routing_table = routing_table
         self.status = status
         self.total_ipv4_address_count = total_ipv4_address_count
@@ -52671,6 +52731,10 @@ class Subnet():
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in Subnet JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in Subnet JSON')
         if 'routing_table' in _dict:
             args['routing_table'] = RoutingTableReference.from_dict(_dict.get('routing_table'))
         else:
@@ -52723,6 +52787,8 @@ class Subnet():
             _dict['public_gateway'] = self.public_gateway.to_dict()
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'routing_table') and self.routing_table is not None:
             _dict['routing_table'] = self.routing_table.to_dict()
         if hasattr(self, 'status') and self.status is not None:
@@ -52758,6 +52824,13 @@ class Subnet():
         The IP version(s) supported by this subnet.
         """
         IPV4 = 'ipv4'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        SUBNET = 'subnet'
 
 
     class StatusEnum(str, Enum):
@@ -53193,6 +53266,7 @@ class SubnetReference():
     :attr str href: The URL for this subnet.
     :attr str id: The unique identifier for this subnet.
     :attr str name: The user-defined name for this subnet.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -53200,6 +53274,7 @@ class SubnetReference():
                  href: str,
                  id: str,
                  name: str,
+                 resource_type: str,
                  *,
                  deleted: 'SubnetReferenceDeleted' = None) -> None:
         """
@@ -53209,6 +53284,7 @@ class SubnetReference():
         :param str href: The URL for this subnet.
         :param str id: The unique identifier for this subnet.
         :param str name: The user-defined name for this subnet.
+        :param str resource_type: The resource type.
         :param SubnetReferenceDeleted deleted: (optional) If present, this property
                indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -53218,6 +53294,7 @@ class SubnetReference():
         self.href = href
         self.id = id
         self.name = name
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'SubnetReference':
@@ -53241,6 +53318,10 @@ class SubnetReference():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in SubnetReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SubnetReference JSON')
         return cls(**args)
 
     @classmethod
@@ -53261,6 +53342,8 @@ class SubnetReference():
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -53280,6 +53363,13 @@ class SubnetReference():
     def __ne__(self, other: 'SubnetReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        SUBNET = 'subnet'
+
 
 class SubnetReferenceDeleted():
     """
@@ -53527,6 +53617,7 @@ class VPC():
     :attr str id: The unique identifier for this VPC.
     :attr str name: The unique user-defined name for this VPC.
     :attr ResourceGroupReference resource_group: The resource group for this VPC.
+    :attr str resource_type: The resource type.
     :attr str status: The status of this VPC.
     """
 
@@ -53541,6 +53632,7 @@ class VPC():
                  id: str,
                  name: str,
                  resource_group: 'ResourceGroupReference',
+                 resource_type: str,
                  status: str,
                  *,
                  cse_source_ips: List['VPCCSESourceIP'] = None) -> None:
@@ -53565,6 +53657,7 @@ class VPC():
         :param str name: The unique user-defined name for this VPC.
         :param ResourceGroupReference resource_group: The resource group for this
                VPC.
+        :param str resource_type: The resource type.
         :param str status: The status of this VPC.
         :param List[VPCCSESourceIP] cse_source_ips: (optional) The CSE ([Cloud
                Service
@@ -53583,6 +53676,7 @@ class VPC():
         self.id = id
         self.name = name
         self.resource_group = resource_group
+        self.resource_type = resource_type
         self.status = status
 
     @classmethod
@@ -53631,6 +53725,10 @@ class VPC():
             args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
         else:
             raise ValueError('Required property \'resource_group\' not present in VPC JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPC JSON')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
         else:
@@ -53667,6 +53765,8 @@ class VPC():
             _dict['name'] = self.name
         if hasattr(self, 'resource_group') and self.resource_group is not None:
             _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         if hasattr(self, 'status') and self.status is not None:
             _dict['status'] = self.status
         return _dict
@@ -53688,6 +53788,13 @@ class VPC():
     def __ne__(self, other: 'VPC') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPC = 'vpc'
+
 
     class StatusEnum(str, Enum):
         """
@@ -54062,6 +54169,7 @@ class VPCReference():
     :attr str href: The URL for this VPC.
     :attr str id: The unique identifier for this VPC.
     :attr str name: The unique user-defined name for this VPC.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -54069,6 +54177,7 @@ class VPCReference():
                  href: str,
                  id: str,
                  name: str,
+                 resource_type: str,
                  *,
                  deleted: 'VPCReferenceDeleted' = None) -> None:
         """
@@ -54078,6 +54187,7 @@ class VPCReference():
         :param str href: The URL for this VPC.
         :param str id: The unique identifier for this VPC.
         :param str name: The unique user-defined name for this VPC.
+        :param str resource_type: The resource type.
         :param VPCReferenceDeleted deleted: (optional) If present, this property
                indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -54087,6 +54197,7 @@ class VPCReference():
         self.href = href
         self.id = id
         self.name = name
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VPCReference':
@@ -54110,6 +54221,10 @@ class VPCReference():
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in VPCReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPCReference JSON')
         return cls(**args)
 
     @classmethod
@@ -54130,6 +54245,8 @@ class VPCReference():
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -54149,6 +54266,13 @@ class VPCReference():
     def __ne__(self, other: 'VPCReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPC = 'vpc'
+
 
 class VPCReferenceDeleted():
     """
@@ -55736,7 +55860,9 @@ class Volume():
           When processing this property, check for and log unknown values. Optionally halt
           processing and surface the error, or bypass the resource on which the unexpected
           reason code was encountered.
-    :attr List[str] user_tags: Tags for this resource.
+    :attr List[str] user_tags: The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          volume.
     :attr List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
           volume attachments for this volume.
     :attr ZoneReference zone: The zone this volume resides in.
@@ -55802,7 +55928,9 @@ class Volume():
                future. When processing this property, check for and log unknown values.
                Optionally halt processing and surface the error, or bypass the resource on
                which the unexpected reason code was encountered.
-        :param List[str] user_tags: Tags for this resource.
+        :param List[str] user_tags: The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this volume.
         :param List[VolumeAttachmentReferenceVolumeContext] volume_attachments: The
                volume attachments for this volume.
         :param ZoneReference zone: The zone this volume resides in.
@@ -56022,6 +56150,7 @@ class Volume():
         PENDING = 'pending'
         PENDING_DELETION = 'pending_deletion'
         UNUSABLE = 'unusable'
+        UPDATING = 'updating'
 
 
 class VolumeAttachment():
@@ -57270,7 +57399,9 @@ class VolumePatch():
           a
           running virtual server instance, and must have a `capacity` within the range
           supported by the specified profile.
-    :attr List[str] user_tags: (optional) Tags for this resource.
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          volume.
     """
 
     def __init__(self,
@@ -57302,7 +57433,9 @@ class VolumePatch():
                running virtual server instance, and must have a `capacity` within the
                range
                supported by the specified profile.
-        :param List[str] user_tags: (optional) Tags for this resource.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this volume.
         """
         self.capacity = capacity
         self.iops = iops
@@ -57770,7 +57903,9 @@ class VolumePrototype():
     :attr ResourceGroupIdentity resource_group: (optional) The resource group to
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is used.
-    :attr List[str] user_tags: (optional) Tags for this resource.
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          volume.
     :attr ZoneIdentity zone: The zone this volume will reside in.
     """
 
@@ -57795,7 +57930,9 @@ class VolumePrototype():
                to use. If unspecified, the account's [default resource
                group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
                used.
-        :param List[str] user_tags: (optional) Tags for this resource.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this volume.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['VolumePrototypeVolumeByCapacity']))
@@ -58728,32 +58865,17 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
     :attr datetime created_at: The date and time that the network interface was
           created.
     :attr bool enable_infrastructure_nat: If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
           associated with this network interface.
     :attr str href: The URL for this network interface.
     :attr str id: The unique identifier for this network interface.
-    :attr str interface_type: The network interface type:
-          - `pci`: a physical PCI device which can only be created or deleted when the
-          bare metal
-            server is stopped
-            - Has an `allowed_vlans` property which controls the VLANs that will be
-          permitted
-              to use the pci interface
-            - Cannot directly use an IEEE 802.1q VLAN tag.
-          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
-            - Must use an IEEE 802.1q tag.
-            - Has its own security groups and does not inherit those of the PCI device
-          through
-              which traffic flows.
     :attr str mac_address: The MAC address of the interface.  If absent, the value
           is not known.
     :attr str name: The user-defined name for this network interface.
@@ -58766,8 +58888,15 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
     :attr SubnetReference subnet: The associated subnet.
     :attr str type: The type of this bare metal server network interface.
     :attr List[int] allowed_vlans: Indicates what VLAN IDs (for VLAN type only) can
-          use this physical (PCI type) interface. A given VLAN can only be in the
+          use this physical (PCI type) interface.  A given VLAN can only be in the
           `allowed_vlans` array for one PCI type adapter per bare metal server.
+    :attr str interface_type: - `pci`: a physical PCI device which can only be
+          created or deleted when the bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the PCI interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
     """
 
     def __init__(self,
@@ -58776,7 +58905,6 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
                  enable_infrastructure_nat: bool,
                  href: str,
                  id: str,
-                 interface_type: str,
                  mac_address: str,
                  name: str,
                  port_speed: int,
@@ -58787,6 +58915,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
                  subnet: 'SubnetReference',
                  type: str,
                  allowed_vlans: List[int],
+                 interface_type: str,
                  *,
                  floating_ips: List['FloatingIPReference'] = None) -> None:
         """
@@ -58798,30 +58927,15 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         :param datetime created_at: The date and time that the network interface
                was created.
         :param bool enable_infrastructure_nat: If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
-        :param str interface_type: The network interface type:
-               - `pci`: a physical PCI device which can only be created or deleted when
-               the bare metal
-                 server is stopped
-                 - Has an `allowed_vlans` property which controls the VLANs that will be
-               permitted
-                   to use the pci interface
-                 - Cannot directly use an IEEE 802.1q VLAN tag.
-               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
-                  of `allowed_vlans`.
-                 - Must use an IEEE 802.1q tag.
-                 - Has its own security groups and does not inherit those of the PCI
-               device through
-                   which traffic flows.
         :param str mac_address: The MAC address of the interface.  If absent, the
                value is not known.
         :param str name: The user-defined name for this network interface.
@@ -58834,9 +58948,16 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         :param SubnetReference subnet: The associated subnet.
         :param str type: The type of this bare metal server network interface.
         :param List[int] allowed_vlans: Indicates what VLAN IDs (for VLAN type
-               only) can use this physical (PCI type) interface. A given VLAN can only be
+               only) can use this physical (PCI type) interface.  A given VLAN can only be
                in the `allowed_vlans` array for one PCI type adapter per bare metal
                server.
+        :param str interface_type: - `pci`: a physical PCI device which can only be
+               created or deleted when the bare metal
+                 server is stopped
+                 - Has an `allowed_vlans` property which controls the VLANs that will be
+               permitted
+                   to use the PCI interface
+                 - Cannot directly use an IEEE 802.1q VLAN tag.
         :param List[FloatingIPReference] floating_ips: (optional) The floating IPs
                associated with this network interface.
         """
@@ -58847,7 +58968,6 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         self.floating_ips = floating_ips
         self.href = href
         self.id = id
-        self.interface_type = interface_type
         self.mac_address = mac_address
         self.name = name
         self.port_speed = port_speed
@@ -58858,6 +58978,7 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         self.subnet = subnet
         self.type = type
         self.allowed_vlans = allowed_vlans
+        self.interface_type = interface_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfaceByPCI':
@@ -58885,10 +59006,6 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             args['id'] = _dict.get('id')
         else:
             raise ValueError('Required property \'id\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
-        if 'interface_type' in _dict:
-            args['interface_type'] = _dict.get('interface_type')
-        else:
-            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
         if 'mac_address' in _dict:
             args['mac_address'] = _dict.get('mac_address')
         else:
@@ -58929,6 +59046,10 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             args['allowed_vlans'] = _dict.get('allowed_vlans')
         else:
             raise ValueError('Required property \'allowed_vlans\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByPCI JSON')
         return cls(**args)
 
     @classmethod
@@ -58951,8 +59072,6 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
-        if hasattr(self, 'interface_type') and self.interface_type is not None:
-            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'mac_address') and self.mac_address is not None:
             _dict['mac_address'] = self.mac_address
         if hasattr(self, 'name') and self.name is not None:
@@ -58973,6 +59092,8 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
             _dict['type'] = self.type
         if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
             _dict['allowed_vlans'] = self.allowed_vlans
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
         return _dict
 
     def _to_dict(self):
@@ -58992,28 +59113,6 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
     def __ne__(self, other: 'BareMetalServerNetworkInterfaceByPCI') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-    class InterfaceTypeEnum(str, Enum):
-        """
-        The network interface type:
-        - `pci`: a physical PCI device which can only be created or deleted when the bare
-        metal
-          server is stopped
-          - Has an `allowed_vlans` property which controls the VLANs that will be
-        permitted
-            to use the pci interface
-          - Cannot directly use an IEEE 802.1q VLAN tag.
-        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
-        array
-           of `allowed_vlans`.
-          - Must use an IEEE 802.1q tag.
-          - Has its own security groups and does not inherit those of the PCI device
-        through
-            which traffic flows.
-        """
-        PCI = 'pci'
-        VLAN = 'vlan'
-
 
     class ResourceTypeEnum(str, Enum):
         """
@@ -59040,6 +59139,19 @@ class BareMetalServerNetworkInterfaceByPCI(BareMetalServerNetworkInterface):
         SECONDARY = 'secondary'
 
 
+    class InterfaceTypeEnum(str, Enum):
+        """
+        - `pci`: a physical PCI device which can only be created or deleted when the bare
+        metal
+          server is stopped
+          - Has an `allowed_vlans` property which controls the VLANs that will be
+        permitted
+            to use the PCI interface
+          - Cannot directly use an IEEE 802.1q VLAN tag.
+        """
+        PCI = 'pci'
+
+
 class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
     """
     BareMetalServerNetworkInterfaceByVLAN.
@@ -59050,32 +59162,17 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
     :attr datetime created_at: The date and time that the network interface was
           created.
     :attr bool enable_infrastructure_nat: If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr List[FloatingIPReference] floating_ips: (optional) The floating IPs
           associated with this network interface.
     :attr str href: The URL for this network interface.
     :attr str id: The unique identifier for this network interface.
-    :attr str interface_type: The network interface type:
-          - `pci`: a physical PCI device which can only be created or deleted when the
-          bare metal
-            server is stopped
-            - Has an `allowed_vlans` property which controls the VLANs that will be
-          permitted
-              to use the pci interface
-            - Cannot directly use an IEEE 802.1q VLAN tag.
-          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
-            - Must use an IEEE 802.1q tag.
-            - Has its own security groups and does not inherit those of the PCI device
-          through
-              which traffic flows.
     :attr str mac_address: The MAC address of the interface.  If absent, the value
           is not known.
     :attr str name: The user-defined name for this network interface.
@@ -59092,6 +59189,13 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
           `resource_group`. The interface will float automatically if the network detects
           a GARP or RARP on another bare metal server in the resource group.  Applies only
           to `vlan` type interfaces.
+    :attr str interface_type: - `vlan`: a virtual device, used through a `pci`
+          device that has the `vlan` in its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
     :attr int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
           traffic on this interface.
     """
@@ -59102,7 +59206,6 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
                  enable_infrastructure_nat: bool,
                  href: str,
                  id: str,
-                 interface_type: str,
                  mac_address: str,
                  name: str,
                  port_speed: int,
@@ -59113,6 +59216,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
                  subnet: 'SubnetReference',
                  type: str,
                  allow_interface_to_float: bool,
+                 interface_type: str,
                  vlan: int,
                  *,
                  floating_ips: List['FloatingIPReference'] = None) -> None:
@@ -59125,30 +59229,15 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
         :param datetime created_at: The date and time that the network interface
                was created.
         :param bool enable_infrastructure_nat: If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str href: The URL for this network interface.
         :param str id: The unique identifier for this network interface.
-        :param str interface_type: The network interface type:
-               - `pci`: a physical PCI device which can only be created or deleted when
-               the bare metal
-                 server is stopped
-                 - Has an `allowed_vlans` property which controls the VLANs that will be
-               permitted
-                   to use the pci interface
-                 - Cannot directly use an IEEE 802.1q VLAN tag.
-               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
-                  of `allowed_vlans`.
-                 - Must use an IEEE 802.1q tag.
-                 - Has its own security groups and does not inherit those of the PCI
-               device through
-                   which traffic flows.
         :param str mac_address: The MAC address of the interface.  If absent, the
                value is not known.
         :param str name: The user-defined name for this network interface.
@@ -59165,6 +59254,13 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
                `resource_group`. The interface will float automatically if the network
                detects a GARP or RARP on another bare metal server in the resource group.
                Applies only to `vlan` type interfaces.
+        :param str interface_type: - `vlan`: a virtual device, used through a `pci`
+               device that has the `vlan` in its array
+                  of `allowed_vlans`.
+                 - Must use an IEEE 802.1q tag.
+                 - Has its own security groups and does not inherit those of the PCI
+               device through
+                   which traffic flows.
         :param int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
                traffic on this interface.
         :param List[FloatingIPReference] floating_ips: (optional) The floating IPs
@@ -59177,7 +59273,6 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
         self.floating_ips = floating_ips
         self.href = href
         self.id = id
-        self.interface_type = interface_type
         self.mac_address = mac_address
         self.name = name
         self.port_speed = port_speed
@@ -59188,6 +59283,7 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
         self.subnet = subnet
         self.type = type
         self.allow_interface_to_float = allow_interface_to_float
+        self.interface_type = interface_type
         self.vlan = vlan
 
     @classmethod
@@ -59216,10 +59312,6 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             args['id'] = _dict.get('id')
         else:
             raise ValueError('Required property \'id\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
-        if 'interface_type' in _dict:
-            args['interface_type'] = _dict.get('interface_type')
-        else:
-            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
         if 'mac_address' in _dict:
             args['mac_address'] = _dict.get('mac_address')
         else:
@@ -59260,6 +59352,10 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             args['allow_interface_to_float'] = _dict.get('allow_interface_to_float')
         else:
             raise ValueError('Required property \'allow_interface_to_float\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfaceByVLAN JSON')
         if 'vlan' in _dict:
             args['vlan'] = _dict.get('vlan')
         else:
@@ -59286,8 +59382,6 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             _dict['href'] = self.href
         if hasattr(self, 'id') and self.id is not None:
             _dict['id'] = self.id
-        if hasattr(self, 'interface_type') and self.interface_type is not None:
-            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'mac_address') and self.mac_address is not None:
             _dict['mac_address'] = self.mac_address
         if hasattr(self, 'name') and self.name is not None:
@@ -59308,6 +59402,8 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
             _dict['type'] = self.type
         if hasattr(self, 'allow_interface_to_float') and self.allow_interface_to_float is not None:
             _dict['allow_interface_to_float'] = self.allow_interface_to_float
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'vlan') and self.vlan is not None:
             _dict['vlan'] = self.vlan
         return _dict
@@ -59329,28 +59425,6 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
     def __ne__(self, other: 'BareMetalServerNetworkInterfaceByVLAN') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-    class InterfaceTypeEnum(str, Enum):
-        """
-        The network interface type:
-        - `pci`: a physical PCI device which can only be created or deleted when the bare
-        metal
-          server is stopped
-          - Has an `allowed_vlans` property which controls the VLANs that will be
-        permitted
-            to use the pci interface
-          - Cannot directly use an IEEE 802.1q VLAN tag.
-        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
-        array
-           of `allowed_vlans`.
-          - Must use an IEEE 802.1q tag.
-          - Has its own security groups and does not inherit those of the PCI device
-        through
-            which traffic flows.
-        """
-        PCI = 'pci'
-        VLAN = 'vlan'
-
 
     class ResourceTypeEnum(str, Enum):
         """
@@ -59377,6 +59451,19 @@ class BareMetalServerNetworkInterfaceByVLAN(BareMetalServerNetworkInterface):
         SECONDARY = 'secondary'
 
 
+    class InterfaceTypeEnum(str, Enum):
+        """
+        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
+        array
+           of `allowed_vlans`.
+          - Must use an IEEE 802.1q tag.
+          - Has its own security groups and does not inherit those of the PCI device
+        through
+            which traffic flows.
+        """
+        VLAN = 'vlan'
+
+
 class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype(BareMetalServerNetworkInterfacePrototype):
     """
     BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype.
@@ -59385,28 +59472,13 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
     :attr bool enable_infrastructure_nat: (optional) If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
-    :attr str interface_type: The network interface type:
-          - `pci`: a physical PCI device which can only be created or deleted when the
-          bare metal
-            server is stopped
-            - Has an `allowed_vlans` property which controls the VLANs that will be
-          permitted
-              to use the pci interface
-            - Cannot directly use an IEEE 802.1q VLAN tag.
-          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
-            - Must use an IEEE 802.1q tag.
-            - Has its own security groups and does not inherit those of the PCI device
-          through
-              which traffic flows.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -59421,13 +59493,20 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
           security group is used.
     :attr SubnetIdentity subnet: The associated subnet.
     :attr List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for VLAN type
-          only) can use this physical (PCI type) interface. A given VLAN can only be in
+          only) can use this physical (PCI type) interface.  A given VLAN can only be in
           the `allowed_vlans` array for one PCI type adapter per bare metal server.
+    :attr str interface_type: - `pci`: a physical PCI device which can only be
+          created or deleted when the bare metal
+            server is stopped
+            - Has an `allowed_vlans` property which controls the VLANs that will be
+          permitted
+              to use the PCI interface
+            - Cannot directly use an IEEE 802.1q VLAN tag.
     """
 
     def __init__(self,
-                 interface_type: str,
                  subnet: 'SubnetIdentity',
+                 interface_type: str,
                  *,
                  allow_ip_spoofing: bool = None,
                  enable_infrastructure_nat: bool = None,
@@ -59438,34 +59517,26 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
         """
         Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype object.
 
-        :param str interface_type: The network interface type:
-               - `pci`: a physical PCI device which can only be created or deleted when
-               the bare metal
+        :param SubnetIdentity subnet: The associated subnet.
+        :param str interface_type: - `pci`: a physical PCI device which can only be
+               created or deleted when the bare metal
                  server is stopped
                  - Has an `allowed_vlans` property which controls the VLANs that will be
                permitted
-                   to use the pci interface
+                   to use the PCI interface
                  - Cannot directly use an IEEE 802.1q VLAN tag.
-               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
-                  of `allowed_vlans`.
-                 - Must use an IEEE 802.1q tag.
-                 - Has its own security groups and does not inherit those of the PCI
-               device through
-                   which traffic flows.
-        :param SubnetIdentity subnet: The associated subnet.
         :param bool allow_ip_spoofing: (optional) Indicates whether source IP
                spoofing is allowed on this interface. If false, source IP spoofing is
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
         :param bool enable_infrastructure_nat: (optional) If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str name: (optional) The user-defined name for network interface.
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
@@ -59481,19 +59552,19 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
                groups to use for this network interface. If unspecified, the VPC's default
                security group is used.
         :param List[int] allowed_vlans: (optional) Indicates what VLAN IDs (for
-               VLAN type only) can use this physical (PCI type) interface. A given VLAN
+               VLAN type only) can use this physical (PCI type) interface.  A given VLAN
                can only be in the `allowed_vlans` array for one PCI type adapter per bare
                metal server.
         """
         # pylint: disable=super-init-not-called
         self.allow_ip_spoofing = allow_ip_spoofing
         self.enable_infrastructure_nat = enable_infrastructure_nat
-        self.interface_type = interface_type
         self.name = name
         self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
         self.allowed_vlans = allowed_vlans
+        self.interface_type = interface_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype':
@@ -59503,10 +59574,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
             args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
         if 'enable_infrastructure_nat' in _dict:
             args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
-        if 'interface_type' in _dict:
-            args['interface_type'] = _dict.get('interface_type')
-        else:
-            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'primary_ip' in _dict:
@@ -59519,6 +59586,10 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
             raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
         if 'allowed_vlans' in _dict:
             args['allowed_vlans'] = _dict.get('allowed_vlans')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByPCIPrototype JSON')
         return cls(**args)
 
     @classmethod
@@ -59533,8 +59604,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
             _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
         if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
             _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
-        if hasattr(self, 'interface_type') and self.interface_type is not None:
-            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ip') and self.primary_ip is not None:
@@ -59557,6 +59626,8 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
                 _dict['subnet'] = self.subnet.to_dict()
         if hasattr(self, 'allowed_vlans') and self.allowed_vlans is not None:
             _dict['allowed_vlans'] = self.allowed_vlans
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
         return _dict
 
     def _to_dict(self):
@@ -59579,24 +59650,15 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByP
 
     class InterfaceTypeEnum(str, Enum):
         """
-        The network interface type:
         - `pci`: a physical PCI device which can only be created or deleted when the bare
         metal
           server is stopped
           - Has an `allowed_vlans` property which controls the VLANs that will be
         permitted
-            to use the pci interface
+            to use the PCI interface
           - Cannot directly use an IEEE 802.1q VLAN tag.
-        - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
-        array
-           of `allowed_vlans`.
-          - Must use an IEEE 802.1q tag.
-          - Has its own security groups and does not inherit those of the PCI device
-        through
-            which traffic flows.
         """
         PCI = 'pci'
-        VLAN = 'vlan'
 
 
 class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype(BareMetalServerNetworkInterfacePrototype):
@@ -59607,28 +59669,13 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
           allowed on this interface. If false, source IP spoofing is prevented on this
           interface. If true, source IP spoofing is allowed on this interface.
     :attr bool enable_infrastructure_nat: (optional) If `true`:
-             - The VPC infrastructure performs any needed NAT operations.
-             - A single floating IP can be assigned to the network interface.
+            - The VPC infrastructure performs any needed NAT operations.
+            - A single floating IP can be assigned to the network interface.
           If `false`:
-             - The packet is passed unmodified to/from the network interface,
-               allowing the workload to perform any needed NAT operations.
-             - Multiple floating IPs can be assigned to the network interface.
-             - `allow_ip_spoofing` must be set to `false`.
-    :attr str interface_type: The network interface type:
-          - `pci`: a physical PCI device which can only be created or deleted when the
-          bare metal
-            server is stopped
-            - Has an `allowed_vlans` property which controls the VLANs that will be
-          permitted
-              to use the pci interface
-            - Cannot directly use an IEEE 802.1q VLAN tag.
-          - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in
-          its array
-             of `allowed_vlans`.
-            - Must use an IEEE 802.1q tag.
-            - Has its own security groups and does not inherit those of the PCI device
-          through
-              which traffic flows.
+            - Packets are passed unmodified to/from the network interface,
+              allowing the workload to perform any needed NAT operations.
+            - Multiple floating IPs can be assigned to the network interface.
+            - `allow_ip_spoofing` must be set to `false`.
     :attr str name: (optional) The user-defined name for network interface. Names
           must be unique within the instance the network interface resides in. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -59647,13 +59694,20 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
           `resource_group`. The interface will float automatically if the network detects
           a GARP or RARP on another bare metal server in the resource group.  Applies only
           to `vlan` type interfaces.
+    :attr str interface_type: - `vlan`: a virtual device, used through a `pci`
+          device that has the `vlan` in its array
+             of `allowed_vlans`.
+            - Must use an IEEE 802.1q tag.
+            - Has its own security groups and does not inherit those of the PCI device
+          through
+              which traffic flows.
     :attr int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
           traffic on this interface.
     """
 
     def __init__(self,
-                 interface_type: str,
                  subnet: 'SubnetIdentity',
+                 interface_type: str,
                  vlan: int,
                  *,
                  allow_ip_spoofing: bool = None,
@@ -59665,22 +59719,14 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
         """
         Initialize a BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype object.
 
-        :param str interface_type: The network interface type:
-               - `pci`: a physical PCI device which can only be created or deleted when
-               the bare metal
-                 server is stopped
-                 - Has an `allowed_vlans` property which controls the VLANs that will be
-               permitted
-                   to use the pci interface
-                 - Cannot directly use an IEEE 802.1q VLAN tag.
-               - `vlan`: a virtual device, used through a `pci` device that has the `vlan`
-               in its array
+        :param SubnetIdentity subnet: The associated subnet.
+        :param str interface_type: - `vlan`: a virtual device, used through a `pci`
+               device that has the `vlan` in its array
                   of `allowed_vlans`.
                  - Must use an IEEE 802.1q tag.
                  - Has its own security groups and does not inherit those of the PCI
                device through
                    which traffic flows.
-        :param SubnetIdentity subnet: The associated subnet.
         :param int vlan: Indicates the 802.1Q VLAN ID tag that must be used for all
                traffic on this interface.
         :param bool allow_ip_spoofing: (optional) Indicates whether source IP
@@ -59688,13 +59734,13 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
                prevented on this interface. If true, source IP spoofing is allowed on this
                interface.
         :param bool enable_infrastructure_nat: (optional) If `true`:
-                  - The VPC infrastructure performs any needed NAT operations.
-                  - A single floating IP can be assigned to the network interface.
+                 - The VPC infrastructure performs any needed NAT operations.
+                 - A single floating IP can be assigned to the network interface.
                If `false`:
-                  - The packet is passed unmodified to/from the network interface,
-                    allowing the workload to perform any needed NAT operations.
-                  - Multiple floating IPs can be assigned to the network interface.
-                  - `allow_ip_spoofing` must be set to `false`.
+                 - Packets are passed unmodified to/from the network interface,
+                   allowing the workload to perform any needed NAT operations.
+                 - Multiple floating IPs can be assigned to the network interface.
+                 - `allow_ip_spoofing` must be set to `false`.
         :param str name: (optional) The user-defined name for network interface.
                Names must be unique within the instance the network interface resides in.
                If unspecified, the name will be a hyphenated list of randomly-selected
@@ -59718,12 +59764,12 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
         # pylint: disable=super-init-not-called
         self.allow_ip_spoofing = allow_ip_spoofing
         self.enable_infrastructure_nat = enable_infrastructure_nat
-        self.interface_type = interface_type
         self.name = name
         self.primary_ip = primary_ip
         self.security_groups = security_groups
         self.subnet = subnet
         self.allow_interface_to_float = allow_interface_to_float
+        self.interface_type = interface_type
         self.vlan = vlan
 
     @classmethod
@@ -59734,10 +59780,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
             args['allow_ip_spoofing'] = _dict.get('allow_ip_spoofing')
         if 'enable_infrastructure_nat' in _dict:
             args['enable_infrastructure_nat'] = _dict.get('enable_infrastructure_nat')
-        if 'interface_type' in _dict:
-            args['interface_type'] = _dict.get('interface_type')
-        else:
-            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'primary_ip' in _dict:
@@ -59750,6 +59792,10 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
             raise ValueError('Required property \'subnet\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
         if 'allow_interface_to_float' in _dict:
             args['allow_interface_to_float'] = _dict.get('allow_interface_to_float')
+        if 'interface_type' in _dict:
+            args['interface_type'] = _dict.get('interface_type')
+        else:
+            raise ValueError('Required property \'interface_type\' not present in BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByVLANPrototype JSON')
         if 'vlan' in _dict:
             args['vlan'] = _dict.get('vlan')
         else:
@@ -59768,8 +59814,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
             _dict['allow_ip_spoofing'] = self.allow_ip_spoofing
         if hasattr(self, 'enable_infrastructure_nat') and self.enable_infrastructure_nat is not None:
             _dict['enable_infrastructure_nat'] = self.enable_infrastructure_nat
-        if hasattr(self, 'interface_type') and self.interface_type is not None:
-            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'primary_ip') and self.primary_ip is not None:
@@ -59792,6 +59836,8 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
                 _dict['subnet'] = self.subnet.to_dict()
         if hasattr(self, 'allow_interface_to_float') and self.allow_interface_to_float is not None:
             _dict['allow_interface_to_float'] = self.allow_interface_to_float
+        if hasattr(self, 'interface_type') and self.interface_type is not None:
+            _dict['interface_type'] = self.interface_type
         if hasattr(self, 'vlan') and self.vlan is not None:
             _dict['vlan'] = self.vlan
         return _dict
@@ -59816,14 +59862,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
 
     class InterfaceTypeEnum(str, Enum):
         """
-        The network interface type:
-        - `pci`: a physical PCI device which can only be created or deleted when the bare
-        metal
-          server is stopped
-          - Has an `allowed_vlans` property which controls the VLANs that will be
-        permitted
-            to use the pci interface
-          - Cannot directly use an IEEE 802.1q VLAN tag.
         - `vlan`: a virtual device, used through a `pci` device that has the `vlan` in its
         array
            of `allowed_vlans`.
@@ -59832,7 +59870,6 @@ class BareMetalServerNetworkInterfacePrototypeBareMetalServerNetworkInterfaceByV
         through
             which traffic flows.
         """
-        PCI = 'pci'
         VLAN = 'vlan'
 
 
@@ -64775,6 +64812,7 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
     :attr str href: The URL for this subnet.
     :attr str id: The unique identifier for this subnet.
     :attr str name: The user-defined name for this subnet.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -64782,6 +64820,7 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
                  href: str,
                  id: str,
                  name: str,
+                 resource_type: str,
                  *,
                  deleted: 'SubnetReferenceDeleted' = None) -> None:
         """
@@ -64791,6 +64830,7 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
         :param str href: The URL for this subnet.
         :param str id: The unique identifier for this subnet.
         :param str name: The user-defined name for this subnet.
+        :param str resource_type: The resource type.
         :param SubnetReferenceDeleted deleted: (optional) If present, this property
                indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -64801,6 +64841,7 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
         self.href = href
         self.id = id
         self.name = name
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'FlowLogCollectorTargetSubnetReference':
@@ -64824,6 +64865,10 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in FlowLogCollectorTargetSubnetReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in FlowLogCollectorTargetSubnetReference JSON')
         return cls(**args)
 
     @classmethod
@@ -64844,6 +64889,8 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -64864,6 +64911,13 @@ class FlowLogCollectorTargetSubnetReference(FlowLogCollectorTarget):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        SUBNET = 'subnet'
+
+
 class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
     """
     FlowLogCollectorTargetVPCReference.
@@ -64875,6 +64929,7 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
     :attr str href: The URL for this VPC.
     :attr str id: The unique identifier for this VPC.
     :attr str name: The unique user-defined name for this VPC.
+    :attr str resource_type: The resource type.
     """
 
     def __init__(self,
@@ -64882,6 +64937,7 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
                  href: str,
                  id: str,
                  name: str,
+                 resource_type: str,
                  *,
                  deleted: 'VPCReferenceDeleted' = None) -> None:
         """
@@ -64891,6 +64947,7 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
         :param str href: The URL for this VPC.
         :param str id: The unique identifier for this VPC.
         :param str name: The unique user-defined name for this VPC.
+        :param str resource_type: The resource type.
         :param VPCReferenceDeleted deleted: (optional) If present, this property
                indicates the referenced resource has been deleted and provides
                some supplementary information.
@@ -64901,6 +64958,7 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
         self.href = href
         self.id = id
         self.name = name
+        self.resource_type = resource_type
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'FlowLogCollectorTargetVPCReference':
@@ -64924,6 +64982,10 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in FlowLogCollectorTargetVPCReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in FlowLogCollectorTargetVPCReference JSON')
         return cls(**args)
 
     @classmethod
@@ -64944,6 +65006,8 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
             _dict['id'] = self.id
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
         return _dict
 
     def _to_dict(self):
@@ -64963,6 +65027,13 @@ class FlowLogCollectorTargetVPCReference(FlowLogCollectorTarget):
     def __ne__(self, other: 'FlowLogCollectorTargetVPCReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPC = 'vpc'
+
 
 class ImageIdentityByCRN(ImageIdentity):
     """
@@ -69945,7 +70016,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -70031,7 +70101,6 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -70237,7 +70306,6 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -70322,7 +70390,6 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -70517,7 +70584,6 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -70603,7 +70669,6 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -70990,7 +71055,6 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -71076,7 +71140,6 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -71282,7 +71345,6 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: (optional) The unique user-defined name for this virtual server
           instance (and default system hostname). If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -71368,7 +71430,6 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param str name: (optional) The unique user-defined name for this virtual
                server instance (and default system hostname). If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -71589,7 +71650,6 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :attr InstanceMetadataServicePrototype metadata_service: (optional)
-          Configuration options for the instance metadata service.
     :attr str name: The unique user-defined name for this instance template.
     :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
           additional network interfaces to create for the virtual server instance.
@@ -71686,7 +71746,6 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
-               Configuration options for the instance metadata service.
         :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
                additional network interfaces to create for the virtual server instance.
         :param InstancePlacementTargetPrototype placement_target: (optional) The
@@ -71886,6 +71945,325 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceTemplateInstanceByImage') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class InstanceTemplateInstanceBySourceSnapshot(InstanceTemplate):
+    """
+    InstanceTemplateInstanceBySourceSnapshot.
+
+    :attr InstanceAvailabilityPrototype availability_policy: (optional) The
+          availability policy to use for this virtual server instance.
+    :attr datetime created_at: The date and time that the instance template was
+          created.
+    :attr str crn: The CRN for this instance template.
+    :attr InstanceDefaultTrustedProfilePrototype default_trusted_profile: (optional)
+          The default trusted profile configuration to use for this virtual server
+          instance  This property's value is used when provisioning the virtual server
+          instance, but not subsequently managed. Accordingly, it is reflected as an
+          [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :attr str href: The URL for this instance template.
+    :attr str id: The unique identifier for this instance template.
+    :attr List[KeyIdentity] keys: (optional) The public SSH keys for the
+          administrative user of the virtual server instance. Keys will be made available
+          to the virtual server instance as cloud-init vendor data. For cloud-init enabled
+          images, these keys will also be added as SSH authorized keys for the
+          administrative user.
+          For Windows images, at least one key must be specified, and one will be chosen
+          to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images, but if no keys are specified, the instance will
+          be inaccessible unless the specified image provides another means of access.
+          This property's value is used when provisioning the virtual server instance, but
+          not subsequently managed. Accordingly, it is reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :attr InstanceMetadataServicePrototype metadata_service: (optional)
+    :attr str name: The unique user-defined name for this instance template.
+    :attr List[NetworkInterfacePrototype] network_interfaces: (optional) The
+          additional network interfaces to create for the virtual server instance.
+    :attr InstancePlacementTargetPrototype placement_target: (optional) The
+          placement restrictions to use for the virtual server instance.
+    :attr InstanceProfileIdentity profile: (optional) The profile to use for this
+          virtual server instance. If unspecified, `bx2-2x8` will be used, but this
+          default value is expected to change in the future.
+    :attr ResourceGroupReference resource_group: The resource group for this
+          instance template.
+    :attr int total_volume_bandwidth: (optional) The amount of bandwidth (in
+          megabits per second) allocated exclusively to instance storage volumes. An
+          increase in this value will result in a corresponding decrease to
+          `total_network_bandwidth`.
+    :attr str user_data: (optional) User data to be made available when setting up
+          the virtual server instance.
+    :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
+          (optional) The volume attachments for this virtual server instance.
+    :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
+          part of. If specified, it must match the VPC referenced by the subnets of the
+          instance's network interfaces.
+    :attr VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+          boot_volume_attachment: The boot volume attachment for the virtual server
+          instance.
+    :attr NetworkInterfacePrototype primary_network_interface: Primary network
+          interface.
+    :attr ZoneIdentity zone: The zone this virtual server instance will reside in.
+    """
+
+    def __init__(self,
+                 created_at: datetime,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_group: 'ResourceGroupReference',
+                 boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext',
+                 primary_network_interface: 'NetworkInterfacePrototype',
+                 zone: 'ZoneIdentity',
+                 *,
+                 availability_policy: 'InstanceAvailabilityPrototype' = None,
+                 default_trusted_profile: 'InstanceDefaultTrustedProfilePrototype' = None,
+                 keys: List['KeyIdentity'] = None,
+                 metadata_service: 'InstanceMetadataServicePrototype' = None,
+                 network_interfaces: List['NetworkInterfacePrototype'] = None,
+                 placement_target: 'InstancePlacementTargetPrototype' = None,
+                 profile: 'InstanceProfileIdentity' = None,
+                 total_volume_bandwidth: int = None,
+                 user_data: str = None,
+                 volume_attachments: List['VolumeAttachmentPrototypeInstanceContext'] = None,
+                 vpc: 'VPCIdentity' = None) -> None:
+        """
+        Initialize a InstanceTemplateInstanceBySourceSnapshot object.
+
+        :param datetime created_at: The date and time that the instance template
+               was created.
+        :param str crn: The CRN for this instance template.
+        :param str href: The URL for this instance template.
+        :param str id: The unique identifier for this instance template.
+        :param str name: The unique user-defined name for this instance template.
+        :param ResourceGroupReference resource_group: The resource group for this
+               instance template.
+        :param VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+               boot_volume_attachment: The boot volume attachment for the virtual server
+               instance.
+        :param NetworkInterfacePrototype primary_network_interface: Primary network
+               interface.
+        :param ZoneIdentity zone: The zone this virtual server instance will reside
+               in.
+        :param InstanceAvailabilityPrototype availability_policy: (optional) The
+               availability policy to use for this virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance  This property's value is used when provisioning
+               the virtual server instance, but not subsequently managed. Accordingly, it
+               is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               administrative user of the virtual server instance. Keys will be made
+               available to the virtual server instance as cloud-init vendor data. For
+               cloud-init enabled images, these keys will also be added as SSH authorized
+               keys for the administrative user.
+               For Windows images, at least one key must be specified, and one will be
+               chosen to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images, but if no keys are specified, the
+               instance will be inaccessible unless the specified image provides another
+               means of access.
+               This property's value is used when provisioning the virtual server
+               instance, but not subsequently managed. Accordingly, it is reflected as an
+               [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param InstanceMetadataServicePrototype metadata_service: (optional)
+        :param List[NetworkInterfacePrototype] network_interfaces: (optional) The
+               additional network interfaces to create for the virtual server instance.
+        :param InstancePlacementTargetPrototype placement_target: (optional) The
+               placement restrictions to use for the virtual server instance.
+        :param InstanceProfileIdentity profile: (optional) The profile to use for
+               this virtual server instance. If unspecified, `bx2-2x8` will be used, but
+               this default value is expected to change in the future.
+        :param int total_volume_bandwidth: (optional) The amount of bandwidth (in
+               megabits per second) allocated exclusively to instance storage volumes. An
+               increase in this value will result in a corresponding decrease to
+               `total_network_bandwidth`.
+        :param str user_data: (optional) User data to be made available when
+               setting up the virtual server instance.
+        :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
+               (optional) The volume attachments for this virtual server instance.
+        :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
+               to be a part of. If specified, it must match the VPC referenced by the
+               subnets of the instance's network interfaces.
+        """
+        # pylint: disable=super-init-not-called
+        self.availability_policy = availability_policy
+        self.created_at = created_at
+        self.crn = crn
+        self.default_trusted_profile = default_trusted_profile
+        self.href = href
+        self.id = id
+        self.keys = keys
+        self.metadata_service = metadata_service
+        self.name = name
+        self.network_interfaces = network_interfaces
+        self.placement_target = placement_target
+        self.profile = profile
+        self.resource_group = resource_group
+        self.total_volume_bandwidth = total_volume_bandwidth
+        self.user_data = user_data
+        self.volume_attachments = volume_attachments
+        self.vpc = vpc
+        self.boot_volume_attachment = boot_volume_attachment
+        self.primary_network_interface = primary_network_interface
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceTemplateInstanceBySourceSnapshot':
+        """Initialize a InstanceTemplateInstanceBySourceSnapshot object from a json dictionary."""
+        args = {}
+        if 'availability_policy' in _dict:
+            args['availability_policy'] = InstanceAvailabilityPrototype.from_dict(_dict.get('availability_policy'))
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'default_trusted_profile' in _dict:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(_dict.get('default_trusted_profile'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'keys' in _dict:
+            args['keys'] = _dict.get('keys')
+        if 'metadata_service' in _dict:
+            args['metadata_service'] = InstanceMetadataServicePrototype.from_dict(_dict.get('metadata_service'))
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'network_interfaces' in _dict:
+            args['network_interfaces'] = [NetworkInterfacePrototype.from_dict(x) for x in _dict.get('network_interfaces')]
+        if 'placement_target' in _dict:
+            args['placement_target'] = _dict.get('placement_target')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
+        else:
+            raise ValueError('Required property \'resource_group\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'total_volume_bandwidth' in _dict:
+            args['total_volume_bandwidth'] = _dict.get('total_volume_bandwidth')
+        if 'user_data' in _dict:
+            args['user_data'] = _dict.get('user_data')
+        if 'volume_attachments' in _dict:
+            args['volume_attachments'] = [VolumeAttachmentPrototypeInstanceContext.from_dict(x) for x in _dict.get('volume_attachments')]
+        if 'vpc' in _dict:
+            args['vpc'] = _dict.get('vpc')
+        if 'boot_volume_attachment' in _dict:
+            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceBySourceSnapshotContext.from_dict(_dict.get('boot_volume_attachment'))
+        else:
+            raise ValueError('Required property \'boot_volume_attachment\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'primary_network_interface' in _dict:
+            args['primary_network_interface'] = NetworkInterfacePrototype.from_dict(_dict.get('primary_network_interface'))
+        else:
+            raise ValueError('Required property \'primary_network_interface\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        if 'zone' in _dict:
+            args['zone'] = _dict.get('zone')
+        else:
+            raise ValueError('Required property \'zone\' not present in InstanceTemplateInstanceBySourceSnapshot JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceTemplateInstanceBySourceSnapshot object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'availability_policy') and self.availability_policy is not None:
+            _dict['availability_policy'] = self.availability_policy.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for x in self.keys:
+                if isinstance(x, dict):
+                    keys_list.append(x)
+                else:
+                    keys_list.append(x.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'metadata_service') and self.metadata_service is not None:
+            _dict['metadata_service'] = self.metadata_service.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'network_interfaces') and self.network_interfaces is not None:
+            _dict['network_interfaces'] = [x.to_dict() for x in self.network_interfaces]
+        if hasattr(self, 'placement_target') and self.placement_target is not None:
+            if isinstance(self.placement_target, dict):
+                _dict['placement_target'] = self.placement_target
+            else:
+                _dict['placement_target'] = self.placement_target.to_dict()
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'total_volume_bandwidth') and self.total_volume_bandwidth is not None:
+            _dict['total_volume_bandwidth'] = self.total_volume_bandwidth
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        if hasattr(self, 'volume_attachments') and self.volume_attachments is not None:
+            _dict['volume_attachments'] = [x.to_dict() for x in self.volume_attachments]
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            if isinstance(self.vpc, dict):
+                _dict['vpc'] = self.vpc
+            else:
+                _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
+            _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
+        if hasattr(self, 'primary_network_interface') and self.primary_network_interface is not None:
+            _dict['primary_network_interface'] = self.primary_network_interface.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceTemplateInstanceBySourceSnapshot object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceTemplateInstanceBySourceSnapshot') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceTemplateInstanceBySourceSnapshot') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -80435,7 +80813,8 @@ class SnapshotPrototypeSnapshotBySourceVolume(SnapshotPrototype):
     :attr str name: (optional) The unique user-defined name for this snapshot. If
           unspecified, the name will be a hyphenated list of randomly-selected words.
     :attr ResourceGroupIdentity resource_group: (optional)
-    :attr List[str] user_tags: (optional) The user tags associated with this
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
           snapshot.
     :attr VolumeIdentity source_volume: The volume to create this snapshot from.
     """
@@ -80455,8 +80834,9 @@ class SnapshotPrototypeSnapshotBySourceVolume(SnapshotPrototype):
                If unspecified, the name will be a hyphenated list of randomly-selected
                words.
         :param ResourceGroupIdentity resource_group: (optional)
-        :param List[str] user_tags: (optional) The user tags associated with this
-               snapshot.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this snapshot.
         """
         # pylint: disable=super-init-not-called
         self.name = name
@@ -83840,7 +84220,9 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
     :attr str name: (optional) The unique user-defined name for this volume.
     :attr VolumeProfileIdentity profile: The profile to use for this volume.
     :attr ResourceGroupIdentity resource_group: (optional)
-    :attr List[str] user_tags: (optional) Tags for this resource.
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          volume.
     :attr ZoneIdentity zone: The zone this volume will reside in.
     :attr int capacity: The capacity to use for the volume (in gigabytes). The
           specified minimum and maximum capacity values for creating or updating volumes
@@ -83873,7 +84255,9 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
                `custom`.
         :param str name: (optional) The unique user-defined name for this volume.
         :param ResourceGroupIdentity resource_group: (optional)
-        :param List[str] user_tags: (optional) Tags for this resource.
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this volume.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
                to wrap the data encryption key for the volume.
                If unspecified, the `encryption` type for the volume will be
