@@ -19,7 +19,7 @@ from ibm_cloud_sdk_core.api_exception import ApiException
 from ibm_cloud_sdk_core.authenticators.no_auth_authenticator import NoAuthAuthenticator
 import json
 import pytest
-import namegenerator
+import random
 from ibm_vpc.vpc_v1 import *
 
 store = {}
@@ -5173,7 +5173,8 @@ def delete_placement_group(service, pgid):
 
 
 def generate_name(r_type):
-    return "psdk-" + namegenerator.gen() + "-" + r_type
+    names = ("cloudy", "jumble", "lavender", "mayfly", "green",  "yellow", "fox", "unrest", "red", "windy", "foggy", "hatchet", "mushily", "beach", "slacker")
+    return "psdk-" + names[random.randint(0, len(names) - 1)] + "-" + r_type
 
 
 def assertListResponse(output, rType):
