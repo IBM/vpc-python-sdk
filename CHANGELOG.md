@@ -1,3 +1,10 @@
+## [0.11.1](https://github.com/IBM/vpc-python-sdk/compare/v0.11.0...v0.11.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* trigger a release ([#38](https://github.com/IBM/vpc-python-sdk/issues/38)) ([b0f22ff](https://github.com/IBM/vpc-python-sdk/commit/b0f22ff2ec0bc780afe58c1702b07cef35e390f7))
+
 # [0.11.0](https://github.com/IBM/vpc-python-sdk/compare/v0.10.0...v0.11.0) (2022-05-02)
 
 
