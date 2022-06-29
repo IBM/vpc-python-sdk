@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2020, 2021, 2022.
+# (C) Copyright IBM Corp. 2022.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically pr
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2022-05-31
+API Version: 2022-06-30
 """
 
 from datetime import datetime
@@ -50,7 +50,7 @@ class VpcV1(BaseService):
 
     @classmethod
     def new_instance(cls,
-                     version: str = '2022-05-31',
+                     version: str = '2022-06-30',
                      service_name: str = DEFAULT_SERVICE_NAME,
                      generation: int = 2,
                     ) -> 'VpcV1':
@@ -59,7 +59,7 @@ class VpcV1(BaseService):
                external configuration.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2022-06-10` and today's
+               behavior documented here, specify any date between `2022-07-06` and today's
                date (UTC).
         """
         if version is None:
@@ -75,7 +75,7 @@ class VpcV1(BaseService):
         return service
 
     def __init__(self,
-                 version: str = '2022-05-31',
+                 version: str = '2022-06-30',
                  authenticator: Authenticator = None,
                  generation: int = 2,
                 ) -> None:
@@ -83,7 +83,7 @@ class VpcV1(BaseService):
         Construct a new client for the vpc service.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2022-06-10` and today's
+               behavior documented here, specify any date between `2022-07-06` and today's
                date (UTC).
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
@@ -893,7 +893,7 @@ class VpcV1(BaseService):
         *,
         action: str = None,
         name: str = None,
-        next_hop: 'RouteNextHopPrototype' = None,
+        next_hop: 'RoutePrototypeNextHop' = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -923,9 +923,9 @@ class VpcV1(BaseService):
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
-        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
-               the next hop that packets will be delivered to.  For
-               other `action` values, it must be omitted or specified as `0.0.0.0`.
+        :param RoutePrototypeNextHop next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to. For other `action`
+               values, it must be omitted or specified as `0.0.0.0`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Route` object
@@ -1203,6 +1203,7 @@ class VpcV1(BaseService):
     def create_vpc_routing_table(self,
         vpc_id: str,
         *,
+        accept_routes_from: List['ResourceFilter'] = None,
         name: str = None,
         route_direct_link_ingress: bool = None,
         route_transit_gateway_ingress: bool = None,
@@ -1218,6 +1219,11 @@ class VpcV1(BaseService):
         table, and contains the information necessary to create the new routing table.
 
         :param str vpc_id: The VPC identifier.
+        :param List[ResourceFilter] accept_routes_from: (optional) The filters
+               specifying the resources that may create routes in this routing table.
+               At present, only the `resource_type` filter is permitted, and only the
+               `vpn_server` value is supported, but filter support is expected to expand
+               in the future.
         :param str name: (optional) The user-defined name for this routing table.
                Names must be unique within the VPC the routing table resides in. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
@@ -1266,6 +1272,8 @@ class VpcV1(BaseService):
 
         if vpc_id is None:
             raise ValueError('vpc_id must be provided')
+        if accept_routes_from is not None:
+            accept_routes_from = [convert_model(x) for x in accept_routes_from]
         if routes is not None:
             routes = [convert_model(x) for x in routes]
         headers = {}
@@ -1280,6 +1288,7 @@ class VpcV1(BaseService):
         }
 
         data = {
+            'accept_routes_from': accept_routes_from,
             'name': name,
             'route_direct_link_ingress': route_direct_link_ingress,
             'route_transit_gateway_ingress': route_transit_gateway_ingress,
@@ -1311,6 +1320,8 @@ class VpcV1(BaseService):
     def delete_vpc_routing_table(self,
         vpc_id: str,
         id: str,
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -1322,6 +1333,8 @@ class VpcV1(BaseService):
 
         :param str vpc_id: The VPC identifier.
         :param str id: The routing table identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -1331,7 +1344,9 @@ class VpcV1(BaseService):
             raise ValueError('vpc_id must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='delete_vpc_routing_table')
@@ -1412,6 +1427,8 @@ class VpcV1(BaseService):
         vpc_id: str,
         id: str,
         routing_table_patch: 'RoutingTablePatch',
+        *,
+        if_match: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -1424,6 +1441,9 @@ class VpcV1(BaseService):
         :param str vpc_id: The VPC identifier.
         :param str id: The routing table identifier.
         :param RoutingTablePatch routing_table_patch: The routing table patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `RoutingTable` object
@@ -1437,7 +1457,9 @@ class VpcV1(BaseService):
             raise ValueError('routing_table_patch must be provided')
         if isinstance(routing_table_patch, RoutingTablePatch):
             routing_table_patch = convert_model(routing_table_patch)
-        headers = {}
+        headers = {
+            'If-Match': if_match
+        }
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
                                       service_version='V1',
                                       operation_id='update_vpc_routing_table')
@@ -1539,7 +1561,7 @@ class VpcV1(BaseService):
         *,
         action: str = None,
         name: str = None,
-        next_hop: 'RouteNextHopPrototype' = None,
+        next_hop: 'RoutePrototypeNextHop' = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -1569,9 +1591,9 @@ class VpcV1(BaseService):
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
-        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
-               the next hop that packets will be delivered to.  For
-               other `action` values, it must be omitted or specified as `0.0.0.0`.
+        :param RoutePrototypeNextHop next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to. For other `action`
+               values, it must be omitted or specified as `0.0.0.0`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Route` object
@@ -5300,8 +5322,9 @@ class VpcV1(BaseService):
                balancer pool only. Used by the instance group when scaling up instances to
                supply the port for the load balancer pool member.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
-               that the load balancer pool used by this group
-               is in. Required when using a load balancer pool.
+               associated with the specified load balancer pool.
+               Required if `load_balancer_pool` is specified.
+               At present, only load balancers in the `application` family are supported.
         :param LoadBalancerPoolIdentity load_balancer_pool: (optional) If
                specified, the load balancer pool will be managed by this
                group. Instances created by this group will have a new load
@@ -7479,6 +7502,636 @@ class VpcV1(BaseService):
         return response
 
     #########################
+    # Backup policies
+    #########################
+
+
+    def list_backup_policies(self,
+        *,
+        start: str = None,
+        limit: int = None,
+        resource_group_id: str = None,
+        name: str = None,
+        tag: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all backup policies.
+
+        This request lists all backup policies in the region. Backup policies control
+        which sources are selected for backup and include a set of backup policy plans
+        that provide the backup schedules and deletion triggers.
+
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str resource_group_id: (optional) Filters the collection to
+               resources in the resource group with the specified identifier.
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
+        :param str tag: (optional) Filters the collection to resources with the
+               exact tag value.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_backup_policies')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'resource_group.id': resource_group_id,
+            'name': name,
+            'tag': tag
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/backup_policies'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_backup_policy(self,
+        *,
+        match_user_tags: List[str] = None,
+        match_resource_types: List[str] = None,
+        name: str = None,
+        plans: List['BackupPolicyPlanPrototype'] = None,
+        resource_group: 'ResourceGroupIdentity' = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a backup policy.
+
+        This request creates a new backup policy from a backup policy prototype object.
+        The prototype object is structured in the same way as a retrieved backup policy,
+        and contains the information necessary to create the new backup policy.
+
+        :param List[str] match_user_tags: (optional) The user tags this backup
+               policy applies to. Resources that have both a matching user tag and a
+               matching type will be subject to the backup policy.
+        :param List[str] match_resource_types: (optional) A resource type this
+               backup policy applies to. Resources that have both a matching type and a
+               matching user tag will be subject to the backup policy.
+        :param str name: (optional) The user-defined name for this backup policy.
+               Names must be unique within the region this backup policy resides in. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+        :param List[BackupPolicyPlanPrototype] plans: (optional) The prototype
+               objects for backup plans to be created for this backup policy.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicy` object
+        """
+
+        if plans is not None:
+            plans = [convert_model(x) for x in plans]
+        if resource_group is not None:
+            resource_group = convert_model(resource_group)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_backup_policy')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'match_user_tags': match_user_tags,
+            'match_resource_types': match_resource_types,
+            'name': name,
+            'plans': plans,
+            'resource_group': resource_group
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/backup_policies'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_backup_policy_plans(self,
+        backup_policy_id: str,
+        *,
+        name: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all plans for a backup policy.
+
+        This request retrieves all plans for a backup policy. Backup plans provide the
+        backup schedule and deletion triggers.
+
+        :param str backup_policy_id: The backup policy identifier.
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyPlanCollection` object
+        """
+
+        if backup_policy_id is None:
+            raise ValueError('backup_policy_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_backup_policy_plans')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'name': name
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['backup_policy_id']
+        path_param_values = self.encode_path_vars(backup_policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{backup_policy_id}/plans'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_backup_policy_plan(self,
+        backup_policy_id: str,
+        cron_spec: str,
+        *,
+        active: bool = None,
+        attach_user_tags: List[str] = None,
+        copy_user_tags: bool = None,
+        deletion_trigger: 'BackupPolicyPlanDeletionTriggerPrototype' = None,
+        name: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a plan for a backup policy.
+
+        This request creates a new backup policy plan from a backup policy plan prototype
+        object. The prototype object is structured in the same way as a retrieved backup
+        policy plan, and contains the information necessary to create the new backup
+        policy plan.
+        Backups created by this plan will use the resource group of the source being
+        backed up.
+        Backups created by this plan will use the plan's name truncated to 46 characters,
+        followed by a unique 16-character suffix.
+
+        :param str backup_policy_id: The backup policy identifier.
+        :param str cron_spec: The cron specification for the backup schedule. The
+               backup policy jobs
+               (which create and delete backups for this plan) will not start until this
+               time, and may start for up to 90 minutes after this time.
+               All backup schedules for plans in the same policy must be at least an hour
+               apart.
+        :param bool active: (optional) Indicates whether the plan is active.
+        :param List[str] attach_user_tags: (optional) User tags to attach to each
+               backup (snapshot) created by this plan. If unspecified, no user tags will
+               be attached.
+        :param bool copy_user_tags: (optional) Indicates whether to copy the
+               source's user tags to the created backups (snapshots).
+        :param BackupPolicyPlanDeletionTriggerPrototype deletion_trigger:
+               (optional)
+        :param str name: (optional) The user-defined name for this backup policy
+               plan. Names must be unique within the backup policy this plan resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyPlan` object
+        """
+
+        if backup_policy_id is None:
+            raise ValueError('backup_policy_id must be provided')
+        if cron_spec is None:
+            raise ValueError('cron_spec must be provided')
+        if deletion_trigger is not None:
+            deletion_trigger = convert_model(deletion_trigger)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_backup_policy_plan')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'cron_spec': cron_spec,
+            'active': active,
+            'attach_user_tags': attach_user_tags,
+            'copy_user_tags': copy_user_tags,
+            'deletion_trigger': deletion_trigger,
+            'name': name
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['backup_policy_id']
+        path_param_values = self.encode_path_vars(backup_policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{backup_policy_id}/plans'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_backup_policy_plan(self,
+        backup_policy_id: str,
+        id: str,
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a backup policy plan.
+
+        This request deletes a backup policy plan. This operation cannot be reversed. Any
+        backups that have been created by the plan will remain but will no longer be
+        subject to the plan's deletion trigger. Any running jobs associated with the plan
+        will run to completion before the plan is deleted.
+        If the request is accepted, the backup policy plan `status` will be set to
+        `deleting`. Once deletion processing completes, the backup policy plan will no
+        longer be retrievable.
+
+        :param str backup_policy_id: The backup policy identifier.
+        :param str id: The backup policy plan identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyPlan` object
+        """
+
+        if backup_policy_id is None:
+            raise ValueError('backup_policy_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_backup_policy_plan')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['backup_policy_id', 'id']
+        path_param_values = self.encode_path_vars(backup_policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{backup_policy_id}/plans/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_backup_policy_plan(self,
+        backup_policy_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a backup policy plan.
+
+        This request retrieves a single backup policy plan specified by the identifier in
+        the URL.
+
+        :param str backup_policy_id: The backup policy identifier.
+        :param str id: The backup policy plan identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyPlan` object
+        """
+
+        if backup_policy_id is None:
+            raise ValueError('backup_policy_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_backup_policy_plan')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['backup_policy_id', 'id']
+        path_param_values = self.encode_path_vars(backup_policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{backup_policy_id}/plans/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_backup_policy_plan(self,
+        backup_policy_id: str,
+        id: str,
+        backup_policy_plan_patch: 'BackupPolicyPlanPatch',
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a backup policy plan.
+
+        This request updates a backup policy plan with the information in a provided plan
+        patch. The plan patch object is structured in the same way as a retrieved backup
+        policy plan and can contains only the information to be updated.
+
+        :param str backup_policy_id: The backup policy identifier.
+        :param str id: The backup policy plan identifier.
+        :param BackupPolicyPlanPatch backup_policy_plan_patch: The backup policy
+               plan patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicyPlan` object
+        """
+
+        if backup_policy_id is None:
+            raise ValueError('backup_policy_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if backup_policy_plan_patch is None:
+            raise ValueError('backup_policy_plan_patch must be provided')
+        if isinstance(backup_policy_plan_patch, BackupPolicyPlanPatch):
+            backup_policy_plan_patch = convert_model(backup_policy_plan_patch)
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_backup_policy_plan')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(backup_policy_plan_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['backup_policy_id', 'id']
+        path_param_values = self.encode_path_vars(backup_policy_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{backup_policy_id}/plans/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_backup_policy(self,
+        id: str,
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a backup policy.
+
+        This request deletes a backup policy. This operation cannot be reversed.
+        If the request is accepted, the backup policy `status` will be set to `deleting`.
+        Once deletion processing completes, the backup policy will no longer be
+        retrievable.
+
+        :param str id: The backup policy identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicy` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_backup_policy')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_backup_policy(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a backup policy.
+
+        This request retrieves a single backup policy specified by the identifier in the
+        URL.
+
+        :param str id: The backup policy identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicy` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_backup_policy')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_backup_policy(self,
+        id: str,
+        backup_policy_patch: 'BackupPolicyPatch',
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a backup policy.
+
+        This request updates a backup policy with the information in a provided backup
+        policy patch. The backup policy patch object is structured in the same way as a
+        retrieved backup policy and contains only the information to be updated.
+
+        :param str id: The backup policy identifier.
+        :param BackupPolicyPatch backup_policy_patch: The backup policy patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BackupPolicy` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if backup_policy_patch is None:
+            raise ValueError('backup_policy_patch must be provided')
+        if isinstance(backup_policy_patch, BackupPolicyPatch):
+            backup_policy_patch = convert_model(backup_policy_patch)
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_backup_policy')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(backup_policy_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/backup_policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
     # Placement groups
     #########################
 
@@ -8749,109 +9402,6 @@ class VpcV1(BaseService):
         return response
 
 
-    def list_bare_metal_server_network_interface_ips(self,
-        bare_metal_server_id: str,
-        network_interface_id: str,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        List all reserved IPs bound to a network interface.
-
-        This request lists all reserved IPs bound to a network interface.
-
-        :param str bare_metal_server_id: The bare metal server identifier.
-        :param str network_interface_id: The network interface identifier.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `ReservedIPCollectionNetworkInterfaceContext` object
-        """
-
-        if bare_metal_server_id is None:
-            raise ValueError('bare_metal_server_id must be provided')
-        if network_interface_id is None:
-            raise ValueError('network_interface_id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='list_bare_metal_server_network_interface_ips')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['bare_metal_server_id', 'network_interface_id']
-        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/ips'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
-    def get_bare_metal_server_network_interface_ip(self,
-        bare_metal_server_id: str,
-        network_interface_id: str,
-        id: str,
-        **kwargs
-    ) -> DetailedResponse:
-        """
-        Retrieve bound reserved IP.
-
-        This request a retrieves the specified reserved IP address if it is bound to the
-        network interface and bare metal server specified in the URL.
-
-        :param str bare_metal_server_id: The bare metal server identifier.
-        :param str network_interface_id: The network interface identifier.
-        :param str id: The reserved IP identifier.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `ReservedIP` object
-        """
-
-        if bare_metal_server_id is None:
-            raise ValueError('bare_metal_server_id must be provided')
-        if network_interface_id is None:
-            raise ValueError('network_interface_id must be provided')
-        if id is None:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='get_bare_metal_server_network_interface_ip')
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'generation': self.generation
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['bare_metal_server_id', 'network_interface_id', 'id']
-        path_param_values = self.encode_path_vars(bare_metal_server_id, network_interface_id, id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/bare_metal_servers/{bare_metal_server_id}/network_interfaces/{network_interface_id}/ips/{id}'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers,
-                                       params=params)
-
-        response = self.send(request, **kwargs)
-        return response
-
-
     def delete_bare_metal_server(self,
         id: str,
         **kwargs
@@ -9620,6 +10170,7 @@ class VpcV1(BaseService):
         source_image_id: str = None,
         source_image_crn: str = None,
         sort: str = None,
+        backup_policy_plan_id: str = None,
         **kwargs
     ) -> DetailedResponse:
         """
@@ -9656,6 +10207,8 @@ class VpcV1(BaseService):
                sort in descending order. For example, the value `-created_at` sorts the
                collection by the `created_at` property in descending order, and the value
                `name` sorts it by the `name` property in ascending order.
+        :param str backup_policy_plan_id: (optional) Filters the collection to
+               backup policy jobs with the backup plan with the specified identifier.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `SnapshotCollection` object
@@ -9679,7 +10232,8 @@ class VpcV1(BaseService):
             'source_volume.crn': source_volume_crn,
             'source_image.id': source_image_id,
             'source_image.crn': source_image_crn,
-            'sort': sort
+            'sort': sort,
+            'backup_policy_plan.id': backup_policy_plan_id
         }
 
         if 'headers' in kwargs:
@@ -11803,6 +12357,7 @@ class VpcV1(BaseService):
         the target must be attached to at least one other security group.  The specified
         target identifier can be:
         - A network interface identifier
+        - A VPN server identifier
         - An application load balancer identifier
         - An endpoint gateway identifier
         Security groups are stateful, so any changes to a target's security groups are
@@ -11907,6 +12462,7 @@ class VpcV1(BaseService):
         This request adds a resource to an existing security group. The specified target
         identifier can be:
         - A network interface identifier
+        - A VPN server identifier
         - An application load balancer identifier
         - An endpoint gateway identifier
         When a target is added to a security group, the security group rules are applied
@@ -13111,6 +13667,7 @@ class VpcV1(BaseService):
         List all local CIDRs for a VPN gateway connection.
 
         This request lists all local CIDRs for a VPN gateway connection.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13162,6 +13719,7 @@ class VpcV1(BaseService):
         Remove a local CIDR from a VPN gateway connection.
 
         This request removes a CIDR from a VPN gateway connection.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13217,8 +13775,9 @@ class VpcV1(BaseService):
         """
         Check if the specified local CIDR exists on a VPN gateway connection.
 
-        This request succeeds if a CIDR exists on the specified VPN gateway connection and
-        fails otherwise.
+        This request succeeds if a CIDR exists on the specified VPN gateway connection,
+        and fails otherwise.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13274,9 +13833,10 @@ class VpcV1(BaseService):
         """
         Set a local CIDR on a VPN gateway connection.
 
-        This request adds the specified CIDR to the specified VPN gateway connection. A
-        request body is not required, and if provided, is ignored. This request succeeds
-        if the CIDR already exists on the specified VPN gateway connection.
+        This request adds the specified CIDR to the specified VPN gateway connection. This
+        request succeeds if the specified CIDR already exists. A request body is not
+        required, and if provided, is ignored.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13331,6 +13891,7 @@ class VpcV1(BaseService):
         List all peer CIDRs for a VPN gateway connection.
 
         This request lists all peer CIDRs for a VPN gateway connection.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13382,6 +13943,7 @@ class VpcV1(BaseService):
         Remove a peer CIDR from a VPN gateway connection.
 
         This request removes a CIDR from a VPN gateway connection.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13437,8 +13999,9 @@ class VpcV1(BaseService):
         """
         Check if the specified peer CIDR exists on a VPN gateway connection.
 
-        This request succeeds if a CIDR exists on the specified VPN gateway connection and
-        fails otherwise.
+        This request succeeds if a CIDR exists on the specified VPN gateway connection,
+        and fails otherwise.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13494,9 +14057,10 @@ class VpcV1(BaseService):
         """
         Set a peer CIDR on a VPN gateway connection.
 
-        This request adds the specified CIDR to the specified VPN gateway connection. A
-        request body is not required, and if provided, is ignored. This request succeeds
-        if the CIDR already exists on the specified VPN gateway connection.
+        This request adds the specified CIDR to the specified VPN gateway connection. This
+        request succeeds if the specified CIDR already exists. A request body is not
+        required, and if provided, is ignored.
+        This request is only supported for policy mode VPN gateways.
 
         :param str vpn_gateway_id: The VPN gateway identifier.
         :param str id: The VPN gateway connection identifier.
@@ -13537,6 +14101,915 @@ class VpcV1(BaseService):
                                        url=url,
                                        headers=headers,
                                        params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # VPN servers
+    #########################
+
+
+    def list_vpn_servers(self,
+        *,
+        name: str = None,
+        start: str = None,
+        limit: int = None,
+        resource_group_id: str = None,
+        sort: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all VPN servers.
+
+        This request lists all VPN servers.
+
+        :param str name: (optional) Filters the collection to resources with the
+               exact specified name.
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str resource_group_id: (optional) Filters the collection to
+               resources in the resource group with the specified identifier.
+        :param str sort: (optional) Sorts the returned collection by the specified
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_vpn_servers')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'name': name,
+            'start': start,
+            'limit': limit,
+            'resource_group.id': resource_group_id,
+            'sort': sort
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/vpn_servers'
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_vpn_server(self,
+        certificate: 'CertificateInstanceIdentity',
+        client_authentication: List['VPNServerAuthenticationPrototype'],
+        client_ip_pool: str,
+        subnets: List['SubnetIdentity'],
+        *,
+        client_dns_server_ips: List['IP'] = None,
+        client_idle_timeout: int = None,
+        enable_split_tunneling: bool = None,
+        name: str = None,
+        port: int = None,
+        protocol: str = None,
+        resource_group: 'ResourceGroupIdentity' = None,
+        security_groups: List['SecurityGroupIdentity'] = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a VPN server.
+
+        This request creates a new VPN server.
+
+        :param CertificateInstanceIdentity certificate: The certificate instance
+               for this VPN server.
+        :param List[VPNServerAuthenticationPrototype] client_authentication: The
+               methods used to authenticate VPN clients to this VPN server. VPN clients
+               must authenticate against all specified methods.
+        :param str client_ip_pool: The VPN client IPv4 address pool, expressed in
+               CIDR format. The request must not overlap with any existing address
+               prefixes in the VPC or any of the following reserved address ranges:
+                 - `127.0.0.0/8` (IPv4 loopback addresses)
+                 - `161.26.0.0/16` (IBM services)
+                 - `166.8.0.0/14` (Cloud Service Endpoints)
+                 - `169.254.0.0/16` (IPv4 link-local addresses)
+                 - `224.0.0.0/4` (IPv4 multicast addresses)
+               The prefix length of the client IP address pool's CIDR must be between
+               `/9` (8,388,608 addresses) and `/22` (1024 addresses). A CIDR block that
+               contains twice the number of IP addresses that are required to enable the
+               maximum number of concurrent connections is recommended.
+        :param List[SubnetIdentity] subnets: The subnets to provision this VPN
+               server in.  Use subnets in different zones for high availability.
+        :param List[IP] client_dns_server_ips: (optional) The DNS server addresses
+               that will be provided to VPN clients connected to this VPN server.
+        :param int client_idle_timeout: (optional) The seconds a VPN client can be
+               idle before this VPN server will disconnect it.   Specify `0` to prevent
+               the server from disconnecting idle clients.
+        :param bool enable_split_tunneling: (optional) Indicates whether the split
+               tunneling is enabled on this VPN server.
+        :param str name: (optional) The user-defined name for this VPN server. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+               Names must be unique within the VPC this VPN server is serving.
+        :param int port: (optional) The port number to use for this VPN server.
+        :param str protocol: (optional) The transport protocol to use for this VPN
+               server.
+        :param ResourceGroupIdentity resource_group: (optional) The resource group
+               to use. If unspecified, the account's [default resource
+               group](https://cloud.ibm.com/apidocs/resource-manager#introduction) is
+               used.
+        :param List[SecurityGroupIdentity] security_groups: (optional) The security
+               groups to use for this VPN server. If unspecified, the VPC's default
+               security group is used.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServer` object
+        """
+
+        if certificate is None:
+            raise ValueError('certificate must be provided')
+        if client_authentication is None:
+            raise ValueError('client_authentication must be provided')
+        if client_ip_pool is None:
+            raise ValueError('client_ip_pool must be provided')
+        if subnets is None:
+            raise ValueError('subnets must be provided')
+        certificate = convert_model(certificate)
+        client_authentication = [convert_model(x) for x in client_authentication]
+        subnets = [convert_model(x) for x in subnets]
+        if client_dns_server_ips is not None:
+            client_dns_server_ips = [convert_model(x) for x in client_dns_server_ips]
+        if resource_group is not None:
+            resource_group = convert_model(resource_group)
+        if security_groups is not None:
+            security_groups = [convert_model(x) for x in security_groups]
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_vpn_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'certificate': certificate,
+            'client_authentication': client_authentication,
+            'client_ip_pool': client_ip_pool,
+            'subnets': subnets,
+            'client_dns_server_ips': client_dns_server_ips,
+            'client_idle_timeout': client_idle_timeout,
+            'enable_split_tunneling': enable_split_tunneling,
+            'name': name,
+            'port': port,
+            'protocol': protocol,
+            'resource_group': resource_group,
+            'security_groups': security_groups
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        url = '/vpn_servers'
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_vpn_server(self,
+        id: str,
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a VPN server.
+
+        This request deletes a VPN server. This operation cannot be reversed.
+
+        :param str id: The VPN server identifier.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_vpn_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_vpn_server(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a VPN server.
+
+        This request retrieves a single VPN server specified by the identifier in the URL.
+
+        :param str id: The VPN server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServer` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_vpn_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_vpn_server(self,
+        id: str,
+        vpn_server_patch: 'VPNServerPatch',
+        *,
+        if_match: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a VPN server.
+
+        This request updates the properties of an existing VPN server. Any property
+        changes will cause all connected VPN clients are disconnected from this VPN server
+        except for the name change.
+
+        :param str id: The VPN server identifier.
+        :param VPNServerPatch vpn_server_patch: The VPN server patch.
+        :param str if_match: (optional) If present, the request will fail if the
+               specified ETag value does not match the resource's current ETag value.
+               Required if the request body includes an array.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServer` object
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        if vpn_server_patch is None:
+            raise ValueError('vpn_server_patch must be provided')
+        if isinstance(vpn_server_patch, VPNServerPatch):
+            vpn_server_patch = convert_model(vpn_server_patch)
+        headers = {
+            'If-Match': if_match
+        }
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_vpn_server')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(vpn_server_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_vpn_server_client_configuration(self,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve client configuration.
+
+        This request retrieves OpenVPN client configuration on a single VPN server
+        specified by the identifier in the URL. This configuration includes directives
+        compatible with OpenVPN releases 2.4 and 2.5.
+
+        :param str id: The VPN server identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `str` result
+        """
+
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_vpn_server_client_configuration')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'text/plain'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{id}/client_configuration'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_vpn_server_clients(self,
+        vpn_server_id: str,
+        *,
+        start: str = None,
+        limit: int = None,
+        sort: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all VPN clients for a VPN server.
+
+        This request retrieves all connected VPN clients, and any disconnected VPN clients
+        that the VPN server has not yet deleted based on its auto-deletion policy.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str sort: (optional) Sorts the returned collection by the specified
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerClientCollection` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_vpn_server_clients')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'sort': sort
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id']
+        path_param_values = self.encode_path_vars(vpn_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/clients'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_vpn_server_client(self,
+        vpn_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a VPN client.
+
+        This request disconnects and deletes the VPN client from the VPN server. The VPN
+        client may reconnect unless its authentication permissions for the configured
+        authentication methods (such as its client certificate) have been revoked.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN client identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_vpn_server_client')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/clients/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_vpn_server_client(self,
+        vpn_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a VPN client.
+
+        This request retrieves a single VPN client specified by the identifier in the URL.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN client identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerClient` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_vpn_server_client')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/clients/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def disconnect_vpn_client(self,
+        vpn_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Disconnect a VPN client.
+
+        This request disconnects the specified VPN client, and deletes the client
+        according to the VPN server's auto-deletion policy. The VPN client may reconnect
+        unless its authentication permissions for the configured authentication methods
+        (such as its client certificate) have been revoked.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN client identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='disconnect_vpn_client')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/clients/{id}/disconnect'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def list_vpn_server_routes(self,
+        vpn_server_id: str,
+        *,
+        start: str = None,
+        limit: int = None,
+        sort: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        List all VPN routes for a VPN server.
+
+        This request lists all VPN routes in a VPN server. All VPN routes are provided to
+        the VPN client when the connection is established.  Packets received from the VPN
+        client will be dropped by the VPN server if there is no VPN route matching their
+        specified destinations. All VPN routes must be unique within the VPN server.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str sort: (optional) Sorts the returned collection by the specified
+               property name in ascending order. A `-` may be prepended to the name to
+               sort in descending order. For example, the value `-created_at` sorts the
+               collection by the `created_at` property in descending order, and the value
+               `name` sorts it by the `name` property in ascending order.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerRouteCollection` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='list_vpn_server_routes')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'sort': sort
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id']
+        path_param_values = self.encode_path_vars(vpn_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/routes'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def create_vpn_server_route(self,
+        vpn_server_id: str,
+        destination: str,
+        *,
+        action: str = None,
+        name: str = None,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Create a VPN route for a VPN server.
+
+        This request creates a new VPN route in the VPN server. All VPN routes are
+        provided to the VPN client when the connection is established. Packets received
+        from the VPN client will be dropped by the VPN server if there is no VPN route
+        matching their specified destinations. All VPN routes must be unique within the
+        VPN server. destination of the packet.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str destination: The destination to use for this VPN route in the
+               VPN server. Must be unique within the VPN server. If an incoming packet
+               does not match any destination, it will be dropped.
+        :param str action: (optional) The action to perform with a packet matching
+               the VPN route:
+               - `translate`: translate the source IP address to one of the private IP
+               addresses of the VPN server, then deliver the packet to target.
+               - `deliver`: deliver the packet to the target.
+               - `drop`: drop the packet
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the VPN route
+               on which the unexpected property value was encountered.
+        :param str name: (optional) The user-defined name for this VPN route. If
+               unspecified, the name will be a hyphenated list of randomly-selected words.
+               Names must be unique within the VPN server the VPN route resides in.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerRoute` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if destination is None:
+            raise ValueError('destination must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='create_vpn_server_route')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = {
+            'destination': destination,
+            'action': action,
+            'name': name
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id']
+        path_param_values = self.encode_path_vars(vpn_server_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/routes'.format(**path_param_dict)
+        request = self.prepare_request(method='POST',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def delete_vpn_server_route(self,
+        vpn_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Delete a VPN route.
+
+        This request deletes a VPN route. This operation cannot be reversed.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN route identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='delete_vpn_server_route')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/routes/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='DELETE',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def get_vpn_server_route(self,
+        vpn_server_id: str,
+        id: str,
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Retrieve a VPN route.
+
+        This request retrieves a single VPN route specified by the identifier in the URL.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN route identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerRoute` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='get_vpn_server_route')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/routes/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='GET',
+                                       url=url,
+                                       headers=headers,
+                                       params=params)
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+    def update_vpn_server_route(self,
+        vpn_server_id: str,
+        id: str,
+        vpn_server_route_patch: 'VPNServerRoutePatch',
+        **kwargs
+    ) -> DetailedResponse:
+        """
+        Update a VPN route.
+
+        This request updates a VPN route with the information in a provided VPN route
+        patch. The VPN route patch object is structured in the same way as a retrieved VPN
+        route and contains only the information to be updated.
+
+        :param str vpn_server_id: The VPN server identifier.
+        :param str id: The VPN route identifier.
+        :param VPNServerRoutePatch vpn_server_route_patch: The VPN route patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNServerRoute` object
+        """
+
+        if vpn_server_id is None:
+            raise ValueError('vpn_server_id must be provided')
+        if id is None:
+            raise ValueError('id must be provided')
+        if vpn_server_route_patch is None:
+            raise ValueError('vpn_server_route_patch must be provided')
+        if isinstance(vpn_server_route_patch, VPNServerRoutePatch):
+            vpn_server_route_patch = convert_model(vpn_server_route_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
+                                      service_version='V1',
+                                      operation_id='update_vpn_server_route')
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation
+        }
+
+        data = json.dumps(vpn_server_route_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_server_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_server_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_servers/{vpn_server_id}/routes/{id}'.format(**path_param_dict)
+        request = self.prepare_request(method='PATCH',
+                                       url=url,
+                                       headers=headers,
+                                       params=params,
+                                       data=data)
 
         response = self.send(request, **kwargs)
         return response
@@ -15356,11 +16829,10 @@ class VpcV1(BaseService):
                this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
-               instances in the same zone as the load balancer's subnet. Load balancers in
-               the
-               `application` family support any IP address in the VPC. If the load
-               balancer has
-               `route mode` enabled, the member must be in a zone the load balancer has a
+               instances. Load balancers in the `application` family support IP addresses.
+               If the load
+               balancer has route mode enabled, the member must be in a zone the load
+               balancer has a
                subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
@@ -16568,6 +18040,55 @@ class ListVpnGatewaysEnums:
         ROUTE = 'route'
 
 
+class ListVpnServersEnums:
+    """
+    Enums for list_vpn_servers parameters.
+    """
+
+    class Sort(str, Enum):
+        """
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
+        """
+        CREATED_AT = 'created_at'
+        NAME = 'name'
+
+
+class ListVpnServerClientsEnums:
+    """
+    Enums for list_vpn_server_clients parameters.
+    """
+
+    class Sort(str, Enum):
+        """
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order.
+        """
+        CREATED_AT = 'created_at'
+
+
+class ListVpnServerRoutesEnums:
+    """
+    Enums for list_vpn_server_routes parameters.
+    """
+
+    class Sort(str, Enum):
+        """
+        Sorts the returned collection by the specified property name in ascending order. A
+        `-` may be prepended to the name to sort in descending order. For example, the
+        value `-created_at` sorts the collection by the `created_at` property in
+        descending order, and the value `name` sorts it by the `name` property in
+        ascending order.
+        """
+        CREATED_AT = 'created_at'
+        NAME = 'name'
+
+
 class ListEndpointGatewayIpsEnums:
     """
     Enums for list_endpoint_gateway_ips parameters.
@@ -17030,6 +18551,1353 @@ class AddressPrefixPatch():
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'AddressPrefixPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicy():
+    """
+    BackupPolicy.
+
+    :attr datetime created_at: The date and time that the backup policy was created.
+    :attr str crn: The CRN for this backup policy.
+    :attr str href: The URL for this backup policy.
+    :attr str id: The unique identifier for this backup policy.
+    :attr datetime last_job_completed_at: (optional) The date and time that the most
+          recent job for this backup policy completed.
+          If absent, no job has yet completed for this backup policy.
+    :attr str lifecycle_state: The lifecycle state of the backup policy.
+    :attr List[str] match_resource_types: A resource type this backup policy applies
+          to. Resources that have both a matching type and a matching user tag will be
+          subject to the backup policy.
+          The enumerated values for this property will expand in the future. When
+          processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the backup policy on which the
+          unexpected property value was encountered.
+    :attr List[str] match_user_tags: The user tags this backup policy applies to.
+          Resources that have both a matching user tag and a matching type will be subject
+          to the backup policy.
+    :attr str name: The unique user-defined name for this backup policy.
+    :attr List[BackupPolicyPlanReference] plans: The plans for the backup policy.
+    :attr ResourceGroupReference resource_group: The resource group for this backup
+          policy.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 created_at: datetime,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 lifecycle_state: str,
+                 match_resource_types: List[str],
+                 match_user_tags: List[str],
+                 name: str,
+                 plans: List['BackupPolicyPlanReference'],
+                 resource_group: 'ResourceGroupReference',
+                 resource_type: str,
+                 *,
+                 last_job_completed_at: datetime = None) -> None:
+        """
+        Initialize a BackupPolicy object.
+
+        :param datetime created_at: The date and time that the backup policy was
+               created.
+        :param str crn: The CRN for this backup policy.
+        :param str href: The URL for this backup policy.
+        :param str id: The unique identifier for this backup policy.
+        :param str lifecycle_state: The lifecycle state of the backup policy.
+        :param List[str] match_resource_types: A resource type this backup policy
+               applies to. Resources that have both a matching type and a matching user
+               tag will be subject to the backup policy.
+               The enumerated values for this property will expand in the future. When
+               processing this property, check for and log unknown values. Optionally halt
+               processing and surface the error, or bypass the backup policy on which the
+               unexpected property value was encountered.
+        :param List[str] match_user_tags: The user tags this backup policy applies
+               to. Resources that have both a matching user tag and a matching type will
+               be subject to the backup policy.
+        :param str name: The unique user-defined name for this backup policy.
+        :param List[BackupPolicyPlanReference] plans: The plans for the backup
+               policy.
+        :param ResourceGroupReference resource_group: The resource group for this
+               backup policy.
+        :param str resource_type: The resource type.
+        :param datetime last_job_completed_at: (optional) The date and time that
+               the most recent job for this backup policy completed.
+               If absent, no job has yet completed for this backup policy.
+        """
+        self.created_at = created_at
+        self.crn = crn
+        self.href = href
+        self.id = id
+        self.last_job_completed_at = last_job_completed_at
+        self.lifecycle_state = lifecycle_state
+        self.match_resource_types = match_resource_types
+        self.match_user_tags = match_user_tags
+        self.name = name
+        self.plans = plans
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicy':
+        """Initialize a BackupPolicy object from a json dictionary."""
+        args = {}
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BackupPolicy JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in BackupPolicy JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BackupPolicy JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BackupPolicy JSON')
+        if 'last_job_completed_at' in _dict:
+            args['last_job_completed_at'] = string_to_datetime(_dict.get('last_job_completed_at'))
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in BackupPolicy JSON')
+        if 'match_resource_types' in _dict:
+            args['match_resource_types'] = _dict.get('match_resource_types')
+        else:
+            raise ValueError('Required property \'match_resource_types\' not present in BackupPolicy JSON')
+        if 'match_user_tags' in _dict:
+            args['match_user_tags'] = _dict.get('match_user_tags')
+        else:
+            raise ValueError('Required property \'match_user_tags\' not present in BackupPolicy JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BackupPolicy JSON')
+        if 'plans' in _dict:
+            args['plans'] = [BackupPolicyPlanReference.from_dict(x) for x in _dict.get('plans')]
+        else:
+            raise ValueError('Required property \'plans\' not present in BackupPolicy JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
+        else:
+            raise ValueError('Required property \'resource_group\' not present in BackupPolicy JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BackupPolicy JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'last_job_completed_at') and self.last_job_completed_at is not None:
+            _dict['last_job_completed_at'] = datetime_to_string(self.last_job_completed_at)
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'match_resource_types') and self.match_resource_types is not None:
+            _dict['match_resource_types'] = self.match_resource_types
+        if hasattr(self, 'match_user_tags') and self.match_user_tags is not None:
+            _dict['match_user_tags'] = self.match_user_tags
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'plans') and self.plans is not None:
+            _dict['plans'] = [x.to_dict() for x in self.plans]
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the backup policy.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class MatchResourceTypesEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VOLUME = 'volume'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BACKUP_POLICY = 'backup_policy'
+
+
+class BackupPolicyCollection():
+    """
+    BackupPolicyCollection.
+
+    :attr List[BackupPolicy] backup_policies: Collection of backup policies.
+    :attr BackupPolicyCollectionFirst first: A link to the first page of resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr BackupPolicyCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 backup_policies: List['BackupPolicy'],
+                 first: 'BackupPolicyCollectionFirst',
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'BackupPolicyCollectionNext' = None) -> None:
+        """
+        Initialize a BackupPolicyCollection object.
+
+        :param List[BackupPolicy] backup_policies: Collection of backup policies.
+        :param BackupPolicyCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param BackupPolicyCollectionNext next: (optional) A link to the next page
+               of resources. This property is present for all pages
+               except the last page.
+        """
+        self.backup_policies = backup_policies
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyCollection':
+        """Initialize a BackupPolicyCollection object from a json dictionary."""
+        args = {}
+        if 'backup_policies' in _dict:
+            args['backup_policies'] = [BackupPolicy.from_dict(x) for x in _dict.get('backup_policies')]
+        else:
+            raise ValueError('Required property \'backup_policies\' not present in BackupPolicyCollection JSON')
+        if 'first' in _dict:
+            args['first'] = BackupPolicyCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in BackupPolicyCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in BackupPolicyCollection JSON')
+        if 'next' in _dict:
+            args['next'] = BackupPolicyCollectionNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in BackupPolicyCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'backup_policies') and self.backup_policies is not None:
+            _dict['backup_policies'] = [x.to_dict() for x in self.backup_policies]
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BackupPolicyCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyCollectionFirst':
+        """Initialize a BackupPolicyCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BackupPolicyCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a BackupPolicyCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyCollectionNext':
+        """Initialize a BackupPolicyCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BackupPolicyCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPatch():
+    """
+    BackupPolicyPatch.
+
+    :attr List[str] match_user_tags: (optional) The user tags this backup policy
+          applies to (replacing any existing tags). Resources that have both a matching
+          user tag and a matching type will be subject to the backup policy.
+    :attr str name: (optional) The user-defined name for this backup policy. Names
+          must be unique within the region this backup policy resides in.
+    """
+
+    def __init__(self,
+                 *,
+                 match_user_tags: List[str] = None,
+                 name: str = None) -> None:
+        """
+        Initialize a BackupPolicyPatch object.
+
+        :param List[str] match_user_tags: (optional) The user tags this backup
+               policy applies to (replacing any existing tags). Resources that have both a
+               matching user tag and a matching type will be subject to the backup policy.
+        :param str name: (optional) The user-defined name for this backup policy.
+               Names must be unique within the region this backup policy resides in.
+        """
+        self.match_user_tags = match_user_tags
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPatch':
+        """Initialize a BackupPolicyPatch object from a json dictionary."""
+        args = {}
+        if 'match_user_tags' in _dict:
+            args['match_user_tags'] = _dict.get('match_user_tags')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'match_user_tags') and self.match_user_tags is not None:
+            _dict['match_user_tags'] = self.match_user_tags
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlan():
+    """
+    BackupPolicyPlan.
+
+    :attr bool active: Indicates whether the plan is active.
+    :attr List[str] attach_user_tags: The user tags to attach to backups (snapshots)
+          created by this plan.
+    :attr bool copy_user_tags: Indicates whether to copy the source's user tags to
+          the created backups (snapshots).
+    :attr datetime created_at: The date and time that the backup policy plan was
+          created.
+    :attr str cron_spec: The cron specification for the backup schedule. The backup
+          policy jobs
+          (which create and delete backups for this plan) will not start until this time,
+          and may start for up to 90 minutes after this time.
+          All backup schedules for plans in the same policy must be at least an hour
+          apart.
+    :attr BackupPolicyPlanDeletionTrigger deletion_trigger:
+    :attr str href: The URL for this backup policy plan.
+    :attr str id: The unique identifier for this backup policy plan.
+    :attr str lifecycle_state: The lifecycle state of this backup policy plan.
+    :attr str name: The unique user-defined name for this backup policy plan.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 active: bool,
+                 attach_user_tags: List[str],
+                 copy_user_tags: bool,
+                 created_at: datetime,
+                 cron_spec: str,
+                 deletion_trigger: 'BackupPolicyPlanDeletionTrigger',
+                 href: str,
+                 id: str,
+                 lifecycle_state: str,
+                 name: str,
+                 resource_type: str) -> None:
+        """
+        Initialize a BackupPolicyPlan object.
+
+        :param bool active: Indicates whether the plan is active.
+        :param List[str] attach_user_tags: The user tags to attach to backups
+               (snapshots) created by this plan.
+        :param bool copy_user_tags: Indicates whether to copy the source's user
+               tags to the created backups (snapshots).
+        :param datetime created_at: The date and time that the backup policy plan
+               was created.
+        :param str cron_spec: The cron specification for the backup schedule. The
+               backup policy jobs
+               (which create and delete backups for this plan) will not start until this
+               time, and may start for up to 90 minutes after this time.
+               All backup schedules for plans in the same policy must be at least an hour
+               apart.
+        :param BackupPolicyPlanDeletionTrigger deletion_trigger:
+        :param str href: The URL for this backup policy plan.
+        :param str id: The unique identifier for this backup policy plan.
+        :param str lifecycle_state: The lifecycle state of this backup policy plan.
+        :param str name: The unique user-defined name for this backup policy plan.
+        :param str resource_type: The resource type.
+        """
+        self.active = active
+        self.attach_user_tags = attach_user_tags
+        self.copy_user_tags = copy_user_tags
+        self.created_at = created_at
+        self.cron_spec = cron_spec
+        self.deletion_trigger = deletion_trigger
+        self.href = href
+        self.id = id
+        self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlan':
+        """Initialize a BackupPolicyPlan object from a json dictionary."""
+        args = {}
+        if 'active' in _dict:
+            args['active'] = _dict.get('active')
+        else:
+            raise ValueError('Required property \'active\' not present in BackupPolicyPlan JSON')
+        if 'attach_user_tags' in _dict:
+            args['attach_user_tags'] = _dict.get('attach_user_tags')
+        else:
+            raise ValueError('Required property \'attach_user_tags\' not present in BackupPolicyPlan JSON')
+        if 'copy_user_tags' in _dict:
+            args['copy_user_tags'] = _dict.get('copy_user_tags')
+        else:
+            raise ValueError('Required property \'copy_user_tags\' not present in BackupPolicyPlan JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in BackupPolicyPlan JSON')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        else:
+            raise ValueError('Required property \'cron_spec\' not present in BackupPolicyPlan JSON')
+        if 'deletion_trigger' in _dict:
+            args['deletion_trigger'] = BackupPolicyPlanDeletionTrigger.from_dict(_dict.get('deletion_trigger'))
+        else:
+            raise ValueError('Required property \'deletion_trigger\' not present in BackupPolicyPlan JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BackupPolicyPlan JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BackupPolicyPlan JSON')
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in BackupPolicyPlan JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BackupPolicyPlan JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BackupPolicyPlan JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlan object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'active') and self.active is not None:
+            _dict['active'] = self.active
+        if hasattr(self, 'attach_user_tags') and self.attach_user_tags is not None:
+            _dict['attach_user_tags'] = self.attach_user_tags
+        if hasattr(self, 'copy_user_tags') and self.copy_user_tags is not None:
+            _dict['copy_user_tags'] = self.copy_user_tags
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'deletion_trigger') and self.deletion_trigger is not None:
+            _dict['deletion_trigger'] = self.deletion_trigger.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlan object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlan') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlan') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of this backup policy plan.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BACKUP_POLICY_PLAN = 'backup_policy_plan'
+
+
+class BackupPolicyPlanCollection():
+    """
+    BackupPolicyPlanCollection.
+
+    :attr List[BackupPolicyPlan] plans: Collection of backup policy plans.
+    """
+
+    def __init__(self,
+                 plans: List['BackupPolicyPlan']) -> None:
+        """
+        Initialize a BackupPolicyPlanCollection object.
+
+        :param List[BackupPolicyPlan] plans: Collection of backup policy plans.
+        """
+        self.plans = plans
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanCollection':
+        """Initialize a BackupPolicyPlanCollection object from a json dictionary."""
+        args = {}
+        if 'plans' in _dict:
+            args['plans'] = [BackupPolicyPlan.from_dict(x) for x in _dict.get('plans')]
+        else:
+            raise ValueError('Required property \'plans\' not present in BackupPolicyPlanCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'plans') and self.plans is not None:
+            _dict['plans'] = [x.to_dict() for x in self.plans]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanDeletionTrigger():
+    """
+    BackupPolicyPlanDeletionTrigger.
+
+    :attr int delete_after: The maximum number of days to keep each backup after
+          creation.
+    :attr int delete_over_count: (optional) The maximum number of recent backups to
+          keep. If absent, there is no maximum.
+    """
+
+    def __init__(self,
+                 delete_after: int,
+                 *,
+                 delete_over_count: int = None) -> None:
+        """
+        Initialize a BackupPolicyPlanDeletionTrigger object.
+
+        :param int delete_after: The maximum number of days to keep each backup
+               after creation.
+        :param int delete_over_count: (optional) The maximum number of recent
+               backups to keep. If absent, there is no maximum.
+        """
+        self.delete_after = delete_after
+        self.delete_over_count = delete_over_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanDeletionTrigger':
+        """Initialize a BackupPolicyPlanDeletionTrigger object from a json dictionary."""
+        args = {}
+        if 'delete_after' in _dict:
+            args['delete_after'] = _dict.get('delete_after')
+        else:
+            raise ValueError('Required property \'delete_after\' not present in BackupPolicyPlanDeletionTrigger JSON')
+        if 'delete_over_count' in _dict:
+            args['delete_over_count'] = _dict.get('delete_over_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanDeletionTrigger object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'delete_after') and self.delete_after is not None:
+            _dict['delete_after'] = self.delete_after
+        if hasattr(self, 'delete_over_count') and self.delete_over_count is not None:
+            _dict['delete_over_count'] = self.delete_over_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanDeletionTrigger object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanDeletionTrigger') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanDeletionTrigger') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanDeletionTriggerPatch():
+    """
+    BackupPolicyPlanDeletionTriggerPatch.
+
+    :attr int delete_after: (optional) The maximum number of days to keep each
+          backup after creation.
+    :attr int delete_over_count: (optional) The maximum number of recent backups to
+          keep. Specify `null` to remove any existing maximum.
+    """
+
+    def __init__(self,
+                 *,
+                 delete_after: int = None,
+                 delete_over_count: int = None) -> None:
+        """
+        Initialize a BackupPolicyPlanDeletionTriggerPatch object.
+
+        :param int delete_after: (optional) The maximum number of days to keep each
+               backup after creation.
+        :param int delete_over_count: (optional) The maximum number of recent
+               backups to keep. Specify `null` to remove any existing maximum.
+        """
+        self.delete_after = delete_after
+        self.delete_over_count = delete_over_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanDeletionTriggerPatch':
+        """Initialize a BackupPolicyPlanDeletionTriggerPatch object from a json dictionary."""
+        args = {}
+        if 'delete_after' in _dict:
+            args['delete_after'] = _dict.get('delete_after')
+        if 'delete_over_count' in _dict:
+            args['delete_over_count'] = _dict.get('delete_over_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanDeletionTriggerPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'delete_after') and self.delete_after is not None:
+            _dict['delete_after'] = self.delete_after
+        if hasattr(self, 'delete_over_count') and self.delete_over_count is not None:
+            _dict['delete_over_count'] = self.delete_over_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanDeletionTriggerPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanDeletionTriggerPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanDeletionTriggerPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanDeletionTriggerPrototype():
+    """
+    BackupPolicyPlanDeletionTriggerPrototype.
+
+    :attr int delete_after: (optional) The maximum number of days to keep each
+          backup after creation.
+    :attr int delete_over_count: (optional) The maximum number of recent backups to
+          keep. If unspecified, there will be no maximum.
+    """
+
+    def __init__(self,
+                 *,
+                 delete_after: int = None,
+                 delete_over_count: int = None) -> None:
+        """
+        Initialize a BackupPolicyPlanDeletionTriggerPrototype object.
+
+        :param int delete_after: (optional) The maximum number of days to keep each
+               backup after creation.
+        :param int delete_over_count: (optional) The maximum number of recent
+               backups to keep. If unspecified, there will be no maximum.
+        """
+        self.delete_after = delete_after
+        self.delete_over_count = delete_over_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanDeletionTriggerPrototype':
+        """Initialize a BackupPolicyPlanDeletionTriggerPrototype object from a json dictionary."""
+        args = {}
+        if 'delete_after' in _dict:
+            args['delete_after'] = _dict.get('delete_after')
+        if 'delete_over_count' in _dict:
+            args['delete_over_count'] = _dict.get('delete_over_count')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanDeletionTriggerPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'delete_after') and self.delete_after is not None:
+            _dict['delete_after'] = self.delete_after
+        if hasattr(self, 'delete_over_count') and self.delete_over_count is not None:
+            _dict['delete_over_count'] = self.delete_over_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanDeletionTriggerPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanDeletionTriggerPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanDeletionTriggerPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanPatch():
+    """
+    BackupPolicyPlanPatch.
+
+    :attr bool active: (optional) Indicates whether the plan is active.
+    :attr List[str] attach_user_tags: (optional) The user tags to attach to backups
+          (snapshots) created by this plan. Updating this value does not change the user
+          tags for backups that have already been created by this plan.
+    :attr bool copy_user_tags: (optional) Indicates whether to copy the source's
+          user tags to the created backups (snapshots).
+    :attr str cron_spec: (optional) The cron specification for the backup schedule.
+          The backup policy jobs
+          (which create and delete backups for this plan) will not start until this time,
+          and may start for up to 90 minutes after this time.
+          All backup schedules for plans in the same policy must be at least an hour
+          apart.
+    :attr BackupPolicyPlanDeletionTriggerPatch deletion_trigger: (optional)
+    :attr str name: (optional) The user-defined name for this backup policy plan.
+          Names must be unique within the backup policy this plan resides in.
+    """
+
+    def __init__(self,
+                 *,
+                 active: bool = None,
+                 attach_user_tags: List[str] = None,
+                 copy_user_tags: bool = None,
+                 cron_spec: str = None,
+                 deletion_trigger: 'BackupPolicyPlanDeletionTriggerPatch' = None,
+                 name: str = None) -> None:
+        """
+        Initialize a BackupPolicyPlanPatch object.
+
+        :param bool active: (optional) Indicates whether the plan is active.
+        :param List[str] attach_user_tags: (optional) The user tags to attach to
+               backups (snapshots) created by this plan. Updating this value does not
+               change the user tags for backups that have already been created by this
+               plan.
+        :param bool copy_user_tags: (optional) Indicates whether to copy the
+               source's user tags to the created backups (snapshots).
+        :param str cron_spec: (optional) The cron specification for the backup
+               schedule. The backup policy jobs
+               (which create and delete backups for this plan) will not start until this
+               time, and may start for up to 90 minutes after this time.
+               All backup schedules for plans in the same policy must be at least an hour
+               apart.
+        :param BackupPolicyPlanDeletionTriggerPatch deletion_trigger: (optional)
+        :param str name: (optional) The user-defined name for this backup policy
+               plan. Names must be unique within the backup policy this plan resides in.
+        """
+        self.active = active
+        self.attach_user_tags = attach_user_tags
+        self.copy_user_tags = copy_user_tags
+        self.cron_spec = cron_spec
+        self.deletion_trigger = deletion_trigger
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanPatch':
+        """Initialize a BackupPolicyPlanPatch object from a json dictionary."""
+        args = {}
+        if 'active' in _dict:
+            args['active'] = _dict.get('active')
+        if 'attach_user_tags' in _dict:
+            args['attach_user_tags'] = _dict.get('attach_user_tags')
+        if 'copy_user_tags' in _dict:
+            args['copy_user_tags'] = _dict.get('copy_user_tags')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        if 'deletion_trigger' in _dict:
+            args['deletion_trigger'] = BackupPolicyPlanDeletionTriggerPatch.from_dict(_dict.get('deletion_trigger'))
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'active') and self.active is not None:
+            _dict['active'] = self.active
+        if hasattr(self, 'attach_user_tags') and self.attach_user_tags is not None:
+            _dict['attach_user_tags'] = self.attach_user_tags
+        if hasattr(self, 'copy_user_tags') and self.copy_user_tags is not None:
+            _dict['copy_user_tags'] = self.copy_user_tags
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'deletion_trigger') and self.deletion_trigger is not None:
+            _dict['deletion_trigger'] = self.deletion_trigger.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanPrototype():
+    """
+    BackupPolicyPlanPrototype.
+
+    :attr bool active: (optional) Indicates whether the plan is active.
+    :attr List[str] attach_user_tags: (optional) User tags to attach to each backup
+          (snapshot) created by this plan. If unspecified, no user tags will be attached.
+    :attr bool copy_user_tags: (optional) Indicates whether to copy the source's
+          user tags to the created backups (snapshots).
+    :attr str cron_spec: The cron specification for the backup schedule. The backup
+          policy jobs
+          (which create and delete backups for this plan) will not start until this time,
+          and may start for up to 90 minutes after this time.
+          All backup schedules for plans in the same policy must be at least an hour
+          apart.
+    :attr BackupPolicyPlanDeletionTriggerPrototype deletion_trigger: (optional)
+    :attr str name: (optional) The user-defined name for this backup policy plan.
+          Names must be unique within the backup policy this plan resides in. If
+          unspecified, the name will be a hyphenated list of randomly-selected words.
+    """
+
+    def __init__(self,
+                 cron_spec: str,
+                 *,
+                 active: bool = None,
+                 attach_user_tags: List[str] = None,
+                 copy_user_tags: bool = None,
+                 deletion_trigger: 'BackupPolicyPlanDeletionTriggerPrototype' = None,
+                 name: str = None) -> None:
+        """
+        Initialize a BackupPolicyPlanPrototype object.
+
+        :param str cron_spec: The cron specification for the backup schedule. The
+               backup policy jobs
+               (which create and delete backups for this plan) will not start until this
+               time, and may start for up to 90 minutes after this time.
+               All backup schedules for plans in the same policy must be at least an hour
+               apart.
+        :param bool active: (optional) Indicates whether the plan is active.
+        :param List[str] attach_user_tags: (optional) User tags to attach to each
+               backup (snapshot) created by this plan. If unspecified, no user tags will
+               be attached.
+        :param bool copy_user_tags: (optional) Indicates whether to copy the
+               source's user tags to the created backups (snapshots).
+        :param BackupPolicyPlanDeletionTriggerPrototype deletion_trigger:
+               (optional)
+        :param str name: (optional) The user-defined name for this backup policy
+               plan. Names must be unique within the backup policy this plan resides in.
+               If unspecified, the name will be a hyphenated list of randomly-selected
+               words.
+        """
+        self.active = active
+        self.attach_user_tags = attach_user_tags
+        self.copy_user_tags = copy_user_tags
+        self.cron_spec = cron_spec
+        self.deletion_trigger = deletion_trigger
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanPrototype':
+        """Initialize a BackupPolicyPlanPrototype object from a json dictionary."""
+        args = {}
+        if 'active' in _dict:
+            args['active'] = _dict.get('active')
+        if 'attach_user_tags' in _dict:
+            args['attach_user_tags'] = _dict.get('attach_user_tags')
+        if 'copy_user_tags' in _dict:
+            args['copy_user_tags'] = _dict.get('copy_user_tags')
+        if 'cron_spec' in _dict:
+            args['cron_spec'] = _dict.get('cron_spec')
+        else:
+            raise ValueError('Required property \'cron_spec\' not present in BackupPolicyPlanPrototype JSON')
+        if 'deletion_trigger' in _dict:
+            args['deletion_trigger'] = BackupPolicyPlanDeletionTriggerPrototype.from_dict(_dict.get('deletion_trigger'))
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'active') and self.active is not None:
+            _dict['active'] = self.active
+        if hasattr(self, 'attach_user_tags') and self.attach_user_tags is not None:
+            _dict['attach_user_tags'] = self.attach_user_tags
+        if hasattr(self, 'copy_user_tags') and self.copy_user_tags is not None:
+            _dict['copy_user_tags'] = self.copy_user_tags
+        if hasattr(self, 'cron_spec') and self.cron_spec is not None:
+            _dict['cron_spec'] = self.cron_spec
+        if hasattr(self, 'deletion_trigger') and self.deletion_trigger is not None:
+            _dict['deletion_trigger'] = self.deletion_trigger.to_dict()
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class BackupPolicyPlanReference():
+    """
+    BackupPolicyPlanReference.
+
+    :attr BackupPolicyPlanReferenceDeleted deleted: (optional) If present, this
+          property indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this backup policy plan.
+    :attr str id: The unique identifier for this backup policy plan.
+    :attr str name: The unique user-defined name for this backup policy plan.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'BackupPolicyPlanReferenceDeleted' = None) -> None:
+        """
+        Initialize a BackupPolicyPlanReference object.
+
+        :param str href: The URL for this backup policy plan.
+        :param str id: The unique identifier for this backup policy plan.
+        :param str name: The unique user-defined name for this backup policy plan.
+        :param str resource_type: The resource type.
+        :param BackupPolicyPlanReferenceDeleted deleted: (optional) If present,
+               this property indicates the referenced resource has been deleted and
+               provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanReference':
+        """Initialize a BackupPolicyPlanReference object from a json dictionary."""
+        args = {}
+        if 'deleted' in _dict:
+            args['deleted'] = BackupPolicyPlanReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in BackupPolicyPlanReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in BackupPolicyPlanReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in BackupPolicyPlanReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in BackupPolicyPlanReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        BACKUP_POLICY_PLAN = 'backup_policy_plan'
+
+
+class BackupPolicyPlanReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a BackupPolicyPlanReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BackupPolicyPlanReferenceDeleted':
+        """Initialize a BackupPolicyPlanReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in BackupPolicyPlanReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BackupPolicyPlanReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BackupPolicyPlanReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BackupPolicyPlanReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BackupPolicyPlanReferenceDeleted') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -23636,6 +26504,11 @@ class DefaultRoutingTable():
     """
     DefaultRoutingTable.
 
+    :attr List[ResourceFilter] accept_routes_from: The filters specifying the
+          resources that may create routes in this routing table.
+          At present, only the `resource_type` filter is permitted, and only the
+          `vpn_server` value is supported, but filter support is expected to expand in the
+          future.
     :attr datetime created_at: The date and time that this routing table was
           created.
     :attr str href: The URL for this routing table.
@@ -23681,6 +26554,7 @@ class DefaultRoutingTable():
     """
 
     def __init__(self,
+                 accept_routes_from: List['ResourceFilter'],
                  created_at: datetime,
                  href: str,
                  id: str,
@@ -23696,6 +26570,11 @@ class DefaultRoutingTable():
         """
         Initialize a DefaultRoutingTable object.
 
+        :param List[ResourceFilter] accept_routes_from: The filters specifying the
+               resources that may create routes in this routing table.
+               At present, only the `resource_type` filter is permitted, and only the
+               `vpn_server` value is supported, but filter support is expected to expand
+               in the future.
         :param datetime created_at: The date and time that this routing table was
                created.
         :param str href: The URL for this routing table.
@@ -23740,6 +26619,7 @@ class DefaultRoutingTable():
         :param List[SubnetReference] subnets: The subnets to which this routing
                table is attached.
         """
+        self.accept_routes_from = accept_routes_from
         self.created_at = created_at
         self.href = href
         self.id = id
@@ -23757,6 +26637,10 @@ class DefaultRoutingTable():
     def from_dict(cls, _dict: Dict) -> 'DefaultRoutingTable':
         """Initialize a DefaultRoutingTable object from a json dictionary."""
         args = {}
+        if 'accept_routes_from' in _dict:
+            args['accept_routes_from'] = [ResourceFilter.from_dict(x) for x in _dict.get('accept_routes_from')]
+        else:
+            raise ValueError('Required property \'accept_routes_from\' not present in DefaultRoutingTable JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -23815,6 +26699,8 @@ class DefaultRoutingTable():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'accept_routes_from') and self.accept_routes_from is not None:
+            _dict['accept_routes_from'] = [x.to_dict() for x in self.accept_routes_from]
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'href') and self.href is not None:
@@ -24059,7 +26945,7 @@ class EncryptionKeyReference():
 
     :attr str crn: The CRN of the [Key Protect Root
           Key](https://cloud.ibm.com/docs/key-protect?topic=key-protect-getting-started-tutorial)
-          or [Hyper Protect Crypto Service Root
+          or [Hyper Protect Crypto Services Root
           Key](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started) for this
           resource.
     """
@@ -24071,7 +26957,7 @@ class EncryptionKeyReference():
 
         :param str crn: The CRN of the [Key Protect Root
                Key](https://cloud.ibm.com/docs/key-protect?topic=key-protect-getting-started-tutorial)
-               or [Hyper Protect Crypto Service Root
+               or [Hyper Protect Crypto Services Root
                Key](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started) for
                this resource.
         """
@@ -33265,9 +36151,10 @@ class InstanceGroupPatch():
           Instance groups are not compatible with instance templates that specify `true`
           for
           `default_trusted_profile.auto_link`.
-    :attr LoadBalancerIdentity load_balancer: (optional) The load balancer that the
-          load balancer pool used by this group
-          is in. Required when using a load balancer pool.
+    :attr LoadBalancerIdentity load_balancer: (optional) The load balancer
+          associated with the specified load balancer pool.
+          Required if `load_balancer_pool` is specified.
+          At present, only load balancers in the `application` family are supported.
     :attr LoadBalancerPoolIdentity load_balancer_pool: (optional) If specified, the
           load balancer pool will be managed by this
           group. Instances created by this group will have a new load
@@ -33301,8 +36188,9 @@ class InstanceGroupPatch():
                `true` for
                `default_trusted_profile.auto_link`.
         :param LoadBalancerIdentity load_balancer: (optional) The load balancer
-               that the load balancer pool used by this group
-               is in. Required when using a load balancer pool.
+               associated with the specified load balancer pool.
+               Required if `load_balancer_pool` is specified.
+               At present, only load balancers in the `application` family are supported.
         :param LoadBalancerPoolIdentity load_balancer_pool: (optional) If
                specified, the load balancer pool will be managed by this
                group. Instances created by this group will have a new load
@@ -35223,10 +38111,12 @@ class InstancePrototype():
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match
           the VPC referenced by the subnets of the instance's network interfaces.
@@ -35296,10 +38186,12 @@ class InstancePrototype():
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match
                the VPC referenced by the subnets of the instance's network interfaces.
@@ -35608,10 +38500,12 @@ class InstanceTemplate():
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match
           the VPC referenced by the subnets of the instance's network interfaces.
@@ -35686,10 +38580,12 @@ class InstanceTemplate():
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match
                the VPC referenced by the subnets of the instance's network interfaces.
@@ -36039,10 +38935,12 @@ class InstanceTemplatePrototype():
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match
           the VPC referenced by the subnets of the instance's network interfaces.
@@ -36112,10 +39010,12 @@ class InstanceTemplatePrototype():
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match
                the VPC referenced by the subnets of the instance's network interfaces.
@@ -40973,9 +43873,10 @@ class LoadBalancerPoolMember():
     :attr str provisioning_status: The provisioning status of this member.
     :attr LoadBalancerPoolMemberTarget target: The pool member target. Load
           balancers in the `network` family support virtual server
-          instances in the same zone as the load balancer's subnet. Load balancers in the
-          `application` family support any IP address in the VPC. If the load balancer has
-          `route mode` enabled, the member must be in a zone the load balancer has a
+          instances. Load balancers in the `application` family support IP addresses. If
+          the load
+          balancer has route mode enabled, the member must be in a zone the load balancer
+          has a
           subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
@@ -41009,11 +43910,10 @@ class LoadBalancerPoolMember():
         :param str provisioning_status: The provisioning status of this member.
         :param LoadBalancerPoolMemberTarget target: The pool member target. Load
                balancers in the `network` family support virtual server
-               instances in the same zone as the load balancer's subnet. Load balancers in
-               the
-               `application` family support any IP address in the VPC. If the load
-               balancer has
-               `route mode` enabled, the member must be in a zone the load balancer has a
+               instances. Load balancers in the `application` family support IP addresses.
+               If the load
+               balancer has route mode enabled, the member must be in a zone the load
+               balancer has a
                subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
@@ -41202,9 +44102,10 @@ class LoadBalancerPoolMemberPatch():
           pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: (optional) The pool member
           target. Load balancers in the `network` family support virtual server
-          instances in the same zone as the load balancer's subnet. Load balancers in the
-          `application` family support any IP address in the VPC. If the load balancer has
-          `route mode` enabled, the member must be in a zone the load balancer has a
+          instances. Load balancers in the `application` family support IP addresses. If
+          the load
+          balancer has route mode enabled, the member must be in a zone the load balancer
+          has a
           subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
@@ -41231,11 +44132,10 @@ class LoadBalancerPoolMemberPatch():
         :param LoadBalancerPoolMemberTargetPrototype target: (optional) The pool
                member target. Load balancers in the `network` family support virtual
                server
-               instances in the same zone as the load balancer's subnet. Load balancers in
-               the
-               `application` family support any IP address in the VPC. If the load
-               balancer has
-               `route mode` enabled, the member must be in a zone the load balancer has a
+               instances. Load balancers in the `application` family support IP addresses.
+               If the load
+               balancer has route mode enabled, the member must be in a zone the load
+               balancer has a
                subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
@@ -41308,9 +44208,10 @@ class LoadBalancerPoolMemberPrototype():
           pool's listener.
     :attr LoadBalancerPoolMemberTargetPrototype target: The pool member target. Load
           balancers in the `network` family support virtual server
-          instances in the same zone as the load balancer's subnet. Load balancers in the
-          `application` family support any IP address in the VPC. If the load balancer has
-          `route mode` enabled, the member must be in a zone the load balancer has a
+          instances. Load balancers in the `application` family support IP addresses. If
+          the load
+          balancer has route mode enabled, the member must be in a zone the load balancer
+          has a
           subnet in.
     :attr int weight: (optional) Weight of the server member. Applicable only if the
           pool algorithm is
@@ -41336,11 +44237,10 @@ class LoadBalancerPoolMemberPrototype():
                this pool's listener.
         :param LoadBalancerPoolMemberTargetPrototype target: The pool member
                target. Load balancers in the `network` family support virtual server
-               instances in the same zone as the load balancer's subnet. Load balancers in
-               the
-               `application` family support any IP address in the VPC. If the load
-               balancer has
-               `route mode` enabled, the member must be in a zone the load balancer has a
+               instances. Load balancers in the `application` family support IP addresses.
+               If the load
+               balancer has route mode enabled, the member must be in a zone the load
+               balancer has a
                subnet in.
         :param int weight: (optional) Weight of the server member. Applicable only
                if the pool algorithm is
@@ -41543,9 +44443,9 @@ class LoadBalancerPoolMemberReferenceDeleted():
 class LoadBalancerPoolMemberTarget():
     """
     The pool member target. Load balancers in the `network` family support virtual server
-    instances in the same zone as the load balancer's subnet. Load balancers in the
-    `application` family support any IP address in the VPC. If the load balancer has
-    `route mode` enabled, the member must be in a zone the load balancer has a subnet in.
+    instances. Load balancers in the `application` family support IP addresses. If the
+    load balancer has route mode enabled, the member must be in a zone the load balancer
+    has a subnet in.
 
     """
 
@@ -41561,9 +44461,9 @@ class LoadBalancerPoolMemberTarget():
 class LoadBalancerPoolMemberTargetPrototype():
     """
     The pool member target. Load balancers in the `network` family support virtual server
-    instances in the same zone as the load balancer's subnet. Load balancers in the
-    `application` family support any IP address in the VPC. If the load balancer has
-    `route mode` enabled, the member must be in a zone the load balancer has a subnet in.
+    instances. Load balancers in the `application` family support IP addresses. If the
+    load balancer has route mode enabled, the member must be in a zone the load balancer
+    has a subnet in.
 
     """
 
@@ -48771,7 +51671,7 @@ class ReservedIPTarget():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['ReservedIPTargetEndpointGatewayReference', 'ReservedIPTargetNetworkInterfaceReferenceTargetContext', 'ReservedIPTargetLoadBalancerReference', 'ReservedIPTargetVPNGatewayReference', 'ReservedIPTargetGenericResourceReference']))
+                  ", ".join(['ReservedIPTargetEndpointGatewayReference', 'ReservedIPTargetNetworkInterfaceReferenceTargetContext', 'ReservedIPTargetLoadBalancerReference', 'ReservedIPTargetVPNGatewayReference', 'ReservedIPTargetVPNServerReference', 'ReservedIPTargetGenericResourceReference']))
         raise Exception(msg)
 
 class ReservedIPTargetPrototype():
@@ -48789,6 +51689,61 @@ class ReservedIPTargetPrototype():
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['ReservedIPTargetPrototypeEndpointGatewayIdentity']))
         raise Exception(msg)
+
+class ResourceFilter():
+    """
+    Identifies one or more resources according to the specified filter property.
+
+    :attr str resource_type: (optional) The resource type.
+    """
+
+    def __init__(self,
+                 *,
+                 resource_type: str = None) -> None:
+        """
+        Initialize a ResourceFilter object.
+
+        :param str resource_type: (optional) The resource type.
+        """
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ResourceFilter':
+        """Initialize a ResourceFilter object from a json dictionary."""
+        args = {}
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ResourceFilter object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ResourceFilter object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ResourceFilter') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ResourceFilter') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 class ResourceGroupIdentity():
     """
@@ -48894,6 +51849,11 @@ class Route():
           - `deliver`: deliver the packet to the specified `next_hop`
           - `drop`: drop the packet.
     :attr datetime created_at: The date and time that the route was created.
+    :attr RouteCreator creator: (optional) If present, the resource that created the
+          route. Routes with this property present cannot be
+          directly deleted. All routes with an `origin` of `learned` or `service` will
+          have this
+          property set, and future `origin` values may also have this property set.
     :attr str destination: The destination of the route.
     :attr str href: The URL for this route.
     :attr str id: The unique identifier for this route.
@@ -48902,6 +51862,13 @@ class Route():
     :attr RouteNextHop next_hop: If `action` is `deliver`, the next hop that packets
           will be delivered to.  For
           other `action` values, its `address` will be `0.0.0.0`.
+    :attr str origin: (optional) The origin of this route:
+          - `service`: route was directly created by a service
+          - `user`: route was directly created by a user
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the route on which the unexpected
+          property value was encountered.
     :attr ZoneReference zone: The zone the route applies to. (Traffic from subnets
           in this zone will be
           subject to this route.).
@@ -48916,7 +51883,10 @@ class Route():
                  lifecycle_state: str,
                  name: str,
                  next_hop: 'RouteNextHop',
-                 zone: 'ZoneReference') -> None:
+                 zone: 'ZoneReference',
+                 *,
+                 creator: 'RouteCreator' = None,
+                 origin: str = None) -> None:
         """
         Initialize a Route object.
 
@@ -48939,15 +51909,22 @@ class Route():
         :param ZoneReference zone: The zone the route applies to. (Traffic from
                subnets in this zone will be
                subject to this route.).
+        :param RouteCreator creator: (optional) If present, the resource that
+               created the route. Routes with this property present cannot be
+               directly deleted. All routes with an `origin` of `learned` or `service`
+               will have this
+               property set, and future `origin` values may also have this property set.
         """
         self.action = action
         self.created_at = created_at
+        self.creator = creator
         self.destination = destination
         self.href = href
         self.id = id
         self.lifecycle_state = lifecycle_state
         self.name = name
         self.next_hop = next_hop
+        self.origin = origin
         self.zone = zone
 
     @classmethod
@@ -48962,6 +51939,8 @@ class Route():
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
             raise ValueError('Required property \'created_at\' not present in Route JSON')
+        if 'creator' in _dict:
+            args['creator'] = _dict.get('creator')
         if 'destination' in _dict:
             args['destination'] = _dict.get('destination')
         else:
@@ -48986,6 +51965,8 @@ class Route():
             args['next_hop'] = _dict.get('next_hop')
         else:
             raise ValueError('Required property \'next_hop\' not present in Route JSON')
+        if 'origin' in _dict:
+            args['origin'] = _dict.get('origin')
         if 'zone' in _dict:
             args['zone'] = ZoneReference.from_dict(_dict.get('zone'))
         else:
@@ -49004,6 +51985,11 @@ class Route():
             _dict['action'] = self.action
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'creator') and self.creator is not None:
+            if isinstance(self.creator, dict):
+                _dict['creator'] = self.creator
+            else:
+                _dict['creator'] = self.creator.to_dict()
         if hasattr(self, 'destination') and self.destination is not None:
             _dict['destination'] = self.destination
         if hasattr(self, 'href') and self.href is not None:
@@ -49019,6 +52005,8 @@ class Route():
                 _dict['next_hop'] = self.next_hop
             else:
                 _dict['next_hop'] = self.next_hop.to_dict()
+        if hasattr(self, 'origin') and getattr(self, 'origin') is not None:
+            _dict['origin'] = getattr(self, 'origin')
         if hasattr(self, 'zone') and self.zone is not None:
             _dict['zone'] = self.zone.to_dict()
         return _dict
@@ -49068,6 +52056,20 @@ class Route():
         SUSPENDED = 'suspended'
         UPDATING = 'updating'
         WAITING = 'waiting'
+
+
+    class OriginEnum(str, Enum):
+        """
+        The origin of this route:
+        - `service`: route was directly created by a service
+        - `user`: route was directly created by a user
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the route on which the unexpected
+        property value was encountered.
+        """
+        SERVICE = 'service'
+        USER = 'user'
 
 
 class RouteCollection():
@@ -49284,6 +52286,23 @@ class RouteCollectionNext():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class RouteCreator():
+    """
+    If present, the resource that created the route. Routes with this property present
+    cannot be directly deleted. All routes with an `origin` of `learned` or `service` will
+    have this property set, and future `origin` values may also have this property set.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a RouteCreator object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['RouteCreatorVPNGatewayReference', 'RouteCreatorVPNServerReference']))
+        raise Exception(msg)
+
 class RouteNextHop():
     """
     RouteNextHop.
@@ -49297,21 +52316,6 @@ class RouteNextHop():
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
                   ", ".join(['RouteNextHopIP', 'RouteNextHopVPNGatewayConnectionReference']))
-        raise Exception(msg)
-
-class RouteNextHopPrototype():
-    """
-    The next hop packets will be routed to.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a RouteNextHopPrototype object.
-
-        """
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['RouteNextHopPrototypeRouteNextHopIP', 'RouteNextHopPrototypeVPNGatewayConnectionIdentity']))
         raise Exception(msg)
 
 class RoutePatch():
@@ -49390,9 +52394,9 @@ class RoutePrototype():
     :attr str name: (optional) The user-defined name for this route. If unspecified,
           the name will be a hyphenated list of randomly-selected words. Names must be
           unique within the VPC routing table the route resides in.
-    :attr RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`, the
-          next hop that packets will be delivered to.  For
-          other `action` values, it must be omitted or specified as `0.0.0.0`.
+    :attr RoutePrototypeNextHop next_hop: (optional) If `action` is `deliver`, the
+          next hop that packets will be delivered to. For other `action`
+          values, it must be omitted or specified as `0.0.0.0`.
     :attr ZoneIdentity zone: The zone to apply the route to. (Traffic from subnets
           in this zone will be
           subject to this route.).
@@ -49404,7 +52408,7 @@ class RoutePrototype():
                  *,
                  action: str = None,
                  name: str = None,
-                 next_hop: 'RouteNextHopPrototype' = None) -> None:
+                 next_hop: 'RoutePrototypeNextHop' = None) -> None:
         """
         Initialize a RoutePrototype object.
 
@@ -49426,9 +52430,9 @@ class RoutePrototype():
         :param str name: (optional) The user-defined name for this route. If
                unspecified, the name will be a hyphenated list of randomly-selected words.
                Names must be unique within the VPC routing table the route resides in.
-        :param RouteNextHopPrototype next_hop: (optional) If `action` is `deliver`,
-               the next hop that packets will be delivered to.  For
-               other `action` values, it must be omitted or specified as `0.0.0.0`.
+        :param RoutePrototypeNextHop next_hop: (optional) If `action` is `deliver`,
+               the next hop that packets will be delivered to. For other `action`
+               values, it must be omitted or specified as `0.0.0.0`.
         """
         self.action = action
         self.destination = destination
@@ -49515,6 +52519,22 @@ class RoutePrototype():
         DELIVER = 'deliver'
         DROP = 'drop'
 
+
+class RoutePrototypeNextHop():
+    """
+    If `action` is `deliver`, the next hop that packets will be delivered to. For other
+    `action` values, it must be omitted or specified as `0.0.0.0`.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a RoutePrototypeNextHop object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP', 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentity']))
+        raise Exception(msg)
 
 class RouteReference():
     """
@@ -49666,6 +52686,11 @@ class RoutingTable():
     """
     RoutingTable.
 
+    :attr List[ResourceFilter] accept_routes_from: The filters specifying the
+          resources that may create routes in this routing table.
+          At present, only the `resource_type` filter is permitted, and only the
+          `vpn_server` value is supported, but filter support is expected to expand in the
+          future.
     :attr datetime created_at: The date and time that this routing table was
           created.
     :attr str href: The URL for this routing table.
@@ -49707,6 +52732,7 @@ class RoutingTable():
     """
 
     def __init__(self,
+                 accept_routes_from: List['ResourceFilter'],
                  created_at: datetime,
                  href: str,
                  id: str,
@@ -49722,6 +52748,11 @@ class RoutingTable():
         """
         Initialize a RoutingTable object.
 
+        :param List[ResourceFilter] accept_routes_from: The filters specifying the
+               resources that may create routes in this routing table.
+               At present, only the `resource_type` filter is permitted, and only the
+               `vpn_server` value is supported, but filter support is expected to expand
+               in the future.
         :param datetime created_at: The date and time that this routing table was
                created.
         :param str href: The URL for this routing table.
@@ -49762,6 +52793,7 @@ class RoutingTable():
         :param List[SubnetReference] subnets: The subnets to which this routing
                table is attached.
         """
+        self.accept_routes_from = accept_routes_from
         self.created_at = created_at
         self.href = href
         self.id = id
@@ -49779,6 +52811,10 @@ class RoutingTable():
     def from_dict(cls, _dict: Dict) -> 'RoutingTable':
         """Initialize a RoutingTable object from a json dictionary."""
         args = {}
+        if 'accept_routes_from' in _dict:
+            args['accept_routes_from'] = [ResourceFilter.from_dict(x) for x in _dict.get('accept_routes_from')]
+        else:
+            raise ValueError('Required property \'accept_routes_from\' not present in RoutingTable JSON')
         if 'created_at' in _dict:
             args['created_at'] = string_to_datetime(_dict.get('created_at'))
         else:
@@ -49837,6 +52873,8 @@ class RoutingTable():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'accept_routes_from') and self.accept_routes_from is not None:
+            _dict['accept_routes_from'] = [x.to_dict() for x in self.accept_routes_from]
         if hasattr(self, 'created_at') and self.created_at is not None:
             _dict['created_at'] = datetime_to_string(self.created_at)
         if hasattr(self, 'href') and self.href is not None:
@@ -50135,6 +53173,15 @@ class RoutingTablePatch():
     """
     RoutingTablePatch.
 
+    :attr List[ResourceFilter] accept_routes_from: (optional) The filters specifying
+          the resources that may create routes in this routing table
+          (replacing any existing filters). All routes learned from resources that match a
+          given filter will be removed when an existing filter is removed. Therefore, if
+          an empty array is specified, all filters will be removed, resulting in all
+          learned routes being removed.
+          At present, only the `resource_type` filter is permitted, and only the
+          `vpn_server` value is supported, but filter support is expected to expand in the
+          future.
     :attr str name: (optional) The user-defined name for this routing table. Names
           must be unique within the VPC the routing table resides in.
     :attr bool route_direct_link_ingress: (optional) Indicates whether this routing
@@ -50182,6 +53229,7 @@ class RoutingTablePatch():
 
     def __init__(self,
                  *,
+                 accept_routes_from: List['ResourceFilter'] = None,
                  name: str = None,
                  route_direct_link_ingress: bool = None,
                  route_transit_gateway_ingress: bool = None,
@@ -50189,6 +53237,15 @@ class RoutingTablePatch():
         """
         Initialize a RoutingTablePatch object.
 
+        :param List[ResourceFilter] accept_routes_from: (optional) The filters
+               specifying the resources that may create routes in this routing table
+               (replacing any existing filters). All routes learned from resources that
+               match a given filter will be removed when an existing filter is removed.
+               Therefore, if an empty array is specified, all filters will be removed,
+               resulting in all learned routes being removed.
+               At present, only the `resource_type` filter is permitted, and only the
+               `vpn_server` value is supported, but filter support is expected to expand
+               in the future.
         :param str name: (optional) The user-defined name for this routing table.
                Names must be unique within the VPC the routing table resides in.
         :param bool route_direct_link_ingress: (optional) Indicates whether this
@@ -50233,6 +53290,7 @@ class RoutingTablePatch():
                route with a `next_hop` of an internet-bound IP address or a VPN gateway
                connection, the packet will be dropped.
         """
+        self.accept_routes_from = accept_routes_from
         self.name = name
         self.route_direct_link_ingress = route_direct_link_ingress
         self.route_transit_gateway_ingress = route_transit_gateway_ingress
@@ -50242,6 +53300,8 @@ class RoutingTablePatch():
     def from_dict(cls, _dict: Dict) -> 'RoutingTablePatch':
         """Initialize a RoutingTablePatch object from a json dictionary."""
         args = {}
+        if 'accept_routes_from' in _dict:
+            args['accept_routes_from'] = [ResourceFilter.from_dict(x) for x in _dict.get('accept_routes_from')]
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'route_direct_link_ingress' in _dict:
@@ -50260,6 +53320,8 @@ class RoutingTablePatch():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'accept_routes_from') and self.accept_routes_from is not None:
+            _dict['accept_routes_from'] = [x.to_dict() for x in self.accept_routes_from]
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'route_direct_link_ingress') and self.route_direct_link_ingress is not None:
@@ -51768,13 +54830,15 @@ class SecurityGroupTargetReference():
 
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext', 'SecurityGroupTargetReferenceLoadBalancerReference', 'SecurityGroupTargetReferenceEndpointGatewayReference']))
+                  ", ".join(['SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext', 'SecurityGroupTargetReferenceLoadBalancerReference', 'SecurityGroupTargetReferenceEndpointGatewayReference', 'SecurityGroupTargetReferenceVPNServerReference']))
         raise Exception(msg)
 
 class Snapshot():
     """
     Snapshot.
 
+    :attr BackupPolicyPlanReference backup_policy_plan: (optional) If present, the
+          backup policy plan which created this snapshot.
     :attr bool bootable: Indicates if a boot volume attachment can be created with a
           volume created from this snapshot.
     :attr datetime captured_at: (optional) The date and time the data capture for
@@ -51835,6 +54899,7 @@ class Snapshot():
                  source_volume: 'VolumeReference',
                  user_tags: List[str],
                  *,
+                 backup_policy_plan: 'BackupPolicyPlanReference' = None,
                  captured_at: datetime = None,
                  encryption_key: 'EncryptionKeyReference' = None,
                  operating_system: 'OperatingSystem' = None,
@@ -51870,6 +54935,8 @@ class Snapshot():
         :param List[str] user_tags: The [user
                tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
                this snapshot.
+        :param BackupPolicyPlanReference backup_policy_plan: (optional) If present,
+               the backup policy plan which created this snapshot.
         :param datetime captured_at: (optional) The date and time the data capture
                for this snapshot was completed.
                If absent, this snapshot's data has not yet been captured. Additionally,
@@ -51884,6 +54951,7 @@ class Snapshot():
                which the data on this snapshot was most directly
                provisioned.
         """
+        self.backup_policy_plan = backup_policy_plan
         self.bootable = bootable
         self.captured_at = captured_at
         self.created_at = created_at
@@ -51909,6 +54977,8 @@ class Snapshot():
     def from_dict(cls, _dict: Dict) -> 'Snapshot':
         """Initialize a Snapshot object from a json dictionary."""
         args = {}
+        if 'backup_policy_plan' in _dict:
+            args['backup_policy_plan'] = BackupPolicyPlanReference.from_dict(_dict.get('backup_policy_plan'))
         if 'bootable' in _dict:
             args['bootable'] = _dict.get('bootable')
         else:
@@ -51991,6 +55061,8 @@ class Snapshot():
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'backup_policy_plan') and self.backup_policy_plan is not None:
+            _dict['backup_policy_plan'] = self.backup_policy_plan.to_dict()
         if hasattr(self, 'bootable') and self.bootable is not None:
             _dict['bootable'] = self.bootable
         if hasattr(self, 'captured_at') and self.captured_at is not None:
@@ -55812,6 +58884,1836 @@ class VPNGatewayReferenceDeleted():
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+class VPNServer():
+    """
+    VPNServer.
+
+    :attr CertificateInstanceReference certificate: The certificate instance for
+          this VPN server.
+    :attr List[VPNServerAuthentication] client_authentication: The methods used to
+          authenticate VPN clients to this VPN server. VPN clients must authenticate
+          against all specified methods.
+    :attr bool client_auto_delete: Indicates whether disconnected VPN clients will
+          be automatically deleted after
+          `client_auto_delete_timeout` hours have passed. At present, this is always
+          `true`, but may be modifiable in the future.
+    :attr int client_auto_delete_timeout: If `client_auto_delete` is `true`, the
+          hours after which disconnected VPN clients will be automatically deleted. If the
+          value is `0`, disconnected VPN clients will be deleted immediately. This value
+          may be modifiable in the future.
+    :attr List[IP] client_dns_server_ips: The DNS server addresses that will be
+          provided to VPN clients that are connected to this VPN server.
+    :attr int client_idle_timeout: The seconds a VPN client can be idle before this
+          VPN server will disconnect it.  If `0`, the server will not disconnect idle
+          clients.
+    :attr str client_ip_pool: The VPN client IPv4 address pool, expressed in CIDR
+          format.
+    :attr datetime created_at: The date and time that the VPN server was created.
+    :attr str crn: The CRN for this VPN server.
+    :attr bool enable_split_tunneling: Indicates whether the split tunneling is
+          enabled on this VPN server.
+    :attr str health_state: The health of this resource.
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
+          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+          incapacitated
+          - `inapplicable`: The health state does not apply because of the current
+          lifecycle state. A resource with a lifecycle state of `failed` or `deleting`
+          will have a health state of `inapplicable`. A `pending` resource may also have
+          this state.
+    :attr str hostname: Fully qualified domain name assigned to this VPN server.
+    :attr str href: The URL for this VPN server.
+    :attr str id: The unique identifier for this VPN server.
+    :attr str lifecycle_state: The lifecycle state of the VPN server.
+    :attr str name: The unique user-defined name for this VPN server.
+    :attr int port: The port number used by this VPN server.
+    :attr List[ReservedIPReference] private_ips: The reserved IPs bound to this VPN
+          server.
+    :attr str protocol: The transport protocol used by this VPN server.
+    :attr ResourceGroupReference resource_group: The resource group for this VPN
+          server.
+    :attr str resource_type: The resource type.
+    :attr List[SecurityGroupReference] security_groups: The security groups
+          targeting this VPN server.
+    :attr List[SubnetReference] subnets: The subnets this VPN server is provisioned
+          in.
+    :attr VPCReference vpc: The VPC this VPN server resides in.
+    """
+
+    def __init__(self,
+                 certificate: 'CertificateInstanceReference',
+                 client_authentication: List['VPNServerAuthentication'],
+                 client_auto_delete: bool,
+                 client_auto_delete_timeout: int,
+                 client_dns_server_ips: List['IP'],
+                 client_idle_timeout: int,
+                 client_ip_pool: str,
+                 created_at: datetime,
+                 crn: str,
+                 enable_split_tunneling: bool,
+                 health_state: str,
+                 hostname: str,
+                 href: str,
+                 id: str,
+                 lifecycle_state: str,
+                 name: str,
+                 port: int,
+                 private_ips: List['ReservedIPReference'],
+                 protocol: str,
+                 resource_group: 'ResourceGroupReference',
+                 resource_type: str,
+                 security_groups: List['SecurityGroupReference'],
+                 subnets: List['SubnetReference'],
+                 vpc: 'VPCReference') -> None:
+        """
+        Initialize a VPNServer object.
+
+        :param CertificateInstanceReference certificate: The certificate instance
+               for this VPN server.
+        :param List[VPNServerAuthentication] client_authentication: The methods
+               used to authenticate VPN clients to this VPN server. VPN clients must
+               authenticate against all specified methods.
+        :param bool client_auto_delete: Indicates whether disconnected VPN clients
+               will be automatically deleted after
+               `client_auto_delete_timeout` hours have passed. At present, this is always
+               `true`, but may be modifiable in the future.
+        :param int client_auto_delete_timeout: If `client_auto_delete` is `true`,
+               the hours after which disconnected VPN clients will be automatically
+               deleted. If the value is `0`, disconnected VPN clients will be deleted
+               immediately. This value may be modifiable in the future.
+        :param List[IP] client_dns_server_ips: The DNS server addresses that will
+               be provided to VPN clients that are connected to this VPN server.
+        :param int client_idle_timeout: The seconds a VPN client can be idle before
+               this VPN server will disconnect it.  If `0`, the server will not disconnect
+               idle clients.
+        :param str client_ip_pool: The VPN client IPv4 address pool, expressed in
+               CIDR format.
+        :param datetime created_at: The date and time that the VPN server was
+               created.
+        :param str crn: The CRN for this VPN server.
+        :param bool enable_split_tunneling: Indicates whether the split tunneling
+               is enabled on this VPN server.
+        :param str health_state: The health of this resource.
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
+               connectivity
+               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+               incapacitated
+               - `inapplicable`: The health state does not apply because of the current
+               lifecycle state. A resource with a lifecycle state of `failed` or
+               `deleting` will have a health state of `inapplicable`. A `pending` resource
+               may also have this state.
+        :param str hostname: Fully qualified domain name assigned to this VPN
+               server.
+        :param str href: The URL for this VPN server.
+        :param str id: The unique identifier for this VPN server.
+        :param str lifecycle_state: The lifecycle state of the VPN server.
+        :param str name: The unique user-defined name for this VPN server.
+        :param int port: The port number used by this VPN server.
+        :param List[ReservedIPReference] private_ips: The reserved IPs bound to
+               this VPN server.
+        :param str protocol: The transport protocol used by this VPN server.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN server.
+        :param str resource_type: The resource type.
+        :param List[SecurityGroupReference] security_groups: The security groups
+               targeting this VPN server.
+        :param List[SubnetReference] subnets: The subnets this VPN server is
+               provisioned in.
+        :param VPCReference vpc: The VPC this VPN server resides in.
+        """
+        self.certificate = certificate
+        self.client_authentication = client_authentication
+        self.client_auto_delete = client_auto_delete
+        self.client_auto_delete_timeout = client_auto_delete_timeout
+        self.client_dns_server_ips = client_dns_server_ips
+        self.client_idle_timeout = client_idle_timeout
+        self.client_ip_pool = client_ip_pool
+        self.created_at = created_at
+        self.crn = crn
+        self.enable_split_tunneling = enable_split_tunneling
+        self.health_state = health_state
+        self.hostname = hostname
+        self.href = href
+        self.id = id
+        self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.port = port
+        self.private_ips = private_ips
+        self.protocol = protocol
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.security_groups = security_groups
+        self.subnets = subnets
+        self.vpc = vpc
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServer':
+        """Initialize a VPNServer object from a json dictionary."""
+        args = {}
+        if 'certificate' in _dict:
+            args['certificate'] = CertificateInstanceReference.from_dict(_dict.get('certificate'))
+        else:
+            raise ValueError('Required property \'certificate\' not present in VPNServer JSON')
+        if 'client_authentication' in _dict:
+            args['client_authentication'] = _dict.get('client_authentication')
+        else:
+            raise ValueError('Required property \'client_authentication\' not present in VPNServer JSON')
+        if 'client_auto_delete' in _dict:
+            args['client_auto_delete'] = _dict.get('client_auto_delete')
+        else:
+            raise ValueError('Required property \'client_auto_delete\' not present in VPNServer JSON')
+        if 'client_auto_delete_timeout' in _dict:
+            args['client_auto_delete_timeout'] = _dict.get('client_auto_delete_timeout')
+        else:
+            raise ValueError('Required property \'client_auto_delete_timeout\' not present in VPNServer JSON')
+        if 'client_dns_server_ips' in _dict:
+            args['client_dns_server_ips'] = [IP.from_dict(x) for x in _dict.get('client_dns_server_ips')]
+        else:
+            raise ValueError('Required property \'client_dns_server_ips\' not present in VPNServer JSON')
+        if 'client_idle_timeout' in _dict:
+            args['client_idle_timeout'] = _dict.get('client_idle_timeout')
+        else:
+            raise ValueError('Required property \'client_idle_timeout\' not present in VPNServer JSON')
+        if 'client_ip_pool' in _dict:
+            args['client_ip_pool'] = _dict.get('client_ip_pool')
+        else:
+            raise ValueError('Required property \'client_ip_pool\' not present in VPNServer JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNServer JSON')
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in VPNServer JSON')
+        if 'enable_split_tunneling' in _dict:
+            args['enable_split_tunneling'] = _dict.get('enable_split_tunneling')
+        else:
+            raise ValueError('Required property \'enable_split_tunneling\' not present in VPNServer JSON')
+        if 'health_state' in _dict:
+            args['health_state'] = _dict.get('health_state')
+        else:
+            raise ValueError('Required property \'health_state\' not present in VPNServer JSON')
+        if 'hostname' in _dict:
+            args['hostname'] = _dict.get('hostname')
+        else:
+            raise ValueError('Required property \'hostname\' not present in VPNServer JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServer JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNServer JSON')
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in VPNServer JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in VPNServer JSON')
+        if 'port' in _dict:
+            args['port'] = _dict.get('port')
+        else:
+            raise ValueError('Required property \'port\' not present in VPNServer JSON')
+        if 'private_ips' in _dict:
+            args['private_ips'] = [ReservedIPReference.from_dict(x) for x in _dict.get('private_ips')]
+        else:
+            raise ValueError('Required property \'private_ips\' not present in VPNServer JSON')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        else:
+            raise ValueError('Required property \'protocol\' not present in VPNServer JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = ResourceGroupReference.from_dict(_dict.get('resource_group'))
+        else:
+            raise ValueError('Required property \'resource_group\' not present in VPNServer JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNServer JSON')
+        if 'security_groups' in _dict:
+            args['security_groups'] = [SecurityGroupReference.from_dict(x) for x in _dict.get('security_groups')]
+        else:
+            raise ValueError('Required property \'security_groups\' not present in VPNServer JSON')
+        if 'subnets' in _dict:
+            args['subnets'] = [SubnetReference.from_dict(x) for x in _dict.get('subnets')]
+        else:
+            raise ValueError('Required property \'subnets\' not present in VPNServer JSON')
+        if 'vpc' in _dict:
+            args['vpc'] = VPCReference.from_dict(_dict.get('vpc'))
+        else:
+            raise ValueError('Required property \'vpc\' not present in VPNServer JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServer object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'certificate') and self.certificate is not None:
+            _dict['certificate'] = self.certificate.to_dict()
+        if hasattr(self, 'client_authentication') and self.client_authentication is not None:
+            client_authentication_list = []
+            for x in self.client_authentication:
+                if isinstance(x, dict):
+                    client_authentication_list.append(x)
+                else:
+                    client_authentication_list.append(x.to_dict())
+            _dict['client_authentication'] = client_authentication_list
+        if hasattr(self, 'client_auto_delete') and self.client_auto_delete is not None:
+            _dict['client_auto_delete'] = self.client_auto_delete
+        if hasattr(self, 'client_auto_delete_timeout') and self.client_auto_delete_timeout is not None:
+            _dict['client_auto_delete_timeout'] = self.client_auto_delete_timeout
+        if hasattr(self, 'client_dns_server_ips') and self.client_dns_server_ips is not None:
+            _dict['client_dns_server_ips'] = [x.to_dict() for x in self.client_dns_server_ips]
+        if hasattr(self, 'client_idle_timeout') and self.client_idle_timeout is not None:
+            _dict['client_idle_timeout'] = self.client_idle_timeout
+        if hasattr(self, 'client_ip_pool') and self.client_ip_pool is not None:
+            _dict['client_ip_pool'] = self.client_ip_pool
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'enable_split_tunneling') and self.enable_split_tunneling is not None:
+            _dict['enable_split_tunneling'] = self.enable_split_tunneling
+        if hasattr(self, 'health_state') and self.health_state is not None:
+            _dict['health_state'] = self.health_state
+        if hasattr(self, 'hostname') and self.hostname is not None:
+            _dict['hostname'] = self.hostname
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'private_ips') and self.private_ips is not None:
+            _dict['private_ips'] = [x.to_dict() for x in self.private_ips]
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'security_groups') and self.security_groups is not None:
+            _dict['security_groups'] = [x.to_dict() for x in self.security_groups]
+        if hasattr(self, 'subnets') and self.subnets is not None:
+            _dict['subnets'] = [x.to_dict() for x in self.subnets]
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            _dict['vpc'] = self.vpc.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServer object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServer') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServer') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HealthStateEnum(str, Enum):
+        """
+        The health of this resource.
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
+        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+        incapacitated
+        - `inapplicable`: The health state does not apply because of the current lifecycle
+        state. A resource with a lifecycle state of `failed` or `deleting` will have a
+        health state of `inapplicable`. A `pending` resource may also have this state.
+        """
+        DEGRADED = 'degraded'
+        FAULTED = 'faulted'
+        INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN server.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ProtocolEnum(str, Enum):
+        """
+        The transport protocol used by this VPN server.
+        """
+        TCP = 'tcp'
+        UDP = 'udp'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER = 'vpn_server'
+
+
+class VPNServerAuthentication():
+    """
+    An authentication method for this VPN server.
+
+    :attr str method: The type of authentication.
+    """
+
+    def __init__(self,
+                 method: str) -> None:
+        """
+        Initialize a VPNServerAuthentication object.
+
+        :param str method: The type of authentication.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNServerAuthenticationByUsername', 'VPNServerAuthenticationByCertificate']))
+        raise Exception(msg)
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
+class VPNServerAuthenticationByUsernameIdProvider():
+    """
+    The type of identity provider to be used by VPN client.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a VPNServerAuthenticationByUsernameIdProvider object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNServerAuthenticationByUsernameIdProviderByIAM']))
+        raise Exception(msg)
+
+class VPNServerAuthenticationPrototype():
+    """
+    An authentication method for this VPN server.
+
+    :attr str method: The type of authentication.
+    """
+
+    def __init__(self,
+                 method: str) -> None:
+        """
+        Initialize a VPNServerAuthenticationPrototype object.
+
+        :param str method: The type of authentication.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype', 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype']))
+        raise Exception(msg)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationPrototype':
+        """Initialize a VPNServerAuthenticationPrototype object from a json dictionary."""
+        disc_class = cls._get_class_by_discriminator(_dict)
+        if disc_class != cls:
+            return disc_class.from_dict(_dict)
+        msg = ("Cannot convert dictionary into an instance of base class 'VPNServerAuthenticationPrototype'. " +
+                "The discriminator value should map to a valid subclass: {1}").format(
+                  ", ".join(['VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype', 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype']))
+        raise Exception(msg)
+
+    @classmethod
+    def _from_dict(cls, _dict: Dict):
+        """Initialize a VPNServerAuthenticationPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    @classmethod
+    def _get_class_by_discriminator(cls, _dict: Dict) -> object:
+        mapping = {}
+        mapping['certificate'] = 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype'
+        mapping['username'] = 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype'
+        disc_value = _dict.get('method')
+        if disc_value is None:
+            raise ValueError('Discriminator property \'method\' not found in VPNServerAuthenticationPrototype JSON')
+        class_name = mapping.get(disc_value, disc_value)
+        try:
+            disc_class = getattr(sys.modules[__name__], class_name)
+        except AttributeError:
+            disc_class = cls
+        if isinstance(disc_class, object):
+            return disc_class
+        raise TypeError('%s is not a discriminator class' % class_name)
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
+class VPNServerClient():
+    """
+    VPNServerClient.
+
+    :attr IP client_ip: The IP address assigned to this VPN client from
+          `client_ip_pool`.
+    :attr str common_name: (optional) The common name of client certificate that the
+          VPN client provided when connecting to the server.
+          This property will be present only when the `certificate` client authentication
+          method is enabled on the VPN server.
+    :attr datetime created_at: The date and time that the VPN client was created.
+    :attr datetime disconnected_at: (optional) The date and time that the VPN client
+          was disconnected.
+          This property will be present only when the client `status` is `disconnected`.
+    :attr str href: The URL for this VPN client.
+    :attr str id: The unique identifier for this VPN client.
+    :attr IP remote_ip: The remote IP address of this VPN client.
+    :attr int remote_port: The remote port of this VPN client.
+    :attr str resource_type: The resource type.
+    :attr str status: The status of the VPN client:
+          - `connected`: the VPN client is `connected` to this VPN server.
+          - `disconnected`: the VPN client is `disconnected` from this VPN server.
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the VPN client on which the
+          unexpected property value was encountered.
+    :attr str username: (optional) The username that this VPN client provided when
+          connecting to the VPN server.
+          This property will be present only when the `username` client authentication
+          method is enabled on the VPN server.
+    """
+
+    def __init__(self,
+                 client_ip: 'IP',
+                 created_at: datetime,
+                 href: str,
+                 id: str,
+                 remote_ip: 'IP',
+                 remote_port: int,
+                 resource_type: str,
+                 status: str,
+                 *,
+                 common_name: str = None,
+                 disconnected_at: datetime = None,
+                 username: str = None) -> None:
+        """
+        Initialize a VPNServerClient object.
+
+        :param IP client_ip: The IP address assigned to this VPN client from
+               `client_ip_pool`.
+        :param datetime created_at: The date and time that the VPN client was
+               created.
+        :param str href: The URL for this VPN client.
+        :param str id: The unique identifier for this VPN client.
+        :param IP remote_ip: The remote IP address of this VPN client.
+        :param int remote_port: The remote port of this VPN client.
+        :param str resource_type: The resource type.
+        :param str status: The status of the VPN client:
+               - `connected`: the VPN client is `connected` to this VPN server.
+               - `disconnected`: the VPN client is `disconnected` from this VPN server.
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the VPN client
+               on which the unexpected property value was encountered.
+        :param str common_name: (optional) The common name of client certificate
+               that the VPN client provided when connecting to the server.
+               This property will be present only when the `certificate` client
+               authentication method is enabled on the VPN server.
+        :param datetime disconnected_at: (optional) The date and time that the VPN
+               client was disconnected.
+               This property will be present only when the client `status` is
+               `disconnected`.
+        :param str username: (optional) The username that this VPN client provided
+               when connecting to the VPN server.
+               This property will be present only when the `username` client
+               authentication method is enabled on the VPN server.
+        """
+        self.client_ip = client_ip
+        self.common_name = common_name
+        self.created_at = created_at
+        self.disconnected_at = disconnected_at
+        self.href = href
+        self.id = id
+        self.remote_ip = remote_ip
+        self.remote_port = remote_port
+        self.resource_type = resource_type
+        self.status = status
+        self.username = username
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerClient':
+        """Initialize a VPNServerClient object from a json dictionary."""
+        args = {}
+        if 'client_ip' in _dict:
+            args['client_ip'] = IP.from_dict(_dict.get('client_ip'))
+        else:
+            raise ValueError('Required property \'client_ip\' not present in VPNServerClient JSON')
+        if 'common_name' in _dict:
+            args['common_name'] = _dict.get('common_name')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNServerClient JSON')
+        if 'disconnected_at' in _dict:
+            args['disconnected_at'] = string_to_datetime(_dict.get('disconnected_at'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerClient JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNServerClient JSON')
+        if 'remote_ip' in _dict:
+            args['remote_ip'] = IP.from_dict(_dict.get('remote_ip'))
+        else:
+            raise ValueError('Required property \'remote_ip\' not present in VPNServerClient JSON')
+        if 'remote_port' in _dict:
+            args['remote_port'] = _dict.get('remote_port')
+        else:
+            raise ValueError('Required property \'remote_port\' not present in VPNServerClient JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNServerClient JSON')
+        if 'status' in _dict:
+            args['status'] = _dict.get('status')
+        else:
+            raise ValueError('Required property \'status\' not present in VPNServerClient JSON')
+        if 'username' in _dict:
+            args['username'] = _dict.get('username')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerClient object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'client_ip') and self.client_ip is not None:
+            _dict['client_ip'] = self.client_ip.to_dict()
+        if hasattr(self, 'common_name') and self.common_name is not None:
+            _dict['common_name'] = self.common_name
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'disconnected_at') and self.disconnected_at is not None:
+            _dict['disconnected_at'] = datetime_to_string(self.disconnected_at)
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'remote_ip') and self.remote_ip is not None:
+            _dict['remote_ip'] = self.remote_ip.to_dict()
+        if hasattr(self, 'remote_port') and self.remote_port is not None:
+            _dict['remote_port'] = self.remote_port
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerClient object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerClient') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerClient') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER_CLIENT = 'vpn_server_client'
+
+
+    class StatusEnum(str, Enum):
+        """
+        The status of the VPN client:
+        - `connected`: the VPN client is `connected` to this VPN server.
+        - `disconnected`: the VPN client is `disconnected` from this VPN server.
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the VPN client on which the unexpected
+        property value was encountered.
+        """
+        CONNECTED = 'connected'
+        DISCONNECTED = 'disconnected'
+
+
+class VPNServerClientCollection():
+    """
+    VPNServerClientCollection.
+
+    :attr List[VPNServerClient] clients: Collection of VPN clients.
+    :attr VPNServerClientCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr VPNServerClientCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 clients: List['VPNServerClient'],
+                 first: 'VPNServerClientCollectionFirst',
+                 limit: int,
+                 total_count: int,
+                 *,
+                 next: 'VPNServerClientCollectionNext' = None) -> None:
+        """
+        Initialize a VPNServerClientCollection object.
+
+        :param List[VPNServerClient] clients: Collection of VPN clients.
+        :param VPNServerClientCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param VPNServerClientCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.clients = clients
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerClientCollection':
+        """Initialize a VPNServerClientCollection object from a json dictionary."""
+        args = {}
+        if 'clients' in _dict:
+            args['clients'] = [VPNServerClient.from_dict(x) for x in _dict.get('clients')]
+        else:
+            raise ValueError('Required property \'clients\' not present in VPNServerClientCollection JSON')
+        if 'first' in _dict:
+            args['first'] = VPNServerClientCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in VPNServerClientCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in VPNServerClientCollection JSON')
+        if 'next' in _dict:
+            args['next'] = VPNServerClientCollectionNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in VPNServerClientCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerClientCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'clients') and self.clients is not None:
+            _dict['clients'] = [x.to_dict() for x in self.clients]
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerClientCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerClientCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerClientCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerClientCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerClientCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerClientCollectionFirst':
+        """Initialize a VPNServerClientCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerClientCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerClientCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerClientCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerClientCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerClientCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerClientCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerClientCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerClientCollectionNext':
+        """Initialize a VPNServerClientCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerClientCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerClientCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerClientCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerClientCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerClientCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerCollection():
+    """
+    VPNServerCollection.
+
+    :attr VPNServerCollectionFirst first: A link to the first page of resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr VPNServerCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr int total_count: The total number of resources across all pages.
+    :attr List[VPNServer] vpn_servers: Collection of VPN servers.
+    """
+
+    def __init__(self,
+                 first: 'VPNServerCollectionFirst',
+                 limit: int,
+                 total_count: int,
+                 vpn_servers: List['VPNServer'],
+                 *,
+                 next: 'VPNServerCollectionNext' = None) -> None:
+        """
+        Initialize a VPNServerCollection object.
+
+        :param VPNServerCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param List[VPNServer] vpn_servers: Collection of VPN servers.
+        :param VPNServerCollectionNext next: (optional) A link to the next page of
+               resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+        self.vpn_servers = vpn_servers
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerCollection':
+        """Initialize a VPNServerCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = VPNServerCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in VPNServerCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in VPNServerCollection JSON')
+        if 'next' in _dict:
+            args['next'] = VPNServerCollectionNext.from_dict(_dict.get('next'))
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in VPNServerCollection JSON')
+        if 'vpn_servers' in _dict:
+            args['vpn_servers'] = [VPNServer.from_dict(x) for x in _dict.get('vpn_servers')]
+        else:
+            raise ValueError('Required property \'vpn_servers\' not present in VPNServerCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        if hasattr(self, 'vpn_servers') and self.vpn_servers is not None:
+            _dict['vpn_servers'] = [x.to_dict() for x in self.vpn_servers]
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerCollectionFirst':
+        """Initialize a VPNServerCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerCollectionNext':
+        """Initialize a VPNServerCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerPatch():
+    """
+    VPNServerPatch.
+
+    :attr CertificateInstanceIdentity certificate: (optional) The certificate
+          instance for this VPN server.
+    :attr List[VPNServerAuthenticationPrototype] client_authentication: (optional)
+          The authentication methods to use to authenticate VPN client on this VPN server
+          (replacing any existing methods).
+    :attr List[IP] client_dns_server_ips: (optional) The DNS server addresses that
+          will be provided to VPN clients connected to this VPN server (replacing any
+          existing addresses).
+    :attr int client_idle_timeout: (optional) The seconds a VPN client can be idle
+          before this VPN server will disconnect it.  If `0`, the server will not
+          disconnect idle clients.
+    :attr str client_ip_pool: (optional) The VPN client IPv4 address pool, expressed
+          in CIDR format. The request must not overlap with any existing address prefixes
+          in the VPC or any of the following reserved address ranges:
+            - `127.0.0.0/8` (IPv4 loopback addresses)
+            - `161.26.0.0/16` (IBM services)
+            - `166.8.0.0/14` (Cloud Service Endpoints)
+            - `169.254.0.0/16` (IPv4 link-local addresses)
+            - `224.0.0.0/4` (IPv4 multicast addresses)
+          The prefix length of the client IP address pool's CIDR must be between
+          `/9` (8,388,608 addresses) and `/22` (1024 addresses). A CIDR block that
+          contains twice the number of IP addresses that are required to enable the
+          maximum number of concurrent connections is recommended.
+    :attr bool enable_split_tunneling: (optional) Indicates whether the split
+          tunneling is enabled on this VPN server.
+    :attr str name: (optional) The user-defined name for this VPN server. Names must
+          be unique within the VPC this VPN server is serving.
+    :attr int port: (optional) The port number used by this VPN server.
+    :attr str protocol: (optional) The transport protocol used by this VPN server.
+    :attr List[SubnetIdentity] subnets: (optional) The subnets to provision this VPN
+          server in (replacing the existing subnets).
+    """
+
+    def __init__(self,
+                 *,
+                 certificate: 'CertificateInstanceIdentity' = None,
+                 client_authentication: List['VPNServerAuthenticationPrototype'] = None,
+                 client_dns_server_ips: List['IP'] = None,
+                 client_idle_timeout: int = None,
+                 client_ip_pool: str = None,
+                 enable_split_tunneling: bool = None,
+                 name: str = None,
+                 port: int = None,
+                 protocol: str = None,
+                 subnets: List['SubnetIdentity'] = None) -> None:
+        """
+        Initialize a VPNServerPatch object.
+
+        :param CertificateInstanceIdentity certificate: (optional) The certificate
+               instance for this VPN server.
+        :param List[VPNServerAuthenticationPrototype] client_authentication:
+               (optional) The authentication methods to use to authenticate VPN client on
+               this VPN server
+               (replacing any existing methods).
+        :param List[IP] client_dns_server_ips: (optional) The DNS server addresses
+               that will be provided to VPN clients connected to this VPN server
+               (replacing any existing addresses).
+        :param int client_idle_timeout: (optional) The seconds a VPN client can be
+               idle before this VPN server will disconnect it.  If `0`, the server will
+               not disconnect idle clients.
+        :param str client_ip_pool: (optional) The VPN client IPv4 address pool,
+               expressed in CIDR format. The request must not overlap with any existing
+               address prefixes in the VPC or any of the following reserved address
+               ranges:
+                 - `127.0.0.0/8` (IPv4 loopback addresses)
+                 - `161.26.0.0/16` (IBM services)
+                 - `166.8.0.0/14` (Cloud Service Endpoints)
+                 - `169.254.0.0/16` (IPv4 link-local addresses)
+                 - `224.0.0.0/4` (IPv4 multicast addresses)
+               The prefix length of the client IP address pool's CIDR must be between
+               `/9` (8,388,608 addresses) and `/22` (1024 addresses). A CIDR block that
+               contains twice the number of IP addresses that are required to enable the
+               maximum number of concurrent connections is recommended.
+        :param bool enable_split_tunneling: (optional) Indicates whether the split
+               tunneling is enabled on this VPN server.
+        :param str name: (optional) The user-defined name for this VPN server.
+               Names must be unique within the VPC this VPN server is serving.
+        :param int port: (optional) The port number used by this VPN server.
+        :param str protocol: (optional) The transport protocol used by this VPN
+               server.
+        :param List[SubnetIdentity] subnets: (optional) The subnets to provision
+               this VPN server in (replacing the existing subnets).
+        """
+        self.certificate = certificate
+        self.client_authentication = client_authentication
+        self.client_dns_server_ips = client_dns_server_ips
+        self.client_idle_timeout = client_idle_timeout
+        self.client_ip_pool = client_ip_pool
+        self.enable_split_tunneling = enable_split_tunneling
+        self.name = name
+        self.port = port
+        self.protocol = protocol
+        self.subnets = subnets
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerPatch':
+        """Initialize a VPNServerPatch object from a json dictionary."""
+        args = {}
+        if 'certificate' in _dict:
+            args['certificate'] = _dict.get('certificate')
+        if 'client_authentication' in _dict:
+            args['client_authentication'] = [VPNServerAuthenticationPrototype.from_dict(x) for x in _dict.get('client_authentication')]
+        if 'client_dns_server_ips' in _dict:
+            args['client_dns_server_ips'] = [IP.from_dict(x) for x in _dict.get('client_dns_server_ips')]
+        if 'client_idle_timeout' in _dict:
+            args['client_idle_timeout'] = _dict.get('client_idle_timeout')
+        if 'client_ip_pool' in _dict:
+            args['client_ip_pool'] = _dict.get('client_ip_pool')
+        if 'enable_split_tunneling' in _dict:
+            args['enable_split_tunneling'] = _dict.get('enable_split_tunneling')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'port' in _dict:
+            args['port'] = _dict.get('port')
+        if 'protocol' in _dict:
+            args['protocol'] = _dict.get('protocol')
+        if 'subnets' in _dict:
+            args['subnets'] = _dict.get('subnets')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'certificate') and self.certificate is not None:
+            if isinstance(self.certificate, dict):
+                _dict['certificate'] = self.certificate
+            else:
+                _dict['certificate'] = self.certificate.to_dict()
+        if hasattr(self, 'client_authentication') and self.client_authentication is not None:
+            _dict['client_authentication'] = [x.to_dict() for x in self.client_authentication]
+        if hasattr(self, 'client_dns_server_ips') and self.client_dns_server_ips is not None:
+            _dict['client_dns_server_ips'] = [x.to_dict() for x in self.client_dns_server_ips]
+        if hasattr(self, 'client_idle_timeout') and self.client_idle_timeout is not None:
+            _dict['client_idle_timeout'] = self.client_idle_timeout
+        if hasattr(self, 'client_ip_pool') and self.client_ip_pool is not None:
+            _dict['client_ip_pool'] = self.client_ip_pool
+        if hasattr(self, 'enable_split_tunneling') and self.enable_split_tunneling is not None:
+            _dict['enable_split_tunneling'] = self.enable_split_tunneling
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'port') and self.port is not None:
+            _dict['port'] = self.port
+        if hasattr(self, 'protocol') and self.protocol is not None:
+            _dict['protocol'] = self.protocol
+        if hasattr(self, 'subnets') and self.subnets is not None:
+            subnets_list = []
+            for x in self.subnets:
+                if isinstance(x, dict):
+                    subnets_list.append(x)
+                else:
+                    subnets_list.append(x.to_dict())
+            _dict['subnets'] = subnets_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ProtocolEnum(str, Enum):
+        """
+        The transport protocol used by this VPN server.
+        """
+        TCP = 'tcp'
+        UDP = 'udp'
+
+
+class VPNServerReferenceDeleted():
+    """
+    If present, this property indicates the referenced resource has been deleted and
+    provides some supplementary information.
+
+    :attr str more_info: Link to documentation about deleted resources.
+    """
+
+    def __init__(self,
+                 more_info: str) -> None:
+        """
+        Initialize a VPNServerReferenceDeleted object.
+
+        :param str more_info: Link to documentation about deleted resources.
+        """
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerReferenceDeleted':
+        """Initialize a VPNServerReferenceDeleted object from a json dictionary."""
+        args = {}
+        if 'more_info' in _dict:
+            args['more_info'] = _dict.get('more_info')
+        else:
+            raise ValueError('Required property \'more_info\' not present in VPNServerReferenceDeleted JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerReferenceDeleted object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerReferenceDeleted object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerReferenceDeleted') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerReferenceDeleted') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerRoute():
+    """
+    VPNServerRoute.
+
+    :attr str action: The action to perform with a packet matching the VPN route:
+          - `translate`: translate the source IP address to one of the private IP
+          addresses of the VPN server.
+          - `deliver`: deliver the packet into the VPC.
+          - `drop`: drop the packet
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the VPN route on which the
+          unexpected property value was encountered.
+    :attr datetime created_at: The date and time that the VPN route was created.
+    :attr str destination: The destination for this VPN route in the VPN server. If
+          an incoming packet does not match any destination, it will be dropped.
+    :attr str href: The URL for this VPN route.
+    :attr str id: The unique identifier for this VPN route.
+    :attr str lifecycle_state: The lifecycle state of the VPN route.
+    :attr str name: The user-defined name for this VPN route.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 action: str,
+                 created_at: datetime,
+                 destination: str,
+                 href: str,
+                 id: str,
+                 lifecycle_state: str,
+                 name: str,
+                 resource_type: str) -> None:
+        """
+        Initialize a VPNServerRoute object.
+
+        :param str action: The action to perform with a packet matching the VPN
+               route:
+               - `translate`: translate the source IP address to one of the private IP
+               addresses of the VPN server.
+               - `deliver`: deliver the packet into the VPC.
+               - `drop`: drop the packet
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the VPN route
+               on which the unexpected property value was encountered.
+        :param datetime created_at: The date and time that the VPN route was
+               created.
+        :param str destination: The destination for this VPN route in the VPN
+               server. If an incoming packet does not match any destination, it will be
+               dropped.
+        :param str href: The URL for this VPN route.
+        :param str id: The unique identifier for this VPN route.
+        :param str lifecycle_state: The lifecycle state of the VPN route.
+        :param str name: The user-defined name for this VPN route.
+        :param str resource_type: The resource type.
+        """
+        self.action = action
+        self.created_at = created_at
+        self.destination = destination
+        self.href = href
+        self.id = id
+        self.lifecycle_state = lifecycle_state
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerRoute':
+        """Initialize a VPNServerRoute object from a json dictionary."""
+        args = {}
+        if 'action' in _dict:
+            args['action'] = _dict.get('action')
+        else:
+            raise ValueError('Required property \'action\' not present in VPNServerRoute JSON')
+        if 'created_at' in _dict:
+            args['created_at'] = string_to_datetime(_dict.get('created_at'))
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNServerRoute JSON')
+        if 'destination' in _dict:
+            args['destination'] = _dict.get('destination')
+        else:
+            raise ValueError('Required property \'destination\' not present in VPNServerRoute JSON')
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerRoute JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in VPNServerRoute JSON')
+        if 'lifecycle_state' in _dict:
+            args['lifecycle_state'] = _dict.get('lifecycle_state')
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in VPNServerRoute JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in VPNServerRoute JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNServerRoute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerRoute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'action') and self.action is not None:
+            _dict['action'] = self.action
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'destination') and self.destination is not None:
+            _dict['destination'] = self.destination
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerRoute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerRoute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerRoute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ActionEnum(str, Enum):
+        """
+        The action to perform with a packet matching the VPN route:
+        - `translate`: translate the source IP address to one of the private IP addresses
+        of the VPN server.
+        - `deliver`: deliver the packet into the VPC.
+        - `drop`: drop the packet
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the VPN route on which the unexpected
+        property value was encountered.
+        """
+        DELIVER = 'deliver'
+        DROP = 'drop'
+        TRANSLATE = 'translate'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN route.
+        """
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER_ROUTE = 'vpn_server_route'
+
+
+class VPNServerRouteCollection():
+    """
+    VPNServerRouteCollection.
+
+    :attr VPNServerRouteCollectionFirst first: A link to the first page of
+          resources.
+    :attr int limit: The maximum number of resources that can be returned by the
+          request.
+    :attr VPNServerRouteCollectionNext next: (optional) A link to the next page of
+          resources. This property is present for all pages
+          except the last page.
+    :attr List[VPNServerRoute] routes: Collection of VPN routes.
+    :attr int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(self,
+                 first: 'VPNServerRouteCollectionFirst',
+                 limit: int,
+                 routes: List['VPNServerRoute'],
+                 total_count: int,
+                 *,
+                 next: 'VPNServerRouteCollectionNext' = None) -> None:
+        """
+        Initialize a VPNServerRouteCollection object.
+
+        :param VPNServerRouteCollectionFirst first: A link to the first page of
+               resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[VPNServerRoute] routes: Collection of VPN routes.
+        :param int total_count: The total number of resources across all pages.
+        :param VPNServerRouteCollectionNext next: (optional) A link to the next
+               page of resources. This property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.routes = routes
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerRouteCollection':
+        """Initialize a VPNServerRouteCollection object from a json dictionary."""
+        args = {}
+        if 'first' in _dict:
+            args['first'] = VPNServerRouteCollectionFirst.from_dict(_dict.get('first'))
+        else:
+            raise ValueError('Required property \'first\' not present in VPNServerRouteCollection JSON')
+        if 'limit' in _dict:
+            args['limit'] = _dict.get('limit')
+        else:
+            raise ValueError('Required property \'limit\' not present in VPNServerRouteCollection JSON')
+        if 'next' in _dict:
+            args['next'] = VPNServerRouteCollectionNext.from_dict(_dict.get('next'))
+        if 'routes' in _dict:
+            args['routes'] = [VPNServerRoute.from_dict(x) for x in _dict.get('routes')]
+        else:
+            raise ValueError('Required property \'routes\' not present in VPNServerRouteCollection JSON')
+        if 'total_count' in _dict:
+            args['total_count'] = _dict.get('total_count')
+        else:
+            raise ValueError('Required property \'total_count\' not present in VPNServerRouteCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerRouteCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'routes') and self.routes is not None:
+            _dict['routes'] = [x.to_dict() for x in self.routes]
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerRouteCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerRouteCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerRouteCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerRouteCollectionFirst():
+    """
+    A link to the first page of resources.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerRouteCollectionFirst object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerRouteCollectionFirst':
+        """Initialize a VPNServerRouteCollectionFirst object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerRouteCollectionFirst JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerRouteCollectionFirst object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerRouteCollectionFirst object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerRouteCollectionFirst') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerRouteCollectionFirst') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerRouteCollectionNext():
+    """
+    A link to the next page of resources. This property is present for all pages except
+    the last page.
+
+    :attr str href: The URL for a page of resources.
+    """
+
+    def __init__(self,
+                 href: str) -> None:
+        """
+        Initialize a VPNServerRouteCollectionNext object.
+
+        :param str href: The URL for a page of resources.
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerRouteCollectionNext':
+        """Initialize a VPNServerRouteCollectionNext object from a json dictionary."""
+        args = {}
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in VPNServerRouteCollectionNext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerRouteCollectionNext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerRouteCollectionNext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerRouteCollectionNext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerRouteCollectionNext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VPNServerRoutePatch():
+    """
+    VPNServerRoutePatch.
+
+    :attr str name: (optional) The user-defined name for this VPN route. Names must
+          be unique within the VPN server the VPN route resides in.
+    """
+
+    def __init__(self,
+                 *,
+                 name: str = None) -> None:
+        """
+        Initialize a VPNServerRoutePatch object.
+
+        :param str name: (optional) The user-defined name for this VPN route. Names
+               must be unique within the VPN server the VPN route resides in.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerRoutePatch':
+        """Initialize a VPNServerRoutePatch object from a json dictionary."""
+        args = {}
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerRoutePatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerRoutePatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerRoutePatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerRoutePatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
 class Volume():
     """
     Volume.
@@ -57935,7 +62837,7 @@ class VolumePrototype():
                this volume.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['VolumePrototypeVolumeByCapacity']))
+                  ", ".join(['VolumePrototypeVolumeByCapacity', 'VolumePrototypeVolumeBySourceSnapshot']))
         raise Exception(msg)
 
 class VolumePrototypeInstanceByImageContext():
@@ -63512,7 +68414,7 @@ class EncryptionKeyIdentityByCRN(EncryptionKeyIdentity):
 
     :attr str crn: The CRN of the [Key Protect Root
           Key](https://cloud.ibm.com/docs/key-protect?topic=key-protect-getting-started-tutorial)
-          or [Hyper Protect Crypto Service Root
+          or [Hyper Protect Crypto Services Root
           Key](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started) for this
           resource.
     """
@@ -63524,7 +68426,7 @@ class EncryptionKeyIdentityByCRN(EncryptionKeyIdentity):
 
         :param str crn: The CRN of the [Key Protect Root
                Key](https://cloud.ibm.com/docs/key-protect?topic=key-protect-getting-started-tutorial)
-               or [Hyper Protect Crypto Service Root
+               or [Hyper Protect Crypto Services Root
                Key](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started) for
                this resource.
         """
@@ -65221,7 +70123,7 @@ class ImagePrototypeImageByFile(ImagePrototype):
           Protect](https://cloud.ibm.com/docs/key-protect?topic=key-protect-wrap-keys) or
           the
           [Hyper Protect Crypto
-          Service](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
+          Services](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
           If unspecified, the imported image is treated as unencrypted.
     :attr EncryptionKeyIdentity encryption_key: (optional) The root key that was
           used to wrap the data key (which is ultimately represented as
@@ -65265,7 +70167,7 @@ class ImagePrototypeImageByFile(ImagePrototype):
                Protect](https://cloud.ibm.com/docs/key-protect?topic=key-protect-wrap-keys)
                or the
                [Hyper Protect Crypto
-               Service](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
+               Services](https://cloud.ibm.com/docs/services/hs-crypto?topic=hs-crypto-wrap-keys).
                If unspecified, the imported image is treated as unencrypted.
         :param EncryptionKeyIdentity encryption_key: (optional) The root key that
                was used to wrap the data key (which is ultimately represented as
@@ -70031,10 +74933,12 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -70116,10 +75020,12 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -70321,10 +75227,12 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -70405,10 +75313,12 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -70599,10 +75509,12 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -70684,10 +75596,12 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -71070,10 +75984,12 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -71155,10 +76071,12 @@ class InstanceTemplatePrototypeInstanceByImage(InstanceTemplatePrototype):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -71360,10 +76278,12 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -71445,10 +76365,12 @@ class InstanceTemplatePrototypeInstanceBySourceTemplate(InstanceTemplatePrototyp
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -71664,10 +76586,12 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -71757,10 +76681,12 @@ class InstanceTemplateInstanceByImage(InstanceTemplate):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -71995,10 +76921,12 @@ class InstanceTemplateInstanceBySourceSnapshot(InstanceTemplate):
           megabits per second) allocated exclusively to instance storage volumes. An
           increase in this value will result in a corresponding decrease to
           `total_network_bandwidth`.
-    :attr str user_data: (optional) User data to be made available when setting up
-          the virtual server instance.
+    :attr str user_data: (optional) [User
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance.
     :attr List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-          (optional) The volume attachments for this virtual server instance.
+          (optional) The additional volume attachments to create for the virtual server
+          instance.
     :attr VPCIdentity vpc: (optional) The VPC the virtual server instance is to be a
           part of. If specified, it must match the VPC referenced by the subnets of the
           instance's network interfaces.
@@ -72087,10 +77015,12 @@ class InstanceTemplateInstanceBySourceSnapshot(InstanceTemplate):
                megabits per second) allocated exclusively to instance storage volumes. An
                increase in this value will result in a corresponding decrease to
                `total_network_bandwidth`.
-        :param str user_data: (optional) User data to be made available when
-               setting up the virtual server instance.
+        :param str user_data: (optional) [User
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance.
         :param List[VolumeAttachmentPrototypeInstanceContext] volume_attachments:
-               (optional) The volume attachments for this virtual server instance.
+               (optional) The additional volume attachments to create for the virtual
+               server instance.
         :param VPCIdentity vpc: (optional) The VPC the virtual server instance is
                to be a part of. If specified, it must match the VPC referenced by the
                subnets of the instance's network interfaces.
@@ -78244,6 +83174,123 @@ class ReservedIPTargetVPNGatewayReference(ReservedIPTarget):
         VPN_GATEWAY = 'vpn_gateway'
 
 
+class ReservedIPTargetVPNServerReference(ReservedIPTarget):
+    """
+    ReservedIPTargetVPNServerReference.
+
+    :attr str crn: The CRN for this VPN server.
+    :attr VPNServerReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this VPN server.
+    :attr str id: The unique identifier for this VPN server.
+    :attr str name: The unique user-defined name for this VPN server.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'VPNServerReferenceDeleted' = None) -> None:
+        """
+        Initialize a ReservedIPTargetVPNServerReference object.
+
+        :param str crn: The CRN for this VPN server.
+        :param str href: The URL for this VPN server.
+        :param str id: The unique identifier for this VPN server.
+        :param str name: The unique user-defined name for this VPN server.
+        :param str resource_type: The resource type.
+        :param VPNServerReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPTargetVPNServerReference':
+        """Initialize a ReservedIPTargetVPNServerReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in ReservedIPTargetVPNServerReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = VPNServerReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPTargetVPNServerReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in ReservedIPTargetVPNServerReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in ReservedIPTargetVPNServerReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPTargetVPNServerReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPTargetVPNServerReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPTargetVPNServerReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPTargetVPNServerReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPTargetVPNServerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER = 'vpn_server'
+
+
 class ResourceGroupIdentityById(ResourceGroupIdentity):
     """
     ResourceGroupIdentityById.
@@ -78300,6 +83347,240 @@ class ResourceGroupIdentityById(ResourceGroupIdentity):
     def __ne__(self, other: 'ResourceGroupIdentityById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+class RouteCreatorVPNGatewayReference(RouteCreator):
+    """
+    RouteCreatorVPNGatewayReference.
+
+    :attr str crn: The VPN gateway's CRN.
+    :attr VPNGatewayReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The VPN gateway's canonical URL.
+    :attr str id: The unique identifier for this VPN gateway.
+    :attr str name: The user-defined name for this VPN gateway.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'VPNGatewayReferenceDeleted' = None) -> None:
+        """
+        Initialize a RouteCreatorVPNGatewayReference object.
+
+        :param str crn: The VPN gateway's CRN.
+        :param str href: The VPN gateway's canonical URL.
+        :param str id: The unique identifier for this VPN gateway.
+        :param str name: The user-defined name for this VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPNGatewayReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RouteCreatorVPNGatewayReference':
+        """Initialize a RouteCreatorVPNGatewayReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in RouteCreatorVPNGatewayReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = VPNGatewayReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in RouteCreatorVPNGatewayReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in RouteCreatorVPNGatewayReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in RouteCreatorVPNGatewayReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in RouteCreatorVPNGatewayReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RouteCreatorVPNGatewayReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RouteCreatorVPNGatewayReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RouteCreatorVPNGatewayReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RouteCreatorVPNGatewayReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_GATEWAY = 'vpn_gateway'
+
+
+class RouteCreatorVPNServerReference(RouteCreator):
+    """
+    RouteCreatorVPNServerReference.
+
+    :attr str crn: The CRN for this VPN server.
+    :attr VPNServerReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this VPN server.
+    :attr str id: The unique identifier for this VPN server.
+    :attr str name: The unique user-defined name for this VPN server.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'VPNServerReferenceDeleted' = None) -> None:
+        """
+        Initialize a RouteCreatorVPNServerReference object.
+
+        :param str crn: The CRN for this VPN server.
+        :param str href: The URL for this VPN server.
+        :param str id: The unique identifier for this VPN server.
+        :param str name: The unique user-defined name for this VPN server.
+        :param str resource_type: The resource type.
+        :param VPNServerReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RouteCreatorVPNServerReference':
+        """Initialize a RouteCreatorVPNServerReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in RouteCreatorVPNServerReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = VPNServerReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in RouteCreatorVPNServerReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in RouteCreatorVPNServerReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in RouteCreatorVPNServerReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in RouteCreatorVPNServerReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RouteCreatorVPNServerReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RouteCreatorVPNServerReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RouteCreatorVPNServerReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RouteCreatorVPNServerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER = 'vpn_server'
+
 
 class RouteNextHopIP(RouteNextHop):
     """
@@ -78366,88 +83647,6 @@ class RouteNextHopIP(RouteNextHop):
     def __ne__(self, other: 'RouteNextHopIP') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
-
-class RouteNextHopPrototypeRouteNextHopIP(RouteNextHopPrototype):
-    """
-    The IP address of the next hop to which to route packets.
-
-    :attr str address: The IP address.
-          This property may add support for IPv6 addresses in the future. When processing
-          a value in this property, verify that the address is in an expected format. If
-          it is not, log an error. Optionally halt processing and surface the error, or
-          bypass the resource on which the unexpected IP address format was encountered.
-    """
-
-    def __init__(self,
-                 address: str) -> None:
-        """
-        Initialize a RouteNextHopPrototypeRouteNextHopIP object.
-
-        :param str address: The IP address.
-               This property may add support for IPv6 addresses in the future. When
-               processing a value in this property, verify that the address is in an
-               expected format. If it is not, log an error. Optionally halt processing and
-               surface the error, or bypass the resource on which the unexpected IP
-               address format was encountered.
-        """
-        # pylint: disable=super-init-not-called
-        self.address = address
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'RouteNextHopPrototypeRouteNextHopIP':
-        """Initialize a RouteNextHopPrototypeRouteNextHopIP object from a json dictionary."""
-        args = {}
-        if 'address' in _dict:
-            args['address'] = _dict.get('address')
-        else:
-            raise ValueError('Required property \'address\' not present in RouteNextHopPrototypeRouteNextHopIP JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a RouteNextHopPrototypeRouteNextHopIP object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'address') and self.address is not None:
-            _dict['address'] = self.address
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this RouteNextHopPrototypeRouteNextHopIP object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'RouteNextHopPrototypeRouteNextHopIP') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'RouteNextHopPrototypeRouteNextHopIP') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-class RouteNextHopPrototypeVPNGatewayConnectionIdentity(RouteNextHopPrototype):
-    """
-    Identifies a VPN gateway connection by a unique property.
-
-    """
-
-    def __init__(self) -> None:
-        """
-        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentity object.
-
-        """
-        # pylint: disable=super-init-not-called
-        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-                  ", ".join(['RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById', 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref']))
-        raise Exception(msg)
 
 class RouteNextHopVPNGatewayConnectionReference(RouteNextHop):
     """
@@ -78556,6 +83755,88 @@ class RouteNextHopVPNGatewayConnectionReference(RouteNextHop):
         """
         VPN_GATEWAY_CONNECTION = 'vpn_gateway_connection'
 
+
+class RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP(RoutePrototypeNextHop):
+    """
+    The IP address of the next hop to which to route packets.
+
+    :attr str address: The IP address.
+          This property may add support for IPv6 addresses in the future. When processing
+          a value in this property, verify that the address is in an expected format. If
+          it is not, log an error. Optionally halt processing and surface the error, or
+          bypass the resource on which the unexpected IP address format was encountered.
+    """
+
+    def __init__(self,
+                 address: str) -> None:
+        """
+        Initialize a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP object.
+
+        :param str address: The IP address.
+               This property may add support for IPv6 addresses in the future. When
+               processing a value in this property, verify that the address is in an
+               expected format. If it is not, log an error. Optionally halt processing and
+               surface the error, or bypass the resource on which the unexpected IP
+               address format was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.address = address
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP':
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP object from a json dictionary."""
+        args = {}
+        if 'address' in _dict:
+            args['address'] = _dict.get('address')
+        else:
+            raise ValueError('Required property \'address\' not present in RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentity(RoutePrototypeNextHop):
+    """
+    Identifies a VPN gateway connection by a unique property.
+
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentity object.
+
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+                  ", ".join(['RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById', 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref']))
+        raise Exception(msg)
 
 class RoutingTableIdentityByHref(RoutingTableIdentity):
     """
@@ -80633,6 +85914,123 @@ class SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetContext(Securit
         The resource type.
         """
         NETWORK_INTERFACE = 'network_interface'
+
+
+class SecurityGroupTargetReferenceVPNServerReference(SecurityGroupTargetReference):
+    """
+    SecurityGroupTargetReferenceVPNServerReference.
+
+    :attr str crn: The CRN for this VPN server.
+    :attr VPNServerReferenceDeleted deleted: (optional) If present, this property
+          indicates the referenced resource has been deleted and provides
+          some supplementary information.
+    :attr str href: The URL for this VPN server.
+    :attr str id: The unique identifier for this VPN server.
+    :attr str name: The unique user-defined name for this VPN server.
+    :attr str resource_type: The resource type.
+    """
+
+    def __init__(self,
+                 crn: str,
+                 href: str,
+                 id: str,
+                 name: str,
+                 resource_type: str,
+                 *,
+                 deleted: 'VPNServerReferenceDeleted' = None) -> None:
+        """
+        Initialize a SecurityGroupTargetReferenceVPNServerReference object.
+
+        :param str crn: The CRN for this VPN server.
+        :param str href: The URL for this VPN server.
+        :param str id: The unique identifier for this VPN server.
+        :param str name: The unique user-defined name for this VPN server.
+        :param str resource_type: The resource type.
+        :param VPNServerReferenceDeleted deleted: (optional) If present, this
+               property indicates the referenced resource has been deleted and provides
+               some supplementary information.
+        """
+        # pylint: disable=super-init-not-called
+        self.crn = crn
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecurityGroupTargetReferenceVPNServerReference':
+        """Initialize a SecurityGroupTargetReferenceVPNServerReference object from a json dictionary."""
+        args = {}
+        if 'crn' in _dict:
+            args['crn'] = _dict.get('crn')
+        else:
+            raise ValueError('Required property \'crn\' not present in SecurityGroupTargetReferenceVPNServerReference JSON')
+        if 'deleted' in _dict:
+            args['deleted'] = VPNServerReferenceDeleted.from_dict(_dict.get('deleted'))
+        if 'href' in _dict:
+            args['href'] = _dict.get('href')
+        else:
+            raise ValueError('Required property \'href\' not present in SecurityGroupTargetReferenceVPNServerReference JSON')
+        if 'id' in _dict:
+            args['id'] = _dict.get('id')
+        else:
+            raise ValueError('Required property \'id\' not present in SecurityGroupTargetReferenceVPNServerReference JSON')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        else:
+            raise ValueError('Required property \'name\' not present in SecurityGroupTargetReferenceVPNServerReference JSON')
+        if 'resource_type' in _dict:
+            args['resource_type'] = _dict.get('resource_type')
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SecurityGroupTargetReferenceVPNServerReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecurityGroupTargetReferenceVPNServerReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecurityGroupTargetReferenceVPNServerReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecurityGroupTargetReferenceVPNServerReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecurityGroupTargetReferenceVPNServerReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+        VPN_SERVER = 'vpn_server'
 
 
 class SnapshotIdentityByCRN(SnapshotIdentity):
@@ -83836,6 +89234,426 @@ class VPNGatewayRouteMode(VPNGateway):
         ROUTE = 'route'
 
 
+class VPNServerAuthenticationByCertificate(VPNServerAuthentication):
+    """
+    VPNServerAuthenticationByCertificate.
+
+    :attr str method: The type of authentication.
+    :attr CertificateInstanceReference client_ca: The certificate instance used for
+          the VPN client certificate authority (CA).
+    :attr str crl: (optional) The certificate revocation list contents, encoded in
+          PEM format.
+    """
+
+    def __init__(self,
+                 method: str,
+                 client_ca: 'CertificateInstanceReference',
+                 *,
+                 crl: str = None) -> None:
+        """
+        Initialize a VPNServerAuthenticationByCertificate object.
+
+        :param str method: The type of authentication.
+        :param CertificateInstanceReference client_ca: The certificate instance
+               used for the VPN client certificate authority (CA).
+        :param str crl: (optional) The certificate revocation list contents,
+               encoded in PEM format.
+        """
+        # pylint: disable=super-init-not-called
+        self.method = method
+        self.client_ca = client_ca
+        self.crl = crl
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationByCertificate':
+        """Initialize a VPNServerAuthenticationByCertificate object from a json dictionary."""
+        args = {}
+        if 'method' in _dict:
+            args['method'] = _dict.get('method')
+        else:
+            raise ValueError('Required property \'method\' not present in VPNServerAuthenticationByCertificate JSON')
+        if 'client_ca' in _dict:
+            args['client_ca'] = CertificateInstanceReference.from_dict(_dict.get('client_ca'))
+        else:
+            raise ValueError('Required property \'client_ca\' not present in VPNServerAuthenticationByCertificate JSON')
+        if 'crl' in _dict:
+            args['crl'] = _dict.get('crl')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerAuthenticationByCertificate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'method') and self.method is not None:
+            _dict['method'] = self.method
+        if hasattr(self, 'client_ca') and self.client_ca is not None:
+            _dict['client_ca'] = self.client_ca.to_dict()
+        if hasattr(self, 'crl') and self.crl is not None:
+            _dict['crl'] = self.crl
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerAuthenticationByCertificate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerAuthenticationByCertificate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerAuthenticationByCertificate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
+class VPNServerAuthenticationByUsername(VPNServerAuthentication):
+    """
+    VPNServerAuthenticationByUsername.
+
+    :attr str method: The type of authentication.
+    :attr VPNServerAuthenticationByUsernameIdProvider identity_provider: The type of
+          identity provider to be used by VPN client.
+    """
+
+    def __init__(self,
+                 method: str,
+                 identity_provider: 'VPNServerAuthenticationByUsernameIdProvider') -> None:
+        """
+        Initialize a VPNServerAuthenticationByUsername object.
+
+        :param str method: The type of authentication.
+        :param VPNServerAuthenticationByUsernameIdProvider identity_provider: The
+               type of identity provider to be used by VPN client.
+        """
+        # pylint: disable=super-init-not-called
+        self.method = method
+        self.identity_provider = identity_provider
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationByUsername':
+        """Initialize a VPNServerAuthenticationByUsername object from a json dictionary."""
+        args = {}
+        if 'method' in _dict:
+            args['method'] = _dict.get('method')
+        else:
+            raise ValueError('Required property \'method\' not present in VPNServerAuthenticationByUsername JSON')
+        if 'identity_provider' in _dict:
+            args['identity_provider'] = _dict.get('identity_provider')
+        else:
+            raise ValueError('Required property \'identity_provider\' not present in VPNServerAuthenticationByUsername JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerAuthenticationByUsername object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'method') and self.method is not None:
+            _dict['method'] = self.method
+        if hasattr(self, 'identity_provider') and self.identity_provider is not None:
+            if isinstance(self.identity_provider, dict):
+                _dict['identity_provider'] = self.identity_provider
+            else:
+                _dict['identity_provider'] = self.identity_provider.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerAuthenticationByUsername object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerAuthenticationByUsername') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerAuthenticationByUsername') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
+class VPNServerAuthenticationByUsernameIdProviderByIAM(VPNServerAuthenticationByUsernameIdProvider):
+    """
+    VPNServerAuthenticationByUsernameIdProviderByIAM.
+
+    :attr str provider_type: The type of identity provider to be used by the VPN
+          client.
+          - `iam`: IBM identity and access management
+          The enumerated values for this property are expected to expand in the future.
+          When processing this property, check for and log unknown values. Optionally halt
+          processing and surface the error, or bypass the route on which the unexpected
+          property value was encountered.
+    """
+
+    def __init__(self,
+                 provider_type: str) -> None:
+        """
+        Initialize a VPNServerAuthenticationByUsernameIdProviderByIAM object.
+
+        :param str provider_type: The type of identity provider to be used by the
+               VPN client.
+               - `iam`: IBM identity and access management
+               The enumerated values for this property are expected to expand in the
+               future. When processing this property, check for and log unknown values.
+               Optionally halt processing and surface the error, or bypass the route on
+               which the unexpected property value was encountered.
+        """
+        # pylint: disable=super-init-not-called
+        self.provider_type = provider_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationByUsernameIdProviderByIAM':
+        """Initialize a VPNServerAuthenticationByUsernameIdProviderByIAM object from a json dictionary."""
+        args = {}
+        if 'provider_type' in _dict:
+            args['provider_type'] = _dict.get('provider_type')
+        else:
+            raise ValueError('Required property \'provider_type\' not present in VPNServerAuthenticationByUsernameIdProviderByIAM JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerAuthenticationByUsernameIdProviderByIAM object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'provider_type') and self.provider_type is not None:
+            _dict['provider_type'] = self.provider_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerAuthenticationByUsernameIdProviderByIAM object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerAuthenticationByUsernameIdProviderByIAM') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerAuthenticationByUsernameIdProviderByIAM') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ProviderTypeEnum(str, Enum):
+        """
+        The type of identity provider to be used by the VPN client.
+        - `iam`: IBM identity and access management
+        The enumerated values for this property are expected to expand in the future. When
+        processing this property, check for and log unknown values. Optionally halt
+        processing and surface the error, or bypass the route on which the unexpected
+        property value was encountered.
+        """
+        IAM = 'iam'
+
+
+class VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype(VPNServerAuthenticationPrototype):
+    """
+    VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype.
+
+    :attr str method: The type of authentication.
+    :attr CertificateInstanceIdentity client_ca: The certificate instance to use for
+          the VPN client certificate authority (CA).
+    :attr str crl: (optional) The certificate revocation list contents, encoded in
+          PEM format.
+    """
+
+    def __init__(self,
+                 method: str,
+                 client_ca: 'CertificateInstanceIdentity',
+                 *,
+                 crl: str = None) -> None:
+        """
+        Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype object.
+
+        :param str method: The type of authentication.
+        :param CertificateInstanceIdentity client_ca: The certificate instance to
+               use for the VPN client certificate authority (CA).
+        :param str crl: (optional) The certificate revocation list contents,
+               encoded in PEM format.
+        """
+        # pylint: disable=super-init-not-called
+        self.method = method
+        self.client_ca = client_ca
+        self.crl = crl
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype':
+        """Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype object from a json dictionary."""
+        args = {}
+        if 'method' in _dict:
+            args['method'] = _dict.get('method')
+        else:
+            raise ValueError('Required property \'method\' not present in VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype JSON')
+        if 'client_ca' in _dict:
+            args['client_ca'] = _dict.get('client_ca')
+        else:
+            raise ValueError('Required property \'client_ca\' not present in VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype JSON')
+        if 'crl' in _dict:
+            args['crl'] = _dict.get('crl')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'method') and self.method is not None:
+            _dict['method'] = self.method
+        if hasattr(self, 'client_ca') and self.client_ca is not None:
+            if isinstance(self.client_ca, dict):
+                _dict['client_ca'] = self.client_ca
+            else:
+                _dict['client_ca'] = self.client_ca.to_dict()
+        if hasattr(self, 'crl') and self.crl is not None:
+            _dict['crl'] = self.crl
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
+class VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype(VPNServerAuthenticationPrototype):
+    """
+    VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype.
+
+    :attr str method: The type of authentication.
+    :attr VPNServerAuthenticationByUsernameIdProvider identity_provider: The type of
+          identity provider to be used by VPN client.
+    """
+
+    def __init__(self,
+                 method: str,
+                 identity_provider: 'VPNServerAuthenticationByUsernameIdProvider') -> None:
+        """
+        Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype object.
+
+        :param str method: The type of authentication.
+        :param VPNServerAuthenticationByUsernameIdProvider identity_provider: The
+               type of identity provider to be used by VPN client.
+        """
+        # pylint: disable=super-init-not-called
+        self.method = method
+        self.identity_provider = identity_provider
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype':
+        """Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype object from a json dictionary."""
+        args = {}
+        if 'method' in _dict:
+            args['method'] = _dict.get('method')
+        else:
+            raise ValueError('Required property \'method\' not present in VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype JSON')
+        if 'identity_provider' in _dict:
+            args['identity_provider'] = _dict.get('identity_provider')
+        else:
+            raise ValueError('Required property \'identity_provider\' not present in VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'method') and self.method is not None:
+            _dict['method'] = self.method
+        if hasattr(self, 'identity_provider') and self.identity_provider is not None:
+            if isinstance(self.identity_provider, dict):
+                _dict['identity_provider'] = self.identity_provider
+            else:
+                _dict['identity_provider'] = self.identity_provider.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class MethodEnum(str, Enum):
+        """
+        The type of authentication.
+        """
+        CERTIFICATE = 'certificate'
+        USERNAME = 'username'
+
+
 class VolumeAttachmentPrototypeVolumeVolumeIdentity(VolumeAttachmentPrototypeVolume):
     """
     Identifies a volume by a unique property.
@@ -84354,6 +90172,167 @@ class VolumePrototypeVolumeByCapacity(VolumePrototype):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'VolumePrototypeVolumeByCapacity') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+class VolumePrototypeVolumeBySourceSnapshot(VolumePrototype):
+    """
+    VolumePrototypeVolumeBySourceSnapshot.
+
+    :attr int iops: (optional) The maximum I/O operations per second (IOPS) to use
+          for the volume. Applicable only to volumes using a profile `family` of `custom`.
+    :attr str name: (optional) The unique user-defined name for this volume.
+    :attr VolumeProfileIdentity profile: The profile to use for this volume.
+    :attr ResourceGroupIdentity resource_group: (optional)
+    :attr List[str] user_tags: (optional) The [user
+          tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with this
+          volume.
+    :attr ZoneIdentity zone: The zone this volume will reside in.
+    :attr int capacity: (optional) The capacity to use for the volume (in
+          gigabytes). Must be at least the snapshot's
+          `minimum_capacity`. The maximum value may increase in the future.
+          If unspecified, the capacity will be the source snapshot's `minimum_capacity`.
+    :attr EncryptionKeyIdentity encryption_key: (optional) The root key to use to
+          wrap the data encryption key for the volume.
+          If unspecified, the snapshot's `encryption_key` will be used.
+    :attr SnapshotIdentity source_snapshot: The snapshot from which to clone the
+          volume.
+    """
+
+    def __init__(self,
+                 profile: 'VolumeProfileIdentity',
+                 zone: 'ZoneIdentity',
+                 source_snapshot: 'SnapshotIdentity',
+                 *,
+                 iops: int = None,
+                 name: str = None,
+                 resource_group: 'ResourceGroupIdentity' = None,
+                 user_tags: List[str] = None,
+                 capacity: int = None,
+                 encryption_key: 'EncryptionKeyIdentity' = None) -> None:
+        """
+        Initialize a VolumePrototypeVolumeBySourceSnapshot object.
+
+        :param VolumeProfileIdentity profile: The profile to use for this volume.
+        :param ZoneIdentity zone: The zone this volume will reside in.
+        :param SnapshotIdentity source_snapshot: The snapshot from which to clone
+               the volume.
+        :param int iops: (optional) The maximum I/O operations per second (IOPS) to
+               use for the volume. Applicable only to volumes using a profile `family` of
+               `custom`.
+        :param str name: (optional) The unique user-defined name for this volume.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param List[str] user_tags: (optional) The [user
+               tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) associated with
+               this volume.
+        :param int capacity: (optional) The capacity to use for the volume (in
+               gigabytes). Must be at least the snapshot's
+               `minimum_capacity`. The maximum value may increase in the future.
+               If unspecified, the capacity will be the source snapshot's
+               `minimum_capacity`.
+        :param EncryptionKeyIdentity encryption_key: (optional) The root key to use
+               to wrap the data encryption key for the volume.
+               If unspecified, the snapshot's `encryption_key` will be used.
+        """
+        # pylint: disable=super-init-not-called
+        self.iops = iops
+        self.name = name
+        self.profile = profile
+        self.resource_group = resource_group
+        self.user_tags = user_tags
+        self.zone = zone
+        self.capacity = capacity
+        self.encryption_key = encryption_key
+        self.source_snapshot = source_snapshot
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumePrototypeVolumeBySourceSnapshot':
+        """Initialize a VolumePrototypeVolumeBySourceSnapshot object from a json dictionary."""
+        args = {}
+        if 'iops' in _dict:
+            args['iops'] = _dict.get('iops')
+        if 'name' in _dict:
+            args['name'] = _dict.get('name')
+        if 'profile' in _dict:
+            args['profile'] = _dict.get('profile')
+        else:
+            raise ValueError('Required property \'profile\' not present in VolumePrototypeVolumeBySourceSnapshot JSON')
+        if 'resource_group' in _dict:
+            args['resource_group'] = _dict.get('resource_group')
+        if 'user_tags' in _dict:
+            args['user_tags'] = _dict.get('user_tags')
+        if 'zone' in _dict:
+            args['zone'] = _dict.get('zone')
+        else:
+            raise ValueError('Required property \'zone\' not present in VolumePrototypeVolumeBySourceSnapshot JSON')
+        if 'capacity' in _dict:
+            args['capacity'] = _dict.get('capacity')
+        if 'encryption_key' in _dict:
+            args['encryption_key'] = _dict.get('encryption_key')
+        if 'source_snapshot' in _dict:
+            args['source_snapshot'] = _dict.get('source_snapshot')
+        else:
+            raise ValueError('Required property \'source_snapshot\' not present in VolumePrototypeVolumeBySourceSnapshot JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumePrototypeVolumeBySourceSnapshot object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'iops') and self.iops is not None:
+            _dict['iops'] = self.iops
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'user_tags') and self.user_tags is not None:
+            _dict['user_tags'] = self.user_tags
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
+        if hasattr(self, 'capacity') and self.capacity is not None:
+            _dict['capacity'] = self.capacity
+        if hasattr(self, 'encryption_key') and self.encryption_key is not None:
+            if isinstance(self.encryption_key, dict):
+                _dict['encryption_key'] = self.encryption_key
+            else:
+                _dict['encryption_key'] = self.encryption_key.to_dict()
+        if hasattr(self, 'source_snapshot') and self.source_snapshot is not None:
+            if isinstance(self.source_snapshot, dict):
+                _dict['source_snapshot'] = self.source_snapshot
+            else:
+                _dict['source_snapshot'] = self.source_snapshot.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumePrototypeVolumeBySourceSnapshot object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumePrototypeVolumeBySourceSnapshot') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumePrototypeVolumeBySourceSnapshot') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -87851,9 +93830,9 @@ class ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayIdentityByI
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref(RouteNextHopPrototypeVPNGatewayConnectionIdentity):
+class RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref(RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentity):
     """
-    RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.
+    RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.
 
     :attr str href: The VPN connection's canonical URL.
     """
@@ -87861,7 +93840,7 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
     def __init__(self,
                  href: str) -> None:
         """
-        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object.
+        Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object.
 
         :param str href: The VPN connection's canonical URL.
         """
@@ -87869,18 +93848,18 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
         self.href = href
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref':
-        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref':
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
         args = {}
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         else:
-            raise ValueError('Required property \'href\' not present in RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref JSON')
+            raise ValueError('Required property \'href\' not present in RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -87895,22 +93874,22 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object."""
+        """Return a `str` version of this RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref') -> bool:
+    def __eq__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref') -> bool:
+    def __ne__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById(RouteNextHopPrototypeVPNGatewayConnectionIdentity):
+class RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById(RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentity):
     """
-    RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.
+    RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.
 
     :attr str id: The unique identifier for this VPN gateway connection.
     """
@@ -87918,7 +93897,7 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
     def __init__(self,
                  id: str) -> None:
         """
-        Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object.
+        Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object.
 
         :param str id: The unique identifier for this VPN gateway connection.
         """
@@ -87926,18 +93905,18 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
         self.id = id
 
     @classmethod
-    def from_dict(cls, _dict: Dict) -> 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById':
-        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
+    def from_dict(cls, _dict: Dict) -> 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById':
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
         args = {}
         if 'id' in _dict:
             args['id'] = _dict.get('id')
         else:
-            raise ValueError('Required property \'id\' not present in RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById JSON')
+            raise ValueError('Required property \'id\' not present in RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById JSON')
         return cls(**args)
 
     @classmethod
     def _from_dict(cls, _dict):
-        """Initialize a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
+        """Initialize a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object from a json dictionary."""
         return cls.from_dict(_dict)
 
     def to_dict(self) -> Dict:
@@ -87952,16 +93931,16 @@ class RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdent
         return self.to_dict()
 
     def __str__(self) -> str:
-        """Return a `str` version of this RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object."""
+        """Return a `str` version of this RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById object."""
         return json.dumps(self.to_dict(), indent=2)
 
-    def __eq__(self, other: 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById') -> bool:
+    def __eq__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById') -> bool:
         """Return `true` when self and other are equal, false otherwise."""
         if not isinstance(other, self.__class__):
             return False
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: 'RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById') -> bool:
+    def __ne__(self, other: 'RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 

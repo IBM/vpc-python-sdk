@@ -546,7 +546,7 @@ class TestBareMetalServers():
         ips = get_bare_metal_server_network_interface_ip(
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_subnet_reserved_ip'])
         assertGetPatchResponse(ips)
-
+    
     def test_delete_bare_metal_server_nic_fip(self, createGen2Service):
         fips = remove_bare_metal_server_network_interface_floating_ip(
             createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
@@ -760,6 +760,7 @@ class TestSecurityGroups():
         sg_network_interface = delete_security_group_target_binding(
             createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
         assert sg_network_interface.status_code == 204
+
     def test_create_sg_rule(self, createGen2Service):
         sg_rule = create_security_group_rule(
             createGen2Service, store['created_sg_id'])
@@ -1005,15 +1006,81 @@ class TestVPNGateways():
         assert peer_cidr.status_code == 204
 
 
+class TestVPNServer():
+    def test_list_vpn_servers(self, createGen2Service):
+        vpnServers = list_vpn_servers(createGen2Service)
+        assertListResponse(vpnServers, 'vpn_servers')
+    
+    def test_create_vpn_server(self, createGen2Service):
+        vpnServer = create_vpn_server(createGen2Service, store['created_subnet'])
+        assertCreateResponse(vpnServer)
+        store['created_vpn_server'] = vpnServer.get_result()['id']
+        
+
+    def test_get_vpn_server(self, createGen2Service):
+        vpnServer = get_vpn_server(createGen2Service, store['created_vpn_server'])
+        store['created_vpn_server_etag'] = vpnServer.get_headers()['ETag']
+        assertGetPatchResponse(vpnServer)
+    
+    def test_update_vpn_server(self, createGen2Service):
+        vpnServer = update_vpn_server(createGen2Service, store['created_vpn_server'], store['created_vpn_server_etag'])
+        assertGetPatchResponse(vpnServer)
+
+    def test_get_vpn_server_client_configuration(self, createGen2Service):
+        vpnServerConfiguration = get_vpn_server_client_configuration(createGen2Service, store['created_vpn_server'])
+        assertGetResponse(vpnServerConfiguration)
+    
+    def test_list_vpn_server_clients(self, createGen2Service):
+        clients = list_vpn_server_clients(createGen2Service, store['created_vpn_server'])
+        print(clients)
+        store['vpnserverclientId']=clients.get_result()['clients'][0]['id']
+        assertListResponse(clients, 'clients')
+
+    def test_get_vpn_server_client(self, createGen2Service):
+        client = get_vpn_server_client(createGen2Service, store['created_vpn_server'], store['vpnserverclientId'])
+        assertGetPatchResponse(client)
+
+    def test_disconnect_vpn_client(self, createGen2Service):
+        response = disconnect_vpn_client(createGen2Service, store['created_vpn_server'], store['vpnserverclientId'])
+        assertDeleteRequestAcceptedResponse(response)
+
+    def test_list_vpn_server_routes(self, createGen2Service):
+        routes = list_vpn_server_routes(createGen2Service, store['created_vpn_server'])
+        assertListResponse(routes, 'routes')
+
+    def test_create_vpn_server_route(self, createGen2Service):
+        route = create_vpn_server_route(createGen2Service, store['created_vpn_server'])
+        store['created_vpn_server_route'] = route.get_result()['id']
+        assertCreateResponse(route)
+    
+    def test_get_vpn_server_route(self, createGen2Service):
+        route = get_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
+        assertGetPatchResponse(route)
+    
+    def test_update_vpn_server_route(self, createGen2Service):
+        route = update_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
+        assertGetPatchResponse(route)
+
+    def test_delete_vpn_server_route(self, createGen2Service):
+        response = delete_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
+        assertDeleteRequestAcceptedResponse(response)
+    
+    def test_delete_vpn_server_client(self, createGen2Service):
+        response = delete_vpn_server_client(createGen2Service, store['created_vpn_server'], store['vpnserverclientId'])
+        assertDeleteRequestAcceptedResponse(response)
+
+    def test_delete_vpn_server(self,createGen2Service):
+        response = delete_vpn_server(createGen2Service, store['created_vpn_server'], store['created_vpn_server_etag']  )
+        assertDeleteRequestAcceptedResponse(response)
+
 class TestLoadBalancer():
     def test_list_load_balancer_profiles(self, createGen2Service):
         profiles = list_load_balancer_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
 
     def test_get_load_balancer_profile(self, createGen2Service):
-        pytest.skip("no env")
         profile = get_load_balancer_profile(createGen2Service)
-        assertGetPatchResponse(profile)
+        assertGetNameResponse(profile)
 
     def test_list_load_balancer(self, createGen2Service):
         load_balancers = list_load_balancers(createGen2Service)
@@ -1391,6 +1458,88 @@ class TestDedicatedHost():
             createGen2Service, store['created_dh'])
         assertDeleteResponse(igm)
 
+class TestBackupAsaService():
+    def test_list_backup_policies(self, createGen2Service):
+        bckPolicies = list_backup_policies(
+            createGen2Service
+        )
+        assertListResponse(bckPolicies, 'backup_policies')
+    
+    def test_create_backup_policy(self, createGen2Service):
+        name = 'my-backup-policy'
+        bckPolicies = create_backup_policy(createGen2Service, name)
+        assertCreateResponse(bckPolicies)
+        store['created_backup_policy'] = bckPolicies.get_result()['id']
+        store['created_backup_policy_etag'] = bckPolicies.get_headers()['ETag']
+
+    def test_list_backup_policy_plans(self, createGen2Service):
+        bckPolicyPlans = list_backup_policy_plans(
+            createGen2Service,
+            store['created_backup_policy'],
+            'my-backup-policy'
+        )
+        assertListResponse(bckPolicyPlans, 'plans')
+    def test_create_backup_policy_plan(self, createGen2Service):
+        name='my-backup-policy-plan'
+        bckPolicyPlan = create_backup_policy_plan(
+            createGen2Service,
+            store['created_backup_policy'],
+            name
+        )
+        assertCreateResponse(bckPolicyPlan)
+        store['created_backup_policy_plan'] = bckPolicyPlan.get_result()['id']
+
+    def test_get_backup_policy_plan(self, createGen2Service):
+        bckPolicyPlan = get_backup_policy_plan(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_plan']
+        )
+        store['created_backup_policy_plan_etag'] = bckPolicyPlan.get_headers()['ETag']
+        assertGetPatchResponse(bckPolicyPlan)
+
+    def test_update_backup_policy_plan(self, createGen2Service):
+        bckPolicyPlan = update_backup_policy_plan(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_plan'],
+            store['created_backup_policy_plan_etag'],
+            'my-backup-policy-plan-updated'
+        )
+        assertGetPatchResponse(bckPolicyPlan)
+
+    def test_get_backup_policy(self, createGen2Service):
+        bckPolicy = get_backup_policy(
+            createGen2Service,
+            store['created_backup_policy']
+        )
+        assertGetPatchResponse(bckPolicy)
+
+    def test_update_backup_policy(self, createGen2Service):
+        bckPolicy = update_backup_policy(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_etag'],
+            'my-backup-policy-updated'
+        )
+        assertGetPatchResponse(bckPolicy)
+    
+    def test_delete_backup_policy_plan(self, createGen2Service):
+        bckPolicyPlan = delete_backup_policy_plan(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_plan'],
+            store['created_backup_policy_plan_etag']
+        )
+        assertDeleteRequestAcceptedResponse(bckPolicyPlan)
+
+    def test_delete_backup_policy(self, createGen2Service):
+        bckPolicy = delete_backup_policy(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_etag']
+        )
+        assertDeleteRequestAcceptedResponse(bckPolicy)
 class TestPlacementGroup():
     def test_create_placement_group(self, createGen2Service):
         name = 'my-placement-group'
@@ -1839,6 +1988,129 @@ def create_bare_metal_server_stop(service, id, stopping_type):
     )
     return create_bare_metal_server_stop_response
 
+# --------------------------------------------------------
+# Backup Policies
+# --------------------------------------------------------
+def list_backup_policies(service):
+    response = service.list_backup_policies()
+    return response
+
+def create_backup_policy(service, name):
+    # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
+    backup_policy_plan_deletion_trigger_prototype_model = {
+        'delete_after': 20,
+        'delete_over_count': 20,
+    }
+
+    # Construct a dict representation of a BackupPolicyPlanPrototype model
+    backup_policy_plan_prototype_model = {
+        'active': True,
+        'attach_user_tags': ['my-daily-backup-plan'],
+        'copy_user_tags': True,
+        'cron_spec': '*/5 1,2,3 * * *',
+        'deletion_trigger': backup_policy_plan_deletion_trigger_prototype_model,
+        'name': 'my-policy-plan',
+    }
+
+    response = service.create_backup_policy(
+        match_user_tags=['my-daily-backup-policy'],
+        match_resource_types=['volume'],
+        name=name,
+        plans=[backup_policy_plan_prototype_model],
+    )
+    return response
+
+def list_backup_policy_plans(service, backup_policy_id, name):
+    response = service.list_backup_policy_plans(
+        backup_policy_id=backup_policy_id,
+        name=name
+    )
+    return response
+
+def create_backup_policy_plan(service, backup_policy_id, name):
+    # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
+    backup_policy_plan_deletion_trigger_prototype_model = {
+        'delete_after': 20,
+        'delete_over_count': 20,
+    }
+
+    response = service.create_backup_policy_plan(
+        backup_policy_id=backup_policy_id,
+        cron_spec='*/5 1,2,3 * * *',
+        active=True,
+        attach_user_tags=['my-daily-backup-plan'],
+        copy_user_tags=True,
+        deletion_trigger=backup_policy_plan_deletion_trigger_prototype_model,
+        name=name
+    )
+    return response
+
+def get_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id):
+    response = service.get_backup_policy_plan(
+        backup_policy_id=backup_policy_id,
+        id=backup_policy_plan_id
+    )
+    return response
+
+def update_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id, etag, name):
+    # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPatch model
+    backup_policy_plan_deletion_trigger_patch_model = {
+        'delete_after': 20,
+        'delete_over_count': 38,
+    }
+
+    # Construct a dict representation of a BackupPolicyPlanPatch model
+    backup_policy_plan_patch_model = {
+        'active': True,
+        'attach_user_tags': ['my-daily-backup-plan'],
+        'copy_user_tags': True,
+        'cron_spec': '*/5 1,2,3 * * *',
+        'deletion_trigger': backup_policy_plan_deletion_trigger_patch_model,
+        'name': name,
+    }
+
+    response = service.update_backup_policy_plan(
+        backup_policy_id=backup_policy_id,
+        id=backup_policy_plan_id,
+        backup_policy_plan_patch=backup_policy_plan_patch_model,
+        if_match=etag
+    )
+    return response
+
+def get_backup_policy(service, backup_policy_id):
+    response = service.get_backup_policy(
+        id=backup_policy_id
+    )
+    return response
+
+def update_backup_policy(service, backup_policy_id, etag, name):
+    # Construct a dict representation of a BackupPolicyPatch model
+    backup_policy_patch_model = {
+        'match_user_tags': ['my-daily-backup-policy'],
+        'name': name,
+    }
+
+    response = service.update_backup_policy(
+        id=backup_policy_id,
+        backup_policy_patch=backup_policy_patch_model,
+        if_match=etag
+    )
+    return response
+
+def delete_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id, etag):
+    response = service.delete_backup_policy_plan(
+        backup_policy_id=backup_policy_id,
+        id=backup_policy_plan_id,
+        if_match=etag
+    )
+    return response
+
+def delete_backup_policy(service, backup_policy_id, etag):
+    response = service.delete_backup_policy(
+        id=backup_policy_id,
+        if_match=etag
+    )
+    return response
 # --------------------------------------------------------
 # list_images()
 # --------------------------------------------------------
@@ -2316,6 +2588,139 @@ def update_instance_volume_attachment(service, instance_id, id):
         volume_attachment_patch,
     )
     return response
+
+def list_vpn_servers(service):
+    vpn_server_collection = service.list_vpn_servers(
+        sort='name'
+    )
+    return vpn_server_collection
+
+def create_vpn_server(service, subnetId):
+    name = generate_name('vpnserver')
+    certificate_instance_identity_model = {
+        'crn': 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5',
+    }
+
+    vpn_server_authentication_by_username_id_provider_model = {
+        'provider_type': 'iam',
+    }
+
+    vpn_server_authentication_prototype_model = {
+        'method': 'certificate',
+        'identity_provider': vpn_server_authentication_by_username_id_provider_model,
+    }
+
+    subnet_identity_model = {
+        'id': subnetId,
+    }
+
+    vpn_server = service.create_vpn_server(
+        certificate=certificate_instance_identity_model,
+        client_authentication=[vpn_server_authentication_prototype_model],
+        client_ip_pool='172.16.0.0/16',
+        subnets=[subnet_identity_model],
+        name=name
+    )
+    return vpn_server
+
+def get_vpn_server(service, vpnServerId):
+    vpn_server = service.get_vpn_server(
+        id=vpnServerId
+    )
+    return vpn_server
+
+def update_vpn_server(service, vpnServerId, etag):
+    vpn_server_patch_model = {}
+    vpn_server_patch_model['name']=generate_name('vpnserver-updated')
+
+    vpn_server = service.update_vpn_server(
+        id=vpnServerId,
+        vpn_server_patch=vpn_server_patch_model,
+        if_match=etag
+    )
+    return vpn_server
+
+def get_vpn_server_client_configuration(service, vpnServerId):
+    vpn_server_client_configuration = service.get_vpn_server_client_configuration(
+        id=vpnServerId
+    )
+    return vpn_server_client_configuration
+
+def list_vpn_server_clients(service, vpnServerId):
+    vpn_server_client_collection = service.list_vpn_server_clients(
+        vpn_server_id=vpnServerId,
+        sort='created_at'
+    )
+    return vpn_server_client_collection
+
+def get_vpn_server_client(service, vpnServerId, vpnServerClientId):
+    vpn_server_client = service.get_vpn_server_client(
+        vpn_server_id=vpnServerId,
+        id=vpnServerClientId
+    )
+    return vpn_server_client
+
+def disconnect_vpn_client(service, vpnServerId, vpnServerClientId):
+    response = service.disconnect_vpn_client(
+        vpn_server_id=vpnServerId,
+        id=vpnServerClientId
+    )
+    return response
+
+def list_vpn_server_routes(service, vpnServerId):
+    vpn_server_route_collection = service.list_vpn_server_routes(
+        vpn_server_id=vpnServerId,
+        sort='name'
+    )
+    return vpn_server_route_collection
+
+def create_vpn_server_route(service, vpnServerId):
+    name = generate_name('vpnserver-route')
+    vpn_server_route = service.create_vpn_server_route(
+        vpn_server_id=vpnServerId,
+        destination='172.16.0.0/16',
+        name=name
+    )
+    return vpn_server_route
+
+
+def get_vpn_server_route(service, vpnServerId, vpnServerRouteId):
+    vpn_server_route = service.get_vpn_server_route(
+        vpn_server_id=vpnServerId,
+        id=vpnServerRouteId
+    )
+    return vpn_server_route
+
+def update_vpn_server_route(service, vpnServerId, vpnServerRouteId):
+    vpn_server_route_patch_model = {}
+    vpn_server_route_patch_model['name'] = 'my-vpnserver-route-updated'
+    vpn_server_route = service.update_vpn_server_route(
+        vpn_server_id=vpnServerId,
+        id=vpnServerRouteId,
+        vpn_server_route_patch=vpn_server_route_patch_model
+    )
+    return vpn_server_route
+def delete_vpn_server_route(service, vpnServerId, vpnServerRouteId):
+    response = service.delete_vpn_server_route(
+        vpn_server_id=vpnServerId,
+        id=vpnServerRouteId
+    )
+    return response
+
+def delete_vpn_server_client(service, vpnServerId, vpnServerClientId):
+    response = service.delete_vpn_server_client(
+        vpn_server_id=vpnServerId,
+        id=vpnServerClientId
+    )
+    return response
+
+def delete_vpn_server(service, id, etag):
+    response = service.delete_vpn_server(
+        id=id,
+        if_match=etag
+    )
+    return response
+
 
 # --------------------------------------------------------
 # test_list_load_balancer_profiles_()
@@ -3355,8 +3760,6 @@ def update_security_group(service, id):
     )
     return response
 
-
-
 # --------------------------------------------------------
 # list_security_group_targets()
 # --------------------------------------------------------
@@ -3396,7 +3799,6 @@ def create_security_group_target_binding(service, security_group_id, id):
     response = service.create_security_group_target_binding(
         security_group_id, id)
     return response
-
 
 # --------------------------------------------------------
 # list_security_group_rules()
@@ -3618,7 +4020,7 @@ def set_subnet_public_gateway(service, id, pgw):
     return response
 
 # --------------------------------------------------------
-# vpc_service()
+# service()
 # --------------------------------------------------------
 
 
@@ -5171,14 +5573,24 @@ def delete_placement_group(service, pgid):
 # Utils
 # --------------------------------------------------------
 
+
 def generate_name(r_type):
     names = ("cloudy", "jumble", "lavender", "mayfly", "green",  "yellow", "fox", "unrest", "red", "windy", "foggy", "hatchet", "mushily", "beach", "slacker")
     return "psdk-" + names[random.randint(0, len(names) - 1)] + "-" + r_type
+
 
 def assertListResponse(output, rType):
     response = output.get_result()
     assert output.status_code == 200
     assert response[rType] is not None
+
+#
+
+def assertGetNameResponse(output):
+    response = output.get_result()
+    assert output.status_code == 200
+    # assert response['name'] is not None
+    assert response['name'] is not None
 
 def assertGetPatchResponse(output):
     response = output.get_result()
@@ -5186,6 +5598,9 @@ def assertGetPatchResponse(output):
     # assert response['name'] is not None
     assert response['id'] is not None
 
+def assertGetResponse(output):
+    response = output.get_result()
+    assert output.status_code == 200
 
 def assertCreateResponse(output):
     response = output.get_result()
@@ -5197,3 +5612,7 @@ def assertCreateResponse(output):
 def assertDeleteResponse(output):
     response = output.get_result()
     assert output.status_code == 204
+
+def assertDeleteRequestAcceptedResponse(output):
+    response = output.get_result()
+    assert output.status_code == 202
