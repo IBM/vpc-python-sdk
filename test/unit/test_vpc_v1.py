@@ -684,7 +684,7 @@ class TestGetVpcDefaultRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/default_routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "milled-easy-equine-machines", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "milled-easy-equine-machines", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -720,7 +720,7 @@ class TestGetVpcDefaultRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/default_routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "milled-easy-equine-machines", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "milled-easy-equine-machines", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1319,7 +1319,7 @@ class TestListVpcRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1367,7 +1367,7 @@ class TestListVpcRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1403,7 +1403,7 @@ class TestListVpcRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1444,7 +1444,7 @@ class TestCreateVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -1455,17 +1455,17 @@ class TestCreateVpcRoute():
         zone_identity_model = {}
         zone_identity_model['name'] = 'us-south-1'
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Set up parameter values
         vpc_id = 'testString'
         destination = '192.168.3.0/24'
         zone = zone_identity_model
         action = 'deliver'
-        name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
+        name = 'my-route-1'
+        next_hop = route_prototype_next_hop_model
 
         # Invoke method
         response = _service.create_vpc_route(
@@ -1486,8 +1486,8 @@ class TestCreateVpcRoute():
         assert req_body['destination'] == '192.168.3.0/24'
         assert req_body['zone'] == zone_identity_model
         assert req_body['action'] == 'deliver'
-        assert req_body['name'] == 'my-route-2'
-        assert req_body['next_hop'] == route_next_hop_prototype_model
+        assert req_body['name'] == 'my-route-1'
+        assert req_body['next_hop'] == route_prototype_next_hop_model
 
     def test_create_vpc_route_all_params_with_retries(self):
         # Enable retries and run test_create_vpc_route_all_params.
@@ -1505,7 +1505,7 @@ class TestCreateVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -1516,17 +1516,17 @@ class TestCreateVpcRoute():
         zone_identity_model = {}
         zone_identity_model['name'] = 'us-south-1'
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Set up parameter values
         vpc_id = 'testString'
         destination = '192.168.3.0/24'
         zone = zone_identity_model
         action = 'deliver'
-        name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
+        name = 'my-route-1'
+        next_hop = route_prototype_next_hop_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -1636,7 +1636,7 @@ class TestGetVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1674,7 +1674,7 @@ class TestGetVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1717,7 +1717,7 @@ class TestUpdateVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -1764,7 +1764,7 @@ class TestUpdateVpcRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -1813,7 +1813,7 @@ class TestListVpcRoutingTables():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1861,7 +1861,7 @@ class TestListVpcRoutingTables():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1897,7 +1897,7 @@ class TestListVpcRoutingTables():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "routing_tables": [{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -1938,16 +1938,20 @@ class TestCreateVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a ResourceFilter model
+        resource_filter_model = {}
+        resource_filter_model['resource_type'] = 'vpn_server'
+
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a ZoneIdentityByName model
         zone_identity_model = {}
@@ -1957,12 +1961,13 @@ class TestCreateVpcRoutingTable():
         route_prototype_model = {}
         route_prototype_model['action'] = 'deliver'
         route_prototype_model['destination'] = '192.168.3.0/24'
-        route_prototype_model['name'] = 'my-route-2'
-        route_prototype_model['next_hop'] = route_next_hop_prototype_model
+        route_prototype_model['name'] = 'my-route-1'
+        route_prototype_model['next_hop'] = route_prototype_next_hop_model
         route_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
         vpc_id = 'testString'
+        accept_routes_from = [resource_filter_model]
         name = 'my-routing-table-2'
         route_direct_link_ingress = False
         route_transit_gateway_ingress = False
@@ -1972,6 +1977,7 @@ class TestCreateVpcRoutingTable():
         # Invoke method
         response = _service.create_vpc_routing_table(
             vpc_id,
+            accept_routes_from=accept_routes_from,
             name=name,
             route_direct_link_ingress=route_direct_link_ingress,
             route_transit_gateway_ingress=route_transit_gateway_ingress,
@@ -1985,6 +1991,7 @@ class TestCreateVpcRoutingTable():
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['accept_routes_from'] == [resource_filter_model]
         assert req_body['name'] == 'my-routing-table-2'
         assert req_body['route_direct_link_ingress'] == False
         assert req_body['route_transit_gateway_ingress'] == False
@@ -2007,16 +2014,20 @@ class TestCreateVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=201)
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a ResourceFilter model
+        resource_filter_model = {}
+        resource_filter_model['resource_type'] = 'vpn_server'
+
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Construct a dict representation of a ZoneIdentityByName model
         zone_identity_model = {}
@@ -2026,12 +2037,13 @@ class TestCreateVpcRoutingTable():
         route_prototype_model = {}
         route_prototype_model['action'] = 'deliver'
         route_prototype_model['destination'] = '192.168.3.0/24'
-        route_prototype_model['name'] = 'my-route-2'
-        route_prototype_model['next_hop'] = route_next_hop_prototype_model
+        route_prototype_model['name'] = 'my-route-1'
+        route_prototype_model['next_hop'] = route_prototype_next_hop_model
         route_prototype_model['zone'] = zone_identity_model
 
         # Set up parameter values
         vpc_id = 'testString'
+        accept_routes_from = [resource_filter_model]
         name = 'my-routing-table-2'
         route_direct_link_ingress = False
         route_transit_gateway_ingress = False
@@ -2076,11 +2088,13 @@ class TestDeleteVpcRoutingTable():
         # Set up parameter values
         vpc_id = 'testString'
         id = 'testString'
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
 
         # Invoke method
         response = _service.delete_vpc_routing_table(
             vpc_id,
             id,
+            if_match=if_match,
             headers={}
         )
 
@@ -2096,6 +2110,41 @@ class TestDeleteVpcRoutingTable():
         # Disable retries and run test_delete_vpc_routing_table_all_params.
         _service.disable_retries()
         self.test_delete_vpc_routing_table_all_params()
+
+    @responses.activate
+    def test_delete_vpc_routing_table_required_params(self):
+        """
+        test_delete_vpc_routing_table_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpcs/testString/routing_tables/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=204)
+
+        # Set up parameter values
+        vpc_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_vpc_routing_table(
+            vpc_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 204
+
+    def test_delete_vpc_routing_table_required_params_with_retries(self):
+        # Enable retries and run test_delete_vpc_routing_table_required_params.
+        _service.enable_retries()
+        self.test_delete_vpc_routing_table_required_params()
+
+        # Disable retries and run test_delete_vpc_routing_table_required_params.
+        _service.disable_retries()
+        self.test_delete_vpc_routing_table_required_params()
 
     @responses.activate
     def test_delete_vpc_routing_table_value_error(self):
@@ -2144,7 +2193,7 @@ class TestGetVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2182,7 +2231,7 @@ class TestGetVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2225,15 +2274,77 @@ class TestUpdateVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a ResourceFilter model
+        resource_filter_model = {}
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         # Construct a dict representation of a RoutingTablePatch model
         routing_table_patch_model = {}
+        routing_table_patch_model['accept_routes_from'] = [resource_filter_model]
+        routing_table_patch_model['name'] = 'my-routing-table-2'
+        routing_table_patch_model['route_direct_link_ingress'] = True
+        routing_table_patch_model['route_transit_gateway_ingress'] = True
+        routing_table_patch_model['route_vpc_zone_ingress'] = True
+
+        # Set up parameter values
+        vpc_id = 'testString'
+        id = 'testString'
+        routing_table_patch = routing_table_patch_model
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.update_vpc_routing_table(
+            vpc_id,
+            id,
+            routing_table_patch,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == routing_table_patch
+
+    def test_update_vpc_routing_table_all_params_with_retries(self):
+        # Enable retries and run test_update_vpc_routing_table_all_params.
+        _service.enable_retries()
+        self.test_update_vpc_routing_table_all_params()
+
+        # Disable retries and run test_update_vpc_routing_table_all_params.
+        _service.disable_retries()
+        self.test_update_vpc_routing_table_all_params()
+
+    @responses.activate
+    def test_update_vpc_routing_table_required_params(self):
+        """
+        test_update_vpc_routing_table_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpcs/testString/routing_tables/testString')
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a ResourceFilter model
+        resource_filter_model = {}
+        resource_filter_model['resource_type'] = 'vpn_server'
+
+        # Construct a dict representation of a RoutingTablePatch model
+        routing_table_patch_model = {}
+        routing_table_patch_model['accept_routes_from'] = [resource_filter_model]
         routing_table_patch_model['name'] = 'my-routing-table-2'
         routing_table_patch_model['route_direct_link_ingress'] = True
         routing_table_patch_model['route_transit_gateway_ingress'] = True
@@ -2259,14 +2370,14 @@ class TestUpdateVpcRoutingTable():
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body == routing_table_patch
 
-    def test_update_vpc_routing_table_all_params_with_retries(self):
-        # Enable retries and run test_update_vpc_routing_table_all_params.
+    def test_update_vpc_routing_table_required_params_with_retries(self):
+        # Enable retries and run test_update_vpc_routing_table_required_params.
         _service.enable_retries()
-        self.test_update_vpc_routing_table_all_params()
+        self.test_update_vpc_routing_table_required_params()
 
-        # Disable retries and run test_update_vpc_routing_table_all_params.
+        # Disable retries and run test_update_vpc_routing_table_required_params.
         _service.disable_retries()
-        self.test_update_vpc_routing_table_all_params()
+        self.test_update_vpc_routing_table_required_params()
 
     @responses.activate
     def test_update_vpc_routing_table_value_error(self):
@@ -2275,15 +2386,20 @@ class TestUpdateVpcRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
                       content_type='application/json',
                       status=200)
 
+        # Construct a dict representation of a ResourceFilter model
+        resource_filter_model = {}
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         # Construct a dict representation of a RoutingTablePatch model
         routing_table_patch_model = {}
+        routing_table_patch_model['accept_routes_from'] = [resource_filter_model]
         routing_table_patch_model['name'] = 'my-routing-table-2'
         routing_table_patch_model['route_direct_link_ingress'] = True
         routing_table_patch_model['route_transit_gateway_ingress'] = True
@@ -2327,7 +2443,7 @@ class TestListVpcRoutingTableRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2374,7 +2490,7 @@ class TestListVpcRoutingTableRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2412,7 +2528,7 @@ class TestListVpcRoutingTableRoutes():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2455,7 +2571,7 @@ class TestCreateVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -2466,9 +2582,9 @@ class TestCreateVpcRoutingTableRoute():
         zone_identity_model = {}
         zone_identity_model['name'] = 'us-south-1'
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Set up parameter values
         vpc_id = 'testString'
@@ -2476,8 +2592,8 @@ class TestCreateVpcRoutingTableRoute():
         destination = '192.168.3.0/24'
         zone = zone_identity_model
         action = 'deliver'
-        name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
+        name = 'my-route-1'
+        next_hop = route_prototype_next_hop_model
 
         # Invoke method
         response = _service.create_vpc_routing_table_route(
@@ -2499,8 +2615,8 @@ class TestCreateVpcRoutingTableRoute():
         assert req_body['destination'] == '192.168.3.0/24'
         assert req_body['zone'] == zone_identity_model
         assert req_body['action'] == 'deliver'
-        assert req_body['name'] == 'my-route-2'
-        assert req_body['next_hop'] == route_next_hop_prototype_model
+        assert req_body['name'] == 'my-route-1'
+        assert req_body['next_hop'] == route_prototype_next_hop_model
 
     def test_create_vpc_routing_table_route_all_params_with_retries(self):
         # Enable retries and run test_create_vpc_routing_table_route_all_params.
@@ -2518,7 +2634,7 @@ class TestCreateVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -2529,9 +2645,9 @@ class TestCreateVpcRoutingTableRoute():
         zone_identity_model = {}
         zone_identity_model['name'] = 'us-south-1'
 
-        # Construct a dict representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_model = {}
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        # Construct a dict representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_model = {}
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         # Set up parameter values
         vpc_id = 'testString'
@@ -2539,8 +2655,8 @@ class TestCreateVpcRoutingTableRoute():
         destination = '192.168.3.0/24'
         zone = zone_identity_model
         action = 'deliver'
-        name = 'my-route-2'
-        next_hop = route_next_hop_prototype_model
+        name = 'my-route-1'
+        next_hop = route_prototype_next_hop_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -2655,7 +2771,7 @@ class TestGetVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2695,7 +2811,7 @@ class TestGetVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -2740,7 +2856,7 @@ class TestUpdateVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -2789,7 +2905,7 @@ class TestUpdateVpcRoutingTableRoute():
         """
         # Set up mock
         url = preprocess_url('/vpcs/testString/routing_tables/testString/routes/testString')
-        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
+        mock_response = '{"action": "delegate", "created_at": "2019-01-01T12:00:00.000Z", "creator": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b", "id": "ddf51bec-3424-11e8-b467-0ed5f89f718b", "name": "my-vpn-gateway", "resource_type": "vpn_gateway"}, "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-route-1", "next_hop": {"address": "192.168.3.4"}, "origin": "service", "zone": {"href": "https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1", "name": "us-south-1"}}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -3845,7 +3961,7 @@ class TestGetSubnetRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/subnets/testString/routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3881,7 +3997,7 @@ class TestGetSubnetRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/subnets/testString/routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -3922,7 +4038,7 @@ class TestReplaceSubnetRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/subnets/testString/routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.PUT,
                       url,
                       body=mock_response,
@@ -3967,7 +4083,7 @@ class TestReplaceSubnetRoutingTable():
         """
         # Set up mock
         url = preprocess_url('/subnets/testString/routing_table')
-        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
+        mock_response = '{"accept_routes_from": [{"resource_type": "vpn_gateway"}], "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "is_default": true, "lifecycle_state": "stable", "name": "my-routing-table-1", "resource_type": "routing_table", "route_direct_link_ingress": false, "route_transit_gateway_ingress": false, "route_vpc_zone_ingress": true, "routes": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "1a15dca5-7e33-45e1-b7c5-bc690e569531", "name": "my-route-1"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}]}'
         responses.add(responses.PUT,
                       url,
                       body=mock_response,
@@ -13338,6 +13454,1261 @@ class TestUpdateDedicatedHost():
 ##############################################################################
 
 ##############################################################################
+# Start of Service: BackupPolicies
+##############################################################################
+# region
+
+class TestNewInstance():
+    """
+    Test Class for new_instance
+    """
+
+    def test_new_instance(self):
+        """
+        new_instance()
+        """
+        os.environ['TEST_SERVICE_AUTH_TYPE'] = 'noAuth'
+
+        service = VpcV1.new_instance(
+            version=version,
+            service_name='TEST_SERVICE',
+        )
+
+        assert service is not None
+        assert isinstance(service, VpcV1)
+
+    def test_new_instance_without_authenticator(self):
+        """
+        new_instance_without_authenticator()
+        """
+        with pytest.raises(ValueError, match='authenticator must be provided'):
+            service = VpcV1.new_instance(
+                version=version,
+                service_name='TEST_SERVICE_NOT_FOUND',
+            )
+
+    def test_new_instance_without_required_params(self):
+        """
+        new_instance_without_required_params()
+        """
+        with pytest.raises(TypeError, match='new_instance\\(\\) missing \\d required positional arguments?: \'.*\''):
+            service = VpcV1.new_instance()
+
+    def test_new_instance_required_param_none(self):
+        """
+        new_instance_required_param_none()
+        """
+        with pytest.raises(ValueError, match='version must be provided'):
+            service = VpcV1.new_instance(
+                version=None,
+            )
+class TestListBackupPolicies():
+    """
+    Test Class for list_backup_policies
+    """
+
+    @responses.activate
+    def test_list_backup_policies_all_params(self):
+        """
+        list_backup_policies()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"backup_policies": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        start = 'testString'
+        limit = 1
+        resource_group_id = 'testString'
+        name = 'testString'
+        tag = 'testString'
+
+        # Invoke method
+        response = _service.list_backup_policies(
+            start=start,
+            limit=limit,
+            resource_group_id=resource_group_id,
+            name=name,
+            tag=tag,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+        assert 'resource_group.id={}'.format(resource_group_id) in query_string
+        assert 'name={}'.format(name) in query_string
+        assert 'tag={}'.format(tag) in query_string
+
+    def test_list_backup_policies_all_params_with_retries(self):
+        # Enable retries and run test_list_backup_policies_all_params.
+        _service.enable_retries()
+        self.test_list_backup_policies_all_params()
+
+        # Disable retries and run test_list_backup_policies_all_params.
+        _service.disable_retries()
+        self.test_list_backup_policies_all_params()
+
+    @responses.activate
+    def test_list_backup_policies_required_params(self):
+        """
+        test_list_backup_policies_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"backup_policies": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Invoke method
+        response = _service.list_backup_policies()
+
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_backup_policies_required_params_with_retries(self):
+        # Enable retries and run test_list_backup_policies_required_params.
+        _service.enable_retries()
+        self.test_list_backup_policies_required_params()
+
+        # Disable retries and run test_list_backup_policies_required_params.
+        _service.disable_retries()
+        self.test_list_backup_policies_required_params()
+
+    @responses.activate
+    def test_list_backup_policies_value_error(self):
+        """
+        test_list_backup_policies_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"backup_policies": [{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_backup_policies(**req_copy)
+
+
+    def test_list_backup_policies_value_error_with_retries(self):
+        # Enable retries and run test_list_backup_policies_value_error.
+        _service.enable_retries()
+        self.test_list_backup_policies_value_error()
+
+        # Disable retries and run test_list_backup_policies_value_error.
+        _service.disable_retries()
+        self.test_list_backup_policies_value_error()
+
+class TestCreateBackupPolicy():
+    """
+    Test Class for create_backup_policy
+    """
+
+    @responses.activate
+    def test_create_backup_policy_all_params(self):
+        """
+        create_backup_policy()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
+        backup_policy_plan_deletion_trigger_prototype_model = {}
+        backup_policy_plan_deletion_trigger_prototype_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_prototype_model['delete_over_count'] = 20
+
+        # Construct a dict representation of a BackupPolicyPlanPrototype model
+        backup_policy_plan_prototype_model = {}
+        backup_policy_plan_prototype_model['active'] = True
+        backup_policy_plan_prototype_model['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_prototype_model['copy_user_tags'] = True
+        backup_policy_plan_prototype_model['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_prototype_model['deletion_trigger'] = backup_policy_plan_deletion_trigger_prototype_model
+        backup_policy_plan_prototype_model['name'] = 'my-policy-plan'
+
+        # Construct a dict representation of a ResourceGroupIdentityById model
+        resource_group_identity_model = {}
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        # Set up parameter values
+        match_user_tags = ['my-daily-backup-policy']
+        match_resource_types = ['volume']
+        name = 'my-backup-policy'
+        plans = [backup_policy_plan_prototype_model]
+        resource_group = resource_group_identity_model
+
+        # Invoke method
+        response = _service.create_backup_policy(
+            match_user_tags=match_user_tags,
+            match_resource_types=match_resource_types,
+            name=name,
+            plans=plans,
+            resource_group=resource_group,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['match_user_tags'] == ['my-daily-backup-policy']
+        assert req_body['match_resource_types'] == ['volume']
+        assert req_body['name'] == 'my-backup-policy'
+        assert req_body['plans'] == [backup_policy_plan_prototype_model]
+        assert req_body['resource_group'] == resource_group_identity_model
+
+    def test_create_backup_policy_all_params_with_retries(self):
+        # Enable retries and run test_create_backup_policy_all_params.
+        _service.enable_retries()
+        self.test_create_backup_policy_all_params()
+
+        # Disable retries and run test_create_backup_policy_all_params.
+        _service.disable_retries()
+        self.test_create_backup_policy_all_params()
+
+    @responses.activate
+    def test_create_backup_policy_required_params(self):
+        """
+        test_create_backup_policy_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Invoke method
+        response = _service.create_backup_policy()
+
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+
+    def test_create_backup_policy_required_params_with_retries(self):
+        # Enable retries and run test_create_backup_policy_required_params.
+        _service.enable_retries()
+        self.test_create_backup_policy_required_params()
+
+        # Disable retries and run test_create_backup_policy_required_params.
+        _service.disable_retries()
+        self.test_create_backup_policy_required_params()
+
+    @responses.activate
+    def test_create_backup_policy_value_error(self):
+        """
+        test_create_backup_policy_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_backup_policy(**req_copy)
+
+
+    def test_create_backup_policy_value_error_with_retries(self):
+        # Enable retries and run test_create_backup_policy_value_error.
+        _service.enable_retries()
+        self.test_create_backup_policy_value_error()
+
+        # Disable retries and run test_create_backup_policy_value_error.
+        _service.disable_retries()
+        self.test_create_backup_policy_value_error()
+
+class TestListBackupPolicyPlans():
+    """
+    Test Class for list_backup_policy_plans
+    """
+
+    @responses.activate
+    def test_list_backup_policy_plans_all_params(self):
+        """
+        list_backup_policy_plans()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans')
+        mock_response = '{"plans": [{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        name = 'testString'
+
+        # Invoke method
+        response = _service.list_backup_policy_plans(
+            backup_policy_id,
+            name=name,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'name={}'.format(name) in query_string
+
+    def test_list_backup_policy_plans_all_params_with_retries(self):
+        # Enable retries and run test_list_backup_policy_plans_all_params.
+        _service.enable_retries()
+        self.test_list_backup_policy_plans_all_params()
+
+        # Disable retries and run test_list_backup_policy_plans_all_params.
+        _service.disable_retries()
+        self.test_list_backup_policy_plans_all_params()
+
+    @responses.activate
+    def test_list_backup_policy_plans_required_params(self):
+        """
+        test_list_backup_policy_plans_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans')
+        mock_response = '{"plans": [{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+
+        # Invoke method
+        response = _service.list_backup_policy_plans(
+            backup_policy_id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_backup_policy_plans_required_params_with_retries(self):
+        # Enable retries and run test_list_backup_policy_plans_required_params.
+        _service.enable_retries()
+        self.test_list_backup_policy_plans_required_params()
+
+        # Disable retries and run test_list_backup_policy_plans_required_params.
+        _service.disable_retries()
+        self.test_list_backup_policy_plans_required_params()
+
+    @responses.activate
+    def test_list_backup_policy_plans_value_error(self):
+        """
+        test_list_backup_policy_plans_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans')
+        mock_response = '{"plans": [{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "backup_policy_id": backup_policy_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_backup_policy_plans(**req_copy)
+
+
+    def test_list_backup_policy_plans_value_error_with_retries(self):
+        # Enable retries and run test_list_backup_policy_plans_value_error.
+        _service.enable_retries()
+        self.test_list_backup_policy_plans_value_error()
+
+        # Disable retries and run test_list_backup_policy_plans_value_error.
+        _service.disable_retries()
+        self.test_list_backup_policy_plans_value_error()
+
+class TestCreateBackupPolicyPlan():
+    """
+    Test Class for create_backup_policy_plan
+    """
+
+    @responses.activate
+    def test_create_backup_policy_plan_all_params(self):
+        """
+        create_backup_policy_plan()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
+        backup_policy_plan_deletion_trigger_prototype_model = {}
+        backup_policy_plan_deletion_trigger_prototype_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_prototype_model['delete_over_count'] = 20
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        cron_spec = '*/5 1,2,3 * * *'
+        active = True
+        attach_user_tags = ['my-daily-backup-plan']
+        copy_user_tags = True
+        deletion_trigger = backup_policy_plan_deletion_trigger_prototype_model
+        name = 'my-policy-plan'
+
+        # Invoke method
+        response = _service.create_backup_policy_plan(
+            backup_policy_id,
+            cron_spec,
+            active=active,
+            attach_user_tags=attach_user_tags,
+            copy_user_tags=copy_user_tags,
+            deletion_trigger=deletion_trigger,
+            name=name,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['cron_spec'] == '*/5 1,2,3 * * *'
+        assert req_body['active'] == True
+        assert req_body['attach_user_tags'] == ['my-daily-backup-plan']
+        assert req_body['copy_user_tags'] == True
+        assert req_body['deletion_trigger'] == backup_policy_plan_deletion_trigger_prototype_model
+        assert req_body['name'] == 'my-policy-plan'
+
+    def test_create_backup_policy_plan_all_params_with_retries(self):
+        # Enable retries and run test_create_backup_policy_plan_all_params.
+        _service.enable_retries()
+        self.test_create_backup_policy_plan_all_params()
+
+        # Disable retries and run test_create_backup_policy_plan_all_params.
+        _service.disable_retries()
+        self.test_create_backup_policy_plan_all_params()
+
+    @responses.activate
+    def test_create_backup_policy_plan_value_error(self):
+        """
+        test_create_backup_policy_plan_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
+        backup_policy_plan_deletion_trigger_prototype_model = {}
+        backup_policy_plan_deletion_trigger_prototype_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_prototype_model['delete_over_count'] = 20
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        cron_spec = '*/5 1,2,3 * * *'
+        active = True
+        attach_user_tags = ['my-daily-backup-plan']
+        copy_user_tags = True
+        deletion_trigger = backup_policy_plan_deletion_trigger_prototype_model
+        name = 'my-policy-plan'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "backup_policy_id": backup_policy_id,
+            "cron_spec": cron_spec,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_backup_policy_plan(**req_copy)
+
+
+    def test_create_backup_policy_plan_value_error_with_retries(self):
+        # Enable retries and run test_create_backup_policy_plan_value_error.
+        _service.enable_retries()
+        self.test_create_backup_policy_plan_value_error()
+
+        # Disable retries and run test_create_backup_policy_plan_value_error.
+        _service.disable_retries()
+        self.test_create_backup_policy_plan_value_error()
+
+class TestDeleteBackupPolicyPlan():
+    """
+    Test Class for delete_backup_policy_plan
+    """
+
+    @responses.activate
+    def test_delete_backup_policy_plan_all_params(self):
+        """
+        delete_backup_policy_plan()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.delete_backup_policy_plan(
+            backup_policy_id,
+            id,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_backup_policy_plan_all_params_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_plan_all_params.
+        _service.enable_retries()
+        self.test_delete_backup_policy_plan_all_params()
+
+        # Disable retries and run test_delete_backup_policy_plan_all_params.
+        _service.disable_retries()
+        self.test_delete_backup_policy_plan_all_params()
+
+    @responses.activate
+    def test_delete_backup_policy_plan_required_params(self):
+        """
+        test_delete_backup_policy_plan_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_backup_policy_plan(
+            backup_policy_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_backup_policy_plan_required_params_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_plan_required_params.
+        _service.enable_retries()
+        self.test_delete_backup_policy_plan_required_params()
+
+        # Disable retries and run test_delete_backup_policy_plan_required_params.
+        _service.disable_retries()
+        self.test_delete_backup_policy_plan_required_params()
+
+    @responses.activate
+    def test_delete_backup_policy_plan_value_error(self):
+        """
+        test_delete_backup_policy_plan_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "backup_policy_id": backup_policy_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_backup_policy_plan(**req_copy)
+
+
+    def test_delete_backup_policy_plan_value_error_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_plan_value_error.
+        _service.enable_retries()
+        self.test_delete_backup_policy_plan_value_error()
+
+        # Disable retries and run test_delete_backup_policy_plan_value_error.
+        _service.disable_retries()
+        self.test_delete_backup_policy_plan_value_error()
+
+class TestGetBackupPolicyPlan():
+    """
+    Test Class for get_backup_policy_plan
+    """
+
+    @responses.activate
+    def test_get_backup_policy_plan_all_params(self):
+        """
+        get_backup_policy_plan()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_backup_policy_plan(
+            backup_policy_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_backup_policy_plan_all_params_with_retries(self):
+        # Enable retries and run test_get_backup_policy_plan_all_params.
+        _service.enable_retries()
+        self.test_get_backup_policy_plan_all_params()
+
+        # Disable retries and run test_get_backup_policy_plan_all_params.
+        _service.disable_retries()
+        self.test_get_backup_policy_plan_all_params()
+
+    @responses.activate
+    def test_get_backup_policy_plan_value_error(self):
+        """
+        test_get_backup_policy_plan_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "backup_policy_id": backup_policy_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_backup_policy_plan(**req_copy)
+
+
+    def test_get_backup_policy_plan_value_error_with_retries(self):
+        # Enable retries and run test_get_backup_policy_plan_value_error.
+        _service.enable_retries()
+        self.test_get_backup_policy_plan_value_error()
+
+        # Disable retries and run test_get_backup_policy_plan_value_error.
+        _service.disable_retries()
+        self.test_get_backup_policy_plan_value_error()
+
+class TestUpdateBackupPolicyPlan():
+    """
+    Test Class for update_backup_policy_plan
+    """
+
+    @responses.activate
+    def test_update_backup_policy_plan_all_params(self):
+        """
+        update_backup_policy_plan()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPatch model
+        backup_policy_plan_deletion_trigger_patch_model = {}
+        backup_policy_plan_deletion_trigger_patch_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_patch_model['delete_over_count'] = 38
+
+        # Construct a dict representation of a BackupPolicyPlanPatch model
+        backup_policy_plan_patch_model = {}
+        backup_policy_plan_patch_model['active'] = True
+        backup_policy_plan_patch_model['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_patch_model['copy_user_tags'] = True
+        backup_policy_plan_patch_model['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_patch_model['deletion_trigger'] = backup_policy_plan_deletion_trigger_patch_model
+        backup_policy_plan_patch_model['name'] = 'my-policy-plan'
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+        backup_policy_plan_patch = backup_policy_plan_patch_model
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.update_backup_policy_plan(
+            backup_policy_id,
+            id,
+            backup_policy_plan_patch,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == backup_policy_plan_patch
+
+    def test_update_backup_policy_plan_all_params_with_retries(self):
+        # Enable retries and run test_update_backup_policy_plan_all_params.
+        _service.enable_retries()
+        self.test_update_backup_policy_plan_all_params()
+
+        # Disable retries and run test_update_backup_policy_plan_all_params.
+        _service.disable_retries()
+        self.test_update_backup_policy_plan_all_params()
+
+    @responses.activate
+    def test_update_backup_policy_plan_required_params(self):
+        """
+        test_update_backup_policy_plan_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPatch model
+        backup_policy_plan_deletion_trigger_patch_model = {}
+        backup_policy_plan_deletion_trigger_patch_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_patch_model['delete_over_count'] = 38
+
+        # Construct a dict representation of a BackupPolicyPlanPatch model
+        backup_policy_plan_patch_model = {}
+        backup_policy_plan_patch_model['active'] = True
+        backup_policy_plan_patch_model['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_patch_model['copy_user_tags'] = True
+        backup_policy_plan_patch_model['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_patch_model['deletion_trigger'] = backup_policy_plan_deletion_trigger_patch_model
+        backup_policy_plan_patch_model['name'] = 'my-policy-plan'
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+        backup_policy_plan_patch = backup_policy_plan_patch_model
+
+        # Invoke method
+        response = _service.update_backup_policy_plan(
+            backup_policy_id,
+            id,
+            backup_policy_plan_patch,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == backup_policy_plan_patch
+
+    def test_update_backup_policy_plan_required_params_with_retries(self):
+        # Enable retries and run test_update_backup_policy_plan_required_params.
+        _service.enable_retries()
+        self.test_update_backup_policy_plan_required_params()
+
+        # Disable retries and run test_update_backup_policy_plan_required_params.
+        _service.disable_retries()
+        self.test_update_backup_policy_plan_required_params()
+
+    @responses.activate
+    def test_update_backup_policy_plan_value_error(self):
+        """
+        test_update_backup_policy_plan_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString/plans/testString')
+        mock_response = '{"active": true, "attach_user_tags": ["attach_user_tags"], "copy_user_tags": true, "created_at": "2019-01-01T12:00:00.000Z", "cron_spec": "*/5 1,2,3 * * *", "deletion_trigger": {"delete_after": 20, "delete_over_count": 20}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "lifecycle_state": "stable", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPatch model
+        backup_policy_plan_deletion_trigger_patch_model = {}
+        backup_policy_plan_deletion_trigger_patch_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_patch_model['delete_over_count'] = 38
+
+        # Construct a dict representation of a BackupPolicyPlanPatch model
+        backup_policy_plan_patch_model = {}
+        backup_policy_plan_patch_model['active'] = True
+        backup_policy_plan_patch_model['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_patch_model['copy_user_tags'] = True
+        backup_policy_plan_patch_model['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_patch_model['deletion_trigger'] = backup_policy_plan_deletion_trigger_patch_model
+        backup_policy_plan_patch_model['name'] = 'my-policy-plan'
+
+        # Set up parameter values
+        backup_policy_id = 'testString'
+        id = 'testString'
+        backup_policy_plan_patch = backup_policy_plan_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "backup_policy_id": backup_policy_id,
+            "id": id,
+            "backup_policy_plan_patch": backup_policy_plan_patch,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_backup_policy_plan(**req_copy)
+
+
+    def test_update_backup_policy_plan_value_error_with_retries(self):
+        # Enable retries and run test_update_backup_policy_plan_value_error.
+        _service.enable_retries()
+        self.test_update_backup_policy_plan_value_error()
+
+        # Disable retries and run test_update_backup_policy_plan_value_error.
+        _service.disable_retries()
+        self.test_update_backup_policy_plan_value_error()
+
+class TestDeleteBackupPolicy():
+    """
+    Test Class for delete_backup_policy
+    """
+
+    @responses.activate
+    def test_delete_backup_policy_all_params(self):
+        """
+        delete_backup_policy()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.delete_backup_policy(
+            id,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_backup_policy_all_params_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_all_params.
+        _service.enable_retries()
+        self.test_delete_backup_policy_all_params()
+
+        # Disable retries and run test_delete_backup_policy_all_params.
+        _service.disable_retries()
+        self.test_delete_backup_policy_all_params()
+
+    @responses.activate
+    def test_delete_backup_policy_required_params(self):
+        """
+        test_delete_backup_policy_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_backup_policy(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_backup_policy_required_params_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_required_params.
+        _service.enable_retries()
+        self.test_delete_backup_policy_required_params()
+
+        # Disable retries and run test_delete_backup_policy_required_params.
+        _service.disable_retries()
+        self.test_delete_backup_policy_required_params()
+
+    @responses.activate
+    def test_delete_backup_policy_value_error(self):
+        """
+        test_delete_backup_policy_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.DELETE,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_backup_policy(**req_copy)
+
+
+    def test_delete_backup_policy_value_error_with_retries(self):
+        # Enable retries and run test_delete_backup_policy_value_error.
+        _service.enable_retries()
+        self.test_delete_backup_policy_value_error()
+
+        # Disable retries and run test_delete_backup_policy_value_error.
+        _service.disable_retries()
+        self.test_delete_backup_policy_value_error()
+
+class TestGetBackupPolicy():
+    """
+    Test Class for get_backup_policy
+    """
+
+    @responses.activate
+    def test_get_backup_policy_all_params(self):
+        """
+        get_backup_policy()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_backup_policy(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_backup_policy_all_params_with_retries(self):
+        # Enable retries and run test_get_backup_policy_all_params.
+        _service.enable_retries()
+        self.test_get_backup_policy_all_params()
+
+        # Disable retries and run test_get_backup_policy_all_params.
+        _service.disable_retries()
+        self.test_get_backup_policy_all_params()
+
+    @responses.activate
+    def test_get_backup_policy_value_error(self):
+        """
+        test_get_backup_policy_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_backup_policy(**req_copy)
+
+
+    def test_get_backup_policy_value_error_with_retries(self):
+        # Enable retries and run test_get_backup_policy_value_error.
+        _service.enable_retries()
+        self.test_get_backup_policy_value_error()
+
+        # Disable retries and run test_get_backup_policy_value_error.
+        _service.disable_retries()
+        self.test_get_backup_policy_value_error()
+
+class TestUpdateBackupPolicy():
+    """
+    Test Class for update_backup_policy
+    """
+
+    @responses.activate
+    def test_update_backup_policy_all_params(self):
+        """
+        update_backup_policy()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPatch model
+        backup_policy_patch_model = {}
+        backup_policy_patch_model['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_patch_model['name'] = 'my-backup-policy'
+
+        # Set up parameter values
+        id = 'testString'
+        backup_policy_patch = backup_policy_patch_model
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.update_backup_policy(
+            id,
+            backup_policy_patch,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == backup_policy_patch
+
+    def test_update_backup_policy_all_params_with_retries(self):
+        # Enable retries and run test_update_backup_policy_all_params.
+        _service.enable_retries()
+        self.test_update_backup_policy_all_params()
+
+        # Disable retries and run test_update_backup_policy_all_params.
+        _service.disable_retries()
+        self.test_update_backup_policy_all_params()
+
+    @responses.activate
+    def test_update_backup_policy_required_params(self):
+        """
+        test_update_backup_policy_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPatch model
+        backup_policy_patch_model = {}
+        backup_policy_patch_model['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_patch_model['name'] = 'my-backup-policy'
+
+        # Set up parameter values
+        id = 'testString'
+        backup_policy_patch = backup_policy_patch_model
+
+        # Invoke method
+        response = _service.update_backup_policy(
+            id,
+            backup_policy_patch,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == backup_policy_patch
+
+    def test_update_backup_policy_required_params_with_retries(self):
+        # Enable retries and run test_update_backup_policy_required_params.
+        _service.enable_retries()
+        self.test_update_backup_policy_required_params()
+
+        # Disable retries and run test_update_backup_policy_required_params.
+        _service.disable_retries()
+        self.test_update_backup_policy_required_params()
+
+    @responses.activate
+    def test_update_backup_policy_value_error(self):
+        """
+        test_update_backup_policy_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/backup_policies/testString')
+        mock_response = '{"created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "id": "r134-076191ba-49c2-4763-94fd-c70de73ee2e6", "last_job_completed_at": "2019-01-01T12:00:00.000Z", "lifecycle_state": "stable", "match_resource_types": ["volume"], "match_user_tags": ["match_user_tags"], "name": "my-backup-policy", "plans": [{"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}], "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "backup_policy"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a BackupPolicyPatch model
+        backup_policy_patch_model = {}
+        backup_policy_patch_model['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_patch_model['name'] = 'my-backup-policy'
+
+        # Set up parameter values
+        id = 'testString'
+        backup_policy_patch = backup_policy_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+            "backup_policy_patch": backup_policy_patch,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_backup_policy(**req_copy)
+
+
+    def test_update_backup_policy_value_error_with_retries(self):
+        # Enable retries and run test_update_backup_policy_value_error.
+        _service.enable_retries()
+        self.test_update_backup_policy_value_error()
+
+        # Disable retries and run test_update_backup_policy_value_error.
+        _service.disable_retries()
+        self.test_update_backup_policy_value_error()
+
+# endregion
+##############################################################################
+# End of Service: BackupPolicies
+##############################################################################
+
+##############################################################################
 # Start of Service: PlacementGroups
 ##############################################################################
 # region
@@ -15643,172 +17014,6 @@ class TestAddBareMetalServerNetworkInterfaceFloatingIp():
         _service.disable_retries()
         self.test_add_bare_metal_server_network_interface_floating_ip_value_error()
 
-class TestListBareMetalServerNetworkInterfaceIps():
-    """
-    Test Class for list_bare_metal_server_network_interface_ips
-    """
-
-    @responses.activate
-    def test_list_bare_metal_server_network_interface_ips_all_params(self):
-        """
-        list_bare_metal_server_network_interface_ips()
-        """
-        # Set up mock
-        url = preprocess_url('/bare_metal_servers/testString/network_interfaces/testString/ips')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e/ips?limit=20"}, "ips": [{"address": "192.168.3.4", "auto_delete": false, "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "lifecycle_state": "stable", "name": "my-reserved-ip", "owner": "user", "resource_type": "subnet_reserved_ip", "target": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "d7cc5196-9864-48c4-82d8-3f30da41fcc5", "name": "my-endpoint-gateway", "resource_type": "endpoint_gateway"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e/ips?start=a404e343444b4e1095c9edba76672d67&limit=20"}, "total_count": 132}'
-        responses.add(responses.GET,
-                      url,
-                      body=mock_response,
-                      content_type='application/json',
-                      status=200)
-
-        # Set up parameter values
-        bare_metal_server_id = 'testString'
-        network_interface_id = 'testString'
-
-        # Invoke method
-        response = _service.list_bare_metal_server_network_interface_ips(
-            bare_metal_server_id,
-            network_interface_id,
-            headers={}
-        )
-
-        # Check for correct operation
-        assert len(responses.calls) == 1
-        assert response.status_code == 200
-
-    def test_list_bare_metal_server_network_interface_ips_all_params_with_retries(self):
-        # Enable retries and run test_list_bare_metal_server_network_interface_ips_all_params.
-        _service.enable_retries()
-        self.test_list_bare_metal_server_network_interface_ips_all_params()
-
-        # Disable retries and run test_list_bare_metal_server_network_interface_ips_all_params.
-        _service.disable_retries()
-        self.test_list_bare_metal_server_network_interface_ips_all_params()
-
-    @responses.activate
-    def test_list_bare_metal_server_network_interface_ips_value_error(self):
-        """
-        test_list_bare_metal_server_network_interface_ips_value_error()
-        """
-        # Set up mock
-        url = preprocess_url('/bare_metal_servers/testString/network_interfaces/testString/ips')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e/ips?limit=20"}, "ips": [{"address": "192.168.3.4", "auto_delete": false, "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "lifecycle_state": "stable", "name": "my-reserved-ip", "owner": "user", "resource_type": "subnet_reserved_ip", "target": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "d7cc5196-9864-48c4-82d8-3f30da41fcc5", "name": "my-endpoint-gateway", "resource_type": "endpoint_gateway"}}], "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/instances/1e09281b-f177-46fb-baf1-bc152b2e391a/network_interfaces/10c02d81-0ecb-4dc5-897d-28392913b81e/ips?start=a404e343444b4e1095c9edba76672d67&limit=20"}, "total_count": 132}'
-        responses.add(responses.GET,
-                      url,
-                      body=mock_response,
-                      content_type='application/json',
-                      status=200)
-
-        # Set up parameter values
-        bare_metal_server_id = 'testString'
-        network_interface_id = 'testString'
-
-        # Pass in all but one required param and check for a ValueError
-        req_param_dict = {
-            "bare_metal_server_id": bare_metal_server_id,
-            "network_interface_id": network_interface_id,
-        }
-        for param in req_param_dict.keys():
-            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
-            with pytest.raises(ValueError):
-                _service.list_bare_metal_server_network_interface_ips(**req_copy)
-
-
-    def test_list_bare_metal_server_network_interface_ips_value_error_with_retries(self):
-        # Enable retries and run test_list_bare_metal_server_network_interface_ips_value_error.
-        _service.enable_retries()
-        self.test_list_bare_metal_server_network_interface_ips_value_error()
-
-        # Disable retries and run test_list_bare_metal_server_network_interface_ips_value_error.
-        _service.disable_retries()
-        self.test_list_bare_metal_server_network_interface_ips_value_error()
-
-class TestGetBareMetalServerNetworkInterfaceIp():
-    """
-    Test Class for get_bare_metal_server_network_interface_ip
-    """
-
-    @responses.activate
-    def test_get_bare_metal_server_network_interface_ip_all_params(self):
-        """
-        get_bare_metal_server_network_interface_ip()
-        """
-        # Set up mock
-        url = preprocess_url('/bare_metal_servers/testString/network_interfaces/testString/ips/testString')
-        mock_response = '{"address": "192.168.3.4", "auto_delete": false, "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "lifecycle_state": "stable", "name": "my-reserved-ip", "owner": "user", "resource_type": "subnet_reserved_ip", "target": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "d7cc5196-9864-48c4-82d8-3f30da41fcc5", "name": "my-endpoint-gateway", "resource_type": "endpoint_gateway"}}'
-        responses.add(responses.GET,
-                      url,
-                      body=mock_response,
-                      content_type='application/json',
-                      status=200)
-
-        # Set up parameter values
-        bare_metal_server_id = 'testString'
-        network_interface_id = 'testString'
-        id = 'testString'
-
-        # Invoke method
-        response = _service.get_bare_metal_server_network_interface_ip(
-            bare_metal_server_id,
-            network_interface_id,
-            id,
-            headers={}
-        )
-
-        # Check for correct operation
-        assert len(responses.calls) == 1
-        assert response.status_code == 200
-
-    def test_get_bare_metal_server_network_interface_ip_all_params_with_retries(self):
-        # Enable retries and run test_get_bare_metal_server_network_interface_ip_all_params.
-        _service.enable_retries()
-        self.test_get_bare_metal_server_network_interface_ip_all_params()
-
-        # Disable retries and run test_get_bare_metal_server_network_interface_ip_all_params.
-        _service.disable_retries()
-        self.test_get_bare_metal_server_network_interface_ip_all_params()
-
-    @responses.activate
-    def test_get_bare_metal_server_network_interface_ip_value_error(self):
-        """
-        test_get_bare_metal_server_network_interface_ip_value_error()
-        """
-        # Set up mock
-        url = preprocess_url('/bare_metal_servers/testString/network_interfaces/testString/ips/testString')
-        mock_response = '{"address": "192.168.3.4", "auto_delete": false, "created_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "lifecycle_state": "stable", "name": "my-reserved-ip", "owner": "user", "resource_type": "subnet_reserved_ip", "target": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::endpoint-gateway:d7cc5196-9864-48c4-82d8-3f30da41fcc5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/endpoint_gateways/d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "d7cc5196-9864-48c4-82d8-3f30da41fcc5", "name": "my-endpoint-gateway", "resource_type": "endpoint_gateway"}}'
-        responses.add(responses.GET,
-                      url,
-                      body=mock_response,
-                      content_type='application/json',
-                      status=200)
-
-        # Set up parameter values
-        bare_metal_server_id = 'testString'
-        network_interface_id = 'testString'
-        id = 'testString'
-
-        # Pass in all but one required param and check for a ValueError
-        req_param_dict = {
-            "bare_metal_server_id": bare_metal_server_id,
-            "network_interface_id": network_interface_id,
-            "id": id,
-        }
-        for param in req_param_dict.keys():
-            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
-            with pytest.raises(ValueError):
-                _service.get_bare_metal_server_network_interface_ip(**req_copy)
-
-
-    def test_get_bare_metal_server_network_interface_ip_value_error_with_retries(self):
-        # Enable retries and run test_get_bare_metal_server_network_interface_ip_value_error.
-        _service.enable_retries()
-        self.test_get_bare_metal_server_network_interface_ip_value_error()
-
-        # Disable retries and run test_get_bare_metal_server_network_interface_ip_value_error.
-        _service.disable_retries()
-        self.test_get_bare_metal_server_network_interface_ip_value_error()
-
 class TestDeleteBareMetalServer():
     """
     Test Class for delete_bare_metal_server
@@ -17326,7 +18531,7 @@ class TestListSnapshots():
         """
         # Set up mock
         url = preprocess_url('/snapshots')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -17344,6 +18549,7 @@ class TestListSnapshots():
         source_image_id = 'testString'
         source_image_crn = 'testString'
         sort = 'name'
+        backup_policy_plan_id = 'testString'
 
         # Invoke method
         response = _service.list_snapshots(
@@ -17357,6 +18563,7 @@ class TestListSnapshots():
             source_image_id=source_image_id,
             source_image_crn=source_image_crn,
             sort=sort,
+            backup_policy_plan_id=backup_policy_plan_id,
             headers={}
         )
 
@@ -17376,6 +18583,7 @@ class TestListSnapshots():
         assert 'source_image.id={}'.format(source_image_id) in query_string
         assert 'source_image.crn={}'.format(source_image_crn) in query_string
         assert 'sort={}'.format(sort) in query_string
+        assert 'backup_policy_plan.id={}'.format(backup_policy_plan_id) in query_string
 
     def test_list_snapshots_all_params_with_retries(self):
         # Enable retries and run test_list_snapshots_all_params.
@@ -17393,7 +18601,7 @@ class TestListSnapshots():
         """
         # Set up mock
         url = preprocess_url('/snapshots')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -17424,7 +18632,7 @@ class TestListSnapshots():
         """
         # Set up mock
         url = preprocess_url('/snapshots')
-        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20"}, "snapshots": [{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}], "total_count": 132}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -17461,7 +18669,7 @@ class TestCreateSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -17515,7 +18723,7 @@ class TestCreateSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.POST,
                       url,
                       body=mock_response,
@@ -17677,7 +18885,7 @@ class TestGetSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots/testString')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -17713,7 +18921,7 @@ class TestGetSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots/testString')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.GET,
                       url,
                       body=mock_response,
@@ -17754,7 +18962,7 @@ class TestUpdateSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots/testString')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -17802,7 +19010,7 @@ class TestUpdateSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots/testString')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -17848,7 +19056,7 @@ class TestUpdateSnapshot():
         """
         # Set up mock
         url = preprocess_url('/snapshots/testString')
-        mock_response = '{"bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
+        mock_response = '{"backup_policy_plan": {"deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "id": "r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178", "name": "my-policy-plan", "resource_type": "backup_policy_plan"}, "bootable": true, "captured_at": "2019-01-01T12:00:00.000Z", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::snapshot:r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "deletable": false, "encryption": "provider_managed", "encryption_key": {"crn": "crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/snapshots/r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "id": "r134-f6bfa329-0e36-433f-a3bb-0df632e79263", "lifecycle_state": "stable", "minimum_capacity": 1, "name": "my-snapshot", "operating_system": {"architecture": "amd64", "dedicated_host_only": false, "display_name": "Ubuntu Server 16.04 LTS amd64", "family": "Ubuntu Server", "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-amd64", "name": "ubuntu-16-amd64", "vendor": "Canonical", "version": "16.04 LTS"}, "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "snapshot", "service_tags": ["service_tags"], "size": 1, "source_image": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::image:72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/images/72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "id": "72b27b5c-f4b0-48bb-b954-5becc7c1dcb8", "name": "my-image"}, "source_volume": {"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::volume:1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/volumes/1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "id": "1a6b7274-678d-4dfb-8981-c71dd9d4daa5", "name": "my-volume"}, "user_tags": ["user_tags"]}'
         responses.add(responses.PATCH,
                       url,
                       body=mock_response,
@@ -24575,6 +25783,1679 @@ class TestAddVpnGatewayConnectionPeerCidr():
 ##############################################################################
 
 ##############################################################################
+# Start of Service: VPNServers
+##############################################################################
+# region
+
+class TestNewInstance():
+    """
+    Test Class for new_instance
+    """
+
+    def test_new_instance(self):
+        """
+        new_instance()
+        """
+        os.environ['TEST_SERVICE_AUTH_TYPE'] = 'noAuth'
+
+        service = VpcV1.new_instance(
+            version=version,
+            service_name='TEST_SERVICE',
+        )
+
+        assert service is not None
+        assert isinstance(service, VpcV1)
+
+    def test_new_instance_without_authenticator(self):
+        """
+        new_instance_without_authenticator()
+        """
+        with pytest.raises(ValueError, match='authenticator must be provided'):
+            service = VpcV1.new_instance(
+                version=version,
+                service_name='TEST_SERVICE_NOT_FOUND',
+            )
+
+    def test_new_instance_without_required_params(self):
+        """
+        new_instance_without_required_params()
+        """
+        with pytest.raises(TypeError, match='new_instance\\(\\) missing \\d required positional arguments?: \'.*\''):
+            service = VpcV1.new_instance()
+
+    def test_new_instance_required_param_none(self):
+        """
+        new_instance_required_param_none()
+        """
+        with pytest.raises(ValueError, match='version must be provided'):
+            service = VpcV1.new_instance(
+                version=None,
+            )
+class TestListVpnServers():
+    """
+    Test Class for list_vpn_servers
+    """
+
+    @responses.activate
+    def test_list_vpn_servers_all_params(self):
+        """
+        list_vpn_servers()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?start=ffd653466e284937896724b2dd044c9c&limit=20"}, "total_count": 132, "vpn_servers": [{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        name = 'testString'
+        start = 'testString'
+        limit = 1
+        resource_group_id = 'testString'
+        sort = 'name'
+
+        # Invoke method
+        response = _service.list_vpn_servers(
+            name=name,
+            start=start,
+            limit=limit,
+            resource_group_id=resource_group_id,
+            sort=sort,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'name={}'.format(name) in query_string
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+        assert 'resource_group.id={}'.format(resource_group_id) in query_string
+        assert 'sort={}'.format(sort) in query_string
+
+    def test_list_vpn_servers_all_params_with_retries(self):
+        # Enable retries and run test_list_vpn_servers_all_params.
+        _service.enable_retries()
+        self.test_list_vpn_servers_all_params()
+
+        # Disable retries and run test_list_vpn_servers_all_params.
+        _service.disable_retries()
+        self.test_list_vpn_servers_all_params()
+
+    @responses.activate
+    def test_list_vpn_servers_required_params(self):
+        """
+        test_list_vpn_servers_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?start=ffd653466e284937896724b2dd044c9c&limit=20"}, "total_count": 132, "vpn_servers": [{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Invoke method
+        response = _service.list_vpn_servers()
+
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_vpn_servers_required_params_with_retries(self):
+        # Enable retries and run test_list_vpn_servers_required_params.
+        _service.enable_retries()
+        self.test_list_vpn_servers_required_params()
+
+        # Disable retries and run test_list_vpn_servers_required_params.
+        _service.disable_retries()
+        self.test_list_vpn_servers_required_params()
+
+    @responses.activate
+    def test_list_vpn_servers_value_error(self):
+        """
+        test_list_vpn_servers_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?start=ffd653466e284937896724b2dd044c9c&limit=20"}, "total_count": 132, "vpn_servers": [{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}]}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_vpn_servers(**req_copy)
+
+
+    def test_list_vpn_servers_value_error_with_retries(self):
+        # Enable retries and run test_list_vpn_servers_value_error.
+        _service.enable_retries()
+        self.test_list_vpn_servers_value_error()
+
+        # Disable retries and run test_list_vpn_servers_value_error.
+        _service.disable_retries()
+        self.test_list_vpn_servers_value_error()
+
+class TestCreateVpnServer():
+    """
+    Test Class for create_vpn_server
+    """
+
+    @responses.activate
+    def test_create_vpn_server_all_params(self):
+        """
+        create_vpn_server()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a CertificateInstanceIdentityByCRN model
+        certificate_instance_identity_model = {}
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a dict representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_model = {}
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a dict representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_model = {}
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a dict representation of a SubnetIdentityById model
+        subnet_identity_model = {}
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a dict representation of a IP model
+        ip_model = {}
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a dict representation of a ResourceGroupIdentityById model
+        resource_group_identity_model = {}
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        # Construct a dict representation of a SecurityGroupIdentityById model
+        security_group_identity_model = {}
+        security_group_identity_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+
+        # Set up parameter values
+        certificate = certificate_instance_identity_model
+        client_authentication = [vpn_server_authentication_prototype_model]
+        client_ip_pool = '172.16.0.0/16'
+        subnets = [subnet_identity_model]
+        client_dns_server_ips = [ip_model]
+        client_idle_timeout = 600
+        enable_split_tunneling = False
+        name = 'my-vpn-server'
+        port = 443
+        protocol = 'udp'
+        resource_group = resource_group_identity_model
+        security_groups = [security_group_identity_model]
+
+        # Invoke method
+        response = _service.create_vpn_server(
+            certificate,
+            client_authentication,
+            client_ip_pool,
+            subnets,
+            client_dns_server_ips=client_dns_server_ips,
+            client_idle_timeout=client_idle_timeout,
+            enable_split_tunneling=enable_split_tunneling,
+            name=name,
+            port=port,
+            protocol=protocol,
+            resource_group=resource_group,
+            security_groups=security_groups,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['certificate'] == certificate_instance_identity_model
+        assert req_body['client_authentication'] == [vpn_server_authentication_prototype_model]
+        assert req_body['client_ip_pool'] == '172.16.0.0/16'
+        assert req_body['subnets'] == [subnet_identity_model]
+        assert req_body['client_dns_server_ips'] == [ip_model]
+        assert req_body['client_idle_timeout'] == 600
+        assert req_body['enable_split_tunneling'] == False
+        assert req_body['name'] == 'my-vpn-server'
+        assert req_body['port'] == 443
+        assert req_body['protocol'] == 'udp'
+        assert req_body['resource_group'] == resource_group_identity_model
+        assert req_body['security_groups'] == [security_group_identity_model]
+
+    def test_create_vpn_server_all_params_with_retries(self):
+        # Enable retries and run test_create_vpn_server_all_params.
+        _service.enable_retries()
+        self.test_create_vpn_server_all_params()
+
+        # Disable retries and run test_create_vpn_server_all_params.
+        _service.disable_retries()
+        self.test_create_vpn_server_all_params()
+
+    @responses.activate
+    def test_create_vpn_server_value_error(self):
+        """
+        test_create_vpn_server_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Construct a dict representation of a CertificateInstanceIdentityByCRN model
+        certificate_instance_identity_model = {}
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a dict representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_model = {}
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a dict representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_model = {}
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a dict representation of a SubnetIdentityById model
+        subnet_identity_model = {}
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a dict representation of a IP model
+        ip_model = {}
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a dict representation of a ResourceGroupIdentityById model
+        resource_group_identity_model = {}
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        # Construct a dict representation of a SecurityGroupIdentityById model
+        security_group_identity_model = {}
+        security_group_identity_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+
+        # Set up parameter values
+        certificate = certificate_instance_identity_model
+        client_authentication = [vpn_server_authentication_prototype_model]
+        client_ip_pool = '172.16.0.0/16'
+        subnets = [subnet_identity_model]
+        client_dns_server_ips = [ip_model]
+        client_idle_timeout = 600
+        enable_split_tunneling = False
+        name = 'my-vpn-server'
+        port = 443
+        protocol = 'udp'
+        resource_group = resource_group_identity_model
+        security_groups = [security_group_identity_model]
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "certificate": certificate,
+            "client_authentication": client_authentication,
+            "client_ip_pool": client_ip_pool,
+            "subnets": subnets,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_vpn_server(**req_copy)
+
+
+    def test_create_vpn_server_value_error_with_retries(self):
+        # Enable retries and run test_create_vpn_server_value_error.
+        _service.enable_retries()
+        self.test_create_vpn_server_value_error()
+
+        # Disable retries and run test_create_vpn_server_value_error.
+        _service.disable_retries()
+        self.test_create_vpn_server_value_error()
+
+class TestDeleteVpnServer():
+    """
+    Test Class for delete_vpn_server
+    """
+
+    @responses.activate
+    def test_delete_vpn_server_all_params(self):
+        """
+        delete_vpn_server()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.delete_vpn_server(
+            id,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_vpn_server_all_params_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_all_params.
+        _service.enable_retries()
+        self.test_delete_vpn_server_all_params()
+
+        # Disable retries and run test_delete_vpn_server_all_params.
+        _service.disable_retries()
+        self.test_delete_vpn_server_all_params()
+
+    @responses.activate
+    def test_delete_vpn_server_required_params(self):
+        """
+        test_delete_vpn_server_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_vpn_server(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_vpn_server_required_params_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_required_params.
+        _service.enable_retries()
+        self.test_delete_vpn_server_required_params()
+
+        # Disable retries and run test_delete_vpn_server_required_params.
+        _service.disable_retries()
+        self.test_delete_vpn_server_required_params()
+
+    @responses.activate
+    def test_delete_vpn_server_value_error(self):
+        """
+        test_delete_vpn_server_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_vpn_server(**req_copy)
+
+
+    def test_delete_vpn_server_value_error_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_value_error.
+        _service.enable_retries()
+        self.test_delete_vpn_server_value_error()
+
+        # Disable retries and run test_delete_vpn_server_value_error.
+        _service.disable_retries()
+        self.test_delete_vpn_server_value_error()
+
+class TestGetVpnServer():
+    """
+    Test Class for get_vpn_server
+    """
+
+    @responses.activate
+    def test_get_vpn_server_all_params(self):
+        """
+        get_vpn_server()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_vpn_server(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_vpn_server_all_params_with_retries(self):
+        # Enable retries and run test_get_vpn_server_all_params.
+        _service.enable_retries()
+        self.test_get_vpn_server_all_params()
+
+        # Disable retries and run test_get_vpn_server_all_params.
+        _service.disable_retries()
+        self.test_get_vpn_server_all_params()
+
+    @responses.activate
+    def test_get_vpn_server_value_error(self):
+        """
+        test_get_vpn_server_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_vpn_server(**req_copy)
+
+
+    def test_get_vpn_server_value_error_with_retries(self):
+        # Enable retries and run test_get_vpn_server_value_error.
+        _service.enable_retries()
+        self.test_get_vpn_server_value_error()
+
+        # Disable retries and run test_get_vpn_server_value_error.
+        _service.disable_retries()
+        self.test_get_vpn_server_value_error()
+
+class TestUpdateVpnServer():
+    """
+    Test Class for update_vpn_server
+    """
+
+    @responses.activate
+    def test_update_vpn_server_all_params(self):
+        """
+        update_vpn_server()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a CertificateInstanceIdentityByCRN model
+        certificate_instance_identity_model = {}
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a dict representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_model = {}
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a dict representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_model = {}
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a dict representation of a IP model
+        ip_model = {}
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a dict representation of a SubnetIdentityById model
+        subnet_identity_model = {}
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a dict representation of a VPNServerPatch model
+        vpn_server_patch_model = {}
+        vpn_server_patch_model['certificate'] = certificate_instance_identity_model
+        vpn_server_patch_model['client_authentication'] = [vpn_server_authentication_prototype_model]
+        vpn_server_patch_model['client_dns_server_ips'] = [ip_model]
+        vpn_server_patch_model['client_idle_timeout'] = 600
+        vpn_server_patch_model['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_patch_model['enable_split_tunneling'] = True
+        vpn_server_patch_model['name'] = 'my-vpn-server'
+        vpn_server_patch_model['port'] = 443
+        vpn_server_patch_model['protocol'] = 'udp'
+        vpn_server_patch_model['subnets'] = [subnet_identity_model]
+
+        # Set up parameter values
+        id = 'testString'
+        vpn_server_patch = vpn_server_patch_model
+        if_match = 'W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"'
+
+        # Invoke method
+        response = _service.update_vpn_server(
+            id,
+            vpn_server_patch,
+            if_match=if_match,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == vpn_server_patch
+
+    def test_update_vpn_server_all_params_with_retries(self):
+        # Enable retries and run test_update_vpn_server_all_params.
+        _service.enable_retries()
+        self.test_update_vpn_server_all_params()
+
+        # Disable retries and run test_update_vpn_server_all_params.
+        _service.disable_retries()
+        self.test_update_vpn_server_all_params()
+
+    @responses.activate
+    def test_update_vpn_server_required_params(self):
+        """
+        test_update_vpn_server_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a CertificateInstanceIdentityByCRN model
+        certificate_instance_identity_model = {}
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a dict representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_model = {}
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a dict representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_model = {}
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a dict representation of a IP model
+        ip_model = {}
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a dict representation of a SubnetIdentityById model
+        subnet_identity_model = {}
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a dict representation of a VPNServerPatch model
+        vpn_server_patch_model = {}
+        vpn_server_patch_model['certificate'] = certificate_instance_identity_model
+        vpn_server_patch_model['client_authentication'] = [vpn_server_authentication_prototype_model]
+        vpn_server_patch_model['client_dns_server_ips'] = [ip_model]
+        vpn_server_patch_model['client_idle_timeout'] = 600
+        vpn_server_patch_model['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_patch_model['enable_split_tunneling'] = True
+        vpn_server_patch_model['name'] = 'my-vpn-server'
+        vpn_server_patch_model['port'] = 443
+        vpn_server_patch_model['protocol'] = 'udp'
+        vpn_server_patch_model['subnets'] = [subnet_identity_model]
+
+        # Set up parameter values
+        id = 'testString'
+        vpn_server_patch = vpn_server_patch_model
+
+        # Invoke method
+        response = _service.update_vpn_server(
+            id,
+            vpn_server_patch,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == vpn_server_patch
+
+    def test_update_vpn_server_required_params_with_retries(self):
+        # Enable retries and run test_update_vpn_server_required_params.
+        _service.enable_retries()
+        self.test_update_vpn_server_required_params()
+
+        # Disable retries and run test_update_vpn_server_required_params.
+        _service.disable_retries()
+        self.test_update_vpn_server_required_params()
+
+    @responses.activate
+    def test_update_vpn_server_value_error(self):
+        """
+        test_update_vpn_server_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString')
+        mock_response = '{"certificate": {"crn": "crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5"}, "client_authentication": [{"method": "certificate", "identity_provider": {"provider_type": "iam"}}], "client_auto_delete": true, "client_auto_delete_timeout": 1, "client_dns_server_ips": [{"address": "192.168.3.4"}], "client_idle_timeout": 600, "client_ip_pool": "172.16.0.0/16", "created_at": "2019-01-01T12:00:00.000Z", "crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "enable_split_tunneling": true, "health_state": "ok", "hostname": "a8506291.us-south.vpn-server.appdomain.cloud", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "id": "r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5", "lifecycle_state": "stable", "name": "my-vpn-server", "port": 443, "private_ips": [{"address": "192.168.3.4", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb", "id": "6d353a0f-aeb1-4ae1-832e-1110d10981bb", "name": "my-reserved-ip", "resource_type": "subnet_reserved_ip"}], "protocol": "udp", "resource_group": {"href": "https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345", "id": "fee82deba12e4c0fb69c3b09d1f12345", "name": "my-resource-group"}, "resource_type": "vpn_server", "security_groups": [{"crn": "crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271", "id": "be5df5ca-12a0-494b-907e-aa6ec2bfa271", "name": "my-security-group"}], "subnets": [{"crn": "crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "id": "7ec86020-1c6e-4889-b3f0-a15f2e50f87e", "name": "my-subnet", "resource_type": "subnet"}], "vpc": {"crn": "crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b", "deleted": {"more_info": "https://cloud.ibm.com/apidocs/vpc#deleted-resources"}, "href": "https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b", "id": "4727d842-f94f-4a2d-824a-9bc9b02c523b", "name": "my-vpc", "resource_type": "vpc"}}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a CertificateInstanceIdentityByCRN model
+        certificate_instance_identity_model = {}
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a dict representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_model = {}
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a dict representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_model = {}
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a dict representation of a IP model
+        ip_model = {}
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a dict representation of a SubnetIdentityById model
+        subnet_identity_model = {}
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a dict representation of a VPNServerPatch model
+        vpn_server_patch_model = {}
+        vpn_server_patch_model['certificate'] = certificate_instance_identity_model
+        vpn_server_patch_model['client_authentication'] = [vpn_server_authentication_prototype_model]
+        vpn_server_patch_model['client_dns_server_ips'] = [ip_model]
+        vpn_server_patch_model['client_idle_timeout'] = 600
+        vpn_server_patch_model['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_patch_model['enable_split_tunneling'] = True
+        vpn_server_patch_model['name'] = 'my-vpn-server'
+        vpn_server_patch_model['port'] = 443
+        vpn_server_patch_model['protocol'] = 'udp'
+        vpn_server_patch_model['subnets'] = [subnet_identity_model]
+
+        # Set up parameter values
+        id = 'testString'
+        vpn_server_patch = vpn_server_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+            "vpn_server_patch": vpn_server_patch,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_vpn_server(**req_copy)
+
+
+    def test_update_vpn_server_value_error_with_retries(self):
+        # Enable retries and run test_update_vpn_server_value_error.
+        _service.enable_retries()
+        self.test_update_vpn_server_value_error()
+
+        # Disable retries and run test_update_vpn_server_value_error.
+        _service.disable_retries()
+        self.test_update_vpn_server_value_error()
+
+class TestGetVpnServerClientConfiguration():
+    """
+    Test Class for get_vpn_server_client_configuration
+    """
+
+    @responses.activate
+    def test_get_vpn_server_client_configuration_all_params(self):
+        """
+        get_vpn_server_client_configuration()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/client_configuration')
+        mock_response = '"client\nproto udp\nremote a8506291.us-south.vpn-server.appdomain.cloud\nport 443\n\ndev tun\nnobind\n<ca>\n-----BEGIN CERTIFICATE-----\nxxxxxx\n-----END CERTIFICATE-----\n</ca>"'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='text/plain',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_vpn_server_client_configuration(
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_vpn_server_client_configuration_all_params_with_retries(self):
+        # Enable retries and run test_get_vpn_server_client_configuration_all_params.
+        _service.enable_retries()
+        self.test_get_vpn_server_client_configuration_all_params()
+
+        # Disable retries and run test_get_vpn_server_client_configuration_all_params.
+        _service.disable_retries()
+        self.test_get_vpn_server_client_configuration_all_params()
+
+    @responses.activate
+    def test_get_vpn_server_client_configuration_value_error(self):
+        """
+        test_get_vpn_server_client_configuration_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/client_configuration')
+        mock_response = '"client\nproto udp\nremote a8506291.us-south.vpn-server.appdomain.cloud\nport 443\n\ndev tun\nnobind\n<ca>\n-----BEGIN CERTIFICATE-----\nxxxxxx\n-----END CERTIFICATE-----\n</ca>"'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='text/plain',
+                      status=200)
+
+        # Set up parameter values
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_vpn_server_client_configuration(**req_copy)
+
+
+    def test_get_vpn_server_client_configuration_value_error_with_retries(self):
+        # Enable retries and run test_get_vpn_server_client_configuration_value_error.
+        _service.enable_retries()
+        self.test_get_vpn_server_client_configuration_value_error()
+
+        # Disable retries and run test_get_vpn_server_client_configuration_value_error.
+        _service.disable_retries()
+        self.test_get_vpn_server_client_configuration_value_error()
+
+class TestListVpnServerClients():
+    """
+    Test Class for list_vpn_server_clients
+    """
+
+    @responses.activate
+    def test_list_vpn_server_clients_all_params(self):
+        """
+        list_vpn_server_clients()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients')
+        mock_response = '{"clients": [{"client_ip": {"address": "192.168.3.4"}, "common_name": "common_name", "created_at": "2019-01-01T12:00:00.000Z", "disconnected_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "remote_ip": {"address": "192.168.3.4"}, "remote_port": 22, "resource_type": "vpn_server_client", "status": "connected", "username": "username"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        start = 'testString'
+        limit = 1
+        sort = 'created_at'
+
+        # Invoke method
+        response = _service.list_vpn_server_clients(
+            vpn_server_id,
+            start=start,
+            limit=limit,
+            sort=sort,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+        assert 'sort={}'.format(sort) in query_string
+
+    def test_list_vpn_server_clients_all_params_with_retries(self):
+        # Enable retries and run test_list_vpn_server_clients_all_params.
+        _service.enable_retries()
+        self.test_list_vpn_server_clients_all_params()
+
+        # Disable retries and run test_list_vpn_server_clients_all_params.
+        _service.disable_retries()
+        self.test_list_vpn_server_clients_all_params()
+
+    @responses.activate
+    def test_list_vpn_server_clients_required_params(self):
+        """
+        test_list_vpn_server_clients_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients')
+        mock_response = '{"clients": [{"client_ip": {"address": "192.168.3.4"}, "common_name": "common_name", "created_at": "2019-01-01T12:00:00.000Z", "disconnected_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "remote_ip": {"address": "192.168.3.4"}, "remote_port": 22, "resource_type": "vpn_server_client", "status": "connected", "username": "username"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+
+        # Invoke method
+        response = _service.list_vpn_server_clients(
+            vpn_server_id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_vpn_server_clients_required_params_with_retries(self):
+        # Enable retries and run test_list_vpn_server_clients_required_params.
+        _service.enable_retries()
+        self.test_list_vpn_server_clients_required_params()
+
+        # Disable retries and run test_list_vpn_server_clients_required_params.
+        _service.disable_retries()
+        self.test_list_vpn_server_clients_required_params()
+
+    @responses.activate
+    def test_list_vpn_server_clients_value_error(self):
+        """
+        test_list_vpn_server_clients_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients')
+        mock_response = '{"clients": [{"client_ip": {"address": "192.168.3.4"}, "common_name": "common_name", "created_at": "2019-01-01T12:00:00.000Z", "disconnected_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "remote_ip": {"address": "192.168.3.4"}, "remote_port": 22, "resource_type": "vpn_server_client", "status": "connected", "username": "username"}], "first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_vpn_server_clients(**req_copy)
+
+
+    def test_list_vpn_server_clients_value_error_with_retries(self):
+        # Enable retries and run test_list_vpn_server_clients_value_error.
+        _service.enable_retries()
+        self.test_list_vpn_server_clients_value_error()
+
+        # Disable retries and run test_list_vpn_server_clients_value_error.
+        _service.disable_retries()
+        self.test_list_vpn_server_clients_value_error()
+
+class TestDeleteVpnServerClient():
+    """
+    Test Class for delete_vpn_server_client
+    """
+
+    @responses.activate
+    def test_delete_vpn_server_client_all_params(self):
+        """
+        delete_vpn_server_client()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_vpn_server_client(
+            vpn_server_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_vpn_server_client_all_params_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_client_all_params.
+        _service.enable_retries()
+        self.test_delete_vpn_server_client_all_params()
+
+        # Disable retries and run test_delete_vpn_server_client_all_params.
+        _service.disable_retries()
+        self.test_delete_vpn_server_client_all_params()
+
+    @responses.activate
+    def test_delete_vpn_server_client_value_error(self):
+        """
+        test_delete_vpn_server_client_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_vpn_server_client(**req_copy)
+
+
+    def test_delete_vpn_server_client_value_error_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_client_value_error.
+        _service.enable_retries()
+        self.test_delete_vpn_server_client_value_error()
+
+        # Disable retries and run test_delete_vpn_server_client_value_error.
+        _service.disable_retries()
+        self.test_delete_vpn_server_client_value_error()
+
+class TestGetVpnServerClient():
+    """
+    Test Class for get_vpn_server_client
+    """
+
+    @responses.activate
+    def test_get_vpn_server_client_all_params(self):
+        """
+        get_vpn_server_client()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString')
+        mock_response = '{"client_ip": {"address": "192.168.3.4"}, "common_name": "common_name", "created_at": "2019-01-01T12:00:00.000Z", "disconnected_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "remote_ip": {"address": "192.168.3.4"}, "remote_port": 22, "resource_type": "vpn_server_client", "status": "connected", "username": "username"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_vpn_server_client(
+            vpn_server_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_vpn_server_client_all_params_with_retries(self):
+        # Enable retries and run test_get_vpn_server_client_all_params.
+        _service.enable_retries()
+        self.test_get_vpn_server_client_all_params()
+
+        # Disable retries and run test_get_vpn_server_client_all_params.
+        _service.disable_retries()
+        self.test_get_vpn_server_client_all_params()
+
+    @responses.activate
+    def test_get_vpn_server_client_value_error(self):
+        """
+        test_get_vpn_server_client_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString')
+        mock_response = '{"client_ip": {"address": "192.168.3.4"}, "common_name": "common_name", "created_at": "2019-01-01T12:00:00.000Z", "disconnected_at": "2019-01-01T12:00:00.000Z", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "remote_ip": {"address": "192.168.3.4"}, "remote_port": 22, "resource_type": "vpn_server_client", "status": "connected", "username": "username"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_vpn_server_client(**req_copy)
+
+
+    def test_get_vpn_server_client_value_error_with_retries(self):
+        # Enable retries and run test_get_vpn_server_client_value_error.
+        _service.enable_retries()
+        self.test_get_vpn_server_client_value_error()
+
+        # Disable retries and run test_get_vpn_server_client_value_error.
+        _service.disable_retries()
+        self.test_get_vpn_server_client_value_error()
+
+class TestDisconnectVpnClient():
+    """
+    Test Class for disconnect_vpn_client
+    """
+
+    @responses.activate
+    def test_disconnect_vpn_client_all_params(self):
+        """
+        disconnect_vpn_client()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString/disconnect')
+        responses.add(responses.POST,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.disconnect_vpn_client(
+            vpn_server_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_disconnect_vpn_client_all_params_with_retries(self):
+        # Enable retries and run test_disconnect_vpn_client_all_params.
+        _service.enable_retries()
+        self.test_disconnect_vpn_client_all_params()
+
+        # Disable retries and run test_disconnect_vpn_client_all_params.
+        _service.disable_retries()
+        self.test_disconnect_vpn_client_all_params()
+
+    @responses.activate
+    def test_disconnect_vpn_client_value_error(self):
+        """
+        test_disconnect_vpn_client_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/clients/testString/disconnect')
+        responses.add(responses.POST,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.disconnect_vpn_client(**req_copy)
+
+
+    def test_disconnect_vpn_client_value_error_with_retries(self):
+        # Enable retries and run test_disconnect_vpn_client_value_error.
+        _service.enable_retries()
+        self.test_disconnect_vpn_client_value_error()
+
+        # Disable retries and run test_disconnect_vpn_client_value_error.
+        _service.disable_retries()
+        self.test_disconnect_vpn_client_value_error()
+
+class TestListVpnServerRoutes():
+    """
+    Test Class for list_vpn_server_routes
+    """
+
+    @responses.activate
+    def test_list_vpn_server_routes_all_params(self):
+        """
+        list_vpn_server_routes()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        start = 'testString'
+        limit = 1
+        sort = 'name'
+
+        # Invoke method
+        response = _service.list_vpn_server_routes(
+            vpn_server_id,
+            start=start,
+            limit=limit,
+            sort=sort,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?',1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'start={}'.format(start) in query_string
+        assert 'limit={}'.format(limit) in query_string
+        assert 'sort={}'.format(sort) in query_string
+
+    def test_list_vpn_server_routes_all_params_with_retries(self):
+        # Enable retries and run test_list_vpn_server_routes_all_params.
+        _service.enable_retries()
+        self.test_list_vpn_server_routes_all_params()
+
+        # Disable retries and run test_list_vpn_server_routes_all_params.
+        _service.disable_retries()
+        self.test_list_vpn_server_routes_all_params()
+
+    @responses.activate
+    def test_list_vpn_server_routes_required_params(self):
+        """
+        test_list_vpn_server_routes_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+
+        # Invoke method
+        response = _service.list_vpn_server_routes(
+            vpn_server_id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_vpn_server_routes_required_params_with_retries(self):
+        # Enable retries and run test_list_vpn_server_routes_required_params.
+        _service.enable_retries()
+        self.test_list_vpn_server_routes_required_params()
+
+        # Disable retries and run test_list_vpn_server_routes_required_params.
+        _service.disable_retries()
+        self.test_list_vpn_server_routes_required_params()
+
+    @responses.activate
+    def test_list_vpn_server_routes_value_error(self):
+        """
+        test_list_vpn_server_routes_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes')
+        mock_response = '{"first": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?limit=20"}, "limit": 20, "next": {"href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20"}, "routes": [{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}], "total_count": 132}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_vpn_server_routes(**req_copy)
+
+
+    def test_list_vpn_server_routes_value_error_with_retries(self):
+        # Enable retries and run test_list_vpn_server_routes_value_error.
+        _service.enable_retries()
+        self.test_list_vpn_server_routes_value_error()
+
+        # Disable retries and run test_list_vpn_server_routes_value_error.
+        _service.disable_retries()
+        self.test_list_vpn_server_routes_value_error()
+
+class TestCreateVpnServerRoute():
+    """
+    Test Class for create_vpn_server_route
+    """
+
+    @responses.activate
+    def test_create_vpn_server_route_all_params(self):
+        """
+        create_vpn_server_route()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        destination = '172.16.0.0/16'
+        action = 'deliver'
+        name = 'my-vpn-route-2'
+
+        # Invoke method
+        response = _service.create_vpn_server_route(
+            vpn_server_id,
+            destination,
+            action=action,
+            name=name,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['destination'] == '172.16.0.0/16'
+        assert req_body['action'] == 'deliver'
+        assert req_body['name'] == 'my-vpn-route-2'
+
+    def test_create_vpn_server_route_all_params_with_retries(self):
+        # Enable retries and run test_create_vpn_server_route_all_params.
+        _service.enable_retries()
+        self.test_create_vpn_server_route_all_params()
+
+        # Disable retries and run test_create_vpn_server_route_all_params.
+        _service.disable_retries()
+        self.test_create_vpn_server_route_all_params()
+
+    @responses.activate
+    def test_create_vpn_server_route_value_error(self):
+        """
+        test_create_vpn_server_route_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.POST,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=201)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        destination = '172.16.0.0/16'
+        action = 'deliver'
+        name = 'my-vpn-route-2'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "destination": destination,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_vpn_server_route(**req_copy)
+
+
+    def test_create_vpn_server_route_value_error_with_retries(self):
+        # Enable retries and run test_create_vpn_server_route_value_error.
+        _service.enable_retries()
+        self.test_create_vpn_server_route_value_error()
+
+        # Disable retries and run test_create_vpn_server_route_value_error.
+        _service.disable_retries()
+        self.test_create_vpn_server_route_value_error()
+
+class TestDeleteVpnServerRoute():
+    """
+    Test Class for delete_vpn_server_route
+    """
+
+    @responses.activate
+    def test_delete_vpn_server_route_all_params(self):
+        """
+        delete_vpn_server_route()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.delete_vpn_server_route(
+            vpn_server_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_vpn_server_route_all_params_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_route_all_params.
+        _service.enable_retries()
+        self.test_delete_vpn_server_route_all_params()
+
+        # Disable retries and run test_delete_vpn_server_route_all_params.
+        _service.disable_retries()
+        self.test_delete_vpn_server_route_all_params()
+
+    @responses.activate
+    def test_delete_vpn_server_route_value_error(self):
+        """
+        test_delete_vpn_server_route_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        responses.add(responses.DELETE,
+                      url,
+                      status=202)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_vpn_server_route(**req_copy)
+
+
+    def test_delete_vpn_server_route_value_error_with_retries(self):
+        # Enable retries and run test_delete_vpn_server_route_value_error.
+        _service.enable_retries()
+        self.test_delete_vpn_server_route_value_error()
+
+        # Disable retries and run test_delete_vpn_server_route_value_error.
+        _service.disable_retries()
+        self.test_delete_vpn_server_route_value_error()
+
+class TestGetVpnServerRoute():
+    """
+    Test Class for get_vpn_server_route
+    """
+
+    @responses.activate
+    def test_get_vpn_server_route_all_params(self):
+        """
+        get_vpn_server_route()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = _service.get_vpn_server_route(
+            vpn_server_id,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_vpn_server_route_all_params_with_retries(self):
+        # Enable retries and run test_get_vpn_server_route_all_params.
+        _service.enable_retries()
+        self.test_get_vpn_server_route_all_params()
+
+        # Disable retries and run test_get_vpn_server_route_all_params.
+        _service.disable_retries()
+        self.test_get_vpn_server_route_all_params()
+
+    @responses.activate
+    def test_get_vpn_server_route_value_error(self):
+        """
+        test_get_vpn_server_route_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_vpn_server_route(**req_copy)
+
+
+    def test_get_vpn_server_route_value_error_with_retries(self):
+        # Enable retries and run test_get_vpn_server_route_value_error.
+        _service.enable_retries()
+        self.test_get_vpn_server_route_value_error()
+
+        # Disable retries and run test_get_vpn_server_route_value_error.
+        _service.disable_retries()
+        self.test_get_vpn_server_route_value_error()
+
+class TestUpdateVpnServerRoute():
+    """
+    Test Class for update_vpn_server_route
+    """
+
+    @responses.activate
+    def test_update_vpn_server_route_all_params(self):
+        """
+        update_vpn_server_route()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a VPNServerRoutePatch model
+        vpn_server_route_patch_model = {}
+        vpn_server_route_patch_model['name'] = 'my-vpn-route-2'
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+        vpn_server_route_patch = vpn_server_route_patch_model
+
+        # Invoke method
+        response = _service.update_vpn_server_route(
+            vpn_server_id,
+            id,
+            vpn_server_route_patch,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == vpn_server_route_patch
+
+    def test_update_vpn_server_route_all_params_with_retries(self):
+        # Enable retries and run test_update_vpn_server_route_all_params.
+        _service.enable_retries()
+        self.test_update_vpn_server_route_all_params()
+
+        # Disable retries and run test_update_vpn_server_route_all_params.
+        _service.disable_retries()
+        self.test_update_vpn_server_route_all_params()
+
+    @responses.activate
+    def test_update_vpn_server_route_value_error(self):
+        """
+        test_update_vpn_server_route_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/vpn_servers/testString/routes/testString')
+        mock_response = '{"action": "deliver", "created_at": "2019-01-01T12:00:00.000Z", "destination": "192.168.3.0/24", "href": "https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "id": "r006-1a15dca5-7e33-45e1-b7c5-bc690e569531", "lifecycle_state": "stable", "name": "my-vpn-route-1", "resource_type": "vpn_server_route"}'
+        responses.add(responses.PATCH,
+                      url,
+                      body=mock_response,
+                      content_type='application/json',
+                      status=200)
+
+        # Construct a dict representation of a VPNServerRoutePatch model
+        vpn_server_route_patch_model = {}
+        vpn_server_route_patch_model['name'] = 'my-vpn-route-2'
+
+        # Set up parameter values
+        vpn_server_id = 'testString'
+        id = 'testString'
+        vpn_server_route_patch = vpn_server_route_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "vpn_server_id": vpn_server_id,
+            "id": id,
+            "vpn_server_route_patch": vpn_server_route_patch,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_vpn_server_route(**req_copy)
+
+
+    def test_update_vpn_server_route_value_error_with_retries(self):
+        # Enable retries and run test_update_vpn_server_route_value_error.
+        _service.enable_retries()
+        self.test_update_vpn_server_route_value_error()
+
+        # Disable retries and run test_update_vpn_server_route_value_error.
+        _service.disable_retries()
+        self.test_update_vpn_server_route_value_error()
+
+# endregion
+##############################################################################
+# End of Service: VPNServers
+##############################################################################
+
+##############################################################################
 # Start of Service: LoadBalancers
 ##############################################################################
 # region
@@ -29798,6 +32679,551 @@ class TestModel_AddressPrefixPatch():
         address_prefix_patch_model_json2 = address_prefix_patch_model.to_dict()
         assert address_prefix_patch_model_json2 == address_prefix_patch_model_json
 
+class TestModel_BackupPolicy():
+    """
+    Test Class for BackupPolicy
+    """
+
+    def test_backup_policy_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicy
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_reference_deleted_model = {} # BackupPolicyPlanReferenceDeleted
+        backup_policy_plan_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        backup_policy_plan_reference_model = {} # BackupPolicyPlanReference
+        backup_policy_plan_reference_model['deleted'] = backup_policy_plan_reference_deleted_model
+        backup_policy_plan_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['name'] = 'my-policy-plan'
+        backup_policy_plan_reference_model['resource_type'] = 'backup_policy_plan'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        # Construct a json representation of a BackupPolicy model
+        backup_policy_model_json = {}
+        backup_policy_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model_json['id'] = 'r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model_json['last_job_completed_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_model_json['lifecycle_state'] = 'stable'
+        backup_policy_model_json['match_resource_types'] = ['volume']
+        backup_policy_model_json['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_model_json['name'] = 'my-backup-policy'
+        backup_policy_model_json['plans'] = [backup_policy_plan_reference_model]
+        backup_policy_model_json['resource_group'] = resource_group_reference_model
+        backup_policy_model_json['resource_type'] = 'backup_policy'
+
+        # Construct a model instance of BackupPolicy by calling from_dict on the json representation
+        backup_policy_model = BackupPolicy.from_dict(backup_policy_model_json)
+        assert backup_policy_model != False
+
+        # Construct a model instance of BackupPolicy by calling from_dict on the json representation
+        backup_policy_model_dict = BackupPolicy.from_dict(backup_policy_model_json).__dict__
+        backup_policy_model2 = BackupPolicy(**backup_policy_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_model == backup_policy_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_model_json2 = backup_policy_model.to_dict()
+        assert backup_policy_model_json2 == backup_policy_model_json
+
+class TestModel_BackupPolicyCollection():
+    """
+    Test Class for BackupPolicyCollection
+    """
+
+    def test_backup_policy_collection_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_reference_deleted_model = {} # BackupPolicyPlanReferenceDeleted
+        backup_policy_plan_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        backup_policy_plan_reference_model = {} # BackupPolicyPlanReference
+        backup_policy_plan_reference_model['deleted'] = backup_policy_plan_reference_deleted_model
+        backup_policy_plan_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['name'] = 'my-policy-plan'
+        backup_policy_plan_reference_model['resource_type'] = 'backup_policy_plan'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        backup_policy_model = {} # BackupPolicy
+        backup_policy_model['created_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::backup-policy:r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model['id'] = 'r134-076191ba-49c2-4763-94fd-c70de73ee2e6'
+        backup_policy_model['last_job_completed_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_model['lifecycle_state'] = 'stable'
+        backup_policy_model['match_resource_types'] = ['volume']
+        backup_policy_model['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_model['name'] = 'my-backup-policy'
+        backup_policy_model['plans'] = [backup_policy_plan_reference_model]
+        backup_policy_model['resource_group'] = resource_group_reference_model
+        backup_policy_model['resource_type'] = 'backup_policy'
+
+        backup_policy_collection_first_model = {} # BackupPolicyCollectionFirst
+        backup_policy_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies?limit=20'
+
+        backup_policy_collection_next_model = {} # BackupPolicyCollectionNext
+        backup_policy_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
+        # Construct a json representation of a BackupPolicyCollection model
+        backup_policy_collection_model_json = {}
+        backup_policy_collection_model_json['backup_policies'] = [backup_policy_model]
+        backup_policy_collection_model_json['first'] = backup_policy_collection_first_model
+        backup_policy_collection_model_json['limit'] = 20
+        backup_policy_collection_model_json['next'] = backup_policy_collection_next_model
+        backup_policy_collection_model_json['total_count'] = 132
+
+        # Construct a model instance of BackupPolicyCollection by calling from_dict on the json representation
+        backup_policy_collection_model = BackupPolicyCollection.from_dict(backup_policy_collection_model_json)
+        assert backup_policy_collection_model != False
+
+        # Construct a model instance of BackupPolicyCollection by calling from_dict on the json representation
+        backup_policy_collection_model_dict = BackupPolicyCollection.from_dict(backup_policy_collection_model_json).__dict__
+        backup_policy_collection_model2 = BackupPolicyCollection(**backup_policy_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_collection_model == backup_policy_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_collection_model_json2 = backup_policy_collection_model.to_dict()
+        assert backup_policy_collection_model_json2 == backup_policy_collection_model_json
+
+class TestModel_BackupPolicyCollectionFirst():
+    """
+    Test Class for BackupPolicyCollectionFirst
+    """
+
+    def test_backup_policy_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyCollectionFirst
+        """
+
+        # Construct a json representation of a BackupPolicyCollectionFirst model
+        backup_policy_collection_first_model_json = {}
+        backup_policy_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies?limit=20'
+
+        # Construct a model instance of BackupPolicyCollectionFirst by calling from_dict on the json representation
+        backup_policy_collection_first_model = BackupPolicyCollectionFirst.from_dict(backup_policy_collection_first_model_json)
+        assert backup_policy_collection_first_model != False
+
+        # Construct a model instance of BackupPolicyCollectionFirst by calling from_dict on the json representation
+        backup_policy_collection_first_model_dict = BackupPolicyCollectionFirst.from_dict(backup_policy_collection_first_model_json).__dict__
+        backup_policy_collection_first_model2 = BackupPolicyCollectionFirst(**backup_policy_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_collection_first_model == backup_policy_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_collection_first_model_json2 = backup_policy_collection_first_model.to_dict()
+        assert backup_policy_collection_first_model_json2 == backup_policy_collection_first_model_json
+
+class TestModel_BackupPolicyCollectionNext():
+    """
+    Test Class for BackupPolicyCollectionNext
+    """
+
+    def test_backup_policy_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyCollectionNext
+        """
+
+        # Construct a json representation of a BackupPolicyCollectionNext model
+        backup_policy_collection_next_model_json = {}
+        backup_policy_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
+
+        # Construct a model instance of BackupPolicyCollectionNext by calling from_dict on the json representation
+        backup_policy_collection_next_model = BackupPolicyCollectionNext.from_dict(backup_policy_collection_next_model_json)
+        assert backup_policy_collection_next_model != False
+
+        # Construct a model instance of BackupPolicyCollectionNext by calling from_dict on the json representation
+        backup_policy_collection_next_model_dict = BackupPolicyCollectionNext.from_dict(backup_policy_collection_next_model_json).__dict__
+        backup_policy_collection_next_model2 = BackupPolicyCollectionNext(**backup_policy_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_collection_next_model == backup_policy_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_collection_next_model_json2 = backup_policy_collection_next_model.to_dict()
+        assert backup_policy_collection_next_model_json2 == backup_policy_collection_next_model_json
+
+class TestModel_BackupPolicyPatch():
+    """
+    Test Class for BackupPolicyPatch
+    """
+
+    def test_backup_policy_patch_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPatch
+        """
+
+        # Construct a json representation of a BackupPolicyPatch model
+        backup_policy_patch_model_json = {}
+        backup_policy_patch_model_json['match_user_tags'] = ['my-daily-backup-policy']
+        backup_policy_patch_model_json['name'] = 'my-backup-policy'
+
+        # Construct a model instance of BackupPolicyPatch by calling from_dict on the json representation
+        backup_policy_patch_model = BackupPolicyPatch.from_dict(backup_policy_patch_model_json)
+        assert backup_policy_patch_model != False
+
+        # Construct a model instance of BackupPolicyPatch by calling from_dict on the json representation
+        backup_policy_patch_model_dict = BackupPolicyPatch.from_dict(backup_policy_patch_model_json).__dict__
+        backup_policy_patch_model2 = BackupPolicyPatch(**backup_policy_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_patch_model == backup_policy_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_patch_model_json2 = backup_policy_patch_model.to_dict()
+        assert backup_policy_patch_model_json2 == backup_policy_patch_model_json
+
+class TestModel_BackupPolicyPlan():
+    """
+    Test Class for BackupPolicyPlan
+    """
+
+    def test_backup_policy_plan_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlan
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_deletion_trigger_model = {} # BackupPolicyPlanDeletionTrigger
+        backup_policy_plan_deletion_trigger_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_model['delete_over_count'] = 20
+
+        # Construct a json representation of a BackupPolicyPlan model
+        backup_policy_plan_model_json = {}
+        backup_policy_plan_model_json['active'] = True
+        backup_policy_plan_model_json['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_model_json['copy_user_tags'] = True
+        backup_policy_plan_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_plan_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_model_json['deletion_trigger'] = backup_policy_plan_deletion_trigger_model
+        backup_policy_plan_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_model_json['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_model_json['lifecycle_state'] = 'stable'
+        backup_policy_plan_model_json['name'] = 'my-policy-plan'
+        backup_policy_plan_model_json['resource_type'] = 'backup_policy_plan'
+
+        # Construct a model instance of BackupPolicyPlan by calling from_dict on the json representation
+        backup_policy_plan_model = BackupPolicyPlan.from_dict(backup_policy_plan_model_json)
+        assert backup_policy_plan_model != False
+
+        # Construct a model instance of BackupPolicyPlan by calling from_dict on the json representation
+        backup_policy_plan_model_dict = BackupPolicyPlan.from_dict(backup_policy_plan_model_json).__dict__
+        backup_policy_plan_model2 = BackupPolicyPlan(**backup_policy_plan_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_model == backup_policy_plan_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_model_json2 = backup_policy_plan_model.to_dict()
+        assert backup_policy_plan_model_json2 == backup_policy_plan_model_json
+
+class TestModel_BackupPolicyPlanCollection():
+    """
+    Test Class for BackupPolicyPlanCollection
+    """
+
+    def test_backup_policy_plan_collection_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_deletion_trigger_model = {} # BackupPolicyPlanDeletionTrigger
+        backup_policy_plan_deletion_trigger_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_model['delete_over_count'] = 20
+
+        backup_policy_plan_model = {} # BackupPolicyPlan
+        backup_policy_plan_model['active'] = True
+        backup_policy_plan_model['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_model['copy_user_tags'] = True
+        backup_policy_plan_model['created_at'] = '2019-01-01T12:00:00Z'
+        backup_policy_plan_model['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_model['deletion_trigger'] = backup_policy_plan_deletion_trigger_model
+        backup_policy_plan_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_model['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_model['lifecycle_state'] = 'stable'
+        backup_policy_plan_model['name'] = 'my-policy-plan'
+        backup_policy_plan_model['resource_type'] = 'backup_policy_plan'
+
+        # Construct a json representation of a BackupPolicyPlanCollection model
+        backup_policy_plan_collection_model_json = {}
+        backup_policy_plan_collection_model_json['plans'] = [backup_policy_plan_model]
+
+        # Construct a model instance of BackupPolicyPlanCollection by calling from_dict on the json representation
+        backup_policy_plan_collection_model = BackupPolicyPlanCollection.from_dict(backup_policy_plan_collection_model_json)
+        assert backup_policy_plan_collection_model != False
+
+        # Construct a model instance of BackupPolicyPlanCollection by calling from_dict on the json representation
+        backup_policy_plan_collection_model_dict = BackupPolicyPlanCollection.from_dict(backup_policy_plan_collection_model_json).__dict__
+        backup_policy_plan_collection_model2 = BackupPolicyPlanCollection(**backup_policy_plan_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_collection_model == backup_policy_plan_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_collection_model_json2 = backup_policy_plan_collection_model.to_dict()
+        assert backup_policy_plan_collection_model_json2 == backup_policy_plan_collection_model_json
+
+class TestModel_BackupPolicyPlanDeletionTrigger():
+    """
+    Test Class for BackupPolicyPlanDeletionTrigger
+    """
+
+    def test_backup_policy_plan_deletion_trigger_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanDeletionTrigger
+        """
+
+        # Construct a json representation of a BackupPolicyPlanDeletionTrigger model
+        backup_policy_plan_deletion_trigger_model_json = {}
+        backup_policy_plan_deletion_trigger_model_json['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_model_json['delete_over_count'] = 20
+
+        # Construct a model instance of BackupPolicyPlanDeletionTrigger by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_model = BackupPolicyPlanDeletionTrigger.from_dict(backup_policy_plan_deletion_trigger_model_json)
+        assert backup_policy_plan_deletion_trigger_model != False
+
+        # Construct a model instance of BackupPolicyPlanDeletionTrigger by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_model_dict = BackupPolicyPlanDeletionTrigger.from_dict(backup_policy_plan_deletion_trigger_model_json).__dict__
+        backup_policy_plan_deletion_trigger_model2 = BackupPolicyPlanDeletionTrigger(**backup_policy_plan_deletion_trigger_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_deletion_trigger_model == backup_policy_plan_deletion_trigger_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_deletion_trigger_model_json2 = backup_policy_plan_deletion_trigger_model.to_dict()
+        assert backup_policy_plan_deletion_trigger_model_json2 == backup_policy_plan_deletion_trigger_model_json
+
+class TestModel_BackupPolicyPlanDeletionTriggerPatch():
+    """
+    Test Class for BackupPolicyPlanDeletionTriggerPatch
+    """
+
+    def test_backup_policy_plan_deletion_trigger_patch_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanDeletionTriggerPatch
+        """
+
+        # Construct a json representation of a BackupPolicyPlanDeletionTriggerPatch model
+        backup_policy_plan_deletion_trigger_patch_model_json = {}
+        backup_policy_plan_deletion_trigger_patch_model_json['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_patch_model_json['delete_over_count'] = 38
+
+        # Construct a model instance of BackupPolicyPlanDeletionTriggerPatch by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_patch_model = BackupPolicyPlanDeletionTriggerPatch.from_dict(backup_policy_plan_deletion_trigger_patch_model_json)
+        assert backup_policy_plan_deletion_trigger_patch_model != False
+
+        # Construct a model instance of BackupPolicyPlanDeletionTriggerPatch by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_patch_model_dict = BackupPolicyPlanDeletionTriggerPatch.from_dict(backup_policy_plan_deletion_trigger_patch_model_json).__dict__
+        backup_policy_plan_deletion_trigger_patch_model2 = BackupPolicyPlanDeletionTriggerPatch(**backup_policy_plan_deletion_trigger_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_deletion_trigger_patch_model == backup_policy_plan_deletion_trigger_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_deletion_trigger_patch_model_json2 = backup_policy_plan_deletion_trigger_patch_model.to_dict()
+        assert backup_policy_plan_deletion_trigger_patch_model_json2 == backup_policy_plan_deletion_trigger_patch_model_json
+
+class TestModel_BackupPolicyPlanDeletionTriggerPrototype():
+    """
+    Test Class for BackupPolicyPlanDeletionTriggerPrototype
+    """
+
+    def test_backup_policy_plan_deletion_trigger_prototype_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanDeletionTriggerPrototype
+        """
+
+        # Construct a json representation of a BackupPolicyPlanDeletionTriggerPrototype model
+        backup_policy_plan_deletion_trigger_prototype_model_json = {}
+        backup_policy_plan_deletion_trigger_prototype_model_json['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_prototype_model_json['delete_over_count'] = 20
+
+        # Construct a model instance of BackupPolicyPlanDeletionTriggerPrototype by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_prototype_model = BackupPolicyPlanDeletionTriggerPrototype.from_dict(backup_policy_plan_deletion_trigger_prototype_model_json)
+        assert backup_policy_plan_deletion_trigger_prototype_model != False
+
+        # Construct a model instance of BackupPolicyPlanDeletionTriggerPrototype by calling from_dict on the json representation
+        backup_policy_plan_deletion_trigger_prototype_model_dict = BackupPolicyPlanDeletionTriggerPrototype.from_dict(backup_policy_plan_deletion_trigger_prototype_model_json).__dict__
+        backup_policy_plan_deletion_trigger_prototype_model2 = BackupPolicyPlanDeletionTriggerPrototype(**backup_policy_plan_deletion_trigger_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_deletion_trigger_prototype_model == backup_policy_plan_deletion_trigger_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_deletion_trigger_prototype_model_json2 = backup_policy_plan_deletion_trigger_prototype_model.to_dict()
+        assert backup_policy_plan_deletion_trigger_prototype_model_json2 == backup_policy_plan_deletion_trigger_prototype_model_json
+
+class TestModel_BackupPolicyPlanPatch():
+    """
+    Test Class for BackupPolicyPlanPatch
+    """
+
+    def test_backup_policy_plan_patch_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_deletion_trigger_patch_model = {} # BackupPolicyPlanDeletionTriggerPatch
+        backup_policy_plan_deletion_trigger_patch_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_patch_model['delete_over_count'] = 38
+
+        # Construct a json representation of a BackupPolicyPlanPatch model
+        backup_policy_plan_patch_model_json = {}
+        backup_policy_plan_patch_model_json['active'] = True
+        backup_policy_plan_patch_model_json['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_patch_model_json['copy_user_tags'] = True
+        backup_policy_plan_patch_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_patch_model_json['deletion_trigger'] = backup_policy_plan_deletion_trigger_patch_model
+        backup_policy_plan_patch_model_json['name'] = 'my-policy-plan'
+
+        # Construct a model instance of BackupPolicyPlanPatch by calling from_dict on the json representation
+        backup_policy_plan_patch_model = BackupPolicyPlanPatch.from_dict(backup_policy_plan_patch_model_json)
+        assert backup_policy_plan_patch_model != False
+
+        # Construct a model instance of BackupPolicyPlanPatch by calling from_dict on the json representation
+        backup_policy_plan_patch_model_dict = BackupPolicyPlanPatch.from_dict(backup_policy_plan_patch_model_json).__dict__
+        backup_policy_plan_patch_model2 = BackupPolicyPlanPatch(**backup_policy_plan_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_patch_model == backup_policy_plan_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_patch_model_json2 = backup_policy_plan_patch_model.to_dict()
+        assert backup_policy_plan_patch_model_json2 == backup_policy_plan_patch_model_json
+
+class TestModel_BackupPolicyPlanPrototype():
+    """
+    Test Class for BackupPolicyPlanPrototype
+    """
+
+    def test_backup_policy_plan_prototype_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanPrototype
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_deletion_trigger_prototype_model = {} # BackupPolicyPlanDeletionTriggerPrototype
+        backup_policy_plan_deletion_trigger_prototype_model['delete_after'] = 20
+        backup_policy_plan_deletion_trigger_prototype_model['delete_over_count'] = 20
+
+        # Construct a json representation of a BackupPolicyPlanPrototype model
+        backup_policy_plan_prototype_model_json = {}
+        backup_policy_plan_prototype_model_json['active'] = True
+        backup_policy_plan_prototype_model_json['attach_user_tags'] = ['my-daily-backup-plan']
+        backup_policy_plan_prototype_model_json['copy_user_tags'] = True
+        backup_policy_plan_prototype_model_json['cron_spec'] = '*/5 1,2,3 * * *'
+        backup_policy_plan_prototype_model_json['deletion_trigger'] = backup_policy_plan_deletion_trigger_prototype_model
+        backup_policy_plan_prototype_model_json['name'] = 'my-policy-plan'
+
+        # Construct a model instance of BackupPolicyPlanPrototype by calling from_dict on the json representation
+        backup_policy_plan_prototype_model = BackupPolicyPlanPrototype.from_dict(backup_policy_plan_prototype_model_json)
+        assert backup_policy_plan_prototype_model != False
+
+        # Construct a model instance of BackupPolicyPlanPrototype by calling from_dict on the json representation
+        backup_policy_plan_prototype_model_dict = BackupPolicyPlanPrototype.from_dict(backup_policy_plan_prototype_model_json).__dict__
+        backup_policy_plan_prototype_model2 = BackupPolicyPlanPrototype(**backup_policy_plan_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_prototype_model == backup_policy_plan_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_prototype_model_json2 = backup_policy_plan_prototype_model.to_dict()
+        assert backup_policy_plan_prototype_model_json2 == backup_policy_plan_prototype_model_json
+
+class TestModel_BackupPolicyPlanReference():
+    """
+    Test Class for BackupPolicyPlanReference
+    """
+
+    def test_backup_policy_plan_reference_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        backup_policy_plan_reference_deleted_model = {} # BackupPolicyPlanReferenceDeleted
+        backup_policy_plan_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a BackupPolicyPlanReference model
+        backup_policy_plan_reference_model_json = {}
+        backup_policy_plan_reference_model_json['deleted'] = backup_policy_plan_reference_deleted_model
+        backup_policy_plan_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model_json['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model_json['name'] = 'my-policy-plan'
+        backup_policy_plan_reference_model_json['resource_type'] = 'backup_policy_plan'
+
+        # Construct a model instance of BackupPolicyPlanReference by calling from_dict on the json representation
+        backup_policy_plan_reference_model = BackupPolicyPlanReference.from_dict(backup_policy_plan_reference_model_json)
+        assert backup_policy_plan_reference_model != False
+
+        # Construct a model instance of BackupPolicyPlanReference by calling from_dict on the json representation
+        backup_policy_plan_reference_model_dict = BackupPolicyPlanReference.from_dict(backup_policy_plan_reference_model_json).__dict__
+        backup_policy_plan_reference_model2 = BackupPolicyPlanReference(**backup_policy_plan_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_reference_model == backup_policy_plan_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_reference_model_json2 = backup_policy_plan_reference_model.to_dict()
+        assert backup_policy_plan_reference_model_json2 == backup_policy_plan_reference_model_json
+
+class TestModel_BackupPolicyPlanReferenceDeleted():
+    """
+    Test Class for BackupPolicyPlanReferenceDeleted
+    """
+
+    def test_backup_policy_plan_reference_deleted_serialization(self):
+        """
+        Test serialization/deserialization for BackupPolicyPlanReferenceDeleted
+        """
+
+        # Construct a json representation of a BackupPolicyPlanReferenceDeleted model
+        backup_policy_plan_reference_deleted_model_json = {}
+        backup_policy_plan_reference_deleted_model_json['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a model instance of BackupPolicyPlanReferenceDeleted by calling from_dict on the json representation
+        backup_policy_plan_reference_deleted_model = BackupPolicyPlanReferenceDeleted.from_dict(backup_policy_plan_reference_deleted_model_json)
+        assert backup_policy_plan_reference_deleted_model != False
+
+        # Construct a model instance of BackupPolicyPlanReferenceDeleted by calling from_dict on the json representation
+        backup_policy_plan_reference_deleted_model_dict = BackupPolicyPlanReferenceDeleted.from_dict(backup_policy_plan_reference_deleted_model_json).__dict__
+        backup_policy_plan_reference_deleted_model2 = BackupPolicyPlanReferenceDeleted(**backup_policy_plan_reference_deleted_model_dict)
+
+        # Verify the model instances are equivalent
+        assert backup_policy_plan_reference_deleted_model == backup_policy_plan_reference_deleted_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        backup_policy_plan_reference_deleted_model_json2 = backup_policy_plan_reference_deleted_model.to_dict()
+        assert backup_policy_plan_reference_deleted_model_json2 == backup_policy_plan_reference_deleted_model_json
+
 class TestModel_BareMetalServer():
     """
     Test Class for BareMetalServer
@@ -32710,6 +36136,9 @@ class TestModel_DefaultRoutingTable():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        resource_filter_model = {} # ResourceFilter
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         route_reference_deleted_model = {} # RouteReferenceDeleted
         route_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
@@ -32732,6 +36161,7 @@ class TestModel_DefaultRoutingTable():
 
         # Construct a json representation of a DefaultRoutingTable model
         default_routing_table_model_json = {}
+        default_routing_table_model_json['accept_routes_from'] = [resource_filter_model]
         default_routing_table_model_json['created_at'] = '2019-01-01T12:00:00Z'
         default_routing_table_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         default_routing_table_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -43436,6 +46866,35 @@ class TestModel_ReservedIPReferenceDeleted():
         reserved_ip_reference_deleted_model_json2 = reserved_ip_reference_deleted_model.to_dict()
         assert reserved_ip_reference_deleted_model_json2 == reserved_ip_reference_deleted_model_json
 
+class TestModel_ResourceFilter():
+    """
+    Test Class for ResourceFilter
+    """
+
+    def test_resource_filter_serialization(self):
+        """
+        Test serialization/deserialization for ResourceFilter
+        """
+
+        # Construct a json representation of a ResourceFilter model
+        resource_filter_model_json = {}
+        resource_filter_model_json['resource_type'] = 'vpn_gateway'
+
+        # Construct a model instance of ResourceFilter by calling from_dict on the json representation
+        resource_filter_model = ResourceFilter.from_dict(resource_filter_model_json)
+        assert resource_filter_model != False
+
+        # Construct a model instance of ResourceFilter by calling from_dict on the json representation
+        resource_filter_model_dict = ResourceFilter.from_dict(resource_filter_model_json).__dict__
+        resource_filter_model2 = ResourceFilter(**resource_filter_model_dict)
+
+        # Verify the model instances are equivalent
+        assert resource_filter_model == resource_filter_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        resource_filter_model_json2 = resource_filter_model.to_dict()
+        assert resource_filter_model_json2 == resource_filter_model_json
+
 class TestModel_ResourceGroupReference():
     """
     Test Class for ResourceGroupReference
@@ -43479,6 +46938,17 @@ class TestModel_Route():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        vpn_gateway_reference_deleted_model = {} # VPNGatewayReferenceDeleted
+        vpn_gateway_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        route_creator_model = {} # RouteCreatorVPNGatewayReference
+        route_creator_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['deleted'] = vpn_gateway_reference_deleted_model
+        route_creator_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['name'] = 'my-vpn-gateway'
+        route_creator_model['resource_type'] = 'vpn_gateway'
+
         route_next_hop_model = {} # RouteNextHopIP
         route_next_hop_model['address'] = '192.168.3.4'
 
@@ -43490,12 +46960,14 @@ class TestModel_Route():
         route_model_json = {}
         route_model_json['action'] = 'delegate'
         route_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        route_model_json['creator'] = route_creator_model
         route_model_json['destination'] = '192.168.3.0/24'
         route_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model_json['lifecycle_state'] = 'stable'
         route_model_json['name'] = 'my-route-1'
         route_model_json['next_hop'] = route_next_hop_model
+        route_model_json['origin'] = 'service'
         route_model_json['zone'] = zone_reference_model
 
         # Construct a model instance of Route by calling from_dict on the json representation
@@ -43531,6 +47003,17 @@ class TestModel_RouteCollection():
         route_collection_next_model = {} # RouteCollectionNext
         route_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/1a15dca5-7e33-45e1-b7c5-bc690e569531/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20'
 
+        vpn_gateway_reference_deleted_model = {} # VPNGatewayReferenceDeleted
+        vpn_gateway_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        route_creator_model = {} # RouteCreatorVPNGatewayReference
+        route_creator_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['deleted'] = vpn_gateway_reference_deleted_model
+        route_creator_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_model['name'] = 'my-vpn-gateway'
+        route_creator_model['resource_type'] = 'vpn_gateway'
+
         route_next_hop_model = {} # RouteNextHopIP
         route_next_hop_model['address'] = '192.168.3.4'
 
@@ -43541,12 +47024,14 @@ class TestModel_RouteCollection():
         route_model = {} # Route
         route_model['action'] = 'delegate'
         route_model['created_at'] = '2019-01-01T12:00:00Z'
+        route_model['creator'] = route_creator_model
         route_model['destination'] = '192.168.3.0/24'
         route_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
         route_model['lifecycle_state'] = 'stable'
         route_model['name'] = 'my-route-1'
         route_model['next_hop'] = route_next_hop_model
+        route_model['origin'] = 'service'
         route_model['zone'] = zone_reference_model
 
         # Construct a json representation of a RouteCollection model
@@ -43671,8 +47156,8 @@ class TestModel_RoutePrototype():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
-        route_next_hop_prototype_model = {} # RouteNextHopPrototypeRouteNextHopIP
-        route_next_hop_prototype_model['address'] = '192.168.3.4'
+        route_prototype_next_hop_model = {} # RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP
+        route_prototype_next_hop_model['address'] = '192.168.3.4'
 
         zone_identity_model = {} # ZoneIdentityByName
         zone_identity_model['name'] = 'us-south-1'
@@ -43681,8 +47166,8 @@ class TestModel_RoutePrototype():
         route_prototype_model_json = {}
         route_prototype_model_json['action'] = 'deliver'
         route_prototype_model_json['destination'] = '192.168.3.0/24'
-        route_prototype_model_json['name'] = 'my-route-2'
-        route_prototype_model_json['next_hop'] = route_next_hop_prototype_model
+        route_prototype_model_json['name'] = 'my-route-1'
+        route_prototype_model_json['next_hop'] = route_prototype_next_hop_model
         route_prototype_model_json['zone'] = zone_identity_model
 
         # Construct a model instance of RoutePrototype by calling from_dict on the json representation
@@ -43778,6 +47263,9 @@ class TestModel_RoutingTable():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        resource_filter_model = {} # ResourceFilter
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         route_reference_deleted_model = {} # RouteReferenceDeleted
         route_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
@@ -43800,6 +47288,7 @@ class TestModel_RoutingTable():
 
         # Construct a json representation of a RoutingTable model
         routing_table_model_json = {}
+        routing_table_model_json['accept_routes_from'] = [resource_filter_model]
         routing_table_model_json['created_at'] = '2019-01-01T12:00:00Z'
         routing_table_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         routing_table_model_json['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -43846,6 +47335,9 @@ class TestModel_RoutingTableCollection():
         routing_table_collection_next_model = {} # RoutingTableCollectionNext
         routing_table_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
 
+        resource_filter_model = {} # ResourceFilter
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         route_reference_deleted_model = {} # RouteReferenceDeleted
         route_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
 
@@ -43867,6 +47359,7 @@ class TestModel_RoutingTableCollection():
         subnet_reference_model['resource_type'] = 'subnet'
 
         routing_table_model = {} # RoutingTable
+        routing_table_model['accept_routes_from'] = [resource_filter_model]
         routing_table_model['created_at'] = '2019-01-01T12:00:00Z'
         routing_table_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routing_tables/6885e83f-03b2-4603-8a86-db2a0f55c840'
         routing_table_model['id'] = '1a15dca5-7e33-45e1-b7c5-bc690e569531'
@@ -43971,8 +47464,14 @@ class TestModel_RoutingTablePatch():
         Test serialization/deserialization for RoutingTablePatch
         """
 
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        resource_filter_model = {} # ResourceFilter
+        resource_filter_model['resource_type'] = 'vpn_server'
+
         # Construct a json representation of a RoutingTablePatch model
         routing_table_patch_model_json = {}
+        routing_table_patch_model_json['accept_routes_from'] = [resource_filter_model]
         routing_table_patch_model_json['name'] = 'my-routing-table-2'
         routing_table_patch_model_json['route_direct_link_ingress'] = True
         routing_table_patch_model_json['route_transit_gateway_ingress'] = True
@@ -44582,6 +48081,16 @@ class TestModel_Snapshot():
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        backup_policy_plan_reference_deleted_model = {} # BackupPolicyPlanReferenceDeleted
+        backup_policy_plan_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        backup_policy_plan_reference_model = {} # BackupPolicyPlanReference
+        backup_policy_plan_reference_model['deleted'] = backup_policy_plan_reference_deleted_model
+        backup_policy_plan_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['name'] = 'my-policy-plan'
+        backup_policy_plan_reference_model['resource_type'] = 'backup_policy_plan'
+
         encryption_key_reference_model = {} # EncryptionKeyReference
         encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
@@ -44622,6 +48131,7 @@ class TestModel_Snapshot():
 
         # Construct a json representation of a Snapshot model
         snapshot_model_json = {}
+        snapshot_model_json['backup_policy_plan'] = backup_policy_plan_reference_model
         snapshot_model_json['bootable'] = True
         snapshot_model_json['captured_at'] = '2019-01-01T12:00:00Z'
         snapshot_model_json['created_at'] = '2019-01-01T12:00:00Z'
@@ -44676,6 +48186,16 @@ class TestModel_SnapshotCollection():
         snapshot_collection_next_model = {} # SnapshotCollectionNext
         snapshot_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/snapshots?start=9d5a91a3e2cbd233b5a5b33436855ed1&limit=20'
 
+        backup_policy_plan_reference_deleted_model = {} # BackupPolicyPlanReferenceDeleted
+        backup_policy_plan_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        backup_policy_plan_reference_model = {} # BackupPolicyPlanReference
+        backup_policy_plan_reference_model['deleted'] = backup_policy_plan_reference_deleted_model
+        backup_policy_plan_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/backup_policies/r134-076191ba-49c2-4763-94fd-c70de73ee2e6/plans/r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['id'] = 'r134-6da51cfe-6f7b-4638-a6ba-00e9c327b178'
+        backup_policy_plan_reference_model['name'] = 'my-policy-plan'
+        backup_policy_plan_reference_model['resource_type'] = 'backup_policy_plan'
+
         encryption_key_reference_model = {} # EncryptionKeyReference
         encryption_key_reference_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
 
@@ -44715,6 +48235,7 @@ class TestModel_SnapshotCollection():
         volume_reference_model['name'] = 'my-volume'
 
         snapshot_model = {} # Snapshot
+        snapshot_model['backup_policy_plan'] = backup_policy_plan_reference_model
         snapshot_model['bootable'] = True
         snapshot_model['captured_at'] = '2019-01-01T12:00:00Z'
         snapshot_model['created_at'] = '2019-01-01T12:00:00Z'
@@ -46315,6 +49836,725 @@ class TestModel_VPNGatewayReferenceDeleted():
         # Convert model instance back to dict and verify no loss of data
         vpn_gateway_reference_deleted_model_json2 = vpn_gateway_reference_deleted_model.to_dict()
         assert vpn_gateway_reference_deleted_model_json2 == vpn_gateway_reference_deleted_model_json
+
+class TestModel_VPNServer():
+    """
+    Test Class for VPNServer
+    """
+
+    def test_vpn_server_serialization(self):
+        """
+        Test serialization/deserialization for VPNServer
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        certificate_instance_reference_model = {} # CertificateInstanceReference
+        certificate_instance_reference_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        vpn_server_authentication_by_username_id_provider_model = {} # VPNServerAuthenticationByUsernameIdProviderByIAM
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        vpn_server_authentication_model = {} # VPNServerAuthenticationByUsername
+        vpn_server_authentication_model['method'] = 'certificate'
+        vpn_server_authentication_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        ip_model = {} # IP
+        ip_model['address'] = '192.168.3.4'
+
+        reserved_ip_reference_deleted_model = {} # ReservedIPReferenceDeleted
+        reserved_ip_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        reserved_ip_reference_model = {} # ReservedIPReference
+        reserved_ip_reference_model['address'] = '192.168.3.4'
+        reserved_ip_reference_model['deleted'] = reserved_ip_reference_deleted_model
+        reserved_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb'
+        reserved_ip_reference_model['id'] = '6d353a0f-aeb1-4ae1-832e-1110d10981bb'
+        reserved_ip_reference_model['name'] = 'my-reserved-ip'
+        reserved_ip_reference_model['resource_type'] = 'subnet_reserved_ip'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        security_group_reference_deleted_model = {} # SecurityGroupReferenceDeleted
+        security_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        security_group_reference_model = {} # SecurityGroupReference
+        security_group_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['deleted'] = security_group_reference_deleted_model
+        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['name'] = 'my-security-group'
+
+        subnet_reference_deleted_model = {} # SubnetReferenceDeleted
+        subnet_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        subnet_reference_model = {} # SubnetReference
+        subnet_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['deleted'] = subnet_reference_deleted_model
+        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['name'] = 'my-subnet'
+        subnet_reference_model['resource_type'] = 'subnet'
+
+        vpc_reference_deleted_model = {} # VPCReferenceDeleted
+        vpc_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        vpc_reference_model = {} # VPCReference
+        vpc_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['deleted'] = vpc_reference_deleted_model
+        vpc_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['name'] = 'my-vpc'
+        vpc_reference_model['resource_type'] = 'vpc'
+
+        # Construct a json representation of a VPNServer model
+        vpn_server_model_json = {}
+        vpn_server_model_json['certificate'] = certificate_instance_reference_model
+        vpn_server_model_json['client_authentication'] = [vpn_server_authentication_model]
+        vpn_server_model_json['client_auto_delete'] = True
+        vpn_server_model_json['client_auto_delete_timeout'] = 1
+        vpn_server_model_json['client_dns_server_ips'] = [ip_model]
+        vpn_server_model_json['client_idle_timeout'] = 600
+        vpn_server_model_json['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model_json['enable_split_tunneling'] = True
+        vpn_server_model_json['health_state'] = 'ok'
+        vpn_server_model_json['hostname'] = 'a8506291.us-south.vpn-server.appdomain.cloud'
+        vpn_server_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model_json['id'] = 'r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model_json['lifecycle_state'] = 'stable'
+        vpn_server_model_json['name'] = 'my-vpn-server'
+        vpn_server_model_json['port'] = 443
+        vpn_server_model_json['private_ips'] = [reserved_ip_reference_model]
+        vpn_server_model_json['protocol'] = 'udp'
+        vpn_server_model_json['resource_group'] = resource_group_reference_model
+        vpn_server_model_json['resource_type'] = 'vpn_server'
+        vpn_server_model_json['security_groups'] = [security_group_reference_model]
+        vpn_server_model_json['subnets'] = [subnet_reference_model]
+        vpn_server_model_json['vpc'] = vpc_reference_model
+
+        # Construct a model instance of VPNServer by calling from_dict on the json representation
+        vpn_server_model = VPNServer.from_dict(vpn_server_model_json)
+        assert vpn_server_model != False
+
+        # Construct a model instance of VPNServer by calling from_dict on the json representation
+        vpn_server_model_dict = VPNServer.from_dict(vpn_server_model_json).__dict__
+        vpn_server_model2 = VPNServer(**vpn_server_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_model == vpn_server_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_model_json2 = vpn_server_model.to_dict()
+        assert vpn_server_model_json2 == vpn_server_model_json
+
+class TestModel_VPNServerClient():
+    """
+    Test Class for VPNServerClient
+    """
+
+    def test_vpn_server_client_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerClient
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        ip_model = {} # IP
+        ip_model['address'] = '192.168.3.4'
+
+        # Construct a json representation of a VPNServerClient model
+        vpn_server_client_model_json = {}
+        vpn_server_client_model_json['client_ip'] = ip_model
+        vpn_server_client_model_json['common_name'] = 'testString'
+        vpn_server_client_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_client_model_json['disconnected_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_client_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_client_model_json['id'] = 'r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_client_model_json['remote_ip'] = ip_model
+        vpn_server_client_model_json['remote_port'] = 22
+        vpn_server_client_model_json['resource_type'] = 'vpn_server_client'
+        vpn_server_client_model_json['status'] = 'connected'
+        vpn_server_client_model_json['username'] = 'testString'
+
+        # Construct a model instance of VPNServerClient by calling from_dict on the json representation
+        vpn_server_client_model = VPNServerClient.from_dict(vpn_server_client_model_json)
+        assert vpn_server_client_model != False
+
+        # Construct a model instance of VPNServerClient by calling from_dict on the json representation
+        vpn_server_client_model_dict = VPNServerClient.from_dict(vpn_server_client_model_json).__dict__
+        vpn_server_client_model2 = VPNServerClient(**vpn_server_client_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_client_model == vpn_server_client_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_client_model_json2 = vpn_server_client_model.to_dict()
+        assert vpn_server_client_model_json2 == vpn_server_client_model_json
+
+class TestModel_VPNServerClientCollection():
+    """
+    Test Class for VPNServerClientCollection
+    """
+
+    def test_vpn_server_client_collection_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerClientCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        ip_model = {} # IP
+        ip_model['address'] = '192.168.3.4'
+
+        vpn_server_client_model = {} # VPNServerClient
+        vpn_server_client_model['client_ip'] = ip_model
+        vpn_server_client_model['common_name'] = 'testString'
+        vpn_server_client_model['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_client_model['disconnected_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_client_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/8e454ead-0db7-48ac-9a8b-2698d8c470a7/clients/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_client_model['id'] = 'r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_client_model['remote_ip'] = ip_model
+        vpn_server_client_model['remote_port'] = 22
+        vpn_server_client_model['resource_type'] = 'vpn_server_client'
+        vpn_server_client_model['status'] = 'connected'
+        vpn_server_client_model['username'] = 'testString'
+
+        vpn_server_client_collection_first_model = {} # VPNServerClientCollectionFirst
+        vpn_server_client_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?limit=20'
+
+        vpn_server_client_collection_next_model = {} # VPNServerClientCollectionNext
+        vpn_server_client_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20'
+
+        # Construct a json representation of a VPNServerClientCollection model
+        vpn_server_client_collection_model_json = {}
+        vpn_server_client_collection_model_json['clients'] = [vpn_server_client_model]
+        vpn_server_client_collection_model_json['first'] = vpn_server_client_collection_first_model
+        vpn_server_client_collection_model_json['limit'] = 20
+        vpn_server_client_collection_model_json['next'] = vpn_server_client_collection_next_model
+        vpn_server_client_collection_model_json['total_count'] = 132
+
+        # Construct a model instance of VPNServerClientCollection by calling from_dict on the json representation
+        vpn_server_client_collection_model = VPNServerClientCollection.from_dict(vpn_server_client_collection_model_json)
+        assert vpn_server_client_collection_model != False
+
+        # Construct a model instance of VPNServerClientCollection by calling from_dict on the json representation
+        vpn_server_client_collection_model_dict = VPNServerClientCollection.from_dict(vpn_server_client_collection_model_json).__dict__
+        vpn_server_client_collection_model2 = VPNServerClientCollection(**vpn_server_client_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_client_collection_model == vpn_server_client_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_client_collection_model_json2 = vpn_server_client_collection_model.to_dict()
+        assert vpn_server_client_collection_model_json2 == vpn_server_client_collection_model_json
+
+class TestModel_VPNServerClientCollectionFirst():
+    """
+    Test Class for VPNServerClientCollectionFirst
+    """
+
+    def test_vpn_server_client_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerClientCollectionFirst
+        """
+
+        # Construct a json representation of a VPNServerClientCollectionFirst model
+        vpn_server_client_collection_first_model_json = {}
+        vpn_server_client_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?limit=20'
+
+        # Construct a model instance of VPNServerClientCollectionFirst by calling from_dict on the json representation
+        vpn_server_client_collection_first_model = VPNServerClientCollectionFirst.from_dict(vpn_server_client_collection_first_model_json)
+        assert vpn_server_client_collection_first_model != False
+
+        # Construct a model instance of VPNServerClientCollectionFirst by calling from_dict on the json representation
+        vpn_server_client_collection_first_model_dict = VPNServerClientCollectionFirst.from_dict(vpn_server_client_collection_first_model_json).__dict__
+        vpn_server_client_collection_first_model2 = VPNServerClientCollectionFirst(**vpn_server_client_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_client_collection_first_model == vpn_server_client_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_client_collection_first_model_json2 = vpn_server_client_collection_first_model.to_dict()
+        assert vpn_server_client_collection_first_model_json2 == vpn_server_client_collection_first_model_json
+
+class TestModel_VPNServerClientCollectionNext():
+    """
+    Test Class for VPNServerClientCollectionNext
+    """
+
+    def test_vpn_server_client_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerClientCollectionNext
+        """
+
+        # Construct a json representation of a VPNServerClientCollectionNext model
+        vpn_server_client_collection_next_model_json = {}
+        vpn_server_client_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531/clients?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20'
+
+        # Construct a model instance of VPNServerClientCollectionNext by calling from_dict on the json representation
+        vpn_server_client_collection_next_model = VPNServerClientCollectionNext.from_dict(vpn_server_client_collection_next_model_json)
+        assert vpn_server_client_collection_next_model != False
+
+        # Construct a model instance of VPNServerClientCollectionNext by calling from_dict on the json representation
+        vpn_server_client_collection_next_model_dict = VPNServerClientCollectionNext.from_dict(vpn_server_client_collection_next_model_json).__dict__
+        vpn_server_client_collection_next_model2 = VPNServerClientCollectionNext(**vpn_server_client_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_client_collection_next_model == vpn_server_client_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_client_collection_next_model_json2 = vpn_server_client_collection_next_model.to_dict()
+        assert vpn_server_client_collection_next_model_json2 == vpn_server_client_collection_next_model_json
+
+class TestModel_VPNServerCollection():
+    """
+    Test Class for VPNServerCollection
+    """
+
+    def test_vpn_server_collection_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_collection_first_model = {} # VPNServerCollectionFirst
+        vpn_server_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?limit=20'
+
+        vpn_server_collection_next_model = {} # VPNServerCollectionNext
+        vpn_server_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?start=ffd653466e284937896724b2dd044c9c&limit=20'
+
+        certificate_instance_reference_model = {} # CertificateInstanceReference
+        certificate_instance_reference_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        vpn_server_authentication_by_username_id_provider_model = {} # VPNServerAuthenticationByUsernameIdProviderByIAM
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        vpn_server_authentication_model = {} # VPNServerAuthenticationByUsername
+        vpn_server_authentication_model['method'] = 'certificate'
+        vpn_server_authentication_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        ip_model = {} # IP
+        ip_model['address'] = '192.168.3.4'
+
+        reserved_ip_reference_deleted_model = {} # ReservedIPReferenceDeleted
+        reserved_ip_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        reserved_ip_reference_model = {} # ReservedIPReference
+        reserved_ip_reference_model['address'] = '192.168.3.4'
+        reserved_ip_reference_model['deleted'] = reserved_ip_reference_deleted_model
+        reserved_ip_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e/reserved_ips/6d353a0f-aeb1-4ae1-832e-1110d10981bb'
+        reserved_ip_reference_model['id'] = '6d353a0f-aeb1-4ae1-832e-1110d10981bb'
+        reserved_ip_reference_model['name'] = 'my-reserved-ip'
+        reserved_ip_reference_model['resource_type'] = 'subnet_reserved_ip'
+
+        resource_group_reference_model = {} # ResourceGroupReference
+        resource_group_reference_model['href'] = 'https://resource-controller.cloud.ibm.com/v2/resource_groups/fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+        resource_group_reference_model['name'] = 'my-resource-group'
+
+        security_group_reference_deleted_model = {} # SecurityGroupReferenceDeleted
+        security_group_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        security_group_reference_model = {} # SecurityGroupReference
+        security_group_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::security-group:be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['deleted'] = security_group_reference_deleted_model
+        security_group_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/security_groups/be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['id'] = 'be5df5ca-12a0-494b-907e-aa6ec2bfa271'
+        security_group_reference_model['name'] = 'my-security-group'
+
+        subnet_reference_deleted_model = {} # SubnetReferenceDeleted
+        subnet_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        subnet_reference_model = {} # SubnetReference
+        subnet_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south-1:a/123456::subnet:7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['deleted'] = subnet_reference_deleted_model
+        subnet_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/subnets/7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+        subnet_reference_model['name'] = 'my-subnet'
+        subnet_reference_model['resource_type'] = 'subnet'
+
+        vpc_reference_deleted_model = {} # VPCReferenceDeleted
+        vpc_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        vpc_reference_model = {} # VPCReference
+        vpc_reference_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpc:4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['deleted'] = vpc_reference_deleted_model
+        vpc_reference_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpcs/4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['id'] = '4727d842-f94f-4a2d-824a-9bc9b02c523b'
+        vpc_reference_model['name'] = 'my-vpc'
+        vpc_reference_model['resource_type'] = 'vpc'
+
+        vpn_server_model = {} # VPNServer
+        vpn_server_model['certificate'] = certificate_instance_reference_model
+        vpn_server_model['client_authentication'] = [vpn_server_authentication_model]
+        vpn_server_model['client_auto_delete'] = True
+        vpn_server_model['client_auto_delete_timeout'] = 1
+        vpn_server_model['client_dns_server_ips'] = [ip_model]
+        vpn_server_model['client_idle_timeout'] = 600
+        vpn_server_model['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_model['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_model['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model['enable_split_tunneling'] = True
+        vpn_server_model['health_state'] = 'ok'
+        vpn_server_model['hostname'] = 'a8506291.us-south.vpn-server.appdomain.cloud'
+        vpn_server_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model['id'] = 'r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        vpn_server_model['lifecycle_state'] = 'stable'
+        vpn_server_model['name'] = 'my-vpn-server'
+        vpn_server_model['port'] = 443
+        vpn_server_model['private_ips'] = [reserved_ip_reference_model]
+        vpn_server_model['protocol'] = 'udp'
+        vpn_server_model['resource_group'] = resource_group_reference_model
+        vpn_server_model['resource_type'] = 'vpn_server'
+        vpn_server_model['security_groups'] = [security_group_reference_model]
+        vpn_server_model['subnets'] = [subnet_reference_model]
+        vpn_server_model['vpc'] = vpc_reference_model
+
+        # Construct a json representation of a VPNServerCollection model
+        vpn_server_collection_model_json = {}
+        vpn_server_collection_model_json['first'] = vpn_server_collection_first_model
+        vpn_server_collection_model_json['limit'] = 20
+        vpn_server_collection_model_json['next'] = vpn_server_collection_next_model
+        vpn_server_collection_model_json['total_count'] = 132
+        vpn_server_collection_model_json['vpn_servers'] = [vpn_server_model]
+
+        # Construct a model instance of VPNServerCollection by calling from_dict on the json representation
+        vpn_server_collection_model = VPNServerCollection.from_dict(vpn_server_collection_model_json)
+        assert vpn_server_collection_model != False
+
+        # Construct a model instance of VPNServerCollection by calling from_dict on the json representation
+        vpn_server_collection_model_dict = VPNServerCollection.from_dict(vpn_server_collection_model_json).__dict__
+        vpn_server_collection_model2 = VPNServerCollection(**vpn_server_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_collection_model == vpn_server_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_collection_model_json2 = vpn_server_collection_model.to_dict()
+        assert vpn_server_collection_model_json2 == vpn_server_collection_model_json
+
+class TestModel_VPNServerCollectionFirst():
+    """
+    Test Class for VPNServerCollectionFirst
+    """
+
+    def test_vpn_server_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerCollectionFirst
+        """
+
+        # Construct a json representation of a VPNServerCollectionFirst model
+        vpn_server_collection_first_model_json = {}
+        vpn_server_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?limit=20'
+
+        # Construct a model instance of VPNServerCollectionFirst by calling from_dict on the json representation
+        vpn_server_collection_first_model = VPNServerCollectionFirst.from_dict(vpn_server_collection_first_model_json)
+        assert vpn_server_collection_first_model != False
+
+        # Construct a model instance of VPNServerCollectionFirst by calling from_dict on the json representation
+        vpn_server_collection_first_model_dict = VPNServerCollectionFirst.from_dict(vpn_server_collection_first_model_json).__dict__
+        vpn_server_collection_first_model2 = VPNServerCollectionFirst(**vpn_server_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_collection_first_model == vpn_server_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_collection_first_model_json2 = vpn_server_collection_first_model.to_dict()
+        assert vpn_server_collection_first_model_json2 == vpn_server_collection_first_model_json
+
+class TestModel_VPNServerCollectionNext():
+    """
+    Test Class for VPNServerCollectionNext
+    """
+
+    def test_vpn_server_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerCollectionNext
+        """
+
+        # Construct a json representation of a VPNServerCollectionNext model
+        vpn_server_collection_next_model_json = {}
+        vpn_server_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers?start=ffd653466e284937896724b2dd044c9c&limit=20'
+
+        # Construct a model instance of VPNServerCollectionNext by calling from_dict on the json representation
+        vpn_server_collection_next_model = VPNServerCollectionNext.from_dict(vpn_server_collection_next_model_json)
+        assert vpn_server_collection_next_model != False
+
+        # Construct a model instance of VPNServerCollectionNext by calling from_dict on the json representation
+        vpn_server_collection_next_model_dict = VPNServerCollectionNext.from_dict(vpn_server_collection_next_model_json).__dict__
+        vpn_server_collection_next_model2 = VPNServerCollectionNext(**vpn_server_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_collection_next_model == vpn_server_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_collection_next_model_json2 = vpn_server_collection_next_model.to_dict()
+        assert vpn_server_collection_next_model_json2 == vpn_server_collection_next_model_json
+
+class TestModel_VPNServerPatch():
+    """
+    Test Class for VPNServerPatch
+    """
+
+    def test_vpn_server_patch_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        certificate_instance_identity_model = {} # CertificateInstanceIdentityByCRN
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        vpn_server_authentication_by_username_id_provider_model = {} # VPNServerAuthenticationByUsernameIdProviderByIAM
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        vpn_server_authentication_prototype_model = {} # VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype
+        vpn_server_authentication_prototype_model['method'] = 'username'
+        vpn_server_authentication_prototype_model['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        ip_model = {} # IP
+        ip_model['address'] = '192.168.3.4'
+
+        subnet_identity_model = {} # SubnetIdentityById
+        subnet_identity_model['id'] = '7ec86020-1c6e-4889-b3f0-a15f2e50f87e'
+
+        # Construct a json representation of a VPNServerPatch model
+        vpn_server_patch_model_json = {}
+        vpn_server_patch_model_json['certificate'] = certificate_instance_identity_model
+        vpn_server_patch_model_json['client_authentication'] = [vpn_server_authentication_prototype_model]
+        vpn_server_patch_model_json['client_dns_server_ips'] = [ip_model]
+        vpn_server_patch_model_json['client_idle_timeout'] = 600
+        vpn_server_patch_model_json['client_ip_pool'] = '172.16.0.0/16'
+        vpn_server_patch_model_json['enable_split_tunneling'] = True
+        vpn_server_patch_model_json['name'] = 'my-vpn-server'
+        vpn_server_patch_model_json['port'] = 443
+        vpn_server_patch_model_json['protocol'] = 'udp'
+        vpn_server_patch_model_json['subnets'] = [subnet_identity_model]
+
+        # Construct a model instance of VPNServerPatch by calling from_dict on the json representation
+        vpn_server_patch_model = VPNServerPatch.from_dict(vpn_server_patch_model_json)
+        assert vpn_server_patch_model != False
+
+        # Construct a model instance of VPNServerPatch by calling from_dict on the json representation
+        vpn_server_patch_model_dict = VPNServerPatch.from_dict(vpn_server_patch_model_json).__dict__
+        vpn_server_patch_model2 = VPNServerPatch(**vpn_server_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_patch_model == vpn_server_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_patch_model_json2 = vpn_server_patch_model.to_dict()
+        assert vpn_server_patch_model_json2 == vpn_server_patch_model_json
+
+class TestModel_VPNServerReferenceDeleted():
+    """
+    Test Class for VPNServerReferenceDeleted
+    """
+
+    def test_vpn_server_reference_deleted_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerReferenceDeleted
+        """
+
+        # Construct a json representation of a VPNServerReferenceDeleted model
+        vpn_server_reference_deleted_model_json = {}
+        vpn_server_reference_deleted_model_json['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a model instance of VPNServerReferenceDeleted by calling from_dict on the json representation
+        vpn_server_reference_deleted_model = VPNServerReferenceDeleted.from_dict(vpn_server_reference_deleted_model_json)
+        assert vpn_server_reference_deleted_model != False
+
+        # Construct a model instance of VPNServerReferenceDeleted by calling from_dict on the json representation
+        vpn_server_reference_deleted_model_dict = VPNServerReferenceDeleted.from_dict(vpn_server_reference_deleted_model_json).__dict__
+        vpn_server_reference_deleted_model2 = VPNServerReferenceDeleted(**vpn_server_reference_deleted_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_reference_deleted_model == vpn_server_reference_deleted_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_reference_deleted_model_json2 = vpn_server_reference_deleted_model.to_dict()
+        assert vpn_server_reference_deleted_model_json2 == vpn_server_reference_deleted_model_json
+
+class TestModel_VPNServerRoute():
+    """
+    Test Class for VPNServerRoute
+    """
+
+    def test_vpn_server_route_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerRoute
+        """
+
+        # Construct a json representation of a VPNServerRoute model
+        vpn_server_route_model_json = {}
+        vpn_server_route_model_json['action'] = 'deliver'
+        vpn_server_route_model_json['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_route_model_json['destination'] = '192.168.3.0/24'
+        vpn_server_route_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_route_model_json['id'] = 'r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_route_model_json['lifecycle_state'] = 'stable'
+        vpn_server_route_model_json['name'] = 'my-vpn-route-1'
+        vpn_server_route_model_json['resource_type'] = 'vpn_server_route'
+
+        # Construct a model instance of VPNServerRoute by calling from_dict on the json representation
+        vpn_server_route_model = VPNServerRoute.from_dict(vpn_server_route_model_json)
+        assert vpn_server_route_model != False
+
+        # Construct a model instance of VPNServerRoute by calling from_dict on the json representation
+        vpn_server_route_model_dict = VPNServerRoute.from_dict(vpn_server_route_model_json).__dict__
+        vpn_server_route_model2 = VPNServerRoute(**vpn_server_route_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_route_model == vpn_server_route_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_route_model_json2 = vpn_server_route_model.to_dict()
+        assert vpn_server_route_model_json2 == vpn_server_route_model_json
+
+class TestModel_VPNServerRouteCollection():
+    """
+    Test Class for VPNServerRouteCollection
+    """
+
+    def test_vpn_server_route_collection_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerRouteCollection
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_route_collection_first_model = {} # VPNServerRouteCollectionFirst
+        vpn_server_route_collection_first_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?limit=20'
+
+        vpn_server_route_collection_next_model = {} # VPNServerRouteCollectionNext
+        vpn_server_route_collection_next_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20'
+
+        vpn_server_route_model = {} # VPNServerRoute
+        vpn_server_route_model['action'] = 'deliver'
+        vpn_server_route_model['created_at'] = '2019-01-01T12:00:00Z'
+        vpn_server_route_model['destination'] = '192.168.3.0/24'
+        vpn_server_route_model['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-8e454ead-0db7-48ac-9a8b-2698d8c470a7/routes/r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_route_model['id'] = 'r006-1a15dca5-7e33-45e1-b7c5-bc690e569531'
+        vpn_server_route_model['lifecycle_state'] = 'stable'
+        vpn_server_route_model['name'] = 'my-vpn-route-1'
+        vpn_server_route_model['resource_type'] = 'vpn_server_route'
+
+        # Construct a json representation of a VPNServerRouteCollection model
+        vpn_server_route_collection_model_json = {}
+        vpn_server_route_collection_model_json['first'] = vpn_server_route_collection_first_model
+        vpn_server_route_collection_model_json['limit'] = 20
+        vpn_server_route_collection_model_json['next'] = vpn_server_route_collection_next_model
+        vpn_server_route_collection_model_json['routes'] = [vpn_server_route_model]
+        vpn_server_route_collection_model_json['total_count'] = 132
+
+        # Construct a model instance of VPNServerRouteCollection by calling from_dict on the json representation
+        vpn_server_route_collection_model = VPNServerRouteCollection.from_dict(vpn_server_route_collection_model_json)
+        assert vpn_server_route_collection_model != False
+
+        # Construct a model instance of VPNServerRouteCollection by calling from_dict on the json representation
+        vpn_server_route_collection_model_dict = VPNServerRouteCollection.from_dict(vpn_server_route_collection_model_json).__dict__
+        vpn_server_route_collection_model2 = VPNServerRouteCollection(**vpn_server_route_collection_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_route_collection_model == vpn_server_route_collection_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_route_collection_model_json2 = vpn_server_route_collection_model.to_dict()
+        assert vpn_server_route_collection_model_json2 == vpn_server_route_collection_model_json
+
+class TestModel_VPNServerRouteCollectionFirst():
+    """
+    Test Class for VPNServerRouteCollectionFirst
+    """
+
+    def test_vpn_server_route_collection_first_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerRouteCollectionFirst
+        """
+
+        # Construct a json representation of a VPNServerRouteCollectionFirst model
+        vpn_server_route_collection_first_model_json = {}
+        vpn_server_route_collection_first_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?limit=20'
+
+        # Construct a model instance of VPNServerRouteCollectionFirst by calling from_dict on the json representation
+        vpn_server_route_collection_first_model = VPNServerRouteCollectionFirst.from_dict(vpn_server_route_collection_first_model_json)
+        assert vpn_server_route_collection_first_model != False
+
+        # Construct a model instance of VPNServerRouteCollectionFirst by calling from_dict on the json representation
+        vpn_server_route_collection_first_model_dict = VPNServerRouteCollectionFirst.from_dict(vpn_server_route_collection_first_model_json).__dict__
+        vpn_server_route_collection_first_model2 = VPNServerRouteCollectionFirst(**vpn_server_route_collection_first_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_route_collection_first_model == vpn_server_route_collection_first_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_route_collection_first_model_json2 = vpn_server_route_collection_first_model.to_dict()
+        assert vpn_server_route_collection_first_model_json2 == vpn_server_route_collection_first_model_json
+
+class TestModel_VPNServerRouteCollectionNext():
+    """
+    Test Class for VPNServerRouteCollectionNext
+    """
+
+    def test_vpn_server_route_collection_next_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerRouteCollectionNext
+        """
+
+        # Construct a json representation of a VPNServerRouteCollectionNext model
+        vpn_server_route_collection_next_model_json = {}
+        vpn_server_route_collection_next_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-982d72b7-db1b-4606-afb2-ed6bd4b0bed1/routes?start=a5e812a2-62c0-4555-86a5-907106760c56&limit=20'
+
+        # Construct a model instance of VPNServerRouteCollectionNext by calling from_dict on the json representation
+        vpn_server_route_collection_next_model = VPNServerRouteCollectionNext.from_dict(vpn_server_route_collection_next_model_json)
+        assert vpn_server_route_collection_next_model != False
+
+        # Construct a model instance of VPNServerRouteCollectionNext by calling from_dict on the json representation
+        vpn_server_route_collection_next_model_dict = VPNServerRouteCollectionNext.from_dict(vpn_server_route_collection_next_model_json).__dict__
+        vpn_server_route_collection_next_model2 = VPNServerRouteCollectionNext(**vpn_server_route_collection_next_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_route_collection_next_model == vpn_server_route_collection_next_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_route_collection_next_model_json2 = vpn_server_route_collection_next_model.to_dict()
+        assert vpn_server_route_collection_next_model_json2 == vpn_server_route_collection_next_model_json
+
+class TestModel_VPNServerRoutePatch():
+    """
+    Test Class for VPNServerRoutePatch
+    """
+
+    def test_vpn_server_route_patch_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerRoutePatch
+        """
+
+        # Construct a json representation of a VPNServerRoutePatch model
+        vpn_server_route_patch_model_json = {}
+        vpn_server_route_patch_model_json['name'] = 'my-vpn-route-2'
+
+        # Construct a model instance of VPNServerRoutePatch by calling from_dict on the json representation
+        vpn_server_route_patch_model = VPNServerRoutePatch.from_dict(vpn_server_route_patch_model_json)
+        assert vpn_server_route_patch_model != False
+
+        # Construct a model instance of VPNServerRoutePatch by calling from_dict on the json representation
+        vpn_server_route_patch_model_dict = VPNServerRoutePatch.from_dict(vpn_server_route_patch_model_json).__dict__
+        vpn_server_route_patch_model2 = VPNServerRoutePatch(**vpn_server_route_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_route_patch_model == vpn_server_route_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_route_patch_model_json2 = vpn_server_route_patch_model.to_dict()
+        assert vpn_server_route_patch_model_json2 == vpn_server_route_patch_model_json
 
 class TestModel_Volume():
     """
@@ -54825,6 +59065,45 @@ class TestModel_ReservedIPTargetVPNGatewayReference():
         reserved_ip_target_vpn_gateway_reference_model_json2 = reserved_ip_target_vpn_gateway_reference_model.to_dict()
         assert reserved_ip_target_vpn_gateway_reference_model_json2 == reserved_ip_target_vpn_gateway_reference_model_json
 
+class TestModel_ReservedIPTargetVPNServerReference():
+    """
+    Test Class for ReservedIPTargetVPNServerReference
+    """
+
+    def test_reserved_ip_target_vpn_server_reference_serialization(self):
+        """
+        Test serialization/deserialization for ReservedIPTargetVPNServerReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_reference_deleted_model = {} # VPNServerReferenceDeleted
+        vpn_server_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a ReservedIPTargetVPNServerReference model
+        reserved_ip_target_vpn_server_reference_model_json = {}
+        reserved_ip_target_vpn_server_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        reserved_ip_target_vpn_server_reference_model_json['deleted'] = vpn_server_reference_deleted_model
+        reserved_ip_target_vpn_server_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        reserved_ip_target_vpn_server_reference_model_json['id'] = 'r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        reserved_ip_target_vpn_server_reference_model_json['name'] = 'my-vpn-server'
+        reserved_ip_target_vpn_server_reference_model_json['resource_type'] = 'vpn_server'
+
+        # Construct a model instance of ReservedIPTargetVPNServerReference by calling from_dict on the json representation
+        reserved_ip_target_vpn_server_reference_model = ReservedIPTargetVPNServerReference.from_dict(reserved_ip_target_vpn_server_reference_model_json)
+        assert reserved_ip_target_vpn_server_reference_model != False
+
+        # Construct a model instance of ReservedIPTargetVPNServerReference by calling from_dict on the json representation
+        reserved_ip_target_vpn_server_reference_model_dict = ReservedIPTargetVPNServerReference.from_dict(reserved_ip_target_vpn_server_reference_model_json).__dict__
+        reserved_ip_target_vpn_server_reference_model2 = ReservedIPTargetVPNServerReference(**reserved_ip_target_vpn_server_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert reserved_ip_target_vpn_server_reference_model == reserved_ip_target_vpn_server_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        reserved_ip_target_vpn_server_reference_model_json2 = reserved_ip_target_vpn_server_reference_model.to_dict()
+        assert reserved_ip_target_vpn_server_reference_model_json2 == reserved_ip_target_vpn_server_reference_model_json
+
 class TestModel_ResourceGroupIdentityById():
     """
     Test Class for ResourceGroupIdentityById
@@ -54854,6 +59133,84 @@ class TestModel_ResourceGroupIdentityById():
         resource_group_identity_by_id_model_json2 = resource_group_identity_by_id_model.to_dict()
         assert resource_group_identity_by_id_model_json2 == resource_group_identity_by_id_model_json
 
+class TestModel_RouteCreatorVPNGatewayReference():
+    """
+    Test Class for RouteCreatorVPNGatewayReference
+    """
+
+    def test_route_creator_vpn_gateway_reference_serialization(self):
+        """
+        Test serialization/deserialization for RouteCreatorVPNGatewayReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_gateway_reference_deleted_model = {} # VPNGatewayReferenceDeleted
+        vpn_gateway_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a RouteCreatorVPNGatewayReference model
+        route_creator_vpn_gateway_reference_model_json = {}
+        route_creator_vpn_gateway_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn:ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_vpn_gateway_reference_model_json['deleted'] = vpn_gateway_reference_deleted_model
+        route_creator_vpn_gateway_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_vpn_gateway_reference_model_json['id'] = 'ddf51bec-3424-11e8-b467-0ed5f89f718b'
+        route_creator_vpn_gateway_reference_model_json['name'] = 'my-vpn-gateway'
+        route_creator_vpn_gateway_reference_model_json['resource_type'] = 'vpn_gateway'
+
+        # Construct a model instance of RouteCreatorVPNGatewayReference by calling from_dict on the json representation
+        route_creator_vpn_gateway_reference_model = RouteCreatorVPNGatewayReference.from_dict(route_creator_vpn_gateway_reference_model_json)
+        assert route_creator_vpn_gateway_reference_model != False
+
+        # Construct a model instance of RouteCreatorVPNGatewayReference by calling from_dict on the json representation
+        route_creator_vpn_gateway_reference_model_dict = RouteCreatorVPNGatewayReference.from_dict(route_creator_vpn_gateway_reference_model_json).__dict__
+        route_creator_vpn_gateway_reference_model2 = RouteCreatorVPNGatewayReference(**route_creator_vpn_gateway_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert route_creator_vpn_gateway_reference_model == route_creator_vpn_gateway_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        route_creator_vpn_gateway_reference_model_json2 = route_creator_vpn_gateway_reference_model.to_dict()
+        assert route_creator_vpn_gateway_reference_model_json2 == route_creator_vpn_gateway_reference_model_json
+
+class TestModel_RouteCreatorVPNServerReference():
+    """
+    Test Class for RouteCreatorVPNServerReference
+    """
+
+    def test_route_creator_vpn_server_reference_serialization(self):
+        """
+        Test serialization/deserialization for RouteCreatorVPNServerReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_reference_deleted_model = {} # VPNServerReferenceDeleted
+        vpn_server_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a RouteCreatorVPNServerReference model
+        route_creator_vpn_server_reference_model_json = {}
+        route_creator_vpn_server_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        route_creator_vpn_server_reference_model_json['deleted'] = vpn_server_reference_deleted_model
+        route_creator_vpn_server_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        route_creator_vpn_server_reference_model_json['id'] = 'r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        route_creator_vpn_server_reference_model_json['name'] = 'my-vpn-server'
+        route_creator_vpn_server_reference_model_json['resource_type'] = 'vpn_server'
+
+        # Construct a model instance of RouteCreatorVPNServerReference by calling from_dict on the json representation
+        route_creator_vpn_server_reference_model = RouteCreatorVPNServerReference.from_dict(route_creator_vpn_server_reference_model_json)
+        assert route_creator_vpn_server_reference_model != False
+
+        # Construct a model instance of RouteCreatorVPNServerReference by calling from_dict on the json representation
+        route_creator_vpn_server_reference_model_dict = RouteCreatorVPNServerReference.from_dict(route_creator_vpn_server_reference_model_json).__dict__
+        route_creator_vpn_server_reference_model2 = RouteCreatorVPNServerReference(**route_creator_vpn_server_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert route_creator_vpn_server_reference_model == route_creator_vpn_server_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        route_creator_vpn_server_reference_model_json2 = route_creator_vpn_server_reference_model.to_dict()
+        assert route_creator_vpn_server_reference_model_json2 == route_creator_vpn_server_reference_model_json
+
 class TestModel_RouteNextHopIP():
     """
     Test Class for RouteNextHopIP
@@ -54882,35 +59239,6 @@ class TestModel_RouteNextHopIP():
         # Convert model instance back to dict and verify no loss of data
         route_next_hop_ip_model_json2 = route_next_hop_ip_model.to_dict()
         assert route_next_hop_ip_model_json2 == route_next_hop_ip_model_json
-
-class TestModel_RouteNextHopPrototypeRouteNextHopIP():
-    """
-    Test Class for RouteNextHopPrototypeRouteNextHopIP
-    """
-
-    def test_route_next_hop_prototype_route_next_hop_ip_serialization(self):
-        """
-        Test serialization/deserialization for RouteNextHopPrototypeRouteNextHopIP
-        """
-
-        # Construct a json representation of a RouteNextHopPrototypeRouteNextHopIP model
-        route_next_hop_prototype_route_next_hop_ip_model_json = {}
-        route_next_hop_prototype_route_next_hop_ip_model_json['address'] = '192.168.3.4'
-
-        # Construct a model instance of RouteNextHopPrototypeRouteNextHopIP by calling from_dict on the json representation
-        route_next_hop_prototype_route_next_hop_ip_model = RouteNextHopPrototypeRouteNextHopIP.from_dict(route_next_hop_prototype_route_next_hop_ip_model_json)
-        assert route_next_hop_prototype_route_next_hop_ip_model != False
-
-        # Construct a model instance of RouteNextHopPrototypeRouteNextHopIP by calling from_dict on the json representation
-        route_next_hop_prototype_route_next_hop_ip_model_dict = RouteNextHopPrototypeRouteNextHopIP.from_dict(route_next_hop_prototype_route_next_hop_ip_model_json).__dict__
-        route_next_hop_prototype_route_next_hop_ip_model2 = RouteNextHopPrototypeRouteNextHopIP(**route_next_hop_prototype_route_next_hop_ip_model_dict)
-
-        # Verify the model instances are equivalent
-        assert route_next_hop_prototype_route_next_hop_ip_model == route_next_hop_prototype_route_next_hop_ip_model2
-
-        # Convert model instance back to dict and verify no loss of data
-        route_next_hop_prototype_route_next_hop_ip_model_json2 = route_next_hop_prototype_route_next_hop_ip_model.to_dict()
-        assert route_next_hop_prototype_route_next_hop_ip_model_json2 == route_next_hop_prototype_route_next_hop_ip_model_json
 
 class TestModel_RouteNextHopVPNGatewayConnectionReference():
     """
@@ -54949,6 +59277,35 @@ class TestModel_RouteNextHopVPNGatewayConnectionReference():
         # Convert model instance back to dict and verify no loss of data
         route_next_hop_vpn_gateway_connection_reference_model_json2 = route_next_hop_vpn_gateway_connection_reference_model.to_dict()
         assert route_next_hop_vpn_gateway_connection_reference_model_json2 == route_next_hop_vpn_gateway_connection_reference_model_json
+
+class TestModel_RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP():
+    """
+    Test Class for RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP
+    """
+
+    def test_route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_serialization(self):
+        """
+        Test serialization/deserialization for RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP
+        """
+
+        # Construct a json representation of a RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP model
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json = {}
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json['address'] = '192.168.3.4'
+
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model = RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP.from_dict(route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json)
+        assert route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model != False
+
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_dict = RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP.from_dict(route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json).__dict__
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model2 = RoutePrototypeNextHopRouteNextHopPrototypeRouteNextHopIP(**route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_dict)
+
+        # Verify the model instances are equivalent
+        assert route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model == route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json2 = route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model.to_dict()
+        assert route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json2 == route_prototype_next_hop_route_next_hop_prototype_route_next_hop_ip_model_json
 
 class TestModel_RoutingTableIdentityByHref():
     """
@@ -55658,6 +60015,45 @@ class TestModel_SecurityGroupTargetReferenceNetworkInterfaceReferenceTargetConte
         # Convert model instance back to dict and verify no loss of data
         security_group_target_reference_network_interface_reference_target_context_model_json2 = security_group_target_reference_network_interface_reference_target_context_model.to_dict()
         assert security_group_target_reference_network_interface_reference_target_context_model_json2 == security_group_target_reference_network_interface_reference_target_context_model_json
+
+class TestModel_SecurityGroupTargetReferenceVPNServerReference():
+    """
+    Test Class for SecurityGroupTargetReferenceVPNServerReference
+    """
+
+    def test_security_group_target_reference_vpn_server_reference_serialization(self):
+        """
+        Test serialization/deserialization for SecurityGroupTargetReferenceVPNServerReference
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_reference_deleted_model = {} # VPNServerReferenceDeleted
+        vpn_server_reference_deleted_model['more_info'] = 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+
+        # Construct a json representation of a SecurityGroupTargetReferenceVPNServerReference model
+        security_group_target_reference_vpn_server_reference_model_json = {}
+        security_group_target_reference_vpn_server_reference_model_json['crn'] = 'crn:v1:bluemix:public:is:us-south:a/123456::vpn-server:r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        security_group_target_reference_vpn_server_reference_model_json['deleted'] = vpn_server_reference_deleted_model
+        security_group_target_reference_vpn_server_reference_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_servers/r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        security_group_target_reference_vpn_server_reference_model_json['id'] = 'r006-d7cc5196-9864-48c4-82d8-3f30da41fcc5'
+        security_group_target_reference_vpn_server_reference_model_json['name'] = 'my-vpn-server'
+        security_group_target_reference_vpn_server_reference_model_json['resource_type'] = 'vpn_server'
+
+        # Construct a model instance of SecurityGroupTargetReferenceVPNServerReference by calling from_dict on the json representation
+        security_group_target_reference_vpn_server_reference_model = SecurityGroupTargetReferenceVPNServerReference.from_dict(security_group_target_reference_vpn_server_reference_model_json)
+        assert security_group_target_reference_vpn_server_reference_model != False
+
+        # Construct a model instance of SecurityGroupTargetReferenceVPNServerReference by calling from_dict on the json representation
+        security_group_target_reference_vpn_server_reference_model_dict = SecurityGroupTargetReferenceVPNServerReference.from_dict(security_group_target_reference_vpn_server_reference_model_json).__dict__
+        security_group_target_reference_vpn_server_reference_model2 = SecurityGroupTargetReferenceVPNServerReference(**security_group_target_reference_vpn_server_reference_model_dict)
+
+        # Verify the model instances are equivalent
+        assert security_group_target_reference_vpn_server_reference_model == security_group_target_reference_vpn_server_reference_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        security_group_target_reference_vpn_server_reference_model_json2 = security_group_target_reference_vpn_server_reference_model.to_dict()
+        assert security_group_target_reference_vpn_server_reference_model_json2 == security_group_target_reference_vpn_server_reference_model_json
 
 class TestModel_SnapshotIdentityByCRN():
     """
@@ -56982,6 +61378,177 @@ class TestModel_VPNGatewayRouteMode():
         vpn_gateway_route_mode_model_json2 = vpn_gateway_route_mode_model.to_dict()
         assert vpn_gateway_route_mode_model_json2 == vpn_gateway_route_mode_model_json
 
+class TestModel_VPNServerAuthenticationByCertificate():
+    """
+    Test Class for VPNServerAuthenticationByCertificate
+    """
+
+    def test_vpn_server_authentication_by_certificate_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerAuthenticationByCertificate
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        certificate_instance_reference_model = {} # CertificateInstanceReference
+        certificate_instance_reference_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a json representation of a VPNServerAuthenticationByCertificate model
+        vpn_server_authentication_by_certificate_model_json = {}
+        vpn_server_authentication_by_certificate_model_json['method'] = 'certificate'
+        vpn_server_authentication_by_certificate_model_json['client_ca'] = certificate_instance_reference_model
+        vpn_server_authentication_by_certificate_model_json['crl'] = 'testString'
+
+        # Construct a model instance of VPNServerAuthenticationByCertificate by calling from_dict on the json representation
+        vpn_server_authentication_by_certificate_model = VPNServerAuthenticationByCertificate.from_dict(vpn_server_authentication_by_certificate_model_json)
+        assert vpn_server_authentication_by_certificate_model != False
+
+        # Construct a model instance of VPNServerAuthenticationByCertificate by calling from_dict on the json representation
+        vpn_server_authentication_by_certificate_model_dict = VPNServerAuthenticationByCertificate.from_dict(vpn_server_authentication_by_certificate_model_json).__dict__
+        vpn_server_authentication_by_certificate_model2 = VPNServerAuthenticationByCertificate(**vpn_server_authentication_by_certificate_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_authentication_by_certificate_model == vpn_server_authentication_by_certificate_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_authentication_by_certificate_model_json2 = vpn_server_authentication_by_certificate_model.to_dict()
+        assert vpn_server_authentication_by_certificate_model_json2 == vpn_server_authentication_by_certificate_model_json
+
+class TestModel_VPNServerAuthenticationByUsername():
+    """
+    Test Class for VPNServerAuthenticationByUsername
+    """
+
+    def test_vpn_server_authentication_by_username_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerAuthenticationByUsername
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_authentication_by_username_id_provider_model = {} # VPNServerAuthenticationByUsernameIdProviderByIAM
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a json representation of a VPNServerAuthenticationByUsername model
+        vpn_server_authentication_by_username_model_json = {}
+        vpn_server_authentication_by_username_model_json['method'] = 'certificate'
+        vpn_server_authentication_by_username_model_json['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a model instance of VPNServerAuthenticationByUsername by calling from_dict on the json representation
+        vpn_server_authentication_by_username_model = VPNServerAuthenticationByUsername.from_dict(vpn_server_authentication_by_username_model_json)
+        assert vpn_server_authentication_by_username_model != False
+
+        # Construct a model instance of VPNServerAuthenticationByUsername by calling from_dict on the json representation
+        vpn_server_authentication_by_username_model_dict = VPNServerAuthenticationByUsername.from_dict(vpn_server_authentication_by_username_model_json).__dict__
+        vpn_server_authentication_by_username_model2 = VPNServerAuthenticationByUsername(**vpn_server_authentication_by_username_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_authentication_by_username_model == vpn_server_authentication_by_username_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_authentication_by_username_model_json2 = vpn_server_authentication_by_username_model.to_dict()
+        assert vpn_server_authentication_by_username_model_json2 == vpn_server_authentication_by_username_model_json
+
+class TestModel_VPNServerAuthenticationByUsernameIdProviderByIAM():
+    """
+    Test Class for VPNServerAuthenticationByUsernameIdProviderByIAM
+    """
+
+    def test_vpn_server_authentication_by_username_id_provider_by_iam_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerAuthenticationByUsernameIdProviderByIAM
+        """
+
+        # Construct a json representation of a VPNServerAuthenticationByUsernameIdProviderByIAM model
+        vpn_server_authentication_by_username_id_provider_by_iam_model_json = {}
+        vpn_server_authentication_by_username_id_provider_by_iam_model_json['provider_type'] = 'iam'
+
+        # Construct a model instance of VPNServerAuthenticationByUsernameIdProviderByIAM by calling from_dict on the json representation
+        vpn_server_authentication_by_username_id_provider_by_iam_model = VPNServerAuthenticationByUsernameIdProviderByIAM.from_dict(vpn_server_authentication_by_username_id_provider_by_iam_model_json)
+        assert vpn_server_authentication_by_username_id_provider_by_iam_model != False
+
+        # Construct a model instance of VPNServerAuthenticationByUsernameIdProviderByIAM by calling from_dict on the json representation
+        vpn_server_authentication_by_username_id_provider_by_iam_model_dict = VPNServerAuthenticationByUsernameIdProviderByIAM.from_dict(vpn_server_authentication_by_username_id_provider_by_iam_model_json).__dict__
+        vpn_server_authentication_by_username_id_provider_by_iam_model2 = VPNServerAuthenticationByUsernameIdProviderByIAM(**vpn_server_authentication_by_username_id_provider_by_iam_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_authentication_by_username_id_provider_by_iam_model == vpn_server_authentication_by_username_id_provider_by_iam_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_authentication_by_username_id_provider_by_iam_model_json2 = vpn_server_authentication_by_username_id_provider_by_iam_model.to_dict()
+        assert vpn_server_authentication_by_username_id_provider_by_iam_model_json2 == vpn_server_authentication_by_username_id_provider_by_iam_model_json
+
+class TestModel_VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype():
+    """
+    Test Class for VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype
+    """
+
+    def test_vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        certificate_instance_identity_model = {} # CertificateInstanceIdentityByCRN
+        certificate_instance_identity_model['crn'] = 'crn:v1:bluemix:public:secrets-manager:us-south:a/123456:36fa422d-080d-4d83-8d2d-86851b4001df:secret:2e786aab-42fa-63ed-14f8-d66d552f4dd5'
+
+        # Construct a json representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype model
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json = {}
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json['method'] = 'certificate'
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json['client_ca'] = certificate_instance_identity_model
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json['crl'] = 'testString'
+
+        # Construct a model instance of VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype by calling from_dict on the json representation
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model = VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype.from_dict(vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json)
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model != False
+
+        # Construct a model instance of VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype by calling from_dict on the json representation
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_dict = VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype.from_dict(vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json).__dict__
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model2 = VPNServerAuthenticationPrototypeVPNServerAuthenticationByCertificatePrototype(**vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model == vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json2 = vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model.to_dict()
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json2 == vpn_server_authentication_prototype_vpn_server_authentication_by_certificate_prototype_model_json
+
+class TestModel_VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype():
+    """
+    Test Class for VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype
+    """
+
+    def test_vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_serialization(self):
+        """
+        Test serialization/deserialization for VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        vpn_server_authentication_by_username_id_provider_model = {} # VPNServerAuthenticationByUsernameIdProviderByIAM
+        vpn_server_authentication_by_username_id_provider_model['provider_type'] = 'iam'
+
+        # Construct a json representation of a VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype model
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json = {}
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json['method'] = 'username'
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json['identity_provider'] = vpn_server_authentication_by_username_id_provider_model
+
+        # Construct a model instance of VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype by calling from_dict on the json representation
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model = VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype.from_dict(vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json)
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model != False
+
+        # Construct a model instance of VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype by calling from_dict on the json representation
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_dict = VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype.from_dict(vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json).__dict__
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model2 = VPNServerAuthenticationPrototypeVPNServerAuthenticationByUsernamePrototype(**vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model == vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json2 = vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model.to_dict()
+        assert vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json2 == vpn_server_authentication_prototype_vpn_server_authentication_by_username_prototype_model_json
+
 class TestModel_VolumeIdentityByCRN():
     """
     Test Class for VolumeIdentityByCRN
@@ -57176,6 +61743,60 @@ class TestModel_VolumePrototypeVolumeByCapacity():
         # Convert model instance back to dict and verify no loss of data
         volume_prototype_volume_by_capacity_model_json2 = volume_prototype_volume_by_capacity_model.to_dict()
         assert volume_prototype_volume_by_capacity_model_json2 == volume_prototype_volume_by_capacity_model_json
+
+class TestModel_VolumePrototypeVolumeBySourceSnapshot():
+    """
+    Test Class for VolumePrototypeVolumeBySourceSnapshot
+    """
+
+    def test_volume_prototype_volume_by_source_snapshot_serialization(self):
+        """
+        Test serialization/deserialization for VolumePrototypeVolumeBySourceSnapshot
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        volume_profile_identity_model = {} # VolumeProfileIdentityByName
+        volume_profile_identity_model['name'] = 'general-purpose'
+
+        resource_group_identity_model = {} # ResourceGroupIdentityById
+        resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+        zone_identity_model = {} # ZoneIdentityByName
+        zone_identity_model['name'] = 'us-south-1'
+
+        encryption_key_identity_model = {} # EncryptionKeyIdentityByCRN
+        encryption_key_identity_model['crn'] = 'crn:v1:bluemix:public:kms:us-south:a/dffc98a0f1f0f95f6613b3b752286b87:e4a29d1a-2ef0-42a6-8fd2-350deb1c647e:key:5437653b-c4b1-447f-9646-b2a2a4cd6179'
+
+        snapshot_identity_model = {} # SnapshotIdentityById
+        snapshot_identity_model['id'] = '349a61d8-7ab1-420f-a690-5fed76ef9d4f'
+
+        # Construct a json representation of a VolumePrototypeVolumeBySourceSnapshot model
+        volume_prototype_volume_by_source_snapshot_model_json = {}
+        volume_prototype_volume_by_source_snapshot_model_json['iops'] = 10000
+        volume_prototype_volume_by_source_snapshot_model_json['name'] = 'my-volume'
+        volume_prototype_volume_by_source_snapshot_model_json['profile'] = volume_profile_identity_model
+        volume_prototype_volume_by_source_snapshot_model_json['resource_group'] = resource_group_identity_model
+        volume_prototype_volume_by_source_snapshot_model_json['user_tags'] = ['testString']
+        volume_prototype_volume_by_source_snapshot_model_json['zone'] = zone_identity_model
+        volume_prototype_volume_by_source_snapshot_model_json['capacity'] = 100
+        volume_prototype_volume_by_source_snapshot_model_json['encryption_key'] = encryption_key_identity_model
+        volume_prototype_volume_by_source_snapshot_model_json['source_snapshot'] = snapshot_identity_model
+
+        # Construct a model instance of VolumePrototypeVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_prototype_volume_by_source_snapshot_model = VolumePrototypeVolumeBySourceSnapshot.from_dict(volume_prototype_volume_by_source_snapshot_model_json)
+        assert volume_prototype_volume_by_source_snapshot_model != False
+
+        # Construct a model instance of VolumePrototypeVolumeBySourceSnapshot by calling from_dict on the json representation
+        volume_prototype_volume_by_source_snapshot_model_dict = VolumePrototypeVolumeBySourceSnapshot.from_dict(volume_prototype_volume_by_source_snapshot_model_json).__dict__
+        volume_prototype_volume_by_source_snapshot_model2 = VolumePrototypeVolumeBySourceSnapshot(**volume_prototype_volume_by_source_snapshot_model_dict)
+
+        # Verify the model instances are equivalent
+        assert volume_prototype_volume_by_source_snapshot_model == volume_prototype_volume_by_source_snapshot_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        volume_prototype_volume_by_source_snapshot_model_json2 = volume_prototype_volume_by_source_snapshot_model.to_dict()
+        assert volume_prototype_volume_by_source_snapshot_model_json2 == volume_prototype_volume_by_source_snapshot_model_json
 
 class TestModel_ZoneIdentityByHref():
     """
@@ -58735,63 +63356,63 @@ class TestModel_ReservedIPTargetPrototypeEndpointGatewayIdentityEndpointGatewayI
         reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json2 = reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model.to_dict()
         assert reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json2 == reserved_ip_target_prototype_endpoint_gateway_identity_endpoint_gateway_identity_by_id_model_json
 
-class TestModel_RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref():
+class TestModel_RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref():
     """
-    Test Class for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref
+    Test Class for RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref
     """
 
-    def test_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_serialization(self):
+    def test_route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_serialization(self):
         """
-        Test serialization/deserialization for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref
+        Test serialization/deserialization for RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref
         """
 
-        # Construct a json representation of a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref model
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json = {}
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
+        # Construct a json representation of a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref model
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json = {}
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json['href'] = 'https://us-south.iaas.cloud.ibm.com/v1/vpn_gateways/ddf51bec-3424-11e8-b467-0ed5f89f718b/connections/93487806-7743-4c46-81d6-72869883ea0b'
 
-        # Construct a model instance of RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref by calling from_dict on the json representation
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.from_dict(route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json)
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model != False
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.from_dict(route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json)
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model != False
 
-        # Construct a model instance of RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref by calling from_dict on the json representation
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_dict = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.from_dict(route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json).__dict__
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model2 = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref(**route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_dict)
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_dict = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref.from_dict(route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json).__dict__
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model2 = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityByHref(**route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_dict)
 
         # Verify the model instances are equivalent
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model2
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model == route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model2
 
         # Convert model instance back to dict and verify no loss of data
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 = route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model.to_dict()
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 = route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model.to_dict()
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json2 == route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_href_model_json
 
-class TestModel_RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById():
+class TestModel_RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById():
     """
-    Test Class for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById
+    Test Class for RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById
     """
 
-    def test_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_serialization(self):
+    def test_route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_serialization(self):
         """
-        Test serialization/deserialization for RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById
+        Test serialization/deserialization for RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById
         """
 
-        # Construct a json representation of a RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById model
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json = {}
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json['id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
+        # Construct a json representation of a RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById model
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json = {}
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json['id'] = 'a10a5771-dc23-442c-8460-c3601d8542f7'
 
-        # Construct a model instance of RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById by calling from_dict on the json representation
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.from_dict(route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json)
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model != False
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.from_dict(route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json)
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model != False
 
-        # Construct a model instance of RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById by calling from_dict on the json representation
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_dict = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.from_dict(route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json).__dict__
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model2 = RouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById(**route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_dict)
+        # Construct a model instance of RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById by calling from_dict on the json representation
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_dict = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById.from_dict(route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json).__dict__
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model2 = RoutePrototypeNextHopRouteNextHopPrototypeVPNGatewayConnectionIdentityRouteNextHopPrototypeVPNGatewayConnectionIdentityVPNGatewayConnectionIdentityById(**route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_dict)
 
         # Verify the model instances are equivalent
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model2
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model == route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model2
 
         # Convert model instance back to dict and verify no loss of data
-        route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 = route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model.to_dict()
-        assert route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 == route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json
+        route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 = route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model.to_dict()
+        assert route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json2 == route_prototype_next_hop_route_next_hop_prototype_vpn_gateway_connection_identity_route_next_hop_prototype_vpn_gateway_connection_identity_vpn_gateway_connection_identity_by_id_model_json
 
 class TestModel_SecurityGroupRuleRemotePatchSecurityGroupIdentitySecurityGroupIdentityByCRN():
     """
