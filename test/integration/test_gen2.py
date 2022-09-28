@@ -1097,10 +1097,12 @@ class TestLoadBalancer():
         load_balancer = get_load_balancer(
             createGen2Service, store['created_load_balancer'])
         assertGetPatchResponse(load_balancer)
+        store['created_load_balancer_etag'] = load_balancer.get_headers()['ETag']
 
     def test_update_load_balancer(self, createGen2Service):
         load_balancer = update_load_balancer(
-            createGen2Service, store['created_load_balancer'])
+            createGen2Service, store['created_load_balancer'],
+            store['created_load_balancer_etag'])
         assertGetPatchResponse(load_balancer)
 
     def test_get_load_balancer_statistics(self, createGen2Service):
@@ -1265,7 +1267,8 @@ class TestLoadBalancer():
     # delete load balancer
     def test_delete_load_balancer(self, createGen2Service):
         load_balancer = delete_load_balancer(
-            createGen2Service, store['created_load_balancer'])
+            createGen2Service, store['created_load_balancer'],
+            store['created_load_balancer_etag'])
         assertDeleteResponse(load_balancer)
 
 
@@ -2842,8 +2845,8 @@ def create_load_balancer(service, subnet):
 # --------------------------------------------------------
 
 
-def delete_load_balancer(service, id):
-    response = service.delete_load_balancer(id)
+def delete_load_balancer(service, id, etag):
+    response = service.delete_load_balancer(id, if_match=etag)
     return response
 
 # --------------------------------------------------------
@@ -2859,12 +2862,13 @@ def get_load_balancer(service, id):
 # --------------------------------------------------------
 # update_load_balancer()
 # --------------------------------------------------------
-def update_load_balancer(service, id):
+def update_load_balancer(service, id, etag):
     load_balancer_patch = {}
     load_balancer_patch['name'] = generate_name('lb')
     response = service.update_load_balancer(
         id,
         load_balancer_patch,
+        if_match = etag,
     )
     return response
 
