@@ -1032,7 +1032,6 @@ class TestVPNServer():
     
     def test_list_vpn_server_clients(self, createGen2Service):
         clients = list_vpn_server_clients(createGen2Service, store['created_vpn_server'])
-        print(clients)
         store['vpnserverclientId']=clients.get_result()['clients'][0]['id']
         assertListResponse(clients, 'clients')
 
@@ -1510,6 +1509,23 @@ class TestBackupAsaService():
             'my-backup-policy-plan-updated'
         )
         assertGetPatchResponse(bckPolicyPlan)
+
+    def test_list_backup_policy_jobs(self, createGen2Service):
+        
+        bckPolicyJjobs = list_backup_policy_jobs(
+            createGen2Service,
+            store['created_backup_policy']
+        )
+        assertListResponse(bckPolicyJjobs, 'jobs')
+        store['created_backup_policy_job'] = bckPolicyJjobs.get_result()['jobs'][0]['id']
+
+    def test_get_backup_policy_job(self, createGen2Service):
+        bckPolicyjob = get_backup_policy_job(
+            createGen2Service,
+            store['created_backup_policy'],
+            store['created_backup_policy_job']
+        )
+        assertGetPatchResponse(bckPolicyjob)
 
     def test_get_backup_policy(self, createGen2Service):
         bckPolicy = get_backup_policy(
@@ -2021,6 +2037,14 @@ def create_backup_policy(service, name):
         name=name,
         plans=[backup_policy_plan_prototype_model],
     )
+    return response
+
+def list_backup_policy_jobs(service, backup_policy_id):
+    response = service.list_backup_policy_jobs(backup_policy_id)
+    return response
+
+def get_backup_policy_job(service, backup_policy_id, job_id):
+    response = service.get_backup_policy_job(backup_policy_id, job_id)
     return response
 
 def list_backup_policy_plans(service, backup_policy_id, name):
@@ -4319,9 +4343,9 @@ def create_ike_policy(service):
     # resource_group_identity_model = {}
     # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-    authentication_algorithm = 'md5'
-    dh_group = 5
-    encryption_algorithm = 'triple_des'
+    authentication_algorithm = 'sha256'
+    dh_group = 14
+    encryption_algorithm = 'aes128'
     ike_version = 1
     key_lifetime = 28800
     name = generate_name('ike')
@@ -4365,7 +4389,7 @@ def update_ike_policy(service, id):
 
     ike_policy_patch_model = {}
     ike_policy_patch_model['name'] = generate_name('ike')
-    ike_policy_patch_model['authentication_algorithm'] = 'md5'
+    ike_policy_patch_model['authentication_algorithm'] = 'sha384'
 
     ike_policy_patch = ike_policy_patch_model
 
@@ -4402,8 +4426,8 @@ def create_ipsec_policy(service):
     # resource_group_identity_model = {}
     # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-    authentication_algorithm = 'md5'
-    encryption_algorithm = 'triple_des'
+    authentication_algorithm = 'sha384'
+    encryption_algorithm = 'aes192'
     pfs = 'disabled'
     key_lifetime = 3600
     name = generate_name('ipsec')
@@ -4449,7 +4473,7 @@ def update_ipsec_policy(service, id):
 
     i_psec_policy_patch_model = {}
     i_psec_policy_patch_model['name'] = generate_name('ipsec')
-    i_psec_policy_patch_model['authentication_algorithm'] = 'md5'
+    i_psec_policy_patch_model['authentication_algorithm'] = 'sha256'
 
     i_psec_policy_patch = i_psec_policy_patch_model
 
@@ -4717,7 +4741,7 @@ def create_volume(service, zone):
     # volume_prototype_model['resource_group'] = resource_group_identity_model
     volume_prototype_model['zone'] = zone_identity_model
     volume_prototype_model['capacity'] = 100
-
+    volume_prototype_model['user_tags'] = ['my-daily-backup-policy']
     volume_prototype = volume_prototype_model
     response = service.create_volume(volume_prototype)
     return response
