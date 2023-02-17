@@ -14,3 +14,7 @@ unit-test:
 
 test-int:
 	pytest -v test/integration --capture=tee-sys
+
+
+test-examples:
+	pytest -v examples/test_vpc_v1_examples.py -rs --capture=tee-sys
