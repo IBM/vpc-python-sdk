@@ -724,6 +724,51 @@ class TestInstances():
         ins = delete_instance(createGen2Service, store['created_instance_id'])
         assertDeleteResponse(ins)
 
+class TestSnapshots():
+    def test_list_snapshots(self, createGen2Service):
+        snapshots = list_snapshots(createGen2Service)
+        assertListResponse(snapshots, 'snapshots')
+    
+    def test_create_snapshot(self, createGen2Service):
+        snapshot = create_snapshot(createGen2Service, store['created_vol'], generate_name("snapshot"))
+        snapshot1 = create_snapshot(createGen2Service, store['created_vol'], generate_name("snapshot"))
+        assertCreateResponse(snapshot)
+        assertCreateResponse(snapshot1)
+        store['snapshot_id'] = snapshot.get_result()['id']
+
+    def test_get_snapshot(self, createGen2Service):
+        snapshot = get_snapshot(createGen2Service, store['snapshot_id'])
+        assertGetPatchResponse(snapshot)
+    
+    def test_update_snapshot(self, createGen2Service):
+        snapshot = update_snapshot(createGen2Service, store['snapshot_id'])
+        assertGetPatchResponse(snapshot)
+
+    def test_list_snapshot_clones(self, createGen2Service):
+        clones = list_snapshot_clones(createGen2Service, store['snapshot_id'])
+        assertListResponse(clones, 'clones')
+
+    def test_create_snapshot_clone(self, createGen2Service):
+        snapshot = create_snapshot_clone(createGen2Service, store['snapshot_id'], store['zone'])
+        assertGetResponse(snapshot)
+
+    def test_get_snapshot_clone(self, createGen2Service):
+        snapshot = get_snapshot_clone(createGen2Service, store['snapshot_id'], store['zone'])
+        assertGetResponse(snapshot)
+
+    def test_delete_snapshot_clone(self, createGen2Service):
+        response = delete_snapshot_clone(createGen2Service, store['snapshot_id'], store['zone'])
+        assertDeleteRequestAcceptedResponse(response)
+
+    def test_delete_snapshot(self, createGen2Service):
+        response = delete_snapshot(createGen2Service, store['snapshot_id'])
+        assertDeleteResponse(response)
+    
+    def test_delete_snapshots(self, createGen2Service):
+        response = delete_snapshots(createGen2Service, store['created_vol'])
+        assertDeleteResponse(response)
+
+    
 
 class TestSecurityGroups():
     def test_create_sg(self, createGen2Service):
@@ -1100,8 +1145,7 @@ class TestLoadBalancer():
 
     def test_update_load_balancer(self, createGen2Service):
         load_balancer = update_load_balancer(
-            createGen2Service, store['created_load_balancer'],
-            store['created_load_balancer_etag'])
+            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag'])
         assertGetPatchResponse(load_balancer)
 
     def test_get_load_balancer_statistics(self, createGen2Service):
@@ -1266,8 +1310,7 @@ class TestLoadBalancer():
     # delete load balancer
     def test_delete_load_balancer(self, createGen2Service):
         load_balancer = delete_load_balancer(
-            createGen2Service, store['created_load_balancer'],
-            store['created_load_balancer_etag'])
+            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag'])
         assertDeleteResponse(load_balancer)
 
 
@@ -1808,12 +1851,17 @@ def create_bare_metal_server(service, profile_name, subnet_id, image_id, key_id,
     bare_metal_server_initialization_model['keys'] = [key_identity_model]
     bare_metal_server_initialization_model['user_data'] = user_data
 
+    bare_metal_server_trusted_platform_module_prototype_model = {
+        'mode': 'disabled',
+    }
     create_bare_metal_server_response = service.create_bare_metal_server(
+        enable_secure_boot=False,
         initialization=bare_metal_server_initialization_model,
         primary_network_interface=bare_metal_server_primary_network_interface_model,
         profile=bare_metal_server_profile_identity_model,
         zone=zone_identity_model,
         name=bare_metal_server_name,
+        trusted_platform_module=bare_metal_server_trusted_platform_module_prototype_model,
         vpc=vpc_identity_model,
         #enable_secure_boot=True
     )
@@ -2060,13 +2108,20 @@ def create_backup_policy_plan(service, backup_policy_id, name):
         'delete_after': 20,
         'delete_over_count': 20,
     }
-
+    zone_identity_model = {
+        'name': store['zone'],
+    }
+    backup_policy_plan_clone_policy_prototype_model = {
+        'max_snapshots': 38,
+        'zones': [zone_identity_model],
+    }
     response = service.create_backup_policy_plan(
         backup_policy_id=backup_policy_id,
         cron_spec='*/5 1,2,3 * * *',
         active=True,
         attach_user_tags=['my-daily-backup-plan'],
         copy_user_tags=True,
+        clone_policy=backup_policy_plan_clone_policy_prototype_model,
         deletion_trigger=backup_policy_plan_deletion_trigger_prototype_model,
         name=name
     )
@@ -2363,7 +2418,12 @@ def create_instance(service, vpc, profile, zone, image, subnet):
     instance_prototype_model[
         'primary_network_interface'] = network_interface_prototype_model
     instance_prototype_model['zone'] = zone_identity_model
+    metadata_service_model = {}
+    metadata_service_model['enabled'] = True
+    metadata_service_model['protocol'] = 'https'
+    metadata_service_model['response_hop_limit'] = 5
 
+    instance_prototype_model['metadata_service'] = metadata_service_model
     # Set up parameter values
     instance_prototype = instance_prototype_model
 
@@ -2870,7 +2930,7 @@ def create_load_balancer(service, subnet):
 
 
 def delete_load_balancer(service, id, etag):
-    response = service.delete_load_balancer(id, if_match=etag)
+    response = service.delete_load_balancer(id, if_match = etag)
     return response
 
 # --------------------------------------------------------
@@ -3701,6 +3761,76 @@ def update_key(service, id):
         id,
         key_patch,
     )
+    return response
+
+
+
+def list_snapshots(service):
+    snapshots = service.list_snapshots()
+    return snapshots
+
+def create_snapshot(service, volumeID, name):
+    volume_identity_model = {}
+    volume_identity_model['id'] = volumeID
+    zone_identity_model = {
+        'name': store['zone'],
+    }
+
+    snapshot_clone_prototype_model = {
+        'zone': zone_identity_model,
+    }
+    
+    snapshot_prototype_model = {
+        'clones': [snapshot_clone_prototype_model],
+        'source_volume': volume_identity_model,
+        'name': name
+    }
+    snapshot = service.create_snapshot(
+        snapshot_prototype=snapshot_prototype_model)
+
+    return snapshot
+
+def get_snapshot(service, snapshotID):
+    snapshot = service.get_snapshot(id=snapshotID)
+    return snapshot
+
+def update_snapshot(service, snapshotID):
+    snapshot_patch_model = {}
+    snapshot_patch_model['name'] = generate_name('updated')
+
+    snapshot = service.update_snapshot(
+        id=snapshotID,
+        snapshot_patch=snapshot_patch_model)
+    return snapshot
+
+def list_snapshot_clones(service, snapshotID):
+    clones = service.list_snapshot_clones(id=snapshotID)
+    return clones
+
+def get_snapshot_clone(service, snapshotID, zone):
+    snapshot = service.get_snapshot_clone(
+                id=snapshotID,
+                zone_name=zone,
+            )
+    return snapshot
+
+def create_snapshot_clone(service, snapshotID, zone):
+    snapshot = service.create_snapshot_clone(
+                id=snapshotID,
+                zone_name=zone,
+            )
+    return snapshot
+
+def delete_snapshot(service, snapshotID):
+    response = service.delete_snapshot(id=snapshotID)
+    return response
+
+def delete_snapshots(service, volumeID):
+    response = service.delete_snapshots(source_volume_id=volumeID)
+    return response
+
+def delete_snapshot_clone(service, snapshotID, zone):
+    response = service.delete_snapshot_clone(id=snapshotID, zone_name=zone)
     return response
 
 # --------------------------------------------------------
