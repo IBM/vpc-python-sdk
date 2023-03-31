@@ -467,6 +467,7 @@ class TestVpcV1Examples():
                 zone=zone_identity_model,
                 next_hop=route_next_hop_prototype_model,
                 action='delegate',
+                priority=1,
                 name='my-routing-table-route').get_result()
 
             # end-create_vpc_routing_table_route
@@ -1246,6 +1247,10 @@ class TestVpcV1Examples():
             pager = VolumesPager(
                 client=vpc_service,
                 limit=10,
+                attachment_state='attached',
+                encryption='provider_managed',
+                operating_system_family='Ubuntu Server',
+                operating_system_architecture='amd64',
                 zone_name='us-south-2',
             )
             while pager.has_next():
@@ -2804,7 +2809,7 @@ class TestVpcV1Examples():
 
             dedicated_host_patch_model = {}
             dedicated_host_patch_model['name'] = 'my-dedicated-host-updated'
-            dedicated_host_patch_model['instance_placement_enabled'] = True
+            dedicated_host_patch_model['instance_placement_enabled'] = False
 
             dedicated_host = vpc_service.update_dedicated_host(
                 id=data['dedicatedHostId'],
@@ -4628,12 +4633,24 @@ class TestVpcV1Examples():
         try:
             print('\ncreate_load_balancer() result:')
             # begin-create_load_balancer
+            dns_instance_identity_model = {
+                'crn': 'crn:v1:bluemix:public:dns-svcs:global:a/fff1cdf3dc1e4ec692a5f78bbb2584bc:6860c359-b2e2-46fa-a944-b38c28201c6e',
+            }
 
+            dns_zone_identity_model = {
+                'id': 'd66662cc-aa23-4fe1-9987-858487a61f45',
+            }
+
+            load_balancer_dns_prototype_model = {
+                'instance': dns_instance_identity_model,
+                'zone': dns_zone_identity_model,
+            }
             subnet_identity_model = {}
             subnet_identity_model['id'] = data['subnetId']
 
             load_balancer = vpc_service.create_load_balancer(
-                is_public=True, subnets=[subnet_identity_model],
+                dns=load_balancer_dns_prototype_model,
+                is_public=False, subnets=[subnet_identity_model],
                 name='my-load-balancer').get_result()
 
             # end-create_load_balancer
@@ -4672,8 +4689,19 @@ class TestVpcV1Examples():
         try:
             print('\nupdate_load_balancer() result:')
             # begin-update_load_balancer
+            dns_instance_identity_model = {
+                'crn': 'crn:v1:bluemix:public:dns-svcs:global:a/fff1cdf3dc1e4ec692a5f78bbb2584bc:6860c359-b2e2-46fa-a944-b38c28201c6e',
+            }
+            dns_zone_identity_model = {
+                'id': 'd66662cc-aa23-4fe1-9987-858487a61f45',
+            }
+            load_balancer_dns_patch_model = {
+                'instance': dns_instance_identity_model,
+                'zone': dns_zone_identity_model,
+            }
 
             load_balancer_patch_model = {}
+            load_balancer_patch_model['dns'] = load_balancer_dns_patch_model
             load_balancer_patch_model['name'] = 'my-load-balancer-updated'
 
             load_balancer = vpc_service.update_load_balancer(
@@ -4737,6 +4765,7 @@ class TestVpcV1Examples():
 
             load_balancer_listener = vpc_service.create_load_balancer_listener(
                 load_balancer_id=data['loadBalancerId'], port=5656,
+                idle_connection_timeout=100,
                 protocol='http').get_result()
 
             # end-create_load_balancer_listener
@@ -5548,103 +5577,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-    @needscredentials
-    def test_list_placement_groups_example(self):
-        """
-        list_placement_groups request example
-        """
-        try:
-            print('\nlist_placement_groups() result:')
-            # begin-list_placement_groups
-
-            all_results = []
-            pager = PlacementGroupsPager(
-                client=vpc_service,
-                limit=10,
-            )
-            while pager.has_next():
-                next_page = pager.get_next()
-                assert next_page is not None
-                all_results.extend(next_page)
-
-            print(json.dumps(all_results, indent=2))
-
-            # end-list_placement_groups
-            assert all_results is not None
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_create_placement_group_example(self):
-        """
-        create_placement_group request example
-        """
-        try:
-            print('\ncreate_placement_group() result:')
-            # begin-create_placement_group
-
-            response = vpc_service.create_placement_group(
-                strategy='host_spread',
-                name='my-placement-group'
-            )
-            placement_group = response.get_result()
-
-            print(json.dumps(placement_group, indent=2))
-
-            # end-create_placement_group
-            data['placementGroupID']=placement_group['id']
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_get_placement_group_example(self):
-        """
-        get_placement_group request example
-        """
-        try:
-            print('\nget_placement_group() result:')
-            placementGroupID = data['placementGroupID']
-            # begin-get_placement_group
-
-            response = vpc_service.get_placement_group(
-                id=placementGroupID,
-            )
-            placement_group = response.get_result()
-
-            print(json.dumps(placement_group, indent=2))
-
-            # end-get_placement_group
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_update_placement_group_example(self):
-        """
-        update_placement_group request example
-        """
-        try:
-            print('\nupdate_placement_group() result:')
-            placementGroupID = data['placementGroupID']
-            
-            # begin-update_placement_group
-
-            placement_group_patch_model = {
-                'name': 'my-placement-group-updated'
-            }
-
-            response = vpc_service.update_placement_group(
-                id=placementGroupID,
-                placement_group_patch=placement_group_patch_model,
-            )
-            placement_group = response.get_result()
-
-            print(json.dumps(placement_group, indent=2))
-
-            # end-update_placement_group
-
-        except ApiException as e:
-            pytest.fail(str(e))
     @needscredentials
     def test_list_bare_metal_server_profiles_example(self):
         """
@@ -6726,25 +6658,6 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_delete_placement_group_example(self):
-        """
-        delete_placement_group request example
-        """
-        try:
-            placementGroupID = data['placementGroupID']
-            # begin-delete_placement_group
-
-            response = vpc_service.delete_placement_group(
-                id=placementGroupID,
-            )
-
-            # end-delete_placement_group
-            print('\ndelete_placement_group() response status code: ', response.get_status_code())
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
     def test_delete_instance_network_interface_example(self):
         """
         delete_instance_network_interface request example
@@ -6791,22 +6704,6 @@ class TestVpcV1Examples():
             response = vpc_service.delete_floating_ip(id=data['floatingIpId'])
 
             # end-delete_floating_ip
-            assert response is not None
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_delete_instance_template_example(self):
-        """
-        delete_instance_template request example
-        """
-        try:
-            # begin-delete_instance_template
-
-            response = vpc_service.delete_instance_template(id=data['instanceTemplateId'])
-
-            # end-delete_instance_template
             assert response is not None
 
         except ApiException as e:
@@ -7136,16 +7033,16 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_delete_dedicated_host_group_example(self):
+    def test_delete_instance_template_example(self):
         """
-        delete_dedicated_host_group request example
+        delete_instance_template request example
         """
         try:
-            # begin-delete_dedicated_host_group
+            # begin-delete_instance_template
 
-            response = vpc_service.delete_dedicated_host_group(id=data['dedicatedHostGroupId'])
+            response = vpc_service.delete_instance_template(id=data['instanceTemplateId'])
 
-            # end-delete_dedicated_host_group
+            # end-delete_instance_template
             assert response is not None
 
         except ApiException as e:
@@ -7162,6 +7059,38 @@ class TestVpcV1Examples():
             response = vpc_service.delete_dedicated_host(id=data['dedicatedHostId'])
 
             # end-delete_dedicated_host
+            assert response is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_dedicated_host_group_example(self):
+        """
+        delete_dedicated_host_group request example
+        """
+        try:
+            # begin-delete_dedicated_host_group
+
+            response = vpc_service.delete_dedicated_host_group(id=data['dedicatedHostGroupId'])
+
+            # end-delete_dedicated_host_group
+            assert response is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_subnet_example(self):
+        """
+        delete_subnet request example
+        """
+        try:
+            # begin-delete_subnet
+
+            response = vpc_service.delete_subnet(id=data['subnetId'])
+
+            # end-delete_subnet
             assert response is not None
 
         except ApiException as e:
@@ -7227,22 +7156,6 @@ class TestVpcV1Examples():
             response = vpc_service.delete_vpn_gateway(id=data['vpnGatewayId'])
 
             # end-delete_vpn_gateway
-            assert response is not None
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_delete_subnet_example(self):
-        """
-        delete_subnet request example
-        """
-        try:
-            # begin-delete_subnet
-
-            response = vpc_service.delete_subnet(id=data['subnetId'])
-
-            # end-delete_subnet
             assert response is not None
 
         except ApiException as e:
