@@ -171,6 +171,7 @@ class TestNetworkACL():
         assertGetPatchResponse(acl)
 
 
+
 class TestVolume():
     def test_list_vol_profiles(self, createGen2Service):
         profiles = list_volume_profiles(createGen2Service)
@@ -198,7 +199,6 @@ class TestVolume():
     def test_update_vol(self, createGen2Service):
         vol = update_volume(createGen2Service, store['created_vol'])
         assertGetPatchResponse(vol)
-
 
 class TestVPC():
     def test_list_vpc(self, createGen2Service):
@@ -714,15 +714,6 @@ class TestInstances():
         vol_attach = update_instance_volume_attachment(
             createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
         assertGetPatchResponse(vol_attach)
-
-    def test_delete_instance_vol_attachment(self, createGen2Service):
-        vol_attach = delete_instance_volume_attachment(
-            createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
-        assertDeleteResponse(vol_attach)
-
-    def test_delete_instance(self, createGen2Service):
-        ins = delete_instance(createGen2Service, store['created_instance_id'])
-        assertDeleteResponse(ins)
 
 class TestSnapshots():
     def test_list_snapshots(self, createGen2Service):
@@ -1493,14 +1484,14 @@ class TestDedicatedHost():
         ig = update_dedicated_host(createGen2Service, store['created_dh'])
         assertGetPatchResponse(ig)
 
-    def test_delete_dedicated_host_group(self, createGen2Service):
-        igm = delete_dedicated_host_group(
-            createGen2Service, store['created_dhg'])
-        assertDeleteResponse(igm)
-
     def test_delete_dedicated_host(self, createGen2Service):
         igm = delete_dedicated_host(
             createGen2Service, store['created_dh'])
+        assertDeleteResponse(igm)
+    
+    def test_delete_dedicated_host_group(self, createGen2Service):
+        igm = delete_dedicated_host_group(
+            createGen2Service, store['created_dhg'])
         assertDeleteResponse(igm)
 
 class TestBackupAsaService():
@@ -1673,6 +1664,15 @@ class TestTeardown():
     def test_delete_pgw(self, createGen2Service):
         pgw = delete_public_gateway(createGen2Service, store['created_pgw'])
         assertDeleteResponse(pgw)
+
+    def test_delete_instance_vol_attachment(self, createGen2Service):
+        vol_attach = delete_instance_volume_attachment(
+            createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
+        assertDeleteResponse(vol_attach)
+
+    def test_delete_instance(self, createGen2Service):
+        ins = delete_instance(createGen2Service, store['created_instance_id'])
+        assertDeleteResponse(ins)
 
     def test_delete_key(self, createGen2Service):
         key = delete_key(createGen2Service, store['created_key'])
@@ -2905,7 +2905,19 @@ def create_load_balancer(service, subnet):
     # resource_group_identity_model = {}
     # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
 
-    is_public = True
+    dns_instance_identity_model = {
+        'crn': 'crn:v1:bluemix:public:dns-svcs:global:a/fff1cdf3dc1e4ec692a5f78bbb2584bc:6860c359-b2e2-46fa-a944-b38c28201c6e',
+    }
+
+    dns_zone_identity_model = {
+        'id': 'd66662cc-aa23-4fe1-9987-858487a61f45',
+    }
+
+    load_balancer_dns_prototype_model = {
+        'instance': dns_instance_identity_model,
+        'zone': dns_zone_identity_model,
+    }
+    is_public = False
     subnets = [subnet_identity_model]
     # listeners = [
     #     load_balancer_listener_prototype_load_balancer_context_model
@@ -2919,6 +2931,7 @@ def create_load_balancer(service, subnet):
         subnets,
         # listeners=listeners,
         name=name,
+        dns=load_balancer_dns_prototype_model
         # pools=pools,
         # resource_group=resource_group,
     )
@@ -3027,6 +3040,7 @@ def create_load_balancer_listener(service, load_balancer_id):
         load_balancer_id,
         protocol,
         port=port,
+        idle_connection_timeout=100,
         #     certificate_instance=certificate_instance,
         #     connection_limit=connection_limit,
         #     default_pool=default_pool,
@@ -5555,6 +5569,7 @@ def create_vpc_routing_table_route(service, vpc_id, routing_table_id, zoneName):
         next_hop=route_next_hop_prototype_model,
         zone=zone_identity_model,
         action='delegate',
+        priority=1,
         name=generate_name('my-route'),
     )
     return response
@@ -5672,7 +5687,8 @@ def get_dedicated_host(service, id):
 
 def update_dedicated_host(service, id):
     dedicated_host_patch_model = {
-        'name': 'my-host'
+        'name': 'my-host',
+        'instance_placement_enabled': False
     }
     update_dedicated_host_response = service.update_dedicated_host(
         id, dedicated_host_patch=dedicated_host_patch_model)
