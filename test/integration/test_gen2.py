@@ -71,7 +71,6 @@ class TestFloatingIPs():
 
 class TestImages():
     def test_create_images(self, createGen2Service):
-        pytest.skip("no cos bucket")
         image = create_image(createGen2Service)
         assertCreateResponse(image)
 
@@ -85,14 +84,29 @@ class TestImages():
         assertGetPatchResponse(image)
 
     def test_update_image(self, createGen2Service):
-        pytest.skip("no private image")
-        image = update_image(createGen2Service, store['created_image'])
+        image = update_image(createGen2Service, store['image_id'])
         assertGetPatchResponse(image)
 
-    def test_delete_image(self, createGen2Service):
-        pytest.skip("no private image")
-        image = delete_image(createGen2Service, store['created_image'])
-        assertDeleteResponse(image)
+    def test_create_image_export_job(self, createGen2Service):
+        image = create_image_export_job(createGen2Service, store['image_id'])
+        assertCreateResponse(image)
+
+    def test_list_image_export_jobs(self, createGen2Service):
+        images = list_image_export_jobs(createGen2Service, store['image_id'])
+        assertListResponse(images, 'export_jobs')
+        store['image_export_job_id'] = images.get_result()['export_jobs'][0]['id']
+
+    def test_get_image_export_job(self, createGen2Service):
+        image = get_image_export_job(createGen2Service, store['image_id'], store['image_export_job_id'])
+        assertGetPatchResponse(image)
+
+    def test_update_image_export_job(self, createGen2Service):
+        image = update_image_export_job(createGen2Service, store['image_id'], store['image_export_job_id'])
+        assertGetPatchResponse(image)
+
+    def test_delete_image_export_job(self, createGen2Service):
+        image = delete_image_export_job(createGen2Service, store['image_id'], store['image_export_job_id'])
+        assertDeleteRequestAcceptedResponse(image)
 
     def test_list_operating_systems(self, createGen2Service):
         oss = list_operating_systems(createGen2Service)
@@ -1694,6 +1708,9 @@ class TestTeardown():
         vpc = delete_vpc(createGen2Service, store['created_vpc'])
         assertDeleteResponse(vpc)
 
+    def test_delete_image(self, createGen2Service):
+        image = delete_image(createGen2Service, store['image_id'])
+        assertDeleteResponse(image)
 
 # --------------------------------------------------------
 #  test helpers
@@ -2268,6 +2285,47 @@ def update_image(service, id):
     )
     return response
 
+def create_image_export_job(service, id):
+    cloud_object_storage_bucket_identity_model = {
+        'name': 'bucket-27200-lwx4cfvcue',
+    }
+    image_export_job = service.create_image_export_job(
+        image_id=id,
+        name='my-image-export-job',
+        storage_bucket=cloud_object_storage_bucket_identity_model
+    )
+    return image_export_job
+
+def list_image_export_jobs(service, id):
+    response = service.list_image_export_jobs(
+                image_id=id
+            )
+    return response
+
+def update_image_export_job(service, id, export_id):
+    image_export_job_patch_model = {
+        'name' : generate_name('image-export-job-updated')
+    }
+    image_export_job = service.update_image_export_job(
+        image_id=id,
+        id=export_id,
+        image_export_job_patch=image_export_job_patch_model
+    )
+    return image_export_job
+
+def get_image_export_job(service, id, export_id):
+    image_export_job = service.get_image_export_job(
+        image_id=id,
+        id=export_id
+    )
+    return image_export_job
+
+def delete_image_export_job(service, id, export_id):
+    response = service.delete_image_export_job(
+        image_id=id,
+        id=export_id
+    )
+    return response
 # --------------------------------------------------------
 # list_operating_systems()
 # --------------------------------------------------------

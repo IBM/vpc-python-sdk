@@ -962,6 +962,112 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_image_export_jobs_example(self):
+        """
+        list_image_export_jobs request example
+        """
+        try:
+            print('\nlist_image_export_jobs() result:')
+            # begin-list_image_export_jobs
+
+            response = vpc_service.list_image_export_jobs(
+                image_id=data['imageId']
+            )
+            image_export_job_unpaginated_collection = response.get_result()
+
+            # end-list_image_export_jobs
+            assert image_export_job_unpaginated_collection is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_image_export_job_example(self):
+        """
+        create_image_export_job request example
+        """
+        try:
+            print('\ncreate_image_export_job() result:')
+            # begin-create_image_export_job
+
+            cloud_object_storage_bucket_identity_model = {
+                'name': 'bucket-27200-lwx4cfvcue',
+            }
+
+            image_export_job = vpc_service.create_image_export_job(
+                image_id=data['imageId'],
+                name='my-image-export-job',
+                storage_bucket=cloud_object_storage_bucket_identity_model
+            ).get_result()
+
+            # end-create_image_export_job
+            assert image_export_job is not None
+            data['imageExportJobId']=image_export_job['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_image_export_job_example(self):
+        """
+        get_image_export_job request example
+        """
+        try:
+            print('\nget_image_export_job() result:')
+            # begin-get_image_export_job
+
+            image_export_job = vpc_service.get_image_export_job(
+                image_id=data['imageId'],
+                id=data['imageExportJobId']
+            ).get_result()
+
+            # end-get_image_export_job
+            assert image_export_job is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_image_export_job_example(self):
+        """
+        update_image_export_job request example
+        """
+        try:
+            print('\nupdate_image_export_job() result:')
+            # begin-update_image_export_job
+
+            image_export_job_patch_model = {
+                'name' : 'my-image-export-job-updated'
+            }
+
+            image_export_job = vpc_service.update_image_export_job(
+                image_id=data['imageId'],
+                id=data['imageExportJobId'],
+                image_export_job_patch=image_export_job_patch_model
+            ).get_result()
+
+            # end-update_image_export_job
+            assert image_export_job is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_image_export_job_example(self):
+        """
+        delete_image_export_job request example
+        """
+        try:
+            # begin-delete_image_export_job
+
+            response = vpc_service.delete_image_export_job(
+                image_id=data['imageId'],
+                id=data['imageExportJobId']
+            )
+
+            # end-delete_image_export_job
+            print('\ndelete_image_export_job() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_operating_systems_example(self):
         """
         list_operating_systems request example
