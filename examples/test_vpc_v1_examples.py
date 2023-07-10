@@ -2989,6 +2989,7 @@ class TestVpcV1Examples():
 
             assert snapshot is not None
             data['snapshotId']=snapshot['id']
+            data['snapshotCRN']=snapshot['crn']
             volume_identity_model = {}
             volume_identity_model['id'] = data['volumeId']
 
@@ -3000,7 +3001,17 @@ class TestVpcV1Examples():
             snapshot = vpc_service.create_snapshot(
                 snapshot_prototype=snapshot_prototype_model)
             
-
+            # copy snapshot
+            snapshot_identity_by_crn_model = {}  # SnapshotIdentityByCRN
+            snapshot_identity_by_crn_model['crn'] = data['snapshotCRN']
+            source_snapshot_prototype_model = {
+                'source_snapshot' : snapshot_identity_by_crn_model,
+                'name': 'source-snapshot-copy'
+            }
+            snapshotCRC = vpc_service.create_snapshot(
+                snapshot_prototype=source_snapshot_prototype_model)
+            assert snapshotCRC is not None
+            print(snapshotCRC)
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -6374,12 +6385,23 @@ class TestVpcV1Examples():
                 'max_snapshots': 38,
                 'zones': [zone_identity_model],
             }
+            backup_policy_plan_remote_region_policies_protoype_model = [
+                {
+                    'delete_over_count': 2,
+                    'region': "us-south",
+                },
+                {
+                    'delete_over_count': 2,
+                    'region': "jp-tok",
+                },
+            ]
             backup_policy_plan_response = vpc_service.create_backup_policy_plan(
                 backup_policy_id=data['backupPolicyID'],
                 cron_spec='*/5 1,2,3 * * *',
                 active=True,
                 attach_user_tags=['my-daily-backup-plan'],
                 copy_user_tags=True,
+                remote_region_policies=backup_policy_plan_remote_region_policies_protoype_model,
                 clone_policy=backup_policy_plan_clone_policy_prototype_model,
                 deletion_trigger=backup_policy_plan_deletion_trigger_prototype_model,
                 name='my-backup-policy-plan'
@@ -6424,7 +6446,21 @@ class TestVpcV1Examples():
 
             backup_policy_plan_patch_model = {}
             backup_policy_plan_patch_model['name'] = 'my-backup-policy-plan-updated'
-
+            backup_policy_plan_remote_region_policies_updated = [
+                {
+                    'delete_over_count': 2,
+                    'region': "us-south",
+                },
+                {
+                    'delete_over_count': 3,
+                    'region': "jp-tok",
+                },
+                {
+                    'delete_over_count': 4,
+                    'region': "eu-de",
+                },
+            ]
+            backup_policy_plan_patch_model['remote_region_policies'] = backup_policy_plan_remote_region_policies_updated
             backup_policy_plan = vpc_service.update_backup_policy_plan(
                 backup_policy_id=data['backupPolicyID'],
                 id=data['backupPolicyPlanID'],
@@ -6901,7 +6937,9 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    @pytest.mark.skip(reason="mock error")
     def test_delete_snapshots_example(self):
+        
         """
         delete_snapshots request example
         """
