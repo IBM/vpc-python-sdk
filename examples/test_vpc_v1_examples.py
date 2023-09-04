@@ -3127,6 +3127,351 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_share_profiles_example(self):
+        """
+        list_share_profiles request example
+        """
+        try:
+            print('\nlist_share_profiles() result:')
+            # begin-list_share_profiles
+
+            all_results = []
+            pager = ShareProfilesPager(
+                client=vpc_service,
+                limit=10,
+                sort='name',
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+
+            # end-list_share_profiles
+            print(json.dumps(all_results, indent=2))
+            data['shareProfileName'] = all_results[0]['name']
+            assert all_results is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_share_profile_example(self):
+        """
+        get_share_profile request example
+        """
+        try:
+            print('\nget_share_profile() result:')
+            # begin-get_share_profile
+
+            response = vpc_service.get_share_profile(
+                name=data['shareProfileName'],
+            )
+            share_profile = response.get_result()
+
+
+            # end-get_share_profile
+            print(json.dumps(share_profile, indent=2))
+            assert share_profile is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_shares_example(self):
+        """
+        list_shares request example
+        """
+        try:
+            print('\nlist_shares() result:')
+            # begin-list_shares
+
+            all_results = []
+            pager = SharesPager(
+                client=vpc_service,
+                limit=10,
+                sort='name',
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+
+            # end-list_shares
+            print(json.dumps(all_results, indent=2))
+            assert all_results is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_share_example(self):
+        """
+        create_share request example
+        """
+        try:
+            print('\ncreate_share() result:')
+            # begin-create_share
+
+            share_profile_identity_model = {
+                'name': data['shareProfileName'],
+            }
+
+            zone_identity_model = {
+                'name': 'us-east-1',
+            }
+
+            share_prototype_model = {
+                'profile': share_profile_identity_model,
+                'zone': zone_identity_model,
+                'size': 200,
+                'name': 'my-share',
+            }
+
+            response = vpc_service.create_share(
+                share_prototype=share_prototype_model,
+            )
+            share = response.get_result()
+
+            #replica share
+            source_share_prototype_model = {
+                'id': share['id'],
+            }
+            share_replica_prototype_model = {
+                'profile': share_profile_identity_model,
+                'zone': zone_identity_model,
+                'replication_cron_spec': '0 */5 * * *',
+                'source_share': source_share_prototype_model,
+                'name': 'my-share-replica',
+            }
+
+            response_replica = vpc_service.create_share(
+                share_prototype=share_replica_prototype_model,
+            )
+            share_replica = response_replica.get_result()
+            # end-create_share
+            print(json.dumps(share, indent=2))
+            data['shareId']=share['id']
+            data['shareReplicaId']=share_replica['id']
+            data['shareReplicaETag']=response_replica.get_headers()['ETag']
+            assert share is not None
+            assert share_replica is not None
+            
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_share_example(self):
+        """
+        get_share request example
+        """
+        try:
+            print('\nget_share() result:')
+            # begin-get_share
+
+            response = vpc_service.get_share(
+                id=data['shareId'],
+            )
+            share = response.get_result()
+
+
+            # end-get_share
+            print(json.dumps(share, indent=2))
+            data['shareETag'] = response.get_headers()['ETag']
+            assert share is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_share_example(self):
+        """
+        update_share request example
+        """
+        try:
+            print('\nupdate_share() result:')
+            # begin-update_share
+
+            share_patch_model = {
+            }
+            share_patch_model['name'] = 'my-share-updated'
+
+            response = vpc_service.update_share(
+                id=data['shareId'],
+                share_patch=share_patch_model,
+                if_match=data['shareETag'],
+            )
+            share = response.get_result()
+
+
+            # end-update_share
+            print(json.dumps(share, indent=2))
+            data['shareETag'] = response.get_headers()['ETag']
+            assert share is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_failover_share_example(self):
+        """
+        failover_share request example
+        """
+        try:
+            # begin-failover_share
+
+            response = vpc_service.failover_share(
+                share_id=data['shareReplicaId'],
+            )
+
+            # end-failover_share
+            print('\nfailover_share() response status code: ', response.get_status_code())
+            assert response is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_share_mount_targets_example(self):
+        """
+        list_share_mount_targets request example
+        """
+        try:
+            print('\nlist_share_mount_targets() result:')
+            # begin-list_share_mount_targets
+
+            all_results = []
+            pager = ShareMountTargetsPager(
+                client=vpc_service,
+                share_id=data['shareId'],
+                limit=10,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+
+            # end-list_share_mount_targets
+            print(json.dumps(all_results, indent=2))
+            assert all_results is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_share_mount_target_example(self):
+        """
+        create_share_mount_target request example
+        """
+        try:
+            print('\ncreate_share_mount_target() result:')
+            # begin-create_share_mount_target
+            subnet_prototype_model = {
+                'id': data['subnetId'],
+            }
+            share_mount_target_virtual_network_interface_prototype_model = {
+                'name': 'my-share-mount-target-vni',
+                'subnet': subnet_prototype_model,
+            }
+
+            share_mount_target_prototype_model = {
+                'virtual_network_interface': share_mount_target_virtual_network_interface_prototype_model,
+                'name': 'my-share-mount-target',
+            }
+
+            response = vpc_service.create_share_mount_target(
+                share_id=data['shareId'],
+                share_mount_target_prototype=share_mount_target_prototype_model,
+            )
+            share_mount_target = response.get_result()
+
+
+            # end-create_share_mount_target
+            print(json.dumps(share_mount_target, indent=2))
+            data['shareMountTargetId'] = share_mount_target['id']
+            assert share_mount_target is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_share_mount_target_example(self):
+        """
+        get_share_mount_target request example
+        """
+        try:
+            print('\nget_share_mount_target() result:')
+            # begin-get_share_mount_target
+
+            response = vpc_service.get_share_mount_target(
+                share_id=data['shareId'],
+                id=data['shareMountTargetId'],
+            )
+            share_mount_target = response.get_result()
+
+
+            # end-get_share_mount_target
+            print(json.dumps(share_mount_target, indent=2))
+            assert share_mount_target is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_share_mount_target_example(self):
+        """
+        update_share_mount_target request example
+        """
+        try:
+            print('\nupdate_share_mount_target() result:')
+            # begin-update_share_mount_target
+
+            share_mount_target_patch_model = {
+            }
+            share_mount_target_patch_model['name'] = 'my-share-mount-target-updated'
+
+            response = vpc_service.update_share_mount_target(
+                share_id=data['shareId'],
+                id=data['shareMountTargetId'],
+                share_mount_target_patch=share_mount_target_patch_model,
+            )
+            share_mount_target = response.get_result()
+
+
+            # end-update_share_mount_target
+            print(json.dumps(share_mount_target, indent=2))
+            assert share_mount_target is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_share_source_example(self):
+        """
+        get_share_source request example
+        """
+        try:
+            print('\nget_share_source() result:')
+            # begin-get_share_source
+
+            response = vpc_service.get_share_source(
+                share_id=data['shareReplicaId'],
+            )
+            share = response.get_result()
+
+
+            # end-get_share_source
+            print(json.dumps(share, indent=2))
+            assert share is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+
+    @needscredentials
     def test_list_regions_example(self):
         """
         list_regions request example
@@ -6919,7 +7264,71 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-            
+
+    @needscredentials
+    def test_delete_share_mount_target_example(self):
+        """
+        delete_share_mount_target request example
+        """
+        try:
+            print('\ndelete_share_mount_target() result:')
+            # begin-delete_share_mount_target
+
+            response = vpc_service.delete_share_mount_target(
+                share_id=data['shareId'],
+                id=data['shareMountTargetId'],
+            )
+            share_mount_target = response.get_result()
+
+            # end-delete_share_mount_target
+            print('\ndelete_share_mount_target() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_share_source_example(self):
+        """
+        delete_share_source request example
+        """
+        try:
+            # begin-delete_share_source
+
+            response = vpc_service.delete_share_source(
+                share_id=data['shareReplicaId'],
+            )
+            # end-delete_share_source
+            print('\ndelete_share_source() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+
+    @needscredentials
+    def test_delete_share_example(self):
+        """
+        delete_share request example
+        """
+        try:
+            print('\ndelete_share() result:')
+            # begin-delete_share
+
+            response = vpc_service.delete_share(
+                id=data['shareId'],
+                if_match=data['shareETag'],
+            )
+            response_replica = vpc_service.delete_share(
+                id=data['shareReplicaId'],
+                if_match=data['shareReplicaETag'],
+            )
+            share = response.get_result()
+            # end-delete_share
+            print('\ndelete_share() response status code: ', response.get_status_code())
+            print('\ndelete_share() response status code: ', response_replica.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
     @needscredentials
     def test_delete_snapshot_example(self):
         """
