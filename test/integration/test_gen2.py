@@ -781,7 +781,80 @@ class TestSnapshots():
         response = delete_snapshots(createGen2Service, store['created_vol'])
         assertDeleteResponse(response)
 
+
+class TestShares():
+    def test_list_share_profiles(self, createGen2Service):
+        share_profiles = list_share_profiles(createGen2Service)
+        store['share_profile_name']=share_profiles.get_result()['profiles'][0]['name']
+        assertListResponse(share_profiles, 'profiles')
+
+    def test_get_share_profile(self, createGen2Service):
+        share_profile = get_share_profile(
+            createGen2Service, store['share_profile_name'])
+        assertGetPatchResponse(share_profile)
+
+    def test_list_shares(self, createGen2Service):
+        shares = list_shares(createGen2Service)
+        assertListResponse(shares, 'shares')
+
+    def test_create_share(self, createGen2Service):
+        share = create_share(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], 200)
+        assertCreateResponse(share)
+        store['share_id'] = share.get_result()['id']
+        create_share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], store['share_id'], '0 */5 * * *')
+        assertCreateResponse(create_share_replica)
+        store['share_replica_id'] = create_share_replica.get_result()['id']
+        store['share_replica_etag'] = create_share_replica.get_headers()['ETag']
+
+
+    def test_get_share(self, createGen2Service):
+        share = get_share(createGen2Service, store['share_id'])
+        store['share_etag'] = share.get_headers()['ETag']
+        assertGetPatchResponse(share)
     
+    def test_update_share(self, createGen2Service):
+        share = update_share(createGen2Service, store['share_id'], generate_name("share-updated", store['share_etag']))
+        assertGetPatchResponse(share)
+        store['share_etag'] = share.get_headers()['ETag']
+
+    def test_failover_share(self, createGen2Service):
+        response = failover_share(createGen2Service, store['share_replica_id'])
+        assertGetResponse(response)
+
+    def test_list_share_mount_targets(self, createGen2Service):
+        share_mount_targets = list_share_mount_targets(createGen2Service, store['share_id'])
+        assertListResponse(share_mount_targets, 'mount_targets')
+
+    def test_create_share_mount_target(self, createGen2Service):
+        share_mount_target = create_share_mount_target(createGen2Service, store['share_id'], store['created_subnet'], generate_name("share-mount-target"), generate_name("vni"))
+        assertCreateResponse(share_mount_target)
+        store['share_mount_target_id'] = share_mount_target.get_result()['id']
+
+    def test_get_share_mount_target(self, createGen2Service):
+        share_mount_target = get_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'])
+        assertGetResponse(share_mount_target)
+
+    def test_update_share_mount_target(self, createGen2Service):
+        share_mount_target = update_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'], generate_name("share-mount-target-updated"))
+        assertGetPatchResponse(share_mount_target)
+
+    def test_get_share_source(self, createGen2Service):
+        share = get_share_source(createGen2Service, store['share_id'])
+        assertGetResponse(share)
+    
+    def test_delete_share_mount_target(self, createGen2Service):
+        response = delete_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'])
+        assertDeleteRequestAcceptedResponse(response)
+
+    def test_delete_share_source(self, createGen2Service):
+        response = delete_share_source(createGen2Service, store['share_replica_id'])
+        assertDeleteResponse(response)
+
+    def test_delete_share(self, createGen2Service):
+        response = delete_share(createGen2Service, store['share_id'], store['share_etag'])
+        assertDeleteResponse(response)
+        response_replica = delete_share(createGen2Service, store['share_replica_id'], store['share_replica_etag'])
+        assertDeleteResponse(response_replica)
 
 class TestSecurityGroups():
     def test_create_sg(self, createGen2Service):
@@ -3972,6 +4045,163 @@ def delete_snapshots(service, volumeID):
 def delete_snapshot_clone(service, snapshotID, zone):
     response = service.delete_snapshot_clone(id=snapshotID, zone_name=zone)
     return response
+
+# --------------------------------------------------------
+# shares
+# --------------------------------------------------------
+
+
+def list_share_profiles(service):
+    share_profile_collection = service.list_share_profiles()
+    return share_profile_collection
+
+def get_share_profiles(service, share_profile_name):
+    share_profile = service.get_share_profile(
+        name=share_profile_name,
+    )
+    return share_profile
+
+def list_shares(service):
+    shares = service.list_shares()
+    return shares_collection
+
+def create_share(service, share_profile_name, name, zone_name, size):
+    share_profile_identity_model = {
+        'name': share_profile_name,
+    }
+    zone_identity_model = {
+        'name': zone_name,
+    }
+    share_prototype_model = {
+        'name': name,
+        'profile': share_profile_identity_model,
+        'zone': zone_identity_model,
+        'size': size,
+    }
+
+    share = service.create_share(
+        share_prototype=share_prototype_model,
+    )
+    return share
+
+def create_share_replica(service, share_profile_name, name, zone_name, share_id, cron_spec):
+    share_profile_identity_model = {
+        'name': share_profile_name,
+    }
+    zone_identity_model = {
+        'name': zone_name,
+    }
+    source_share_prototype_model = {
+        'id': share_id,
+    }
+    share_prototype_model = {
+        'name': name,
+        'profile': share_profile_identity_model,
+        'zone': zone_identity_model,
+        'replication_cron_spec': cron_spec,
+        'source_share': source_share_prototype_model,
+    }
+
+    share = service.create_share(
+        share_prototype=share_prototype_model,
+    )
+    return share
+
+def get_share(service, share_id):
+    share = service.get_share(
+        id=share_id,
+    )
+    return share
+
+def update_share(service, share_id, share_name, share_etag):
+    share_patch_model = {
+            'name': share_name,
+    }
+
+    share = service.update_share(
+        id=share_id,
+        share_patch=share_patch_model,
+        if_match=share_etag,
+    )
+    return share
+
+def failover_share(service, share_id):
+    response = service.failover_share(
+            share_id=share_id,
+    )
+    return response
+
+def list_share_mount_targets(service, share_id):
+    share_mount_target_collection = service.list_share_mount_targets(
+            share_id=share_id,
+    )
+    return share_mount_target_collection
+
+def get_share_mount_target(service, share_id, share_mount_target_id):
+    share_mount_target = service.get_share_mount_target(
+        share_id=share_id,
+        id=share_mount_target_id,
+    )
+    return share_mount_target
+
+def update_share_mount_target(service, share_id, share_mount_target_id, share_mount_target_name):
+    share_mount_target_patch_model = {
+        'name': share_mount_target_name,
+    }
+    share_mount_target = service.update_share_mount_target(
+        share_id=share_id,
+        id=share_mount_target_id,
+        share_mount_target_patch=share_mount_target_patch_model,
+    )
+    return share_mount_target
+
+def get_share_source(service, share_id):
+    share = service.get_share_source(
+            share_id=share_id,
+    )
+    return share
+
+def create_share_mount_target(service, share_id, subnet_id, name, vni_name):
+
+    subnet_prototype_model = {
+    'id': subnet_id,
+    }
+    share_mount_target_virtual_network_interface_prototype_model = {
+        'name': vni_name,
+        'subnet': subnet_prototype_model,
+    }
+    share_mount_target_prototype_model = {
+        'name': name,
+        'virtual_network_interface': share_mount_target_virtual_network_interface_prototype_model,
+    }
+
+    share_mount_target = service.create_share_mount_target(
+        share_id=share_id,
+        share_mount_target_prototype=share_mount_target_prototype_model,
+    )
+    return share_mount_target
+
+def delete_share_mount_target(service, share_id, share_mount_target_id):
+    share_mount_target = service.delete_share_mount_target(
+        share_id=share_id,
+        id=share_mount_target_id',
+    )
+    return share_mount_target
+
+def delete_share_source(service, share_id):
+    response = service.delete_share_source(
+        share_id=share_id,
+    )
+    return response
+
+def delete_share(service, share_id, share_etag):
+    share = service.delete_share(
+        id=share_id,
+        if_match=share_etag,
+    )
+    return share
+
+
 
 # --------------------------------------------------------
 # list_security_groups()
