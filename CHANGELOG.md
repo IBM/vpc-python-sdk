@@ -1,3 +1,10 @@
+## [0.19.1](https://github.com/IBM/vpc-python-sdk/compare/v0.19.0...v0.19.1) (2023-09-21)
+
+
+### Bug Fixes
+
+* **headers:** updated common headers for request id ([#57](https://github.com/IBM/vpc-python-sdk/issues/57)) ([b513734](https://github.com/IBM/vpc-python-sdk/commit/b513734f82fb4463c87a011e003027cbd3c09166))
+
 # [0.19.0](https://github.com/IBM/vpc-python-sdk/compare/v0.18.0...v0.19.0) (2023-09-05)
 
 
