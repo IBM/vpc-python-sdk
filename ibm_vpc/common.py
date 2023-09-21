@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# Copyright 2019 IBM All Rights Reserved.
+# Copyright 2021, 2022, 2023. IBM All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ def get_x_correlation_id():
     """
     Get the value to be sent in the X-Correlation-Id header.
     """
-    return X_CORRELATION_ID
+    return str(uuid.uuid4())
 
 def get_x_request_id():
     """
     Get the value to be sent in the X-Request-Id header.
     """
-    return X_REQUEST_ID
+    return str(uuid.uuid4())
 
 def get_user_agent():
     """
@@ -55,9 +55,6 @@ def get_user_agent():
     return USER_AGENT
 
 
-
-X_CORRELATION_ID = str(uuid.uuid4())
-X_REQUEST_ID = str(uuid.uuid4())
 USER_AGENT = '{0}/{1} ({2})'.format(SDK_NAME, __version__, get_system_info())
 
 
