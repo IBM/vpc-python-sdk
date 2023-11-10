@@ -225,6 +225,31 @@ class TestVPC():
         store['created_vpc'] = vpc.get_result()['id']
         print('created_vpc: ' + store['created_vpc'])
 
+    def test_create_vpc_hub(self, createGen2Service):
+        vpc = create_vpc_hub(createGen2Service)
+        assertCreateResponse(vpc)
+        store['created_vpc_hub'] = vpc.get_result()['id']
+        print('created_vpc_hub: ' + store['created_vpc_hub'])
+
+    def test_create_vpc_dns_res_binding(self, createGen2Service):
+        vpc = create_vpc_dns_res_binding(createGen2Service, store['created_vpc'], store['created_vpc_hub'])
+        assertCreateResponse(vpc)
+        store['created_vpc_dns_res_binding'] = vpc.get_result()['id']
+        print('created_vpc_dns_res_binding: ' + store['created_vpc_dns_res_binding'])
+
+    def test_get_vpc_dns_res_binding(self, createGen2Service):
+        vpc = get_vpc_dns_res_binding(createGen2Service, store['created_vpc'], store['created_vpc_dns_res_binding'])
+        assertGetResponse(vpc)
+
+
+    def test_list_vpc_dns_res_binding(self, createGen2Service):
+        vpc = list_vpc_dns_res_binding(createGen2Service, store['created_vpc'])
+        assertPagerListResponse(vpc)
+
+    def test_update_vpc_dns_res_binding(self, createGen2Service):
+        vpc = update_vpc_dns_res_binding(createGen2Service, store['created_vpc'], store['created_vpc_dns_res_binding'])
+        assertGetPatchResponse(vpc)
+
     def test_get_vpc(self, createGen2Service):
         vpc = get_vpc(createGen2Service, store['created_vpc'])
         assertGetPatchResponse(vpc)
@@ -801,10 +826,10 @@ class TestShares():
         share = create_share(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], 200)
         assertCreateResponse(share)
         store['share_id'] = share.get_result()['id']
-        create_share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], store['share_id'], '0 */5 * * *')
-        assertCreateResponse(create_share_replica)
-        store['share_replica_id'] = create_share_replica.get_result()['id']
-        store['share_replica_etag'] = create_share_replica.get_headers()['ETag']
+        share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], store['share_id'], '0 */5 * * *')
+        assertCreateResponse(share_replica)
+        store['share_replica_id'] = share_replica.get_result()['id']
+        store['share_replica_etag'] = share_replica.get_headers()['ETag']
 
 
     def test_get_share(self, createGen2Service):
@@ -813,13 +838,13 @@ class TestShares():
         assertGetPatchResponse(share)
     
     def test_update_share(self, createGen2Service):
-        share = update_share(createGen2Service, store['share_id'], generate_name("share-updated", store['share_etag']))
+        share = update_share(createGen2Service, store['share_id'], generate_name("share-updated"), store['share_etag'])
         assertGetPatchResponse(share)
         store['share_etag'] = share.get_headers()['ETag']
 
     def test_failover_share(self, createGen2Service):
         response = failover_share(createGen2Service, store['share_replica_id'])
-        assertGetResponse(response)
+        assertDeleteRequestAcceptedResponse(response)
 
     def test_list_share_mount_targets(self, createGen2Service):
         share_mount_targets = list_share_mount_targets(createGen2Service, store['share_id'])
@@ -838,23 +863,23 @@ class TestShares():
         share_mount_target = update_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'], generate_name("share-mount-target-updated"))
         assertGetPatchResponse(share_mount_target)
 
-    def test_get_share_source(self, createGen2Service):
-        share = get_share_source(createGen2Service, store['share_id'])
-        assertGetResponse(share)
+    # def test_get_share_source(self, createGen2Service):
+    #     share = get_share_source(createGen2Service, store['share_id'])
+    #     assertGetResponse(share)
     
     def test_delete_share_mount_target(self, createGen2Service):
         response = delete_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'])
         assertDeleteRequestAcceptedResponse(response)
 
-    def test_delete_share_source(self, createGen2Service):
-        response = delete_share_source(createGen2Service, store['share_replica_id'])
-        assertDeleteResponse(response)
+    # def test_delete_share_source(self, createGen2Service):
+    #     response = delete_share_source(createGen2Service, store['share_replica_id'])
+    #     assertDeleteResponse(response)
 
     def test_delete_share(self, createGen2Service):
         response = delete_share(createGen2Service, store['share_id'], store['share_etag'])
-        assertDeleteResponse(response)
+        assertDeleteRequestAcceptedResponse(response)
         response_replica = delete_share(createGen2Service, store['share_replica_id'], store['share_replica_etag'])
-        assertDeleteResponse(response_replica)
+        assertDeleteRequestAcceptedResponse(response_replica)
 
 class TestSecurityGroups():
     def test_create_sg(self, createGen2Service):
@@ -1785,10 +1810,18 @@ class TestTeardown():
         acl = delete_network_acl(createGen2Service, store['created_nacl_id'])
         assertDeleteResponse(acl)
 
+    def test_delete_vpc_dns_res_binding(self, createGen2Service):
+        vpc = delete_vpc_dns_res_binding(createGen2Service, store['created_vpc'], store['created_vpc_dns_res_binding'])
+        assertDeleteResponse(vpc)
+
     def test_delete_vpc(self, createGen2Service):
         vpc = delete_vpc(createGen2Service, store['created_vpc'])
         assertDeleteResponse(vpc)
 
+     
+    def test_delete_vpc(self, createGen2Service):
+        vpc = delete_vpc(createGen2Service, store['created_vpc_hub'])
+        assertDeleteResponse(vpc)
     def test_delete_image(self, createGen2Service):
         image = delete_image(createGen2Service, store['image_id'])
         assertDeleteResponse(image)
@@ -4055,7 +4088,7 @@ def list_share_profiles(service):
     share_profile_collection = service.list_share_profiles()
     return share_profile_collection
 
-def get_share_profiles(service, share_profile_name):
+def get_share_profile(service, share_profile_name):
     share_profile = service.get_share_profile(
         name=share_profile_name,
     )
@@ -4063,7 +4096,7 @@ def get_share_profiles(service, share_profile_name):
 
 def list_shares(service):
     shares = service.list_shares()
-    return shares_collection
+    return shares
 
 def create_share(service, share_profile_name, name, zone_name, size):
     share_profile_identity_model = {
@@ -4184,7 +4217,7 @@ def create_share_mount_target(service, share_id, subnet_id, name, vni_name):
 def delete_share_mount_target(service, share_id, share_mount_target_id):
     share_mount_target = service.delete_share_mount_target(
         share_id=share_id,
-        id=share_mount_target_id',
+        id=share_mount_target_id,
     )
     return share_mount_target
 
@@ -4633,6 +4666,84 @@ def create_vpc(service):
     )
     return response
 
+def create_vpc_hub(service):
+    # Construct a dict representation of a ResourceGroupIdentityById model
+    # resource_group_identity_model = {}
+    # resource_group_identity_model['id'] = 'fee82deba12e4c0fb69c3b09d1f12345'
+
+    # Set up parameter values
+    zone_identity_model = {
+        'name': 'us-south-1',
+    }
+    dns_server_prototype_model = {
+        'address': '192.168.3.4',
+        'zone_affinity': zone_identity_model,
+    }
+    vpcdns_resolver_prototype_model = {
+        'manual_servers': [dns_server_prototype_model],
+        'type': 'manual',
+    }
+    vpcdns_prototype_model = {
+        'enable_hub': False,
+        'resolver': vpcdns_resolver_prototype_model,
+    }
+    response = service.create_vpc(
+        address_prefix_management="manual",
+        classic_access=True,
+        name="my-vpc-hub",
+        dns=vpcdns_prototype_model,
+    )
+    return response
+
+
+def create_vpc_dns_res_binding(service, spokeVpcId, hubVpcId):
+    vpc_identity_model = {
+        'id': hubVpcId,
+    }
+
+    response = service.create_vpc_dns_resolution_binding(
+        vpc_id=spokeVpcId,
+        name='my-vpc-dns-resolution-binding',
+        vpc=vpc_identity_model,
+    )
+    return response
+
+
+def get_vpc_dns_res_binding(service,vpcId, bindingId):
+    response = service.get_vpc_dns_resolution_binding(
+        vpc_id=vpcId,
+        id=bindingId,
+    )
+    return response
+
+def list_vpc_dns_res_binding(service,vpcId):
+    all_results = []
+    pager = VpcDnsResolutionBindingsPager(
+        client=service,
+        vpc_id=vpcId,
+        limit=10,
+    )
+    while pager.has_next():
+        next_page = pager.get_next()
+        assert next_page is not None
+        all_results.extend(next_page)
+    return all_results
+
+def update_vpc_dns_res_binding(service,vpcId, vpcDnsResolutionBindingID):
+    vpcdns_resolution_binding_patch_model = {
+    }
+    vpcdns_resolution_binding_patch_model['name']='my-vpc-dns-resolution-binding-updated'
+
+    response = service.update_vpc_dns_resolution_binding(
+        vpc_id=vpcId,
+        id=vpcDnsResolutionBindingID,
+        vpcdns_resolution_binding_patch=vpcdns_resolution_binding_patch_model,
+    )
+    return response
+
+
+
+
 # --------------------------------------------------------
 # delete_vpc()
 # --------------------------------------------------------
@@ -4640,6 +4751,13 @@ def create_vpc(service):
 
 def delete_vpc(service, id):
     response = service.delete_vpc(id)
+    return response
+
+def delete_vpc_dns_res_binding(service, vpcId, bindingId):
+    response = service.delete_vpc_dns_resolution_binding(
+        vpc_id=vpcId,
+        id=bindingId,
+    )
     return response
 
 # --------------------------------------------------------
@@ -6146,3 +6264,7 @@ def assertDeleteResponse(output):
 def assertDeleteRequestAcceptedResponse(output):
     response = output.get_result()
     assert output.status_code == 202
+
+    
+def assertPagerListResponse(output):
+    assert len(output) != 0

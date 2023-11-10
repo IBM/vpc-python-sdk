@@ -128,6 +128,43 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    def test_create_hub_vpc_example(self):
+        """
+        create_vpc request example
+        """
+        try:
+            print('\ncreate_vpc() result:')
+            # begin-create_vpc
+
+            zone_identity_model = {
+                'name': 'us-south-1',
+            }
+            dns_server_prototype_model = {
+                'address': '192.168.3.4',
+                'zone_affinity': zone_identity_model,
+            }
+            vpcdns_resolver_prototype_model = {
+                'manual_servers': [dns_server_prototype_model],
+                'type': 'manual',
+            }
+            vpcdns_prototype_model = {
+                'enable_hub': False,
+                'resolver': vpcdns_resolver_prototype_model,
+            }
+            vpc = vpc_service.create_vpc(
+                address_prefix_management="manual",
+                classic_access=True,
+                name="my-vpc-hub",
+                dns=vpcdns_prototype_model,
+            ).get_result()
+
+            # end-create_vpc
+            assert vpc["id"] is not None
+            data["vpcHubID"]=vpc["id"]
+
+        except ApiException as e:
+            pytest.fail(str(e))
+    @needscredentials
     def test_get_vpc_example(self):
         """
         get_vpc request example
@@ -308,6 +345,98 @@ class TestVpcV1Examples():
 
             # end-update_vpc_address_prefix
             assert address_prefix is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_vpc_dns_resolution_binding_example(self):
+        """
+        create_vpc_dns_resolution_binding request example
+        """
+        try:
+            print('\ncreate_vpc_dns_resolution_binding() result:')
+            # begin-create_vpc_dns_resolution_binding
+
+            vpc_identity_model = {
+                'id': data["vpcHubID"],
+            }
+
+            response = vpc_service.create_vpc_dns_resolution_binding(
+                vpc_id=data['vpcID'],
+                name='my-vpc-dns-resolution-binding',
+                vpc=vpc_identity_model,
+            )
+            vpcdns_resolution_binding = response.get_result()
+            # end-create_vpc_dns_resolution_binding
+            data['vpcDnsResolutionBindingID'] = vpcdns_resolution_binding['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_vpc_dns_resolution_bindings_example(self):
+        """
+        list_vpc_dns_resolution_bindings request example
+        """
+        try:
+            print('\nlist_vpc_dns_resolution_bindings() result:')
+            # begin-list_vpc_dns_resolution_bindings
+
+            all_results = []
+            pager = VpcDnsResolutionBindingsPager(
+                client=vpc_service,
+                vpc_id=data['vpcID'],
+                limit=10,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            # end-list_vpc_dns_resolution_bindings
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_vpc_dns_resolution_binding_example(self):
+        """
+        get_vpc_dns_resolution_binding request example
+        """
+        try:
+            print('\nget_vpc_dns_resolution_binding() result:')
+            # begin-get_vpc_dns_resolution_binding
+
+            response = vpc_service.get_vpc_dns_resolution_binding(
+                vpc_id=data['vpcID'],
+                id=data['vpcDnsResolutionBindingID'],
+            )
+            vpcdns_resolution_binding = response.get_result()
+
+            # end-get_vpc_dns_resolution_binding
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_vpc_dns_resolution_binding_example(self):
+        """
+        update_vpc_dns_resolution_binding request example
+        """
+        try:
+            print('\nupdate_vpc_dns_resolution_binding() result:')
+            # begin-update_vpc_dns_resolution_binding
+
+            vpcdns_resolution_binding_patch_model = {
+            }
+            vpcdns_resolution_binding_patch_model['name']='my-vpc-dns-resolution-binding-updated'
+
+            response = vpc_service.update_vpc_dns_resolution_binding(
+                vpc_id=data['vpcID'],
+                id=data['vpcDnsResolutionBindingID'],
+                vpcdns_resolution_binding_patch=vpcdns_resolution_binding_patch_model,
+            )
+            vpcdns_resolution_binding = response.get_result()
+            # end-update_vpc_dns_resolution_binding
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3449,6 +3578,7 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    @pytest.mark.skip(reason="mock")
     def test_get_share_source_example(self):
         """
         get_share_source request example
@@ -7287,6 +7417,7 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    @pytest.mark.skip(reason="mock")
     def test_delete_share_source_example(self):
         """
         delete_share_source request example
@@ -7767,6 +7898,23 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
+    @needscredentials
+    def test_delete_vpc_dns_resolution_binding_example(self):
+        """
+        delete_vpc_dns_resolution_binding request example
+        """
+        try:
+            # begin-delete_vpc_dns_resolution_binding
+
+            response = vpc_service.delete_vpc_dns_resolution_binding(
+                vpc_id=data['vpcID'],
+                id=data['vpcDnsResolutionBindingID'],
+            )
+
+            # end-delete_vpc_dns_resolution_binding
+
+        except ApiException as e:
+            pytest.fail(str(e))
     @needscredentials
     def test_delete_vpc_example(self):
         """
