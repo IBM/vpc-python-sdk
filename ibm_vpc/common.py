@@ -22,7 +22,6 @@ import platform
 import uuid
 from ibm_vpc.version import __version__
 
-HEADER_NAME_X_CORRELATION_ID = 'X-Correlation-Id'
 HEADER_NAME_X_REQUEST_ID = 'X-Request-Id'
 HEADER_NAME_USER_AGENT = 'User-Agent'
 SDK_NAME = 'vpc-python-sdk'
@@ -35,12 +34,6 @@ def get_system_info():
                                 platform.machine(), # Architecture
                                 platform.system(), # OS
                                 platform.python_version()) # Python version
-
-def get_x_correlation_id():
-    """
-    Get the value to be sent in the X-Correlation-Id header.
-    """
-    return str(uuid.uuid4())
 
 def get_x_request_id():
     """
@@ -65,7 +58,6 @@ def get_sdk_headers(service_name, service_version, operation_id):
 
     """
     headers = {}
-    headers[HEADER_NAME_X_CORRELATION_ID] = get_x_correlation_id()
     headers[HEADER_NAME_X_REQUEST_ID] = get_x_request_id()
     headers[HEADER_NAME_USER_AGENT] = get_user_agent()
     return headers
