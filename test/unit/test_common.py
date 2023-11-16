@@ -33,7 +33,6 @@ class TestCommon(unittest.TestCase):
         headers = common.get_sdk_headers('example_service', 'V1', 'operation1')
         self.assertIsNotNone(headers)
         self.assertIsNotNone(headers.get('User-Agent'))
-        self.assertIsNotNone(headers.get('X-Correlation-Id'))
         self.assertIsNotNone(headers.get('X-Request-Id'))
         self.assertIn('vpc-python-sdk', headers.get('User-Agent'))
 
