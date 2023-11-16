@@ -1,3 +1,12 @@
+# [0.20.0](https://github.com/IBM/vpc-python-sdk/compare/v0.19.1...v0.20.0) (2023-11-16)
+
+
+### Features
+
+* **release:** Update SDK to use API released on 2023-11-07 ([#58](https://github.com/IBM/vpc-python-sdk/issues/58)) ([881a378](https://github.com/IBM/vpc-python-sdk/commit/881a37824afeee462e64c1522109b2dc07999961))
+* **release:** Update SDK to use API released on 2023-11-07 ([#59](https://github.com/IBM/vpc-python-sdk/issues/59)) ([7727ca6](https://github.com/IBM/vpc-python-sdk/commit/7727ca6604ccb098037177c7dfc6da8c41661d31))
+* **release:** Update SDK to use API released on 2023-11-07 travis ([#60](https://github.com/IBM/vpc-python-sdk/issues/60)) ([60f0fee](https://github.com/IBM/vpc-python-sdk/commit/60f0fee8b2a9447b9cd56a62a99d29dc9de01b38))
+
 ## [0.19.1](https://github.com/IBM/vpc-python-sdk/compare/v0.19.0...v0.19.1) (2023-09-21)
 
 
