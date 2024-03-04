@@ -164,6 +164,7 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     def test_get_vpc_example(self):
         """
@@ -2243,6 +2244,219 @@ class TestVpcV1Examples():
             # end-update_instance_volume_attachment
 
             assert volume_attachment is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_reservations_example(self):
+        """
+        list_reservations request example
+        """
+        try:
+            print('\nlist_reservations() result:')
+            # begin-list_reservations
+
+            reservation_collection = vpc_service.list_reservations().get_result()
+
+            # end-list_instance_profiles
+            assert reservation_collection is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_reservation_example(self):
+        """
+        create_reservation request example
+        """
+        try:
+            print('\ncreate_reservation() result:')
+            # begin-create_reservation
+
+            capacity_model = {}
+            capacity_model['total'] = 10
+
+            committed_use_model = {}
+            committed_use_model['term'] = 'one_year'
+
+            profile_model = {}
+            profile_model['name'] = 'ba2-2x8'
+            profile_model['resource_type'] = 'instance_profile'
+
+            zone_identity_model = {}
+            zone_identity_model['name'] = data['zone']
+
+            reservation = vpc_service.create_reservation(
+                capacity=capacity_model, 
+                committed_use=committed_use_model, 
+                profile=profile_model, 
+                zone=zone_identity_model, 
+                name='my-reservation').get_result()
+
+            # end-create_reservation
+            assert reservation['id'] is not None
+            data['reservationId']=reservation['id']
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_reservation_example(self):
+        """
+        update_reservation request example
+        """
+        try:
+            print('\nupdate_reservation() result:')
+            # begin-update_reservation
+
+            reservation_patch_model = {}
+            reservation_patch_model['name'] ='my-reservation-updated'
+
+            reservation = vpc_service.update_reservation(
+                id=data['reservationId'], reservation_patch=reservation_patch_model).get_result()
+
+            # end-update_reservation
+            assert reservation is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_activate_reservation_example(self):
+        """
+        activate_reservation request example
+        """
+        try:
+            print('\nactivate_reservation() result:')
+            # begin-activate_reservation
+
+            response = vpc_service.activate_reservation(
+                id=data['reservationId']).get_result()
+
+            # end-activate_reservation
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_reservation_example(self):
+        """
+        get_reservation request example
+        """
+        try:
+            print('\nget_reservation() result:')
+            # begin-activate_reservation
+
+            reservation = vpc_service.get_reservation(
+                id=data['reservationId']).get_result()
+
+            # end-get_reservation
+            assert reservation is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_instance_with_reservation_example(self):
+        """
+        create_instance with reservation request example
+        """
+        try:
+            print('\ncreate_instance_with_reservation() result:')
+            # begin-create_instance
+
+            subnet_identity_model = {}
+            subnet_identity_model['id'] = data['subnetId']
+
+            network_interface_prototype_model = {}
+            network_interface_prototype_model['name'] = 'my-network-interface'
+            network_interface_prototype_model['subnet'] = subnet_identity_model
+
+            instance_profile_identity_model = {}
+            instance_profile_identity_model['name'] = 'bx2-2x8'
+
+            vpc_identity_model = {}
+            vpc_identity_model['id'] = data['vpcID']
+
+            zone_identity_model = {}
+            zone_identity_model['name'] = data['zone']
+
+            reservation_identity_model = {}
+            reservation_identity_model['id'] =  data['reservationId']
+
+            reservation_affinity_model = {}
+            reservation_affinity_model['policy'] = 'manual'
+            reservation_affinity_model['pool'] = [reservation_identity_model]
+
+            image_identity_model = {}
+            image_identity_model['id'] = data['imageId']
+
+            instance_prototype_model = {}
+            instance_prototype_model['name'] = 'my-instance-with-res'
+            instance_prototype_model['profile'] = instance_profile_identity_model
+            instance_prototype_model['vpc'] = vpc_identity_model
+            instance_prototype_model['primary_network_interface'] = network_interface_prototype_model
+            instance_prototype_model['zone'] = zone_identity_model
+            instance_prototype_model['image'] = image_identity_model
+            instance_prototype_model['reservation_affinity'] = reservation_affinity_model
+
+            instance = vpc_service.create_instance(
+                instance_prototype=instance_prototype_model).get_result()
+
+            # end-create_instance
+
+            assert instance is not None
+            data['instanceIdWithRes']=instance['id']
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_instance_with_reservation_example(self):
+        """
+        update_instance with reservation request example
+        """
+        try:
+            print('\nupdate_instance_with_reservation() result:')
+            # begin-update_instance
+
+            reservation_identity_model = {}
+            reservation_identity_model['id'] =  data['reservationId']
+
+            reservation_affinity_model = {}
+            reservation_affinity_model['policy'] = 'manual'
+            reservation_affinity_model['pool'] = [reservation_identity_model]
+
+            instance_patch_model = {}
+            instance_patch_model['name']='my-instance-updated'
+            instance_patch_model['reservation_affinity'] = reservation_affinity_model
+
+            instance = vpc_service.update_instance(
+                id=data['instanceId'],
+                instance_patch=instance_patch_model).get_result()
+
+            # end-update_instance
+            assert instance is not None
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+
+    @needscredentials
+    @pytest.mark.skip(reason="mock")
+    def test_delete_reservation_example(self):
+        """
+        delete_reservation request example
+        """
+        try:
+            # begin-delete_reservation
+
+            response = vpc_service.delete_reservation(
+                id=data['reservationId'])
+
+            assert response is not None
+
+            # end-delete_reservation
+            print('\ndelete_reservation() response status code: ',
+                  response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4988,7 +5202,30 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
+    
     @needscredentials
+    def test_create_vpn_server_route_example(self):
+        """
+        create_vpn_server_route request example
+        """
+        try:
+            print('\ncreate_vpn_server_route() result:')
+            # begin-create_vpn_server_route
+
+            vpn_server_route = vpc_service.create_vpn_server_route(
+                vpn_server_id=data['vpnserverId'],
+                destination='172.16.0.0/16',
+                name='my-vpn-server-route'
+            ).get_result()
+
+            print(json.dumps(vpn_server_route, indent=2))
+
+            # end-create_vpn_server_route
+            data['vpnserverrouteId']=vpn_server_route['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+    @needscredentials
+    @pytest.mark.skip(reason="mock")
     def test_list_vpn_server_routes_example(self):
         """
         list_vpn_server_routes request example
@@ -5013,28 +5250,6 @@ class TestVpcV1Examples():
 
             print(json.dumps(all_results, indent=2))
 
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_create_vpn_server_route_example(self):
-        """
-        create_vpn_server_route request example
-        """
-        try:
-            print('\ncreate_vpn_server_route() result:')
-            # begin-create_vpn_server_route
-
-            vpn_server_route = vpc_service.create_vpn_server_route(
-                vpn_server_id=data['vpnserverId'],
-                destination='172.16.0.0/16',
-                name='my-vpn-server-route'
-            ).get_result()
-
-            print(json.dumps(vpn_server_route, indent=2))
-
-            # end-create_vpn_server_route
-            data['vpnserverrouteId']=vpn_server_route['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -6269,20 +6484,23 @@ class TestVpcV1Examples():
                     'id': data['subnetId'],
                 },
             }
-
+            bare_metal_server_profile_identity_model = {
+                'name': 'bmx2-48x768',
+            }
             zone_identity_model = {
                 'name': data['zone'],
             }
-
-            bare_metal_server = vpc_service.create_bare_metal_server(
-                initialization=bare_metal_server_initialization_prototype_model,
-                primary_network_interface=
+            bare_metal_server_prototype_model = {
+                'initialization': bare_metal_server_initialization_prototype_model,
+                'primary_network_interface':
                 bare_metal_server_primary_network_interface_prototype_model,
-                profile={
-                    'name': 'bmx2-48x768'
-                },
-                name='my-baremetal-server',
-                zone=zone_identity_model).get_result()
+                'profile': bare_metal_server_profile_identity_model,
+                'name':'my-baremetal-server',
+                'zone':zone_identity_model
+            }
+            bare_metal_server = vpc_service.create_bare_metal_server(
+                bare_metal_server_prototype=bare_metal_server_prototype_model,
+                ).get_result()
 
             # end-create_bare_metal_server
             assert bare_metal_server is not None
@@ -6807,12 +7025,14 @@ class TestVpcV1Examples():
                 'deletion_trigger': backup_policy_plan_deletion_trigger_prototype_model,
                 'name': 'my-backup-policy-plan',
             }
-
+            backup_policy_prototype = {
+                'match_user_tags': ['my-daily-backup-policy'],
+                'match_resource_type':['volume'],
+                'name':'my-backup-policy',
+                'plans':[backup_policy_plan_prototype_model],
+            }
             backup_policy_response = vpc_service.create_backup_policy(
-                match_user_tags=['my-daily-backup-policy'],
-                match_resource_types=['volume'],
-                name='my-backup-policy',
-                plans=[backup_policy_plan_prototype_model],
+                backup_policy_prototype = backup_policy_prototype
             )
             backup_policy = backup_policy_response.get_result()
             data['backupPolicyETag'] = backup_policy_response.get_headers()['ETag']
@@ -6951,6 +7171,7 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
+    @pytest.mark.skip(reason="mock")
     def test_list_backup_policy_jobs_example(self):
         """
         list_backup_policy_jobs request example
@@ -6976,6 +7197,7 @@ class TestVpcV1Examples():
         data['backupPolicyJobID'] = all_results[0]['id']
 
     @needscredentials
+    @pytest.mark.skip(reason="mock")
     def test_get_backup_policy_job_example(self):
         """
         get_backup_policy_job request example
@@ -7915,6 +8137,7 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     def test_delete_vpc_example(self):
         """
