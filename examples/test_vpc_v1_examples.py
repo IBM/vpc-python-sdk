@@ -4813,13 +4813,47 @@ class TestVpcV1Examples():
             print('\ncreate_vpn_gateway_connection() result:')
             # begin-create_vpn_gateway_connection
 
-            vpn_gateway_connection_prototype_model = {}
-            vpn_gateway_connection_prototype_model['peer_address'] = '192.132.5.0'
-            vpn_gateway_connection_prototype_model['psk'] = 'lkj14b1oi0alcniejkso'
-            vpn_gateway_connection_prototype_model['name'] = 'my-vpn-connection'
-            vpn_gateway_connection_prototype_model['peer_cidrs'] = ['197.155.0.0/28']
-            vpn_gateway_connection_prototype_model['local_cidrs'] = ['192.132.0.0/28']
-            vpn_gateway_connection_prototype_model['admin_state_up'] = True
+            # Construct a dict representation of a VPNGatewayConnectionDPDPrototype model
+            vpn_gateway_connection_dpd_prototype_model = {
+                'action': 'restart',
+                'interval': 30,
+                'timeout': 120,
+            }
+            # Construct a dict representation of a VPNGatewayConnectionIKEPolicyPrototypeIKEPolicyIdentityById model
+            vpn_gateway_connection_ike_policy_prototype_model = {
+                'id': 'ddf51bec-3424-11e8-b467-0ed5f89f718b',
+            }
+            # Construct a dict representation of a VPNGatewayConnectionIPsecPolicyPrototypeIPsecPolicyIdentityById model
+            vpn_gateway_connection_i_psec_policy_prototype_model = {
+                'id': 'ddf51bec-3424-11e8-b467-0ed5f89f718b',
+            }
+            # Construct a dict representation of a VPNGatewayConnectionIKEIdentityPrototypeVPNGatewayConnectionIKEIdentityFQDN model
+            vpn_gateway_connection_ike_identity_prototype_model = {
+                'type': 'fqdn',
+                'value': 'my-service.example.com',
+            }
+            # Construct a dict representation of a VPNGatewayConnectionStaticRouteModeLocalPrototype model
+            vpn_gateway_connection_static_route_mode_local_prototype_model = {
+                'ike_identities': [vpn_gateway_connection_ike_identity_prototype_model],
+            }
+            # Construct a dict representation of a VPNGatewayConnectionStaticRouteModePeerPrototypeVPNGatewayConnectionPeerByAddress model
+            vpn_gateway_connection_static_route_mode_peer_prototype_model = {
+                'ike_identity': vpn_gateway_connection_ike_identity_prototype_model,
+                'address': '169.21.50.5',
+            }
+            # Construct a dict representation of a VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype model
+            vpn_gateway_connection_prototype_model = {
+                'admin_state_up': True,
+                'dead_peer_detection': vpn_gateway_connection_dpd_prototype_model,
+                'establish_mode': 'bidirectional',
+                'ike_policy': vpn_gateway_connection_ike_policy_prototype_model,
+                'ipsec_policy': vpn_gateway_connection_i_psec_policy_prototype_model,
+                'name': 'my-vpn-connection',
+                'psk': 'lkj14b1oi0alcniejkso',
+                'local': vpn_gateway_connection_static_route_mode_local_prototype_model,
+                'peer': vpn_gateway_connection_static_route_mode_peer_prototype_model,
+                'routing_protocol': 'none',
+            }
 
             vpn_gateway_connection = vpc_service.create_vpn_gateway_connection(
                 vpn_gateway_id=data['vpnGatewayId'],
@@ -4882,38 +4916,38 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_add_vpn_gateway_connection_local_cidr_example(self):
+    def test_add_vpn_gateway_connections_local_cidr_example(self):
         """
-        add_vpn_gateway_connection_local_cidr request example
+        add_vpn_gateway_connections_local_cidr request example
         """
         try:
-            # begin-add_vpn_gateway_connection_local_cidr
+            # begin-add_vpn_gateway_connections_local_cidr
 
-            response = vpc_service.add_vpn_gateway_connection_local_cidr(
+            response = vpc_service.add_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr_prefix='192.134.0.0',
                 prefix_length='28')
 
-            # end-add_vpn_gateway_connection_local_cidr
+            # end-add_vpn_gateway_connections_local_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_vpn_gateway_connection_local_cidrs_example(self):
+    def test_list_vpn_gateway_connections_local_cidrs_example(self):
         """
-        list_vpn_gateway_connection_local_cidrs request example
+        list_vpn_gateway_connections_local_cidrs request example
         """
         try:
-            print('\nlist_vpn_gateway_connection_local_cidrs() result:')
-            # begin-list_vpn_gateway_connection_local_cidrs
+            print('\nlist_vpn_gateway_connections_local_cidrs() result:')
+            # begin-list_vpn_gateway_connections_local_cidrs
 
-            vpn_gateway_connection_local_cid_rs = vpc_service.list_vpn_gateway_connection_local_cidrs(
+            vpn_gateway_connection_local_cid_rs = vpc_service.list_vpn_gateway_connections_local_cidrs(
                 vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
 
-            # end-list_vpn_gateway_connection_local_cidrs
+            # end-list_vpn_gateway_connections_local_cidrs
 
             assert vpn_gateway_connection_local_cid_rs is not None
 
@@ -4921,58 +4955,56 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_add_vpn_gateway_connection_peer_cidr_example(self):
+    def test_add_vpn_gateway_connections_peer_cidr_example(self):
         """
-        add_vpn_gateway_connection_peer_cidr request example
+        add_vpn_gateway_connections_peer_cidr request example
         """
         try:
-            # begin-add_vpn_gateway_connection_peer_cidr
+            # begin-add_vpn_gateway_connections_peer_cidr
 
-            response = vpc_service.add_vpn_gateway_connection_peer_cidr(
+            response = vpc_service.add_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.144.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-add_vpn_gateway_connection_peer_cidr
+            # end-add_vpn_gateway_connections_peer_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_check_vpn_gateway_connection_local_cidr_example(self):
+    def test_check_vpn_gateway_connections_local_cidr_example(self):
         """
-        check_vpn_gateway_connection_local_cidr request example
+        check_vpn_gateway_connections_local_cidr request example
         """
         try:
-            # begin-check_vpn_gateway_connection_local_cidr
+            # begin-check_vpn_gateway_connections_local_cidr
 
-            response = vpc_service.check_vpn_gateway_connection_local_cidr(
+            response = vpc_service.check_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.134.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-check_vpn_gateway_connection_local_cidr
+            # end-check_vpn_gateway_connections_local_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_vpn_gateway_connection_peer_cidrs_example(self):
+    def test_list_vpn_gateway_connections_peer_cidrs_example(self):
         """
-        list_vpn_gateway_connection_peer_cidrs request example
+        list_vpn_gateway_connections_peer_cidrs request example
         """
         try:
-            print('\nlist_vpn_gateway_connection_peer_cidrs() result:')
-            # begin-list_vpn_gateway_connection_peer_cidrs
+            print('\nlist_vpn_gateway_connections_peer_cidrs() result:')
+            # begin-list_vpn_gateway_connections_peer_cidrs
 
-            vpn_gateway_connection_peer_cid_rs = vpc_service.list_vpn_gateway_connection_peer_cidrs(
+            vpn_gateway_connection_peer_cid_rs = vpc_service.list_vpn_gateway_connections_peer_cidrs(
                 vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
 
-            # end-list_vpn_gateway_connection_peer_cidrs
+            # end-list_vpn_gateway_connections_peer_cidrs
 
             assert vpn_gateway_connection_peer_cid_rs is not None
 
@@ -4980,20 +5012,19 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_check_vpn_gateway_connection_peer_cidr_example(self):
+    def test_check_vpn_gateway_connections_peer_cidr_example(self):
         """
-        check_vpn_gateway_connection_peer_cidr request example
+        check_vpn_gateway_connections_peer_cidr request example
         """
         try:
-            # begin-check_vpn_gateway_connection_peer_cidr
+            # begin-check_vpn_gateway_connections_peer_cidr
 
-            response = vpc_service.check_vpn_gateway_connection_peer_cidr(
+            response = vpc_service.check_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.144.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-check_vpn_gateway_connection_peer_cidr
+            # end-check_vpn_gateway_connections_peer_cidr
             assert response is not None
 
         except ApiException as e:
@@ -7421,40 +7452,38 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_remove_vpn_gateway_connection_peer_cidr_example(self):
+    def test_remove_vpn_gateway_connections_peer_cidr_example(self):
         """
-        remove_vpn_gateway_connection_peer_cidr request example
+        remove_vpn_gateway_connections_peer_cidr request example
         """
         try:
-            # begin-remove_vpn_gateway_connection_peer_cidr
+            # begin-remove_vpn_gateway_connections_peer_cidr
 
-            response = vpc_service.remove_vpn_gateway_connection_peer_cidr(
+            response = vpc_service.remove_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.144.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-remove_vpn_gateway_connection_peer_cidr
+            # end-remove_vpn_gateway_connections_peer_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_remove_vpn_gateway_connection_local_cidr_example(self):
+    def test_remove_vpn_gateway_connections_local_cidr_example(self):
         """
-        remove_vpn_gateway_connection_local_cidr request example
+        remove_vpn_gateway_connections_local_cidr request example
         """
         try:
-            # begin-remove_vpn_gateway_connection_local_cidr
+            # begin-remove_vpn_gateway_connections_local_cidr
 
-            response = vpc_service.remove_vpn_gateway_connection_local_cidr(
+            response = vpc_service.remove_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.134.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-remove_vpn_gateway_connection_local_cidr
+            # end-remove_vpn_gateway_connections_local_cidr
             assert response is not None
 
         except ApiException as e:
