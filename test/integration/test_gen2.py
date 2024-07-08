@@ -826,11 +826,16 @@ class TestShares():
         share = create_share(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], 200)
         assertCreateResponse(share)
         store['share_id'] = share.get_result()['id']
-        share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share"), store['zone'], store['share_id'], '0 */5 * * *')
+        store['share_crn'] = share.get_result()['crn']
+        share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share-replica"), store['zone'], store['share_id'], '0 */5 * * *')
         assertCreateResponse(share_replica)
         store['share_replica_id'] = share_replica.get_result()['id']
         store['share_replica_etag'] = share_replica.get_headers()['ETag']
 
+    def test_create_accessor_share(self, createGen2Service):
+        share = create_accessor_share(createGen2Service, store['share_profile_name'], generate_name("share-accessor"))
+        assertCreateResponse(share)
+        store['share_accessor_id'] = share.get_result()['id']
 
     def test_get_share(self, createGen2Service):
         share = get_share(createGen2Service, store['share_id'])
@@ -872,7 +877,7 @@ class TestShares():
         assertDeleteRequestAcceptedResponse(response)
 
     # def test_delete_share_source(self, createGen2Service):
-    #     response = delete_share_source(createGen2Service, store['share_replica_id'])
+    #     response = delete_share_source(createGen2Service, store['share_id'])
     #     assertDeleteResponse(response)
 
     def test_delete_share(self, createGen2Service):
@@ -1121,44 +1126,44 @@ class TestVPNGateways():
 
     # local_cidrs
     def test_create_vpn_gateway_connection_local_cidrs(self, createGen2Service):
-        local_cidr = add_vpn_gateway_connections_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0/28")
+        local_cidr = add_vpn_gateway_connection_local_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
         assert local_cidr.status_code == 204
 
-    def test_list_vpn_gateway_connections_local_cidrs(self, createGen2Service):
-        local_cidr = list_vpn_gateway_connections_local_cidrs(
+    def test_list_vpn_gateway_connection_local_cidrs(self, createGen2Service):
+        local_cidr = list_vpn_gateway_connection_local_cidrs(
             createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
         assert local_cidr.status_code == 200
 
-    def test_check_vpn_gateway_connections_local_cidr(self, createGen2Service):
-        local_cidr = check_vpn_gateway_connections_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0/28")
+    def test_check_vpn_gateway_connection_local_cidr(self, createGen2Service):
+        local_cidr = check_vpn_gateway_connection_local_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
         assert local_cidr.status_code == 204
 
-    def test_remove_vpn_gateway_connections_local_cidr(self, createGen2Service):
-        local_cidr = remove_vpn_gateway_connections_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0/28")
+    def test_remove_vpn_gateway_connection_local_cidr(self, createGen2Service):
+        local_cidr = remove_vpn_gateway_connection_local_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
         assert local_cidr.status_code == 204
     # peer_cidrs
 
     def test_create_vpn_gateway_connection_peer_cidrs(self, createGen2Service):
-        peer_cidr = add_vpn_gateway_connections_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0/28")
+        peer_cidr = add_vpn_gateway_connection_peer_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
         assert peer_cidr.status_code == 204
 
-    def test_list_vpn_gateway_connections_peer_cidrs(self, createGen2Service):
-        peer_cidr = list_vpn_gateway_connections_peer_cidrs(
+    def test_list_vpn_gateway_connection_peer_cidrs(self, createGen2Service):
+        peer_cidr = list_vpn_gateway_connection_peer_cidrs(
             createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
         assert peer_cidr.status_code == 200
 
-    def test_check_vpn_gateway_connections_peer_cidr(self, createGen2Service):
-        peer_cidr = check_vpn_gateway_connections_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0/28")
+    def test_check_vpn_gateway_connection_peer_cidr(self, createGen2Service):
+        peer_cidr = check_vpn_gateway_connection_peer_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
         assert peer_cidr.status_code == 204
 
-    def test_remove_vpn_gateway_connections_peer_cidr(self, createGen2Service):
-        peer_cidr = remove_vpn_gateway_connections_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0/28")
+    def test_remove_vpn_gateway_connection_peer_cidr(self, createGen2Service):
+        peer_cidr = remove_vpn_gateway_connection_peer_cidr(
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
         assert peer_cidr.status_code == 204
 
 
@@ -1817,11 +1822,11 @@ class TestTeardown():
     def test_delete_vpc(self, createGen2Service):
         vpc = delete_vpc(createGen2Service, store['created_vpc'])
         assertDeleteResponse(vpc)
-
-     
+    
     def test_delete_vpc(self, createGen2Service):
         vpc = delete_vpc(createGen2Service, store['created_vpc_hub'])
         assertDeleteResponse(vpc)
+
     def test_delete_image(self, createGen2Service):
         image = delete_image(createGen2Service, store['image_id'])
         assertDeleteResponse(image)
@@ -4117,6 +4122,20 @@ def create_share(service, share_profile_name, name, zone_name, size):
     )
     return share
 
+def create_accessor_share(service, shareCRN, name):
+    share_identity = {
+        'crn': shareCRN,
+    }
+    share_prototype_model = {
+        'name': name,
+        'origin_share': share_identity,
+    }
+
+    share = service.create_share(
+        share_prototype=share_prototype_model,
+    )
+    return share
+
 def create_share_replica(service, share_profile_name, name, zone_name, share_id, cron_spec):
     share_profile_identity_model = {
         'name': share_profile_name,
@@ -4741,9 +4760,6 @@ def update_vpc_dns_res_binding(service,vpcId, vpcDnsResolutionBindingID):
     )
     return response
 
-
-
-
 # --------------------------------------------------------
 # delete_vpc()
 # --------------------------------------------------------
@@ -5228,10 +5244,11 @@ def create_vpn_gateway_connection(service, vpn_gateway_id):
         'routing_protocol': 'none',
     }
 
-    response = service.create_vpn_gateway_connection(
-        vpn_gateway_id,
+    response = service.vpc_service.create_vpn_gateway_connection(
+        vpn_gateway_id='testString',
         vpn_gateway_connection_prototype=vpn_gateway_connection_prototype_model,
     )
+
     return response
 # --------------------------------------------------------
 # delete_vpn_gateway_connection()
@@ -5267,80 +5284,80 @@ def update_vpn_gateway_connection(service, vpn_gateway_id, id):
     return response
 
 # --------------------------------------------------------
-# list_vpn_gateway_connections_local_cidrs()
+# list_vpn_gateway_connection_local_cidrs()
 # --------------------------------------------------------
 
 
-def list_vpn_gateway_connections_local_cidrs(service, vpn_gateway_id, id):
+def list_vpn_gateway_connection_local_cidrs(service, vpn_gateway_id, id):
     response = service.list_vpn_gateway_connections_local_cidrs(
         vpn_gateway_id, id)
     return response
 
 # --------------------------------------------------------
-# remove_vpn_gateway_connections_local_cidr()
+# remove_vpn_gateway_connection_local_cidr()
 # --------------------------------------------------------
 
 
-def remove_vpn_gateway_connections_local_cidr(service, vpn_gateway_id, id, cidr):
+def remove_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.remove_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 
 # --------------------------------------------------------
-# check_vpn_gateway_connections_local_cidr()
+# check_vpn_gateway_connection_local_cidr()
 # --------------------------------------------------------
 
 
-def check_vpn_gateway_connections_local_cidr(service, vpn_gateway_id, id, cidr):
+def check_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.check_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 # --------------------------------------------------------
-# add_vpn_gateway_connections_local_cidr()
+# add_vpn_gateway_connection_local_cidr()
 # --------------------------------------------------------
 
 
-def add_vpn_gateway_connections_local_cidr(service, vpn_gateway_id, id, cidr):
+def add_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.add_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 # --------------------------------------------------------
-# list_vpn_gateway_connections_peer_cidrs()
+# list_vpn_gateway_connection_peer_cidrs()
 # --------------------------------------------------------
 
 
-def list_vpn_gateway_connections_peer_cidrs(service, vpn_gateway_id, id):
+def list_vpn_gateway_connection_peer_cidrs(service, vpn_gateway_id, id):
     response = service.list_vpn_gateway_connections_peer_cidrs(
         vpn_gateway_id, id)
     return response
 
 # --------------------------------------------------------
-# remove_vpn_gateway_connections_peer_cidr()
+# remove_vpn_gateway_connection_peer_cidr()
 # --------------------------------------------------------
 
 
-def remove_vpn_gateway_connections_peer_cidr(service, vpn_gateway_id, id, cidr):
+def remove_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.remove_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 
 # --------------------------------------------------------
-# check_vpn_gateway_connections_peer_cidr()
+# check_vpn_gateway_connection_peer_cidr()
 # --------------------------------------------------------
 
 
-def check_vpn_gateway_connections_peer_cidr(service, vpn_gateway_id, id, cidr):
+def check_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.check_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 # --------------------------------------------------------
-# add_vpn_gateway_connections_peer_cidr()
+# add_vpn_gateway_connection_peer_cidr()
 # --------------------------------------------------------
 
 
-def add_vpn_gateway_connections_peer_cidr(service, vpn_gateway_id, id, cidr):
+def add_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
     response = service.add_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, cidr)
+        vpn_gateway_id, id, prefix_address, prefix_length)
     return response
 
 # --------------------------------------------------------
@@ -6269,6 +6286,9 @@ def assertListResponse(output, rType):
 
 #
 
+def assertPagerListResponse(output):
+    assert len(output) != 0
+
 def assertGetNameResponse(output):
     response = output.get_result()
     assert output.status_code == 200
@@ -6299,7 +6319,3 @@ def assertDeleteResponse(output):
 def assertDeleteRequestAcceptedResponse(output):
     response = output.get_result()
     assert output.status_code == 202
-
-    
-def assertPagerListResponse(output):
-    assert len(output) != 0

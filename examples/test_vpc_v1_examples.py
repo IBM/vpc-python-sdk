@@ -1009,6 +1009,7 @@ class TestVpcV1Examples():
                 client=vpc_service,
                 limit=10,
                 visibility='private',
+                user_data_format='cloud_init',
             )
             while pager.has_next():
                 next_page = pager.get_next()
@@ -3596,10 +3597,41 @@ class TestVpcV1Examples():
             # end-create_share
             print(json.dumps(share, indent=2))
             data['shareId']=share['id']
+            data['shareCRN']=share['crn']
             data['shareReplicaId']=share_replica['id']
             data['shareReplicaETag']=response_replica.get_headers()['ETag']
             assert share is not None
             assert share_replica is not None
+            
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_accessor_share_example(self):
+        """
+        create_share request example
+        """
+        try:
+            print('\ncreate_share() result:')
+            # begin-create_share
+
+            share_identity = {
+                'crn': data["shareCRN"]
+            }
+            share_prototype_model = {
+                'origin_share': share_identity,
+                'name': 'my-accessor-share',
+            }
+
+            response = vpc_service.create_share(
+                share_prototype=share_prototype_model,
+            )
+            share = response.get_result()
+
+            # end-create_share
+            data['shareAccessorId']=share['id']
+            assert share is not None
             
 
         except ApiException as e:
@@ -3657,6 +3689,74 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
+    @needscredentials
+    def test_list_share_accessor_bindings_example(self):
+        """
+        list_share_accessor_bindings request example
+        """
+        try:
+            print('\nlist_share_accessor_bindings() result:')
+
+            # begin-list_share_accessor_bindings
+
+            all_results = []
+            pager = ShareAccessorBindingsPager(
+                client=vpc_service,
+                id=data['shareId'],
+                limit=10,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            # end-list_share_accessor_bindings
+            data['shareAccessorBindingId'] = all_results[0]['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_share_accessor_binding_example(self):
+        """
+        get_share_accessor_binding request example
+        """
+        try:
+            print('\nget_share_accessor_binding() result:')
+
+            # begin-get_share_accessor_binding
+
+            response = vpc_service.get_share_accessor_binding(
+                share_id=data['shareId'],
+                id=data['shareAccessorBindingId'],
+            )
+            share_accessor_binding = response.get_result()
+
+            print(json.dumps(share_accessor_binding, indent=2))
+
+            # end-get_share_accessor_binding
+            assert share_accessor_binding is not None
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_share_accessor_binding_example(self):
+        """
+        delete_share_accessor_binding request example
+        """
+        try:
+            # begin-delete_share_accessor_binding
+
+            response = vpc_service.delete_share_accessor_binding(
+                share_id=data['shareId'],
+                id=data['shareAccessorBindingId'],
+            )
+
+            # end-delete_share_accessor_binding
+            print('\ndelete_share_accessor_binding() response status code: ',
+                  response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
     @needscredentials
     def test_failover_share_example(self):
         """
@@ -4857,8 +4957,8 @@ class TestVpcV1Examples():
 
             vpn_gateway_connection = vpc_service.create_vpn_gateway_connection(
                 vpn_gateway_id=data['vpnGatewayId'],
-                vpn_gateway_connection_prototype=
-                vpn_gateway_connection_prototype_model).get_result()
+                vpn_gateway_connection_prototype=vpn_gateway_connection_prototype_model,
+            ).get_result()
 
             # end-create_vpn_gateway_connection
 
@@ -4916,38 +5016,37 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_add_vpn_gateway_connections_local_cidr_example(self):
+    def test_add_vpn_gateway_connection_local_cidr_example(self):
         """
-        add_vpn_gateway_connections_local_cidr request example
+        add_vpn_gateway_connection_local_cidr request example
         """
         try:
-            # begin-add_vpn_gateway_connections_local_cidr
+            # begin-add_vpn_gateway_connection_local_cidr
 
             response = vpc_service.add_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                cidr_prefix='192.134.0.0',
-                prefix_length='28')
+                cidr='192.144.0.0/28')
 
-            # end-add_vpn_gateway_connections_local_cidr
+            # end-add_vpn_gateway_connection_local_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_vpn_gateway_connections_local_cidrs_example(self):
+    def test_list_vpn_gateway_connection_local_cidrs_example(self):
         """
-        list_vpn_gateway_connections_local_cidrs request example
+        list_vpn_gateway_connection_local_cidrs request example
         """
         try:
-            print('\nlist_vpn_gateway_connections_local_cidrs() result:')
-            # begin-list_vpn_gateway_connections_local_cidrs
+            print('\nlist_vpn_gateway_connection_local_cidrs() result:')
+            # begin-list_vpn_gateway_connection_local_cidrs
 
             vpn_gateway_connection_local_cid_rs = vpc_service.list_vpn_gateway_connections_local_cidrs(
                 vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
 
-            # end-list_vpn_gateway_connections_local_cidrs
+            # end-list_vpn_gateway_connection_local_cidrs
 
             assert vpn_gateway_connection_local_cid_rs is not None
 
@@ -4955,56 +5054,56 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_add_vpn_gateway_connections_peer_cidr_example(self):
+    def test_add_vpn_gateway_connection_peer_cidr_example(self):
         """
-        add_vpn_gateway_connections_peer_cidr request example
+        add_vpn_gateway_connection_peer_cidr request example
         """
         try:
-            # begin-add_vpn_gateway_connections_peer_cidr
+            # begin-add_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.add_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr='192.144.0.0/28')
 
-            # end-add_vpn_gateway_connections_peer_cidr
+            # end-add_vpn_gateway_connection_peer_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_check_vpn_gateway_connections_local_cidr_example(self):
+    def test_check_vpn_gateway_connection_local_cidr_example(self):
         """
-        check_vpn_gateway_connections_local_cidr request example
+        check_vpn_gateway_connection_local_cidr request example
         """
         try:
-            # begin-check_vpn_gateway_connections_local_cidr
+            # begin-check_vpn_gateway_connection_local_cidr
 
             response = vpc_service.check_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr='192.144.0.0/28')
 
-            # end-check_vpn_gateway_connections_local_cidr
+            # end-check_vpn_gateway_connection_local_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_vpn_gateway_connections_peer_cidrs_example(self):
+    def test_list_vpn_gateway_connection_peer_cidrs_example(self):
         """
-        list_vpn_gateway_connections_peer_cidrs request example
+        list_vpn_gateway_connection_peer_cidrs request example
         """
         try:
-            print('\nlist_vpn_gateway_connections_peer_cidrs() result:')
-            # begin-list_vpn_gateway_connections_peer_cidrs
+            print('\nlist_vpn_gateway_connection_peer_cidrs() result:')
+            # begin-list_vpn_gateway_connection_peer_cidrs
 
             vpn_gateway_connection_peer_cid_rs = vpc_service.list_vpn_gateway_connections_peer_cidrs(
                 vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
 
-            # end-list_vpn_gateway_connections_peer_cidrs
+            # end-list_vpn_gateway_connection_peer_cidrs
 
             assert vpn_gateway_connection_peer_cid_rs is not None
 
@@ -5012,19 +5111,19 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_check_vpn_gateway_connections_peer_cidr_example(self):
+    def test_check_vpn_gateway_connection_peer_cidr_example(self):
         """
-        check_vpn_gateway_connections_peer_cidr request example
+        check_vpn_gateway_connection_peer_cidr request example
         """
         try:
-            # begin-check_vpn_gateway_connections_peer_cidr
+            # begin-check_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.check_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr='192.144.0.0/28')
 
-            # end-check_vpn_gateway_connections_peer_cidr
+            # end-check_vpn_gateway_connection_peer_cidr
             assert response is not None
 
         except ApiException as e:
@@ -6522,6 +6621,7 @@ class TestVpcV1Examples():
                 'name': data['zone'],
             }
             bare_metal_server_prototype_model = {
+                'bandwidth': 10000,
                 'initialization': bare_metal_server_initialization_prototype_model,
                 'primary_network_interface':
                 bare_metal_server_primary_network_interface_prototype_model,
@@ -7452,38 +7552,38 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_remove_vpn_gateway_connections_peer_cidr_example(self):
+    def test_remove_vpn_gateway_connection_peer_cidr_example(self):
         """
-        remove_vpn_gateway_connections_peer_cidr request example
+        remove_vpn_gateway_connection_peer_cidr request example
         """
         try:
-            # begin-remove_vpn_gateway_connections_peer_cidr
+            # begin-remove_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.remove_vpn_gateway_connections_peer_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr='192.144.0.0/28')
 
-            # end-remove_vpn_gateway_connections_peer_cidr
+            # end-remove_vpn_gateway_connection_peer_cidr
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_remove_vpn_gateway_connections_local_cidr_example(self):
+    def test_remove_vpn_gateway_connection_local_cidr_example(self):
         """
-        remove_vpn_gateway_connections_local_cidr request example
+        remove_vpn_gateway_connection_local_cidr request example
         """
         try:
-            # begin-remove_vpn_gateway_connections_local_cidr
+            # begin-remove_vpn_gateway_connection_local_cidr
 
             response = vpc_service.remove_vpn_gateway_connections_local_cidr(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
                 cidr='192.144.0.0/28')
 
-            # end-remove_vpn_gateway_connections_local_cidr
+            # end-remove_vpn_gateway_connection_local_cidr
             assert response is not None
 
         except ApiException as e:
