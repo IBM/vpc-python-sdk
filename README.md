@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-# IBM Cloud Virtual Private Cloud (VPC) Python SDK Version 0.22.0
+# IBM Cloud Virtual Private Cloud (VPC) Python SDK Version 0.23.0
 
 Python client library to interact with various [IBM Cloud Virtual Private Cloud (VPC) Service APIs](https://cloud.ibm.com/apidocs/vpc).
 
@@ -58,13 +58,13 @@ Service Name | Imported Class Name
 To install, use `pip` or `easy_install`:
 
 ```bash
-pip install --upgrade "ibm-vpc>=0.22.0"
+pip install --upgrade "ibm-vpc>=0.23.0"
 ```
 
 or
 
 ```bash
-easy_install --upgrade "ibm-vpc>=0.22.0"
+easy_install --upgrade "ibm-vpc>=0.23.0"
 ```
 
 ## Using the SDK
