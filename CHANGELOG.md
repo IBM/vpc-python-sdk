@@ -1,3 +1,10 @@
+## [0.24.1](https://github.com/IBM/vpc-python-sdk/compare/v0.24.0...v0.24.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* **travis:** Fix travis to publish to pypi ([#66](https://github.com/IBM/vpc-python-sdk/issues/66)) ([e7b4a20](https://github.com/IBM/vpc-python-sdk/commit/e7b4a202ea0fd90f8200db75c82aaa5a253c0fa6))
+
 # [0.24.0](https://github.com/IBM/vpc-python-sdk/compare/v0.23.0...v0.24.0) (2024-10-22)
 
 
