@@ -19,7 +19,7 @@ import os
 import sys
 import pkg_resources
 
-__version__ = '0.24.1'
+__version__ = '0.25.0'
 PACKAGE_NAME = 'ibm_vpc'
 PACKAGE_DESC = 'Python client library for IBM Cloud VPC Services'
 
