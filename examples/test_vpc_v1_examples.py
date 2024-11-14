@@ -1876,6 +1876,115 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
+
+    @needscredentials
+    def test_list_instance_cluster_network_attachments_example(self):
+        """
+        list_instance_cluster_network_attachments request example
+        """
+        try:
+            print('\nlist_instance_cluster_network_attachments() result:')
+
+            # begin-list_instance_cluster_network_attachments
+
+            all_results = []
+            pager = InstanceClusterNetworkAttachmentsPager(
+                client=vpc_service,
+                instance_id=data['instanceId'],
+                limit=10,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_instance_cluster_network_attachments
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_cluster_network_attachment_example(self):
+        """
+        create_cluster_network_attachment request example
+        """
+        try:
+            print('\ncreate_cluster_network_attachment() result:')
+
+            # begin-create_cluster_network_attachment
+
+            instance_cluster_network_attachment_prototype_cluster_network_interface_model = {
+                'name': 'my-instance-network-attachment',
+                'auto_delete': False,
+            }
+            response = vpc_service.create_cluster_network_attachment(
+                instance_id=data['instanceId'],
+                cluster_network_interface=instance_cluster_network_attachment_prototype_cluster_network_interface_model,
+                name='my-instance-network-attachment',
+            )
+            instance_cluster_network_attachment = response.get_result()
+
+            print(json.dumps(instance_cluster_network_attachment, indent=2))
+
+            # end-create_cluster_network_attachment
+            assert instance_cluster_network_attachment is not None
+            data['instanceClusterNetworkAttachmentId']=instance_cluster_network_attachment['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_instance_cluster_network_attachment_example(self):
+        """
+        get_instance_cluster_network_attachment request example
+        """
+        try:
+            print('\nget_instance_cluster_network_attachment() result:')
+
+            # begin-get_instance_cluster_network_attachment
+
+            response = vpc_service.get_instance_cluster_network_attachment(
+                instance_id=data['instanceId'],
+                id=data['instanceClusterNetworkAttachmentId'],
+            )
+            instance_cluster_network_attachment = response.get_result()
+
+            print(json.dumps(instance_cluster_network_attachment, indent=2))
+
+            # end-get_instance_cluster_network_attachment
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_instance_cluster_network_attachment_example(self):
+        """
+        update_instance_cluster_network_attachment request example
+        """
+        try:
+            print('\nupdate_instance_cluster_network_attachment() result:')
+
+            # begin-update_instance_cluster_network_attachment
+
+            instance_cluster_network_attachment_patch_model = {
+                'name': 'my-instance-network-attachment-updated',
+            }
+
+            response = vpc_service.update_instance_cluster_network_attachment(
+                instance_id=data['instanceId'],
+                id=data['instanceClusterNetworkAttachmentId'],
+                instance_cluster_network_attachment_patch=instance_cluster_network_attachment_patch_model,
+            )
+            instance_cluster_network_attachment = response.get_result()
+
+            print(json.dumps(instance_cluster_network_attachment, indent=2))
+
+            # end-update_instance_cluster_network_attachment
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+
     @needscredentials
     @pytest.mark.skip(reason="mock")
     def test_create_instance_console_access_token_example(self):
@@ -3988,6 +4097,493 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
+
+    @needscredentials
+    def test_list_cluster_network_profiles_example(self):
+        """
+        list_cluster_network_profiles request example
+        """
+        try:
+            print('\nlist_cluster_network_profiles() result:')
+
+            # begin-list_cluster_network_profiles
+
+            all_results = []
+            pager = ClusterNetworkProfilesPager(
+                client=vpc_service,
+                limit=10,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_cluster_network_profiles
+            assert all_results is not None
+            data['clusterNetworkProfile']=all_results[0]['name']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_cluster_network_profile_example(self):
+        """
+        get_cluster_network_profile request example
+        """
+        try:
+            print('\nget_cluster_network_profile() result:')
+
+            # begin-get_cluster_network_profile
+
+            response = vpc_service.get_cluster_network_profile(
+                name=data['clusterNetworkProfile'],
+            )
+            cluster_network_profile = response.get_result()
+
+            print(json.dumps(cluster_network_profile, indent=2))
+
+            # end-get_cluster_network_profile
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_cluster_networks_example(self):
+        """
+        list_cluster_networks request example
+        """
+        try:
+            print('\nlist_cluster_networks() result:')
+
+            # begin-list_cluster_networks
+
+            all_results = []
+            pager = ClusterNetworksPager(
+                client=vpc_service,
+                limit=10,
+                sort='name',
+                vpc_id=data['vpcID'],
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_cluster_networks
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_cluster_network_example(self):
+        """
+        create_cluster_network request example
+        """
+        try:
+            print('\ncreate_cluster_network() result:')
+
+            # begin-create_cluster_network
+
+            cluster_network_profile_identity_model = {
+                'name': data['clusterNetworkProfile'],
+            }
+
+            vpc_identity_model = {
+                'id': data['vpcID'],
+            }
+
+            zone_identity_model = {
+                'name': data['zone'],
+            }
+
+            response = vpc_service.create_cluster_network(
+                profile=cluster_network_profile_identity_model,
+                vpc=vpc_identity_model,
+                zone=zone_identity_model,
+            )
+            cluster_network = response.get_result()
+
+            print(json.dumps(cluster_network, indent=2))
+
+            # end-create_cluster_network
+            assert cluster_network is not None
+            data['clusterNetworkId']=cluster_network['id']
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_cluster_network_interfaces_example(self):
+        """
+        list_cluster_network_interfaces request example
+        """
+        try:
+            print('\nlist_cluster_network_interfaces() result:')
+
+            # begin-list_cluster_network_interfaces
+
+            all_results = []
+            pager = ClusterNetworkInterfacesPager(
+                client=vpc_service,
+                cluster_network_id=data['clusterNetworkId'],
+                limit=10,
+                sort='name',
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_cluster_network_interfaces
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_cluster_network_interface_example(self):
+        """
+        create_cluster_network_interface request example
+        """
+        try:
+            print('\ncreate_cluster_network_interface() result:')
+
+            # begin-create_cluster_network_interface
+
+            response = vpc_service.create_cluster_network_interface(
+                cluster_network_id=data['clusterNetworkId'],
+            )
+            cluster_network_interface = response.get_result()
+
+            print(json.dumps(cluster_network_interface, indent=2))
+
+            # end-create_cluster_network_interface
+            assert cluster_network_interface is not None
+            data['clusterNetworkInterfaceId']=cluster_network_interface['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_cluster_network_interface_example(self):
+        """
+        get_cluster_network_interface request example
+        """
+        try:
+            print('\nget_cluster_network_interface() result:')
+
+            # begin-get_cluster_network_interface
+
+            response = vpc_service.get_cluster_network_interface(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkInterfaceId'],
+            )
+            cluster_network_interface = response.get_result()
+
+            print(json.dumps(cluster_network_interface, indent=2))
+
+            # end-get_cluster_network_interface
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_cluster_network_interface_example(self):
+        """
+        update_cluster_network_interface request example
+        """
+        try:
+            print('\nupdate_cluster_network_interface() result:')
+
+            # begin-update_cluster_network_interface
+
+            cluster_network_interface_patch_model = {
+                'name': 'my-cluster-network-interface-updated',
+            }
+
+            response = vpc_service.update_cluster_network_interface(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkInterfaceId'],
+                cluster_network_interface_patch=cluster_network_interface_patch_model,
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_interface = response.get_result()
+
+            print(json.dumps(cluster_network_interface, indent=2))
+
+            # end-update_cluster_network_interface
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_cluster_network_subnets_example(self):
+        """
+        list_cluster_network_subnets request example
+        """
+        try:
+            print('\nlist_cluster_network_subnets() result:')
+
+            # begin-list_cluster_network_subnets
+
+            all_results = []
+            pager = ClusterNetworkSubnetsPager(
+                client=vpc_service,
+                cluster_network_id=data['clusterNetworkId'],
+                limit=10,
+                sort='name',
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_cluster_network_subnets
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_cluster_network_subnet_example(self):
+        """
+        create_cluster_network_subnet request example
+        """
+        try:
+            print('\ncreate_cluster_network_subnet() result:')
+
+            # begin-create_cluster_network_subnet
+
+            cluster_network_subnet_prototype_model = {
+                'total_ipv4_address_count': 256,
+            }
+
+            response = vpc_service.create_cluster_network_subnet(
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_prototype=cluster_network_subnet_prototype_model,
+            )
+            cluster_network_subnet = response.get_result()
+
+            print(json.dumps(cluster_network_subnet, indent=2))
+
+            # end-create_cluster_network_subnet
+            assert cluster_network_subnet is not None
+            data['clusterNetworkSubnetId']=cluster_network_subnet['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_cluster_network_subnet_reserved_ips_example(self):
+        """
+        list_cluster_network_subnet_reserved_ips request example
+        """
+        try:
+            print('\nlist_cluster_network_subnet_reserved_ips() result:')
+
+            # begin-list_cluster_network_subnet_reserved_ips
+
+            all_results = []
+            pager = ClusterNetworkSubnetReservedIpsPager(
+                client=vpc_service,
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_id=data['clusterNetworkSubnetId'],
+                limit=10,
+                sort='name',
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_cluster_network_subnet_reserved_ips
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_cluster_network_subnet_reserved_ip_example(self):
+        """
+        create_cluster_network_subnet_reserved_ip request example
+        """
+        try:
+            print('\ncreate_cluster_network_subnet_reserved_ip() result:')
+
+            # begin-create_cluster_network_subnet_reserved_ip
+
+            response = vpc_service.create_cluster_network_subnet_reserved_ip(
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_id=data['clusterNetworkSubnetId'],
+                name='my-cluster-network-subnet-reserved-ip',
+            )
+            cluster_network_subnet_reserved_ip = response.get_result()
+
+            print(json.dumps(cluster_network_subnet_reserved_ip, indent=2))
+
+            # end-create_cluster_network_subnet_reserved_ip
+            assert cluster_network_subnet_reserved_ip is not None
+            data['clusterNetworkSubnetReservedIpId']=cluster_network_subnet_reserved_ip['id']
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_cluster_network_subnet_reserved_ip_example(self):
+        """
+        get_cluster_network_subnet_reserved_ip request example
+        """
+        try:
+            print('\nget_cluster_network_subnet_reserved_ip() result:')
+
+            # begin-get_cluster_network_subnet_reserved_ip
+
+            response = vpc_service.get_cluster_network_subnet_reserved_ip(
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_id=data['clusterNetworkSubnetId'],
+                id=data['clusterNetworkSubnetReservedIpId'],
+            )
+            cluster_network_subnet_reserved_ip = response.get_result()
+
+            print(json.dumps(cluster_network_subnet_reserved_ip, indent=2))
+
+            # end-get_cluster_network_subnet_reserved_ip
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_cluster_network_subnet_reserved_ip_example(self):
+        """
+        update_cluster_network_subnet_reserved_ip request example
+        """
+        try:
+            print('\nupdate_cluster_network_subnet_reserved_ip() result:')
+
+            # begin-update_cluster_network_subnet_reserved_ip
+
+            cluster_network_subnet_reserved_ip_patch_model = {
+                'name':'my-cluster-network-subnet-reserved-ip-updated',
+            }
+
+            response = vpc_service.update_cluster_network_subnet_reserved_ip(
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_id=data['clusterNetworkSubnetId'],
+                id=data['clusterNetworkSubnetReservedIpId'],
+                cluster_network_subnet_reserved_ip_patch=cluster_network_subnet_reserved_ip_patch_model,
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_subnet_reserved_ip = response.get_result()
+
+            print(json.dumps(cluster_network_subnet_reserved_ip, indent=2))
+
+            # end-update_cluster_network_subnet_reserved_ip
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_cluster_network_subnet_example(self):
+        """
+        get_cluster_network_subnet request example
+        """
+        try:
+            print('\nget_cluster_network_subnet() result:')
+
+            # begin-get_cluster_network_subnet
+
+            response = vpc_service.get_cluster_network_subnet(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkSubnetId'],
+            )
+            cluster_network_subnet = response.get_result()
+
+            print(json.dumps(cluster_network_subnet, indent=2))
+
+            # end-get_cluster_network_subnet
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_cluster_network_subnet_example(self):
+        """
+        update_cluster_network_subnet request example
+        """
+        try:
+            print('\nupdate_cluster_network_subnet() result:')
+
+            # begin-update_cluster_network_subnet
+
+            cluster_network_subnet_patch_model = {
+                'name': 'my-cluster-network-subnet-updated',
+            }
+
+            response = vpc_service.update_cluster_network_subnet(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkSubnetId'],
+                cluster_network_subnet_patch=cluster_network_subnet_patch_model,
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_subnet = response.get_result()
+
+            print(json.dumps(cluster_network_subnet, indent=2))
+
+            # end-update_cluster_network_subnet
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_cluster_network_example(self):
+        """
+        get_cluster_network request example
+        """
+        try:
+            print('\nget_cluster_network() result:')
+
+            # begin-get_cluster_network
+
+            response = vpc_service.get_cluster_network(
+                id=data['clusterNetworkId'],
+            )
+            cluster_network = response.get_result()
+
+            print(json.dumps(cluster_network, indent=2))
+
+            # end-get_cluster_network
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_cluster_network_example(self):
+        """
+        update_cluster_network request example
+        """
+        try:
+            print('\nupdate_cluster_network() result:')
+
+            # begin-update_cluster_network
+
+            cluster_network_patch_model = {
+                'name': 'my-cluster-network-updated',
+            }
+
+            response = vpc_service.update_cluster_network(
+                id=data['clusterNetworkId'],
+                cluster_network_patch=cluster_network_patch_model,
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network = response.get_result()
+
+            print(json.dumps(cluster_network, indent=2))
+
+            # end-update_cluster_network
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
 
     @needscredentials
     def test_list_public_gateways_example(self):
@@ -7677,6 +8273,32 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
+
+
+    @needscredentials
+    def test_delete_instance_cluster_network_attachment_example(self):
+        """
+        delete_instance_cluster_network_attachment request example
+        """
+        try:
+            print('\ndelete_instance_cluster_network_attachment() result:')
+
+            # begin-delete_instance_cluster_network_attachment
+
+            response = vpc_service.delete_instance_cluster_network_attachment(
+                instance_id=data['instanceId'],
+                id=data['instanceClusterNetworkAttachmentId'],
+            )
+            instance_cluster_network_attachment = response.get_result()
+
+            print(json.dumps(instance_cluster_network_attachment, indent=2))
+
+            # end-delete_instance_cluster_network_attachment
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+
     @needscredentials
     def test_delete_instance_example(self):
         """
@@ -7894,6 +8516,104 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
+
+    @needscredentials
+    def test_delete_cluster_network_interface_example(self):
+        """
+        delete_cluster_network_interface request example
+        """
+        try:
+            print('\ndelete_cluster_network_interface() result:')
+
+            # begin-delete_cluster_network_interface
+
+            response = vpc_service.delete_cluster_network_interface(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkInterfaceId'],
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_interface = response.get_result()
+
+            print(json.dumps(cluster_network_interface, indent=2))
+
+            # end-delete_cluster_network_interface
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_cluster_network_subnet_reserved_ip_example(self):
+        """
+        delete_cluster_network_subnet_reserved_ip request example
+        """
+        try:
+            print('\ndelete_cluster_network_subnet_reserved_ip() result:')
+
+            # begin-delete_cluster_network_subnet_reserved_ip
+
+            response = vpc_service.delete_cluster_network_subnet_reserved_ip(
+                cluster_network_id=data['clusterNetworkId'],
+                cluster_network_subnet_id=data['clusterNetworkSubnetId'],
+                id=data['clusterNetworkSubnetReservedIpId'],
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_subnet_reserved_ip = response.get_result()
+
+            print(json.dumps(cluster_network_subnet_reserved_ip, indent=2))
+
+            # end-delete_cluster_network_subnet_reserved_ip
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_cluster_network_subnet_example(self):
+        """
+        delete_cluster_network_subnet request example
+        """
+        try:
+            print('\ndelete_cluster_network_subnet() result:')
+
+            # begin-delete_cluster_network_subnet
+
+            response = vpc_service.delete_cluster_network_subnet(
+                cluster_network_id=data['clusterNetworkId'],
+                id=data['clusterNetworkSubnetId'],
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network_subnet = response.get_result()
+
+            print(json.dumps(cluster_network_subnet, indent=2))
+
+            # end-delete_cluster_network_subnet
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_cluster_network_example(self):
+        """
+        delete_cluster_network request example
+        """
+        try:
+            print('\ndelete_cluster_network() result:')
+
+            # begin-delete_cluster_network
+
+            response = vpc_service.delete_cluster_network(
+                id=data['clusterNetworkId'],
+                if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+            )
+            cluster_network = response.get_result()
+
+            print(json.dumps(cluster_network, indent=2))
+
+            # end-delete_cluster_network
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
 
     @needscredentials
     def test_delete_public_gateway_example(self):
