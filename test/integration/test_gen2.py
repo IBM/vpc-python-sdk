@@ -662,6 +662,102 @@ class TestInstances():
         assert instance.status_code == 201
         assert instance.get_result()['id'] is not None
 
+
+    def test_list_instance_cluster_network_attachments(self, createGen2Service):
+        response = createGen2Service.list_instance_cluster_network_attachments(
+            instance_id=store['created_instance_id'],
+            limit=50,
+        )
+
+        assert response.get_status_code() == 200
+        instance_cluster_network_attachment_collection = response.get_result()
+        assert instance_cluster_network_attachment_collection is not None
+
+    def test_list_instance_cluster_network_attachments_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = InstanceClusterNetworkAttachmentsPager(
+            client=createGen2Service,
+            instance_id=store['created_instance_id'],
+            limit=10,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = InstanceClusterNetworkAttachmentsPager(
+            client=createGen2Service,
+            instance_id=store['created_instance_id'],
+            limit=10,
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_instance_cluster_network_attachments() returned a total of {len(all_results)} items(s) using InstanceClusterNetworkAttachmentsPager.')
+
+    def test_create_cluster_network_attachment(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkInterfacePrimaryIPPrototypeClusterNetworkSubnetReservedIPPrototypeClusterNetworkInterfacePrimaryIPContext model
+        cluster_network_interface_primary_ip_prototype_model = {
+            'address': '10.0.0.5',
+            'auto_delete': False,
+            'name': 'my-cluster-network-subnet-reserved-ip',
+        }
+        # Construct a dict representation of a ClusterNetworkSubnetIdentityById model
+        cluster_network_subnet_identity_model = {
+            'id': store['created_cluster_network_subnet_id'],
+        }
+        # Construct a dict representation of a InstanceClusterNetworkAttachmentPrototypeClusterNetworkInterfaceInstanceClusterNetworkInterfacePrototypeInstanceClusterNetworkAttachment model
+        instance_cluster_network_attachment_prototype_cluster_network_interface_model = {
+            'auto_delete': False,
+            'name': 'my-cluster-network-interface',
+            'primary_ip': cluster_network_interface_primary_ip_prototype_model,
+            'subnet': cluster_network_subnet_identity_model,
+        }
+        # Construct a dict representation of a InstanceClusterNetworkAttachmentBeforePrototypeInstanceClusterNetworkAttachmentIdentityById model
+
+
+        response = createGen2Service.create_cluster_network_attachment(
+            instance_id=store['created_instance_id'],
+            cluster_network_interface=instance_cluster_network_attachment_prototype_cluster_network_interface_model,
+            name='my-instance-network-attachment',
+        )
+
+        assert response.get_status_code() == 201
+        instance_cluster_network_attachment = response.get_result()
+        assert instance_cluster_network_attachment is not None
+        store['created_instance_cluster_network_attachment_id'] = instance_cluster_network_attachment['id']
+
+    def test_get_instance_cluster_network_attachment(self, createGen2Service):
+        response = createGen2Service.get_instance_cluster_network_attachment(
+            instance_id=store['created_instance_id'],
+            id=store['created_instance_cluster_network_attachment_id'],
+        )
+
+        assert response.get_status_code() == 200
+        instance_cluster_network_attachment = response.get_result()
+        assert instance_cluster_network_attachment is not None
+
+    def test_update_instance_cluster_network_attachment(self, createGen2Service):
+        # Construct a dict representation of a InstanceClusterNetworkAttachmentPatch model
+        instance_cluster_network_attachment_patch_model = {
+            'name': 'my-instance-network-attachment-updated',
+        }
+
+        response = createGen2Service.update_instance_cluster_network_attachment(
+            instance_id=store['created_instance_id'],
+            id=store['created_instance_cluster_network_attachment_id'],
+            instance_cluster_network_attachment_patch=instance_cluster_network_attachment_patch_model,
+        )
+
+        assert response.get_status_code() == 200
+        instance_cluster_network_attachment = response.get_result()
+        assert instance_cluster_network_attachment is not None
+
+
     def test_get_instance_initialization(self, createGen2Service):
         instance = get_instance_initialization(
             createGen2Service, store['created_instance_id'])
@@ -713,6 +809,16 @@ class TestInstances():
         fips = remove_instance_network_interface_floating_ip(
             createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
         assertDeleteResponse(fips)
+
+    def test_delete_instance_cluster_network_attachment(self, createGen2Service):
+        response = createGen2Service.delete_instance_cluster_network_attachment(
+            instance_id=store['created_instance_id'],
+            id='testString',
+        )
+
+        assert response.get_status_code() == 202
+        instance_cluster_network_attachment = response.get_result()
+        assert instance_cluster_network_attachment is not None
 
     def test_list_instance_network_interface_ips(self, createGen2Service):
         ips = list_instance_network_interface_ips(
@@ -805,6 +911,476 @@ class TestSnapshots():
         pytest.skip("mock error")
         response = delete_snapshots(createGen2Service, store['created_vol'])
         assertDeleteResponse(response)
+
+class TestClusterNetworks():
+
+
+    def test_list_cluster_network_profiles(self, createGen2Service):
+        response = createGen2Service.list_cluster_network_profiles(
+            limit=50,
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_profile_collection = response.get_result()
+        assert cluster_network_profile_collection is not None
+
+
+    def test_list_cluster_network_profiles_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = ClusterNetworkProfilesPager(
+            client=createGen2Service,
+            limit=10,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = ClusterNetworkProfilesPager(
+            client=createGen2Service,
+            limit=10,
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_cluster_network_profiles() returned a total of {len(all_results)} items(s) using ClusterNetworkProfilesPager.')
+        store['cluster_network_profile'] = all_items[0]['name']
+
+    def test_get_cluster_network_profile(self, createGen2Service):
+        response = createGen2Service.get_cluster_network_profile(
+            name=store['cluster_network_profile'],
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_profile = response.get_result()
+        assert cluster_network_profile is not None
+
+
+    def test_list_cluster_networks(self, createGen2Service):
+        response = createGen2Service.list_cluster_networks(
+            limit=50,
+            sort='name',
+            vpc_id=store['created_vpc'],
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_collection = response.get_result()
+        assert cluster_network_collection is not None
+
+
+    def test_list_cluster_networks_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = ClusterNetworksPager(
+            client=createGen2Service,
+            limit=10,
+            sort='name',
+            vpc_id=store['created_vpc'],
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = ClusterNetworksPager(
+            client=createGen2Service,
+            limit=10,
+            sort='name',
+            vpc_id=store['created_vpc'],
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_cluster_networks() returned a total of {len(all_results)} items(s) using ClusterNetworksPager.')
+
+
+    def test_create_cluster_network(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkProfileIdentityByName model
+        cluster_network_profile_identity_model = {
+            'name': store['cluster_network_profile'],
+        }
+        # Construct a dict representation of a VPCIdentityById model
+        vpc_identity_model = {
+            'id': store['created_vpc'],
+        }
+        # Construct a dict representation of a ZoneIdentityByName model
+        zone_identity_model = {
+            'name': store['zone'],
+        }
+        # Construct a dict representation of a ClusterNetworkSubnetPrefixPrototype model
+        cluster_network_subnet_prefix_prototype_model = {
+            'cidr': '10.0.0.0/24',
+        }
+
+        response = createGen2Service.create_cluster_network(
+            profile=cluster_network_profile_identity_model,
+            vpc=vpc_identity_model,
+            zone=zone_identity_model,
+            name='my-cluster-network',
+            subnet_prefixes=[cluster_network_subnet_prefix_prototype_model],
+        )
+
+        assert response.get_status_code() == 201
+        cluster_network = response.get_result()
+        assert cluster_network is not None
+        store['created_cluster_network_id'] = cluster_network['id']
+
+
+    def test_list_cluster_network_interfaces(self, createGen2Service):
+        response = createGen2Service.list_cluster_network_interfaces(
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=50,
+            sort='name',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_interface_collection = response.get_result()
+        assert cluster_network_interface_collection is not None
+
+
+    def test_list_cluster_network_interfaces_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = ClusterNetworkInterfacesPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=10,
+            sort='name',
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = ClusterNetworkInterfacesPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=10,
+            sort='name',
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_cluster_network_interfaces() returned a total of {len(all_results)} items(s) using ClusterNetworkInterfacesPager.')
+
+
+    def test_create_cluster_network_interface(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkInterfacePrimaryIPPrototypeClusterNetworkSubnetReservedIPPrototypeClusterNetworkInterfacePrimaryIPContext model
+        cluster_network_interface_primary_ip_prototype_model = {
+            'address': '10.0.0.5',
+            'auto_delete': False,
+            'name': 'my-cluster-network-subnet-reserved-ip',
+        }
+        # Construct a dict representation of a ClusterNetworkSubnetIdentityById model
+        cluster_network_subnet_identity_model = {
+            'id': '0717-7931845c-65c4-4b0a-80cd-7d9c1a6d7930',
+        }
+
+        response = createGen2Service.create_cluster_network_interface(
+            cluster_network_id=store['created_cluster_network_id'],
+            name='my-cluster-network-interface',
+            primary_ip=cluster_network_interface_primary_ip_prototype_model,
+            subnet=cluster_network_subnet_identity_model,
+        )
+
+        assert response.get_status_code() == 201
+        cluster_network_interface = response.get_result()
+        assert cluster_network_interface is not None
+        store['created_cluster_network_interface_id'] = cluster_network_interface['id']
+
+
+    def test_get_cluster_network_interface(self, createGen2Service):
+        response = createGen2Service.get_cluster_network_interface(
+            cluster_network_id=store['created_cluster_network_id'],
+            id='testString',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_interface = response.get_result()
+        assert cluster_network_interface is not None
+
+
+    def test_update_cluster_network_interface(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkInterfacePatch model
+        cluster_network_interface_patch_model = {
+            'auto_delete': False,
+            'name': 'my-cluster-network-interface',
+        }
+
+        response = createGen2Service.update_cluster_network_interface(
+            cluster_network_id=store['created_cluster_network_id'],
+            id='testString',
+            cluster_network_interface_patch=cluster_network_interface_patch_model,
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_interface = response.get_result()
+        assert cluster_network_interface is not None
+
+
+    def test_list_cluster_network_subnets(self, createGen2Service):
+        response = createGen2Service.list_cluster_network_subnets(
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=50,
+            sort='name',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet_collection = response.get_result()
+        assert cluster_network_subnet_collection is not None
+
+
+    def test_list_cluster_network_subnets_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = ClusterNetworkSubnetsPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=10,
+            sort='name',
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = ClusterNetworkSubnetsPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            limit=10,
+            sort='name',
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_cluster_network_subnets() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetsPager.')
+
+
+    def test_create_cluster_network_subnet(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkSubnetPrototypeClusterNetworkSubnetByTotalCountPrototype model
+        cluster_network_subnet_prototype_model = {
+            'ip_version': 'ipv4',
+            'name': 'my-cluster-network-subnet',
+            'total_ipv4_address_count': 256,
+        }
+
+        response = createGen2Service.create_cluster_network_subnet(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_prototype=cluster_network_subnet_prototype_model,
+        )
+
+        assert response.get_status_code() == 201
+        cluster_network_subnet = response.get_result()
+        assert cluster_network_subnet is not None
+        store['created_cluster_network_subnet_id'] = cluster_network_subnet['id']
+
+    def test_list_cluster_network_subnet_reserved_ips(self, createGen2Service):
+        response = createGen2Service.list_cluster_network_subnet_reserved_ips(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            limit=50,
+            sort='name',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet_reserved_ip_collection = response.get_result()
+        assert cluster_network_subnet_reserved_ip_collection is not None
+
+
+    def test_list_cluster_network_subnet_reserved_ips_with_pager(self, createGen2Service):
+        all_results = []
+
+        # Test get_next().
+        pager = ClusterNetworkSubnetReservedIpsPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            limit=10,
+            sort='name',
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = ClusterNetworkSubnetReservedIpsPager(
+            client=createGen2Service,
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            limit=10,
+            sort='name',
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(f'\nlist_cluster_network_subnet_reserved_ips() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetReservedIpsPager.')
+
+
+    def test_create_cluster_network_subnet_reserved_ip(self, createGen2Service):
+        response = createGen2Service.create_cluster_network_subnet_reserved_ip(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            address='192.168.3.4',
+            name='my-cluster-network-subnet-reserved-ip',
+        )
+
+        assert response.get_status_code() == 201
+        cluster_network_subnet_reserved_ip = response.get_result()
+        assert cluster_network_subnet_reserved_ip is not None
+        store['created_cluster_network_subnet_reserved_ip_id'] = cluster_network_subnet_reserved_ip['id']
+
+
+    def test_get_cluster_network_subnet_reserved_ip(self, createGen2Service):
+        response = createGen2Service.get_cluster_network_subnet_reserved_ip(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            id=store['created_cluster_network_subnet_reserved_ip_id'],
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet_reserved_ip = response.get_result()
+        assert cluster_network_subnet_reserved_ip is not None
+
+
+    def test_update_cluster_network_subnet_reserved_ip(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkSubnetReservedIPPatch model
+        cluster_network_subnet_reserved_ip_patch_model = {
+            'auto_delete': False,
+            'name': 'my-cluster-network-subnet-reserved-ip-updated',
+        }
+
+        response = createGen2Service.update_cluster_network_subnet_reserved_ip(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            id=store['created_cluster_network_subnet_reserved_ip_id'],
+            cluster_network_subnet_reserved_ip_patch=cluster_network_subnet_reserved_ip_patch_model,
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet_reserved_ip = response.get_result()
+        assert cluster_network_subnet_reserved_ip is not None
+
+
+    def test_get_cluster_network_subnet(self, createGen2Service):
+        response = createGen2Service.get_cluster_network_subnet(
+            cluster_network_id=store['created_cluster_network_id'],
+            id=store['created_cluster_network_subnet_id'],
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet = response.get_result()
+        assert cluster_network_subnet is not None
+
+
+    def test_update_cluster_network_subnet(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkSubnetPatch model
+        cluster_network_subnet_patch_model = {
+            'name': 'my-cluster-network-subnet-updated',
+        }
+
+        response = createGen2Service.update_cluster_network_subnet(
+            cluster_network_id=store['created_cluster_network_id'],
+            id=store['created_cluster_network_subnet_id'],
+            cluster_network_subnet_patch=cluster_network_subnet_patch_model,
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network_subnet = response.get_result()
+        assert cluster_network_subnet is not None
+
+
+    def test_get_cluster_network(self, createGen2Service):
+        response = createGen2Service.get_cluster_network(
+            id=store['created_cluster_network_id'],
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network = response.get_result()
+        assert cluster_network is not None
+
+
+    def test_update_cluster_network(self, createGen2Service):
+        # Construct a dict representation of a ClusterNetworkPatch model
+        cluster_network_patch_model = {
+            'name': 'my-cluster-network-updated',
+        }
+
+        response = createGen2Service.update_cluster_network(
+            id=store['created_cluster_network_id'],
+            cluster_network_patch=cluster_network_patch_model,
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 200
+        cluster_network = response.get_result()
+        assert cluster_network is not None
+
+
+
+    def test_delete_cluster_network_interface(self, createGen2Service):
+        response = createGen2Service.delete_cluster_network_interface(
+            cluster_network_id=store['created_cluster_network_id'],
+            id=store['created_cluster_network_interface_id'],
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 202
+        cluster_network_interface = response.get_result()
+        assert cluster_network_interface is not None
+
+
+    def test_delete_cluster_network_subnet_reserved_ip(self, createGen2Service):
+        response = createGen2Service.delete_cluster_network_subnet_reserved_ip(
+            cluster_network_id=store['created_cluster_network_id'],
+            cluster_network_subnet_id=store['created_cluster_network_subnet_id'],
+            id=store['created_cluster_network_subnet_reserved_ip_id'],
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 202
+        cluster_network_subnet_reserved_ip = response.get_result()
+        assert cluster_network_subnet_reserved_ip is not None
+
+
+    def test_delete_cluster_network_subnet(self, createGen2Service):
+        response = createGen2Service.delete_cluster_network_subnet(
+            cluster_network_id=store['created_cluster_network_id'],
+            id=store['created_cluster_network_subnet_id'],
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 202
+        cluster_network_subnet = response.get_result()
+        assert cluster_network_subnet is not None
+
+
+    def test_delete_cluster_network(self, createGen2Service):
+        response = createGen2Service.delete_cluster_network(
+            id=store['created_cluster_network_id'],
+            if_match='W/"96d225c4-56bd-43d9-98fc-d7148e5c5028"',
+        )
+
+        assert response.get_status_code() == 202
+        cluster_network = response.get_result()
+        assert cluster_network is not None
 
 
 class TestShares():
