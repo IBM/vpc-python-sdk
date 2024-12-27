@@ -1,0 +1,94 @@
+[project]
+name = "ibm-vpc"
+version = "0.0.1"
+authors = [
+    { name="IBM", email="devxsdk@us.ibm.com" }
+]
+description = "Python client library for IBM Cloud ibm-vpc Services"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+keywords=["ibm", "cloud", "ibm cloud services", "vpc" ]
+dependencies = [
+    "ibm_cloud_sdk_core>=3.22.0",
+    "python_dateutil>=2.5.3,<3.0.0",
+]
+
+[project.urls]
+Repository = "https://github.ibm.com/ibmcloud/vpc-python-sdk"
+Documentation = "https://github.ibm.com/ibmcloud/vpc-python-sdk/blob/master/README.md"
+Issues = "https://github.ibm.com/ibmcloud/vpc-python-sdk/issues"
+Contributing = "https://github.ibm.com/ibmcloud/vpc-python-sdk/blob/master/CONTRIBUTING.md"
+License = "https://github.ibm.com/ibmcloud/vpc-python-sdk/blob/master/LICENSE"
+
+[project.optional-dependencies]
+dev = [
+    "coverage>=7.3.2,<8.0.0",
+    "pylint>=3.0.0,<4.0.0",
+    "pytest>=7.4.2,<8.0.0",
+    "pytest-cov>=4.1.0,<5.0.0",
+    "responses>=0.23.3,<1.0.0",
+    "black>=24.0.0,<25.0.0",
+    "pytest-rerunfailures>=12.0",
+    "tox>=4.12.0,<4.23.2",
+]
+publish = [
+    "build",
+    "twine"
+]
+
+[build-system]
+requires = ["setuptools>=67.7.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ibm_vpc"]
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py37-lint, py37, py38, py39
+
+[testenv:py37-lint]
+basepython = python3.7
+deps = pylint
+commands = pylint --rcfile=.pylintrc ibm-vpc test/unit
+
+[testenv]
+passenv = TOXENV CI TRAVIS*
+commands =
+          pytest -v test/unit
+
+deps =
+    pylint
+    pytest
+    pytest-cov
+    responses
+    pytest-rerunfailures
+    ibm_cloud_sdk_core
+    python_dateutil
+
+usedevelop = True
+exclude = .venv,.git,.tox,docs
+"""
