@@ -25,7 +25,7 @@ from ibm_vpc.vpc_v1 import *
 store = {}
 
 
-class TestGeography():
+class TestGeography:
     def test_regions(self, createGen2Service, env):
         regions = list_regions(createGen2Service)
         assert regions.status_code == 200
@@ -45,12 +45,11 @@ class TestGeography():
             store['zone'] = zones.get_result()['zones'][0]['name']
 
     def test_zone(self, createGen2Service):
-        zone = get_region_zone(
-            createGen2Service, store['region'], store['zone'])
+        zone = get_region_zone(createGen2Service, store['region'], store['zone'])
         assert zone.status_code == 200
 
 
-class TestFloatingIPs():
+class TestFloatingIPs:
     def test_create_floating_ip(self, createGen2Service):
         fip = create_floating_ip(createGen2Service)
         assertCreateResponse(fip)
@@ -69,7 +68,7 @@ class TestFloatingIPs():
         assertGetPatchResponse(fip)
 
 
-class TestImages():
+class TestImages:
     def test_create_images(self, createGen2Service):
         image = create_image(createGen2Service)
         assertCreateResponse(image)
@@ -111,21 +110,19 @@ class TestImages():
     def test_list_operating_systems(self, createGen2Service):
         oss = list_operating_systems(createGen2Service)
         assertListResponse(oss, 'operating_systems')
-        store['operating_system_name'] = oss.get_result()[
-            'operating_systems'][0]['name']
+        store['operating_system_name'] = oss.get_result()['operating_systems'][0]['name']
 
     def test_get_operating_system(self, createGen2Service):
-        os = get_operating_system(
-            createGen2Service, store['operating_system_name']).get_result()
+        os = get_operating_system(createGen2Service, store['operating_system_name']).get_result()
         assert os['name'] == store['operating_system_name']
 
 
-class TestSSHKeys():
+class TestSSHKeys:
     def test_create_ssh_keys(self, createGen2Service):
         key = create_key(createGen2Service)
         assertCreateResponse(key)
         store['created_key'] = key.get_result()['id']
-        
+
     def test_list_ssh_keys(self, createGen2Service):
         keys = list_keys(createGen2Service)
         assertListResponse(keys, 'keys')
@@ -139,7 +136,7 @@ class TestSSHKeys():
         assertGetPatchResponse(key)
 
 
-class TestNetworkACL():
+class TestNetworkACL:
     def test_list_nacl(self, createGen2Service):
         acls = list_network_acls(createGen2Service)
         assertListResponse(acls, 'network_acls')
@@ -155,29 +152,24 @@ class TestNetworkACL():
         store['created_nacl_id'] = acl.get_result()['id']
 
     def test_list_nacl_rules(self, createGen2Service):
-        acl_rules = list_network_acl_rules(
-            createGen2Service, store['created_nacl_id'])
+        acl_rules = list_network_acl_rules(createGen2Service, store['created_nacl_id'])
         assertListResponse(acl_rules, 'rules')
 
     def test_create_nacl_rules(self, createGen2Service):
-        acl_rule = create_network_acl_rule(
-            createGen2Service, store['created_nacl_id'])
+        acl_rule = create_network_acl_rule(createGen2Service, store['created_nacl_id'])
         assertCreateResponse(acl_rule)
         store['created_nacl_rule_id'] = acl_rule.get_result()['id']
 
     def test_get_nacl_rules(self, createGen2Service):
-        acl_rules = get_network_acl_rule(
-            createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
+        acl_rules = get_network_acl_rule(createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
         assertGetPatchResponse(acl_rules)
 
     def test_update_nacl_rules(self, createGen2Service):
-        acl_rule = update_network_acl_rule(
-            createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
+        acl_rule = update_network_acl_rule(createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
         assertGetPatchResponse(acl_rule)
 
     def test_delete_nacl_rules(self, createGen2Service):
-        acl_rule = delete_network_acl_rule(
-            createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
+        acl_rule = delete_network_acl_rule(createGen2Service, store['created_nacl_id'], store['created_nacl_rule_id'])
         assertDeleteResponse(acl_rule)
 
     def test_update_nacl(self, createGen2Service):
@@ -185,8 +177,7 @@ class TestNetworkACL():
         assertGetPatchResponse(acl)
 
 
-
-class TestVolume():
+class TestVolume:
     def test_list_vol_profiles(self, createGen2Service):
         profiles = list_volume_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
@@ -214,7 +205,8 @@ class TestVolume():
         vol = update_volume(createGen2Service, store['created_vol'])
         assertGetPatchResponse(vol)
 
-class TestVPC():
+
+class TestVPC:
     def test_list_vpc(self, createGen2Service):
         vpcs = list_vpcs(createGen2Service)
         assertListResponse(vpcs, 'vpcs')
@@ -241,7 +233,6 @@ class TestVPC():
         vpc = get_vpc_dns_res_binding(createGen2Service, store['created_vpc'], store['created_vpc_dns_res_binding'])
         assertGetResponse(vpc)
 
-
     def test_list_vpc_dns_res_binding(self, createGen2Service):
         vpc = list_vpc_dns_res_binding(createGen2Service, store['created_vpc'])
         assertPagerListResponse(vpc)
@@ -259,7 +250,7 @@ class TestVPC():
         assertGetPatchResponse(vpc)
 
 
-class TestSubnet():
+class TestSubnet:
     def test_list_subnet(self, createGen2Service):
         subnets = list_subnets(createGen2Service)
         assertListResponse(subnets, 'subnets')
@@ -270,8 +261,7 @@ class TestSubnet():
 
     def test_create_subnet(self, createGen2Service):
         print(store['zone'], store['created_vpc'])
-        subnet = create_subnet(
-            createGen2Service, store['created_vpc'], store['zone'])
+        subnet = create_subnet(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(subnet)
         store['created_subnet'] = subnet.get_result()['id']
         print('created_subnet: ' + store['created_subnet'])
@@ -285,98 +275,97 @@ class TestSubnet():
         assertGetPatchResponse(subnet)
 
     def test_update_subnet_nacl(self, createGen2Service):
-        subnet_nacl = replace_subnet_network_acl(
-            createGen2Service, store['created_subnet'], store['created_nacl_id'])
+        subnet_nacl = replace_subnet_network_acl(createGen2Service, store['created_subnet'], store['created_nacl_id'])
         assertCreateResponse(subnet_nacl)
 
     def test_get_subnet_nacl(self, createGen2Service):
-        subnet_nacl = get_subnet_network_acl(
-            createGen2Service, store['created_subnet'])
+        subnet_nacl = get_subnet_network_acl(createGen2Service, store['created_subnet'])
         assertGetPatchResponse(subnet_nacl)
 
     def test_list_subnet_reserved_ips(self, createGen2Service):
-        reserved_ips = list_subnet_reserved_ips(
-            createGen2Service, store['created_subnet'])
+        reserved_ips = list_subnet_reserved_ips(createGen2Service, store['created_subnet'])
         assertListResponse(reserved_ips, 'reserved_ips')
 
     def test_create_subnet_reserved_ip(self, createGen2Service):
-        reserved_ip = create_subnet_reserved_ip(
-            createGen2Service, store['created_subnet'])
+        reserved_ip = create_subnet_reserved_ip(createGen2Service, store['created_subnet'])
         assertCreateResponse(reserved_ip)
         store['created_subnet_reserved_ip'] = reserved_ip.get_result()['id']
 
     def test_get_subnet_reserved_ip(self, createGen2Service):
         reserved_ip = get_subnet_reserved_ip(
-            createGen2Service, store['created_subnet'],  store['created_subnet_reserved_ip'])
+            createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip']
+        )
         assertGetPatchResponse(reserved_ip)
 
     def test_update_subnet_reserved_ip(self, createGen2Service):
         reserved_ip = update_subnet_reserved_ip(
-            createGen2Service, store['created_subnet'],  store['created_subnet_reserved_ip'])
+            createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip']
+        )
         assertGetPatchResponse(reserved_ip)
 
 
-class TestVPCRoutingTables():
+class TestVPCRoutingTables:
     def test_create_vpc_routing_table(self, createGen2Service):
-        routing_table = create_vpc_routing_table(
-            createGen2Service, store['created_vpc'], store['zone'])
+        routing_table = create_vpc_routing_table(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(routing_table)
         store['created_routing_table_id'] = routing_table.get_result()['id']
 
     def test_list_vpc_routing_tables(self, createGen2Service):
-        routing_tables = list_vpc_routing_tables(
-            createGen2Service, store['created_vpc'])
+        routing_tables = list_vpc_routing_tables(createGen2Service, store['created_vpc'])
         assertListResponse(routing_tables, 'routing_tables')
 
     def test_create_vpc_routing_table_route(self, createGen2Service):
         route = create_vpc_routing_table_route(
-            createGen2Service,
-            store['created_vpc'],
-            store['created_routing_table_id'],
-            store['zone'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['zone']
+        )
         assertCreateResponse(route)
         store['created_route_id'] = route.get_result()['id']
 
     def test_list_vpc_routing_table_routes(self, createGen2Service):
         pytest.skip("mock error")
         routes = list_vpc_routing_table_routes(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id']
+        )
         assertListResponse(routes, 'routes')
 
     def test_get_vpc_routing_table(self, createGen2Service):
-        route = get_vpc_routing_table(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+        route = get_vpc_routing_table(createGen2Service, store['created_vpc'], store['created_routing_table_id'])
         assertGetPatchResponse(route)
 
     def test_get_vpc_routing_table_route(self, createGen2Service):
         route = get_vpc_routing_table_route(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id']
+        )
         assertGetPatchResponse(route)
 
     def test_update_vpc_routing_table_route(self, createGen2Service):
         route = update_vpc_routing_table_route(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id']
+        )
         assertGetPatchResponse(route)
 
     def test_update_vpc_routing_table(self, createGen2Service):
         routing_table = update_vpc_routing_table(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id']
+        )
         assertGetPatchResponse(routing_table)
 
     def test_delete_vpc_routing_table_route(self, createGen2Service):
         route = delete_vpc_routing_table_route(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id'], store['created_route_id']
+        )
         assertDeleteResponse(route)
 
     def test_delete_vpc_routing_table(self, createGen2Service):
         routing_table = delete_vpc_routing_table(
-            createGen2Service, store['created_vpc'], store['created_routing_table_id'])
+            createGen2Service, store['created_vpc'], store['created_routing_table_id']
+        )
         assertDeleteResponse(routing_table)
 
 
-class TestEndpointGateways():
+class TestEndpointGateways:
     def test_create_endpoint_gateway(self, createGen2Service):
-        eg = create_endpoint_gateway(createGen2Service,  store['created_vpc'])
+        eg = create_endpoint_gateway(createGen2Service, store['created_vpc'])
         assertCreateResponse(eg)
         store['created_eg_id'] = eg.get_result()['id']
 
@@ -389,41 +378,34 @@ class TestEndpointGateways():
         assertGetPatchResponse(fip)
 
     def test_update_endpoint_gateway(self, createGen2Service):
-        fip = update_endpoint_gateway(
-            createGen2Service, store['created_eg_id'])
+        fip = update_endpoint_gateway(createGen2Service, store['created_eg_id'])
         assertGetPatchResponse(fip)
 
     def test_add_endpoint_gateway_ip(self, createGen2Service):
-        eg_ip = add_endpoint_gateway_ip(
-            createGen2Service, store['created_eg_id'], store['created_subnet_reserved_ip'])
+        eg_ip = add_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_subnet_reserved_ip'])
         assertCreateResponse(eg_ip)
         store['created_eg_ip_id'] = eg_ip.get_result()['id']
 
     def test_list_endpoint_gateway_ips(self, createGen2Service):
-        ips = list_endpoint_gateway_ips(
-            createGen2Service, store['created_eg_id'])
+        ips = list_endpoint_gateway_ips(createGen2Service, store['created_eg_id'])
         assertListResponse(ips, 'ips')
 
     def test_get_endpoint_gateway_ip(self, createGen2Service):
-        fip = get_endpoint_gateway_ip(
-            createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
+        fip = get_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
         assertGetPatchResponse(fip)
 
     def test_remove_endpoint_gateway_ip(self, createGen2Service):
-        vpc = remove_endpoint_gateway_ip(
-            createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
+        vpc = remove_endpoint_gateway_ip(createGen2Service, store['created_eg_id'], store['created_eg_ip_id'])
         assertDeleteResponse(vpc)
 
     def test_delete_endpoint_gateway(self, createGen2Service):
-        vpc = delete_endpoint_gateway(
-            createGen2Service, store['created_eg_id'])
+        vpc = delete_endpoint_gateway(createGen2Service, store['created_eg_id'])
         assertDeleteResponse(vpc)
 
 
-class TestPublicGateways():
+class TestPublicGateways:
     def test_create_pgw(self, createGen2Service):
-        pgw = create_public_gateway(
-            createGen2Service, store['created_vpc'], store['zone'])
+        pgw = create_public_gateway(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(pgw)
         store['created_pgw'] = pgw.get_result()['id']
 
@@ -440,39 +422,42 @@ class TestPublicGateways():
         assertGetPatchResponse(pgw)
 
     def test_update_subnet_pgw(self, createGen2Service):
-        subnet = set_subnet_public_gateway(
-            createGen2Service, store['created_subnet'], store['created_pgw'])
+        subnet = set_subnet_public_gateway(createGen2Service, store['created_subnet'], store['created_pgw'])
         assertCreateResponse(subnet)
 
     def test_get_subnet_pgw(self, createGen2Service):
-        subnet = get_subnet_public_gateway(
-            createGen2Service, store['created_subnet'])
+        subnet = get_subnet_public_gateway(createGen2Service, store['created_subnet'])
         assertGetPatchResponse(subnet)
 
     def test_delete_subnet_pgw(self, createGen2Service):
-        vpc = unset_subnet_public_gateway(
-            createGen2Service, store['created_subnet'])
+        vpc = unset_subnet_public_gateway(createGen2Service, store['created_subnet'])
         assertDeleteResponse(vpc)
 
 
-class TestBareMetalServers():
+class TestBareMetalServers:
 
     def test_list_bare_metal_server_profiles(self, createGen2Service):
         profiles = list_bare_metal_server_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
-        store['bare_metal_server_profile'] = profiles.get_result()[
-            'profiles'][0]['name']
+        store['bare_metal_server_profile'] = profiles.get_result()['profiles'][0]['name']
 
     def test_get_bare_metal_server_profile(self, createGen2Service):
-        prof = get_bare_metal_server_profile(
-            createGen2Service, store['bare_metal_server_profile'])
+        prof = get_bare_metal_server_profile(createGen2Service, store['bare_metal_server_profile'])
         assert prof.status_code == 200
         assert prof.get_result() is not None
 
     def test_create_bare_metal_server(self, createGen2Service):
-        bms = create_bare_metal_server(createGen2Service, store['bare_metal_server_profile'], store['created_subnet'],
-                                       store['image_id'], store['created_key'], store['created_vpc'],
-                                       store['zone'], 'testString', 'my-bare-metal-server')
+        bms = create_bare_metal_server(
+            createGen2Service,
+            store['bare_metal_server_profile'],
+            store['created_subnet'],
+            store['image_id'],
+            store['created_key'],
+            store['created_vpc'],
+            store['zone'],
+            'testString',
+            'my-bare-metal-server',
+        )
         assertCreateResponse(bms)
         store['created_bare_metal_server_id'] = bms.get_result()['id']
         print('created_bare_metal_server_id -' + store['created_bare_metal_server_id'])
@@ -486,33 +471,32 @@ class TestBareMetalServers():
         print("primary network interface is - " + store['network_interface_id'])
 
     def test_get_bare_metal_server(self, createGen2Service):
-        bare_metal_server = get_bare_metal_server(
-            createGen2Service, store['created_bare_metal_server_id'])
+        bare_metal_server = get_bare_metal_server(createGen2Service, store['created_bare_metal_server_id'])
         assertGetPatchResponse(bare_metal_server)
 
     def test_update_bare_metal_server(self, createGen2Service):
         bare_metal_server = update_bare_metal_server(
-            createGen2Service, store['created_bare_metal_server_id'], 'my-bare-metal-server-update', True)
+            createGen2Service, store['created_bare_metal_server_id'], 'my-bare-metal-server-update', True
+        )
         assertGetPatchResponse(bare_metal_server)
 
     def test_get_bare_metal_server_initialization(self, createGen2Service):
         bare_metal_server = get_bare_metal_server_initialization(
-            createGen2Service, store['created_bare_metal_server_id'])
+            createGen2Service, store['created_bare_metal_server_id']
+        )
         assert bare_metal_server.status_code == 200
         assert bare_metal_server.get_result() is not None
 
     def test_create_bare_metal_server_console_access_token(self, createGen2Service):
         pytest.skip("no env")
         bare_metal_server_access_token = create_bare_metal_server_console_access_token(
-            createGen2Service, store['created_bare_metal_server_id'],
-            'serial'
+            createGen2Service, store['created_bare_metal_server_id'], 'serial'
         )
         assert bare_metal_server_access_token.status_code == 200
         assert bare_metal_server_access_token.get_result() is not None
 
     def test_list_bare_metal_server_disks(self, createGen2Service):
-        bare_metal_server_disks = list_bare_metal_server_disks(
-            createGen2Service, store['created_bare_metal_server_id'])
+        bare_metal_server_disks = list_bare_metal_server_disks(createGen2Service, store['created_bare_metal_server_id'])
         bare_metal_server_disk = bare_metal_server_disks.get_result()['disks'][0]
         store['bare_metal_server_disk_id'] = bare_metal_server_disk['id']
         assert bare_metal_server_disks.status_code == 200
@@ -520,14 +504,17 @@ class TestBareMetalServers():
 
     def test_get_bare_metal_server_disk(self, createGen2Service):
         bare_metal_server_disk = get_bare_metal_server_disk(
-            createGen2Service, store['created_bare_metal_server_id'], store['bare_metal_server_disk_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bare_metal_server_disk_id']
+        )
         assert bare_metal_server_disk.status_code == 200
         assert bare_metal_server_disk.get_result() is not None
 
     def test_update_bare_metal_server_disk(self, createGen2Service):
         bare_metal_server_disk = update_bare_metal_server_disk(
-            createGen2Service, store['created_bare_metal_server_id'], store['bare_metal_server_disk_id'],
-            'my-bare-metal-server-disk-update'
+            createGen2Service,
+            store['created_bare_metal_server_id'],
+            store['bare_metal_server_disk_id'],
+            'my-bare-metal-server-disk-update',
         )
         assert bare_metal_server_disk.status_code == 200
         assert bare_metal_server_disk.get_result() is not None
@@ -535,91 +522,119 @@ class TestBareMetalServers():
     # create nic
     def test_create_bare_metal_server_network_interface(self, createGen2Service):
         nic = create_bare_metal_server_network_interface(
-            createGen2Service, store['created_bare_metal_server_id'],
-            [4, 4049], store['created_subnet'], 'pci', 'my-bms-nic', False, True)
+            createGen2Service,
+            store['created_bare_metal_server_id'],
+            [4, 4049],
+            store['created_subnet'],
+            'pci',
+            'my-bms-nic',
+            False,
+            True,
+        )
         assertCreateResponse(nic)
         store['bare_metal_server_created_nic'] = nic.get_result()['id']
 
     def test_list_bare_metal_server_network_interfaces(self, createGen2Service):
         bare_metal_server_nics = list_bare_metal_server_network_interfaces(
-            createGen2Service, store['created_bare_metal_server_id'])
+            createGen2Service, store['created_bare_metal_server_id']
+        )
         assertListResponse(bare_metal_server_nics, 'network_interfaces')
-        store['bms_nic_id'] = bare_metal_server_nics.get_result()[
-            'network_interfaces'][0]['id']
+        store['bms_nic_id'] = bare_metal_server_nics.get_result()['network_interfaces'][0]['id']
 
     def test_get_bare_metal_server_network_interface(self, createGen2Service):
         bare_metal_server_nic = get_bare_metal_server_network_interface(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id']
+        )
         assertGetPatchResponse(bare_metal_server_nic)
 
     # update nic
     def test_update_bare_metal_server_network_interface(self, createGen2Service):
         nic = update_bare_metal_server_network_interface(
-            createGen2Service, store['created_bare_metal_server_id'], store['bare_metal_server_created_nic'],
-            'my-bare-metal-server-network-interface-update', True, False)
+            createGen2Service,
+            store['created_bare_metal_server_id'],
+            store['bare_metal_server_created_nic'],
+            'my-bare-metal-server-network-interface-update',
+            True,
+            False,
+        )
         assertGetPatchResponse(nic)
 
     def test_create_bare_metal_server_nic_fip(self, createGen2Service):
         fip = add_bare_metal_server_network_interface_floating_ip(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id']
+        )
         assertCreateResponse(fip)
         store['created_bms_nic_fip'] = fip.get_result()['id']
 
     def test_get_bare_metal_server_nic_fips(self, createGen2Service):
         fips = list_bare_metal_server_network_interface_floating_ips(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id']
+        )
         assertListResponse(fips, 'floating_ips')
 
     def test_get_bare_metal_server_nic_fip(self, createGen2Service):
         fips = get_bare_metal_server_network_interface_floating_ip(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id']
+        )
         assertGetPatchResponse(fips)
 
     def test_list_bare_metal_server_network_interface_ips(self, createGen2Service):
         pytest.skip("no env")
         ips = list_bare_metal_server_network_interface_ips(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id']
+        )
         assertListResponse(ips, 'ips')
 
     def test_get_bare_metal_server_network_interface_ip(self, createGen2Service):
         pytest.skip("no env")
         ips = get_bare_metal_server_network_interface_ip(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_subnet_reserved_ip'])
+            createGen2Service,
+            store['created_bare_metal_server_id'],
+            store['bms_nic_id'],
+            store['created_subnet_reserved_ip'],
+        )
         assertGetPatchResponse(ips)
-    
+
     def test_delete_bare_metal_server_nic_fip(self, createGen2Service):
         fips = remove_bare_metal_server_network_interface_floating_ip(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'], store['created_fip_id']
+        )
         assertDeleteResponse(fips)
 
     def test_delete_bare_metal_server_network_interface(self, createGen2Service):
         nics = delete_bare_metal_server_network_interface(
-            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id'])
+            createGen2Service, store['created_bare_metal_server_id'], store['bms_nic_id']
+        )
         assertDeleteResponse(nics)
 
     def test_create_bare_metal_server_restart(self, createGen2Service):
         bare_metal_server_restart = create_bare_metal_server_restart(
-            createGen2Service, store['created_bare_metal_server_id'])
+            createGen2Service, store['created_bare_metal_server_id']
+        )
         assert bare_metal_server_restart.status_code == 204
 
     def test_create_bare_metal_server_stop(self, createGen2Service):
         bare_metal_server_stop = create_bare_metal_server_stop(
-            createGen2Service, store['created_bare_metal_server_id'], 'hard')
+            createGen2Service, store['created_bare_metal_server_id'], 'hard'
+        )
         assert bare_metal_server_stop.status_code == 204
 
     def test_create_bare_metal_server_start(self, createGen2Service):
         bare_metal_server_start = create_bare_metal_server_start(
-            createGen2Service, store['created_bare_metal_server_id'])
+            createGen2Service, store['created_bare_metal_server_id']
+        )
         assert bare_metal_server_start.status_code == 204
 
     def test_delete_bare_metal_server(self, createGen2Service):
         bare_metal_server_stop = create_bare_metal_server_stop(
-            createGen2Service, store['created_bare_metal_server_id'], 'hard')
+            createGen2Service, store['created_bare_metal_server_id'], 'hard'
+        )
         assert bare_metal_server_stop.status_code == 204
         bms = delete_bare_metal_server(createGen2Service, store['created_bare_metal_server_id'])
         assertDeleteResponse(bms)
 
-class TestInstances():
+
+class TestInstances:
     def test_list_instances(self, createGen2Service):
         instances = list_instances(createGen2Service)
         assertListResponse(instances, 'instances')
@@ -630,38 +645,38 @@ class TestInstances():
     def test_list_instance_profiles(self, createGen2Service):
         profiles = list_instance_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
-        store['instance_profile'] = profiles.get_result()[
-            'profiles'][0]['name']
+        store['instance_profile'] = profiles.get_result()['profiles'][0]['name']
 
     def test_get_instance_profile(self, createGen2Service):
-        prof = get_instance_profile(
-            createGen2Service, store['instance_profile'])
+        prof = get_instance_profile(createGen2Service, store['instance_profile'])
         assert prof.status_code == 200
         assert prof.get_result() is not None
 
     def test_create_instance(self, createGen2Service):
-        ins = create_instance(createGen2Service, store['created_vpc'], store['instance_profile'],
-                              store['zone'], store['image_id'], store['created_subnet'])
+        ins = create_instance(
+            createGen2Service,
+            store['created_vpc'],
+            store['instance_profile'],
+            store['zone'],
+            store['image_id'],
+            store['created_subnet'],
+        )
         assertCreateResponse(ins)
         store['created_instance_id'] = ins.get_result()['id']
         print('created_instance_id -' + store['created_instance_id'])
 
     def test_get_instance(self, createGen2Service):
-        instance = get_instance(
-            createGen2Service, store['created_instance_id'])
+        instance = get_instance(createGen2Service, store['created_instance_id'])
         assertGetPatchResponse(instance)
 
     def test_update_instance(self, createGen2Service):
-        instance = update_instance(
-            createGen2Service, store['created_instance_id'])
+        instance = update_instance(createGen2Service, store['created_instance_id'])
         assertGetPatchResponse(instance)
 
     def test_create_instance_action(self, createGen2Service):
-        instance = create_instance_action(
-            createGen2Service, store['created_instance_id'])
+        instance = create_instance_action(createGen2Service, store['created_instance_id'])
         assert instance.status_code == 201
         assert instance.get_result()['id'] is not None
-
 
     def test_list_instance_cluster_network_attachments(self, createGen2Service):
         response = createGen2Service.list_instance_cluster_network_attachments(
@@ -697,7 +712,9 @@ class TestInstances():
         assert all_items is not None
 
         assert len(all_results) == len(all_items)
-        print(f'\nlist_instance_cluster_network_attachments() returned a total of {len(all_results)} items(s) using InstanceClusterNetworkAttachmentsPager.')
+        print(
+            f'\nlist_instance_cluster_network_attachments() returned a total of {len(all_results)} items(s) using InstanceClusterNetworkAttachmentsPager.'
+        )
 
     def test_create_cluster_network_attachment(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkInterfacePrimaryIPPrototypeClusterNetworkSubnetReservedIPPrototypeClusterNetworkInterfacePrimaryIPContext model
@@ -718,7 +735,6 @@ class TestInstances():
             'subnet': cluster_network_subnet_identity_model,
         }
         # Construct a dict representation of a InstanceClusterNetworkAttachmentBeforePrototypeInstanceClusterNetworkAttachmentIdentityById model
-
 
         response = createGen2Service.create_cluster_network_attachment(
             instance_id=store['created_instance_id'],
@@ -757,57 +773,58 @@ class TestInstances():
         instance_cluster_network_attachment = response.get_result()
         assert instance_cluster_network_attachment is not None
 
-
     def test_get_instance_initialization(self, createGen2Service):
-        instance = get_instance_initialization(
-            createGen2Service, store['created_instance_id'])
+        instance = get_instance_initialization(createGen2Service, store['created_instance_id'])
         assert instance.status_code == 200
         assert instance.get_result() is not None
 
     def test_list_instance_network_interfaces(self, createGen2Service):
-        instance_nics = list_instance_network_interfaces(
-            createGen2Service, store['created_instance_id'])
+        instance_nics = list_instance_network_interfaces(createGen2Service, store['created_instance_id'])
         assertListResponse(instance_nics, 'network_interfaces')
-        store['nic_id'] = instance_nics.get_result()[
-            'network_interfaces'][0]['id']
+        store['nic_id'] = instance_nics.get_result()['network_interfaces'][0]['id']
+
     # create nic
 
     def test_create_instance_network_interface(self, createGen2Service):
         nic = create_instance_network_interface(
-            createGen2Service, store['created_instance_id'], store['created_subnet'])
+            createGen2Service, store['created_instance_id'], store['created_subnet']
+        )
         assertCreateResponse(nic)
         store['created_nic'] = nic.get_result()['id']
+
     # update
 
     def test_update_instance_network_interface(self, createGen2Service):
-        nic = update_instance_network_interface(
-            createGen2Service, store['created_instance_id'], store['created_nic'])
+        nic = update_instance_network_interface(createGen2Service, store['created_instance_id'], store['created_nic'])
         assertGetPatchResponse(nic)
 
     def test_get_instance_network_interface(self, createGen2Service):
-        instance_nic = get_instance_network_interface(
-            createGen2Service, store['created_instance_id'], store['nic_id'])
+        instance_nic = get_instance_network_interface(createGen2Service, store['created_instance_id'], store['nic_id'])
         assertGetPatchResponse(instance_nic)
 
     def test_create_instance_nic_fip(self, createGen2Service):
         fip = add_instance_network_interface_floating_ip(
-            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id']
+        )
         assertCreateResponse(fip)
         store['created_nic_fip'] = fip.get_result()['id']
 
     def test_get_instance_nic_fips(self, createGen2Service):
         fips = list_instance_network_interface_floating_ips(
-            createGen2Service, store['created_instance_id'], store['nic_id'])
+            createGen2Service, store['created_instance_id'], store['nic_id']
+        )
         assertListResponse(fips, 'floating_ips')
 
     def test_get_instance_nic_fip(self, createGen2Service):
         fips = get_instance_network_interface_floating_ip(
-            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id']
+        )
         assertGetPatchResponse(fips)
 
     def test_delete_instance_nic_fip(self, createGen2Service):
         fips = remove_instance_network_interface_floating_ip(
-            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id'])
+            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_fip_id']
+        )
         assertDeleteResponse(fips)
 
     def test_delete_instance_cluster_network_attachment(self, createGen2Service):
@@ -821,51 +838,52 @@ class TestInstances():
         assert instance_cluster_network_attachment is not None
 
     def test_list_instance_network_interface_ips(self, createGen2Service):
-        ips = list_instance_network_interface_ips(
-            createGen2Service, store['created_instance_id'], store['nic_id'])
+        ips = list_instance_network_interface_ips(createGen2Service, store['created_instance_id'], store['nic_id'])
         assertListResponse(ips, 'ips')
 
     def test_get_instance_network_interface_ip(self, createGen2Service):
         fips = get_instance_network_interface_ip(
-            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_subnet_reserved_ip'])
+            createGen2Service, store['created_instance_id'], store['nic_id'], store['created_subnet_reserved_ip']
+        )
         assertGetPatchResponse(fips)
 
     def test_delete_subnet_reserved_ip(self, createGen2Service):
-        vpc = delete_subnet_reserved_ip(
-            createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip'])
+        vpc = delete_subnet_reserved_ip(createGen2Service, store['created_subnet'], store['created_subnet_reserved_ip'])
         assertDeleteResponse(vpc)
 
     def test_delete_instance_network_interface(self, createGen2Service):
-        nics = delete_instance_network_interface(
-            createGen2Service, store['created_instance_id'], store['created_nic'])
+        nics = delete_instance_network_interface(createGen2Service, store['created_instance_id'], store['created_nic'])
         assertDeleteResponse(nics)
 
     def test_create_instance_vol_attachment(self, createGen2Service):
         vol_attach = create_instance_volume_attachment(
-            createGen2Service, store['created_instance_id'], store['created_vol'])
+            createGen2Service, store['created_instance_id'], store['created_vol']
+        )
         assertCreateResponse(vol_attach)
         store['created_vol_atchmt'] = vol_attach.get_result()['id']
 
     def test_list_instance_vol_attachment(self, createGen2Service):
-        instance_vol_attachments = list_instance_volume_attachments(
-            createGen2Service, store['created_instance_id'])
+        instance_vol_attachments = list_instance_volume_attachments(createGen2Service, store['created_instance_id'])
         assertListResponse(instance_vol_attachments, 'volume_attachments')
 
     def test_get_instance_vol_attachment(self, createGen2Service):
         vol_attach = get_instance_volume_attachment(
-            createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
+            createGen2Service, store['created_instance_id'], store['created_vol_atchmt']
+        )
         assertGetPatchResponse(vol_attach)
 
     def test_update_instance_vol_attachment(self, createGen2Service):
         vol_attach = update_instance_volume_attachment(
-            createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
+            createGen2Service, store['created_instance_id'], store['created_vol_atchmt']
+        )
         assertGetPatchResponse(vol_attach)
 
-class TestSnapshots():
+
+class TestSnapshots:
     def test_list_snapshots(self, createGen2Service):
         snapshots = list_snapshots(createGen2Service)
         assertListResponse(snapshots, 'snapshots')
-    
+
     def test_create_snapshot(self, createGen2Service):
         snapshot = create_snapshot(createGen2Service, store['created_vol'], generate_name("snapshot"))
         snapshot1 = create_snapshot(createGen2Service, store['created_vol'], generate_name("snapshot"))
@@ -882,7 +900,7 @@ class TestSnapshots():
     def test_get_snapshot(self, createGen2Service):
         snapshot = get_snapshot(createGen2Service, store['snapshot_id'])
         assertGetPatchResponse(snapshot)
-    
+
     def test_update_snapshot(self, createGen2Service):
         snapshot = update_snapshot(createGen2Service, store['snapshot_id'])
         assertGetPatchResponse(snapshot)
@@ -906,14 +924,14 @@ class TestSnapshots():
     def test_delete_snapshot(self, createGen2Service):
         response = delete_snapshot(createGen2Service, store['snapshot_id'])
         assertDeleteResponse(response)
-    
+
     def test_delete_snapshots(self, createGen2Service):
         pytest.skip("mock error")
         response = delete_snapshots(createGen2Service, store['created_vol'])
         assertDeleteResponse(response)
 
-class TestClusterNetworks():
 
+class TestClusterNetworks:
 
     def test_list_cluster_network_profiles(self, createGen2Service):
         response = createGen2Service.list_cluster_network_profiles(
@@ -923,7 +941,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_profile_collection = response.get_result()
         assert cluster_network_profile_collection is not None
-
 
     def test_list_cluster_network_profiles_with_pager(self, createGen2Service):
         all_results = []
@@ -947,7 +964,9 @@ class TestClusterNetworks():
         assert all_items is not None
 
         assert len(all_results) == len(all_items)
-        print(f'\nlist_cluster_network_profiles() returned a total of {len(all_results)} items(s) using ClusterNetworkProfilesPager.')
+        print(
+            f'\nlist_cluster_network_profiles() returned a total of {len(all_results)} items(s) using ClusterNetworkProfilesPager.'
+        )
         store['cluster_network_profile'] = all_items[0]['name']
 
     def test_get_cluster_network_profile(self, createGen2Service):
@@ -959,7 +978,6 @@ class TestClusterNetworks():
         cluster_network_profile = response.get_result()
         assert cluster_network_profile is not None
 
-
     def test_list_cluster_networks(self, createGen2Service):
         response = createGen2Service.list_cluster_networks(
             limit=50,
@@ -970,7 +988,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_collection = response.get_result()
         assert cluster_network_collection is not None
-
 
     def test_list_cluster_networks_with_pager(self, createGen2Service):
         all_results = []
@@ -999,7 +1016,6 @@ class TestClusterNetworks():
 
         assert len(all_results) == len(all_items)
         print(f'\nlist_cluster_networks() returned a total of {len(all_results)} items(s) using ClusterNetworksPager.')
-
 
     def test_create_cluster_network(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkProfileIdentityByName model
@@ -1032,7 +1048,6 @@ class TestClusterNetworks():
         assert cluster_network is not None
         store['created_cluster_network_id'] = cluster_network['id']
 
-
     def test_list_cluster_network_interfaces(self, createGen2Service):
         response = createGen2Service.list_cluster_network_interfaces(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1043,7 +1058,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_interface_collection = response.get_result()
         assert cluster_network_interface_collection is not None
-
 
     def test_list_cluster_network_interfaces_with_pager(self, createGen2Service):
         all_results = []
@@ -1071,8 +1085,9 @@ class TestClusterNetworks():
         assert all_items is not None
 
         assert len(all_results) == len(all_items)
-        print(f'\nlist_cluster_network_interfaces() returned a total of {len(all_results)} items(s) using ClusterNetworkInterfacesPager.')
-
+        print(
+            f'\nlist_cluster_network_interfaces() returned a total of {len(all_results)} items(s) using ClusterNetworkInterfacesPager.'
+        )
 
     def test_create_cluster_network_interface(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkInterfacePrimaryIPPrototypeClusterNetworkSubnetReservedIPPrototypeClusterNetworkInterfacePrimaryIPContext model
@@ -1098,7 +1113,6 @@ class TestClusterNetworks():
         assert cluster_network_interface is not None
         store['created_cluster_network_interface_id'] = cluster_network_interface['id']
 
-
     def test_get_cluster_network_interface(self, createGen2Service):
         response = createGen2Service.get_cluster_network_interface(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1108,7 +1122,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_interface = response.get_result()
         assert cluster_network_interface is not None
-
 
     def test_update_cluster_network_interface(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkInterfacePatch model
@@ -1128,7 +1141,6 @@ class TestClusterNetworks():
         cluster_network_interface = response.get_result()
         assert cluster_network_interface is not None
 
-
     def test_list_cluster_network_subnets(self, createGen2Service):
         response = createGen2Service.list_cluster_network_subnets(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1139,7 +1151,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_subnet_collection = response.get_result()
         assert cluster_network_subnet_collection is not None
-
 
     def test_list_cluster_network_subnets_with_pager(self, createGen2Service):
         all_results = []
@@ -1167,8 +1178,9 @@ class TestClusterNetworks():
         assert all_items is not None
 
         assert len(all_results) == len(all_items)
-        print(f'\nlist_cluster_network_subnets() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetsPager.')
-
+        print(
+            f'\nlist_cluster_network_subnets() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetsPager.'
+        )
 
     def test_create_cluster_network_subnet(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkSubnetPrototypeClusterNetworkSubnetByTotalCountPrototype model
@@ -1200,7 +1212,6 @@ class TestClusterNetworks():
         cluster_network_subnet_reserved_ip_collection = response.get_result()
         assert cluster_network_subnet_reserved_ip_collection is not None
 
-
     def test_list_cluster_network_subnet_reserved_ips_with_pager(self, createGen2Service):
         all_results = []
 
@@ -1229,8 +1240,9 @@ class TestClusterNetworks():
         assert all_items is not None
 
         assert len(all_results) == len(all_items)
-        print(f'\nlist_cluster_network_subnet_reserved_ips() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetReservedIpsPager.')
-
+        print(
+            f'\nlist_cluster_network_subnet_reserved_ips() returned a total of {len(all_results)} items(s) using ClusterNetworkSubnetReservedIpsPager.'
+        )
 
     def test_create_cluster_network_subnet_reserved_ip(self, createGen2Service):
         response = createGen2Service.create_cluster_network_subnet_reserved_ip(
@@ -1245,7 +1257,6 @@ class TestClusterNetworks():
         assert cluster_network_subnet_reserved_ip is not None
         store['created_cluster_network_subnet_reserved_ip_id'] = cluster_network_subnet_reserved_ip['id']
 
-
     def test_get_cluster_network_subnet_reserved_ip(self, createGen2Service):
         response = createGen2Service.get_cluster_network_subnet_reserved_ip(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1256,7 +1267,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_subnet_reserved_ip = response.get_result()
         assert cluster_network_subnet_reserved_ip is not None
-
 
     def test_update_cluster_network_subnet_reserved_ip(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkSubnetReservedIPPatch model
@@ -1277,7 +1287,6 @@ class TestClusterNetworks():
         cluster_network_subnet_reserved_ip = response.get_result()
         assert cluster_network_subnet_reserved_ip is not None
 
-
     def test_get_cluster_network_subnet(self, createGen2Service):
         response = createGen2Service.get_cluster_network_subnet(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1287,7 +1296,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network_subnet = response.get_result()
         assert cluster_network_subnet is not None
-
 
     def test_update_cluster_network_subnet(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkSubnetPatch model
@@ -1306,7 +1314,6 @@ class TestClusterNetworks():
         cluster_network_subnet = response.get_result()
         assert cluster_network_subnet is not None
 
-
     def test_get_cluster_network(self, createGen2Service):
         response = createGen2Service.get_cluster_network(
             id=store['created_cluster_network_id'],
@@ -1315,7 +1322,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 200
         cluster_network = response.get_result()
         assert cluster_network is not None
-
 
     def test_update_cluster_network(self, createGen2Service):
         # Construct a dict representation of a ClusterNetworkPatch model
@@ -1333,8 +1339,6 @@ class TestClusterNetworks():
         cluster_network = response.get_result()
         assert cluster_network is not None
 
-
-
     def test_delete_cluster_network_interface(self, createGen2Service):
         response = createGen2Service.delete_cluster_network_interface(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1345,7 +1349,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 202
         cluster_network_interface = response.get_result()
         assert cluster_network_interface is not None
-
 
     def test_delete_cluster_network_subnet_reserved_ip(self, createGen2Service):
         response = createGen2Service.delete_cluster_network_subnet_reserved_ip(
@@ -1359,7 +1362,6 @@ class TestClusterNetworks():
         cluster_network_subnet_reserved_ip = response.get_result()
         assert cluster_network_subnet_reserved_ip is not None
 
-
     def test_delete_cluster_network_subnet(self, createGen2Service):
         response = createGen2Service.delete_cluster_network_subnet(
             cluster_network_id=store['created_cluster_network_id'],
@@ -1370,7 +1372,6 @@ class TestClusterNetworks():
         assert response.get_status_code() == 202
         cluster_network_subnet = response.get_result()
         assert cluster_network_subnet is not None
-
 
     def test_delete_cluster_network(self, createGen2Service):
         response = createGen2Service.delete_cluster_network(
@@ -1383,15 +1384,14 @@ class TestClusterNetworks():
         assert cluster_network is not None
 
 
-class TestShares():
+class TestShares:
     def test_list_share_profiles(self, createGen2Service):
         share_profiles = list_share_profiles(createGen2Service)
-        store['share_profile_name']=share_profiles.get_result()['profiles'][0]['name']
+        store['share_profile_name'] = share_profiles.get_result()['profiles'][0]['name']
         assertListResponse(share_profiles, 'profiles')
 
     def test_get_share_profile(self, createGen2Service):
-        share_profile = get_share_profile(
-            createGen2Service, store['share_profile_name'])
+        share_profile = get_share_profile(createGen2Service, store['share_profile_name'])
         assertGetPatchResponse(share_profile)
 
     def test_list_shares(self, createGen2Service):
@@ -1403,7 +1403,14 @@ class TestShares():
         assertCreateResponse(share)
         store['share_id'] = share.get_result()['id']
         store['share_crn'] = share.get_result()['crn']
-        share_replica = create_share_replica(createGen2Service, store['share_profile_name'], generate_name("share-replica"), store['zone'], store['share_id'], '0 */5 * * *')
+        share_replica = create_share_replica(
+            createGen2Service,
+            store['share_profile_name'],
+            generate_name("share-replica"),
+            store['zone'],
+            store['share_id'],
+            '0 */5 * * *',
+        )
         assertCreateResponse(share_replica)
         store['share_replica_id'] = share_replica.get_result()['id']
         store['share_replica_etag'] = share_replica.get_headers()['ETag']
@@ -1417,7 +1424,7 @@ class TestShares():
         share = get_share(createGen2Service, store['share_id'])
         store['share_etag'] = share.get_headers()['ETag']
         assertGetPatchResponse(share)
-    
+
     def test_update_share(self, createGen2Service):
         share = update_share(createGen2Service, store['share_id'], generate_name("share-updated"), store['share_etag'])
         assertGetPatchResponse(share)
@@ -1432,22 +1439,35 @@ class TestShares():
         assertListResponse(share_mount_targets, 'mount_targets')
 
     def test_create_share_mount_target(self, createGen2Service):
-        share_mount_target = create_share_mount_target(createGen2Service, store['share_id'], store['created_subnet'], generate_name("share-mount-target"), generate_name("vni"))
+        share_mount_target = create_share_mount_target(
+            createGen2Service,
+            store['share_id'],
+            store['created_subnet'],
+            generate_name("share-mount-target"),
+            generate_name("vni"),
+        )
         assertCreateResponse(share_mount_target)
         store['share_mount_target_id'] = share_mount_target.get_result()['id']
 
     def test_get_share_mount_target(self, createGen2Service):
-        share_mount_target = get_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'])
+        share_mount_target = get_share_mount_target(
+            createGen2Service, store['share_id'], store['share_mount_target_id']
+        )
         assertGetResponse(share_mount_target)
 
     def test_update_share_mount_target(self, createGen2Service):
-        share_mount_target = update_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'], generate_name("share-mount-target-updated"))
+        share_mount_target = update_share_mount_target(
+            createGen2Service,
+            store['share_id'],
+            store['share_mount_target_id'],
+            generate_name("share-mount-target-updated"),
+        )
         assertGetPatchResponse(share_mount_target)
 
     # def test_get_share_source(self, createGen2Service):
     #     share = get_share_source(createGen2Service, store['share_id'])
     #     assertGetResponse(share)
-    
+
     def test_delete_share_mount_target(self, createGen2Service):
         response = delete_share_mount_target(createGen2Service, store['share_id'], store['share_mount_target_id'])
         assertDeleteRequestAcceptedResponse(response)
@@ -1462,7 +1482,8 @@ class TestShares():
         response_replica = delete_share(createGen2Service, store['share_replica_id'], store['share_replica_etag'])
         assertDeleteRequestAcceptedResponse(response_replica)
 
-class TestSecurityGroups():
+
+class TestSecurityGroups:
     def test_create_sg(self, createGen2Service):
         sg = create_security_group(createGen2Service, store['created_vpc'])
         assertCreateResponse(sg)
@@ -1478,50 +1499,46 @@ class TestSecurityGroups():
 
     def test_create_sg_target(self, createGen2Service):
         sg_network_interface = create_security_group_target_binding(
-            createGen2Service, store['created_sg_id'], store['network_interface_id'])
+            createGen2Service, store['created_sg_id'], store['network_interface_id']
+        )
         assertCreateResponse(sg_network_interface)
-        store['created_sg_network_interface_id'] = sg_network_interface.get_result()[
-            'id']
+        store['created_sg_network_interface_id'] = sg_network_interface.get_result()['id']
 
     def test_list_sg_targets(self, createGen2Service):
-        sg_network_interface = list_security_group_targets(
-            createGen2Service, store['created_sg_id'])
+        sg_network_interface = list_security_group_targets(createGen2Service, store['created_sg_id'])
         assert sg_network_interface.status_code == 200
 
     def test_get_sg_target(self, createGen2Service):
         sg_network_interface = get_security_group_target(
-            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
+            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id']
+        )
         assertGetPatchResponse(sg_network_interface)
 
     def test_delete_sg_target(self, createGen2Service):
         sg_network_interface = delete_security_group_target_binding(
-            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id'])
+            createGen2Service, store['created_sg_id'], store['created_sg_network_interface_id']
+        )
         assert sg_network_interface.status_code == 204
 
     def test_create_sg_rule(self, createGen2Service):
-        sg_rule = create_security_group_rule(
-            createGen2Service, store['created_sg_id'])
+        sg_rule = create_security_group_rule(createGen2Service, store['created_sg_id'])
         assertCreateResponse(sg_rule)
         store['created_sg_rule_id'] = sg_rule.get_result()['id']
 
     def test_list_sg_rules(self, createGen2Service):
-        sg_rules = list_security_group_rules(
-            createGen2Service, store['created_sg_id'])
+        sg_rules = list_security_group_rules(createGen2Service, store['created_sg_id'])
         assertListResponse(sg_rules, 'rules')
 
     def test_get_sg_rule(self, createGen2Service):
-        sg_rule = get_security_group_rule(
-            createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
+        sg_rule = get_security_group_rule(createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
         assertGetPatchResponse(sg_rule)
 
     def test_update_sg_rule(self, createGen2Service):
-        sg_rule = update_security_group_rule(
-            createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
+        sg_rule = update_security_group_rule(createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
         assertGetPatchResponse(sg_rule)
 
     def test_delete_sg_rule(self, createGen2Service):
-        sg_rule = delete_security_group_rule(
-            createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
+        sg_rule = delete_security_group_rule(createGen2Service, store['created_sg_id'], store['created_sg_rule_id'])
         assertDeleteResponse(sg_rule)
 
     def test_update_sg(self, createGen2Service):
@@ -1533,25 +1550,22 @@ class TestSecurityGroups():
         assertDeleteResponse(sg)
 
 
-class TestVPCDefaultSecurityGroup():
+class TestVPCDefaultSecurityGroup:
     def test_get_vpc_default_sg(self, createGen2Service):
-        vpc_default_sg = get_vpc_default_security_group(
-            createGen2Service, store['created_vpc'])
+        vpc_default_sg = get_vpc_default_security_group(createGen2Service, store['created_vpc'])
         assertGetPatchResponse(vpc_default_sg)
 
 
-class TestVPCDefaultACL():
+class TestVPCDefaultACL:
     def test_get_vpc_acl(self, createGen2Service):
-        vpc_default_acl = get_vpc_default_network_acl(
-            createGen2Service, store['created_vpc'])
+        vpc_default_acl = get_vpc_default_network_acl(createGen2Service, store['created_vpc'])
         assertGetPatchResponse(vpc_default_acl)
 
 
-class TestVPCRoutes():
+class TestVPCRoutes:
     def test_create_route(self, createGen2Service):
         pytest.skip("no env")
-        route = create_vpc_route(
-            createGen2Service, store['created_vpc'], store['zone'])
+        route = create_vpc_route(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(route)
         store['created_route'] = route.get_result()['id']
 
@@ -1562,52 +1576,50 @@ class TestVPCRoutes():
 
     def test_get_route(self, createGen2Service):
         pytest.skip("no env")
-        route = get_vpc_route(
-            createGen2Service, store['created_vpc'], store['created_route'])
+        route = get_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
 
     def test_update_route(self, createGen2Service):
         pytest.skip("no env")
-        route = update_vpc_route(
-            createGen2Service, store['created_vpc'], store['created_route'])
+        route = update_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertGetPatchResponse(route)
 
     def test_delete_route(self, createGen2Service):
         pytest.skip("no env")
-        route = delete_vpc_route(
-            createGen2Service, store['created_vpc'], store['created_route'])
+        route = delete_vpc_route(createGen2Service, store['created_vpc'], store['created_route'])
         assertDeleteResponse(route)
 
 
-class TestAddressPrefix():
+class TestAddressPrefix:
     def test_create_address_prefix(self, createGen2Service):
-        address_prefix = create_vpc_address_prefix(
-            createGen2Service, store['created_vpc'], store['zone'])
+        address_prefix = create_vpc_address_prefix(createGen2Service, store['created_vpc'], store['zone'])
         assertCreateResponse(address_prefix)
         store['created_address_prefix'] = address_prefix.get_result()['id']
 
     def test_list_address_prefixes(self, createGen2Service):
-        address_prefixs = list_vpc_address_prefixes(
-            createGen2Service, store['created_vpc'])
+        address_prefixs = list_vpc_address_prefixes(createGen2Service, store['created_vpc'])
         assertListResponse(address_prefixs, 'address_prefixes')
 
     def test_get_address_prefix(self, createGen2Service):
         address_prefix = get_vpc_address_prefix(
-            createGen2Service, store['created_vpc'], store['created_address_prefix'])
+            createGen2Service, store['created_vpc'], store['created_address_prefix']
+        )
         assertGetPatchResponse(address_prefix)
 
     def test_update_address_prefix(self, createGen2Service):
         address_prefix = update_vpc_address_prefix(
-            createGen2Service, store['created_vpc'], store['created_address_prefix'])
+            createGen2Service, store['created_vpc'], store['created_address_prefix']
+        )
         assertGetPatchResponse(address_prefix)
 
     def test_delete_address_prefix(self, createGen2Service):
         address_prefix = delete_vpc_address_prefix(
-            createGen2Service, store['created_vpc'], store['created_address_prefix'])
+            createGen2Service, store['created_vpc'], store['created_address_prefix']
+        )
         assertDeleteResponse(address_prefix)
 
 
-class TestVPNGateways():
+class TestVPNGateways:
     def test_create_ike_policy(self, createGen2Service):
         ike_policy = create_ike_policy(createGen2Service)
         assertCreateResponse(ike_policy)
@@ -1618,18 +1630,15 @@ class TestVPNGateways():
         assertListResponse(ike_policies, 'ike_policies')
 
     def test_get_ike_policy(self, createGen2Service):
-        ike_policy = get_ike_policy(
-            createGen2Service, store['created_ike_policy_id'])
+        ike_policy = get_ike_policy(createGen2Service, store['created_ike_policy_id'])
         assertGetPatchResponse(ike_policy)
 
     def test_update_ike_policy(self, createGen2Service):
-        ike_policy = update_ike_policy(
-            createGen2Service, store['created_ike_policy_id'])
+        ike_policy = update_ike_policy(createGen2Service, store['created_ike_policy_id'])
         assertGetPatchResponse(ike_policy)
 
     def test_list_ike_policy_connections(self, createGen2Service):
-        ike_policies_conn = list_ike_policy_connections(
-            createGen2Service, store['created_ike_policy_id'])
+        ike_policies_conn = list_ike_policy_connections(createGen2Service, store['created_ike_policy_id'])
         assertListResponse(ike_policies_conn, 'connections')
 
     def test_create_ipsec_policy(self, createGen2Service):
@@ -1642,24 +1651,21 @@ class TestVPNGateways():
         assertListResponse(ipsec_policies, 'ipsec_policies')
 
     def test_get_ipsec_policy(self, createGen2Service):
-        ipsec_policy = get_ipsec_policy(
-            createGen2Service, store['created_ipsec_policy_id'])
+        ipsec_policy = get_ipsec_policy(createGen2Service, store['created_ipsec_policy_id'])
         assertGetPatchResponse(ipsec_policy)
 
     def test_update_ipsec_policy(self, createGen2Service):
-        ipsec_policy = update_ipsec_policy(
-            createGen2Service, store['created_ipsec_policy_id'])
+        ipsec_policy = update_ipsec_policy(createGen2Service, store['created_ipsec_policy_id'])
         assertGetPatchResponse(ipsec_policy)
 
     def test_list_ipsec_policy_connections(self, createGen2Service):
-        ipsec_policies_conn = list_ipsec_policy_connections(
-            createGen2Service, store['created_ipsec_policy_id'])
+        ipsec_policies_conn = list_ipsec_policy_connections(createGen2Service, store['created_ipsec_policy_id'])
         assertListResponse(ipsec_policies_conn, 'connections')
+
     # vpn_gateways
 
     def test_create_vpn_gateway(self, createGen2Service):
-        vpn_gateway = create_vpn_gateway(
-            createGen2Service, store['created_subnet'])
+        vpn_gateway = create_vpn_gateway(createGen2Service, store['created_subnet'])
         assertCreateResponse(vpn_gateway)
         store['created_vpn_gateway_id'] = vpn_gateway.get_result()['id']
 
@@ -1668,97 +1674,127 @@ class TestVPNGateways():
         assertListResponse(ipsec_policies, 'vpn_gateways')
 
     def test_get_vpn_gateway(self, createGen2Service):
-        vpn_gateway = get_vpn_gateway(
-            createGen2Service, store['created_vpn_gateway_id'])
+        vpn_gateway = get_vpn_gateway(createGen2Service, store['created_vpn_gateway_id'])
         assertGetPatchResponse(vpn_gateway)
 
     def test_update_vpn_gateway(self, createGen2Service):
-        vpn_gateway = update_vpn_gateway(
-            createGen2Service, store['created_vpn_gateway_id'])
+        vpn_gateway = update_vpn_gateway(createGen2Service, store['created_vpn_gateway_id'])
         assertGetPatchResponse(vpn_gateway)
+
     # vpn_gateways_connections
 
     def test_create_vpn_gateway_connections(self, createGen2Service):
-        vpn_gateway_connection = create_vpn_gateway_connection(
-            createGen2Service, store['created_vpn_gateway_id'])
+        vpn_gateway_connection = create_vpn_gateway_connection(createGen2Service, store['created_vpn_gateway_id'])
         assertCreateResponse(vpn_gateway_connection)
-        store['created_vpn_gateway_connection_id'] = vpn_gateway_connection.get_result()[
-            'id']
+        store['created_vpn_gateway_connection_id'] = vpn_gateway_connection.get_result()['id']
 
     def test_list_vpn_gateway_connections(self, createGen2Service):
-        vpn_gateway_connections = list_vpn_gateway_connections(
-            createGen2Service, store['created_vpn_gateway_id'])
+        vpn_gateway_connections = list_vpn_gateway_connections(createGen2Service, store['created_vpn_gateway_id'])
         assertListResponse(vpn_gateway_connections, 'connections')
 
     def test_get_vpn_gateway_connection(self, createGen2Service):
         vpn_gateway_connection = get_vpn_gateway_connection(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id']
+        )
         assertGetPatchResponse(vpn_gateway_connection)
 
     def test_update_vpn_gateway_connection(self, createGen2Service):
         vpn_gateway_connection = update_vpn_gateway_connection(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id']
+        )
         assertGetPatchResponse(vpn_gateway_connection)
 
     # local_cidrs
     def test_create_vpn_gateway_connection_local_cidrs(self, createGen2Service):
         local_cidr = add_vpn_gateway_connection_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "192.132.10.0",
+            "28",
+        )
         assert local_cidr.status_code == 204
 
     def test_list_vpn_gateway_connection_local_cidrs(self, createGen2Service):
         local_cidr = list_vpn_gateway_connection_local_cidrs(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id']
+        )
         assert local_cidr.status_code == 200
 
     def test_check_vpn_gateway_connection_local_cidr(self, createGen2Service):
         local_cidr = check_vpn_gateway_connection_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "192.132.10.0",
+            "28",
+        )
         assert local_cidr.status_code == 204
 
     def test_remove_vpn_gateway_connection_local_cidr(self, createGen2Service):
         local_cidr = remove_vpn_gateway_connection_local_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "192.132.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "192.132.10.0",
+            "28",
+        )
         assert local_cidr.status_code == 204
+
     # peer_cidrs
 
     def test_create_vpn_gateway_connection_peer_cidrs(self, createGen2Service):
         peer_cidr = add_vpn_gateway_connection_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "202.138.10.0",
+            "28",
+        )
         assert peer_cidr.status_code == 204
 
     def test_list_vpn_gateway_connection_peer_cidrs(self, createGen2Service):
         peer_cidr = list_vpn_gateway_connection_peer_cidrs(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id']
+        )
         assert peer_cidr.status_code == 200
 
     def test_check_vpn_gateway_connection_peer_cidr(self, createGen2Service):
         peer_cidr = check_vpn_gateway_connection_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "202.138.10.0",
+            "28",
+        )
         assert peer_cidr.status_code == 204
 
     def test_remove_vpn_gateway_connection_peer_cidr(self, createGen2Service):
         peer_cidr = remove_vpn_gateway_connection_peer_cidr(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'], "202.138.10.0", "28")
+            createGen2Service,
+            store['created_vpn_gateway_id'],
+            store['created_vpn_gateway_connection_id'],
+            "202.138.10.0",
+            "28",
+        )
         assert peer_cidr.status_code == 204
 
 
-class TestVPNServer():
+class TestVPNServer:
     def test_list_vpn_servers(self, createGen2Service):
         vpnServers = list_vpn_servers(createGen2Service)
         assertListResponse(vpnServers, 'vpn_servers')
-    
+
     def test_create_vpn_server(self, createGen2Service):
         vpnServer = create_vpn_server(createGen2Service, store['created_subnet'])
         assertCreateResponse(vpnServer)
         store['created_vpn_server'] = vpnServer.get_result()['id']
-        
 
     def test_get_vpn_server(self, createGen2Service):
         vpnServer = get_vpn_server(createGen2Service, store['created_vpn_server'])
         store['created_vpn_server_etag'] = vpnServer.get_headers()['ETag']
         assertGetPatchResponse(vpnServer)
-    
+
     def test_update_vpn_server(self, createGen2Service):
         vpnServer = update_vpn_server(createGen2Service, store['created_vpn_server'], store['created_vpn_server_etag'])
         assertGetPatchResponse(vpnServer)
@@ -1766,10 +1802,10 @@ class TestVPNServer():
     def test_get_vpn_server_client_configuration(self, createGen2Service):
         vpnServerConfiguration = get_vpn_server_client_configuration(createGen2Service, store['created_vpn_server'])
         assertGetResponse(vpnServerConfiguration)
-    
+
     def test_list_vpn_server_clients(self, createGen2Service):
         clients = list_vpn_server_clients(createGen2Service, store['created_vpn_server'])
-        store['vpnserverclientId']=clients.get_result()['clients'][0]['id']
+        store['vpnserverclientId'] = clients.get_result()['clients'][0]['id']
         assertListResponse(clients, 'clients')
 
     def test_get_vpn_server_client(self, createGen2Service):
@@ -1788,28 +1824,33 @@ class TestVPNServer():
         route = create_vpn_server_route(createGen2Service, store['created_vpn_server'])
         store['created_vpn_server_route'] = route.get_result()['id']
         assertCreateResponse(route)
-    
+
     def test_get_vpn_server_route(self, createGen2Service):
         route = get_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
         assertGetPatchResponse(route)
-    
+
     def test_update_vpn_server_route(self, createGen2Service):
-        route = update_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
+        route = update_vpn_server_route(
+            createGen2Service, store['created_vpn_server'], store['created_vpn_server_route']
+        )
         assertGetPatchResponse(route)
 
     def test_delete_vpn_server_route(self, createGen2Service):
-        response = delete_vpn_server_route(createGen2Service, store['created_vpn_server'], store['created_vpn_server_route'])
+        response = delete_vpn_server_route(
+            createGen2Service, store['created_vpn_server'], store['created_vpn_server_route']
+        )
         assertDeleteRequestAcceptedResponse(response)
-    
+
     def test_delete_vpn_server_client(self, createGen2Service):
         response = delete_vpn_server_client(createGen2Service, store['created_vpn_server'], store['vpnserverclientId'])
         assertDeleteRequestAcceptedResponse(response)
 
-    def test_delete_vpn_server(self,createGen2Service):
-        response = delete_vpn_server(createGen2Service, store['created_vpn_server'], store['created_vpn_server_etag']  )
+    def test_delete_vpn_server(self, createGen2Service):
+        response = delete_vpn_server(createGen2Service, store['created_vpn_server'], store['created_vpn_server_etag'])
         assertDeleteRequestAcceptedResponse(response)
 
-class TestLoadBalancer():
+
+class TestLoadBalancer:
     def test_list_load_balancer_profiles(self, createGen2Service):
         profiles = list_load_balancer_profiles(createGen2Service)
         assertListResponse(profiles, 'profiles')
@@ -1823,82 +1864,99 @@ class TestLoadBalancer():
         assertListResponse(load_balancers, 'load_balancers')
 
     def test_create_load_balancer(self, createGen2Service):
-        load_balancer = create_load_balancer(
-            createGen2Service, store['created_subnet'])
+        load_balancer = create_load_balancer(createGen2Service, store['created_subnet'])
         assertCreateResponse(load_balancer)
         store['created_load_balancer'] = load_balancer.get_result()['id']
         print('created_load_balancer: ' + store['created_load_balancer'])
 
     def test_get_load_balancer(self, createGen2Service):
-        load_balancer = get_load_balancer(
-            createGen2Service, store['created_load_balancer'])
+        load_balancer = get_load_balancer(createGen2Service, store['created_load_balancer'])
         assertGetPatchResponse(load_balancer)
         store['created_load_balancer_etag'] = load_balancer.get_headers()['ETag']
 
     def test_update_load_balancer(self, createGen2Service):
         load_balancer = update_load_balancer(
-            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag'])
+            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag']
+        )
         assertGetPatchResponse(load_balancer)
 
     def test_get_load_balancer_statistics(self, createGen2Service):
-        load_balancers = get_load_balancer_statistics(
-            createGen2Service, store['created_load_balancer'])
+        load_balancers = get_load_balancer_statistics(createGen2Service, store['created_load_balancer'])
         assert load_balancers.status_code == 200
+
     # listeners
 
     def test_list_load_balancer_listeners(self, createGen2Service):
-        listeners = list_load_balancer_listeners(
-            createGen2Service, store['created_load_balancer'])
+        listeners = list_load_balancer_listeners(createGen2Service, store['created_load_balancer'])
         assertListResponse(listeners, 'listeners')
 
     def test_create_load_balancer_listener(self, createGen2Service):
-        listener = create_load_balancer_listener(
-            createGen2Service, store['created_load_balancer'])
+        listener = create_load_balancer_listener(createGen2Service, store['created_load_balancer'])
         assertCreateResponse(listener)
         store['created_listener'] = listener.get_result()['id']
 
     def test_get_load_balancer_listener(self, createGen2Service):
         listener = get_load_balancer_listener(
-            createGen2Service, store['created_load_balancer'], store['created_listener'])
+            createGen2Service, store['created_load_balancer'], store['created_listener']
+        )
         assertGetPatchResponse(listener)
 
     def test_update_load_balancer_listener(self, createGen2Service):
         listener = update_load_balancer_listener(
-            createGen2Service, store['created_load_balancer'], store['created_listener'])
+            createGen2Service, store['created_load_balancer'], store['created_listener']
+        )
         assertGetPatchResponse(listener)
 
     # listener policies
     def test_list_listener_policies(self, createGen2Service):
         policies = list_load_balancer_listener_policies(
-            createGen2Service, store['created_load_balancer'], store['created_listener'])
+            createGen2Service, store['created_load_balancer'], store['created_listener']
+        )
         assertListResponse(policies, 'policies')
 
     def test_create_listener_policy(self, createGen2Service):
         policy = create_load_balancer_listener_policy(
-            createGen2Service, store['created_load_balancer'], store['created_listener'])
+            createGen2Service, store['created_load_balancer'], store['created_listener']
+        )
         assertCreateResponse(policy)
         store['created_listener_policy'] = policy.get_result()['id']
         print('created_listener_policy: ' + store['created_listener_policy'])
 
     def test_get_listener_policy(self, createGen2Service):
         policy = get_load_balancer_listener_policy(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+        )
         assertGetPatchResponse(policy)
 
     def test_update_listener_policy(self, createGen2Service):
         policy = update_load_balancer_listener_policy(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+        )
         assertGetPatchResponse(policy)
 
     # listener policy rules
     def test_list_listener_policies_rules(self, createGen2Service):
         rules = list_load_balancer_listener_policy_rules(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+        )
         assertListResponse(rules, 'rules')
 
     def test_create_listener_policy_rule(self, createGen2Service):
         rule = create_load_balancer_listener_policy_rule(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+        )
         assert rule.status_code == 201
         res = rule.get_result()
         assert res['id'] is not None
@@ -1906,47 +1964,55 @@ class TestLoadBalancer():
 
     def test_get_listener_policy_rule(self, createGen2Service):
         rule = get_load_balancer_listener_policy_rule(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'],  store['created_listener_policy_rule'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+            store['created_listener_policy_rule'],
+        )
         assert rule.status_code == 200
         res = rule.get_result()
         assert res['id'] is not None
 
     def test_update_listener_policy_rule(self, createGen2Service):
         rule = update_load_balancer_listener_policy_rule(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'], store['created_listener_policy_rule'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+            store['created_listener_policy_rule'],
+        )
         assert rule.status_code == 200
         res = rule.get_result()
         assert res['id'] is not None
 
     def test_create_pool(self, createGen2Service):
-        pool = create_load_balancer_pool(
-            createGen2Service, store['created_load_balancer'])
+        pool = create_load_balancer_pool(createGen2Service, store['created_load_balancer'])
         assertCreateResponse(pool)
         store['created_lb_pool'] = pool.get_result()['id']
 
     def test_list_lb_pools(self, createGen2Service):
-        pools = list_load_balancer_pools(
-            createGen2Service, store['created_load_balancer'])
+        pools = list_load_balancer_pools(createGen2Service, store['created_load_balancer'])
         assertListResponse(pools, 'pools')
 
     def test_get_pool(self, createGen2Service):
-        pool = get_load_balancer_pool(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+        pool = get_load_balancer_pool(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
         assertGetPatchResponse(pool)
 
     def test_update_pool(self, createGen2Service):
-        pool = update_load_balancer_pool(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+        pool = update_load_balancer_pool(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
         assertGetPatchResponse(pool)
 
     def test_put_pool_member(self, createGen2Service):
         member = replace_load_balancer_pool_members(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool']
+        )
         assert member.status_code == 202
 
     def test_create_pool_member(self, createGen2Service):
         member = create_load_balancer_pool_member(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool']
+        )
         assert member.status_code == 201
         res = member.get_result()
         assert res['id'] is not None
@@ -1954,59 +2020,73 @@ class TestLoadBalancer():
 
     def test_list_lb_pool_member(self, createGen2Service):
         members = list_load_balancer_pool_members(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool']
+        )
         assertListResponse(members, 'members')
 
     def test_get_pool_member(self, createGen2Service):
         member = get_load_balancer_pool_member(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member']
+        )
         assert member.status_code == 200
         assert member.get_result()['id'] is not None
 
     def test_update_pool_member(self, createGen2Service):
         member = update_load_balancer_pool_member(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member']
+        )
         assert member.status_code == 200
         assert member.get_result()['id'] is not None
 
     #  delete listener policy rule
     def test_delete_listener_policy_rule(self, createGen2Service):
         rule = delete_load_balancer_listener_policy_rule(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'], store['created_listener_policy_rule'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+            store['created_listener_policy_rule'],
+        )
         assertDeleteResponse(rule)
 
     #  delete listener policy
     def test_delete_listener_policy(self, createGen2Service):
         policy = delete_load_balancer_listener_policy(
-            createGen2Service, store['created_load_balancer'], store['created_listener'], store['created_listener_policy'])
+            createGen2Service,
+            store['created_load_balancer'],
+            store['created_listener'],
+            store['created_listener_policy'],
+        )
         assertDeleteResponse(policy)
 
     # delete listener
     def test_delete_listener(self, createGen2Service):
         listener = delete_load_balancer_listener(
-            createGen2Service, store['created_load_balancer'], store['created_listener'])
+            createGen2Service, store['created_load_balancer'], store['created_listener']
+        )
         assertDeleteResponse(listener)
 
     #  delete pool member
     def test_delete_pool_member(self, createGen2Service):
         pool = delete_load_balancer_pool_member(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member'])
+            createGen2Service, store['created_load_balancer'], store['created_lb_pool'], store['created_lb_pool_member']
+        )
         assertDeleteResponse(pool)
 
     #  delete pool
     def test_delete_pool(self, createGen2Service):
-        pool = delete_load_balancer_pool(
-            createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
+        pool = delete_load_balancer_pool(createGen2Service, store['created_load_balancer'], store['created_lb_pool'])
         assertDeleteResponse(pool)
 
     # delete load balancer
     def test_delete_load_balancer(self, createGen2Service):
         load_balancer = delete_load_balancer(
-            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag'])
+            createGen2Service, store['created_load_balancer'], store['created_load_balancer_etag']
+        )
         assertDeleteResponse(load_balancer)
 
 
-class TestVPCFlowLogs():
+class TestVPCFlowLogs:
     def test_create_flow_log_collector(self, createGen2Service):
         fl = create_flow_log_collector(createGen2Service, store['created_vpc'])
         assertCreateResponse(fl)
@@ -2029,10 +2109,16 @@ class TestVPCFlowLogs():
         assertDeleteResponse(fl)
 
 
-class TestVPCInstanceTemplates():
+class TestVPCInstanceTemplates:
     def test_create_instance_template(self, createGen2Service):
         it = create_instance_template(
-            createGen2Service, store['created_vpc'], store['instance_profile'], store['zone'], store['image_id'], store['created_subnet'])
+            createGen2Service,
+            store['created_vpc'],
+            store['instance_profile'],
+            store['zone'],
+            store['image_id'],
+            store['created_subnet'],
+        )
         assertCreateResponse(it)
         store['created_it'] = it.get_result()['id']
 
@@ -2049,10 +2135,9 @@ class TestVPCInstanceTemplates():
         assertGetPatchResponse(it)
 
 
-class TestVPCInstanceGroups():
+class TestVPCInstanceGroups:
     def test_create_instance_groups(self, createGen2Service):
-        ig = create_instance_group(
-            createGen2Service, store['created_it'], store['created_subnet'])
+        ig = create_instance_group(createGen2Service, store['created_it'], store['created_subnet'])
         assertCreateResponse(ig)
         store['created_ig'] = ig.get_result()['id']
 
@@ -2069,77 +2154,68 @@ class TestVPCInstanceGroups():
         assertGetPatchResponse(ig)
 
     def test_create_instance_group_manager(self, createGen2Service):
-        igm = create_instance_group_manager(
-            createGen2Service, store['created_ig'])
+        igm = create_instance_group_manager(createGen2Service, store['created_ig'])
         assertCreateResponse(igm)
         store['created_igm'] = igm.get_result()['id']
 
     def test_list_instance_group_managers(self, createGen2Service):
-        igm = list_instance_group_managers(
-            createGen2Service, store['created_ig'])
+        igm = list_instance_group_managers(createGen2Service, store['created_ig'])
         assertListResponse(igm, 'managers')
 
     def test_get_instance_group_manager(self, createGen2Service):
-        igm = get_instance_group_manager(
-            createGen2Service, store['created_ig'], store['created_igm'])
+        igm = get_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
         assertGetPatchResponse(igm)
 
     def test_update_instance_group_manager(self, createGen2Service):
-        igm = update_instance_group_manager(
-            createGen2Service, store['created_ig'], store['created_igm'])
+        igm = update_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
         assertGetPatchResponse(igm)
 
     def test_create_instance_group_manager_policy(self, createGen2Service):
-        igmp = create_instance_group_manager_policy(
-            createGen2Service, store['created_ig'], store['created_igm'])
+        igmp = create_instance_group_manager_policy(createGen2Service, store['created_ig'], store['created_igm'])
         assertCreateResponse(igmp)
         store['created_igmp'] = igmp.get_result()['id']
 
     def test_list_instance_group_manager_policies(self, createGen2Service):
-        igmps = list_instance_group_manager_policies(
-            createGen2Service, store['created_ig'], store['created_igm'])
+        igmps = list_instance_group_manager_policies(createGen2Service, store['created_ig'], store['created_igm'])
         assertListResponse(igmps, 'policies')
 
     def test_get_instance_group_manager_policy(self, createGen2Service):
         igmp = get_instance_group_manager_policy(
-            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp']
+        )
         assertGetPatchResponse(igmp)
 
     def test_update_instance_group_manager_policy(self, createGen2Service):
         igmp = update_instance_group_manager_policy(
-            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp']
+        )
         assertGetPatchResponse(igmp)
 
     def test_list_instance_group_memberships(self, createGen2Service):
-        igm = list_instance_group_memberships(
-            createGen2Service, store['created_ig'])
+        igm = list_instance_group_memberships(createGen2Service, store['created_ig'])
         assertListResponse(igm, 'memberships')
         store['created_mbr'] = igm.get_result()['memberships'][0]['id']
 
     def test_get_instance_group_membership(self, createGen2Service):
-        igm = get_instance_group_membership(
-            createGen2Service, store['created_ig'], store['created_mbr'])
+        igm = get_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
         assert igm.status_code == 200
 
     def test_update_instance_group_membership(self, createGen2Service):
-        igm = update_instance_group_membership(
-            createGen2Service, store['created_ig'], store['created_mbr'])
+        igm = update_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
         response = igm.get_result()
         assert igm.status_code == 200
         assert response['id'] is not None
 
     def test_delete_instance_group_membership(self, createGen2Service):
-        igm = delete_instance_group_membership(
-            createGen2Service, store['created_ig'], store['created_mbr'])
+        igm = delete_instance_group_membership(createGen2Service, store['created_ig'], store['created_mbr'])
         assertDeleteResponse(igm)
 
     def test_delete_instance_group_memberships(self, createGen2Service):
-        igm = delete_instance_group_memberships(
-            createGen2Service, store['created_ig'])
+        igm = delete_instance_group_memberships(createGen2Service, store['created_ig'])
         assertDeleteResponse(igm)
 
 
-class TestDedicatedHost():
+class TestDedicatedHost:
     def test_create_dedicated_host_group(self, createGen2Service):
         dhg = create_dedicated_host_group(createGen2Service)
         assertCreateResponse(dhg)
@@ -2155,8 +2231,7 @@ class TestDedicatedHost():
         assert ig.status_code == 200
 
     def test_create_dedicated_host(self, createGen2Service):
-        dh = create_dedicated_host(
-            createGen2Service,  'bx2-host-152x608', store['created_dhg'])
+        dh = create_dedicated_host(createGen2Service, 'bx2-host-152x608', store['created_dhg'])
         assertCreateResponse(dh)
         store['created_dh'] = dh.get_result()['id']
 
@@ -2177,8 +2252,7 @@ class TestDedicatedHost():
         assertGetPatchResponse(ig)
 
     def test_update_dedicated_host_group(self, createGen2Service):
-        ig = update_dedicated_host_group(
-            createGen2Service, store['created_dhg'])
+        ig = update_dedicated_host_group(createGen2Service, store['created_dhg'])
         assertGetPatchResponse(ig)
 
     def test_update_dedicated_host(self, createGen2Service):
@@ -2186,22 +2260,19 @@ class TestDedicatedHost():
         assertGetPatchResponse(ig)
 
     def test_delete_dedicated_host(self, createGen2Service):
-        igm = delete_dedicated_host(
-            createGen2Service, store['created_dh'])
-        assertDeleteResponse(igm)
-    
-    def test_delete_dedicated_host_group(self, createGen2Service):
-        igm = delete_dedicated_host_group(
-            createGen2Service, store['created_dhg'])
+        igm = delete_dedicated_host(createGen2Service, store['created_dh'])
         assertDeleteResponse(igm)
 
-class TestBackupAsaService():
+    def test_delete_dedicated_host_group(self, createGen2Service):
+        igm = delete_dedicated_host_group(createGen2Service, store['created_dhg'])
+        assertDeleteResponse(igm)
+
+
+class TestBackupAsaService:
     def test_list_backup_policies(self, createGen2Service):
-        bckPolicies = list_backup_policies(
-            createGen2Service
-        )
+        bckPolicies = list_backup_policies(createGen2Service)
         assertListResponse(bckPolicies, 'backup_policies')
-    
+
     def test_create_backup_policy(self, createGen2Service):
         name = 'my-backup-policy'
         bckPolicies = create_backup_policy(createGen2Service, name)
@@ -2210,27 +2281,18 @@ class TestBackupAsaService():
         store['created_backup_policy_etag'] = bckPolicies.get_headers()['ETag']
 
     def test_list_backup_policy_plans(self, createGen2Service):
-        bckPolicyPlans = list_backup_policy_plans(
-            createGen2Service,
-            store['created_backup_policy'],
-            'my-backup-policy'
-        )
+        bckPolicyPlans = list_backup_policy_plans(createGen2Service, store['created_backup_policy'], 'my-backup-policy')
         assertListResponse(bckPolicyPlans, 'plans')
+
     def test_create_backup_policy_plan(self, createGen2Service):
-        name='my-backup-policy-plan'
-        bckPolicyPlan = create_backup_policy_plan(
-            createGen2Service,
-            store['created_backup_policy'],
-            name
-        )
+        name = 'my-backup-policy-plan'
+        bckPolicyPlan = create_backup_policy_plan(createGen2Service, store['created_backup_policy'], name)
         assertCreateResponse(bckPolicyPlan)
         store['created_backup_policy_plan'] = bckPolicyPlan.get_result()['id']
 
     def test_get_backup_policy_plan(self, createGen2Service):
         bckPolicyPlan = get_backup_policy_plan(
-            createGen2Service,
-            store['created_backup_policy'],
-            store['created_backup_policy_plan']
+            createGen2Service, store['created_backup_policy'], store['created_backup_policy_plan']
         )
         store['created_backup_policy_plan_etag'] = bckPolicyPlan.get_headers()['ETag']
         assertGetPatchResponse(bckPolicyPlan)
@@ -2241,32 +2303,24 @@ class TestBackupAsaService():
             store['created_backup_policy'],
             store['created_backup_policy_plan'],
             store['created_backup_policy_plan_etag'],
-            'my-backup-policy-plan-updated'
+            'my-backup-policy-plan-updated',
         )
         assertGetPatchResponse(bckPolicyPlan)
 
     def test_list_backup_policy_jobs(self, createGen2Service):
-        
-        bckPolicyJjobs = list_backup_policy_jobs(
-            createGen2Service,
-            store['created_backup_policy']
-        )
+
+        bckPolicyJjobs = list_backup_policy_jobs(createGen2Service, store['created_backup_policy'])
         assertListResponse(bckPolicyJjobs, 'jobs')
         store['created_backup_policy_job'] = bckPolicyJjobs.get_result()['jobs'][0]['id']
 
     def test_get_backup_policy_job(self, createGen2Service):
         bckPolicyjob = get_backup_policy_job(
-            createGen2Service,
-            store['created_backup_policy'],
-            store['created_backup_policy_job']
+            createGen2Service, store['created_backup_policy'], store['created_backup_policy_job']
         )
         assertGetPatchResponse(bckPolicyjob)
 
     def test_get_backup_policy(self, createGen2Service):
-        bckPolicy = get_backup_policy(
-            createGen2Service,
-            store['created_backup_policy']
-        )
+        bckPolicy = get_backup_policy(createGen2Service, store['created_backup_policy'])
         assertGetPatchResponse(bckPolicy)
 
     def test_update_backup_policy(self, createGen2Service):
@@ -2274,27 +2328,27 @@ class TestBackupAsaService():
             createGen2Service,
             store['created_backup_policy'],
             store['created_backup_policy_etag'],
-            'my-backup-policy-updated'
+            'my-backup-policy-updated',
         )
         assertGetPatchResponse(bckPolicy)
-    
+
     def test_delete_backup_policy_plan(self, createGen2Service):
         bckPolicyPlan = delete_backup_policy_plan(
             createGen2Service,
             store['created_backup_policy'],
             store['created_backup_policy_plan'],
-            store['created_backup_policy_plan_etag']
+            store['created_backup_policy_plan_etag'],
         )
         assertDeleteRequestAcceptedResponse(bckPolicyPlan)
 
     def test_delete_backup_policy(self, createGen2Service):
         bckPolicy = delete_backup_policy(
-            createGen2Service,
-            store['created_backup_policy'],
-            store['created_backup_policy_etag']
+            createGen2Service, store['created_backup_policy'], store['created_backup_policy_etag']
         )
         assertDeleteRequestAcceptedResponse(bckPolicy)
-class TestPlacementGroup():
+
+
+class TestPlacementGroup:
     def test_create_placement_group(self, createGen2Service):
         name = 'my-placement-group'
         pg = create_placement_group(createGen2Service, name)
@@ -2311,23 +2365,23 @@ class TestPlacementGroup():
         assert pg.get_result() is not None
 
     def test_update_placement_group(self, createGen2Service):
-        pg = update_placement_group(
-            createGen2Service, store['created_placement_group'], 'my-placement-group1')
+        pg = update_placement_group(createGen2Service, store['created_placement_group'], 'my-placement-group1')
         assertGetPatchResponse(pg)
 
     def test_delete_placement_group(self, createGen2Service):
         pg = delete_placement_group(createGen2Service, store['created_placement_group'])
         assertDeleteResponse(pg)
 
-class TestTeardown():
+
+class TestTeardown:
     def test_delete_instance_group_manager_policy(self, createGen2Service):
         igmp = delete_instance_group_manager_policy(
-            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp'])
+            createGen2Service, store['created_ig'], store['created_igm'], store['created_igmp']
+        )
         assertDeleteResponse(igmp)
 
     def test_delete_instance_group_manager(self, createGen2Service):
-        igm = delete_instance_group_manager(
-            createGen2Service, store['created_ig'], store['created_igm'])
+        igm = delete_instance_group_manager(createGen2Service, store['created_ig'], store['created_igm'])
         assertDeleteResponse(igm)
 
     def test_delete_instance_group(self, createGen2Service):
@@ -2339,23 +2393,21 @@ class TestTeardown():
         assertDeleteResponse(it)
 
     def test_delete_ipsec_policy(self, createGen2Service):
-        ipsec_policy = delete_ipsec_policy(
-            createGen2Service, store['created_ipsec_policy_id'])
+        ipsec_policy = delete_ipsec_policy(createGen2Service, store['created_ipsec_policy_id'])
         assertDeleteResponse(ipsec_policy)
 
     def test_delete_ike_policy(self, createGen2Service):
-        ike_policy = delete_ike_policy(
-            createGen2Service, store['created_ike_policy_id'])
+        ike_policy = delete_ike_policy(createGen2Service, store['created_ike_policy_id'])
         assertDeleteResponse(ike_policy)
 
     def test_delete_vpn_gateway_connection(self, createGen2Service):
         vpn_gateway_connection = delete_vpn_gateway_connection(
-            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id'])
+            createGen2Service, store['created_vpn_gateway_id'], store['created_vpn_gateway_connection_id']
+        )
         assertDeleteResponse(vpn_gateway_connection)
 
     def test_delete_vpn_gateway(self, createGen2Service):
-        vpn_gateway = delete_vpn_gateway(
-            createGen2Service, store['created_vpn_gateway_id'])
+        vpn_gateway = delete_vpn_gateway(createGen2Service, store['created_vpn_gateway_id'])
         assert vpn_gateway.status_code == 202
 
     def test_delete_floating_ip(self, createGen2Service):
@@ -2368,7 +2420,8 @@ class TestTeardown():
 
     def test_delete_instance_vol_attachment(self, createGen2Service):
         vol_attach = delete_instance_volume_attachment(
-            createGen2Service, store['created_instance_id'], store['created_vol_atchmt'])
+            createGen2Service, store['created_instance_id'], store['created_vol_atchmt']
+        )
         assertDeleteResponse(vol_attach)
 
     def test_delete_instance(self, createGen2Service):
@@ -2398,7 +2451,7 @@ class TestTeardown():
     def test_delete_vpc(self, createGen2Service):
         vpc = delete_vpc(createGen2Service, store['created_vpc'])
         assertDeleteResponse(vpc)
-    
+
     def test_delete_vpc(self, createGen2Service):
         vpc = delete_vpc(createGen2Service, store['created_vpc_hub'])
         assertDeleteResponse(vpc)
@@ -2406,6 +2459,7 @@ class TestTeardown():
     def test_delete_image(self, createGen2Service):
         image = delete_image(createGen2Service, store['image_id'])
         assertDeleteResponse(image)
+
 
 # --------------------------------------------------------
 #  test helpers
@@ -2419,6 +2473,7 @@ class TestTeardown():
 def list_floating_ips(service):
     response = service.list_floating_ips()
     return response
+
 
 # --------------------------------------------------------
 # create_floating_ip()
@@ -2438,8 +2493,7 @@ def create_floating_ip(service):
     # Construct a dict representation of a FloatingIPPrototypeFloatingIPByZone model
     floating_ip_prototype_model = {}
     floating_ip_prototype_model['name'] = generate_name("fip")
-    floating_ip_prototype_model[
-        'resource_group'] = resource_group_identity_model
+    floating_ip_prototype_model['resource_group'] = resource_group_identity_model
     floating_ip_prototype_model['zone'] = zone_identity_model
 
     # Set up parameter values
@@ -2447,6 +2501,8 @@ def create_floating_ip(service):
 
     response = service.create_floating_ip(floating_ip_prototype)
     return response
+
+
 # --------------------------------------------------------
 # delete_floating_ip()
 # --------------------------------------------------------
@@ -2456,6 +2512,7 @@ def delete_floating_ip(service, id):
     response = service.delete_floating_ip(id)
     return response
 
+
 # --------------------------------------------------------
 # get_floating_ip()
 # --------------------------------------------------------
@@ -2464,6 +2521,7 @@ def delete_floating_ip(service, id):
 def get_floating_ip(service, id):
     response = service.get_floating_ip(id)
     return response
+
 
 # --------------------------------------------------------
 # update_floating_ip()
@@ -2479,6 +2537,7 @@ def update_floating_ip(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_regions()
 # --------------------------------------------------------
@@ -2487,6 +2546,7 @@ def update_floating_ip(service, id):
 def list_regions(service):
     response = service.list_regions()
     return response
+
 
 # --------------------------------------------------------
 # get_region()
@@ -2497,6 +2557,7 @@ def get_region(service, name):
     response = service.get_region(name)
     return response
 
+
 # --------------------------------------------------------
 # list_region_zones()
 # --------------------------------------------------------
@@ -2505,6 +2566,7 @@ def get_region(service, name):
 def list_region_zones(service, region_name):
     response = service.list_region_zones(region_name)
     return response
+
 
 # --------------------------------------------------------
 # get_region_zone()
@@ -2519,6 +2581,7 @@ def get_region_zone(service, region_name, zone_name):
 # --------------------------------------------------------
 # Bare Metal Servers
 # --------------------------------------------------------
+
 
 def list_bare_metal_server_profiles(service):
     list_bare_metal_server_profiles_response = service.list_bare_metal_server_profiles()
@@ -2535,8 +2598,9 @@ def list_bare_metal_servers(service):
     return list_bare_metal_servers_response
 
 
-def create_bare_metal_server(service, profile_name, subnet_id, image_id, key_id, vpc_id, zone_name, user_data,
-                             bare_metal_server_name):
+def create_bare_metal_server(
+    service, profile_name, subnet_id, image_id, key_id, vpc_id, zone_name, user_data, bare_metal_server_name
+):
     bare_metal_server_profile_identity_model = {}
     bare_metal_server_profile_identity_model['name'] = profile_name
 
@@ -2575,7 +2639,7 @@ def create_bare_metal_server(service, profile_name, subnet_id, image_id, key_id,
         name=bare_metal_server_name,
         trusted_platform_module=bare_metal_server_trusted_platform_module_prototype_model,
         vpc=vpc_identity_model,
-        #enable_secure_boot=True
+        # enable_secure_boot=True
     )
     return create_bare_metal_server_response
 
@@ -2587,9 +2651,7 @@ def get_bare_metal_server_console(service, bare_metal_server_id):
 
 def create_bare_metal_server_console_access_token(service, bare_metal_server_id, console_type):
     create_bare_metal_server_console_access_token_response = service.create_bare_metal_server_console_access_token(
-        bare_metal_server_id,
-        console_type=console_type,
-        force=True
+        bare_metal_server_id, console_type=console_type, force=True
     )
     return create_bare_metal_server_console_access_token_response
 
@@ -2608,9 +2670,7 @@ def update_bare_metal_server_disk(service, bare_metal_server_id, id, disk_name):
     bare_metal_server_disk_patch_model = {}
     bare_metal_server_disk_patch_model['name'] = disk_name
     update_bare_metal_server_disk_response = service.update_bare_metal_server_disk(
-        bare_metal_server_id,
-        id,
-        bare_metal_server_disk_patch=bare_metal_server_disk_patch_model
+        bare_metal_server_id, id, bare_metal_server_disk_patch=bare_metal_server_disk_patch_model
     )
     return update_bare_metal_server_disk_response
 
@@ -2622,8 +2682,16 @@ def list_bare_metal_server_network_interfaces(service, bare_metal_server_id):
     return list_bare_metal_server_network_interfaces_response
 
 
-def create_bare_metal_server_network_interface(service, bare_metal_server_id, vlans, subnet_id, inetrface_type,
-                                               nic_name, allow_ip_spoofing, enable_infrastructure_nat):
+def create_bare_metal_server_network_interface(
+    service,
+    bare_metal_server_id,
+    vlans,
+    subnet_id,
+    inetrface_type,
+    nic_name,
+    allow_ip_spoofing,
+    enable_infrastructure_nat,
+):
     allowed_vlans = vlans
     subnet_identity_model = {}
     subnet_identity_model['id'] = subnet_id
@@ -2637,21 +2705,21 @@ def create_bare_metal_server_network_interface(service, bare_metal_server_id, vl
 
     create_bare_metal_server_network_interface_response = service.create_bare_metal_server_network_interface(
         bare_metal_server_id,
-        bare_metal_server_network_interface_prototype=bare_metal_server_network_interface_prototype_model
+        bare_metal_server_network_interface_prototype=bare_metal_server_network_interface_prototype_model,
     )
     return create_bare_metal_server_network_interface_response
 
 
 def get_bare_metal_server_network_interface(service, bare_metal_server_id, id):
     get_bare_metal_server_network_interface_response = service.get_bare_metal_server_network_interface(
-        bare_metal_server_id,
-        id
+        bare_metal_server_id, id
     )
     return get_bare_metal_server_network_interface_response
 
 
-def update_bare_metal_server_network_interface(service, bare_metal_server_id, id, bms_nic_name, allow_ip_spoofing,
-                                               enable_infrastructure_nat):
+def update_bare_metal_server_network_interface(
+    service, bare_metal_server_id, id, bms_nic_name, allow_ip_spoofing, enable_infrastructure_nat
+):
     bare_metal_server_network_interface_patch_model = {}
     bare_metal_server_network_interface_patch_model['name'] = bms_nic_name
     bare_metal_server_network_interface_patch_model['allow_ip_spoofing'] = allow_ip_spoofing
@@ -2659,66 +2727,60 @@ def update_bare_metal_server_network_interface(service, bare_metal_server_id, id
     update_bare_metal_server_network_interface_response = service.update_bare_metal_server_network_interface(
         bare_metal_server_id,
         id,
-        bare_metal_server_network_interface_patch=bare_metal_server_network_interface_patch_model
+        bare_metal_server_network_interface_patch=bare_metal_server_network_interface_patch_model,
     )
     return update_bare_metal_server_network_interface_response
 
 
 def delete_bare_metal_server_network_interface(service, bare_metal_server_id, id):
     delete_bare_metal_server_network_interface_response = service.delete_bare_metal_server_network_interface(
-        bare_metal_server_id,
-        id
+        bare_metal_server_id, id
     )
     return delete_bare_metal_server_network_interface_response
 
 
-def list_bare_metal_server_network_interface_floating_ips(service, bare_metal_server_id, network_interface_id, ):
-    list_bare_metal_server_network_interface_floating_ips_response = service.list_bare_metal_server_network_interface_floating_ips(
-        bare_metal_server_id,
-        network_interface_id
+def list_bare_metal_server_network_interface_floating_ips(
+    service,
+    bare_metal_server_id,
+    network_interface_id,
+):
+    list_bare_metal_server_network_interface_floating_ips_response = (
+        service.list_bare_metal_server_network_interface_floating_ips(bare_metal_server_id, network_interface_id)
     )
     return list_bare_metal_server_network_interface_floating_ips_response
 
 
 def get_bare_metal_server_network_interface_floating_ip(service, bare_metal_server_id, network_interface_id, id):
-    get_bare_metal_server_network_interface_floating_ip_response = service.get_bare_metal_server_network_interface_floating_ip(
-        bare_metal_server_id,
-        network_interface_id,
-        id
+    get_bare_metal_server_network_interface_floating_ip_response = (
+        service.get_bare_metal_server_network_interface_floating_ip(bare_metal_server_id, network_interface_id, id)
     )
     return get_bare_metal_server_network_interface_floating_ip_response
 
 
 def add_bare_metal_server_network_interface_floating_ip(service, bare_metal_server_id, network_interface_id, id):
-    add_bare_metal_server_network_interface_floating_ip_response = service.add_bare_metal_server_network_interface_floating_ip(
-        bare_metal_server_id,
-        network_interface_id,
-        id
+    add_bare_metal_server_network_interface_floating_ip_response = (
+        service.add_bare_metal_server_network_interface_floating_ip(bare_metal_server_id, network_interface_id, id)
     )
     return add_bare_metal_server_network_interface_floating_ip_response
 
+
 def list_bare_metal_server_network_interface_ips(service, bare_metal_server_id, network_interface_id):
-    list_bare_metal_server_network_interface_floating_ip_response = service.list_bare_metal_server_network_interface_ips(
-        bare_metal_server_id,
-        network_interface_id
+    list_bare_metal_server_network_interface_floating_ip_response = (
+        service.list_bare_metal_server_network_interface_ips(bare_metal_server_id, network_interface_id)
     )
     return list_bare_metal_server_network_interface_floating_ip_response
 
 
 def get_bare_metal_server_network_interface_ip(service, bare_metal_server_id, network_interface_id, id):
     get_bare_metal_server_network_interface_ip_response = service.get_bare_metal_server_network_interface_ip(
-        bare_metal_server_id,
-        network_interface_id,
-        id
+        bare_metal_server_id, network_interface_id, id
     )
     return get_bare_metal_server_network_interface_ip_response
 
 
 def remove_bare_metal_server_network_interface_floating_ip(service, bare_metal_server_id, network_interface_id, id):
-    remove_bare_metal_server_network_interface_floating_ip_response = service.remove_bare_metal_server_network_interface_floating_ip(
-        bare_metal_server_id,
-        network_interface_id,
-        id
+    remove_bare_metal_server_network_interface_floating_ip_response = (
+        service.remove_bare_metal_server_network_interface_floating_ip(bare_metal_server_id, network_interface_id, id)
     )
     return remove_bare_metal_server_network_interface_floating_ip_response
 
@@ -2734,8 +2796,7 @@ def update_bare_metal_server(service, id, name, enable_secure_boot):
     bare_metal_server_patch_model['enable_secure_boot'] = enable_secure_boot
 
     update_bare_metal_server_response = service.update_bare_metal_server(
-        id,
-        bare_metal_server_patch=bare_metal_server_patch_model
+        id, bare_metal_server_patch=bare_metal_server_patch_model
     )
     return update_bare_metal_server_response
 
@@ -2761,11 +2822,9 @@ def create_bare_metal_server_start(service, id):
 
 
 def create_bare_metal_server_stop(service, id, stopping_type):
-    create_bare_metal_server_stop_response = service.stop_bare_metal_server(
-        id,
-        stopping_type
-    )
+    create_bare_metal_server_stop_response = service.stop_bare_metal_server(id, stopping_type)
     return create_bare_metal_server_stop_response
+
 
 # --------------------------------------------------------
 # Backup Policies
@@ -2773,6 +2832,7 @@ def create_bare_metal_server_stop(service, id, stopping_type):
 def list_backup_policies(service):
     response = service.list_backup_policies()
     return response
+
 
 def create_backup_policy(service, name):
     # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
@@ -2799,20 +2859,21 @@ def create_backup_policy(service, name):
     )
     return response
 
+
 def list_backup_policy_jobs(service, backup_policy_id):
     response = service.list_backup_policy_jobs(backup_policy_id)
     return response
+
 
 def get_backup_policy_job(service, backup_policy_id, job_id):
     response = service.get_backup_policy_job(backup_policy_id, job_id)
     return response
 
+
 def list_backup_policy_plans(service, backup_policy_id, name):
-    response = service.list_backup_policy_plans(
-        backup_policy_id=backup_policy_id,
-        name=name
-    )
+    response = service.list_backup_policy_plans(backup_policy_id=backup_policy_id, name=name)
     return response
+
 
 def create_backup_policy_plan(service, backup_policy_id, name):
     # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPrototype model
@@ -2846,16 +2907,15 @@ def create_backup_policy_plan(service, backup_policy_id, name):
         clone_policy=backup_policy_plan_clone_policy_prototype_model,
         deletion_trigger=backup_policy_plan_deletion_trigger_prototype_model,
         remote_region_policies=backup_policy_plan_remote_region_policies_protoype_model,
-        name=name
+        name=name,
     )
     return response
 
+
 def get_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id):
-    response = service.get_backup_policy_plan(
-        backup_policy_id=backup_policy_id,
-        id=backup_policy_plan_id
-    )
+    response = service.get_backup_policy_plan(backup_policy_id=backup_policy_id, id=backup_policy_plan_id)
     return response
+
 
 def update_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id, etag, name):
     # Construct a dict representation of a BackupPolicyPlanDeletionTriggerPatch model
@@ -2892,15 +2952,15 @@ def update_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id, 
         backup_policy_id=backup_policy_id,
         id=backup_policy_plan_id,
         backup_policy_plan_patch=backup_policy_plan_patch_model,
-        if_match=etag
+        if_match=etag,
     )
     return response
 
+
 def get_backup_policy(service, backup_policy_id):
-    response = service.get_backup_policy(
-        id=backup_policy_id
-    )
+    response = service.get_backup_policy(id=backup_policy_id)
     return response
+
 
 def update_backup_policy(service, backup_policy_id, etag, name):
     # Construct a dict representation of a BackupPolicyPatch model
@@ -2910,26 +2970,23 @@ def update_backup_policy(service, backup_policy_id, etag, name):
     }
 
     response = service.update_backup_policy(
-        id=backup_policy_id,
-        backup_policy_patch=backup_policy_patch_model,
-        if_match=etag
+        id=backup_policy_id, backup_policy_patch=backup_policy_patch_model, if_match=etag
     )
     return response
+
 
 def delete_backup_policy_plan(service, backup_policy_id, backup_policy_plan_id, etag):
     response = service.delete_backup_policy_plan(
-        backup_policy_id=backup_policy_id,
-        id=backup_policy_plan_id,
-        if_match=etag
+        backup_policy_id=backup_policy_id, id=backup_policy_plan_id, if_match=etag
     )
     return response
 
+
 def delete_backup_policy(service, backup_policy_id, etag):
-    response = service.delete_backup_policy(
-        id=backup_policy_id,
-        if_match=etag
-    )
+    response = service.delete_backup_policy(id=backup_policy_id, if_match=etag)
     return response
+
+
 # --------------------------------------------------------
 # list_images()
 # --------------------------------------------------------
@@ -2938,6 +2995,7 @@ def delete_backup_policy(service, backup_policy_id, etag):
 def list_images(service):
     response = service.list_images()
     return response
+
 
 # --------------------------------------------------------
 # create_image()
@@ -2948,8 +3006,7 @@ def create_image(service):
 
     # Construct a dict representation of a ImageFilePrototype model
     image_file_prototype_model = {}
-    image_file_prototype_model[
-        'href'] = 'cos://us-south/custom-image-vpc-bucket/customImage-0.vhd'
+    image_file_prototype_model['href'] = 'cos://us-south/custom-image-vpc-bucket/customImage-0.vhd'
 
     # Construct a dict representation of a OperatingSystemIdentityByName model
     operating_system_identity_model = {}
@@ -2964,14 +3021,14 @@ def create_image(service):
     image_prototype_model['name'] = generate_name('image')
     image_prototype_model['resource_group'] = resource_group_identity_model
     image_prototype_model['file'] = image_file_prototype_model
-    image_prototype_model[
-        'operating_system'] = operating_system_identity_model
+    image_prototype_model['operating_system'] = operating_system_identity_model
 
     # Set up parameter values
     image_prototype = image_prototype_model
 
     response = service.create_image(image_prototype)
     return response
+
 
 # --------------------------------------------------------
 # delete_image()
@@ -2982,6 +3039,7 @@ def delete_image(service, id):
     response = service.delete_image(id)
     return response
 
+
 # --------------------------------------------------------
 # get_image()
 # --------------------------------------------------------
@@ -2990,6 +3048,7 @@ def delete_image(service, id):
 def get_image(service, id):
     response = service.get_image(id)
     return response
+
 
 # --------------------------------------------------------
 # update_image()
@@ -3005,47 +3064,40 @@ def update_image(service, id):
     )
     return response
 
+
 def create_image_export_job(service, id):
     cloud_object_storage_bucket_identity_model = {
         'name': 'bucket-27200-lwx4cfvcue',
     }
     image_export_job = service.create_image_export_job(
-        image_id=id,
-        name='my-image-export-job',
-        storage_bucket=cloud_object_storage_bucket_identity_model
+        image_id=id, name='my-image-export-job', storage_bucket=cloud_object_storage_bucket_identity_model
     )
     return image_export_job
+
 
 def list_image_export_jobs(service, id):
-    response = service.list_image_export_jobs(
-                image_id=id
-            )
+    response = service.list_image_export_jobs(image_id=id)
     return response
+
 
 def update_image_export_job(service, id, export_id):
-    image_export_job_patch_model = {
-        'name' : generate_name('image-export-job-updated')
-    }
+    image_export_job_patch_model = {'name': generate_name('image-export-job-updated')}
     image_export_job = service.update_image_export_job(
-        image_id=id,
-        id=export_id,
-        image_export_job_patch=image_export_job_patch_model
+        image_id=id, id=export_id, image_export_job_patch=image_export_job_patch_model
     )
     return image_export_job
+
 
 def get_image_export_job(service, id, export_id):
-    image_export_job = service.get_image_export_job(
-        image_id=id,
-        id=export_id
-    )
+    image_export_job = service.get_image_export_job(image_id=id, id=export_id)
     return image_export_job
 
+
 def delete_image_export_job(service, id, export_id):
-    response = service.delete_image_export_job(
-        image_id=id,
-        id=export_id
-    )
+    response = service.delete_image_export_job(image_id=id, id=export_id)
     return response
+
+
 # --------------------------------------------------------
 # list_operating_systems()
 # --------------------------------------------------------
@@ -3054,6 +3106,7 @@ def delete_image_export_job(service, id, export_id):
 def list_operating_systems(service):
     response = service.list_operating_systems()
     return response
+
 
 # --------------------------------------------------------
 # get_operating_system()
@@ -3064,6 +3117,7 @@ def get_operating_system(service, name):
     response = service.get_operating_system(name)
     return response
 
+
 # --------------------------------------------------------
 # list_instance_profiles()
 # --------------------------------------------------------
@@ -3072,6 +3126,7 @@ def get_operating_system(service, name):
 def list_instance_profiles(service):
     response = service.list_instance_profiles()
     return response
+
 
 # --------------------------------------------------------
 # get_instance_profile()
@@ -3082,6 +3137,7 @@ def get_instance_profile(service, name):
     response = service.get_instance_profile(name)
     return response
 
+
 # --------------------------------------------------------
 # list_instances()
 # --------------------------------------------------------
@@ -3090,6 +3146,7 @@ def get_instance_profile(service, name):
 def list_instances(service):
     response = service.list_instances()
     return response
+
 
 # --------------------------------------------------------
 # create_instance()
@@ -3193,8 +3250,7 @@ def create_instance(service, vpc, profile, zone, image, subnet):
     # instance_prototype_model[
     #     'boot_volume_attachment'] = volume_attachment_prototype_instance_by_image_context_model
     instance_prototype_model['image'] = image_identity_model
-    instance_prototype_model[
-        'primary_network_interface'] = network_interface_prototype_model
+    instance_prototype_model['primary_network_interface'] = network_interface_prototype_model
     instance_prototype_model['zone'] = zone_identity_model
     metadata_service_model = {}
     metadata_service_model['enabled'] = True
@@ -3208,6 +3264,7 @@ def create_instance(service, vpc, profile, zone, image, subnet):
     response = service.create_instance(instance_prototype)
     return response
 
+
 # --------------------------------------------------------
 # delete_instance()
 # --------------------------------------------------------
@@ -3217,6 +3274,7 @@ def delete_instance(service, id):
     response = service.delete_instance(id)
     return response
 
+
 # --------------------------------------------------------
 # get_instance()
 # --------------------------------------------------------
@@ -3225,6 +3283,7 @@ def delete_instance(service, id):
 def get_instance(service, id):
     response = service.get_instance(id)
     return response
+
 
 # --------------------------------------------------------
 # update_instance()
@@ -3248,6 +3307,7 @@ def get_instance_initialization(service, id):
     response = service.get_instance_initialization(id)
     return response
 
+
 # --------------------------------------------------------
 # create_instance_action()
 # --------------------------------------------------------
@@ -3260,6 +3320,7 @@ def create_instance_action(service, instance_id):
         type,
     )
     return response
+
 
 # --------------------------------------------------------
 # list_instance_network_interfaces()
@@ -3307,6 +3368,7 @@ def delete_instance_network_interface(service, instance_id, id):
     response = service.delete_instance_network_interface(instance_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_instance_network_interface()
 # --------------------------------------------------------
@@ -3315,6 +3377,7 @@ def delete_instance_network_interface(service, instance_id, id):
 def get_instance_network_interface(service, instance_id, id):
     response = service.get_instance_network_interface(instance_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_instance_network_interface()
@@ -3331,15 +3394,16 @@ def update_instance_network_interface(service, instance_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_instance_network_interface_floating_ips()
 # --------------------------------------------------------
 
 
 def list_instance_network_interface_floating_ips(service, instance_id, network_interface_id):
-    response = service.list_instance_network_interface_floating_ips(
-        instance_id, network_interface_id)
+    response = service.list_instance_network_interface_floating_ips(instance_id, network_interface_id)
     return response
+
 
 # --------------------------------------------------------
 # remove_instance_network_interface_floating_ip()
@@ -3347,18 +3411,19 @@ def list_instance_network_interface_floating_ips(service, instance_id, network_i
 
 
 def remove_instance_network_interface_floating_ip(service, instance_id, network_interface_id, id):
-    response = service.remove_instance_network_interface_floating_ip(
-        instance_id, network_interface_id, id)
+    response = service.remove_instance_network_interface_floating_ip(instance_id, network_interface_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_instance_network_interface_floating_ip()
 # --------------------------------------------------------
 
 
 def get_instance_network_interface_floating_ip(service, instance_id, network_interface_id, id):
-    response = service.get_instance_network_interface_floating_ip(
-        instance_id, network_interface_id, id)
+    response = service.get_instance_network_interface_floating_ip(instance_id, network_interface_id, id)
     return response
+
 
 # --------------------------------------------------------
 # add_instance_network_interface_floating_ip()
@@ -3366,9 +3431,9 @@ def get_instance_network_interface_floating_ip(service, instance_id, network_int
 
 
 def add_instance_network_interface_floating_ip(service, instance_id, network_interface_id, id):
-    response = service.add_instance_network_interface_floating_ip(
-        instance_id, network_interface_id, id)
+    response = service.add_instance_network_interface_floating_ip(instance_id, network_interface_id, id)
     return response
+
 
 # --------------------------------------------------------
 # list_instance_network_interface_ips()
@@ -3376,9 +3441,9 @@ def add_instance_network_interface_floating_ip(service, instance_id, network_int
 
 
 def list_instance_network_interface_ips(service, instance_id, network_interface_id):
-    response = service.list_instance_network_interface_ips(
-        instance_id, network_interface_id)
+    response = service.list_instance_network_interface_ips(instance_id, network_interface_id)
     return response
+
 
 # --------------------------------------------------------
 # get_instance_network_interface_ip()
@@ -3386,9 +3451,9 @@ def list_instance_network_interface_ips(service, instance_id, network_interface_
 
 
 def get_instance_network_interface_ip(service, instance_id, network_interface_id, id):
-    response = service.get_instance_network_interface_ip(
-        instance_id, network_interface_id, id)
+    response = service.get_instance_network_interface_ip(instance_id, network_interface_id, id)
     return response
+
 
 # --------------------------------------------------------
 # list_instance_volume_attachments()
@@ -3398,6 +3463,7 @@ def get_instance_network_interface_ip(service, instance_id, network_interface_id
 def list_instance_volume_attachments(service, instance_id):
     response = service.list_instance_volume_attachments(instance_id)
     return response
+
 
 # --------------------------------------------------------
 # create_instance_volume_attachment()
@@ -3429,6 +3495,7 @@ def delete_instance_volume_attachment(service, instance_id, id):
     response = service.delete_instance_volume_attachment(instance_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_instance_volume_attachment()
 # --------------------------------------------------------
@@ -3437,6 +3504,7 @@ def delete_instance_volume_attachment(service, instance_id, id):
 def get_instance_volume_attachment(service, instance_id, id):
     response = service.get_instance_volume_attachment(instance_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_instance_volume_attachment()
@@ -3454,11 +3522,11 @@ def update_instance_volume_attachment(service, instance_id, id):
     )
     return response
 
+
 def list_vpn_servers(service):
-    vpn_server_collection = service.list_vpn_servers(
-        sort='name'
-    )
+    vpn_server_collection = service.list_vpn_servers(sort='name')
     return vpn_server_collection
+
 
 def create_vpn_server(service, subnetId):
     name = generate_name('vpnserver')
@@ -3484,106 +3552,83 @@ def create_vpn_server(service, subnetId):
         client_authentication=[vpn_server_authentication_prototype_model],
         client_ip_pool='172.16.0.0/16',
         subnets=[subnet_identity_model],
-        name=name
+        name=name,
     )
     return vpn_server
 
+
 def get_vpn_server(service, vpnServerId):
-    vpn_server = service.get_vpn_server(
-        id=vpnServerId
-    )
+    vpn_server = service.get_vpn_server(id=vpnServerId)
     return vpn_server
+
 
 def update_vpn_server(service, vpnServerId, etag):
     vpn_server_patch_model = {}
-    vpn_server_patch_model['name']=generate_name('vpnserver-updated')
+    vpn_server_patch_model['name'] = generate_name('vpnserver-updated')
 
-    vpn_server = service.update_vpn_server(
-        id=vpnServerId,
-        vpn_server_patch=vpn_server_patch_model,
-        if_match=etag
-    )
+    vpn_server = service.update_vpn_server(id=vpnServerId, vpn_server_patch=vpn_server_patch_model, if_match=etag)
     return vpn_server
 
+
 def get_vpn_server_client_configuration(service, vpnServerId):
-    vpn_server_client_configuration = service.get_vpn_server_client_configuration(
-        id=vpnServerId
-    )
+    vpn_server_client_configuration = service.get_vpn_server_client_configuration(id=vpnServerId)
     return vpn_server_client_configuration
 
+
 def list_vpn_server_clients(service, vpnServerId):
-    vpn_server_client_collection = service.list_vpn_server_clients(
-        vpn_server_id=vpnServerId,
-        sort='created_at'
-    )
+    vpn_server_client_collection = service.list_vpn_server_clients(vpn_server_id=vpnServerId, sort='created_at')
     return vpn_server_client_collection
 
+
 def get_vpn_server_client(service, vpnServerId, vpnServerClientId):
-    vpn_server_client = service.get_vpn_server_client(
-        vpn_server_id=vpnServerId,
-        id=vpnServerClientId
-    )
+    vpn_server_client = service.get_vpn_server_client(vpn_server_id=vpnServerId, id=vpnServerClientId)
     return vpn_server_client
 
+
 def disconnect_vpn_client(service, vpnServerId, vpnServerClientId):
-    response = service.disconnect_vpn_client(
-        vpn_server_id=vpnServerId,
-        id=vpnServerClientId
-    )
+    response = service.disconnect_vpn_client(vpn_server_id=vpnServerId, id=vpnServerClientId)
     return response
 
+
 def list_vpn_server_routes(service, vpnServerId):
-    vpn_server_route_collection = service.list_vpn_server_routes(
-        vpn_server_id=vpnServerId,
-        sort='name'
-    )
+    vpn_server_route_collection = service.list_vpn_server_routes(vpn_server_id=vpnServerId, sort='name')
     return vpn_server_route_collection
+
 
 def create_vpn_server_route(service, vpnServerId):
     name = generate_name('vpnserver-route')
     vpn_server_route = service.create_vpn_server_route(
-        vpn_server_id=vpnServerId,
-        destination='172.16.0.0/16',
-        name=name
+        vpn_server_id=vpnServerId, destination='172.16.0.0/16', name=name
     )
     return vpn_server_route
 
 
 def get_vpn_server_route(service, vpnServerId, vpnServerRouteId):
-    vpn_server_route = service.get_vpn_server_route(
-        vpn_server_id=vpnServerId,
-        id=vpnServerRouteId
-    )
+    vpn_server_route = service.get_vpn_server_route(vpn_server_id=vpnServerId, id=vpnServerRouteId)
     return vpn_server_route
+
 
 def update_vpn_server_route(service, vpnServerId, vpnServerRouteId):
     vpn_server_route_patch_model = {}
     vpn_server_route_patch_model['name'] = 'my-vpnserver-route-updated'
     vpn_server_route = service.update_vpn_server_route(
-        vpn_server_id=vpnServerId,
-        id=vpnServerRouteId,
-        vpn_server_route_patch=vpn_server_route_patch_model
+        vpn_server_id=vpnServerId, id=vpnServerRouteId, vpn_server_route_patch=vpn_server_route_patch_model
     )
     return vpn_server_route
+
+
 def delete_vpn_server_route(service, vpnServerId, vpnServerRouteId):
-    response = service.delete_vpn_server_route(
-        vpn_server_id=vpnServerId,
-        id=vpnServerRouteId
-    )
+    response = service.delete_vpn_server_route(vpn_server_id=vpnServerId, id=vpnServerRouteId)
     return response
+
 
 def delete_vpn_server_client(service, vpnServerId, vpnServerClientId):
-    response = service.delete_vpn_server_client(
-        vpn_server_id=vpnServerId,
-        id=vpnServerClientId
-    )
+    response = service.delete_vpn_server_client(vpn_server_id=vpnServerId, id=vpnServerClientId)
     return response
 
+
 def delete_vpn_server(service, id, etag):
-    response = service.delete_vpn_server(
-        id=id,
-        if_match=etag
-    )
+    response = service.delete_vpn_server(id=id, if_match=etag)
     return response
 
 
@@ -3595,6 +3640,8 @@ def delete_vpn_server(service, id, etag):
 def list_load_balancer_profiles(service):
     response = service.list_load_balancer_profiles()
     return response
+
+
 # --------------------------------------------------------
 # test_get_load_balancer_profile_()
 # --------------------------------------------------------
@@ -3604,6 +3651,8 @@ def get_load_balancer_profile(service):
     name = 'network-fixed'
     response = service.get_load_balancer_profile(name)
     return response
+
+
 # --------------------------------------------------------
 # list_load_balancers()
 # --------------------------------------------------------
@@ -3612,6 +3661,7 @@ def get_load_balancer_profile(service):
 def list_load_balancers(service):
     response = service.list_load_balancers()
     return response
+
 
 # --------------------------------------------------------
 # create_load_balancer()
@@ -3709,11 +3759,12 @@ def create_load_balancer(service, subnet):
         subnets,
         # listeners=listeners,
         name=name,
-        dns=load_balancer_dns_prototype_model
+        dns=load_balancer_dns_prototype_model,
         # pools=pools,
         # resource_group=resource_group,
     )
     return response
+
 
 # --------------------------------------------------------
 # delete_load_balancer()
@@ -3721,8 +3772,9 @@ def create_load_balancer(service, subnet):
 
 
 def delete_load_balancer(service, id, etag):
-    response = service.delete_load_balancer(id, if_match = etag)
+    response = service.delete_load_balancer(id, if_match=etag)
     return response
+
 
 # --------------------------------------------------------
 # get_load_balancer()
@@ -3743,9 +3795,10 @@ def update_load_balancer(service, id, etag):
     response = service.update_load_balancer(
         id,
         load_balancer_patch,
-        if_match = etag,
+        if_match=etag,
     )
     return response
+
 
 # --------------------------------------------------------
 # get_load_balancer_statistics()
@@ -3756,6 +3809,7 @@ def get_load_balancer_statistics(service, id):
     response = service.get_load_balancer_statistics(id)
     return response
 
+
 # --------------------------------------------------------
 # list_load_balancer_listeners()
 # --------------------------------------------------------
@@ -3764,6 +3818,7 @@ def get_load_balancer_statistics(service, id):
 def list_load_balancer_listeners(service, load_balancer_id):
     response = service.list_load_balancer_listeners(load_balancer_id)
     return response
+
 
 # --------------------------------------------------------
 # create_load_balancer_listener()
@@ -3842,6 +3897,7 @@ def get_load_balancer_listener(service, load_balancer_id, id):
     response = service.get_load_balancer_listener(load_balancer_id, id)
     return response
 
+
 # --------------------------------------------------------
 # update_load_balancer_listener()
 # --------------------------------------------------------
@@ -3857,14 +3913,15 @@ def update_load_balancer_listener(service, load_balancer_id, id):
         load_balancer_listener_patch,
     )
     return response
+
+
 # --------------------------------------------------------
 # list_load_balancer_listener_policies()
 # --------------------------------------------------------
 
 
 def list_load_balancer_listener_policies(service, load_balancer_id, listener_id):
-    response = service.list_load_balancer_listener_policies(
-        load_balancer_id, listener_id)
+    response = service.list_load_balancer_listener_policies(load_balancer_id, listener_id)
     return response
 
 
@@ -3905,15 +3962,16 @@ def create_load_balancer_listener_policy(service, load_balancer_id, listener_id)
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_load_balancer_listener_policy()
 # --------------------------------------------------------
 
 
 def delete_load_balancer_listener_policy(service, load_balancer_id, listener_id, id):
-    response = service.delete_load_balancer_listener_policy(
-        load_balancer_id, listener_id, id)
+    response = service.delete_load_balancer_listener_policy(load_balancer_id, listener_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_load_balancer_listener_policy()
@@ -3921,9 +3979,9 @@ def delete_load_balancer_listener_policy(service, load_balancer_id, listener_id,
 
 
 def get_load_balancer_listener_policy(service, load_balancer_id, listener_id, id):
-    response = service.get_load_balancer_listener_policy(
-        load_balancer_id, listener_id, id)
+    response = service.get_load_balancer_listener_policy(load_balancer_id, listener_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_load_balancer_listener_policy()
@@ -3945,15 +4003,16 @@ def update_load_balancer_listener_policy(service, load_balancer_id, listener_id,
 
     return response
 
+
 # --------------------------------------------------------
 # list_load_balancer_listener_policy_rules()
 # --------------------------------------------------------
 
 
 def list_load_balancer_listener_policy_rules(service, load_balancer_id, listener_id, policy_id):
-    response = service.list_load_balancer_listener_policy_rules(
-        load_balancer_id, listener_id, policy_id)
+    response = service.list_load_balancer_listener_policy_rules(load_balancer_id, listener_id, policy_id)
     return response
+
 
 # --------------------------------------------------------
 # create_load_balancer_listener_policy_rule()
@@ -3977,15 +4036,16 @@ def create_load_balancer_listener_policy_rule(service, load_balancer_id, listene
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_load_balancer_listener_policy_rule()
 # --------------------------------------------------------
 
 
 def delete_load_balancer_listener_policy_rule(service, load_balancer_id, listener_id, policy_id, id):
-    response = service.delete_load_balancer_listener_policy_rule(
-        load_balancer_id, listener_id, policy_id, id)
+    response = service.delete_load_balancer_listener_policy_rule(load_balancer_id, listener_id, policy_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_load_balancer_listener_policy_rule()
@@ -3993,8 +4053,7 @@ def delete_load_balancer_listener_policy_rule(service, load_balancer_id, listene
 
 
 def get_load_balancer_listener_policy_rule(service, load_balancer_id, listener_id, policy_id, id):
-    response = service.get_load_balancer_listener_policy_rule(
-        load_balancer_id, listener_id, policy_id, id)
+    response = service.get_load_balancer_listener_policy_rule(load_balancer_id, listener_id, policy_id, id)
     return response
 
 
@@ -4004,8 +4063,7 @@ def get_load_balancer_listener_policy_rule(service, load_balancer_id, listener_i
 def update_load_balancer_listener_policy_rule(service, load_balancer_id, listener_id, policy_id, id):
     load_balancer_listener_policy_rule_patch_model = {}
     load_balancer_listener_policy_rule_patch_model['condition'] = 'contains'
-    load_balancer_listener_policy_rule_patch_model[
-        'field'] = 'MY-APP-HEADER'
+    load_balancer_listener_policy_rule_patch_model['field'] = 'MY-APP-HEADER'
     load_balancer_listener_policy_rule_patch_model['type'] = 'header'
     load_balancer_listener_policy_rule_patch_model['value'] = 'some-value'
 
@@ -4027,6 +4085,7 @@ def list_load_balancer_pools(service, load_balancer_id):
     response = service.list_load_balancer_pools(load_balancer_id)
     return response
 
+
 # --------------------------------------------------------
 # create_load_balancer_pool()
 # --------------------------------------------------------
@@ -4045,8 +4104,7 @@ def create_load_balancer_pool(service, load_balancer_id):
 
     # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
     load_balancer_pool_member_target_prototype_model = {}
-    load_balancer_pool_member_target_prototype_model[
-        'address'] = '192.168.3.4'
+    load_balancer_pool_member_target_prototype_model['address'] = '192.168.3.4'
 
     # Construct a dict representation of a LoadBalancerPoolMemberPrototype model
     # load_balancer_pool_member_prototype_model = {}
@@ -4057,8 +4115,7 @@ def create_load_balancer_pool(service, load_balancer_id):
 
     # Construct a dict representation of a LoadBalancerPoolSessionPersistencePrototype model
     load_balancer_pool_session_persistence_prototype_model = {}
-    load_balancer_pool_session_persistence_prototype_model[
-        'type'] = 'source_ip'
+    load_balancer_pool_session_persistence_prototype_model['type'] = 'source_ip'
 
     algorithm = 'least_connections'
     health_monitor = load_balancer_pool_health_monitor_prototype_model
@@ -4077,6 +4134,8 @@ def create_load_balancer_pool(service, load_balancer_id):
         # session_persistence=session_persistence,
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_load_balancer_pool()
 # --------------------------------------------------------
@@ -4086,6 +4145,7 @@ def delete_load_balancer_pool(service, load_balancer_id, id):
     response = service.delete_load_balancer_pool(load_balancer_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_load_balancer_pool()
 # --------------------------------------------------------
@@ -4094,6 +4154,7 @@ def delete_load_balancer_pool(service, load_balancer_id, id):
 def get_load_balancer_pool(service, load_balancer_id, id):
     response = service.get_load_balancer_pool(load_balancer_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_load_balancer_pool()
@@ -4111,15 +4172,16 @@ def update_load_balancer_pool(service, load_balancer_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_load_balancer_pool_members()
 # --------------------------------------------------------
 
 
 def list_load_balancer_pool_members(service, load_balancer_id, pool_id):
-    response = service.list_load_balancer_pool_members(
-        load_balancer_id, pool_id)
+    response = service.list_load_balancer_pool_members(load_balancer_id, pool_id)
     return response
+
 
 # --------------------------------------------------------
 # create_load_balancer_pool_member()
@@ -4129,8 +4191,7 @@ def list_load_balancer_pool_members(service, load_balancer_id, pool_id):
 def create_load_balancer_pool_member(service, load_balancer_id, pool_id):
     # Construct a dict representation of a LoadBalancerPoolMemberTargetPrototypeByAddress model
     load_balancer_pool_member_target_prototype_model = {}
-    load_balancer_pool_member_target_prototype_model[
-        'address'] = '192.168.3.4'
+    load_balancer_pool_member_target_prototype_model['address'] = '192.168.3.4'
 
     port = 80
     target = load_balancer_pool_member_target_prototype_model
@@ -4144,6 +4205,7 @@ def create_load_balancer_pool_member(service, load_balancer_id, pool_id):
         weight=weight,
     )
     return response
+
 
 # --------------------------------------------------------
 # replace_load_balancer_pool_members()
@@ -4171,15 +4233,17 @@ def replace_load_balancer_pool_members(service, load_balancer_id, pool_id):
         members,
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_load_balancer_pool_member()
 # --------------------------------------------------------
 
 
 def delete_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
-    response = service.delete_load_balancer_pool_member(
-        load_balancer_id, pool_id, id)
+    response = service.delete_load_balancer_pool_member(load_balancer_id, pool_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_load_balancer_pool_member()
@@ -4187,9 +4251,9 @@ def delete_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
 
 
 def get_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
-    response = service.get_load_balancer_pool_member(
-        load_balancer_id, pool_id, id)
+    response = service.get_load_balancer_pool_member(load_balancer_id, pool_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_load_balancer_pool_member()
@@ -4210,6 +4274,7 @@ def update_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_network_acls()
 # --------------------------------------------------------
@@ -4218,6 +4283,7 @@ def update_load_balancer_pool_member(service, load_balancer_id, pool_id, id):
 def list_network_acls(service):
     response = service.list_network_acls()
     return response
+
 
 # --------------------------------------------------------
 # create_network_acl()
@@ -4289,9 +4355,9 @@ def create_network_acl(service, source_nacl_id):
     # Set up parameter values
     network_acl_prototype = network_acl_prototype_model
 
-    response = service.create_network_acl(
-        network_acl_prototype=network_acl_prototype)
+    response = service.create_network_acl(network_acl_prototype=network_acl_prototype)
     return response
+
 
 # --------------------------------------------------------
 # delete_network_acl()
@@ -4302,6 +4368,7 @@ def delete_network_acl(service, id):
     response = service.delete_network_acl(id)
     return response
 
+
 # --------------------------------------------------------
 # get_network_acl()
 # --------------------------------------------------------
@@ -4310,6 +4377,7 @@ def delete_network_acl(service, id):
 def get_network_acl(service, id):
     response = service.get_network_acl(id)
     return response
+
 
 # --------------------------------------------------------
 # update_network_acl()
@@ -4326,6 +4394,7 @@ def update_network_acl(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_network_acl_rules()
 # --------------------------------------------------------
@@ -4334,6 +4403,7 @@ def update_network_acl(service, id):
 def list_network_acl_rules(service, network_acl_id):
     response = service.list_network_acl_rules(network_acl_id)
     return response
+
 
 # --------------------------------------------------------
 # create_network_acl_rule()
@@ -4370,9 +4440,10 @@ def create_network_acl_rule(service, network_acl_id):
 
     network_acl_rule_prototype = network_acl_rule_prototype_model
 
-    response = service.create_network_acl_rule(network_acl_id,
-                                               network_acl_rule_prototype)
+    response = service.create_network_acl_rule(network_acl_id, network_acl_rule_prototype)
     return response
+
+
 # --------------------------------------------------------
 # delete_network_acl_rule()
 # --------------------------------------------------------
@@ -4382,6 +4453,7 @@ def delete_network_acl_rule(service, network_acl_id, id):
     response = service.delete_network_acl_rule(network_acl_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_network_acl_rule()
 # --------------------------------------------------------
@@ -4390,6 +4462,7 @@ def delete_network_acl_rule(service, network_acl_id, id):
 def get_network_acl_rule(service, network_acl_id, id):
     response = service.get_network_acl_rule(network_acl_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_network_acl_rule()
@@ -4405,10 +4478,10 @@ def update_network_acl_rule(service, network_acl_id, id):
     network_acl_rule_patch_model['type'] = 8
     network_acl_rule_patch = network_acl_rule_patch_model
 
-    response = service.update_network_acl_rule(network_acl_id, id,
-                                               network_acl_rule_patch)
+    response = service.update_network_acl_rule(network_acl_id, id, network_acl_rule_patch)
 
     return response
+
 
 # --------------------------------------------------------
 # list_public_gateways()
@@ -4419,6 +4492,7 @@ def list_public_gateways(service):
 
     response = service.list_public_gateways()
     return response
+
 
 # --------------------------------------------------------
 # create_public_gateway()
@@ -4460,6 +4534,8 @@ def create_public_gateway(service, vpc, zone):
     )
 
     return response
+
+
 # --------------------------------------------------------
 # delete_public_gateway()
 # --------------------------------------------------------
@@ -4469,6 +4545,7 @@ def delete_public_gateway(service, id):
     response = service.delete_public_gateway(id)
     return response
 
+
 # --------------------------------------------------------
 # get_public_gateway()
 # --------------------------------------------------------
@@ -4477,6 +4554,7 @@ def delete_public_gateway(service, id):
 def get_public_gateway(service, id):
     response = service.get_public_gateway(id)
     return response
+
 
 # --------------------------------------------------------
 # update_public_gateway()
@@ -4492,6 +4570,7 @@ def update_public_gateway(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_keys()
 # --------------------------------------------------------
@@ -4500,6 +4579,7 @@ def update_public_gateway(service, id):
 def list_keys(service):
     response = service.list_keys()
     return response
+
 
 def create_key_ed25519(service):
 
@@ -4514,6 +4594,7 @@ def create_key_ed25519(service):
         type=type,
     )
     return response
+
 
 # --------------------------------------------------------
 # create_key()
@@ -4538,6 +4619,7 @@ def create_key(service):
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_key()
 # --------------------------------------------------------
@@ -4555,6 +4637,7 @@ def get_key(service, id):
     response = service.get_key(id)
     return response
 
+
 # --------------------------------------------------------
 # update_key()
 # --------------------------------------------------------
@@ -4570,10 +4653,10 @@ def update_key(service, id):
     return response
 
 
-
 def list_snapshots(service):
     snapshots = service.list_snapshots()
     return snapshots
+
 
 def create_snapshot(service, volumeID, name):
     volume_identity_model = {}
@@ -4585,16 +4668,16 @@ def create_snapshot(service, volumeID, name):
     snapshot_clone_prototype_model = {
         'zone': zone_identity_model,
     }
-    
+
     snapshot_prototype_model = {
         'clones': [snapshot_clone_prototype_model],
         'source_volume': volume_identity_model,
-        'name': name
+        'name': name,
     }
-    snapshot = service.create_snapshot(
-        snapshot_prototype=snapshot_prototype_model)
+    snapshot = service.create_snapshot(snapshot_prototype=snapshot_prototype_model)
 
     return snapshot
+
 
 def create_snapshot_CRC(service, sourceVolumeCRN, name):
     snapshot_identity_by_crn_model = {}  # SnapshotIdentityByCRN
@@ -4610,55 +4693,61 @@ def create_snapshot_CRC(service, sourceVolumeCRN, name):
     snapshot_prototype_model = {
         'clones': [snapshot_clone_prototype_model],
         'source_snapshot': snapshot_identity_by_crn_model,
-        'name': name
+        'name': name,
     }
-    snapshot = service.create_snapshot(
-        snapshot_prototype=snapshot_prototype_model)
+    snapshot = service.create_snapshot(snapshot_prototype=snapshot_prototype_model)
 
     return snapshot
+
 
 def get_snapshot(service, snapshotID):
     snapshot = service.get_snapshot(id=snapshotID)
     return snapshot
 
+
 def update_snapshot(service, snapshotID):
     snapshot_patch_model = {}
     snapshot_patch_model['name'] = generate_name('updated')
 
-    snapshot = service.update_snapshot(
-        id=snapshotID,
-        snapshot_patch=snapshot_patch_model)
+    snapshot = service.update_snapshot(id=snapshotID, snapshot_patch=snapshot_patch_model)
     return snapshot
+
 
 def list_snapshot_clones(service, snapshotID):
     clones = service.list_snapshot_clones(id=snapshotID)
     return clones
 
+
 def get_snapshot_clone(service, snapshotID, zone):
     snapshot = service.get_snapshot_clone(
-                id=snapshotID,
-                zone_name=zone,
-            )
+        id=snapshotID,
+        zone_name=zone,
+    )
     return snapshot
+
 
 def create_snapshot_clone(service, snapshotID, zone):
     snapshot = service.create_snapshot_clone(
-                id=snapshotID,
-                zone_name=zone,
-            )
+        id=snapshotID,
+        zone_name=zone,
+    )
     return snapshot
+
 
 def delete_snapshot(service, snapshotID):
     response = service.delete_snapshot(id=snapshotID)
     return response
 
+
 def delete_snapshots(service, volumeID):
     response = service.delete_snapshots(source_volume_id=volumeID)
     return response
 
+
 def delete_snapshot_clone(service, snapshotID, zone):
     response = service.delete_snapshot_clone(id=snapshotID, zone_name=zone)
     return response
+
 
 # --------------------------------------------------------
 # shares
@@ -4669,15 +4758,18 @@ def list_share_profiles(service):
     share_profile_collection = service.list_share_profiles()
     return share_profile_collection
 
+
 def get_share_profile(service, share_profile_name):
     share_profile = service.get_share_profile(
         name=share_profile_name,
     )
     return share_profile
 
+
 def list_shares(service):
     shares = service.list_shares()
     return shares
+
 
 def create_share(service, share_profile_name, name, zone_name, size):
     share_profile_identity_model = {
@@ -4698,6 +4790,7 @@ def create_share(service, share_profile_name, name, zone_name, size):
     )
     return share
 
+
 def create_accessor_share(service, shareCRN, name):
     share_identity = {
         'crn': shareCRN,
@@ -4711,6 +4804,7 @@ def create_accessor_share(service, shareCRN, name):
         share_prototype=share_prototype_model,
     )
     return share
+
 
 def create_share_replica(service, share_profile_name, name, zone_name, share_id, cron_spec):
     share_profile_identity_model = {
@@ -4735,15 +4829,17 @@ def create_share_replica(service, share_profile_name, name, zone_name, share_id,
     )
     return share
 
+
 def get_share(service, share_id):
     share = service.get_share(
         id=share_id,
     )
     return share
 
+
 def update_share(service, share_id, share_name, share_etag):
     share_patch_model = {
-            'name': share_name,
+        'name': share_name,
     }
 
     share = service.update_share(
@@ -4753,17 +4849,20 @@ def update_share(service, share_id, share_name, share_etag):
     )
     return share
 
+
 def failover_share(service, share_id):
     response = service.failover_share(
-            share_id=share_id,
+        share_id=share_id,
     )
     return response
 
+
 def list_share_mount_targets(service, share_id):
     share_mount_target_collection = service.list_share_mount_targets(
-            share_id=share_id,
+        share_id=share_id,
     )
     return share_mount_target_collection
+
 
 def get_share_mount_target(service, share_id, share_mount_target_id):
     share_mount_target = service.get_share_mount_target(
@@ -4771,6 +4870,7 @@ def get_share_mount_target(service, share_id, share_mount_target_id):
         id=share_mount_target_id,
     )
     return share_mount_target
+
 
 def update_share_mount_target(service, share_id, share_mount_target_id, share_mount_target_name):
     share_mount_target_patch_model = {
@@ -4783,16 +4883,18 @@ def update_share_mount_target(service, share_id, share_mount_target_id, share_mo
     )
     return share_mount_target
 
+
 def get_share_source(service, share_id):
     share = service.get_share_source(
-            share_id=share_id,
+        share_id=share_id,
     )
     return share
+
 
 def create_share_mount_target(service, share_id, subnet_id, name, vni_name):
 
     subnet_prototype_model = {
-    'id': subnet_id,
+        'id': subnet_id,
     }
     share_mount_target_virtual_network_interface_prototype_model = {
         'name': vni_name,
@@ -4809,6 +4911,7 @@ def create_share_mount_target(service, share_id, subnet_id, name, vni_name):
     )
     return share_mount_target
 
+
 def delete_share_mount_target(service, share_id, share_mount_target_id):
     share_mount_target = service.delete_share_mount_target(
         share_id=share_id,
@@ -4816,11 +4919,13 @@ def delete_share_mount_target(service, share_id, share_mount_target_id):
     )
     return share_mount_target
 
+
 def delete_share_source(service, share_id):
     response = service.delete_share_source(
         share_id=share_id,
     )
     return response
+
 
 def delete_share(service, share_id, share_etag):
     share = service.delete_share(
@@ -4828,7 +4933,6 @@ def delete_share(service, share_id, share_etag):
         if_match=share_etag,
     )
     return share
-
 
 
 # --------------------------------------------------------
@@ -4839,6 +4943,7 @@ def delete_share(service, share_id, share_etag):
 def list_security_groups(service):
     response = service.list_security_groups()
     return response
+
 
 # --------------------------------------------------------
 # create_security_group()
@@ -4884,6 +4989,7 @@ def create_security_group(service, vpc):
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_security_group()
 # --------------------------------------------------------
@@ -4898,9 +5004,11 @@ def delete_security_group(service, id):
 # get_security_group()
 # --------------------------------------------------------
 
+
 def get_security_group(service, id):
     response = service.get_security_group(id)
     return response
+
 
 # --------------------------------------------------------
 # update_security_group()
@@ -4916,15 +5024,16 @@ def update_security_group(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_security_group_targets()
 # --------------------------------------------------------
 
 
 def list_security_group_targets(service, security_group_id):
-    response = service.list_security_group_targets(
-        security_group_id)
+    response = service.list_security_group_targets(security_group_id)
     return response
+
 
 # --------------------------------------------------------
 # delete_security_group_target_binding()
@@ -4932,9 +5041,9 @@ def list_security_group_targets(service, security_group_id):
 
 
 def delete_security_group_target_binding(service, security_group_id, id):
-    response = service.delete_security_group_target_binding(
-        security_group_id, id)
+    response = service.delete_security_group_target_binding(security_group_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_security_group_target()
@@ -4942,9 +5051,9 @@ def delete_security_group_target_binding(service, security_group_id, id):
 
 
 def get_security_group_target(service, security_group_id, id):
-    response = service.get_security_group_target(
-        security_group_id, id)
+    response = service.get_security_group_target(security_group_id, id)
     return response
+
 
 # --------------------------------------------------------
 # create_security_group_target_binding()
@@ -4952,9 +5061,9 @@ def get_security_group_target(service, security_group_id, id):
 
 
 def create_security_group_target_binding(service, security_group_id, id):
-    response = service.create_security_group_target_binding(
-        security_group_id, id)
+    response = service.create_security_group_target_binding(security_group_id, id)
     return response
+
 
 # --------------------------------------------------------
 # list_security_group_rules()
@@ -4964,6 +5073,7 @@ def create_security_group_target_binding(service, security_group_id, id):
 def list_security_group_rules(service, security_group_id):
     response = service.list_security_group_rules(security_group_id)
     return response
+
 
 # --------------------------------------------------------
 # create_security_group_rule()
@@ -4989,9 +5099,9 @@ def create_security_group_rule(service, sg_id):
     security_group_id = sg_id
     security_group_rule_prototype = security_group_rule_prototype_model
 
-    response = service.create_security_group_rule(
-        security_group_id, security_group_rule_prototype)
+    response = service.create_security_group_rule(security_group_id, security_group_rule_prototype)
     return response
+
 
 # --------------------------------------------------------
 # delete_security_group_rule()
@@ -5002,6 +5112,7 @@ def delete_security_group_rule(service, security_group_id, id):
     response = service.delete_security_group_rule(security_group_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_security_group_rule()
 # --------------------------------------------------------
@@ -5010,6 +5121,7 @@ def delete_security_group_rule(service, security_group_id, id):
 def get_security_group_rule(service, security_group_id, id):
     response = service.get_security_group_rule(security_group_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_security_group_rule()
@@ -5023,9 +5135,9 @@ def update_security_group_rule(service, security_group_id, id):
 
     security_group_rule_patch = security_group_rule_patch_model
 
-    response = service.update_security_group_rule(
-        security_group_id, id, security_group_rule_patch)
+    response = service.update_security_group_rule(security_group_id, id, security_group_rule_patch)
     return response
+
 
 # --------------------------------------------------------
 # list_subnets()
@@ -5035,6 +5147,7 @@ def update_security_group_rule(service, security_group_id, id):
 def list_subnets(service):
     response = service.list_subnets()
     return response
+
 
 # --------------------------------------------------------
 # create_subnet()
@@ -5081,6 +5194,7 @@ def create_subnet(service, vpc, zone):
     response = service.create_subnet(subnet_prototype)
     return response
 
+
 # --------------------------------------------------------
 # delete_subnet()
 # --------------------------------------------------------
@@ -5090,6 +5204,7 @@ def delete_subnet(service, id):
     response = service.delete_subnet(id)
     return response
 
+
 # --------------------------------------------------------
 # get_subnet()
 # --------------------------------------------------------
@@ -5098,6 +5213,8 @@ def delete_subnet(service, id):
 def get_subnet(service, id):
     response = service.get_subnet(id)
     return response
+
+
 # --------------------------------------------------------
 # update_subnet()
 # --------------------------------------------------------
@@ -5113,6 +5230,7 @@ def update_subnet(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # get_subnet_network_acl()
 # --------------------------------------------------------
@@ -5121,6 +5239,7 @@ def update_subnet(service, id):
 def get_subnet_network_acl(service, id):
     response = service.get_subnet_network_acl(id)
     return response
+
 
 # --------------------------------------------------------
 # replace_subnet_network_acl()
@@ -5131,14 +5250,13 @@ def replace_subnet_network_acl(service, id, acl):
 
     # Construct a dict representation of a NetworkACLIdentityById model
     network_acl_identity_model = {}
-    network_acl_identity_model[
-        'id'] = acl
+    network_acl_identity_model['id'] = acl
 
     network_acl_identity = network_acl_identity_model
 
-    response = service.replace_subnet_network_acl(
-        id, network_acl_identity)
+    response = service.replace_subnet_network_acl(id, network_acl_identity)
     return response
+
 
 # --------------------------------------------------------
 # unset_subnet_public_gateway()
@@ -5149,6 +5267,7 @@ def unset_subnet_public_gateway(service, id):
     response = service.unset_subnet_public_gateway(id)
     return response
 
+
 # --------------------------------------------------------
 # get_subnet_public_gateway()
 # --------------------------------------------------------
@@ -5157,6 +5276,7 @@ def unset_subnet_public_gateway(service, id):
 def get_subnet_public_gateway(service, id):
     response = service.get_subnet_public_gateway(id)
     return response
+
 
 # --------------------------------------------------------
 # set_subnet_public_gateway()
@@ -5167,13 +5287,12 @@ def set_subnet_public_gateway(service, id, pgw):
 
     # Construct a dict representation of a PublicGatewayIdentityById model
     public_gateway_identity_model = {}
-    public_gateway_identity_model[
-        'id'] = pgw
+    public_gateway_identity_model['id'] = pgw
     public_gateway_identity = public_gateway_identity_model
 
-    response = service.set_subnet_public_gateway(
-        id, public_gateway_identity)
+    response = service.set_subnet_public_gateway(id, public_gateway_identity)
     return response
+
 
 # --------------------------------------------------------
 # service()
@@ -5183,17 +5302,17 @@ def set_subnet_public_gateway(service, id, pgw):
 def list_subnet_reserved_ips(service, subnet_id):
     response = service.list_subnet_reserved_ips(subnet_id)
     return response
+
+
 # --------------------------------------------------------
 # create_subnet_reserved_ip()
 # --------------------------------------------------------
 
 
 def create_subnet_reserved_ip(service, subnet_id):
-    response = service.create_subnet_reserved_ip(
-        subnet_id,
-        auto_delete=False,
-        name='my-reserved-ip')
+    response = service.create_subnet_reserved_ip(subnet_id, auto_delete=False, name='my-reserved-ip')
     return response
+
 
 # --------------------------------------------------------
 # get_subnet_reserved_ip()
@@ -5201,9 +5320,9 @@ def create_subnet_reserved_ip(service, subnet_id):
 
 
 def get_subnet_reserved_ip(service, subnet_id, id):
-    response = service.get_subnet_reserved_ip(
-        subnet_id, id)
+    response = service.get_subnet_reserved_ip(subnet_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_subnet_reserved_ip()
@@ -5211,15 +5330,12 @@ def get_subnet_reserved_ip(service, subnet_id, id):
 
 
 def update_subnet_reserved_ip(service, subnet_id, id):
-    reserved_ip_patch_model = {
-        'name': 'my-reserved-ip'
-    }
+    reserved_ip_patch_model = {'name': 'my-reserved-ip'}
 
-    response = service.update_subnet_reserved_ip(
-        subnet_id,
-        id,
-        reserved_ip_patch=reserved_ip_patch_model)
+    response = service.update_subnet_reserved_ip(subnet_id, id, reserved_ip_patch=reserved_ip_patch_model)
     return response
+
+
 # --------------------------------------------------------
 # delete_subnet_reserved_ip()
 # --------------------------------------------------------
@@ -5234,9 +5350,12 @@ def delete_subnet_reserved_ip(service, subnet_id, id):
 # list_vpcs()
 # --------------------------------------------------------
 
+
 def list_vpcs(service):
     response = service.list_vpcs()
     return response
+
+
 # --------------------------------------------------------
 # create_vpc()
 # --------------------------------------------------------
@@ -5260,6 +5379,7 @@ def create_vpc(service):
         # resource_group=resource_group,
     )
     return response
+
 
 def create_vpc_hub(service):
     # Construct a dict representation of a ResourceGroupIdentityById model
@@ -5304,14 +5424,15 @@ def create_vpc_dns_res_binding(service, spokeVpcId, hubVpcId):
     return response
 
 
-def get_vpc_dns_res_binding(service,vpcId, bindingId):
+def get_vpc_dns_res_binding(service, vpcId, bindingId):
     response = service.get_vpc_dns_resolution_binding(
         vpc_id=vpcId,
         id=bindingId,
     )
     return response
 
-def list_vpc_dns_res_binding(service,vpcId):
+
+def list_vpc_dns_res_binding(service, vpcId):
     all_results = []
     pager = VpcDnsResolutionBindingsPager(
         client=service,
@@ -5324,10 +5445,10 @@ def list_vpc_dns_res_binding(service,vpcId):
         all_results.extend(next_page)
     return all_results
 
-def update_vpc_dns_res_binding(service,vpcId, vpcDnsResolutionBindingID):
-    vpcdns_resolution_binding_patch_model = {
-    }
-    vpcdns_resolution_binding_patch_model['name']='my-vpc-dns-resolution-binding-updated'
+
+def update_vpc_dns_res_binding(service, vpcId, vpcDnsResolutionBindingID):
+    vpcdns_resolution_binding_patch_model = {}
+    vpcdns_resolution_binding_patch_model['name'] = 'my-vpc-dns-resolution-binding-updated'
 
     response = service.update_vpc_dns_resolution_binding(
         vpc_id=vpcId,
@@ -5335,6 +5456,7 @@ def update_vpc_dns_res_binding(service,vpcId, vpcDnsResolutionBindingID):
         vpcdns_resolution_binding_patch=vpcdns_resolution_binding_patch_model,
     )
     return response
+
 
 # --------------------------------------------------------
 # delete_vpc()
@@ -5345,12 +5467,14 @@ def delete_vpc(service, id):
     response = service.delete_vpc(id)
     return response
 
+
 def delete_vpc_dns_res_binding(service, vpcId, bindingId):
     response = service.delete_vpc_dns_resolution_binding(
         vpc_id=vpcId,
         id=bindingId,
     )
     return response
+
 
 # --------------------------------------------------------
 # get_vpc()
@@ -5375,6 +5499,7 @@ def update_vpc(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # get_vpc_default_network_acl()
 # --------------------------------------------------------
@@ -5384,6 +5509,7 @@ def get_vpc_default_network_acl(service, id):
     response = service.get_vpc_default_network_acl(id)
     return response
 
+
 # --------------------------------------------------------
 # get_vpc_default_security_group()
 # --------------------------------------------------------
@@ -5392,6 +5518,7 @@ def get_vpc_default_network_acl(service, id):
 def get_vpc_default_security_group(service, id):
     response = service.get_vpc_default_security_group(id)
     return response
+
 
 # --------------------------------------------------------
 # list_vpc_address_prefixes()
@@ -5406,6 +5533,7 @@ def list_vpc_address_prefixes(service, vpc_id):
 # --------------------------------------------------------
 # create_vpc_address_prefix()
 # --------------------------------------------------------
+
 
 def create_vpc_address_prefix(service, vpc_id, zone):
     # Construct a dict representation of a ZoneIdentityByName model
@@ -5425,6 +5553,7 @@ def create_vpc_address_prefix(service, vpc_id, zone):
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_vpc_address_prefix()
 # --------------------------------------------------------
@@ -5434,6 +5563,7 @@ def delete_vpc_address_prefix(service, vpc_id, id):
     response = service.delete_vpc_address_prefix(vpc_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_vpc_address_prefix()
 # --------------------------------------------------------
@@ -5442,6 +5572,7 @@ def delete_vpc_address_prefix(service, vpc_id, id):
 def get_vpc_address_prefix(service, vpc_id, id):
     response = service.get_vpc_address_prefix(vpc_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_vpc_address_prefix()
@@ -5459,6 +5590,7 @@ def update_vpc_address_prefix(service, vpc_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_vpc_routes()
 # --------------------------------------------------------
@@ -5467,6 +5599,7 @@ def update_vpc_address_prefix(service, vpc_id, id):
 def list_vpc_routes(service, vpc_id, zone_name):
     response = service.list_vpc_routes(vpc_id, zone_name=zone_name)
     return response
+
 
 # --------------------------------------------------------
 # list_vpc_routes()
@@ -5511,6 +5644,8 @@ def create_vpc_route(service, vpc_id, zone):
 def delete_vpc_route(service, vpc_id, id):
     response = service.delete_vpc_route(vpc_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_vpc_route()
 # --------------------------------------------------------
@@ -5519,6 +5654,8 @@ def delete_vpc_route(service, vpc_id, id):
 def get_vpc_route(service, vpc_id, id):
     response = service.get_vpc_route(vpc_id, id)
     return response
+
+
 # --------------------------------------------------------
 # update_vpc_route()
 # --------------------------------------------------------
@@ -5534,6 +5671,7 @@ def update_vpc_route(service, vpc_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_ike_policies()
 # --------------------------------------------------------
@@ -5542,6 +5680,7 @@ def update_vpc_route(service, vpc_id, id):
 def list_ike_policies(service):
     response = service.list_ike_policies()
     return response
+
 
 # --------------------------------------------------------
 # create_ike_policy()
@@ -5577,6 +5716,7 @@ def create_ike_policy(service):
 # delete_ike_policy()
 # --------------------------------------------------------
 
+
 def delete_ike_policy(service, id):
     response = service.delete_ike_policy(id)
     return response
@@ -5586,6 +5726,7 @@ def delete_ike_policy(service, id):
 # get_ike_policy()
 # --------------------------------------------------------
 
+
 def get_ike_policy(service, id):
     response = service.get_ike_policy(id)
     return response
@@ -5594,6 +5735,7 @@ def get_ike_policy(service, id):
 # --------------------------------------------------------
 # update_ike_policy()
 # --------------------------------------------------------
+
 
 def update_ike_policy(service, id):
 
@@ -5608,6 +5750,8 @@ def update_ike_policy(service, id):
         ike_policy_patch,
     )
     return response
+
+
 # --------------------------------------------------------
 # list_ike_policy_connections()
 # --------------------------------------------------------
@@ -5624,6 +5768,7 @@ def list_ike_policy_connections(service, id):
 def list_ipsec_policies(service):
     response = service.list_ipsec_policies()
     return response
+
 
 # --------------------------------------------------------
 # create_ipsec_policy()
@@ -5653,6 +5798,7 @@ def create_ipsec_policy(service):
     )
     return response
 
+
 # --------------------------------
 
 # --------------------------------------------------------
@@ -5664,6 +5810,7 @@ def delete_ipsec_policy(service, id):
     response = service.delete_ipsec_policy(id)
     return response
 
+
 # --------------------------------------------------------
 # get_ipsec_policy()
 # --------------------------------------------------------
@@ -5673,6 +5820,7 @@ def get_ipsec_policy(service, id):
 
     response = service.get_ipsec_policy(id)
     return response
+
 
 # --------------------------------------------------------
 # update_ipsec_policy()
@@ -5692,6 +5840,8 @@ def update_ipsec_policy(service, id):
         i_psec_policy_patch=i_psec_policy_patch_model,
     )
     return response
+
+
 # --------------------------------------------------------
 # list_ipsec_policy_connections()
 # --------------------------------------------------------
@@ -5701,6 +5851,7 @@ def list_ipsec_policy_connections(service, id):
     response = service.list_ipsec_policy_connections(id)
     return response
 
+
 # --------------------------------------------------------
 # list_vpn_gateways()
 # --------------------------------------------------------
@@ -5709,6 +5860,7 @@ def list_ipsec_policy_connections(service, id):
 def list_vpn_gateways(service):
     response = service.list_vpn_gateways()
     return response
+
 
 # --------------------------------------------------------
 # create_vpn_gateway()
@@ -5730,6 +5882,7 @@ def create_vpn_gateway(service, subnet):
     response = service.create_vpn_gateway(vpn_gateway_prototype)
     return response
 
+
 # --------------------------------------------------------
 # delete_vpn_gateway()
 # --------------------------------------------------------
@@ -5738,6 +5891,7 @@ def create_vpn_gateway(service, subnet):
 def delete_vpn_gateway(service, id):
     response = service.delete_vpn_gateway(id)
     return response
+
 
 # --------------------------------------------------------
 # get_vpn_gateway()
@@ -5753,6 +5907,7 @@ def get_vpn_gateway(service, id):
 # update_vpn_gateway()
 # --------------------------------------------------------
 
+
 def update_vpn_gateway(service, id):
     vpn_gateway_patch_model = {}
     vpn_gateway_patch_model['name'] = generate_name('vpng')
@@ -5762,6 +5917,7 @@ def update_vpn_gateway(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_vpn_gateway_connections()
 # --------------------------------------------------------
@@ -5770,6 +5926,7 @@ def update_vpn_gateway(service, id):
 def list_vpn_gateway_connections(service, vpn_gateway_id):
     response = service.list_vpn_gateway_connections(vpn_gateway_id)
     return response
+
 
 # --------------------------------------------------------
 # create_vpn_gateway_connection()
@@ -5826,6 +5983,8 @@ def create_vpn_gateway_connection(service, vpn_gateway_id):
     )
 
     return response
+
+
 # --------------------------------------------------------
 # delete_vpn_gateway_connection()
 # --------------------------------------------------------
@@ -5834,6 +5993,8 @@ def create_vpn_gateway_connection(service, vpn_gateway_id):
 def delete_vpn_gateway_connection(service, vpn_gateway_id, id):
     response = service.delete_vpn_gateway_connection(vpn_gateway_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_vpn_gateway_connection()
 # --------------------------------------------------------
@@ -5842,6 +6003,7 @@ def delete_vpn_gateway_connection(service, vpn_gateway_id, id):
 def get_vpn_gateway_connection(service, vpn_gateway_id, id):
     response = service.get_vpn_gateway_connection(vpn_gateway_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_vpn_gateway_connection()
@@ -5859,15 +6021,16 @@ def update_vpn_gateway_connection(service, vpn_gateway_id, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_vpn_gateway_connection_local_cidrs()
 # --------------------------------------------------------
 
 
 def list_vpn_gateway_connection_local_cidrs(service, vpn_gateway_id, id):
-    response = service.list_vpn_gateway_connections_local_cidrs(
-        vpn_gateway_id, id)
+    response = service.list_vpn_gateway_connections_local_cidrs(vpn_gateway_id, id)
     return response
+
 
 # --------------------------------------------------------
 # remove_vpn_gateway_connection_local_cidr()
@@ -5875,9 +6038,9 @@ def list_vpn_gateway_connection_local_cidrs(service, vpn_gateway_id, id):
 
 
 def remove_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.remove_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.remove_vpn_gateway_connections_local_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
 
 # --------------------------------------------------------
 # check_vpn_gateway_connection_local_cidr()
@@ -5885,27 +6048,29 @@ def remove_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix
 
 
 def check_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.check_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.check_vpn_gateway_connections_local_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
+
 # --------------------------------------------------------
 # add_vpn_gateway_connection_local_cidr()
 # --------------------------------------------------------
 
 
 def add_vpn_gateway_connection_local_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.add_vpn_gateway_connections_local_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.add_vpn_gateway_connections_local_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
+
 # --------------------------------------------------------
 # list_vpn_gateway_connection_peer_cidrs()
 # --------------------------------------------------------
 
 
 def list_vpn_gateway_connection_peer_cidrs(service, vpn_gateway_id, id):
-    response = service.list_vpn_gateway_connections_peer_cidrs(
-        vpn_gateway_id, id)
+    response = service.list_vpn_gateway_connections_peer_cidrs(vpn_gateway_id, id)
     return response
+
 
 # --------------------------------------------------------
 # remove_vpn_gateway_connection_peer_cidr()
@@ -5913,9 +6078,9 @@ def list_vpn_gateway_connection_peer_cidrs(service, vpn_gateway_id, id):
 
 
 def remove_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.remove_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.remove_vpn_gateway_connections_peer_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
 
 # --------------------------------------------------------
 # check_vpn_gateway_connection_peer_cidr()
@@ -5923,18 +6088,19 @@ def remove_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_
 
 
 def check_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.check_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.check_vpn_gateway_connections_peer_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
+
 # --------------------------------------------------------
 # add_vpn_gateway_connection_peer_cidr()
 # --------------------------------------------------------
 
 
 def add_vpn_gateway_connection_peer_cidr(service, vpn_gateway_id, id, prefix_address, prefix_length):
-    response = service.add_vpn_gateway_connections_peer_cidr(
-        vpn_gateway_id, id, prefix_address, prefix_length)
+    response = service.add_vpn_gateway_connections_peer_cidr(vpn_gateway_id, id, prefix_address, prefix_length)
     return response
+
 
 # --------------------------------------------------------
 # list_volume_profiles()
@@ -5945,6 +6111,7 @@ def list_volume_profiles(service):
     response = service.list_volume_profiles()
     return response
 
+
 # --------------------------------------------------------
 # get_volume_profile()
 # --------------------------------------------------------
@@ -5953,6 +6120,8 @@ def list_volume_profiles(service):
 def get_volume_profile(service, name):
     response = service.get_volume_profile(name)
     return response
+
+
 # --------------------------------------------------------
 # list_volumes()
 # --------------------------------------------------------
@@ -5961,6 +6130,8 @@ def get_volume_profile(service, name):
 def list_volumes(service):
     response = service.list_volumes()
     return response
+
+
 # --------------------------------------------------------
 # create_volume()
 # --------------------------------------------------------
@@ -5992,6 +6163,7 @@ def create_volume(service, zone):
     response = service.create_volume(volume_prototype)
     return response
 
+
 # --------------------------------------------------------
 # delete_volume()
 # --------------------------------------------------------
@@ -6001,6 +6173,7 @@ def delete_volume(service, id):
     response = service.delete_volume(id)
     return response
 
+
 # --------------------------------------------------------
 # get_volume()
 # --------------------------------------------------------
@@ -6009,6 +6182,8 @@ def delete_volume(service, id):
 def get_volume(service, id):
     response = service.get_volume(id)
     return response
+
+
 # --------------------------------------------------------
 # update_volume()
 # --------------------------------------------------------
@@ -6023,6 +6198,7 @@ def update_volume(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_flow_log_collectors()
 # --------------------------------------------------------
@@ -6031,6 +6207,7 @@ def update_volume(service, id):
 def list_flow_log_collectors(service):
     response = service.list_flow_log_collectors()
     return response
+
 
 # --------------------------------------------------------
 # create_flow_log_collector()
@@ -6041,13 +6218,11 @@ def create_flow_log_collector(service, target_id):
 
     # Construct a dict representation of a CloudObjectStorageBucketIdentityByName model
     cloud_object_storage_bucket_identity_model = {}
-    cloud_object_storage_bucket_identity_model[
-        'name'] = generate_name('cos-bucket')
+    cloud_object_storage_bucket_identity_model['name'] = generate_name('cos-bucket')
 
     # Construct a dict representation of a FlowLogCollectorPrototypeTargetNetworkInterfaceIdentityNetworkInterfaceIdentityById model
     flow_log_collector_prototype_target_model = {}
-    flow_log_collector_prototype_target_model[
-        'id'] = target_id
+    flow_log_collector_prototype_target_model['id'] = target_id
 
     # Construct a dict representation of a ResourceGroupIdentityById model
     # resource_group_identity_model = {}
@@ -6069,6 +6244,7 @@ def create_flow_log_collector(service, target_id):
     )
     return response
 
+
 # --------------------------------------------------------
 # delete_flow_log_collector()
 # --------------------------------------------------------
@@ -6077,6 +6253,7 @@ def create_flow_log_collector(service, target_id):
 def delete_flow_log_collector(service, id):
     response = service.delete_flow_log_collector(id)
     return response
+
 
 # --------------------------------------------------------
 # get_flow_log_collector()
@@ -6087,6 +6264,7 @@ def get_flow_log_collector(service, id):
     response = service.get_flow_log_collector(id)
     return response
 
+
 # --------------------------------------------------------
 # update_flow_log_collector()
 # --------------------------------------------------------
@@ -6095,10 +6273,12 @@ def get_flow_log_collector(service, id):
 def update_flow_log_collector(service, id):
     flow_log_collector_patch_model = {}
     flow_log_collector_patch_model['name'] = generate_name('flow-log')
-    response = service.update_flow_log_collector(id,
-                                                 flow_log_collector_patch=flow_log_collector_patch_model,
-                                                 )
+    response = service.update_flow_log_collector(
+        id,
+        flow_log_collector_patch=flow_log_collector_patch_model,
+    )
     return response
+
 
 # --------------------------------------------------------
 # list_instance_templates()
@@ -6108,6 +6288,7 @@ def update_flow_log_collector(service, id):
 def list_instance_templates(service):
     response = service.list_instance_templates()
     return response
+
 
 # --------------------------------------------------------
 # create_instance_template()
@@ -6148,8 +6329,7 @@ def create_instance_template(service, vpc, profile, zone, image, subnet):
     instance_template_prototype_model['vpc'] = vpc_identity_model
 
     instance_template_prototype_model['image'] = image_identity_model
-    instance_template_prototype_model[
-        'primary_network_interface'] = network_interface_prototype_model
+    instance_template_prototype_model['primary_network_interface'] = network_interface_prototype_model
     instance_template_prototype_model['zone'] = zone_identity_model
 
     instance_template_prototype = instance_template_prototype_model
@@ -6157,6 +6337,7 @@ def create_instance_template(service, vpc, profile, zone, image, subnet):
     # Invoke method
     response = service.create_instance_template(instance_template_prototype)
     return response
+
 
 # --------------------------------------------------------
 # delete_instance_template()
@@ -6167,6 +6348,7 @@ def delete_instance_template(service, id):
     response = service.delete_instance_template(id)
     return response
 
+
 # --------------------------------------------------------
 # get_instance_template()
 # --------------------------------------------------------
@@ -6175,6 +6357,7 @@ def delete_instance_template(service, id):
 def get_instance_template(service, id):
     response = service.get_instance_template(id)
     return response
+
 
 # --------------------------------------------------------
 # update_instance_template()
@@ -6190,6 +6373,7 @@ def update_instance_template(service, id):
     )
     return response
 
+
 # --------------------------------------------------------
 # list_instance_groups()
 # --------------------------------------------------------
@@ -6198,6 +6382,7 @@ def update_instance_template(service, id):
 def list_instance_groups(service):
     response = service.list_instance_groups()
     return response
+
 
 # --------------------------------------------------------
 # create_instance_groups()
@@ -6208,8 +6393,7 @@ def create_instance_group(service, instance_template, subnet):
 
     # Construct a dict representation of a InstanceTemplateIdentityById model
     instance_template_identity_model = {}
-    instance_template_identity_model[
-        'id'] = instance_template
+    instance_template_identity_model['id'] = instance_template
 
     # Construct a dict representation of a SubnetIdentityById model
     subnet_identity_model = {}
@@ -6229,6 +6413,8 @@ def create_instance_group(service, instance_template, subnet):
         membership_count=membership_count,
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group)
 # --------------------------------------------------------
@@ -6237,6 +6423,7 @@ def create_instance_group(service, instance_template, subnet):
 def delete_instance_group(service, id):
     response = service.delete_instance_group(id)
     return response
+
 
 # --------------------------------------------------------
 # get_instance_group()
@@ -6247,6 +6434,7 @@ def get_instance_group(service, id):
     response = service.get_instance_group(id)
     return response
 
+
 # --------------------------------------------------------
 # update_instance_group()
 # --------------------------------------------------------
@@ -6255,18 +6443,20 @@ def get_instance_group(service, id):
 def update_instance_group(service, id):
     instance_group_patch_model = {}
     instance_group_patch_model['name'] = generate_name("instance-group")
-    response = service.update_instance_group(
-        id, instance_group_patch=instance_group_patch_model)
+    response = service.update_instance_group(id, instance_group_patch=instance_group_patch_model)
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group_load_balancer()
 # --------------------------------------------------------
 
 
 def delete_instance_group_load_balancer(service, instance_group_id):
-    response = service.delete_instance_group_load_balancer(
-        instance_group_id)
+    response = service.delete_instance_group_load_balancer(instance_group_id)
     return response
+
+
 # --------------------------------------------------------
 # list_instance_group_managers()
 # --------------------------------------------------------
@@ -6275,6 +6465,8 @@ def delete_instance_group_load_balancer(service, instance_group_id):
 def list_instance_group_managers(service, instance_group_id):
     response = service.list_instance_group_managers(instance_group_id)
     return response
+
+
 # --------------------------------------------------------
 # create_instance_group_manager()
 # --------------------------------------------------------
@@ -6283,8 +6475,7 @@ def list_instance_group_managers(service, instance_group_id):
 def create_instance_group_manager(service, id):
     # Construct a dict representation of a InstanceGroupManagerPrototypeInstanceGroupManagerAutoScalePrototype model
     instance_group_manager_prototype_model = {}
-    instance_group_manager_prototype_model[
-        'name'] = generate_name("manager")
+    instance_group_manager_prototype_model['name'] = generate_name("manager")
     instance_group_manager_prototype_model['management_enabled'] = True
     instance_group_manager_prototype_model['aggregation_window'] = 120
     instance_group_manager_prototype_model['cooldown'] = 300
@@ -6297,27 +6488,30 @@ def create_instance_group_manager(service, id):
     instance_group_manager_prototype = instance_group_manager_prototype_model
 
     # Invoke method
-    response = service.create_instance_group_manager(
-        instance_group_id, instance_group_manager_prototype)
+    response = service.create_instance_group_manager(instance_group_id, instance_group_manager_prototype)
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group_manager()
 # --------------------------------------------------------
 
 
 def delete_instance_group_manager(service, instance_group_id, id):
-    response = service.delete_instance_group_manager(instance_group_id,
-                                                     id)
+    response = service.delete_instance_group_manager(instance_group_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_instance_group_manager()
 # --------------------------------------------------------
 
 
 def get_instance_group_manager(service, instance_group_id, id):
-    response = service.get_instance_group_manager(instance_group_id,
-                                                  id)
+    response = service.get_instance_group_manager(instance_group_id, id)
     return response
+
+
 # --------------------------------------------------------
 # update_instance_group_manager()
 # --------------------------------------------------------
@@ -6332,29 +6526,29 @@ def update_instance_group_manager(service, instance_group_id, id):
         instance_group_manager_patch=instance_group_manager_patch_model,
     )
     return response
+
+
 # --------------------------------------------------------
 # list_instance_group_manager_policies()
 # --------------------------------------------------------
 
 
-def list_instance_group_manager_policies(service,
-                                         instance_group_id, instance_group_manager_id):
+def list_instance_group_manager_policies(service, instance_group_id, instance_group_manager_id):
 
     # Invoke method
-    response = service.list_instance_group_manager_policies(
-        instance_group_id, instance_group_manager_id)
+    response = service.list_instance_group_manager_policies(instance_group_id, instance_group_manager_id)
     return response
+
+
 # --------------------------------------------------------
 # create_instance_group_manager_policy()
 # --------------------------------------------------------
 
 
-def create_instance_group_manager_policy(service, instance_group_id,
-                                         instance_group_manager_id):
+def create_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id):
 
     instance_group_manager_policy_prototype_model = {}
-    instance_group_manager_policy_prototype_model['name'] = generate_name(
-        "mpolicy")
+    instance_group_manager_policy_prototype_model['name'] = generate_name("mpolicy")
     instance_group_manager_policy_prototype_model['metric_type'] = 'cpu'
     instance_group_manager_policy_prototype_model['metric_value'] = 38
     instance_group_manager_policy_prototype_model['policy_type'] = 'target'
@@ -6364,19 +6558,21 @@ def create_instance_group_manager_policy(service, instance_group_id,
 
     # Invoke method
     response = service.create_instance_group_manager_policy(
-        instance_group_id,
-        instance_group_manager_id,
-        instance_group_manager_policy_prototype)
+        instance_group_id, instance_group_manager_id, instance_group_manager_policy_prototype
+    )
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group_manager_policy()
 # --------------------------------------------------------
 
 
 def delete_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
-    response = service.delete_instance_group_manager_policy(
-        instance_group_id, instance_group_manager_id, id)
+    response = service.delete_instance_group_manager_policy(instance_group_id, instance_group_manager_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_instance_group_manager_policy()
 # --------------------------------------------------------
@@ -6384,9 +6580,10 @@ def delete_instance_group_manager_policy(service, instance_group_id, instance_gr
 
 def get_instance_group_manager_policy(service, instance_group_id, instance_group_manager_id, id):
     # Invoke method
-    response = service.get_instance_group_manager_policy(
-        instance_group_id, instance_group_manager_id, id)
+    response = service.get_instance_group_manager_policy(instance_group_id, instance_group_manager_id, id)
     return response
+
+
 # --------------------------------------------------------
 # update_instance_group_manager_policy()
 # --------------------------------------------------------
@@ -6406,6 +6603,8 @@ def update_instance_group_manager_policy(service, instance_group_id, instance_gr
         instance_group_manager_policy_patch=instance_group_manager_policy_patch_model,
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group_memberships()
 # --------------------------------------------------------
@@ -6415,6 +6614,8 @@ def delete_instance_group_memberships(service, instance_group_id):
     # Invoke method
     response = service.delete_instance_group_memberships(instance_group_id)
     return response
+
+
 # --------------------------------------------------------
 # list_instance_group_memberships()
 # --------------------------------------------------------
@@ -6423,24 +6624,28 @@ def delete_instance_group_memberships(service, instance_group_id):
 def list_instance_group_memberships(service, instance_group_id):
     response = service.list_instance_group_memberships(instance_group_id)
     return response
+
+
 # --------------------------------------------------------
 # delete_instance_group_membership()
 # --------------------------------------------------------
 
 
 def delete_instance_group_membership(service, instance_group_id, id):
-    response = service.delete_instance_group_membership(instance_group_id,
-                                                        id)
+    response = service.delete_instance_group_membership(instance_group_id, id)
     return response
+
+
 # --------------------------------------------------------
 # get_instance_group_membership()
 # --------------------------------------------------------
 
 
 def get_instance_group_membership(service, instance_group_id, id):
-    response = service.get_instance_group_membership(instance_group_id,
-                                                     id)
+    response = service.get_instance_group_membership(instance_group_id, id)
     return response
+
+
 # --------------------------------------------------------
 # update_instance_group_membership()
 # --------------------------------------------------------
@@ -6448,13 +6653,14 @@ def get_instance_group_membership(service, instance_group_id, id):
 
 def update_instance_group_membership(service, instance_group_id, id):
     instance_group_membership_patch_model = {}
-    instance_group_membership_patch_model[
-        'name'] = generate_name("member")
-    response = service.update_instance_group_membership(instance_group_id,
-                                                        id,
-                                                        instance_group_membership_patch=instance_group_membership_patch_model,
-                                                        )
+    instance_group_membership_patch_model['name'] = generate_name("member")
+    response = service.update_instance_group_membership(
+        instance_group_id,
+        id,
+        instance_group_membership_patch=instance_group_membership_patch_model,
+    )
     return response
+
 
 # --------------------------------------------------------
 # list_endpoint_gateways()
@@ -6464,6 +6670,7 @@ def update_instance_group_membership(service, instance_group_id, id):
 def list_endpoint_gateways(service):
     response = service.list_endpoint_gateways()
     return response
+
 
 # --------------------------------------------------------
 # create_endpoint_gateway()
@@ -6483,6 +6690,8 @@ def create_endpoint_gateway(service, vpcId):
         vpc=vpc_identity_model,
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_endpoint_gateway()
 # --------------------------------------------------------
@@ -6491,6 +6700,7 @@ def create_endpoint_gateway(service, vpcId):
 def delete_endpoint_gateway(service, id):
     response = service.delete_endpoint_gateway(id)
     return response
+
 
 # --------------------------------------------------------
 # get_endpoint_gateway()
@@ -6501,6 +6711,7 @@ def get_endpoint_gateway(service, id):
     response = service.get_endpoint_gateway(id)
     return response
 
+
 # --------------------------------------------------------
 # get_endpoint_gateway()
 # --------------------------------------------------------
@@ -6509,9 +6720,9 @@ def get_endpoint_gateway(service, id):
 def update_endpoint_gateway(service, id):
     endpoint_gateway_patch_model = {}
     endpoint_gateway_patch_model['name'] = generate_name("endpoint-gateway")
-    response = service.update_endpoint_gateway(id,
-                                               endpoint_gateway_patch=endpoint_gateway_patch_model)
+    response = service.update_endpoint_gateway(id, endpoint_gateway_patch=endpoint_gateway_patch_model)
     return response
+
 
 # --------------------------------------------------------
 # list_endpoint_gateway_ips()
@@ -6522,15 +6733,16 @@ def list_endpoint_gateway_ips(service, id):
     response = service.list_endpoint_gateway_ips(endpoint_gateway_id=id)
     return response
 
+
 # --------------------------------------------------------
 # remove_endpoint_gateway_ip()
 # --------------------------------------------------------
 
 
 def remove_endpoint_gateway_ip(service, endpoint_gateway_id, id):
-    response = service.remove_endpoint_gateway_ip(
-        endpoint_gateway_id=endpoint_gateway_id, id=id)
+    response = service.remove_endpoint_gateway_ip(endpoint_gateway_id=endpoint_gateway_id, id=id)
     return response
+
 
 # --------------------------------------------------------
 # get_endpoint_gateway_ip()
@@ -6538,9 +6750,9 @@ def remove_endpoint_gateway_ip(service, endpoint_gateway_id, id):
 
 
 def get_endpoint_gateway_ip(service, endpoint_gateway_id, id):
-    response = service.get_endpoint_gateway_ip(
-        endpoint_gateway_id=endpoint_gateway_id, id=id)
+    response = service.get_endpoint_gateway_ip(endpoint_gateway_id=endpoint_gateway_id, id=id)
     return response
+
 
 # --------------------------------------------------------
 # add_endpoint_gateway_ip()
@@ -6551,6 +6763,7 @@ def add_endpoint_gateway_ip(service, endpoint_gateway_id, id):
     response = service.add_endpoint_gateway_ip(endpoint_gateway_id, id)
     return response
 
+
 # --------------------------------------------------------
 # get_vpc_default_routing_table()
 # --------------------------------------------------------
@@ -6560,6 +6773,7 @@ def get_vpc_default_routing_table(service, id):
     response = service.get_vpc_default_routing_table(id=id)
     return response
 
+
 # --------------------------------------------------------
 # get_subnet_routing_table()
 # --------------------------------------------------------
@@ -6568,6 +6782,8 @@ def get_vpc_default_routing_table(service, id):
 def get_subnet_routing_table(service, id):
     response = service.get_subnet_routing_table(id=id)
     return response
+
+
 # --------------------------------------------------------
 # replace_subnet_routing_table()
 # --------------------------------------------------------
@@ -6576,9 +6792,9 @@ def get_subnet_routing_table(service, id):
 def replace_subnet_routing_table(service, routing_table_id, id):
     routing_table_identity_model = {}
     routing_table_identity_model['id'] = routing_table_id
-    response = service.replace_subnet_routing_table(id=id,
-                                                    routing_table_identity=routing_table_identity_model)
+    response = service.replace_subnet_routing_table(id=id, routing_table_identity=routing_table_identity_model)
     return response
+
 
 # --------------------------------------------------------
 # list_vpc_routing_tables()
@@ -6588,6 +6804,7 @@ def replace_subnet_routing_table(service, routing_table_id, id):
 def list_vpc_routing_tables(service, vpc_id):
     response = service.list_vpc_routing_tables(vpc_id=vpc_id)
     return response
+
 
 # --------------------------------------------------------
 # create_vpc_routing_table()
@@ -6605,7 +6822,7 @@ def create_vpc_routing_table(service, vpc_id, zoneName):
         'destination': '192.168.3.0/24',
         'name': 'my-route-2',
         'next_hop': route_next_hop_prototype_model,
-        'zone': zone_identity_model
+        'zone': zone_identity_model,
     }
     response = service.create_vpc_routing_table(
         vpc_id=vpc_id,
@@ -6613,6 +6830,8 @@ def create_vpc_routing_table(service, vpc_id, zoneName):
         routes=[route_prototype_model],
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_vpc_routing_table()
 # --------------------------------------------------------
@@ -6621,6 +6840,7 @@ def create_vpc_routing_table(service, vpc_id, zoneName):
 def delete_vpc_routing_table(service, vpc_id, id):
     response = service.delete_vpc_routing_table(vpc_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_vpc_routing_table()
@@ -6631,6 +6851,7 @@ def get_vpc_routing_table(service, vpc_id, id):
     response = service.get_vpc_routing_table(vpc_id, id)
     return response
 
+
 # --------------------------------------------------------
 # update_vpc_routing_table()
 # --------------------------------------------------------
@@ -6639,9 +6860,9 @@ def get_vpc_routing_table(service, vpc_id, id):
 def update_vpc_routing_table(service, vpc_id, id):
     routing_table_patch_model = {}
     routing_table_patch_model['name'] = generate_name("routing-table")
-    response = service.update_vpc_routing_table(vpc_id, id,
-                                                routing_table_patch=routing_table_patch_model)
+    response = service.update_vpc_routing_table(vpc_id, id, routing_table_patch=routing_table_patch_model)
     return response
+
 
 # --------------------------------------------------------
 # list_vpc_routing_table_routes()
@@ -6649,9 +6870,9 @@ def update_vpc_routing_table(service, vpc_id, id):
 
 
 def list_vpc_routing_table_routes(service, vpc_id, routing_table_id):
-    response = service.list_vpc_routing_table_routes(
-        vpc_id=vpc_id, routing_table_id=routing_table_id)
+    response = service.list_vpc_routing_table_routes(vpc_id=vpc_id, routing_table_id=routing_table_id)
     return response
+
 
 # --------------------------------------------------------
 # create_vpc_routing_table_route()
@@ -6675,15 +6896,17 @@ def create_vpc_routing_table_route(service, vpc_id, routing_table_id, zoneName):
         name=generate_name('my-route'),
     )
     return response
+
+
 # --------------------------------------------------------
 # delete_vpc_routing_table_route()
 # --------------------------------------------------------
 
 
 def delete_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
-    response = service.delete_vpc_routing_table_route(
-        vpc_id, routing_table_id, id)
+    response = service.delete_vpc_routing_table_route(vpc_id, routing_table_id, id)
     return response
+
 
 # --------------------------------------------------------
 # get_vpc_routing_table_route()
@@ -6691,9 +6914,9 @@ def delete_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
 
 
 def get_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
-    response = service.get_vpc_routing_table_route(
-        vpc_id, routing_table_id, id)
+    response = service.get_vpc_routing_table_route(vpc_id, routing_table_id, id)
     return response
+
 
 # --------------------------------------------------------
 # update_vpc_routing_table()
@@ -6703,9 +6926,9 @@ def get_vpc_routing_table_route(service, vpc_id, routing_table_id, id):
 def update_vpc_routing_table_route(service, vpc_id, table_id, id):
     route_patch_model = {}
     route_patch_model['name'] = generate_name("route")
-    response = service.update_vpc_routing_table_route(vpc_id, table_id, id,
-                                                      route_patch=route_patch_model)
+    response = service.update_vpc_routing_table_route(vpc_id, table_id, id, route_patch=route_patch_model)
     return response
+
 
 # --------------------------------------------------------
 # dedicated host
@@ -6740,8 +6963,8 @@ def update_dedicated_host_group(service, id):
     dedicated_host_group_patch_model = {'name': 'my-host-group-modified'}
 
     update_dedicated_host_group_response = service.update_dedicated_host_group(
-        id,
-        dedicated_host_group_patch=dedicated_host_group_patch_model)
+        id, dedicated_host_group_patch=dedicated_host_group_patch_model
+    )
     return update_dedicated_host_group_response
 
 
@@ -6751,8 +6974,7 @@ def list_dedicated_host_profiles(service):
 
 
 def get_dedicated_host_profile(service, name):
-    get_dedicated_host_profile_response = service.get_dedicated_host_profile(
-        name)
+    get_dedicated_host_profile_response = service.get_dedicated_host_profile(name)
     return get_dedicated_host_profile_response
 
 
@@ -6766,19 +6988,18 @@ def create_dedicated_host(service, profileName, groupId):
     dedicated_host_profile_identity_model['name'] = profileName
 
     # Construct a dict representation of a DedicatedHostGroupIdentityById model
-    dedicated_host_group_identity_model = {
-        'id': groupId
-    }
+    dedicated_host_group_identity_model = {'id': groupId}
 
     # Construct a dict representation of a DedicatedHostPrototypeDedicatedHostByGroup model
     dedicated_host_prototype_model = {
         'name': 'my-host',
         'profile': dedicated_host_profile_identity_model,
-        'group': dedicated_host_group_identity_model
+        'group': dedicated_host_group_identity_model,
     }
 
     create_dedicated_host_response = service.create_dedicated_host(
-        dedicated_host_prototype=dedicated_host_prototype_model)
+        dedicated_host_prototype=dedicated_host_prototype_model
+    )
     return create_dedicated_host_response
 
 
@@ -6788,25 +7009,19 @@ def get_dedicated_host(service, id):
 
 
 def update_dedicated_host(service, id):
-    dedicated_host_patch_model = {
-        'name': 'my-host',
-        'instance_placement_enabled': False
-    }
-    update_dedicated_host_response = service.update_dedicated_host(
-        id, dedicated_host_patch=dedicated_host_patch_model)
+    dedicated_host_patch_model = {'name': 'my-host', 'instance_placement_enabled': False}
+    update_dedicated_host_response = service.update_dedicated_host(id, dedicated_host_patch=dedicated_host_patch_model)
     return update_dedicated_host_response
 
 
 def delete_dedicated_host_group(service, id):
-    delete_dedicated_host_group_response = service.delete_dedicated_host_group(
-        id)
+    delete_dedicated_host_group_response = service.delete_dedicated_host_group(id)
     return delete_dedicated_host_group_response
 
 
 def delete_dedicated_host(service, id):
     delete_dedicated_host_response = service.delete_dedicated_host(id)
     return delete_dedicated_host_response
-
 
 
 # --------------------------------------------------------
@@ -6821,24 +7036,23 @@ def create_placement_group(service, name):
     )
     return placement_group
 
+
 def list_placement_groups(service):
     placement_group_collection = service.list_placement_groups()
     return placement_group_collection
+
 
 def get_placement_group(service, pgid):
     placement_group = service.get_placement_group(pgid)
     return placement_group
 
-def update_placement_group(service, pgid, name):
-    placement_group_patch_model = {
-    'name': name
-    }
 
-    placement_group = service.update_placement_group(
-        pgid,
-        placement_group_patch=placement_group_patch_model
-    )
+def update_placement_group(service, pgid, name):
+    placement_group_patch_model = {'name': name}
+
+    placement_group = service.update_placement_group(pgid, placement_group_patch=placement_group_patch_model)
     return placement_group
+
 
 def delete_placement_group(service, pgid):
     response = service.delete_placement_group(pgid)
@@ -6851,7 +7065,23 @@ def delete_placement_group(service, pgid):
 
 
 def generate_name(r_type):
-    names = ("cloudy", "jumble", "lavender", "mayfly", "green",  "yellow", "fox", "unrest", "red", "windy", "foggy", "hatchet", "mushily", "beach", "slacker")
+    names = (
+        "cloudy",
+        "jumble",
+        "lavender",
+        "mayfly",
+        "green",
+        "yellow",
+        "fox",
+        "unrest",
+        "red",
+        "windy",
+        "foggy",
+        "hatchet",
+        "mushily",
+        "beach",
+        "slacker",
+    )
     return "psdk-" + names[random.randint(0, len(names) - 1)] + "-" + r_type
 
 
@@ -6860,10 +7090,13 @@ def assertListResponse(output, rType):
     assert output.status_code == 200
     assert response[rType] is not None
 
+
 #
+
 
 def assertPagerListResponse(output):
     assert len(output) != 0
+
 
 def assertGetNameResponse(output):
     response = output.get_result()
@@ -6871,15 +7104,18 @@ def assertGetNameResponse(output):
     # assert response['name'] is not None
     assert response['name'] is not None
 
+
 def assertGetPatchResponse(output):
     response = output.get_result()
     assert output.status_code == 200
     # assert response['name'] is not None
     assert response['id'] is not None
 
+
 def assertGetResponse(output):
     response = output.get_result()
     assert output.status_code == 200
+
 
 def assertCreateResponse(output):
     response = output.get_result()
@@ -6891,6 +7127,7 @@ def assertCreateResponse(output):
 def assertDeleteResponse(output):
     response = output.get_result()
     assert output.status_code == 204
+
 
 def assertDeleteRequestAcceptedResponse(output):
     response = output.get_result()

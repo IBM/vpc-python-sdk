@@ -1,6 +1,6 @@
 [project]
 name = "ibm-vpc"
-version = "0.0.1"
+version = "0.25.0"
 authors = [
     { name="IBM", email="devxsdk@us.ibm.com" }
 ]
