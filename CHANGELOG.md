@@ -1,3 +1,11 @@
+## [0.25.1](https://github.com/IBM/vpc-python-sdk/compare/v0.25.0...v0.25.1) (2024-12-30)
+
+
+### Bug Fixes
+
+* **build:** migrate setup.py to pyproject.toml ([#68](https://github.com/IBM/vpc-python-sdk/issues/68)) ([f7729e2](https://github.com/IBM/vpc-python-sdk/commit/f7729e254d0b01ffaabcd210850bc8be6c752159))
+* **release:** fix the semantic release and set the base version and lint fix ([#69](https://github.com/IBM/vpc-python-sdk/issues/69)) ([71386a8](https://github.com/IBM/vpc-python-sdk/commit/71386a8f8b4e677f4bf17b33254f64567e34a91a))
+
 # [0.25.0](https://github.com/IBM/vpc-python-sdk/compare/v0.24.1...v0.25.0) (2024-11-14)
 
 
