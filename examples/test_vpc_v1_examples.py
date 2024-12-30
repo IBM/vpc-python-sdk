@@ -21,7 +21,7 @@ import os
 import pytest
 from ibm_vpc.vpc_v1 import *
 
-data={}
+data = {}
 data['zone'] = 'us-east-1'
 data['region'] = 'us-east'
 
@@ -49,7 +49,7 @@ config = None
 # Start of Examples for Service: VpcV1
 ##############################################################################
 # region
-class TestVpcV1Examples():
+class TestVpcV1Examples:
     """
     Example Test Class for VpcV1
     """
@@ -74,8 +74,8 @@ class TestVpcV1Examples():
         print('Setup complete.')
 
     needscredentials = pytest.mark.skipif(
-        not os.path.exists(config_file),
-        reason="External configuration not available, skipping...")
+        not os.path.exists(config_file), reason="External configuration not available, skipping..."
+    )
 
     @needscredentials
     def test_list_vpcs_example(self):
@@ -122,7 +122,7 @@ class TestVpcV1Examples():
 
             # end-create_vpc
             assert vpc["id"] is not None
-            data["vpcID"]=vpc["id"]
+            data["vpcID"] = vpc["id"]
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -160,7 +160,7 @@ class TestVpcV1Examples():
 
             # end-create_vpc
             assert vpc["id"] is not None
-            data["vpcHubID"]=vpc["id"]
+            data["vpcHubID"] = vpc["id"]
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -192,10 +192,9 @@ class TestVpcV1Examples():
             # begin-update_vpc
 
             vpc_patch_model = {}
-            vpc_patch_model['name']='my-vpc-modified'
+            vpc_patch_model['name'] = 'my-vpc-modified'
 
-            vpc = vpc_service.update_vpc(
-                id=data["vpcID"], vpc_patch=vpc_patch_model).get_result()
+            vpc = vpc_service.update_vpc(id=data["vpcID"], vpc_patch=vpc_patch_model).get_result()
 
             # end-update_vpc
             assert vpc is not None
@@ -212,8 +211,7 @@ class TestVpcV1Examples():
             print('\nget_vpc_default_network_acl() result:')
             # begin-get_vpc_default_network_acl
 
-            default_network_acl = vpc_service.get_vpc_default_network_acl(
-                id=data["vpcID"]).get_result()
+            default_network_acl = vpc_service.get_vpc_default_network_acl(id=data["vpcID"]).get_result()
 
             # end-get_vpc_default_network_acl
             assert default_network_acl is not None
@@ -230,8 +228,7 @@ class TestVpcV1Examples():
             print('\nget_vpc_default_routing_table() result:')
             # begin-get_vpc_default_routing_table
 
-            default_routing_table = vpc_service.get_vpc_default_routing_table(
-                id=data["vpcID"]).get_result()
+            default_routing_table = vpc_service.get_vpc_default_routing_table(id=data["vpcID"]).get_result()
 
             # end-get_vpc_default_routing_table
             assert default_routing_table is not None
@@ -248,8 +245,7 @@ class TestVpcV1Examples():
             print('\nget_vpc_default_security_group() result:')
             # begin-get_vpc_default_security_group
 
-            default_security_group = vpc_service.get_vpc_default_security_group(
-                id=data["vpcID"]).get_result()
+            default_security_group = vpc_service.get_vpc_default_security_group(id=data["vpcID"]).get_result()
 
             # end-get_vpc_default_security_group
             assert default_security_group is not None
@@ -295,16 +291,14 @@ class TestVpcV1Examples():
             # begin-create_vpc_address_prefix
 
             zone_identity_model = {}
-            zone_identity_model['name']= data['zone']
+            zone_identity_model['name'] = data['zone']
             address_prefix = vpc_service.create_vpc_address_prefix(
-                vpc_id=data['vpcID'],
-                cidr='10.0.0.0/24',
-                zone=zone_identity_model,
-                name='my-address-prefix').get_result()
+                vpc_id=data['vpcID'], cidr='10.0.0.0/24', zone=zone_identity_model, name='my-address-prefix'
+            ).get_result()
 
             # end-create_vpc_address_prefix
             assert address_prefix['id'] is not None
-            data['vpcAddressPrefixId']=address_prefix['id']
+            data['vpcAddressPrefixId'] = address_prefix['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -319,7 +313,8 @@ class TestVpcV1Examples():
             # begin-get_vpc_address_prefix
 
             address_prefix = vpc_service.get_vpc_address_prefix(
-                vpc_id=data['vpcID'], id=data['vpcAddressPrefixId']).get_result()
+                vpc_id=data['vpcID'], id=data['vpcAddressPrefixId']
+            ).get_result()
 
             # end-get_vpc_address_prefix
             assert address_prefix is not None
@@ -337,12 +332,11 @@ class TestVpcV1Examples():
             # begin-update_vpc_address_prefix
 
             address_prefix_patch_model = {}
-            address_prefix_patch_model['name']='my-address-prefix-updated'
+            address_prefix_patch_model['name'] = 'my-address-prefix-updated'
 
             address_prefix = vpc_service.update_vpc_address_prefix(
-                vpc_id=data['vpcID'],
-                id=data['vpcAddressPrefixId'],
-                address_prefix_patch=address_prefix_patch_model).get_result()
+                vpc_id=data['vpcID'], id=data['vpcAddressPrefixId'], address_prefix_patch=address_prefix_patch_model
+            ).get_result()
 
             # end-update_vpc_address_prefix
             assert address_prefix is not None
@@ -427,9 +421,8 @@ class TestVpcV1Examples():
             print('\nupdate_vpc_dns_resolution_binding() result:')
             # begin-update_vpc_dns_resolution_binding
 
-            vpcdns_resolution_binding_patch_model = {
-            }
-            vpcdns_resolution_binding_patch_model['name']='my-vpc-dns-resolution-binding-updated'
+            vpcdns_resolution_binding_patch_model = {}
+            vpcdns_resolution_binding_patch_model['name'] = 'my-vpc-dns-resolution-binding-updated'
 
             response = vpc_service.update_vpc_dns_resolution_binding(
                 vpc_id=data['vpcID'],
@@ -481,10 +474,10 @@ class TestVpcV1Examples():
             # begin-create_vpc_routing_table
 
             route_next_hop_prototype_model = {}
-            route_next_hop_prototype_model['address']= '192.168.3.4'
+            route_next_hop_prototype_model['address'] = '192.168.3.4'
 
             zone_identity_model = {}
-            zone_identity_model['name']= data['zone']
+            zone_identity_model['name'] = data['zone']
 
             route_prototype_model = {}
             route_prototype_model['action'] = 'delegate'
@@ -496,11 +489,12 @@ class TestVpcV1Examples():
             routing_table = vpc_service.create_vpc_routing_table(
                 vpc_id=data['vpcID'],
                 name='my-routing-table',
-                routes=[route_prototype_model],).get_result()
+                routes=[route_prototype_model],
+            ).get_result()
 
             # end-create_vpc_routing_table
             assert routing_table['id'] is not None
-            data['vpcRoutingTableId']=routing_table['id']
+            data['vpcRoutingTableId'] = routing_table['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -515,7 +509,8 @@ class TestVpcV1Examples():
             # begin-get_vpc_routing_table
 
             routing_table = vpc_service.get_vpc_routing_table(
-                vpc_id=data['vpcID'], id=data['vpcRoutingTableId']).get_result()
+                vpc_id=data['vpcID'], id=data['vpcRoutingTableId']
+            ).get_result()
 
             # end-get_vpc_routing_table
             assert routing_table is not None
@@ -536,9 +531,8 @@ class TestVpcV1Examples():
             routing_table_patch_model['name'] = 'my-routing-table-modified'
 
             routing_table = vpc_service.update_vpc_routing_table(
-                vpc_id=data['vpcID'],
-                id=data['vpcRoutingTableId'],
-                routing_table_patch=routing_table_patch_model).get_result()
+                vpc_id=data['vpcID'], id=data['vpcRoutingTableId'], routing_table_patch=routing_table_patch_model
+            ).get_result()
 
             # end-update_vpc_routing_table
             assert routing_table is not None
@@ -598,11 +592,12 @@ class TestVpcV1Examples():
                 next_hop=route_next_hop_prototype_model,
                 action='delegate',
                 priority=1,
-                name='my-routing-table-route').get_result()
+                name='my-routing-table-route',
+            ).get_result()
 
             # end-create_vpc_routing_table_route
             assert route['id'] is not None
-            data['vpcRoutingTableRouteId']=route['id']
+            data['vpcRoutingTableRouteId'] = route['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -617,9 +612,8 @@ class TestVpcV1Examples():
             # begin-get_vpc_routing_table_route
 
             route = vpc_service.get_vpc_routing_table_route(
-                vpc_id=data['vpcID'],
-                routing_table_id=data['vpcRoutingTableId'],
-                id=data['vpcRoutingTableRouteId']).get_result()
+                vpc_id=data['vpcID'], routing_table_id=data['vpcRoutingTableId'], id=data['vpcRoutingTableRouteId']
+            ).get_result()
 
             # end-get_vpc_routing_table_route
             assert route is not None
@@ -642,7 +636,8 @@ class TestVpcV1Examples():
                 vpc_id=data['vpcID'],
                 routing_table_id=data['vpcRoutingTableId'],
                 id=data['vpcRoutingTableRouteId'],
-                route_patch=route_patch_model).get_result()
+                route_patch=route_patch_model,
+            ).get_result()
 
             # end-update_vpc_routing_table_route
             assert route is not None
@@ -698,12 +693,11 @@ class TestVpcV1Examples():
             subnet_prototype_model['ipv4_cidr_block'] = '10.0.1.0/24'
             subnet_prototype_model['zone'] = zone_identity_model
 
-            subnet = vpc_service.create_subnet(
-                subnet_prototype=subnet_prototype_model).get_result()
+            subnet = vpc_service.create_subnet(subnet_prototype=subnet_prototype_model).get_result()
 
             # end-create_subnet
             assert subnet['id'] is not None
-            data['subnetId']=subnet['id']
+            data['subnetId'] = subnet['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -735,10 +729,9 @@ class TestVpcV1Examples():
             # begin-update_subnet
 
             subnet_patch_model = {}
-            subnet_patch_model['name'] ='my-subnet-updated'
+            subnet_patch_model['name'] = 'my-subnet-updated'
 
-            subnet = vpc_service.update_subnet(
-                id=data['subnetId'], subnet_patch=subnet_patch_model).get_result()
+            subnet = vpc_service.update_subnet(id=data['subnetId'], subnet_patch=subnet_patch_model).get_result()
 
             # end-update_subnet
             assert subnet is not None
@@ -755,8 +748,7 @@ class TestVpcV1Examples():
             print('\nget_subnet_network_acl() result:')
             # begin-get_subnet_network_acl
 
-            network_acl = vpc_service.get_subnet_network_acl(
-                id=data['subnetId']).get_result()
+            network_acl = vpc_service.get_subnet_network_acl(id=data['subnetId']).get_result()
 
             # end-get_subnet_network_acl
             assert network_acl is not None
@@ -779,16 +771,15 @@ class TestVpcV1Examples():
             network_acl_prototype_model['name'] = 'my-subnet-network-acl'
             network_acl_prototype_model['vpc'] = vpc_model
 
-            network_acl = vpc_service.create_network_acl(
-                network_acl_prototype=network_acl_prototype_model).get_result()
+            network_acl = vpc_service.create_network_acl(network_acl_prototype=network_acl_prototype_model).get_result()
             # begin-replace_subnet_network_acl
 
             network_acl_identity_model = {}
             network_acl_identity_model['id'] = network_acl['id']
 
             network_replace_acl = vpc_service.replace_subnet_network_acl(
-                id=data['subnetId'],
-                network_acl_identity=network_acl_identity_model).get_result()
+                id=data['subnetId'], network_acl_identity=network_acl_identity_model
+            ).get_result()
 
             # end-replace_subnet_network_acl
             assert network_replace_acl is not None
@@ -805,22 +796,22 @@ class TestVpcV1Examples():
             print('\nset_subnet_public_gateway() result:')
 
             vpc_identity_model = {}
-            vpc_identity_model['id']= data['vpcID']
+            vpc_identity_model['id'] = data['vpcID']
 
             zone_identity_model = {}
-            zone_identity_model['name']= data['zone']
+            zone_identity_model['name'] = data['zone']
 
             public_gateway = vpc_service.create_public_gateway(
-                vpc=vpc_identity_model, zone=zone_identity_model).get_result()
+                vpc=vpc_identity_model, zone=zone_identity_model
+            ).get_result()
 
             # begin-set_subnet_public_gateway
 
             public_gateway_identity_model = {}
-            public_gateway_identity_model['id']= public_gateway['id']
+            public_gateway_identity_model['id'] = public_gateway['id']
 
             public_gateway_subnet = vpc_service.set_subnet_public_gateway(
-                id=data['subnetId'],
-                public_gateway_identity=public_gateway_identity_model
+                id=data['subnetId'], public_gateway_identity=public_gateway_identity_model
             ).get_result()
 
             # end-set_subnet_public_gateway
@@ -838,8 +829,7 @@ class TestVpcV1Examples():
             print('\nget_subnet_public_gateway() result:')
             # begin-get_subnet_public_gateway
 
-            public_gateway = vpc_service.get_subnet_public_gateway(
-                id=data['subnetId']).get_result()
+            public_gateway = vpc_service.get_subnet_public_gateway(id=data['subnetId']).get_result()
 
             # end-get_subnet_public_gateway
             assert public_gateway is not None
@@ -859,8 +849,7 @@ class TestVpcV1Examples():
 
             # end-unset_subnet_public_gateway
             assert response is not None
-            print('\nunset_subnet_public_gateway() response status code: ',
-                  response.get_status_code())
+            print('\nunset_subnet_public_gateway() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -874,8 +863,7 @@ class TestVpcV1Examples():
             print('\nget_subnet_routing_table() result:')
             # begin-get_subnet_routing_table
 
-            routing_table = vpc_service.get_subnet_routing_table(
-                id=data['subnetId']).get_result()
+            routing_table = vpc_service.get_subnet_routing_table(id=data['subnetId']).get_result()
 
             # end-get_subnet_routing_table
             assert routing_table is not None
@@ -893,12 +881,11 @@ class TestVpcV1Examples():
             # begin-replace_subnet_routing_table
 
             routing_table_identity_model = {}
-            routing_table_identity_model['id']= data['vpcRoutingTableId']
+            routing_table_identity_model['id'] = data['vpcRoutingTableId']
 
             routing_table = vpc_service.replace_subnet_routing_table(
-                id=data['subnetId'],
-                routing_table_identity=routing_table_identity_model).get_result(
-                )
+                id=data['subnetId'], routing_table_identity=routing_table_identity_model
+            ).get_result()
 
             # end-replace_subnet_routing_table
             assert routing_table is not None
@@ -945,11 +932,12 @@ class TestVpcV1Examples():
             # begin-create_subnet_reserved_ip
 
             reserved_ip = vpc_service.create_subnet_reserved_ip(
-                subnet_id=data['subnetId'],name='my-subnet-reserved-ip', auto_delete=False).get_result()
+                subnet_id=data['subnetId'], name='my-subnet-reserved-ip', auto_delete=False
+            ).get_result()
 
             # end-create_subnet_reserved_ip
             assert reserved_ip['id'] is not None
-            data['subnetReservedIp']=reserved_ip['id']
+            data['subnetReservedIp'] = reserved_ip['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -964,7 +952,8 @@ class TestVpcV1Examples():
             # begin-get_subnet_reserved_ip
 
             reserved_ip = vpc_service.get_subnet_reserved_ip(
-                subnet_id=data['subnetId'], id=data['subnetReservedIp']).get_result()
+                subnet_id=data['subnetId'], id=data['subnetReservedIp']
+            ).get_result()
 
             # end-get_subnet_reserved_ip
             assert reserved_ip is not None
@@ -982,12 +971,11 @@ class TestVpcV1Examples():
             # begin-update_subnet_reserved_ip
 
             reserved_ip_patch_model = {}
-            reserved_ip_patch_model['name']= 'my-reserved-ip-updated'
+            reserved_ip_patch_model['name'] = 'my-reserved-ip-updated'
 
             reserved_ip = vpc_service.update_subnet_reserved_ip(
-                subnet_id=data['subnetId'],
-                id=data['subnetReservedIp'],
-                reserved_ip_patch=reserved_ip_patch_model).get_result()
+                subnet_id=data['subnetId'], id=data['subnetReservedIp'], reserved_ip_patch=reserved_ip_patch_model
+            ).get_result()
 
             # end-update_subnet_reserved_ip
             assert reserved_ip is not None
@@ -1034,7 +1022,7 @@ class TestVpcV1Examples():
             # begin-create_image
 
             image_file_prototype_model = {}
-            image_file_prototype_model['href']= 'cos://us-south/my-bucket/my-image.qcow2'
+            image_file_prototype_model['href'] = 'cos://us-south/my-bucket/my-image.qcow2'
 
             operating_system_identity_model = {}
             operating_system_identity_model['name'] = 'debian-9-amd64'
@@ -1044,12 +1032,11 @@ class TestVpcV1Examples():
             image_prototype_model['operating_system'] = operating_system_identity_model
             image_prototype_model['name'] = 'my-image'
 
-            image = vpc_service.create_image(
-                image_prototype=image_prototype_model).get_result()
+            image = vpc_service.create_image(image_prototype=image_prototype_model).get_result()
 
             # end-create_image
             assert image['id'] is not None
-            data['imageId']=image['id']
+            data['imageId'] = image['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1083,8 +1070,7 @@ class TestVpcV1Examples():
             image_patch_model = {}
             image_patch_model['name'] = 'my-image-updated'
 
-            image = vpc_service.update_image(
-                id=data['imageId'], image_patch=image_patch_model).get_result()
+            image = vpc_service.update_image(id=data['imageId'], image_patch=image_patch_model).get_result()
 
             # end-update_image
             assert image is not None
@@ -1101,9 +1087,7 @@ class TestVpcV1Examples():
             print('\nlist_image_export_jobs() result:')
             # begin-list_image_export_jobs
 
-            response = vpc_service.list_image_export_jobs(
-                image_id=data['imageId']
-            )
+            response = vpc_service.list_image_export_jobs(image_id=data['imageId'])
             image_export_job_unpaginated_collection = response.get_result()
 
             # end-list_image_export_jobs
@@ -1127,12 +1111,12 @@ class TestVpcV1Examples():
             image_export_job = vpc_service.create_image_export_job(
                 image_id=data['imageId'],
                 name='my-image-export-job',
-                storage_bucket=cloud_object_storage_bucket_identity_model
+                storage_bucket=cloud_object_storage_bucket_identity_model,
             ).get_result()
 
             # end-create_image_export_job
             assert image_export_job is not None
-            data['imageExportJobId']=image_export_job['id']
+            data['imageExportJobId'] = image_export_job['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -1146,8 +1130,7 @@ class TestVpcV1Examples():
             # begin-get_image_export_job
 
             image_export_job = vpc_service.get_image_export_job(
-                image_id=data['imageId'],
-                id=data['imageExportJobId']
+                image_id=data['imageId'], id=data['imageExportJobId']
             ).get_result()
 
             # end-get_image_export_job
@@ -1164,14 +1147,12 @@ class TestVpcV1Examples():
             print('\nupdate_image_export_job() result:')
             # begin-update_image_export_job
 
-            image_export_job_patch_model = {
-                'name' : 'my-image-export-job-updated'
-            }
+            image_export_job_patch_model = {'name': 'my-image-export-job-updated'}
 
             image_export_job = vpc_service.update_image_export_job(
                 image_id=data['imageId'],
                 id=data['imageExportJobId'],
-                image_export_job_patch=image_export_job_patch_model
+                image_export_job_patch=image_export_job_patch_model,
             ).get_result()
 
             # end-update_image_export_job
@@ -1187,10 +1168,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_image_export_job
 
-            response = vpc_service.delete_image_export_job(
-                image_id=data['imageId'],
-                id=data['imageExportJobId']
-            )
+            response = vpc_service.delete_image_export_job(image_id=data['imageId'], id=data['imageExportJobId'])
 
             # end-delete_image_export_job
             print('\ndelete_image_export_job() response status code: ', response.get_status_code())
@@ -1221,7 +1199,7 @@ class TestVpcV1Examples():
 
             print(json.dumps(all_results, indent=2))
             assert all_results is not None
-            data['operatingSystemName']=all_results[0]['name']
+            data['operatingSystemName'] = all_results[0]['name']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1235,8 +1213,7 @@ class TestVpcV1Examples():
             print('\nget_operating_system() result:')
             # begin-get_operating_system
 
-            operating_system = vpc_service.get_operating_system(
-                name=data['operatingSystemName']).get_result()
+            operating_system = vpc_service.get_operating_system(name=data['operatingSystemName']).get_result()
 
             # end-get_operating_system
             assert operating_system is not None
@@ -1281,14 +1258,13 @@ class TestVpcV1Examples():
             # begin-create_key
 
             key = vpc_service.create_key(
-                public_key=
-                'AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En',
-                name='my-ssh-key'
+                public_key='AAAAB3NzaC1yc2EAAAADAQABAAABAQDDGe50Bxa5T5NDddrrtbx2Y4/VGbiCgXqnBsYToIUKoFSHTQl5IX3PasGnneKanhcLwWz5M5MoCRvhxTp66NKzIfAz7r+FX9rxgR+ZgcM253YAqOVeIpOU408simDZKriTlN8kYsXL7P34tsWuAJf4MgZtJAQxous/2byetpdCv8ddnT4X3ltOg9w+LqSCPYfNivqH00Eh7S1Ldz7I8aw5WOp5a+sQFP/RbwfpwHp+ny7DfeIOokcuI42tJkoBn7UsLTVpCSmXr2EDRlSWe/1M/iHNRBzaT3CK0+SwZWd2AEjePxSnWKNGIEUJDlUYp7hKhiQcgT5ZAnWU121oc5En',
+                name='my-ssh-key',
             ).get_result()
 
             # end-create_key
             assert key['id'] is not None
-            data['keyId']=key['id']
+            data['keyId'] = key['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1322,8 +1298,7 @@ class TestVpcV1Examples():
             key_patch_model = {}
             key_patch_model['name'] = 'my-ssh-key-updated'
 
-            key = vpc_service.update_key(
-                id=data['keyId'], key_patch=key_patch_model).get_result()
+            key = vpc_service.update_key(id=data['keyId'], key_patch=key_patch_model).get_result()
 
             # end-update_key
             assert key is not None
@@ -1375,12 +1350,11 @@ class TestVpcV1Examples():
             floating_ip_prototype_model['zone'] = zone_identity_model
             floating_ip_prototype_model['name'] = 'my-floating-ip'
 
-            floating_ip = vpc_service.create_floating_ip(
-                floating_ip_prototype=floating_ip_prototype_model).get_result()
+            floating_ip = vpc_service.create_floating_ip(floating_ip_prototype=floating_ip_prototype_model).get_result()
 
             # end-create_floating_ip
             assert floating_ip['id'] is not None
-            data['floatingIpId']=floating_ip['id']
+            data['floatingIpId'] = floating_ip['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1394,8 +1368,7 @@ class TestVpcV1Examples():
             print('\nget_floating_ip() result:')
             # begin-get_floating_ip
 
-            floating_ip = vpc_service.get_floating_ip(
-                id=data['floatingIpId']).get_result()
+            floating_ip = vpc_service.get_floating_ip(id=data['floatingIpId']).get_result()
 
             # end-get_floating_ip
             assert floating_ip['id'] is not None
@@ -1416,8 +1389,8 @@ class TestVpcV1Examples():
             floating_ip_patch_model['name'] = 'my-floating-ip-updated'
 
             floating_ip = vpc_service.update_floating_ip(
-                id=data['floatingIpId'],
-                floating_ip_patch=floating_ip_patch_model).get_result()
+                id=data['floatingIpId'], floating_ip_patch=floating_ip_patch_model
+            ).get_result()
 
             # end-update_floating_ip
             assert floating_ip is not None
@@ -1461,8 +1434,7 @@ class TestVpcV1Examples():
             print('\nget_volume_profile() result:')
             # begin-get_volume_profile
 
-            volume_profile = vpc_service.get_volume_profile(
-                name='10iops-tier').get_result()
+            volume_profile = vpc_service.get_volume_profile(name='10iops-tier').get_result()
 
             # end-get_volume_profile
 
@@ -1524,12 +1496,11 @@ class TestVpcV1Examples():
             volume_prototype_model['zone'] = zone_identity_model
             volume_prototype_model['capacity'] = 100
             volume_prototype_model['user_tags'] = ['my-daily-backup-policy']
-            volume = vpc_service.create_volume(
-                volume_prototype=volume_prototype_model).get_result()
+            volume = vpc_service.create_volume(volume_prototype=volume_prototype_model).get_result()
 
             # end-create_volume
             assert volume['id'] is not None
-            data['volumeId']=volume['id']
+            data['volumeId'] = volume['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1563,8 +1534,7 @@ class TestVpcV1Examples():
             volume_patch_model = {}
             volume_patch_model['name'] = 'my-volume-updated'
 
-            volume = vpc_service.update_volume(
-                id=data['volumeId'], volume_patch=volume_patch_model).get_result()
+            volume = vpc_service.update_volume(id=data['volumeId'], volume_patch=volume_patch_model).get_result()
 
             # end-update_volume
             assert volume is not None
@@ -1581,12 +1551,11 @@ class TestVpcV1Examples():
             print('\nlist_instance_profiles() result:')
             # begin-list_instance_profiles
 
-            instance_profile_collection = vpc_service.list_instance_profiles(
-            ).get_result()
+            instance_profile_collection = vpc_service.list_instance_profiles().get_result()
 
             # end-list_instance_profiles
             assert instance_profile_collection is not None
-            data['instanceProfileName']=instance_profile_collection['profiles'][0]['name']
+            data['instanceProfileName'] = instance_profile_collection['profiles'][0]['name']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1600,8 +1569,7 @@ class TestVpcV1Examples():
             print('\nget_instance_profile() result:')
             # begin-get_instance_profile
 
-            instance_profile = vpc_service.get_instance_profile(
-                name=data['instanceProfileName']).get_result()
+            instance_profile = vpc_service.get_instance_profile(name=data['instanceProfileName']).get_result()
 
             # end-get_instance_profile
             assert instance_profile is not None
@@ -1618,8 +1586,7 @@ class TestVpcV1Examples():
             print('\nlist_instance_templates() result:')
             # begin-list_instance_templates
 
-            instance_template_collection = vpc_service.list_instance_templates(
-            ).get_result()
+            instance_template_collection = vpc_service.list_instance_templates().get_result()
 
             # end-list_instance_templates
 
@@ -1638,7 +1605,7 @@ class TestVpcV1Examples():
             # begin-create_instance_template
 
             key_identity_model = {}
-            key_identity_model['id'] =  data['keyId']
+            key_identity_model['id'] = data['keyId']
 
             subnet_identity_model = {}
             subnet_identity_model['id'] = data['subnetId']
@@ -1679,7 +1646,7 @@ class TestVpcV1Examples():
             # end-create_instance_template
 
             assert instance_template is not None
-            data['instanceTemplateId']=instance_template['id']
+            data['instanceTemplateId'] = instance_template['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1693,8 +1660,7 @@ class TestVpcV1Examples():
             print('\nget_instance_template() result:')
             # begin-get_instance_template
 
-            instance_template = vpc_service.get_instance_template(
-                id=data['instanceTemplateId']).get_result()
+            instance_template = vpc_service.get_instance_template(id=data['instanceTemplateId']).get_result()
             # end-get_instance_template
 
             assert instance_template is not None
@@ -1715,8 +1681,7 @@ class TestVpcV1Examples():
             instance_template_patch_model['name'] = 'my-instance-template-updated'
 
             instance_template = vpc_service.update_instance_template(
-                id=data['instanceTemplateId'],
-                instance_template_patch=instance_template_patch_model
+                id=data['instanceTemplateId'], instance_template_patch=instance_template_patch_model
             ).get_result()
 
             # end-update_instance_template
@@ -1790,13 +1755,12 @@ class TestVpcV1Examples():
             instance_prototype_model['zone'] = zone_identity_model
             instance_prototype_model['image'] = image_identity_model
 
-            instance = vpc_service.create_instance(
-                instance_prototype=instance_prototype_model).get_result()
+            instance = vpc_service.create_instance(instance_prototype=instance_prototype_model).get_result()
 
             # end-create_instance
 
             assert instance is not None
-            data['instanceId']=instance['id']
+            data['instanceId'] = instance['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1828,11 +1792,11 @@ class TestVpcV1Examples():
             # begin-update_instance
 
             instance_patch_model = {}
-            instance_patch_model['name']='my-instance-updated'
+            instance_patch_model['name'] = 'my-instance-updated'
 
             instance = vpc_service.update_instance(
-                id=data['instanceId'],
-                instance_patch=instance_patch_model).get_result()
+                id=data['instanceId'], instance_patch=instance_patch_model
+            ).get_result()
 
             # end-update_instance
             assert instance is not None
@@ -1849,8 +1813,7 @@ class TestVpcV1Examples():
             print('\nget_instance_initialization() result:')
             # begin-get_instance_initialization
 
-            instance_initialization = vpc_service.get_instance_initialization(
-                id=data['instanceId']).get_result()
+            instance_initialization = vpc_service.get_instance_initialization(id=data['instanceId']).get_result()
 
             # end-get_instance_initialization
             assert instance_initialization is not None
@@ -1868,14 +1831,14 @@ class TestVpcV1Examples():
             # begin-create_instance_action
 
             instance_action = vpc_service.create_instance_action(
-                instance_id=data['instanceId'], type='reboot').get_result()
+                instance_id=data['instanceId'], type='reboot'
+            ).get_result()
 
             # end-create_instance_action
             assert instance_action is not None
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_list_instance_cluster_network_attachments_example(self):
@@ -1929,7 +1892,7 @@ class TestVpcV1Examples():
 
             # end-create_cluster_network_attachment
             assert instance_cluster_network_attachment is not None
-            data['instanceClusterNetworkAttachmentId']=instance_cluster_network_attachment['id']
+            data['instanceClusterNetworkAttachmentId'] = instance_cluster_network_attachment['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -1984,7 +1947,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-
     @needscredentials
     @pytest.mark.skip(reason="mock")
     def test_create_instance_console_access_token_example(self):
@@ -1996,7 +1958,8 @@ class TestVpcV1Examples():
             # begin-create_instance_console_access_token
 
             instance_console_access_token = vpc_service.create_instance_console_access_token(
-                instance_id=data['instanceId'], console_type='serial').get_result()
+                instance_id=data['instanceId'], console_type='serial'
+            ).get_result()
 
             assert instance_console_access_token is not None
 
@@ -2018,7 +1981,7 @@ class TestVpcV1Examples():
             instance_disk_collection = vpc_service.list_instance_disks(instance_id=data['instanceId']).get_result()
 
             assert instance_disk_collection is not None
-            data['instanceDiskId']=instance_disk_collection['disks'][0]['id']
+            data['instanceDiskId'] = instance_disk_collection['disks'][0]['id']
 
             # end-list_instance_disks
 
@@ -2036,7 +1999,8 @@ class TestVpcV1Examples():
             # begin-get_instance_disk
 
             instance_disk = vpc_service.get_instance_disk(
-                instance_id=data['instanceId'], id=data['instanceDiskId']).get_result()
+                instance_id=data['instanceId'], id=data['instanceDiskId']
+            ).get_result()
 
             assert instance_disk is not None
 
@@ -2055,14 +2019,11 @@ class TestVpcV1Examples():
             print('\nupdate_instance_disk() result:')
             # begin-update_instance_disk
 
-            instance_disk_patch_model = {
-                'name': 'my-instance-disk-updated'
-            }
+            instance_disk_patch_model = {'name': 'my-instance-disk-updated'}
 
             instance_disk = vpc_service.update_instance_disk(
-                instance_id=data['instanceId'],
-                id=data['instanceDiskId'],
-                instance_disk_patch=instance_disk_patch_model).get_result()
+                instance_id=data['instanceId'], id=data['instanceDiskId'], instance_disk_patch=instance_disk_patch_model
+            ).get_result()
 
             assert instance_disk is not None
 
@@ -2081,7 +2042,8 @@ class TestVpcV1Examples():
             # begin-list_instance_network_interfaces
 
             network_interface_unpaginated_collection = vpc_service.list_instance_network_interfaces(
-                instance_id=data['instanceId']).get_result()
+                instance_id=data['instanceId']
+            ).get_result()
 
             # end-list_instance_network_interfaces
             assert network_interface_unpaginated_collection is not None
@@ -2102,14 +2064,13 @@ class TestVpcV1Examples():
             subnet_identity_model['id'] = data['subnetId']
 
             network_interface = vpc_service.create_instance_network_interface(
-                name='my-network-interface',
-                instance_id=data['instanceId'],
-                subnet=subnet_identity_model).get_result()
+                name='my-network-interface', instance_id=data['instanceId'], subnet=subnet_identity_model
+            ).get_result()
 
             # end-create_instance_network_interface
 
             assert network_interface is not None
-            data['eth2Id']=network_interface['id']
+            data['eth2Id'] = network_interface['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2124,7 +2085,8 @@ class TestVpcV1Examples():
             # begin-get_instance_network_interface
 
             network_interface = vpc_service.get_instance_network_interface(
-                instance_id=data['instanceId'], id=data['eth2Id']).get_result()
+                instance_id=data['instanceId'], id=data['eth2Id']
+            ).get_result()
 
             # end-get_instance_network_interface
 
@@ -2147,9 +2109,7 @@ class TestVpcV1Examples():
             network_interface_patch_model['allow_ip_spoofing'] = True
 
             network_interface = vpc_service.update_instance_network_interface(
-                instance_id=data['instanceId'],
-                id=data['eth2Id'],
-                network_interface_patch=network_interface_patch_model
+                instance_id=data['instanceId'], id=data['eth2Id'], network_interface_patch=network_interface_patch_model
             ).get_result()
 
             # end-update_instance_network_interface
@@ -2169,9 +2129,8 @@ class TestVpcV1Examples():
             # begin-add_instance_network_interface_floating_ip
 
             floating_ip = vpc_service.add_instance_network_interface_floating_ip(
-                instance_id=data['instanceId'],
-                network_interface_id=data['eth2Id'],
-                id=data['floatingIpId']).get_result()
+                instance_id=data['instanceId'], network_interface_id=data['eth2Id'], id=data['floatingIpId']
+            ).get_result()
 
             # end-add_instance_network_interface_floating_ip
 
@@ -2190,8 +2149,8 @@ class TestVpcV1Examples():
             # begin-list_instance_network_interface_floating_ips
 
             floating_ip_unpaginated_collection = vpc_service.list_instance_network_interface_floating_ips(
-                instance_id=data['instanceId'],
-                network_interface_id=data['eth2Id']).get_result()
+                instance_id=data['instanceId'], network_interface_id=data['eth2Id']
+            ).get_result()
 
             # end-list_instance_network_interface_floating_ips
 
@@ -2210,9 +2169,8 @@ class TestVpcV1Examples():
             # begin-get_instance_network_interface_floating_ip
 
             floating_ip = vpc_service.get_instance_network_interface_floating_ip(
-                instance_id=data['instanceId'],
-                network_interface_id=data['eth2Id'],
-                id=data['floatingIpId']).get_result()
+                instance_id=data['instanceId'], network_interface_id=data['eth2Id'], id=data['floatingIpId']
+            ).get_result()
 
             # end-get_instance_network_interface_floating_ip
 
@@ -2259,16 +2217,14 @@ class TestVpcV1Examples():
             # begin-get_instance_network_interface_ip
 
             reserved_ip = vpc_service.get_instance_network_interface_ip(
-                instance_id=data['instanceId'],
-                network_interface_id=data['eth2Id'],
-                id=data['subnetReservedIp']
+                instance_id=data['instanceId'], network_interface_id=data['eth2Id'], id=data['subnetReservedIp']
             ).get_result()
-
 
             # end-get_instance_network_interface_ip
             assert reserved_ip is not None
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     def test_list_instance_volume_attachments_example(self):
         """
@@ -2279,7 +2235,8 @@ class TestVpcV1Examples():
             # begin-list_instance_volume_attachments
 
             volume_attachment_collection = vpc_service.list_instance_volume_attachments(
-                instance_id=data['instanceId']).get_result()
+                instance_id=data['instanceId']
+            ).get_result()
 
             # end-list_instance_volume_attachments
 
@@ -2303,13 +2260,14 @@ class TestVpcV1Examples():
             volume_attachment = vpc_service.create_instance_volume_attachment(
                 instance_id=data['instanceId'],
                 volume=volume_attachment_prototype_volume_model,
-                 name='my-instance-volume-attachment',
-                 delete_volume_on_instance_delete=True).get_result()
+                name='my-instance-volume-attachment',
+                delete_volume_on_instance_delete=True,
+            ).get_result()
 
             # end-create_instance_volume_attachment
 
             assert volume_attachment is not None
-            data['volumeAttachmentId']=volume_attachment['id']
+            data['volumeAttachmentId'] = volume_attachment['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2324,7 +2282,8 @@ class TestVpcV1Examples():
             # begin-get_instance_volume_attachment
 
             volume_attachment = vpc_service.get_instance_volume_attachment(
-                instance_id=data['instanceId'], id=data['volumeAttachmentId']).get_result()
+                instance_id=data['instanceId'], id=data['volumeAttachmentId']
+            ).get_result()
 
             # end-get_instance_volume_attachment
 
@@ -2348,7 +2307,7 @@ class TestVpcV1Examples():
             volume_attachment = vpc_service.update_instance_volume_attachment(
                 instance_id=data['instanceId'],
                 id=data['volumeAttachmentId'],
-                volume_attachment_patch=volume_attachment_patch_model
+                volume_attachment_patch=volume_attachment_patch_model,
             ).get_result()
 
             # end-update_instance_volume_attachment
@@ -2397,15 +2356,16 @@ class TestVpcV1Examples():
             zone_identity_model['name'] = data['zone']
 
             reservation = vpc_service.create_reservation(
-                capacity=capacity_model, 
-                committed_use=committed_use_model, 
-                profile=profile_model, 
-                zone=zone_identity_model, 
-                name='my-reservation').get_result()
+                capacity=capacity_model,
+                committed_use=committed_use_model,
+                profile=profile_model,
+                zone=zone_identity_model,
+                name='my-reservation',
+            ).get_result()
 
             # end-create_reservation
             assert reservation['id'] is not None
-            data['reservationId']=reservation['id']
+            data['reservationId'] = reservation['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2420,10 +2380,11 @@ class TestVpcV1Examples():
             # begin-update_reservation
 
             reservation_patch_model = {}
-            reservation_patch_model['name'] ='my-reservation-updated'
+            reservation_patch_model['name'] = 'my-reservation-updated'
 
             reservation = vpc_service.update_reservation(
-                id=data['reservationId'], reservation_patch=reservation_patch_model).get_result()
+                id=data['reservationId'], reservation_patch=reservation_patch_model
+            ).get_result()
 
             # end-update_reservation
             assert reservation is not None
@@ -2440,8 +2401,7 @@ class TestVpcV1Examples():
             print('\nactivate_reservation() result:')
             # begin-activate_reservation
 
-            response = vpc_service.activate_reservation(
-                id=data['reservationId']).get_result()
+            response = vpc_service.activate_reservation(id=data['reservationId']).get_result()
 
             # end-activate_reservation
         except ApiException as e:
@@ -2456,8 +2416,7 @@ class TestVpcV1Examples():
             print('\nget_reservation() result:')
             # begin-activate_reservation
 
-            reservation = vpc_service.get_reservation(
-                id=data['reservationId']).get_result()
+            reservation = vpc_service.get_reservation(id=data['reservationId']).get_result()
 
             # end-get_reservation
             assert reservation is not None
@@ -2490,7 +2449,7 @@ class TestVpcV1Examples():
             zone_identity_model['name'] = data['zone']
 
             reservation_identity_model = {}
-            reservation_identity_model['id'] =  data['reservationId']
+            reservation_identity_model['id'] = data['reservationId']
 
             reservation_affinity_model = {}
             reservation_affinity_model['policy'] = 'manual'
@@ -2508,13 +2467,12 @@ class TestVpcV1Examples():
             instance_prototype_model['image'] = image_identity_model
             instance_prototype_model['reservation_affinity'] = reservation_affinity_model
 
-            instance = vpc_service.create_instance(
-                instance_prototype=instance_prototype_model).get_result()
+            instance = vpc_service.create_instance(instance_prototype=instance_prototype_model).get_result()
 
             # end-create_instance
 
             assert instance is not None
-            data['instanceIdWithRes']=instance['id']
+            data['instanceIdWithRes'] = instance['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2529,26 +2487,25 @@ class TestVpcV1Examples():
             # begin-update_instance
 
             reservation_identity_model = {}
-            reservation_identity_model['id'] =  data['reservationId']
+            reservation_identity_model['id'] = data['reservationId']
 
             reservation_affinity_model = {}
             reservation_affinity_model['policy'] = 'manual'
             reservation_affinity_model['pool'] = [reservation_identity_model]
 
             instance_patch_model = {}
-            instance_patch_model['name']='my-instance-updated'
+            instance_patch_model['name'] = 'my-instance-updated'
             instance_patch_model['reservation_affinity'] = reservation_affinity_model
 
             instance = vpc_service.update_instance(
-                id=data['instanceId'],
-                instance_patch=instance_patch_model).get_result()
+                id=data['instanceId'], instance_patch=instance_patch_model
+            ).get_result()
 
             # end-update_instance
             assert instance is not None
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     @pytest.mark.skip(reason="mock")
@@ -2559,14 +2516,12 @@ class TestVpcV1Examples():
         try:
             # begin-delete_reservation
 
-            response = vpc_service.delete_reservation(
-                id=data['reservationId'])
+            response = vpc_service.delete_reservation(id=data['reservationId'])
 
             assert response is not None
 
             # end-delete_reservation
-            print('\ndelete_reservation() response status code: ',
-                  response.get_status_code())
+            print('\ndelete_reservation() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2616,12 +2571,13 @@ class TestVpcV1Examples():
             instance_group = vpc_service.create_instance_group(
                 instance_template=instance_template_identity_model,
                 subnets=[subnet_identity_model],
-                name='my-instance-group').get_result()
+                name='my-instance-group',
+            ).get_result()
 
             # end-create_instance_group
 
             assert instance_group is not None
-            data['instanceGroupId']=instance_group['id']
+            data['instanceGroupId'] = instance_group['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2635,8 +2591,7 @@ class TestVpcV1Examples():
             print('\nget_instance_group() result:')
             # begin-get_instance_group
 
-            instance_group = vpc_service.get_instance_group(
-                id=data['instanceGroupId']).get_result()
+            instance_group = vpc_service.get_instance_group(id=data['instanceGroupId']).get_result()
 
             # end-get_instance_group
 
@@ -2658,8 +2613,8 @@ class TestVpcV1Examples():
             instance_group_patch_model['name'] = 'my-instance-group-updated'
 
             instance_group = vpc_service.update_instance_group(
-                id=data['instanceGroupId'],
-                instance_group_patch=instance_group_patch_model).get_result()
+                id=data['instanceGroupId'], instance_group_patch=instance_group_patch_model
+            ).get_result()
 
             # end-update_instance_group
 
@@ -2709,17 +2664,17 @@ class TestVpcV1Examples():
             instance_group_manager_prototype_model['name'] = 'my-instance-group-manager'
             instance_group_manager_prototype_model['manager_type'] = 'autoscale'
             instance_group_manager_prototype_model['max_membership_count'] = 5
-            instance_group_manager_prototype_model['manager_type' ] = 'autoscale'
+            instance_group_manager_prototype_model['manager_type'] = 'autoscale'
 
             instance_group_manager = vpc_service.create_instance_group_manager(
                 instance_group_id=data['instanceGroupId'],
-                instance_group_manager_prototype=
-                instance_group_manager_prototype_model).get_result()
+                instance_group_manager_prototype=instance_group_manager_prototype_model,
+            ).get_result()
 
             # end-create_instance_group_manager
 
             assert instance_group_manager is not None
-            data['instanceGroupManagerId']=instance_group_manager['id']
+            data['instanceGroupManagerId'] = instance_group_manager['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2734,7 +2689,8 @@ class TestVpcV1Examples():
             # begin-get_instance_group_manager
 
             instance_group_manager = vpc_service.get_instance_group_manager(
-                instance_group_id=data['instanceGroupId'], id=data['instanceGroupManagerId']).get_result()
+                instance_group_id=data['instanceGroupId'], id=data['instanceGroupManagerId']
+            ).get_result()
 
             # end-get_instance_group_manager
 
@@ -2758,7 +2714,7 @@ class TestVpcV1Examples():
             instance_group_manager = vpc_service.update_instance_group_manager(
                 instance_group_id=data['instanceGroupId'],
                 id=data['instanceGroupManagerId'],
-                instance_group_manager_patch=instance_group_manager_patch_model
+                instance_group_manager_patch=instance_group_manager_patch_model,
             ).get_result()
 
             # end-update_instance_group_manager
@@ -2811,19 +2767,20 @@ class TestVpcV1Examples():
 
             instance_group_manager_action_prototype_model = {}
             instance_group_manager_action_prototype_model['name'] = 'my-instance-group-manager-action'
-            instance_group_manager_action_prototype_model['group'] = instance_group_manager_scheduled_action_group_prototype_model
-
+            instance_group_manager_action_prototype_model['group'] = (
+                instance_group_manager_scheduled_action_group_prototype_model
+            )
 
             instance_group_manager_action = vpc_service.create_instance_group_manager_action(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                instance_group_manager_action_prototype=
-                instance_group_manager_action_prototype_model).get_result()
+                instance_group_manager_action_prototype=instance_group_manager_action_prototype_model,
+            ).get_result()
 
             # end-create_instance_group_manager_action
 
             assert instance_group_manager_action is not None
-            data['instanceGroupManagerActionId']=instance_group_manager_action['id']
+            data['instanceGroupManagerActionId'] = instance_group_manager_action['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2840,7 +2797,8 @@ class TestVpcV1Examples():
             instance_group_manager_action = vpc_service.get_instance_group_manager_action(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                id=data['instanceGroupManagerActionId']).get_result()
+                id=data['instanceGroupManagerActionId'],
+            ).get_result()
 
             # end-get_instance_group_manager_action
 
@@ -2865,8 +2823,8 @@ class TestVpcV1Examples():
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
                 id=data['instanceGroupManagerActionId'],
-                instance_group_manager_action_patch=
-                instance_group_manager_action_patch_model).get_result()
+                instance_group_manager_action_patch=instance_group_manager_action_patch_model,
+            ).get_result()
 
             # end-update_instance_group_manager_action
 
@@ -2896,7 +2854,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_instance_group_manager_policies
 
             print(json.dumps(all_results, indent=2))
@@ -2924,13 +2881,13 @@ class TestVpcV1Examples():
             instance_group_manager_policy = vpc_service.create_instance_group_manager_policy(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                instance_group_manager_policy_prototype=
-                instance_group_manager_policy_prototype_model).get_result()
+                instance_group_manager_policy_prototype=instance_group_manager_policy_prototype_model,
+            ).get_result()
 
             # end-create_instance_group_manager_policy
 
             assert instance_group_manager_policy is not None
-            data['instanceGroupManagerPolicyId']=instance_group_manager_policy['id']
+            data['instanceGroupManagerPolicyId'] = instance_group_manager_policy['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -2947,7 +2904,8 @@ class TestVpcV1Examples():
             instance_group_manager_policy = vpc_service.get_instance_group_manager_policy(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                id=data['instanceGroupManagerPolicyId']).get_result()
+                id=data['instanceGroupManagerPolicyId'],
+            ).get_result()
 
             # end-get_instance_group_manager_policy
 
@@ -2974,8 +2932,8 @@ class TestVpcV1Examples():
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
                 id=data['instanceGroupManagerPolicyId'],
-                instance_group_manager_policy_patch=
-                instance_group_manager_policy_patch_model).get_result()
+                instance_group_manager_policy_patch=instance_group_manager_policy_patch_model,
+            ).get_result()
 
             # end-update_instance_group_manager_policy
 
@@ -3008,7 +2966,7 @@ class TestVpcV1Examples():
 
             print(json.dumps(all_results, indent=2))
             assert all_results is not None
-            data['instanceGroupMembershipId']=all_results[0]['id']
+            data['instanceGroupMembershipId'] = all_results[0]['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3023,7 +2981,8 @@ class TestVpcV1Examples():
             # begin-get_instance_group_membership
 
             instance_group_membership = vpc_service.get_instance_group_membership(
-                instance_group_id=data['instanceGroupId'], id=data['instanceGroupMembershipId']).get_result()
+                instance_group_id=data['instanceGroupId'], id=data['instanceGroupMembershipId']
+            ).get_result()
 
             # end-get_instance_group_membership
 
@@ -3047,8 +3006,8 @@ class TestVpcV1Examples():
             instance_group_membership = vpc_service.update_instance_group_membership(
                 instance_group_id=data['instanceGroupId'],
                 id=data['instanceGroupMembershipId'],
-                instance_group_membership_patch=
-                instance_group_membership_patch_model).get_result()
+                instance_group_membership_patch=instance_group_membership_patch_model,
+            ).get_result()
 
             # end-update_instance_group_membership
 
@@ -3099,12 +3058,13 @@ class TestVpcV1Examples():
             zone_identity_model['name'] = data['zone']
 
             dedicated_host_group = vpc_service.create_dedicated_host_group(
-                class_='mx2', family='balanced', zone=zone_identity_model,name='my-dedicated-host-group').get_result()
+                class_='mx2', family='balanced', zone=zone_identity_model, name='my-dedicated-host-group'
+            ).get_result()
 
             # end-create_dedicated_host_group
 
             assert dedicated_host_group is not None
-            data['dedicatedHostGroupId']=dedicated_host_group['id']
+            data['dedicatedHostGroupId'] = dedicated_host_group['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3118,8 +3078,7 @@ class TestVpcV1Examples():
             print('\nget_dedicated_host_group() result:')
             # begin-get_dedicated_host_group
 
-            dedicated_host_group = vpc_service.get_dedicated_host_group(
-                id=data['dedicatedHostGroupId']).get_result()
+            dedicated_host_group = vpc_service.get_dedicated_host_group(id=data['dedicatedHostGroupId']).get_result()
 
             # end-get_dedicated_host_group
 
@@ -3141,8 +3100,7 @@ class TestVpcV1Examples():
             dedicated_host_group_patch_model['name'] = 'my-host-group-updated'
 
             dedicated_host_group = vpc_service.update_dedicated_host_group(
-                id=data['dedicatedHostGroupId'],
-                dedicated_host_group_patch=dedicated_host_group_patch_model
+                id=data['dedicatedHostGroupId'], dedicated_host_group_patch=dedicated_host_group_patch_model
             ).get_result()
 
             # end-update_dedicated_host_group
@@ -3175,7 +3133,7 @@ class TestVpcV1Examples():
 
             print(json.dumps(all_results, indent=2))
             assert all_results is not None
-            data['dhProfile']="mx2d-host-152x1216"
+            data['dhProfile'] = "mx2d-host-152x1216"
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3189,8 +3147,7 @@ class TestVpcV1Examples():
             print('\nget_dedicated_host_profile() result:')
             # begin-get_dedicated_host_profile
 
-            dedicated_host_profile = vpc_service.get_dedicated_host_profile(
-                name=data['dhProfile']).get_result()
+            dedicated_host_profile = vpc_service.get_dedicated_host_profile(name=data['dhProfile']).get_result()
 
             print(json.dumps(dedicated_host_profile, indent=2))
             # end-get_dedicated_host_profile
@@ -3256,7 +3213,7 @@ class TestVpcV1Examples():
             # end-create_dedicated_host
 
             assert dedicated_host is not None
-            data['dedicatedHostId']=dedicated_host['id']
+            data['dedicatedHostId'] = dedicated_host['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3270,8 +3227,7 @@ class TestVpcV1Examples():
             print('\nget_dedicated_host() result:')
             # begin-get_dedicated_host
 
-            dedicated_host = vpc_service.get_dedicated_host(
-                id=data['dedicatedHostId']).get_result()
+            dedicated_host = vpc_service.get_dedicated_host(id=data['dedicatedHostId']).get_result()
 
             # end-get_dedicated_host
 
@@ -3288,26 +3244,25 @@ class TestVpcV1Examples():
         try:
             print('\nlist_dedicated_host_disks() result:')
 
-            dedicated_host_collection = vpc_service.list_dedicated_hosts(
-            ).get_result()
+            dedicated_host_collection = vpc_service.list_dedicated_hosts().get_result()
 
             assert dedicated_host_collection is not None
 
             for dh in dedicated_host_collection['dedicated_hosts']:
-                if len(dh['disks'])>0:
-                    data['dhId']=dh['id']
+                if len(dh['disks']) > 0:
+                    data['dhId'] = dh['id']
                     break
 
             # begin-list_dedicated_host_disks
 
-
             dedicated_host_disk_collection = vpc_service.list_dedicated_host_disks(
-                dedicated_host_id=data['dedicatedHostId']).get_result()
+                dedicated_host_id=data['dedicatedHostId']
+            ).get_result()
 
             # end-list_dedicated_host_disks
 
             assert dedicated_host_disk_collection is not None
-            data['diskId']=dedicated_host_disk_collection['disks'][0]['id']
+            data['diskId'] = dedicated_host_disk_collection['disks'][0]['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3322,7 +3277,8 @@ class TestVpcV1Examples():
             # begin-get_dedicated_host_disk
 
             dedicated_host_disk = vpc_service.get_dedicated_host_disk(
-                dedicated_host_id=data['dedicatedHostId'], id=data['diskId']).get_result()
+                dedicated_host_id=data['dedicatedHostId'], id=data['diskId']
+            ).get_result()
 
             # end-get_dedicated_host_disk
 
@@ -3346,7 +3302,7 @@ class TestVpcV1Examples():
             dedicated_host_disk = vpc_service.update_dedicated_host_disk(
                 dedicated_host_id=data['dedicatedHostId'],
                 id=data['diskId'],
-                dedicated_host_disk_patch=dedicated_host_disk_patch_model
+                dedicated_host_disk_patch=dedicated_host_disk_patch_model,
             ).get_result()
 
             # end-update_dedicated_host_disk
@@ -3355,7 +3311,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_update_dedicated_host_example(self):
@@ -3371,8 +3326,8 @@ class TestVpcV1Examples():
             dedicated_host_patch_model['instance_placement_enabled'] = False
 
             dedicated_host = vpc_service.update_dedicated_host(
-                id=data['dedicatedHostId'],
-                dedicated_host_patch=dedicated_host_patch_model).get_result()
+                id=data['dedicatedHostId'], dedicated_host_patch=dedicated_host_patch_model
+            ).get_result()
 
             # end-update_dedicated_host
 
@@ -3380,7 +3335,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_list_snapshots_example(self):
@@ -3429,40 +3383,33 @@ class TestVpcV1Examples():
             snapshot_clone_prototype_model = {
                 'zone': zone_identity_model,
             }
-            
+
             snapshot_prototype_model = {
                 'clones': [snapshot_clone_prototype_model],
                 'source_volume': volume_identity_model,
-                'name': 'my-snapshot-1'
+                'name': 'my-snapshot-1',
             }
-            snapshot = vpc_service.create_snapshot(
-                snapshot_prototype=snapshot_prototype_model).get_result()
+            snapshot = vpc_service.create_snapshot(snapshot_prototype=snapshot_prototype_model).get_result()
 
             # end-create_snapshot
 
             assert snapshot is not None
-            data['snapshotId']=snapshot['id']
-            data['snapshotCRN']=snapshot['crn']
+            data['snapshotId'] = snapshot['id']
+            data['snapshotCRN'] = snapshot['crn']
             volume_identity_model = {}
             volume_identity_model['id'] = data['volumeId']
 
-            
-            snapshot_prototype_model = {
-                'source_volume': volume_identity_model,
-                'name': 'my-snapshot-2'
-            }
-            snapshot = vpc_service.create_snapshot(
-                snapshot_prototype=snapshot_prototype_model)
-            
+            snapshot_prototype_model = {'source_volume': volume_identity_model, 'name': 'my-snapshot-2'}
+            snapshot = vpc_service.create_snapshot(snapshot_prototype=snapshot_prototype_model)
+
             # copy snapshot
             snapshot_identity_by_crn_model = {}  # SnapshotIdentityByCRN
             snapshot_identity_by_crn_model['crn'] = data['snapshotCRN']
             source_snapshot_prototype_model = {
-                'source_snapshot' : snapshot_identity_by_crn_model,
-                'name': 'source-snapshot-copy'
+                'source_snapshot': snapshot_identity_by_crn_model,
+                'name': 'source-snapshot-copy',
             }
-            snapshotCRC = vpc_service.create_snapshot(
-                snapshot_prototype=source_snapshot_prototype_model)
+            snapshotCRC = vpc_service.create_snapshot(snapshot_prototype=source_snapshot_prototype_model)
             assert snapshotCRC is not None
             print(snapshotCRC)
         except ApiException as e:
@@ -3499,8 +3446,8 @@ class TestVpcV1Examples():
             snapshot_patch_model['name'] = 'my-snapshot-updated'
 
             snapshot = vpc_service.update_snapshot(
-                id=data['snapshotId'],
-                snapshot_patch=snapshot_patch_model).get_result()
+                id=data['snapshotId'], snapshot_patch=snapshot_patch_model
+            ).get_result()
 
             # end-update_snapshot
 
@@ -3527,7 +3474,7 @@ class TestVpcV1Examples():
             print(json.dumps(snapshot_clone_collection, indent=2))
 
             # end-list_snapshot_clones
-    
+
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -3599,7 +3546,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_share_profiles
             print(json.dumps(all_results, indent=2))
             data['shareProfileName'] = all_results[0]['name']
@@ -3621,7 +3567,6 @@ class TestVpcV1Examples():
                 name=data['shareProfileName'],
             )
             share_profile = response.get_result()
-
 
             # end-get_share_profile
             print(json.dumps(share_profile, indent=2))
@@ -3649,7 +3594,6 @@ class TestVpcV1Examples():
                 next_page = pager.get_next()
                 assert next_page is not None
                 all_results.extend(next_page)
-
 
             # end-list_shares
             print(json.dumps(all_results, indent=2))
@@ -3687,7 +3631,7 @@ class TestVpcV1Examples():
             )
             share = response.get_result()
 
-            #replica share
+            # replica share
             source_share_prototype_model = {
                 'id': share['id'],
             }
@@ -3705,13 +3649,12 @@ class TestVpcV1Examples():
             share_replica = response_replica.get_result()
             # end-create_share
             print(json.dumps(share, indent=2))
-            data['shareId']=share['id']
-            data['shareCRN']=share['crn']
-            data['shareReplicaId']=share_replica['id']
-            data['shareReplicaETag']=response_replica.get_headers()['ETag']
+            data['shareId'] = share['id']
+            data['shareCRN'] = share['crn']
+            data['shareReplicaId'] = share_replica['id']
+            data['shareReplicaETag'] = response_replica.get_headers()['ETag']
             assert share is not None
             assert share_replica is not None
-            
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3725,9 +3668,7 @@ class TestVpcV1Examples():
             print('\ncreate_share() result:')
             # begin-create_share
 
-            share_identity = {
-                'crn': data["shareCRN"]
-            }
+            share_identity = {'crn': data["shareCRN"]}
             share_prototype_model = {
                 'origin_share': share_identity,
                 'name': 'my-accessor-share',
@@ -3739,9 +3680,8 @@ class TestVpcV1Examples():
             share = response.get_result()
 
             # end-create_share
-            data['shareAccessorId']=share['id']
+            data['shareAccessorId'] = share['id']
             assert share is not None
-            
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -3760,7 +3700,6 @@ class TestVpcV1Examples():
             )
             share = response.get_result()
 
-
             # end-get_share
             print(json.dumps(share, indent=2))
             data['shareETag'] = response.get_headers()['ETag']
@@ -3778,8 +3717,7 @@ class TestVpcV1Examples():
             print('\nupdate_share() result:')
             # begin-update_share
 
-            share_patch_model = {
-            }
+            share_patch_model = {}
             share_patch_model['name'] = 'my-share-updated'
 
             response = vpc_service.update_share(
@@ -3788,7 +3726,6 @@ class TestVpcV1Examples():
                 if_match=data['shareETag'],
             )
             share = response.get_result()
-
 
             # end-update_share
             print(json.dumps(share, indent=2))
@@ -3861,11 +3798,11 @@ class TestVpcV1Examples():
             )
 
             # end-delete_share_accessor_binding
-            print('\ndelete_share_accessor_binding() response status code: ',
-                  response.get_status_code())
+            print('\ndelete_share_accessor_binding() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     def test_failover_share_example(self):
         """
@@ -3905,7 +3842,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_share_mount_targets
             print(json.dumps(all_results, indent=2))
             assert all_results is not None
@@ -3940,7 +3876,6 @@ class TestVpcV1Examples():
             )
             share_mount_target = response.get_result()
 
-
             # end-create_share_mount_target
             print(json.dumps(share_mount_target, indent=2))
             data['shareMountTargetId'] = share_mount_target['id']
@@ -3964,7 +3899,6 @@ class TestVpcV1Examples():
             )
             share_mount_target = response.get_result()
 
-
             # end-get_share_mount_target
             print(json.dumps(share_mount_target, indent=2))
             assert share_mount_target is not None
@@ -3981,8 +3915,7 @@ class TestVpcV1Examples():
             print('\nupdate_share_mount_target() result:')
             # begin-update_share_mount_target
 
-            share_mount_target_patch_model = {
-            }
+            share_mount_target_patch_model = {}
             share_mount_target_patch_model['name'] = 'my-share-mount-target-updated'
 
             response = vpc_service.update_share_mount_target(
@@ -3991,7 +3924,6 @@ class TestVpcV1Examples():
                 share_mount_target_patch=share_mount_target_patch_model,
             )
             share_mount_target = response.get_result()
-
 
             # end-update_share_mount_target
             print(json.dumps(share_mount_target, indent=2))
@@ -4015,14 +3947,12 @@ class TestVpcV1Examples():
             )
             share = response.get_result()
 
-
             # end-get_share_source
             print(json.dumps(share, indent=2))
             assert share is not None
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_list_regions_example(self):
@@ -4069,8 +3999,7 @@ class TestVpcV1Examples():
             print('\nlist_region_zones() result:')
             # begin-list_region_zones
 
-            zone_collection = vpc_service.list_region_zones(
-                region_name='us-east').get_result()
+            zone_collection = vpc_service.list_region_zones(region_name='us-east').get_result()
 
             # end-list_region_zones
 
@@ -4088,8 +4017,7 @@ class TestVpcV1Examples():
             print('\nget_region_zone() result:')
             # begin-get_region_zone
 
-            zone = vpc_service.get_region_zone(region_name='us-east',
-                                               name='us-east-1').get_result()
+            zone = vpc_service.get_region_zone(region_name='us-east', name='us-east-1').get_result()
 
             # end-get_region_zone
 
@@ -4097,7 +4025,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_list_cluster_network_profiles_example(self):
@@ -4123,7 +4050,7 @@ class TestVpcV1Examples():
 
             # end-list_cluster_network_profiles
             assert all_results is not None
-            data['clusterNetworkProfile']=all_results[0]['name']
+            data['clusterNetworkProfile'] = all_results[0]['name']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -4210,7 +4137,7 @@ class TestVpcV1Examples():
 
             # end-create_cluster_network
             assert cluster_network is not None
-            data['clusterNetworkId']=cluster_network['id']
+            data['clusterNetworkId'] = cluster_network['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4262,7 +4189,7 @@ class TestVpcV1Examples():
 
             # end-create_cluster_network_interface
             assert cluster_network_interface is not None
-            data['clusterNetworkInterfaceId']=cluster_network_interface['id']
+            data['clusterNetworkInterfaceId'] = cluster_network_interface['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -4370,7 +4297,7 @@ class TestVpcV1Examples():
 
             # end-create_cluster_network_subnet
             assert cluster_network_subnet is not None
-            data['clusterNetworkSubnetId']=cluster_network_subnet['id']
+            data['clusterNetworkSubnetId'] = cluster_network_subnet['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -4424,7 +4351,7 @@ class TestVpcV1Examples():
 
             # end-create_cluster_network_subnet_reserved_ip
             assert cluster_network_subnet_reserved_ip is not None
-            data['clusterNetworkSubnetReservedIpId']=cluster_network_subnet_reserved_ip['id']
+            data['clusterNetworkSubnetReservedIpId'] = cluster_network_subnet_reserved_ip['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -4463,7 +4390,7 @@ class TestVpcV1Examples():
             # begin-update_cluster_network_subnet_reserved_ip
 
             cluster_network_subnet_reserved_ip_patch_model = {
-                'name':'my-cluster-network-subnet-reserved-ip-updated',
+                'name': 'my-cluster-network-subnet-reserved-ip-updated',
             }
 
             response = vpc_service.update_cluster_network_subnet_reserved_ip(
@@ -4584,7 +4511,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-
     @needscredentials
     def test_list_public_gateways_example(self):
         """
@@ -4628,14 +4554,13 @@ class TestVpcV1Examples():
             zone_identity_model['name'] = data['zone']
 
             public_gateway = vpc_service.create_public_gateway(
-                vpc=vpc_identity_model,
-                zone=zone_identity_model,
-                name='my-public-gateway').get_result()
+                vpc=vpc_identity_model, zone=zone_identity_model, name='my-public-gateway'
+            ).get_result()
 
             # end-create_public_gateway
 
             assert public_gateway is not None
-            data['publicGatewayId']=public_gateway['id']
+            data['publicGatewayId'] = public_gateway['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4649,8 +4574,7 @@ class TestVpcV1Examples():
             print('\nget_public_gateway() result:')
             # begin-get_public_gateway
 
-            public_gateway = vpc_service.get_public_gateway(
-                id=data['publicGatewayId']).get_result()
+            public_gateway = vpc_service.get_public_gateway(id=data['publicGatewayId']).get_result()
 
             # end-get_public_gateway
 
@@ -4672,8 +4596,8 @@ class TestVpcV1Examples():
             public_gateway_patch_model['name'] = 'my-public-gateway-updated'
 
             public_gateway = vpc_service.update_public_gateway(
-                id=data['publicGatewayId'],
-                public_gateway_patch=public_gateway_patch_model).get_result()
+                id=data['publicGatewayId'], public_gateway_patch=public_gateway_patch_model
+            ).get_result()
 
             # end-update_public_gateway
 
@@ -4681,7 +4605,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_list_network_acls_example(self):
@@ -4731,17 +4654,16 @@ class TestVpcV1Examples():
             network_acl_prototype_model_rules['protocol'] = ['tcp']
 
             network_acl_prototype_model = {}
-            network_acl_prototype_model['name'] = 'my-network-acl-rule',
-            network_acl_prototype_model['vpc'] = vpc_identity_model,
+            network_acl_prototype_model['name'] = ('my-network-acl-rule',)
+            network_acl_prototype_model['vpc'] = (vpc_identity_model,)
             network_acl_prototype_model['rules'] = [network_acl_prototype_model_rules]
 
-            network_acl = vpc_service.create_network_acl(
-                network_acl_prototype=network_acl_prototype_model).get_result()
+            network_acl = vpc_service.create_network_acl(network_acl_prototype=network_acl_prototype_model).get_result()
 
             # end-create_network_acl
 
             assert network_acl is not None
-            data['networkACLId']=network_acl['id']
+            data['networkACLId'] = network_acl['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4755,8 +4677,7 @@ class TestVpcV1Examples():
             print('\nget_network_acl() result:')
             # begin-get_network_acl
 
-            network_acl = vpc_service.get_network_acl(
-                id=data['networkACLId']).get_result()
+            network_acl = vpc_service.get_network_acl(id=data['networkACLId']).get_result()
 
             # end-get_network_acl
 
@@ -4778,8 +4699,8 @@ class TestVpcV1Examples():
             network_acl_patch_model['name'] = 'my-network-acl-updated'
 
             network_acl = vpc_service.update_network_acl(
-                id=data['networkACLId'],
-                network_acl_patch=network_acl_patch_model).get_result()
+                id=data['networkACLId'], network_acl_patch=network_acl_patch_model
+            ).get_result()
 
             # end-update_network_acl
 
@@ -4837,14 +4758,13 @@ class TestVpcV1Examples():
             network_acl_rule_prototype_model['type'] = 8
 
             network_acl_rule = vpc_service.create_network_acl_rule(
-                network_acl_id=data['networkACLId'],
-                network_acl_rule_prototype=network_acl_rule_prototype_model
+                network_acl_id=data['networkACLId'], network_acl_rule_prototype=network_acl_rule_prototype_model
             ).get_result()
 
             # end-create_network_acl_rule
 
             assert network_acl_rule is not None
-            data['networkACLRuleId']=network_acl_rule['id']
+            data['networkACLRuleId'] = network_acl_rule['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4859,7 +4779,8 @@ class TestVpcV1Examples():
             # begin-get_network_acl_rule
 
             network_acl_rule = vpc_service.get_network_acl_rule(
-                network_acl_id=data['networkACLId'], id=data['networkACLRuleId']).get_result()
+                network_acl_id=data['networkACLId'], id=data['networkACLRuleId']
+            ).get_result()
 
             # end-get_network_acl_rule
 
@@ -4883,8 +4804,8 @@ class TestVpcV1Examples():
             network_acl_rule = vpc_service.update_network_acl_rule(
                 network_acl_id=data['networkACLId'],
                 id=data['networkACLRuleId'],
-                network_acl_rule_patch=network_acl_rule_patch_model).get_result(
-                )
+                network_acl_rule_patch=network_acl_rule_patch_model,
+            ).get_result()
 
             # end-update_network_acl_rule
 
@@ -4934,12 +4855,14 @@ class TestVpcV1Examples():
             vpc_identity_model = {}
             vpc_identity_model['id'] = data['vpcID']
 
-            security_group = vpc_service.create_security_group(vpc=vpc_identity_model,name='my-security-group').get_result()
+            security_group = vpc_service.create_security_group(
+                vpc=vpc_identity_model, name='my-security-group'
+            ).get_result()
 
             # end-create_security_group
 
             assert security_group is not None
-            data['securityGroupId']=security_group['id']
+            data['securityGroupId'] = security_group['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -4953,8 +4876,7 @@ class TestVpcV1Examples():
             print('\nget_security_group() result:')
             # begin-get_security_group
 
-            security_group = vpc_service.get_security_group(
-                id=data['securityGroupId']).get_result()
+            security_group = vpc_service.get_security_group(id=data['securityGroupId']).get_result()
 
             # end-get_security_group
 
@@ -4976,8 +4898,8 @@ class TestVpcV1Examples():
             security_group_patch_model['name'] = 'my-security-group-updated'
 
             security_group = vpc_service.update_security_group(
-                id=data['securityGroupId'],
-                security_group_patch=security_group_patch_model).get_result()
+                id=data['securityGroupId'], security_group_patch=security_group_patch_model
+            ).get_result()
 
             # end-update_security_group
 
@@ -4996,7 +4918,8 @@ class TestVpcV1Examples():
             # begin-list_security_group_rules
 
             security_group_rule_collection = vpc_service.list_security_group_rules(
-                security_group_id=data['securityGroupId']).get_result()
+                security_group_id=data['securityGroupId']
+            ).get_result()
 
             # end-list_security_group_rules
 
@@ -5027,13 +4950,13 @@ class TestVpcV1Examples():
 
             security_group_rule = vpc_service.create_security_group_rule(
                 security_group_id=data['securityGroupId'],
-                security_group_rule_prototype=security_group_rule_prototype_model
+                security_group_rule_prototype=security_group_rule_prototype_model,
             ).get_result()
 
             # end-create_security_group_rule
 
             assert security_group_rule is not None
-            data['securityGroupRuleId']=security_group_rule['id']
+            data['securityGroupRuleId'] = security_group_rule['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5048,7 +4971,8 @@ class TestVpcV1Examples():
             # begin-get_security_group_rule
 
             security_group_rule = vpc_service.get_security_group_rule(
-                security_group_id=data['securityGroupId'], id=data['securityGroupRuleId']).get_result()
+                security_group_id=data['securityGroupId'], id=data['securityGroupRuleId']
+            ).get_result()
 
             # end-get_security_group_rule
 
@@ -5072,7 +4996,7 @@ class TestVpcV1Examples():
             security_group_rule = vpc_service.update_security_group_rule(
                 security_group_id=data['securityGroupId'],
                 id=data['securityGroupRuleId'],
-                security_group_rule_patch=security_group_rule_patch_model
+                security_group_rule_patch=security_group_rule_patch_model,
             ).get_result()
 
             # end-update_security_group_rule
@@ -5102,7 +5026,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_security_group_targets
 
             print(json.dumps(all_results, indent=2))
@@ -5122,12 +5045,13 @@ class TestVpcV1Examples():
             # begin-create_security_group_target_binding
 
             security_group_target_reference = vpc_service.create_security_group_target_binding(
-                security_group_id=data['securityGroupId'], id=data['eth2Id']).get_result()
+                security_group_id=data['securityGroupId'], id=data['eth2Id']
+            ).get_result()
 
             # end-create_security_group_target_binding
 
             assert security_group_target_reference is not None
-            data['targetId']=security_group_target_reference['id']
+            data['targetId'] = security_group_target_reference['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5142,7 +5066,8 @@ class TestVpcV1Examples():
             # begin-get_security_group_target
 
             security_group_target_reference = vpc_service.get_security_group_target(
-                security_group_id=data['securityGroupId'], id=data['targetId']).get_result()
+                security_group_id=data['securityGroupId'], id=data['targetId']
+            ).get_result()
 
             # end-get_security_group_target
 
@@ -5170,7 +5095,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_ike_policies
 
             print(json.dumps(all_results, indent=2))
@@ -5194,12 +5118,13 @@ class TestVpcV1Examples():
                 dh_group=14,
                 encryption_algorithm='aes128',
                 ike_version=1,
-                name='my-ike-policy').get_result()
+                name='my-ike-policy',
+            ).get_result()
 
             # end-create_ike_policy
 
             assert ike_policy is not None
-            data['ikePolicyId']=ike_policy['id']
+            data['ikePolicyId'] = ike_policy['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5213,8 +5138,7 @@ class TestVpcV1Examples():
             print('\nget_ike_policy() result:')
             # begin-get_ike_policy
 
-            ike_policy = vpc_service.get_ike_policy(
-                id=data['ikePolicyId']).get_result()
+            ike_policy = vpc_service.get_ike_policy(id=data['ikePolicyId']).get_result()
 
             # end-get_ike_policy
 
@@ -5237,8 +5161,8 @@ class TestVpcV1Examples():
             ike_policy_patch_model['dh_group'] = 15
 
             ike_policy = vpc_service.update_ike_policy(
-                id=data['ikePolicyId'],
-                ike_policy_patch=ike_policy_patch_model).get_result()
+                id=data['ikePolicyId'], ike_policy_patch=ike_policy_patch_model
+            ).get_result()
 
             # end-update_ike_policy
 
@@ -5257,7 +5181,8 @@ class TestVpcV1Examples():
             # begin-list_ike_policy_connections
 
             vpn_gateway_connection_collection = vpc_service.list_ike_policy_connections(
-                id=data['ikePolicyId']).get_result()
+                id=data['ikePolicyId']
+            ).get_result()
 
             # end-list_ike_policy_connections
 
@@ -5285,7 +5210,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_ipsec_policies
 
             print(json.dumps(all_results, indent=2))
@@ -5307,13 +5231,15 @@ class TestVpcV1Examples():
             i_psec_policy = vpc_service.create_ipsec_policy(
                 authentication_algorithm='sha256',
                 encryption_algorithm='aes128',
-                pfs='disabled',key_lifetime=3600,
-                name='my-ipsec-policy').get_result()
+                pfs='disabled',
+                key_lifetime=3600,
+                name='my-ipsec-policy',
+            ).get_result()
 
             # end-create_ipsec_policy
 
             assert i_psec_policy is not None
-            data['ipsecPolicyId']=i_psec_policy['id']
+            data['ipsecPolicyId'] = i_psec_policy['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5327,8 +5253,7 @@ class TestVpcV1Examples():
             print('\nget_ipsec_policy() result:')
             # begin-get_ipsec_policy
 
-            i_psec_policy = vpc_service.get_ipsec_policy(
-                id=data['ipsecPolicyId']).get_result()
+            i_psec_policy = vpc_service.get_ipsec_policy(id=data['ipsecPolicyId']).get_result()
 
             # end-get_ipsec_policy
 
@@ -5351,8 +5276,8 @@ class TestVpcV1Examples():
             i_psec_policy_patch_model['authentication_algorithm'] = 'sha256'
 
             i_psec_policy = vpc_service.update_ipsec_policy(
-                id=data['ipsecPolicyId'],
-                i_psec_policy_patch=i_psec_policy_patch_model).get_result()
+                id=data['ipsecPolicyId'], i_psec_policy_patch=i_psec_policy_patch_model
+            ).get_result()
 
             # end-update_ipsec_policy
 
@@ -5371,7 +5296,8 @@ class TestVpcV1Examples():
             # begin-list_ipsec_policy_connections
 
             vpn_gateway_connection_collection = vpc_service.list_ipsec_policy_connections(
-                id=data['ipsecPolicyId']).get_result()
+                id=data['ipsecPolicyId']
+            ).get_result()
 
             # end-list_ipsec_policy_connections
 
@@ -5427,14 +5353,13 @@ class TestVpcV1Examples():
             vpn_gateway_prototype_model['name'] = 'my-vpn-gateway'
             vpn_gateway_prototype_model['mode'] = 'route'
 
-            vpn_gateway = vpc_service.create_vpn_gateway(
-                vpn_gateway_prototype=vpn_gateway_prototype_model).get_result()
+            vpn_gateway = vpc_service.create_vpn_gateway(vpn_gateway_prototype=vpn_gateway_prototype_model).get_result()
 
             # end-create_vpn_gateway
 
             assert vpn_gateway is not None
-            data['vpnGateway']=vpn_gateway
-            data['vpnGatewayId']=vpn_gateway['id']
+            data['vpnGateway'] = vpn_gateway
+            data['vpnGatewayId'] = vpn_gateway['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5448,8 +5373,7 @@ class TestVpcV1Examples():
             print('\nget_vpn_gateway() result:')
             # begin-get_vpn_gateway
 
-            vpn_gateway = vpc_service.get_vpn_gateway(
-                id=data['vpnGatewayId']).get_result()
+            vpn_gateway = vpc_service.get_vpn_gateway(id=data['vpnGatewayId']).get_result()
 
             # end-get_vpn_gateway
 
@@ -5471,8 +5395,8 @@ class TestVpcV1Examples():
             vpn_gateway_patch_model['name'] = 'my-vpn-gateway-updated'
 
             vpn_gateway = vpc_service.update_vpn_gateway(
-                id=data['vpnGatewayId'],
-                vpn_gateway_patch=vpn_gateway_patch_model).get_result()
+                id=data['vpnGatewayId'], vpn_gateway_patch=vpn_gateway_patch_model
+            ).get_result()
 
             # end-update_vpn_gateway
 
@@ -5491,7 +5415,8 @@ class TestVpcV1Examples():
             # begin-list_vpn_gateway_connections
 
             vpn_gateway_connection_collection = vpc_service.list_vpn_gateway_connections(
-                vpn_gateway_id=data['vpnGatewayId']).get_result()
+                vpn_gateway_id=data['vpnGatewayId']
+            ).get_result()
 
             # end-list_vpn_gateway_connections
 
@@ -5559,7 +5484,7 @@ class TestVpcV1Examples():
             # end-create_vpn_gateway_connection
 
             assert vpn_gateway_connection is not None
-            data['vpnGatewayConnectionId']=vpn_gateway_connection['id']
+            data['vpnGatewayConnectionId'] = vpn_gateway_connection['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -5574,8 +5499,8 @@ class TestVpcV1Examples():
             # begin-get_vpn_gateway_connection
 
             vpn_gateway_connection = vpc_service.get_vpn_gateway_connection(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId']).get_result()
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']
+            ).get_result()
 
             # end-get_vpn_gateway_connection
 
@@ -5601,7 +5526,7 @@ class TestVpcV1Examples():
             vpn_gateway_connection = vpc_service.update_vpn_gateway_connection(
                 vpn_gateway_id=data['vpnGatewayId'],
                 id=data['vpnGatewayConnectionId'],
-                vpn_gateway_connection_patch=vpn_gateway_connection_patch_model
+                vpn_gateway_connection_patch=vpn_gateway_connection_patch_model,
             ).get_result()
 
             # end-update_vpn_gateway_connection
@@ -5620,9 +5545,8 @@ class TestVpcV1Examples():
             # begin-add_vpn_gateway_connection_local_cidr
 
             response = vpc_service.add_vpn_gateway_connections_local_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-add_vpn_gateway_connection_local_cidr
             assert response is not None
@@ -5640,7 +5564,8 @@ class TestVpcV1Examples():
             # begin-list_vpn_gateway_connection_local_cidrs
 
             vpn_gateway_connection_local_cid_rs = vpc_service.list_vpn_gateway_connections_local_cidrs(
-                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']
+            ).get_result()
 
             # end-list_vpn_gateway_connection_local_cidrs
 
@@ -5658,9 +5583,8 @@ class TestVpcV1Examples():
             # begin-add_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.add_vpn_gateway_connections_peer_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-add_vpn_gateway_connection_peer_cidr
             assert response is not None
@@ -5677,9 +5601,8 @@ class TestVpcV1Examples():
             # begin-check_vpn_gateway_connection_local_cidr
 
             response = vpc_service.check_vpn_gateway_connections_local_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-check_vpn_gateway_connection_local_cidr
             assert response is not None
@@ -5697,7 +5620,8 @@ class TestVpcV1Examples():
             # begin-list_vpn_gateway_connection_peer_cidrs
 
             vpn_gateway_connection_peer_cid_rs = vpc_service.list_vpn_gateway_connections_peer_cidrs(
-                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']).get_result()
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']
+            ).get_result()
 
             # end-list_vpn_gateway_connection_peer_cidrs
 
@@ -5715,9 +5639,8 @@ class TestVpcV1Examples():
             # begin-check_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.check_vpn_gateway_connections_peer_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-check_vpn_gateway_connection_peer_cidr
             assert response is not None
@@ -5783,14 +5706,14 @@ class TestVpcV1Examples():
                 client_authentication=[vpn_server_authentication_prototype_model],
                 client_ip_pool='172.16.0.0/16',
                 subnets=[subnet_identity_model],
-                name='my-example-vpn-server'
+                name='my-example-vpn-server',
             ).get_result()
 
             print(json.dumps(vpn_server, indent=2))
 
             # end-create_vpn_server
 
-            data['vpnserverId']=vpn_server['id']
+            data['vpnserverId'] = vpn_server['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -5803,9 +5726,7 @@ class TestVpcV1Examples():
             print('\nget_vpn_server() result:')
             # begin-get_vpn_server
 
-            vpn_server_response = vpc_service.get_vpn_server(
-                id=data['vpnserverId']
-            )
+            vpn_server_response = vpc_service.get_vpn_server(id=data['vpnserverId'])
             data['created_vpn_server_etag'] = vpn_server_response.get_headers()['ETag']
             vpn_server = vpn_server_response.get_result()
 
@@ -5825,12 +5746,12 @@ class TestVpcV1Examples():
             # begin-update_vpn_server
 
             vpn_server_patch_model = {}
-            vpn_server_patch_model['name']='my-vpn-server-updated'
+            vpn_server_patch_model['name'] = 'my-vpn-server-updated'
 
             vpn_server = vpc_service.update_vpn_server(
                 id=data['vpnserverId'],
                 vpn_server_patch=vpn_server_patch_model,
-                if_match=data['created_vpn_server_etag']
+                if_match=data['created_vpn_server_etag'],
             ).get_result()
 
             print(json.dumps(vpn_server, indent=2))
@@ -5884,7 +5805,7 @@ class TestVpcV1Examples():
             # end-list_vpn_server_clients
 
             print(json.dumps(all_results, indent=2))
-            data['vpnserverclientId']=all_results[0]['id']
+            data['vpnserverclientId'] = all_results[0]['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -5898,8 +5819,7 @@ class TestVpcV1Examples():
             # begin-get_vpn_server_client
 
             vpn_server_client = vpc_service.get_vpn_server_client(
-                vpn_server_id=data['vpnserverId'],
-                id=data['vpnserverclientId']
+                vpn_server_id=data['vpnserverId'], id=data['vpnserverclientId']
             ).get_result()
 
             print(json.dumps(vpn_server_client, indent=2))
@@ -5918,8 +5838,7 @@ class TestVpcV1Examples():
             # begin-disconnect_vpn_client
 
             response = vpc_service.disconnect_vpn_client(
-                vpn_server_id=data['vpnserverId'],
-                id=data['vpnserverclientId']
+                vpn_server_id=data['vpnserverId'], id=data['vpnserverclientId']
             )
 
             # end-disconnect_vpn_client
@@ -5928,7 +5847,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-    
     @needscredentials
     def test_create_vpn_server_route_example(self):
         """
@@ -5939,17 +5857,16 @@ class TestVpcV1Examples():
             # begin-create_vpn_server_route
 
             vpn_server_route = vpc_service.create_vpn_server_route(
-                vpn_server_id=data['vpnserverId'],
-                destination='172.16.0.0/16',
-                name='my-vpn-server-route'
+                vpn_server_id=data['vpnserverId'], destination='172.16.0.0/16', name='my-vpn-server-route'
             ).get_result()
 
             print(json.dumps(vpn_server_route, indent=2))
 
             # end-create_vpn_server_route
-            data['vpnserverrouteId']=vpn_server_route['id']
+            data['vpnserverrouteId'] = vpn_server_route['id']
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     @pytest.mark.skip(reason="mock")
     def test_list_vpn_server_routes_example(self):
@@ -5989,8 +5906,7 @@ class TestVpcV1Examples():
             # begin-get_vpn_server_route
 
             vpn_server_route = vpc_service.get_vpn_server_route(
-                vpn_server_id=data['vpnserverId'],
-                id=data['vpnserverrouteId']
+                vpn_server_id=data['vpnserverId'], id=data['vpnserverrouteId']
             ).get_result()
 
             print(json.dumps(vpn_server_route, indent=2))
@@ -6015,7 +5931,7 @@ class TestVpcV1Examples():
             vpn_server_route = vpc_service.update_vpn_server_route(
                 vpn_server_id=data['vpnserverId'],
                 id=data['vpnserverrouteId'],
-                vpn_server_route_patch=vpn_server_route_patch_model
+                vpn_server_route_patch=vpn_server_route_patch_model,
             ).get_result()
 
             print(json.dumps(vpn_server_route, indent=2))
@@ -6034,8 +5950,7 @@ class TestVpcV1Examples():
             # begin-delete_vpn_server_route
 
             response = vpc_service.delete_vpn_server_route(
-                vpn_server_id=data['vpnserverId'],
-                id=data['vpnserverrouteId']
+                vpn_server_id=data['vpnserverId'], id=data['vpnserverrouteId']
             )
 
             # end-delete_vpn_server_route
@@ -6053,8 +5968,7 @@ class TestVpcV1Examples():
             # begin-delete_vpn_server_client
 
             response = vpc_service.delete_vpn_server_client(
-                vpn_server_id=data['vpnserverId'],
-                id=data['vpnserverclientId']
+                vpn_server_id=data['vpnserverId'], id=data['vpnserverclientId']
             )
 
             # end-delete_vpn_server_client
@@ -6071,10 +5985,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_vpn_server
 
-            response = vpc_service.delete_vpn_server(
-                id=data['vpnserverId'],
-                if_match=data['created_vpn_server_etag']
-            )
+            response = vpc_service.delete_vpn_server(id=data['vpnserverId'], if_match=data['created_vpn_server_etag'])
 
             # end-delete_vpn_server
             print('\ndelete_vpn_server() response status code: ', response.get_status_code())
@@ -6119,8 +6030,7 @@ class TestVpcV1Examples():
             print('\nget_load_balancer_profile() result:')
             # begin-get_load_balancer_profile
 
-            load_balancer_profile = vpc_service.get_load_balancer_profile(
-                name='network-fixed').get_result()
+            load_balancer_profile = vpc_service.get_load_balancer_profile(name='network-fixed').get_result()
 
             # end-get_load_balancer_profile
 
@@ -6147,7 +6057,6 @@ class TestVpcV1Examples():
                 next_page = pager.get_next()
                 assert next_page is not None
                 all_results.extend(next_page)
-
 
             # end-list_load_balancers
 
@@ -6183,13 +6092,15 @@ class TestVpcV1Examples():
 
             load_balancer = vpc_service.create_load_balancer(
                 dns=load_balancer_dns_prototype_model,
-                is_public=False, subnets=[subnet_identity_model],
-                name='my-load-balancer').get_result()
+                is_public=False,
+                subnets=[subnet_identity_model],
+                name='my-load-balancer',
+            ).get_result()
 
             # end-create_load_balancer
 
             assert load_balancer is not None
-            data['loadBalancerId']=load_balancer['id']
+            data['loadBalancerId'] = load_balancer['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6203,8 +6114,7 @@ class TestVpcV1Examples():
             print('\nget_load_balancer() result:')
             # begin-get_load_balancer
 
-            load_balancer_response = vpc_service.get_load_balancer(
-                id=data['loadBalancerId'])
+            load_balancer_response = vpc_service.get_load_balancer(id=data['loadBalancerId'])
             load_balancer = load_balancer_response.get_result()
             data['created_load_balancer_etag'] = load_balancer_response.get_headers()['ETag']
             # end-get_load_balancer
@@ -6240,7 +6150,8 @@ class TestVpcV1Examples():
             load_balancer = vpc_service.update_load_balancer(
                 id=data['loadBalancerId'],
                 load_balancer_patch=load_balancer_patch_model,
-                if_match=data['created_load_balancer_etag']).get_result()
+                if_match=data['created_load_balancer_etag'],
+            ).get_result()
 
             # end-update_load_balancer
 
@@ -6258,8 +6169,7 @@ class TestVpcV1Examples():
             print('\nget_load_balancer_statistics() result:')
             # begin-get_load_balancer_statistics
 
-            load_balancer_statistics = vpc_service.get_load_balancer_statistics(
-                id=data['loadBalancerId']).get_result()
+            load_balancer_statistics = vpc_service.get_load_balancer_statistics(id=data['loadBalancerId']).get_result()
 
             # end-get_load_balancer_statistics
 
@@ -6278,7 +6188,8 @@ class TestVpcV1Examples():
             # begin-list_load_balancer_listeners
 
             load_balancer_listener_collection = vpc_service.list_load_balancer_listeners(
-                load_balancer_id=data['loadBalancerId']).get_result()
+                load_balancer_id=data['loadBalancerId']
+            ).get_result()
 
             # end-list_load_balancer_listeners
 
@@ -6297,14 +6208,13 @@ class TestVpcV1Examples():
             # begin-create_load_balancer_listener
 
             load_balancer_listener = vpc_service.create_load_balancer_listener(
-                load_balancer_id=data['loadBalancerId'], port=5656,
-                idle_connection_timeout=100,
-                protocol='http').get_result()
+                load_balancer_id=data['loadBalancerId'], port=5656, idle_connection_timeout=100, protocol='http'
+            ).get_result()
 
             # end-create_load_balancer_listener
 
             assert load_balancer_listener is not None
-            data['listenerId']=load_balancer_listener['id']
+            data['listenerId'] = load_balancer_listener['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6319,7 +6229,8 @@ class TestVpcV1Examples():
             # begin-get_load_balancer_listener
 
             load_balancer_listener = vpc_service.get_load_balancer_listener(
-                load_balancer_id=data['loadBalancerId'], id=data['listenerId']).get_result()
+                load_balancer_id=data['loadBalancerId'], id=data['listenerId']
+            ).get_result()
 
             # end-get_load_balancer_listener
 
@@ -6352,7 +6263,7 @@ class TestVpcV1Examples():
             load_balancer_listener = vpc_service.update_load_balancer_listener(
                 load_balancer_id=data['loadBalancerId'],
                 id=data['listenerId'],
-                load_balancer_listener_patch=load_balancer_listener_patch_model
+                load_balancer_listener_patch=load_balancer_listener_patch_model,
             ).get_result()
 
             # end-update_load_balancer_listener
@@ -6372,8 +6283,8 @@ class TestVpcV1Examples():
             # begin-list_load_balancer_listener_policies
 
             load_balancer_listener_policy_collection = vpc_service.list_load_balancer_listener_policies(
-                load_balancer_id=data['loadBalancerId'],
-                listener_id=data['listenerId']).get_result()
+                load_balancer_id=data['loadBalancerId'], listener_id=data['listenerId']
+            ).get_result()
 
             # end-list_load_balancer_listener_policies
 
@@ -6396,12 +6307,13 @@ class TestVpcV1Examples():
                 listener_id=data['listenerId'],
                 action='reject',
                 priority=2,
-                name= 'my-load-balancer-listener-policy').get_result()
+                name='my-load-balancer-listener-policy',
+            ).get_result()
 
             # end-create_load_balancer_listener_policy
 
             assert load_balancer_listener_policy is not None
-            data['policyId']=load_balancer_listener_policy['id']
+            data['policyId'] = load_balancer_listener_policy['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6416,9 +6328,8 @@ class TestVpcV1Examples():
             # begin-get_load_balancer_listener_policy
 
             load_balancer_listener_policy = vpc_service.get_load_balancer_listener_policy(
-                load_balancer_id=data['loadBalancerId'],
-                listener_id=data['listenerId'],
-                id=data['policyId']).get_result()
+                load_balancer_id=data['loadBalancerId'], listener_id=data['listenerId'], id=data['policyId']
+            ).get_result()
 
             # end-get_load_balancer_listener_policy
 
@@ -6444,8 +6355,8 @@ class TestVpcV1Examples():
                 load_balancer_id=data['loadBalancerId'],
                 listener_id=data['listenerId'],
                 id=data['policyId'],
-                load_balancer_listener_policy_patch=
-                load_balancer_listener_policy_patch_model).get_result()
+                load_balancer_listener_policy_patch=load_balancer_listener_policy_patch_model,
+            ).get_result()
 
             # end-update_load_balancer_listener_policy
 
@@ -6464,9 +6375,8 @@ class TestVpcV1Examples():
             # begin-list_load_balancer_listener_policy_rules
 
             load_balancer_listener_policy_rule_collection = vpc_service.list_load_balancer_listener_policy_rules(
-                load_balancer_id=data['loadBalancerId'],
-                listener_id=data['listenerId'],
-                policy_id=data['policyId']).get_result()
+                load_balancer_id=data['loadBalancerId'], listener_id=data['listenerId'], policy_id=data['policyId']
+            ).get_result()
 
             # end-list_load_balancer_listener_policy_rules
 
@@ -6490,12 +6400,13 @@ class TestVpcV1Examples():
                 policy_id=data['policyId'],
                 condition='contains',
                 type='hostname',
-                value='one').get_result()
+                value='one',
+            ).get_result()
 
             # end-create_load_balancer_listener_policy_rule
 
             assert load_balancer_listener_policy_rule is not None
-            data['policyRuleId']=load_balancer_listener_policy_rule['id']
+            data['policyRuleId'] = load_balancer_listener_policy_rule['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6513,7 +6424,8 @@ class TestVpcV1Examples():
                 load_balancer_id=data['loadBalancerId'],
                 listener_id=data['listenerId'],
                 policy_id=data['policyId'],
-                id=data['policyRuleId']).get_result()
+                id=data['policyRuleId'],
+            ).get_result()
 
             # end-get_load_balancer_listener_policy_rule
 
@@ -6542,8 +6454,8 @@ class TestVpcV1Examples():
                 listener_id=data['listenerId'],
                 policy_id=data['policyId'],
                 id=data['policyRuleId'],
-                load_balancer_listener_policy_rule_patch=
-                load_balancer_listener_policy_rule_patch_model).get_result()
+                load_balancer_listener_policy_rule_patch=load_balancer_listener_policy_rule_patch_model,
+            ).get_result()
 
             # end-update_load_balancer_listener_policy_rule
 
@@ -6562,7 +6474,8 @@ class TestVpcV1Examples():
             # begin-list_load_balancer_pools
 
             load_balancer_pool_collection = vpc_service.list_load_balancer_pools(
-                load_balancer_id=data['loadBalancerId']).get_result()
+                load_balancer_id=data['loadBalancerId']
+            ).get_result()
 
             # end-list_load_balancer_pools
 
@@ -6583,7 +6496,7 @@ class TestVpcV1Examples():
             load_balancer_pool_health_monitor_prototype_model = {}
             load_balancer_pool_health_monitor_prototype_model['delay'] = 30
             load_balancer_pool_health_monitor_prototype_model['max_retries'] = 3
-            load_balancer_pool_health_monitor_prototype_model['timeout'] =  30
+            load_balancer_pool_health_monitor_prototype_model['timeout'] = 30
             load_balancer_pool_health_monitor_prototype_model['type'] = 'http'
 
             load_balancer_pool = vpc_service.create_load_balancer_pool(
@@ -6591,12 +6504,13 @@ class TestVpcV1Examples():
                 algorithm='round_robin',
                 health_monitor=load_balancer_pool_health_monitor_prototype_model,
                 protocol='http',
-                name='my-load-balancer-pool').get_result()
+                name='my-load-balancer-pool',
+            ).get_result()
 
             # end-create_load_balancer_pool
 
             assert load_balancer_pool is not None
-            data['poolId']=load_balancer_pool['id']
+            data['poolId'] = load_balancer_pool['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6611,7 +6525,8 @@ class TestVpcV1Examples():
             # begin-get_load_balancer_pool
 
             load_balancer_pool = vpc_service.get_load_balancer_pool(
-                load_balancer_id=data['loadBalancerId'], id=data['poolId']).get_result()
+                load_balancer_id=data['loadBalancerId'], id=data['poolId']
+            ).get_result()
 
             # end-get_load_balancer_pool
 
@@ -6636,7 +6551,7 @@ class TestVpcV1Examples():
             load_balancer_pool = vpc_service.update_load_balancer_pool(
                 load_balancer_id=data['loadBalancerId'],
                 id=data['poolId'],
-                load_balancer_pool_patch=load_balancer_pool_patch_model
+                load_balancer_pool_patch=load_balancer_pool_patch_model,
             ).get_result()
 
             # end-update_load_balancer_pool
@@ -6656,8 +6571,8 @@ class TestVpcV1Examples():
             # begin-list_load_balancer_pool_members
 
             load_balancer_pool_member_collection = vpc_service.list_load_balancer_pool_members(
-                load_balancer_id=data['loadBalancerId'],
-                pool_id=data['poolId']).get_result()
+                load_balancer_id=data['loadBalancerId'], pool_id=data['poolId']
+            ).get_result()
 
             # end-list_load_balancer_pool_members
 
@@ -6676,23 +6591,25 @@ class TestVpcV1Examples():
             # begin-create_load_balancer_pool_member
 
             load_balancer_pool_member_target_prototype_model_identity = {}
-            load_balancer_pool_member_target_prototype_model_identity['address']='192.168.3.4'
+            load_balancer_pool_member_target_prototype_model_identity['address'] = '192.168.3.4'
 
             load_balancer_pool_member_target_prototype_model = {}
-            load_balancer_pool_member_target_prototype_model['id'] = load_balancer_pool_member_target_prototype_model_identity
+            load_balancer_pool_member_target_prototype_model['id'] = (
+                load_balancer_pool_member_target_prototype_model_identity
+            )
 
             load_balancer_pool_member = vpc_service.create_load_balancer_pool_member(
                 load_balancer_id=data['loadBalancerId'],
                 pool_id=data['poolId'],
                 port=80,
                 target=load_balancer_pool_member_target_prototype_model,
-                weight=50
+                weight=50,
             ).get_result()
 
             # end-create_load_balancer_pool_member
 
             assert load_balancer_pool_member is not None
-            data['poolMemberId']=load_balancer_pool_member['id']
+            data['poolMemberId'] = load_balancer_pool_member['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6707,9 +6624,8 @@ class TestVpcV1Examples():
             # begin-get_load_balancer_pool_member
 
             load_balancer_pool_member = vpc_service.get_load_balancer_pool_member(
-                load_balancer_id=data['loadBalancerId'],
-                pool_id=data['poolId'],
-                id=data['poolMemberId']).get_result()
+                load_balancer_id=data['loadBalancerId'], pool_id=data['poolId'], id=data['poolMemberId']
+            ).get_result()
 
             # end-get_load_balancer_pool_member
 
@@ -6727,8 +6643,7 @@ class TestVpcV1Examples():
             print('\nupdate_load_balancer_pool_member() result:')
             # begin-update_load_balancer_pool_member
             load_balancer_pool_member_target_prototype_model = {}
-            load_balancer_pool_member_target_prototype_model[
-                'address'] = '192.168.3.4'
+            load_balancer_pool_member_target_prototype_model['address'] = '192.168.3.4'
 
             load_balancer_pool_member_patch_model = {}
             load_balancer_pool_member_patch_model['port'] = 1235
@@ -6738,8 +6653,8 @@ class TestVpcV1Examples():
                 load_balancer_id=data['loadBalancerId'],
                 pool_id=data['poolId'],
                 id=data['poolMemberId'],
-                load_balancer_pool_member_patch=
-                load_balancer_pool_member_patch_model).get_result()
+                load_balancer_pool_member_patch=load_balancer_pool_member_patch_model,
+            ).get_result()
 
             # end-update_load_balancer_pool_member
 
@@ -6767,13 +6682,13 @@ class TestVpcV1Examples():
             load_balancer_pool_member_collection = vpc_service.replace_load_balancer_pool_members(
                 load_balancer_id=data['loadBalancerId'],
                 pool_id=data['poolId'],
-                members=[load_balancer_pool_member_prototype_model
-                        ]).get_result()
+                members=[load_balancer_pool_member_prototype_model],
+            ).get_result()
 
             # end-replace_load_balancer_pool_members
 
             assert load_balancer_pool_member_collection is not None
-            data['poolMemberId']=load_balancer_pool_member_collection['members'][0]['id']
+            data['poolMemberId'] = load_balancer_pool_member_collection['members'][0]['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6787,9 +6702,8 @@ class TestVpcV1Examples():
             # begin-delete_load_balancer_pool_member
 
             response = vpc_service.delete_load_balancer_pool_member(
-                load_balancer_id=data['loadBalancerId'],
-                pool_id=data['poolId'],
-                id=data['poolMemberId'])
+                load_balancer_id=data['loadBalancerId'], pool_id=data['poolId'], id=data['poolMemberId']
+            )
 
             # end-delete_load_balancer_pool_member
             assert response is not None
@@ -6805,8 +6719,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_load_balancer_pool
 
-            response = vpc_service.delete_load_balancer_pool(
-                load_balancer_id=data['loadBalancerId'], id=data['poolId'])
+            response = vpc_service.delete_load_balancer_pool(load_balancer_id=data['loadBalancerId'], id=data['poolId'])
 
             # end-delete_load_balancer_pool
             assert response is not None
@@ -6826,7 +6739,8 @@ class TestVpcV1Examples():
                 load_balancer_id=data['loadBalancerId'],
                 listener_id=data['listenerId'],
                 policy_id=data['policyId'],
-                id=data['policyRuleId'])
+                id=data['policyRuleId'],
+            )
 
             # end-delete_load_balancer_listener_policy_rule
             assert response is not None
@@ -6843,9 +6757,8 @@ class TestVpcV1Examples():
             # begin-delete_load_balancer_listener_policy
 
             response = vpc_service.delete_load_balancer_listener_policy(
-                load_balancer_id=data['loadBalancerId'],
-                listener_id=data['listenerId'],
-                id=data['policyId'])
+                load_balancer_id=data['loadBalancerId'], listener_id=data['listenerId'], id=data['policyId']
+            )
 
             # end-delete_load_balancer_listener_policy
             assert response is not None
@@ -6862,7 +6775,8 @@ class TestVpcV1Examples():
             # begin-delete_load_balancer_listener
 
             response = vpc_service.delete_load_balancer_listener(
-                load_balancer_id=data['loadBalancerId'], id=data['listenerId'])
+                load_balancer_id=data['loadBalancerId'], id=data['listenerId']
+            )
 
             # end-delete_load_balancer_listener
             assert response is not None
@@ -6878,8 +6792,9 @@ class TestVpcV1Examples():
         try:
             # begin-delete_load_balancer
 
-            response = vpc_service.delete_load_balancer(id=data['loadBalancerId'],
-            if_match=data['created_load_balancer_etag'])
+            response = vpc_service.delete_load_balancer(
+                id=data['loadBalancerId'], if_match=data['created_load_balancer_etag']
+            )
 
             # end-delete_load_balancer
             assert response is not None
@@ -6906,7 +6821,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_endpoint_gateways
 
             print(json.dumps(all_results, indent=2))
@@ -6928,19 +6842,18 @@ class TestVpcV1Examples():
             vpc_identity_model = {}
             vpc_identity_model['id'] = data['vpcID']
 
-            endpoint_target={}
+            endpoint_target = {}
             endpoint_target['name'] = 'ibm-ntp-server'
             endpoint_target['resource_type'] = 'provider_infrastructure_service'
 
             endpoint_gateway = vpc_service.create_endpoint_gateway(
-                target=endpoint_target,
-                vpc=vpc_identity_model,
-                name='my-endpoint-gateway').get_result()
+                target=endpoint_target, vpc=vpc_identity_model, name='my-endpoint-gateway'
+            ).get_result()
 
             # end-create_endpoint_gateway
 
             assert endpoint_gateway is not None
-            data['endpointGatewayId']=endpoint_gateway['id']
+            data['endpointGatewayId'] = endpoint_gateway['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -6966,7 +6879,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_endpoint_gateway_ips
 
             print(json.dumps(all_results, indent=2))
@@ -6986,12 +6898,13 @@ class TestVpcV1Examples():
             # begin-add_endpoint_gateway_ip
 
             reserved_ip = vpc_service.add_endpoint_gateway_ip(
-                endpoint_gateway_id=data['endpointGatewayId'], id=data['subnetReservedIp']).get_result()
+                endpoint_gateway_id=data['endpointGatewayId'], id=data['subnetReservedIp']
+            ).get_result()
 
             # end-add_endpoint_gateway_ip
 
             assert reserved_ip is not None
-            data['endpointGatewayTargetId']=reserved_ip['id']
+            data['endpointGatewayTargetId'] = reserved_ip['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7006,7 +6919,8 @@ class TestVpcV1Examples():
             # begin-get_endpoint_gateway_ip
 
             reserved_ip = vpc_service.get_endpoint_gateway_ip(
-                endpoint_gateway_id=data['endpointGatewayId'], id=data['endpointGatewayTargetId']).get_result()
+                endpoint_gateway_id=data['endpointGatewayId'], id=data['endpointGatewayTargetId']
+            ).get_result()
             # end-get_endpoint_gateway_ip
 
             assert reserved_ip is not None
@@ -7023,8 +6937,7 @@ class TestVpcV1Examples():
             print('\nget_endpoint_gateway() result:')
             # begin-get_endpoint_gateway
 
-            endpoint_gateway = vpc_service.get_endpoint_gateway(
-                id=data['endpointGatewayId']).get_result()
+            endpoint_gateway = vpc_service.get_endpoint_gateway(id=data['endpointGatewayId']).get_result()
 
             # end-get_endpoint_gateway
 
@@ -7046,9 +6959,8 @@ class TestVpcV1Examples():
             endpoint_gateway_patch_model['name'] = 'my-endpoint-gateway-modified'
 
             endpoint_gateway = vpc_service.update_endpoint_gateway(
-                id=data['endpointGatewayId'],
-                endpoint_gateway_patch=endpoint_gateway_patch_model).get_result(
-                )
+                id=data['endpointGatewayId'], endpoint_gateway_patch=endpoint_gateway_patch_model
+            ).get_result()
 
             # end-update_endpoint_gateway
 
@@ -7066,7 +6978,8 @@ class TestVpcV1Examples():
             # begin-remove_endpoint_gateway_ip
 
             response = vpc_service.remove_endpoint_gateway_ip(
-                endpoint_gateway_id=data['endpointGatewayId'], id=data['endpointGatewayTargetId'])
+                endpoint_gateway_id=data['endpointGatewayId'], id=data['endpointGatewayTargetId']
+            )
 
             # end-remove_endpoint_gateway_ip
             assert response is not None
@@ -7082,14 +6995,12 @@ class TestVpcV1Examples():
         try:
             # begin-delete_subnet_reserved_ip
 
-            response = vpc_service.delete_subnet_reserved_ip(
-                subnet_id=data['subnetId'], id=data['subnetReservedIp'])
+            response = vpc_service.delete_subnet_reserved_ip(subnet_id=data['subnetId'], id=data['subnetReservedIp'])
 
             assert response is not None
 
             # end-delete_subnet_reserved_ip
-            print('\ndelete_subnet_reserved_ip() response status code: ',
-                  response.get_status_code())
+            print('\ndelete_subnet_reserved_ip() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7129,7 +7040,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_bare_metal_server_profiles
 
             print(json.dumps(all_results, indent=2))
@@ -7146,8 +7056,7 @@ class TestVpcV1Examples():
             print('\nget_bare_metal_server_profile() result:')
             # begin-get_bare_metal_server_profile
 
-            bare_metal_server_profile = vpc_service.get_bare_metal_server_profile(
-                name='bmhbx2-24x384').get_result()
+            bare_metal_server_profile = vpc_service.get_bare_metal_server_profile(name='bmhbx2-24x384').get_result()
 
             # end-get_bare_metal_server_profile
             assert bare_metal_server_profile is not None
@@ -7173,7 +7082,6 @@ class TestVpcV1Examples():
                 next_page = pager.get_next()
                 assert next_page is not None
                 all_results.extend(next_page)
-
 
             # end-list_bare_metal_servers
 
@@ -7219,15 +7127,14 @@ class TestVpcV1Examples():
             bare_metal_server_prototype_model = {
                 'bandwidth': 10000,
                 'initialization': bare_metal_server_initialization_prototype_model,
-                'primary_network_interface':
-                bare_metal_server_primary_network_interface_prototype_model,
+                'primary_network_interface': bare_metal_server_primary_network_interface_prototype_model,
                 'profile': bare_metal_server_profile_identity_model,
-                'name':'my-baremetal-server',
-                'zone':zone_identity_model
+                'name': 'my-baremetal-server',
+                'zone': zone_identity_model,
             }
             bare_metal_server = vpc_service.create_bare_metal_server(
                 bare_metal_server_prototype=bare_metal_server_prototype_model,
-                ).get_result()
+            ).get_result()
 
             # end-create_bare_metal_server
             assert bare_metal_server is not None
@@ -7247,8 +7154,8 @@ class TestVpcV1Examples():
             # begin-create_bare_metal_server_console_access_token
 
             bare_metal_server_console_access_token = vpc_service.create_bare_metal_server_console_access_token(
-                bare_metal_server_id=data['baremetalId'],
-                console_type='serial').get_result()
+                bare_metal_server_id=data['baremetalId'], console_type='serial'
+            ).get_result()
 
             # end-create_bare_metal_server_console_access_token
             assert bare_metal_server_console_access_token is not None
@@ -7266,10 +7173,11 @@ class TestVpcV1Examples():
             # begin-list_bare_metal_server_disks
 
             bare_metal_server_disk_collection = vpc_service.list_bare_metal_server_disks(
-                bare_metal_server_id=data['baremetalId']).get_result()
+                bare_metal_server_id=data['baremetalId']
+            ).get_result()
             # end-list_bare_metal_server_disks
             assert bare_metal_server_disk_collection is not None
-            data['baremetalDiskId']=bare_metal_server_disk_collection['disks'][0]['id']
+            data['baremetalDiskId'] = bare_metal_server_disk_collection['disks'][0]['id']
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -7283,8 +7191,8 @@ class TestVpcV1Examples():
             # begin-get_bare_metal_server_disk
 
             bare_metal_server_disk = vpc_service.get_bare_metal_server_disk(
-                bare_metal_server_id=data['baremetalId'],
-                id=data['baremetalDiskId']).get_result()
+                bare_metal_server_id=data['baremetalId'], id=data['baremetalDiskId']
+            ).get_result()
 
             # end-get_bare_metal_server_disk
             assert bare_metal_server_disk is not None
@@ -7306,7 +7214,7 @@ class TestVpcV1Examples():
             bare_metal_server_disk = vpc_service.update_bare_metal_server_disk(
                 bare_metal_server_id=data['baremetalId'],
                 id=data['baremetalDiskId'],
-                bare_metal_server_disk_patch=bare_metal_server_disk_patch_model
+                bare_metal_server_disk_patch=bare_metal_server_disk_patch_model,
             ).get_result()
 
             # end-update_bare_metal_server_disk
@@ -7335,7 +7243,6 @@ class TestVpcV1Examples():
                 assert next_page is not None
                 all_results.extend(next_page)
 
-
             # end-list_bare_metal_server_network_interfaces
 
             print(json.dumps(all_results, indent=2))
@@ -7355,21 +7262,18 @@ class TestVpcV1Examples():
 
             bare_metal_server_network_interface_prototype_model = {
                 'interface_type': 'vlan',
-                'subnet': {
-                    'id': data['subnetId']
-                },
+                'subnet': {'id': data['subnetId']},
                 'vlan': 4,
             }
 
             bare_metal_server_network_interface = vpc_service.create_bare_metal_server_network_interface(
                 bare_metal_server_id=data['baremetalId'],
-                bare_metal_server_network_interface_prototype=
-                bare_metal_server_network_interface_prototype_model).get_result(
-                )
+                bare_metal_server_network_interface_prototype=bare_metal_server_network_interface_prototype_model,
+            ).get_result()
 
             # end-create_bare_metal_server_network_interface
             assert bare_metal_server_network_interface is not None
-            data['bm_nic_id']=bare_metal_server_network_interface['id']
+            data['bm_nic_id'] = bare_metal_server_network_interface['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7384,8 +7288,8 @@ class TestVpcV1Examples():
             # begin-get_bare_metal_server_network_interface
 
             bare_metal_server_network_interface = vpc_service.get_bare_metal_server_network_interface(
-                bare_metal_server_id=data['baremetalId'],
-                id=data['bm_nic_id']).get_result()
+                bare_metal_server_id=data['baremetalId'], id=data['bm_nic_id']
+            ).get_result()
 
             # end-get_bare_metal_server_network_interface
             assert bare_metal_server_network_interface is not None
@@ -7402,15 +7306,13 @@ class TestVpcV1Examples():
             print('\nupdate_bare_metal_server_network_interface() result:')
             # begin-update_bare_metal_server_network_interface
 
-            bare_metal_server_network_interface_patch_model = {
-                'name': 'my-network-interface'
-            }
+            bare_metal_server_network_interface_patch_model = {'name': 'my-network-interface'}
 
             bare_metal_server_network_interface = vpc_service.update_bare_metal_server_network_interface(
                 bare_metal_server_id=data['baremetalId'],
                 id=data['bm_nic_id'],
-                bare_metal_server_network_interface_patch=
-                bare_metal_server_network_interface_patch_model).get_result()
+                bare_metal_server_network_interface_patch=bare_metal_server_network_interface_patch_model,
+            ).get_result()
 
             # end-update_bare_metal_server_network_interface
             assert bare_metal_server_network_interface is not None
@@ -7424,15 +7326,14 @@ class TestVpcV1Examples():
         add_bare_metal_server_network_interface_floating_ip request example
         """
         try:
-            print(
-                '\nadd_bare_metal_server_network_interface_floating_ip() result:'
-            )
+            print('\nadd_bare_metal_server_network_interface_floating_ip() result:')
             # begin-add_bare_metal_server_network_interface_floating_ip
 
             floating_ip = vpc_service.add_bare_metal_server_network_interface_floating_ip(
                 bare_metal_server_id=data['baremetalId'],
                 network_interface_id=data['bm_nic_id'],
-                id=data['floatingIpId']).get_result()
+                id=data['floatingIpId'],
+            ).get_result()
 
             # end-add_bare_metal_server_network_interface_floating_ip
             assert floating_ip is not None
@@ -7441,20 +7342,17 @@ class TestVpcV1Examples():
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_bare_metal_server_network_interface_floating_ips_example(
-            self):
+    def test_list_bare_metal_server_network_interface_floating_ips_example(self):
         """
         list_bare_metal_server_network_interface_floating_ips request example
         """
         try:
-            print(
-                '\nlist_bare_metal_server_network_interface_floating_ips() result:'
-            )
+            print('\nlist_bare_metal_server_network_interface_floating_ips() result:')
             # begin-list_bare_metal_server_network_interface_floating_ips
 
             floating_ip_unpaginated_collection = vpc_service.list_bare_metal_server_network_interface_floating_ips(
-                bare_metal_server_id=data['baremetalId'],
-                network_interface_id=data['bm_nic_id']).get_result()
+                bare_metal_server_id=data['baremetalId'], network_interface_id=data['bm_nic_id']
+            ).get_result()
 
             # end-list_bare_metal_server_network_interface_floating_ips
             assert floating_ip_unpaginated_collection is not None
@@ -7468,15 +7366,14 @@ class TestVpcV1Examples():
         get_bare_metal_server_network_interface_floating_ip request example
         """
         try:
-            print(
-                '\nget_bare_metal_server_network_interface_floating_ip() result:'
-            )
+            print('\nget_bare_metal_server_network_interface_floating_ip() result:')
             # begin-get_bare_metal_server_network_interface_floating_ip
 
             floating_ip = vpc_service.get_bare_metal_server_network_interface_floating_ip(
                 bare_metal_server_id=data['baremetalId'],
                 network_interface_id=data['bm_nic_id'],
-                id=data['bm_nic_fip_id']).get_result()
+                id=data['bm_nic_fip_id'],
+            ).get_result()
 
             # end-get_bare_metal_server_network_interface_floating_ip
             assert floating_ip is not None
@@ -7495,8 +7392,7 @@ class TestVpcV1Examples():
             # begin-list_bare_metal_server_network_interface_ips
 
             reserved_ips = vpc_service.list_bare_metal_server_network_interface_ips(
-                bare_metal_server_id=data['baremetalId'],
-                network_interface_id=data['bm_nic_id']
+                bare_metal_server_id=data['baremetalId'], network_interface_id=data['bm_nic_id']
             ).get_result()
 
             # end-list_bare_metal_server_network_interface_ips
@@ -7517,7 +7413,7 @@ class TestVpcV1Examples():
             reserved_ip = vpc_service.get_bare_metal_server_network_interface_ip(
                 bare_metal_server_id=data['baremetalId'],
                 network_interface_id=data['bm_nic_id'],
-                id=data['subnetReservedIp']
+                id=data['subnetReservedIp'],
             ).get_result()
 
             # end-get_bare_metal_server_network_interface_ip
@@ -7534,8 +7430,7 @@ class TestVpcV1Examples():
             print('\nget_bare_metal_server() result:')
             # begin-get_bare_metal_server
 
-            bare_metal_server = vpc_service.get_bare_metal_server(
-                id=data['baremetalId']).get_result()
+            bare_metal_server = vpc_service.get_bare_metal_server(id=data['baremetalId']).get_result()
 
             # end-get_bare_metal_server
             assert bare_metal_server is not None
@@ -7552,13 +7447,10 @@ class TestVpcV1Examples():
             print('\nupdate_bare_metal_server() result:')
             # begin-update_bare_metal_server
 
-            bare_metal_server_patch_model = {
-                'name': 'my-baremetal-server-updated'
-            }
+            bare_metal_server_patch_model = {'name': 'my-baremetal-server-updated'}
 
             bare_metal_server = vpc_service.update_bare_metal_server(
-                id=data['baremetalId'],
-                bare_metal_server_patch=bare_metal_server_patch_model
+                id=data['baremetalId'], bare_metal_server_patch=bare_metal_server_patch_model
             ).get_result()
 
             # end-update_bare_metal_server
@@ -7577,7 +7469,8 @@ class TestVpcV1Examples():
             # begin-get_bare_metal_server_initialization
 
             bare_metal_server_initialization = vpc_service.get_bare_metal_server_initialization(
-                id=data['baremetalId']).get_result()
+                id=data['baremetalId']
+            ).get_result()
 
             # end-get_bare_metal_server_initialization
             assert bare_metal_server_initialization is not None
@@ -7593,13 +7486,11 @@ class TestVpcV1Examples():
         try:
             # begin-restart_bare_metal_server
 
-            response = vpc_service.restart_bare_metal_server(
-                id=data['baremetalId'])
+            response = vpc_service.restart_bare_metal_server(id=data['baremetalId'])
 
             # end-restart_bare_metal_server
             assert response is not None
-            print('\nrestart_bare_metal_server() response status code: ',
-                  response.get_status_code())
+            print('\nrestart_bare_metal_server() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7612,13 +7503,11 @@ class TestVpcV1Examples():
         try:
             # begin-start_bare_metal_server
 
-            response = vpc_service.start_bare_metal_server(
-                id=data['baremetalId'])
+            response = vpc_service.start_bare_metal_server(id=data['baremetalId'])
 
             # end-start_bare_metal_server
             assert response is not None
-            print('\nstart_bare_metal_server() response status code: ',
-                  response.get_status_code())
+            print('\nstart_bare_metal_server() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7631,21 +7520,17 @@ class TestVpcV1Examples():
         try:
             # begin-stop_bare_metal_server
 
-            response = vpc_service.stop_bare_metal_server(
-                id=data['baremetalId'], type='soft')
+            response = vpc_service.stop_bare_metal_server(id=data['baremetalId'], type='soft')
 
             # end-stop_bare_metal_server
             assert response is not None
-            print('\nstop_bare_metal_server() response status code: ',
-                  response.get_status_code())
+            print('\nstop_bare_metal_server() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
 
-
     @needscredentials
-    def test_remove_bare_metal_server_network_interface_floating_ip_example(
-            self):
+    def test_remove_bare_metal_server_network_interface_floating_ip_example(self):
         """
         remove_bare_metal_server_network_interface_floating_ip request example
         """
@@ -7655,13 +7540,15 @@ class TestVpcV1Examples():
             response = vpc_service.remove_bare_metal_server_network_interface_floating_ip(
                 bare_metal_server_id=data['baremetalId'],
                 network_interface_id=data['bm_nic_id'],
-                id=data['bm_nic_fip_id'])
+                id=data['bm_nic_fip_id'],
+            )
 
             # end-remove_bare_metal_server_network_interface_floating_ip
             assert response is not None
             print(
                 '\nremove_bare_metal_server_network_interface_floating_ip() response status code: ',
-                response.get_status_code())
+                response.get_status_code(),
+            )
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7675,13 +7562,12 @@ class TestVpcV1Examples():
             # begin-delete_bare_metal_server_network_interface
 
             response = vpc_service.delete_bare_metal_server_network_interface(
-                bare_metal_server_id=data['baremetalId'], id=data['bm_nic_id'])
+                bare_metal_server_id=data['baremetalId'], id=data['bm_nic_id']
+            )
 
             # end-delete_bare_metal_server_network_interface
             assert response is not None
-            print(
-                '\ndelete_bare_metal_server_network_interface() response status code: ',
-                response.get_status_code())
+            print('\ndelete_bare_metal_server_network_interface() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7698,8 +7584,7 @@ class TestVpcV1Examples():
 
             # end-delete_bare_metal_server
             assert response is not None
-            print('\ndelete_bare_metal_server() response status code: ',
-                  response.get_status_code())
+            print('\ndelete_bare_metal_server() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -7722,7 +7607,6 @@ class TestVpcV1Examples():
                 next_page = pager.get_next()
                 assert next_page is not None
                 all_results.extend(next_page)
-
 
             # end-list_backup_policies
 
@@ -7754,13 +7638,11 @@ class TestVpcV1Examples():
             }
             backup_policy_prototype = {
                 'match_user_tags': ['my-daily-backup-policy'],
-                'match_resource_type':['volume'],
-                'name':'my-backup-policy',
-                'plans':[backup_policy_plan_prototype_model],
+                'match_resource_type': ['volume'],
+                'name': 'my-backup-policy',
+                'plans': [backup_policy_plan_prototype_model],
             }
-            backup_policy_response = vpc_service.create_backup_policy(
-                backup_policy_prototype = backup_policy_prototype
-            )
+            backup_policy_response = vpc_service.create_backup_policy(backup_policy_prototype=backup_policy_prototype)
             backup_policy = backup_policy_response.get_result()
             data['backupPolicyETag'] = backup_policy_response.get_headers()['ETag']
             # end-create_backup_policy
@@ -7826,7 +7708,7 @@ class TestVpcV1Examples():
                 remote_region_policies=backup_policy_plan_remote_region_policies_protoype_model,
                 clone_policy=backup_policy_plan_clone_policy_prototype_model,
                 deletion_trigger=backup_policy_plan_deletion_trigger_prototype_model,
-                name='my-backup-policy-plan'
+                name='my-backup-policy-plan',
             )
             backup_policy_plan = backup_policy_plan_response.get_result()
             data['backupPolicyPlanETag'] = backup_policy_plan_response.get_headers()['ETag']
@@ -7846,8 +7728,7 @@ class TestVpcV1Examples():
             # begin-get_backup_policy_plan
 
             backup_policy_plan = vpc_service.get_backup_policy_plan(
-                backup_policy_id=data['backupPolicyID'],
-                id=data['backupPolicyPlanID']
+                backup_policy_id=data['backupPolicyID'], id=data['backupPolicyPlanID']
             ).get_result()
 
             print(json.dumps(backup_policy_plan, indent=2))
@@ -7887,7 +7768,7 @@ class TestVpcV1Examples():
                 backup_policy_id=data['backupPolicyID'],
                 id=data['backupPolicyPlanID'],
                 backup_policy_plan_patch=backup_policy_plan_patch_model,
-                if_match=data['backupPolicyPlanETag']
+                if_match=data['backupPolicyPlanETag'],
             ).get_result()
 
             print(json.dumps(backup_policy_plan, indent=2))
@@ -7934,8 +7815,7 @@ class TestVpcV1Examples():
             # begin-get_backup_policy_job
 
             response = vpc_service.get_backup_policy_job(
-                backup_policy_id=data['backupPolicyID'],
-                id=data['backupPolicyJobID']
+                backup_policy_id=data['backupPolicyID'], id=data['backupPolicyJobID']
             )
             backup_policy_job = response.get_result()
 
@@ -7953,9 +7833,7 @@ class TestVpcV1Examples():
             print('\nget_backup_policy() result:')
             # begin-get_backup_policy
 
-            backup_policy = vpc_service.get_backup_policy(
-                id=data['backupPolicyID']
-            ).get_result()
+            backup_policy = vpc_service.get_backup_policy(id=data['backupPolicyID']).get_result()
 
             print(json.dumps(backup_policy, indent=2))
 
@@ -7979,7 +7857,7 @@ class TestVpcV1Examples():
             backup_policy = vpc_service.update_backup_policy(
                 id=data['backupPolicyID'],
                 backup_policy_patch=backup_policy_patch_model,
-                if_match=data['backupPolicyETag']
+                if_match=data['backupPolicyETag'],
             ).get_result()
 
             print(json.dumps(backup_policy, indent=2))
@@ -7988,7 +7866,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-            
 
     @needscredentials
     def test_delete_backup_policy_plan_example(self):
@@ -8002,7 +7879,7 @@ class TestVpcV1Examples():
             backup_policy_plan = vpc_service.delete_backup_policy_plan(
                 backup_policy_id=data['backupPolicyID'],
                 id=data['backupPolicyPlanID'],
-                if_match=data['backupPolicyPlanETag']
+                if_match=data['backupPolicyPlanETag'],
             ).get_result()
 
             print(json.dumps(backup_policy_plan, indent=2))
@@ -8022,8 +7899,7 @@ class TestVpcV1Examples():
             # begin-delete_backup_policy
 
             backup_policy = vpc_service.delete_backup_policy(
-                id=data['backupPolicyID'],
-                if_match=data['backupPolicyETag']
+                id=data['backupPolicyID'], if_match=data['backupPolicyETag']
             ).get_result()
 
             print(json.dumps(backup_policy, indent=2))
@@ -8032,6 +7908,7 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
     @needscredentials
     def test_list_flow_log_collectors_example(self):
         """
@@ -8077,12 +7954,13 @@ class TestVpcV1Examples():
             flow_log_collector = vpc_service.create_flow_log_collector(
                 storage_bucket=cloud_object_storage_bucket_identity_model,
                 target=flow_log_collector_target_prototype_model,
-                name='my-flow-log-collector').get_result()
+                name='my-flow-log-collector',
+            ).get_result()
 
             # end-create_flow_log_collector
 
             assert flow_log_collector is not None
-            data['flowLogId']=flow_log_collector['id']
+            data['flowLogId'] = flow_log_collector['id']
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -8096,8 +7974,7 @@ class TestVpcV1Examples():
             print('\nget_flow_log_collector() result:')
             # begin-get_flow_log_collector
 
-            flow_log_collector = vpc_service.get_flow_log_collector(
-                id=data['flowLogId']).get_result()
+            flow_log_collector = vpc_service.get_flow_log_collector(id=data['flowLogId']).get_result()
 
             # end-get_flow_log_collector
 
@@ -8120,8 +7997,7 @@ class TestVpcV1Examples():
             flow_log_collector_patch_model['active'] = True
 
             flow_log_collector = vpc_service.update_flow_log_collector(
-                id=data['flowLogId'],
-                flow_log_collector_patch=flow_log_collector_patch_model
+                id=data['flowLogId'], flow_log_collector_patch=flow_log_collector_patch_model
             ).get_result()
 
             # end-update_flow_log_collector
@@ -8156,9 +8032,8 @@ class TestVpcV1Examples():
             # begin-remove_vpn_gateway_connection_peer_cidr
 
             response = vpc_service.remove_vpn_gateway_connections_peer_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-remove_vpn_gateway_connection_peer_cidr
             assert response is not None
@@ -8175,9 +8050,8 @@ class TestVpcV1Examples():
             # begin-remove_vpn_gateway_connection_local_cidr
 
             response = vpc_service.remove_vpn_gateway_connections_local_cidr(
-                vpn_gateway_id=data['vpnGatewayId'],
-                id=data['vpnGatewayConnectionId'],
-                cidr='192.144.0.0/28')
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'], cidr='192.144.0.0/28'
+            )
 
             # end-remove_vpn_gateway_connection_local_cidr
             assert response is not None
@@ -8194,9 +8068,8 @@ class TestVpcV1Examples():
             # begin-remove_instance_network_interface_floating_ip
 
             response = vpc_service.remove_instance_network_interface_floating_ip(
-                instance_id=data['instanceId'],
-                network_interface_id=data['eth2Id'],
-                id=data['floatingIpId'])
+                instance_id=data['instanceId'], network_interface_id=data['eth2Id'], id=data['floatingIpId']
+            )
 
             # end-remove_instance_network_interface_floating_ip
             assert response is not None
@@ -8213,7 +8086,8 @@ class TestVpcV1Examples():
             # begin-delete_security_group_target_binding
 
             response = vpc_service.delete_security_group_target_binding(
-                security_group_id=data['securityGroupId'], id=data['targetId'])
+                security_group_id=data['securityGroupId'], id=data['targetId']
+            )
 
             # end-delete_security_group_target_binding
             assert response is not None
@@ -8229,8 +8103,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_instance_network_interface
 
-            response = vpc_service.delete_instance_network_interface(
-                instance_id=data['instanceId'], id=data['eth2Id'])
+            response = vpc_service.delete_instance_network_interface(instance_id=data['instanceId'], id=data['eth2Id'])
 
             # end-delete_instance_network_interface
             assert response is not None
@@ -8247,15 +8120,14 @@ class TestVpcV1Examples():
             # begin-delete_instance_volume_attachment
 
             response = vpc_service.delete_instance_volume_attachment(
-                instance_id=data['instanceId'], id=data['volumeAttachmentId'])
+                instance_id=data['instanceId'], id=data['volumeAttachmentId']
+            )
 
             # end-delete_instance_volume_attachment
             assert response is not None
 
         except ApiException as e:
             pytest.fail(str(e))
-
-
 
     @needscredentials
     def test_delete_floating_ip_example(self):
@@ -8272,8 +8144,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
-
 
     @needscredentials
     def test_delete_instance_cluster_network_attachment_example(self):
@@ -8297,7 +8167,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_delete_instance_example(self):
@@ -8407,7 +8276,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-
     @needscredentials
     def test_delete_share_example(self):
         """
@@ -8452,15 +8320,13 @@ class TestVpcV1Examples():
     @needscredentials
     @pytest.mark.skip(reason="mock error")
     def test_delete_snapshots_example(self):
-        
         """
         delete_snapshots request example
         """
         try:
             # begin-delete_snapshots
 
-            response = vpc_service.delete_snapshots(
-                source_volume_id=data['volumeId'])
+            response = vpc_service.delete_snapshots(source_volume_id=data['volumeId'])
 
             # end-delete_snapshots
             assert response is not None
@@ -8493,7 +8359,8 @@ class TestVpcV1Examples():
             # begin-delete_security_group_rule
 
             response = vpc_service.delete_security_group_rule(
-                security_group_id=data['securityGroupId'], id=data['securityGroupRuleId'])
+                security_group_id=data['securityGroupId'], id=data['securityGroupRuleId']
+            )
 
             # end-delete_security_group_rule
             assert response is not None
@@ -8516,7 +8383,6 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
-
 
     @needscredentials
     def test_delete_cluster_network_interface_example(self):
@@ -8614,7 +8480,6 @@ class TestVpcV1Examples():
         except ApiException as e:
             pytest.fail(str(e))
 
-
     @needscredentials
     def test_delete_public_gateway_example(self):
         """
@@ -8640,7 +8505,8 @@ class TestVpcV1Examples():
             # begin-delete_network_acl_rule
 
             response = vpc_service.delete_network_acl_rule(
-                network_acl_id=data['networkACLId'], id=data['networkACLRuleId'])
+                network_acl_id=data['networkACLId'], id=data['networkACLRuleId']
+            )
 
             # end-delete_network_acl_rule
             assert response is not None
@@ -8673,7 +8539,8 @@ class TestVpcV1Examples():
             # begin-delete_instance_group_membership
 
             response = vpc_service.delete_instance_group_membership(
-                instance_group_id=data['instanceGroupId'], id=data['instanceGroupMembershipId'])
+                instance_group_id=data['instanceGroupId'], id=data['instanceGroupMembershipId']
+            )
 
             # end-delete_instance_group_membership
             assert response is not None
@@ -8689,8 +8556,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_instance_group_memberships
 
-            response = vpc_service.delete_instance_group_memberships(
-                instance_group_id=data['instanceGroupId'])
+            response = vpc_service.delete_instance_group_memberships(instance_group_id=data['instanceGroupId'])
 
             # end-delete_instance_group_memberships
             assert response is not None
@@ -8709,7 +8575,8 @@ class TestVpcV1Examples():
             response = vpc_service.delete_instance_group_manager_policy(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                id=data['instanceGroupManagerPolicyId'])
+                id=data['instanceGroupManagerPolicyId'],
+            )
 
             # end-delete_instance_group_manager_policy
             assert response is not None
@@ -8728,7 +8595,8 @@ class TestVpcV1Examples():
             response = vpc_service.delete_instance_group_manager_action(
                 instance_group_id=data['instanceGroupId'],
                 instance_group_manager_id=data['instanceGroupManagerId'],
-                id=data['instanceGroupManagerActionId'])
+                id=data['instanceGroupManagerActionId'],
+            )
 
             # end-delete_instance_group_manager_action
             assert response is not None
@@ -8745,7 +8613,8 @@ class TestVpcV1Examples():
             # begin-delete_instance_group_manager
 
             response = vpc_service.delete_instance_group_manager(
-                instance_group_id=data['instanceGroupId'], id=data['instanceGroupManagerId'])
+                instance_group_id=data['instanceGroupId'], id=data['instanceGroupManagerId']
+            )
 
             # end-delete_instance_group_manager
             assert response is not None
@@ -8762,8 +8631,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_instance_group_load_balancer
 
-            response = vpc_service.delete_instance_group_load_balancer(
-                instance_group_id=data['instanceGroupId'])
+            response = vpc_service.delete_instance_group_load_balancer(instance_group_id=data['instanceGroupId'])
 
             # end-delete_instance_group_load_balancer
             assert response is not None
@@ -8892,7 +8760,8 @@ class TestVpcV1Examples():
             # begin-delete_vpn_gateway_connection
 
             response = vpc_service.delete_vpn_gateway_connection(
-                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId'])
+                vpn_gateway_id=data['vpnGatewayId'], id=data['vpnGatewayConnectionId']
+            )
 
             # end-delete_vpn_gateway_connection
             assert response is not None
@@ -8925,9 +8794,8 @@ class TestVpcV1Examples():
             # begin-delete_vpc_routing_table_route
 
             response = vpc_service.delete_vpc_routing_table_route(
-                vpc_id=data['vpcID'],
-                routing_table_id=data['vpcRoutingTableId'],
-                id=data['vpcRoutingTableRouteId'])
+                vpc_id=data['vpcID'], routing_table_id=data['vpcRoutingTableId'], id=data['vpcRoutingTableRouteId']
+            )
 
             # end-delete_vpc_routing_table_route
             assert response is not None
@@ -8943,8 +8811,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_vpc_routing_table
 
-            response = vpc_service.delete_vpc_routing_table(vpc_id=data['vpcID'],
-                                                            id=data['vpcRoutingTableId'])
+            response = vpc_service.delete_vpc_routing_table(vpc_id=data['vpcID'], id=data['vpcRoutingTableId'])
 
             # end-delete_vpc_routing_table
             assert response is not None
@@ -8960,8 +8827,7 @@ class TestVpcV1Examples():
         try:
             # begin-delete_vpc_address_prefix
 
-            response = vpc_service.delete_vpc_address_prefix(
-                vpc_id=data['vpcID'], id=data['vpcAddressPrefixId'])
+            response = vpc_service.delete_vpc_address_prefix(vpc_id=data['vpcID'], id=data['vpcAddressPrefixId'])
 
             # end-delete_vpc_address_prefix
             assert response is not None
@@ -9002,6 +8868,7 @@ class TestVpcV1Examples():
 
         except ApiException as e:
             pytest.fail(str(e))
+
 
 # endregion
 ##############################################################################

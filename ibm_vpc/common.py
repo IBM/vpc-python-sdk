@@ -26,20 +26,22 @@ HEADER_NAME_X_REQUEST_ID = 'X-Request-Id'
 HEADER_NAME_USER_AGENT = 'User-Agent'
 SDK_NAME = 'vpc-python-sdk'
 
+
 def get_system_info():
     """
     Get information about the system to be inserted into the User-Agent header.
     """
-    return 'lang={0}; arch={1}; os={2}; python.version={3}'.format('python',
-                                platform.machine(), # Architecture
-                                platform.system(), # OS
-                                platform.python_version()) # Python version
+    return 'lang={0}; arch={1}; os={2}; python.version={3}'.format(
+        'python', platform.machine(), platform.system(), platform.python_version()  # Architecture  # OS
+    )  # Python version
+
 
 def get_x_request_id():
     """
     Get the value to be sent in the X-Request-Id header.
     """
     return str(uuid.uuid4())
+
 
 def get_user_agent():
     """

@@ -21,25 +21,27 @@ from ibm_vpc.vpc_v1 import VpcV1
 # Read config file
 configFile = 'vpc.env'
 
+
 def loadConfigFile():
     if os.path.exists(configFile):
         os.environ['IBM_CREDENTIALS_FILE'] = configFile
     else:
         pytest.skip('External configuration not available, skipping...')
 
+
 @pytest.fixture(scope="session")
 def createGen2Service():
     loadConfigFile()
     service = VpcV1.new_instance()
-    headers = {
-        'Accept': 'application/json'
-    }
+    headers = {'Accept': 'application/json'}
     service.set_default_headers(headers)
     print('Setup complete.')
     return service
 
+
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", help="Run test on dev environment")
+
 
 @pytest.fixture()
 def env(request):
@@ -48,4 +50,3 @@ def env(request):
         print('Test on dev env -', val)
         return True
     return False
-
