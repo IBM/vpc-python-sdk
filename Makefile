@@ -6,6 +6,13 @@ deps:
 dev-deps:
 	pip install .[dev]
 
+all: upgrade-pip setup unit-test lint
+
+ci: all
+
+upgrade-pip:
+	pip install --upgrade pip
+
 install:
 	pip install -e .
 
@@ -24,3 +31,10 @@ lint:
 
 lint-fix:
 	black ibm_vpc test examples
+
+build-dist:
+	rm -fr dist
+	${PYTHON} -m build
+
+publish-dist:
+	TWINE_USERNAME=__token__ ${PYTHON} -m twine upload --non-interactive --verbose dist/*

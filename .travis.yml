@@ -49,3 +49,10 @@ deploy:
   on:
     python: '3.8'
     tags: true
+
+- provider: script
+  script: npx semantic-release
+  skip_cleanup: true
+  on:
+    python: '3.8'
+    branch: master
