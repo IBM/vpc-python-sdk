@@ -49,3 +49,11 @@ deploy:
   on:
     python: '3.8'
     tags: true
+
+
+- provider: script
+  script: make ci
+  skip_cleanup: true
+  on:
+    python: '3.8'
+    branch: master
