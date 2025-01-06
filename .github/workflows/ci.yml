@@ -13,7 +13,7 @@ jobs:
     environment: ci
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
 
     steps:
     - uses: actions/checkout@v3
@@ -37,16 +37,18 @@ jobs:
         sudo npm install -g npm@latest || sudo npm install -g npm@9
 
     - name: Install dependencies
-      run: pip install 'tox<4'
+      run: pip install 'tox<4' tox-gh-actions
 
     - name: Run tests
+      env:
+        PYTHON_VERSION: ${{ matrix.python-version }}
       run: tox
 
     - name: Install release dependencies
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       run: |
         pip install bump-my-version
-        npm install -g --save-dev \
+        sudo npm install -g --save-dev \
           @semantic-release/changelog \
           @semantic-release/exec \
           @semantic-release/git \
