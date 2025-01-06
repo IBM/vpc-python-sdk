@@ -34,7 +34,7 @@ jobs:
 
     - name: Install npm
       run: |
-        npm install -g npm@latest || npm install -g npm@9
+        sudo npm install -g npm@latest || sudo npm install -g npm@9
 
     - name: Install dependencies
       run: pip install 'tox<4'
