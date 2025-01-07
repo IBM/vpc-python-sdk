@@ -1,3 +1,10 @@
+## [0.26.1](https://github.com/IBM/vpc-python-sdk/compare/v0.26.0...v0.26.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* **ci:** separated publish job ([#75](https://github.com/IBM/vpc-python-sdk/issues/75)) ([9b29347](https://github.com/IBM/vpc-python-sdk/commit/9b293471f6e8adbb71c94ea9720fa6de91560020))
+
 # [0.26.0](https://github.com/IBM/vpc-python-sdk/compare/v0.25.1...v0.26.0) (2025-01-07)
 
 
