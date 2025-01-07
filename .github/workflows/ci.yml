@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [master]
-    tags: ['*']
+    tags: ['v*']
   pull_request:
     branches: [master]
 
@@ -41,37 +41,22 @@ jobs:
     - name: Install release dependencies
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       run: |
-        pip install bump-my-version
+        pip install bump-my-version build twine
         sudo npm install -g semantic-release \
           @semantic-release/changelog \
           @semantic-release/exec \
           @semantic-release/git \
           @semantic-release/github
 
-    - name: Semantic Release
+    - name: Semantic Release and Publish
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npx semantic-release
-
-  # Separate job for PyPI publishing
-  publish:
-    needs: test
-    # Changed the condition to check for any tag
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    environment: ci
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-    - name: Install dependencies
       run: |
-        pip install build twine
-    - name: Build and publish
-      run: |
-        python -m build
-        python -m twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+        npx semantic-release
+        # If semantic-release was successful, build and publish to PyPI
+        if [ $? -eq 0 ]; then
+          python -m build
+          python -m twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+        fi
