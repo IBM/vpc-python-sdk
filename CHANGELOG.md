@@ -1,3 +1,10 @@
+## [0.26.2](https://github.com/IBM/vpc-python-sdk/compare/v0.26.1...v0.26.2) (2025-01-07)
+
+
+### Bug Fixes
+
+* **publish:** updated the tag and if condition ([#76](https://github.com/IBM/vpc-python-sdk/issues/76)) ([90eef8d](https://github.com/IBM/vpc-python-sdk/commit/90eef8de9f0e986fec745293f6bd44d236052f25))
+
 ## [0.26.1](https://github.com/IBM/vpc-python-sdk/compare/v0.26.0...v0.26.1) (2025-01-07)
 
 
