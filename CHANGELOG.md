@@ -1,3 +1,13 @@
+# [0.26.0](https://github.com/IBM/vpc-python-sdk/compare/v0.25.1...v0.26.0) (2025-01-07)
+
+
+### Features
+
+* **release:** fixed ci workflow ([#72](https://github.com/IBM/vpc-python-sdk/issues/72)) ([9065aea](https://github.com/IBM/vpc-python-sdk/commit/9065aea857b69ba4391a27021e228281106b41fa))
+* **release:** fixed ci workflow ([#73](https://github.com/IBM/vpc-python-sdk/issues/73)) ([0c7d12c](https://github.com/IBM/vpc-python-sdk/commit/0c7d12c481e5afccef9c12ddf10cd69238c20b80))
+* **release:** Updated the ci.yml file ([#74](https://github.com/IBM/vpc-python-sdk/issues/74)) ([54abfde](https://github.com/IBM/vpc-python-sdk/commit/54abfdefe7ea1a6c3524decf1cb9d1199429e712))
+* **spec:** updated the sdk as per the api spec released on 2024-12-26 ([#70](https://github.com/IBM/vpc-python-sdk/issues/70)) ([a5a480b](https://github.com/IBM/vpc-python-sdk/commit/a5a480bc963660833c82191fd058d04d913f9624))
+
 ## [0.25.1](https://github.com/IBM/vpc-python-sdk/compare/v0.25.0...v0.25.1) (2024-12-30)
 
 
