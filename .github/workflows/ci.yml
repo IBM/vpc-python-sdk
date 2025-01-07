@@ -48,7 +48,7 @@ jobs:
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       run: |
         pip install bump-my-version
-        sudo npm install -g --save-dev \
+        sudo npm install -g semantic-release \
           @semantic-release/changelog \
           @semantic-release/exec \
           @semantic-release/git \
