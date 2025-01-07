@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [master]
-    tags: ['v*']
+    tags: ['*']
   pull_request:
     branches: [master]
 
@@ -37,6 +37,7 @@ jobs:
       env:
         PYTHON_VERSION: ${{ matrix.python-version }}
       run: tox
+
     - name: Install release dependencies
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       run: |
@@ -57,7 +58,8 @@ jobs:
   # Separate job for PyPI publishing
   publish:
     needs: test
-    if: startsWith(github.ref, 'refs/tags/')
+    # Changed the condition to check for any tag
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     environment: ci
     steps:
