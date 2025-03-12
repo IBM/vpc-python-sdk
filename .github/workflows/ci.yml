@@ -48,6 +48,12 @@ jobs:
           @semantic-release/git \
           @semantic-release/github
 
+    - name: Configure Git User
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+      run: |
+        git config --global user.name "uibm"
+        git config --global user.email "ujjwal.kumar1@ibm.com"
+
     - name: Semantic Release and Publish
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       env:
