@@ -27,7 +27,8 @@ classifiers = [
 ]
 keywords=["ibm", "cloud", "ibm cloud services", "vpc" ]
 dependencies = [
-    "ibm_cloud_sdk_core>=3.22.0",
+    "ibm_cloud_sdk_core>=3.22.0,<3.22.1;python_version<'3.9'",
+    "ibm_cloud_sdk_core>=3.23.0;python_version>='3.9'",
     "python_dateutil>=2.5.3,<3.0.0",
 ]
 
@@ -68,19 +69,19 @@ skip-string-normalization = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py37-lint, py37, py38, py39
+envlist = lint, py38, py39, py310, py311
 
-[testenv:py37-lint]
-basepython = python3.7
+[testenv:lint]
+basepython = python3.8
 deps = pylint
-commands = pylint --rcfile=.pylintrc ibm-vpc test/unit
+commands = pylint --rcfile=.pylintrc ibm-vpc test
 
 [testenv]
 passenv = TOXENV CI TRAVIS*
 commands =
-          pytest -v test/unit
+        pytest -v test/unit
 
-deps =
+deps = 
     pylint
     pytest
     pytest-cov
