@@ -1,3 +1,12 @@
+# [0.27.0](https://github.com/IBM/vpc-python-sdk/compare/v0.26.3...v0.27.0) (2025-03-12)
+
+
+### Features
+
+* **core:** fixed core version ([#87](https://github.com/IBM/vpc-python-sdk/issues/87)) ([5995d5d](https://github.com/IBM/vpc-python-sdk/commit/5995d5df2925468344c2e3e809974fe2f19ff212))
+* **spec:** updated the sdk as per the api spec released on 2025-03-10 ([#85](https://github.com/IBM/vpc-python-sdk/issues/85)) ([ff6e9ce](https://github.com/IBM/vpc-python-sdk/commit/ff6e9ceb97e830ef6e15d70ec89a52fd4d08c9a0))
+* **url:** fixed the repo urls ([#86](https://github.com/IBM/vpc-python-sdk/issues/86)) ([335f1ac](https://github.com/IBM/vpc-python-sdk/commit/335f1ac892d8adf542ae6ad1f570171950ae1829))
+
 ## [0.26.3](https://github.com/IBM/vpc-python-sdk/compare/v0.26.2...v0.26.3) (2025-01-07)
 
 
