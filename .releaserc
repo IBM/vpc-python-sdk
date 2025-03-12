@@ -13,7 +13,9 @@
     [
       "@semantic-release/git",
       {
-        "message": "chore(release): ${nextRelease.version} release notes\n\n${nextRelease.notes}"
+        "message": "chore(release): ${nextRelease.version} release notes\n\n${nextRelease.notes}",
+        "gitUserName": "uibm",
+        "gitUserEmail": "ujjwal.kumar1@ibm.com"
       }
     ],
     "@semantic-release/github"
