@@ -39,9 +39,9 @@ jobs:
       run: tox
 
     - name: Install release dependencies
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
       run: |
-        pip install bumpversion build twine
+        pip install bump-my-version build twine
         sudo npm install -g semantic-release \
           @semantic-release/changelog \
           @semantic-release/exec \
@@ -49,13 +49,13 @@ jobs:
           @semantic-release/github
 
     - name: Configure Git User
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
       run: |
         git config --global user.name "uibm"
         git config --global user.email "ujjwal.kumar1@ibm.com"
 
     - name: Semantic Release and Publish
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}

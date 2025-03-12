@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords=["ibm", "cloud", "ibm cloud services", "vpc" ]
 dependencies = [
-    "ibm_cloud_sdk_core>=3.22.0,<3.22.1;python_version<'3.9'",
+    "ibm_cloud_sdk_core>=3.22.0,<3.23.0;python_version<'3.9'",
     "ibm_cloud_sdk_core>=3.23.0;python_version>='3.9'",
     "python_dateutil>=2.5.3,<3.0.0",
 ]
