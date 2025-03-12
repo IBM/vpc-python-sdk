@@ -7,12 +7,13 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "bump-my-version bump --allow-dirty --current-version ${lastRelease.version} --new-version ${nextRelease.version} patch"
+        "prepareCmd": "bumpversion --config-file pyproject.toml --allow-dirty --new-version ${nextRelease.version} patch"
       }
     ],
     [
       "@semantic-release/git",
       {
+        "assets": ["CHANGELOG.md", "pyproject.toml", "ibm_vpc/version.py", "README.md"],
         "message": "chore(release): ${nextRelease.version} release notes\n\n${nextRelease.notes}",
         "gitUserName": "uibm",
         "gitUserEmail": "ujjwal.kumar1@ibm.com"

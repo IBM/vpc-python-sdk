@@ -41,7 +41,7 @@ jobs:
     - name: Install release dependencies
       if: github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
       run: |
-        pip install bump-my-version build twine
+        pip install bumpversion build twine
         sudo npm install -g semantic-release \
           @semantic-release/changelog \
           @semantic-release/exec \
