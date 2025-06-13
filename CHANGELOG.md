@@ -1,3 +1,10 @@
+# [0.29.0](https://github.com/IBM/vpc-python-sdk/compare/v0.28.0...v0.29.0) (2025-06-13)
+
+
+### Features
+
+* **core:** updated the sdk core version to 3.42.2 ([#91](https://github.com/IBM/vpc-python-sdk/issues/91)) ([bc3dc8c](https://github.com/IBM/vpc-python-sdk/commit/bc3dc8c2c5e203b75fd4aa4e9ddbe555759d646d))
+
 # [0.28.0](https://github.com/IBM/vpc-python-sdk/compare/v0.27.0...v0.28.0) (2025-04-28)
 
 
