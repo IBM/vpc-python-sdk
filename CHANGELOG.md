@@ -1,3 +1,10 @@
+## [0.29.1](https://github.com/IBM/vpc-python-sdk/compare/v0.29.0...v0.29.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* **version:** fixed missing default version ([#92](https://github.com/IBM/vpc-python-sdk/issues/92)) ([6329526](https://github.com/IBM/vpc-python-sdk/commit/6329526892b3c8f2f1a0185b87d710efcf44eecb))
+
 # [0.29.0](https://github.com/IBM/vpc-python-sdk/compare/v0.28.0...v0.29.0) (2025-06-13)
 
 
