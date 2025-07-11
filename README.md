@@ -76,8 +76,11 @@ from ibm_vpc import VpcV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_cloud_sdk_core import ApiException
 
-authenticator = IAMAuthenticator('apikey')
+authenticator = IAMAuthenticator("YOUR_IBMCLOUD_API_KEY")
 service = VpcV1(authenticator=authenticator)
+
+# to change the service URL to the United Kingdom region
+service.set_service_url(VpcV1.get_service_url_for_region("eu-gb"))
 
 #  Listing VPCs
 print("List VPCs")
