@@ -51,7 +51,7 @@ Service Name | Imported Class Name
 
 * An [IBM Cloud][ibm-cloud-onboarding] account.
 * An IAM API key to allow the SDK to access your account. Create an apikey [here](https://cloud.ibm.com/iam/apikeys).
-* Python version 3.8 or above.
+* Python version 3.10 or above.
 
 ## Installation
 
