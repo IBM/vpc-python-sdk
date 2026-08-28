@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.114.4-9b56d441-20260612-210048
+# IBM OpenAPI SDK Code Generator Version: 3.116.0-df613dbc-20260803-154903
 
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2026-06-23
+API Version: 2026-08-18
 """
 
 from datetime import datetime
@@ -59,6 +59,7 @@ class VpcV1(BaseService):
         'eu-es': 'https://eu-es.iaas.cloud.ibm.com/v1', # Spain (Madrid)
         'eu-gb': 'https://eu-gb.iaas.cloud.ibm.com/v1', # United Kingdom (London)
         'in-che': 'https://in-che.iaas.cloud.ibm.com/v1', # India (Chennai)
+        'in-mum': 'https://in-mum.iaas.cloud.ibm.com/v1', # India (Mumbai)
         'jp-osa': 'https://jp-osa.iaas.cloud.ibm.com/v1', # Japan (Osaka)
         'jp-tok': 'https://jp-tok.iaas.cloud.ibm.com/v1', # Japan (Tokyo)
         'us-east': 'https://us-east.iaas.cloud.ibm.com/v1', # US East (Washington DC)
@@ -68,7 +69,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: Optional[str] = "2026-06-23",
+        version: Optional[str] = "2026-08-18",
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: Optional[int] = 2,
     ) -> 'VpcV1':
@@ -78,7 +79,7 @@ class VpcV1(BaseService):
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
                behavior documented here, specify any date between `2026-04-07` and
-               `2026-06-24`.
+               `2026-08-19`.
         """
         if version is None:
             raise ValueError('version must be provided')
@@ -108,7 +109,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: Optional[str] = "2026-06-23",
+        version: Optional[str] = "2026-08-18",
         authenticator: Authenticator = None,
         generation: Optional[int] = 2,
     ) -> None:
@@ -117,7 +118,7 @@ class VpcV1(BaseService):
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
                behavior documented here, specify any date between `2026-04-07` and
-               `2026-06-24`.
+               `2026-08-19`.
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
                Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
@@ -942,6 +943,65 @@ class VpcV1(BaseService):
     #########################
     # Bare metal servers
     #########################
+
+    def list_bare_metal_server_capacities(
+        self,
+        *,
+        start: Optional[str] = None,
+        limit: Optional[int] = None,
+        profile_name: Optional[str] = None,
+        zone_name: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List capacities for bare metal servers.
+
+        This request lists bare metal server capacities in the region.
+
+        :param str start: (optional) A server-provided token determining what
+               resource to start the page on.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str profile_name: (optional) Filters the collection to resources
+               with a `profile.name` property matching the specified profile name.
+        :param str zone_name: (optional) Filters the collection to resources with a
+               `zone.name` property matching the exact specified name.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BareMetalServerCapacityCollection` object
+        """
+
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_bare_metal_server_capacities',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+            'start': start,
+            'limit': limit,
+            'profile.name': profile_name,
+            'zone.name': zone_name,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/bare_metal_server/capacities'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
 
     def list_bare_metal_server_profiles(
         self,
@@ -10617,6 +10677,73 @@ class VpcV1(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def create_instance_reinitialization(
+        self,
+        id: str,
+        instance_reinitialize_prototype: 'InstanceReinitializePrototype',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Reinitialize an instance.
+
+        This request reinitializes an instance with the information in a provided instance
+        reinitialize prototype object. The instance must be stopped. Upon successful
+        reinitiatilization, the instance will be started automatically. Capacity may not
+        be available for the instance to become `running`.
+        Instances provisioned from a `catalog_offering` cannot be reinitialized.
+        This operation cannot be reversed. The previous initialization data will be fully
+        replaced, the current boot volume will be destroyed and replaced, any local disks
+        will be wiped, and the boot volume attachment identifier will change.
+
+        :param str id: The instance identifier.
+        :param InstanceReinitializePrototype instance_reinitialize_prototype: The
+               instance reinitialize prototype object.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not id:
+            raise ValueError('id must be provided')
+        if instance_reinitialize_prototype is None:
+            raise ValueError('instance_reinitialize_prototype must be provided')
+        if isinstance(instance_reinitialize_prototype, InstanceReinitializePrototype):
+            instance_reinitialize_prototype = convert_model(instance_reinitialize_prototype)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_instance_reinitialization',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        data = json.dumps(instance_reinitialize_prototype)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/instances/{id}/reinitialize'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def create_instance_action(
         self,
         instance_id: str,
@@ -14838,9 +14965,23 @@ class VpcV1(BaseService):
         This request creates a new pool from a pool prototype object.
 
         :param str load_balancer_id: The load balancer identifier.
-        :param str algorithm: The load balancing algorithm. The `least_connections`
-               algorithm is only supported for load balancers that have `availability`
-               with value `subnet` in the profile.
+        :param str algorithm: The load balancing algorithm.
+               - `least_connections`: Routes traffic to the pool member with the least
+               active
+                 connections. Supported by `application` and `network` family load
+               balancers that
+                 have `availability` with value `subnet` in the profile.
+               - `round_robin`: Distributes traffic sequentially across pool members.
+               Supported by
+                 `application` and `network` family load balancers.
+               - `weighted_round_robin`: Distributes traffic across pool members
+               proportionally to
+                 configured member weights. Supported by `application` and `network`
+                 family load balancers.
+               - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+                 proportionally to configured member weights. Supported by `network`
+               family
+                 load balancers with an `asymmetric_routing_supported` value of `true`.
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
                If this pool has a member targeting a load balancer then:
@@ -34798,6 +34939,205 @@ class BareMetalServerCPU:
 
 
 
+class BareMetalServerCapacity:
+    """
+    A `zone` that has available bare metal servers with a `profile`.
+
+    :param BareMetalServerProfileReference profile: The
+          [profile](https://cloud.ibm.com/docs/vpc?topic=vpc-bare-metal-servers-profile)
+          available in the `zone`.
+    :param ZoneReference zone: The zone where one or more bare metal servers of the
+          `profile` are available.
+    """
+
+    def __init__(
+        self,
+        profile: 'BareMetalServerProfileReference',
+        zone: 'ZoneReference',
+    ) -> None:
+        """
+        Initialize a BareMetalServerCapacity object.
+
+        :param BareMetalServerProfileReference profile: The
+               [profile](https://cloud.ibm.com/docs/vpc?topic=vpc-bare-metal-servers-profile)
+               available in the `zone`.
+        :param ZoneReference zone: The zone where one or more bare metal servers of
+               the `profile` are available.
+        """
+        self.profile = profile
+        self.zone = zone
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCapacity':
+        """Initialize a BareMetalServerCapacity object from a json dictionary."""
+        args = {}
+        if (profile := _dict.get('profile')) is not None:
+            args['profile'] = BareMetalServerProfileReference.from_dict(profile)
+        else:
+            raise ValueError('Required property \'profile\' not present in BareMetalServerCapacity JSON')
+        if (zone := _dict.get('zone')) is not None:
+            args['zone'] = ZoneReference.from_dict(zone)
+        else:
+            raise ValueError('Required property \'zone\' not present in BareMetalServerCapacity JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCapacity object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'profile') and self.profile is not None:
+            if isinstance(self.profile, dict):
+                _dict['profile'] = self.profile
+            else:
+                _dict['profile'] = self.profile.to_dict()
+        if hasattr(self, 'zone') and self.zone is not None:
+            if isinstance(self.zone, dict):
+                _dict['zone'] = self.zone
+            else:
+                _dict['zone'] = self.zone.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCapacity object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCapacity') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCapacity') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class BareMetalServerCapacityCollection:
+    """
+    Available bare metal server capacities.
+
+    :param List[BareMetalServerCapacity] capacities: A page of available bare metal
+          server capacities.
+    :param PageLink first: A link to the first page of resources.
+    :param int limit: The maximum number of resources that can be returned by the
+          request.
+    :param PageLink next: (optional) A link to the next page of resources. This
+          property is present for all pages
+          except the last page.
+    :param int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(
+        self,
+        capacities: List['BareMetalServerCapacity'],
+        first: 'PageLink',
+        limit: int,
+        total_count: int,
+        *,
+        next: Optional['PageLink'] = None,
+    ) -> None:
+        """
+        Initialize a BareMetalServerCapacityCollection object.
+
+        :param List[BareMetalServerCapacity] capacities: A page of available bare
+               metal server capacities.
+        :param PageLink first: A link to the first page of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param int total_count: The total number of resources across all pages.
+        :param PageLink next: (optional) A link to the next page of resources. This
+               property is present for all pages
+               except the last page.
+        """
+        self.capacities = capacities
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BareMetalServerCapacityCollection':
+        """Initialize a BareMetalServerCapacityCollection object from a json dictionary."""
+        args = {}
+        if (capacities := _dict.get('capacities')) is not None:
+            args['capacities'] = [BareMetalServerCapacity.from_dict(v) for v in capacities]
+        else:
+            raise ValueError('Required property \'capacities\' not present in BareMetalServerCapacityCollection JSON')
+        if (first := _dict.get('first')) is not None:
+            args['first'] = PageLink.from_dict(first)
+        else:
+            raise ValueError('Required property \'first\' not present in BareMetalServerCapacityCollection JSON')
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        else:
+            raise ValueError('Required property \'limit\' not present in BareMetalServerCapacityCollection JSON')
+        if (next := _dict.get('next')) is not None:
+            args['next'] = PageLink.from_dict(next)
+        if (total_count := _dict.get('total_count')) is not None:
+            args['total_count'] = total_count
+        else:
+            raise ValueError('Required property \'total_count\' not present in BareMetalServerCapacityCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BareMetalServerCapacityCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'capacities') and self.capacities is not None:
+            capacities_list = []
+            for v in self.capacities:
+                if isinstance(v, dict):
+                    capacities_list.append(v)
+                else:
+                    capacities_list.append(v.to_dict())
+            _dict['capacities'] = capacities_list
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BareMetalServerCapacityCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BareMetalServerCapacityCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BareMetalServerCapacityCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class BareMetalServerCollection:
     """
     BareMetalServerCollection.
@@ -38414,6 +38754,8 @@ class BareMetalServerProfile:
     :param BareMetalServerProfileVirtualNetworkInterfacesSupported
           virtual_network_interfaces_supported: Indicates whether this profile supports
           virtual network interfaces.
+    :param List[ZoneReference] zones: The zones in this region that support this
+          bare metal server profile.
     """
 
     def __init__(
@@ -38435,6 +38777,7 @@ class BareMetalServerProfile:
         resource_type: str,
         supported_trusted_platform_module_modes: 'BareMetalServerProfileSupportedTrustedPlatformModuleModes',
         virtual_network_interfaces_supported: 'BareMetalServerProfileVirtualNetworkInterfacesSupported',
+        zones: List['ZoneReference'],
     ) -> None:
         """
         Initialize a BareMetalServerProfile object.
@@ -38464,6 +38807,8 @@ class BareMetalServerProfile:
         :param BareMetalServerProfileVirtualNetworkInterfacesSupported
                virtual_network_interfaces_supported: Indicates whether this profile
                supports virtual network interfaces.
+        :param List[ZoneReference] zones: The zones in this region that support
+               this bare metal server profile.
         """
         self.bandwidth = bandwidth
         self.console_types = console_types
@@ -38482,6 +38827,7 @@ class BareMetalServerProfile:
         self.resource_type = resource_type
         self.supported_trusted_platform_module_modes = supported_trusted_platform_module_modes
         self.virtual_network_interfaces_supported = virtual_network_interfaces_supported
+        self.zones = zones
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'BareMetalServerProfile':
@@ -38555,6 +38901,10 @@ class BareMetalServerProfile:
             args['virtual_network_interfaces_supported'] = BareMetalServerProfileVirtualNetworkInterfacesSupported.from_dict(virtual_network_interfaces_supported)
         else:
             raise ValueError('Required property \'virtual_network_interfaces_supported\' not present in BareMetalServerProfile JSON')
+        if (zones := _dict.get('zones')) is not None:
+            args['zones'] = [ZoneReference.from_dict(v) for v in zones]
+        else:
+            raise ValueError('Required property \'zones\' not present in BareMetalServerProfile JSON')
         return cls(**args)
 
     @classmethod
@@ -38641,6 +38991,14 @@ class BareMetalServerProfile:
                 _dict['virtual_network_interfaces_supported'] = self.virtual_network_interfaces_supported
             else:
                 _dict['virtual_network_interfaces_supported'] = self.virtual_network_interfaces_supported.to_dict()
+        if hasattr(self, 'zones') and self.zones is not None:
+            zones_list = []
+            for v in self.zones:
+                if isinstance(v, dict):
+                    zones_list.append(v)
+                else:
+                    zones_list.append(v.to_dict())
+            _dict['zones'] = zones_list
         return _dict
 
     def _to_dict(self):
@@ -63144,6 +63502,8 @@ class InstanceLifecycleReason:
     :param str code: A reason code for this lifecycle state:
           - `failed_licensing`: Allocation of one or more software license(s) has failed.
           Delete
+            the instance and provision it again. If the problem persists, contact IBM
+          Support.
           - `failed_registration`: The instance's registration to Resource Controller has
             failed. Delete the instance and provision it again. If the problem persists,
             contact IBM Support.
@@ -63173,6 +63533,8 @@ class InstanceLifecycleReason:
         :param str code: A reason code for this lifecycle state:
                - `failed_licensing`: Allocation of one or more software license(s) has
                failed. Delete
+                 the instance and provision it again. If the problem persists, contact IBM
+               Support.
                - `failed_registration`: The instance's registration to Resource Controller
                has
                  failed. Delete the instance and provision it again. If the problem
@@ -63251,6 +63613,8 @@ class InstanceLifecycleReason:
         A reason code for this lifecycle state:
         - `failed_licensing`: Allocation of one or more software license(s) has failed.
         Delete
+          the instance and provision it again. If the problem persists, contact IBM
+        Support.
         - `failed_registration`: The instance's registration to Resource Controller has
           failed. Delete the instance and provision it again. If the problem persists,
           contact IBM Support.
@@ -66819,9 +67183,10 @@ class InstancePrototype:
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not
-          subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as
+          an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -66837,8 +67202,9 @@ class InstancePrototype:
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -66936,8 +67302,10 @@ class InstancePrototype:
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not
-               subsequently managed. Accordingly, it is reflected as an [instance
+               instance, and
+               can only be changed by reinitializing the instance. Accordingly, it is
+               reflected as
+               an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -66955,8 +67323,8 @@ class InstancePrototype:
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -67147,6 +67515,82 @@ class InstanceReference:
     def __ne__(self, other: 'InstanceReference') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class InstanceReinitializePrototype:
+    """
+    InstanceReinitializePrototype.
+
+    :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+          (optional) The default trusted profile configuration to use for this virtual
+          server instance.
+          If not specified, the instance will be reinitialized without a default trusted
+          profile.
+          This property's value is used when reinitializing the virtual server instance,
+          and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as
+          an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+          reinitialized instance. The keys will be made available to the virtual server
+          instance as cloud-init vendor data. For cloud-init enabled images, the keys will
+          also be added as SSH authorized keys for the [default user]
+          (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+          For Windows images, only keys with a `type` value of `rsa` must be specified,
+          and one will be selected to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images.
+          If no keys are specified, the instance will be reinitialized without a key.
+    :param str user_data: (optional) The [user
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance. If not specified, the instance will be
+          reinitialized without user data.
+    """
+
+    def __init__(
+        self,
+        *,
+        default_trusted_profile: Optional['InstanceDefaultTrustedProfilePrototype'] = None,
+        keys: Optional[List['KeyIdentity']] = None,
+        user_data: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a InstanceReinitializePrototype object.
+
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance.
+               If not specified, the instance will be reinitialized without a default
+               trusted
+               profile.
+               This property's value is used when reinitializing the virtual server
+               instance, and
+               can only be changed by reinitializing the instance. Accordingly, it is
+               reflected as
+               an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               reinitialized instance. The keys will be made available to the virtual
+               server instance as cloud-init vendor data. For cloud-init enabled images,
+               the keys will also be added as SSH authorized keys for the [default user]
+               (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+               For Windows images, only keys with a `type` value of `rsa` must be
+               specified, and one will be selected to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images.
+               If no keys are specified, the instance will be reinitialized without a key.
+        :param str user_data: (optional) The [user
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance. If not specified, the instance
+               will be reinitialized without user data.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['InstanceReinitializePrototypeInstanceReinitializeByImage', 'InstanceReinitializePrototypeInstanceReinitializeByVolume', 'InstanceReinitializePrototypeInstanceReinitializeBySnapshot'])
+        )
+        raise Exception(msg)
 
 
 class InstanceReservationAffinity:
@@ -68571,9 +69015,10 @@ class InstanceTemplate:
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not
-          subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as
+          an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -68591,8 +69036,9 @@ class InstanceTemplate:
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -68699,8 +69145,10 @@ class InstanceTemplate:
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not
-               subsequently managed. Accordingly, it is reflected as an [instance
+               instance, and
+               can only be changed by reinitializing the instance. Accordingly, it is
+               reflected as
+               an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -68718,8 +69166,8 @@ class InstanceTemplate:
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -69012,9 +69460,10 @@ class InstanceTemplatePrototype:
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not
-          subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as
+          an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -69030,8 +69479,9 @@ class InstanceTemplatePrototype:
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -69128,8 +69578,10 @@ class InstanceTemplatePrototype:
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not
-               subsequently managed. Accordingly, it is reflected as an [instance
+               instance, and
+               can only be changed by reinitializing the instance. Accordingly, it is
+               reflected as
+               an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -69147,8 +69599,8 @@ class InstanceTemplatePrototype:
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional) The
@@ -70314,6 +70766,8 @@ class LoadBalancer:
           future.
     :param bool advanced_health_checks_supported: Indicates whether this load
           balancer supports advanced health checks.
+    :param bool asymmetric_routing_supported: Indicates whether this load balancer
+          supports asymmetric routing.
     :param List[LoadBalancerPoolMemberReference]
           attached_load_balancer_pool_members: The load balancer pool members attached to
           this load balancer.
@@ -70404,6 +70858,7 @@ class LoadBalancer:
         self,
         access_mode: str,
         advanced_health_checks_supported: bool,
+        asymmetric_routing_supported: bool,
         attached_load_balancer_pool_members: List['LoadBalancerPoolMemberReference'],
         availability: str,
         created_at: datetime,
@@ -70451,6 +70906,8 @@ class LoadBalancer:
                future.
         :param bool advanced_health_checks_supported: Indicates whether this load
                balancer supports advanced health checks.
+        :param bool asymmetric_routing_supported: Indicates whether this load
+               balancer supports asymmetric routing.
         :param List[LoadBalancerPoolMemberReference]
                attached_load_balancer_pool_members: The load balancer pool members
                attached to this load balancer.
@@ -70547,6 +71004,7 @@ class LoadBalancer:
         """
         self.access_mode = access_mode
         self.advanced_health_checks_supported = advanced_health_checks_supported
+        self.asymmetric_routing_supported = asymmetric_routing_supported
         self.attached_load_balancer_pool_members = attached_load_balancer_pool_members
         self.availability = availability
         self.created_at = created_at
@@ -70591,6 +71049,10 @@ class LoadBalancer:
             args['advanced_health_checks_supported'] = advanced_health_checks_supported
         else:
             raise ValueError('Required property \'advanced_health_checks_supported\' not present in LoadBalancer JSON')
+        if (asymmetric_routing_supported := _dict.get('asymmetric_routing_supported')) is not None:
+            args['asymmetric_routing_supported'] = asymmetric_routing_supported
+        else:
+            raise ValueError('Required property \'asymmetric_routing_supported\' not present in LoadBalancer JSON')
         if (attached_load_balancer_pool_members := _dict.get('attached_load_balancer_pool_members')) is not None:
             args['attached_load_balancer_pool_members'] = [LoadBalancerPoolMemberReference.from_dict(v) for v in attached_load_balancer_pool_members]
         else:
@@ -70727,6 +71189,8 @@ class LoadBalancer:
             _dict['access_mode'] = self.access_mode
         if hasattr(self, 'advanced_health_checks_supported') and self.advanced_health_checks_supported is not None:
             _dict['advanced_health_checks_supported'] = self.advanced_health_checks_supported
+        if hasattr(self, 'asymmetric_routing_supported') and self.asymmetric_routing_supported is not None:
+            _dict['asymmetric_routing_supported'] = self.asymmetric_routing_supported
         if hasattr(self, 'attached_load_balancer_pool_members') and self.attached_load_balancer_pool_members is not None:
             attached_load_balancer_pool_members_list = []
             for v in self.attached_load_balancer_pool_members:
@@ -75275,6 +75739,7 @@ class LoadBalancerPool:
 
         LEAST_CONNECTIONS = 'least_connections'
         ROUND_ROBIN = 'round_robin'
+        WEIGHTED_FORWARDING = 'weighted_forwarding'
         WEIGHTED_ROUND_ROBIN = 'weighted_round_robin'
 
 
@@ -77637,9 +78102,21 @@ class LoadBalancerPoolPatch:
     """
     LoadBalancerPoolPatch.
 
-    :param str algorithm: (optional) The load balancing algorithm. The
-          `least_connections` algorithm is only supported for load balancers that have
-          `availability` with value `subnet` in the profile.
+    :param str algorithm: (optional) The load balancing algorithm.
+          - `least_connections`: Routes traffic to the pool member with the least active
+            connections. Supported by `application` and `network` family load balancers
+          that
+            have `availability` with value `subnet` in the profile.
+          - `round_robin`: Distributes traffic sequentially across pool members. Supported
+          by
+            `application` and `network` family load balancers.
+          - `weighted_round_robin`: Distributes traffic across pool members proportionally
+          to
+            configured member weights. Supported by `application` and `network`
+            family load balancers.
+          - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+            proportionally to configured member weights. Supported by `network` family
+            load balancers with an `asymmetric_routing_supported` value of `true`.
     :param LoadBalancerPoolClientAuthenticationPatch client_authentication:
           (optional) The client authentication to use for this pool.
           Supported by load balancers with `mtls_supported` set to `true`. The pool must
@@ -77702,9 +78179,23 @@ class LoadBalancerPoolPatch:
         """
         Initialize a LoadBalancerPoolPatch object.
 
-        :param str algorithm: (optional) The load balancing algorithm. The
-               `least_connections` algorithm is only supported for load balancers that
-               have `availability` with value `subnet` in the profile.
+        :param str algorithm: (optional) The load balancing algorithm.
+               - `least_connections`: Routes traffic to the pool member with the least
+               active
+                 connections. Supported by `application` and `network` family load
+               balancers that
+                 have `availability` with value `subnet` in the profile.
+               - `round_robin`: Distributes traffic sequentially across pool members.
+               Supported by
+                 `application` and `network` family load balancers.
+               - `weighted_round_robin`: Distributes traffic across pool members
+               proportionally to
+                 configured member weights. Supported by `application` and `network`
+                 family load balancers.
+               - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+                 proportionally to configured member weights. Supported by `network`
+               family
+                 load balancers with an `asymmetric_routing_supported` value of `true`.
         :param LoadBalancerPoolClientAuthenticationPatch client_authentication:
                (optional) The client authentication to use for this pool.
                Supported by load balancers with `mtls_supported` set to `true`. The pool
@@ -77854,12 +78345,25 @@ class LoadBalancerPoolPatch:
 
     class AlgorithmEnum(str, Enum):
         """
-        The load balancing algorithm. The `least_connections` algorithm is only supported
-        for load balancers that have `availability` with value `subnet` in the profile.
+        The load balancing algorithm.
+        - `least_connections`: Routes traffic to the pool member with the least active
+          connections. Supported by `application` and `network` family load balancers that
+          have `availability` with value `subnet` in the profile.
+        - `round_robin`: Distributes traffic sequentially across pool members. Supported
+        by
+          `application` and `network` family load balancers.
+        - `weighted_round_robin`: Distributes traffic across pool members proportionally
+        to
+          configured member weights. Supported by `application` and `network`
+          family load balancers.
+        - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+          proportionally to configured member weights. Supported by `network` family
+          load balancers with an `asymmetric_routing_supported` value of `true`.
         """
 
         LEAST_CONNECTIONS = 'least_connections'
         ROUND_ROBIN = 'round_robin'
+        WEIGHTED_FORWARDING = 'weighted_forwarding'
         WEIGHTED_ROUND_ROBIN = 'weighted_round_robin'
 
 
@@ -77899,9 +78403,21 @@ class LoadBalancerPoolPrototypeLoadBalancerContext:
     """
     LoadBalancerPoolPrototypeLoadBalancerContext.
 
-    :param str algorithm: The load balancing algorithm. The `least_connections`
-          algorithm is only supported for load balancers that have `availability` with
-          value `subnet` in the profile.
+    :param str algorithm: The load balancing algorithm.
+          - `least_connections`: Routes traffic to the pool member with the least active
+            connections. Supported by `application` and `network` family load balancers
+          that
+            have `availability` with value `subnet` in the profile.
+          - `round_robin`: Distributes traffic sequentially across pool members. Supported
+          by
+            `application` and `network` family load balancers.
+          - `weighted_round_robin`: Distributes traffic across pool members proportionally
+          to
+            configured member weights. Supported by `application` and `network`
+            family load balancers.
+          - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+            proportionally to configured member weights. Supported by `network` family
+            load balancers with an `asymmetric_routing_supported` value of `true`.
     :param LoadBalancerPoolClientAuthenticationPrototype client_authentication:
           (optional) The client authentication to use for this pool.
           Supported by load balancers with `mtls_supported` set to `true`. The pool must
@@ -77971,9 +78487,23 @@ class LoadBalancerPoolPrototypeLoadBalancerContext:
         """
         Initialize a LoadBalancerPoolPrototypeLoadBalancerContext object.
 
-        :param str algorithm: The load balancing algorithm. The `least_connections`
-               algorithm is only supported for load balancers that have `availability`
-               with value `subnet` in the profile.
+        :param str algorithm: The load balancing algorithm.
+               - `least_connections`: Routes traffic to the pool member with the least
+               active
+                 connections. Supported by `application` and `network` family load
+               balancers that
+                 have `availability` with value `subnet` in the profile.
+               - `round_robin`: Distributes traffic sequentially across pool members.
+               Supported by
+                 `application` and `network` family load balancers.
+               - `weighted_round_robin`: Distributes traffic across pool members
+               proportionally to
+                 configured member weights. Supported by `application` and `network`
+                 family load balancers.
+               - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+                 proportionally to configured member weights. Supported by `network`
+               family
+                 load balancers with an `asymmetric_routing_supported` value of `true`.
         :param LoadBalancerPoolHealthMonitorPrototype health_monitor: The health
                monitor of this pool.
                If this pool has a member targeting a load balancer then:
@@ -78138,12 +78668,25 @@ class LoadBalancerPoolPrototypeLoadBalancerContext:
 
     class AlgorithmEnum(str, Enum):
         """
-        The load balancing algorithm. The `least_connections` algorithm is only supported
-        for load balancers that have `availability` with value `subnet` in the profile.
+        The load balancing algorithm.
+        - `least_connections`: Routes traffic to the pool member with the least active
+          connections. Supported by `application` and `network` family load balancers that
+          have `availability` with value `subnet` in the profile.
+        - `round_robin`: Distributes traffic sequentially across pool members. Supported
+        by
+          `application` and `network` family load balancers.
+        - `weighted_round_robin`: Distributes traffic across pool members proportionally
+        to
+          configured member weights. Supported by `application` and `network`
+          family load balancers.
+        - `weighted_forwarding`: Forwards the layer 4 packets across backend pools
+          proportionally to configured member weights. Supported by `network` family
+          load balancers with an `asymmetric_routing_supported` value of `true`.
         """
 
         LEAST_CONNECTIONS = 'least_connections'
         ROUND_ROBIN = 'round_robin'
+        WEIGHTED_FORWARDING = 'weighted_forwarding'
         WEIGHTED_ROUND_ROBIN = 'weighted_round_robin'
 
 
@@ -78814,6 +79357,8 @@ class LoadBalancerProfile:
     :param LoadBalancerProfileAccessModes access_modes:
     :param LoadBalancerProfileAdvancedHealthCheckSupported
           advanced_health_checks_supported:
+    :param LoadBalancerProfileAsymmetricRoutingSupported
+          asymmetric_routing_supported:
     :param LoadBalancerProfileAvailability availability:
     :param LoadBalancerProfileFailsafePolicyActions failsafe_policy_actions:
     :param str family: The product family this load balancer profile belongs to.
@@ -78841,6 +79386,7 @@ class LoadBalancerProfile:
         self,
         access_modes: 'LoadBalancerProfileAccessModes',
         advanced_health_checks_supported: 'LoadBalancerProfileAdvancedHealthCheckSupported',
+        asymmetric_routing_supported: 'LoadBalancerProfileAsymmetricRoutingSupported',
         availability: 'LoadBalancerProfileAvailability',
         failsafe_policy_actions: 'LoadBalancerProfileFailsafePolicyActions',
         family: str,
@@ -78863,6 +79409,8 @@ class LoadBalancerProfile:
         :param LoadBalancerProfileAccessModes access_modes:
         :param LoadBalancerProfileAdvancedHealthCheckSupported
                advanced_health_checks_supported:
+        :param LoadBalancerProfileAsymmetricRoutingSupported
+               asymmetric_routing_supported:
         :param LoadBalancerProfileAvailability availability:
         :param LoadBalancerProfileFailsafePolicyActions failsafe_policy_actions:
         :param str family: The product family this load balancer profile belongs
@@ -78892,6 +79440,7 @@ class LoadBalancerProfile:
         """
         self.access_modes = access_modes
         self.advanced_health_checks_supported = advanced_health_checks_supported
+        self.asymmetric_routing_supported = asymmetric_routing_supported
         self.availability = availability
         self.failsafe_policy_actions = failsafe_policy_actions
         self.family = family
@@ -78920,6 +79469,10 @@ class LoadBalancerProfile:
             args['advanced_health_checks_supported'] = advanced_health_checks_supported
         else:
             raise ValueError('Required property \'advanced_health_checks_supported\' not present in LoadBalancerProfile JSON')
+        if (asymmetric_routing_supported := _dict.get('asymmetric_routing_supported')) is not None:
+            args['asymmetric_routing_supported'] = asymmetric_routing_supported
+        else:
+            raise ValueError('Required property \'asymmetric_routing_supported\' not present in LoadBalancerProfile JSON')
         if (availability := _dict.get('availability')) is not None:
             args['availability'] = availability
         else:
@@ -79000,6 +79553,11 @@ class LoadBalancerProfile:
                 _dict['advanced_health_checks_supported'] = self.advanced_health_checks_supported
             else:
                 _dict['advanced_health_checks_supported'] = self.advanced_health_checks_supported.to_dict()
+        if hasattr(self, 'asymmetric_routing_supported') and self.asymmetric_routing_supported is not None:
+            if isinstance(self.asymmetric_routing_supported, dict):
+                _dict['asymmetric_routing_supported'] = self.asymmetric_routing_supported
+            else:
+                _dict['asymmetric_routing_supported'] = self.asymmetric_routing_supported.to_dict()
         if hasattr(self, 'availability') and self.availability is not None:
             if isinstance(self.availability, dict):
                 _dict['availability'] = self.availability
@@ -79212,6 +79770,25 @@ class LoadBalancerProfileAdvancedHealthCheckSupported:
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(['LoadBalancerProfileAdvancedHealthCheckSupportedFixed', 'LoadBalancerProfileAdvancedHealthCheckSupportedDependent'])
+        )
+        raise Exception(msg)
+
+
+class LoadBalancerProfileAsymmetricRoutingSupported:
+    """
+    LoadBalancerProfileAsymmetricRoutingSupported.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a LoadBalancerProfileAsymmetricRoutingSupported object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['LoadBalancerProfileAsymmetricRoutingSupportedFixed', 'LoadBalancerProfileAsymmetricRoutingSupportedDependent'])
         )
         raise Exception(msg)
 
@@ -140007,8 +140584,9 @@ class InstancePrototypeInstanceByCatalogOffering(InstancePrototype):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140024,8 +140602,9 @@ class InstancePrototypeInstanceByCatalogOffering(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140135,8 +140714,8 @@ class InstancePrototypeInstanceByCatalogOffering(InstancePrototype):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140154,8 +140733,8 @@ class InstancePrototypeInstanceByCatalogOffering(InstancePrototype):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140251,8 +140830,9 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140268,8 +140848,9 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140366,8 +140947,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140385,8 +140966,8 @@ class InstancePrototypeInstanceByImage(InstancePrototype):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140481,8 +141062,9 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140498,8 +141080,9 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140595,8 +141178,8 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140614,8 +141197,8 @@ class InstancePrototypeInstanceBySourceSnapshot(InstancePrototype):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140711,8 +141294,9 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140728,8 +141312,9 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -140850,8 +141435,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -140869,8 +141454,8 @@ class InstancePrototypeInstanceBySourceTemplate(InstancePrototype):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -141248,8 +141833,9 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -141265,8 +141851,9 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -141361,8 +141948,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -141380,8 +141967,8 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -141452,6 +142039,445 @@ class InstancePrototypeInstanceByVolume(InstancePrototype):
         POOLED = 'pooled'
         WEIGHTED = 'weighted'
 
+
+
+class InstanceReinitializePrototypeInstanceReinitializeByImage(InstanceReinitializePrototype):
+    """
+    Reinitialize an instance by using an image. The image must be within the same
+    operating system family as the current instance image, and must have the same
+    licensing model.
+
+    :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+          (optional) The default trusted profile configuration to use for this virtual
+          server instance. If not specified, the instance will be reinitialized without a
+          default trusted profile.
+          This property's value is used when reinitializing the virtual server instance,
+          and can only be changed by reinitializing the instance. Accordingly, it is
+          reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+          reinitialized instance. The keys will be made available to the virtual server
+          instance as cloud-init vendor data. For cloud-init enabled images, the keys will
+          also be added as SSH authorized keys for the [default user]
+          (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+          For Windows images, only keys with a `type` value of `rsa` must be specified,
+          and one will be selected to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images.
+          If no keys are specified, the instance will be reinitialized without a key.
+    :param str user_data: (optional) The [user
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance. If not specified, the instance will be
+          reinitialized without user data.
+    :param VolumeAttachmentPrototypeInstanceByImageContext boot_volume_attachment:
+          (optional) The boot volume attachment for the virtual server instance. If not
+          specified,
+          a new boot volume attachment will be created.
+    :param ImageIdentity image: The image to use when reinitializing the virtual
+          server instance.
+    """
+
+    def __init__(
+        self,
+        image: 'ImageIdentity',
+        *,
+        default_trusted_profile: Optional['InstanceDefaultTrustedProfilePrototype'] = None,
+        keys: Optional[List['KeyIdentity']] = None,
+        user_data: Optional[str] = None,
+        boot_volume_attachment: Optional['VolumeAttachmentPrototypeInstanceByImageContext'] = None,
+    ) -> None:
+        """
+        Initialize a InstanceReinitializePrototypeInstanceReinitializeByImage object.
+
+        :param ImageIdentity image: The image to use when reinitializing the
+               virtual server instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance. If not specified, the instance will be
+               reinitialized without a default trusted profile.
+               This property's value is used when reinitializing the virtual server
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               reinitialized instance. The keys will be made available to the virtual
+               server instance as cloud-init vendor data. For cloud-init enabled images,
+               the keys will also be added as SSH authorized keys for the [default user]
+               (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+               For Windows images, only keys with a `type` value of `rsa` must be
+               specified, and one will be selected to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images.
+               If no keys are specified, the instance will be reinitialized without a key.
+        :param str user_data: (optional) The [user
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance. If not specified, the instance
+               will be reinitialized without user data.
+        :param VolumeAttachmentPrototypeInstanceByImageContext
+               boot_volume_attachment: (optional) The boot volume attachment for the
+               virtual server instance. If not specified,
+               a new boot volume attachment will be created.
+        """
+        # pylint: disable=super-init-not-called
+        self.default_trusted_profile = default_trusted_profile
+        self.keys = keys
+        self.user_data = user_data
+        self.boot_volume_attachment = boot_volume_attachment
+        self.image = image
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceReinitializePrototypeInstanceReinitializeByImage':
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeByImage object from a json dictionary."""
+        args = {}
+        if (default_trusted_profile := _dict.get('default_trusted_profile')) is not None:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(default_trusted_profile)
+        if (keys := _dict.get('keys')) is not None:
+            args['keys'] = keys
+        if (user_data := _dict.get('user_data')) is not None:
+            args['user_data'] = user_data
+        if (boot_volume_attachment := _dict.get('boot_volume_attachment')) is not None:
+            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByImageContext.from_dict(boot_volume_attachment)
+        if (image := _dict.get('image')) is not None:
+            args['image'] = image
+        else:
+            raise ValueError('Required property \'image\' not present in InstanceReinitializePrototypeInstanceReinitializeByImage JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeByImage object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            if isinstance(self.default_trusted_profile, dict):
+                _dict['default_trusted_profile'] = self.default_trusted_profile
+            else:
+                _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for v in self.keys:
+                if isinstance(v, dict):
+                    keys_list.append(v)
+                else:
+                    keys_list.append(v.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
+            if isinstance(self.boot_volume_attachment, dict):
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment
+            else:
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
+        if hasattr(self, 'image') and self.image is not None:
+            if isinstance(self.image, dict):
+                _dict['image'] = self.image
+            else:
+                _dict['image'] = self.image.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceReinitializePrototypeInstanceReinitializeByImage object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeByImage') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeByImage') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceReinitializePrototypeInstanceReinitializeBySnapshot(InstanceReinitializePrototype):
+    """
+    Reinitialize an instance by using a snapshot.
+
+    :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+          (optional) The default trusted profile configuration to use for this virtual
+          server instance. If not specified, the instance will be reinitialized without a
+          default trusted profile.
+          This property's value is used when reinitializing the virtual server instance,
+          and can only be changed by reinitializing the instance. Accordingly, it is
+          reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+          reinitialized instance. The keys will be made available to the virtual server
+          instance as cloud-init vendor data. For cloud-init enabled images, the keys will
+          also be added as SSH authorized keys for the [default user]
+          (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+          For Windows images, only keys with a `type` value of `rsa` must be specified,
+          and one will be selected to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images.
+          If no keys are specified, the instance will be reinitialized without a key.
+    :param str user_data: (optional) The [user
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance. If not specified, the instance will be
+          reinitialized without user data.
+    :param VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+          boot_volume_attachment: The boot volume attachment for the virtual server
+          instance.
+    """
+
+    def __init__(
+        self,
+        boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceBySourceSnapshotContext',
+        *,
+        default_trusted_profile: Optional['InstanceDefaultTrustedProfilePrototype'] = None,
+        keys: Optional[List['KeyIdentity']] = None,
+        user_data: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a InstanceReinitializePrototypeInstanceReinitializeBySnapshot object.
+
+        :param VolumeAttachmentPrototypeInstanceBySourceSnapshotContext
+               boot_volume_attachment: The boot volume attachment for the virtual server
+               instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance. If not specified, the instance will be
+               reinitialized without a default trusted profile.
+               This property's value is used when reinitializing the virtual server
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               reinitialized instance. The keys will be made available to the virtual
+               server instance as cloud-init vendor data. For cloud-init enabled images,
+               the keys will also be added as SSH authorized keys for the [default user]
+               (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+               For Windows images, only keys with a `type` value of `rsa` must be
+               specified, and one will be selected to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images.
+               If no keys are specified, the instance will be reinitialized without a key.
+        :param str user_data: (optional) The [user
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance. If not specified, the instance
+               will be reinitialized without user data.
+        """
+        # pylint: disable=super-init-not-called
+        self.default_trusted_profile = default_trusted_profile
+        self.keys = keys
+        self.user_data = user_data
+        self.boot_volume_attachment = boot_volume_attachment
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceReinitializePrototypeInstanceReinitializeBySnapshot':
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeBySnapshot object from a json dictionary."""
+        args = {}
+        if (default_trusted_profile := _dict.get('default_trusted_profile')) is not None:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(default_trusted_profile)
+        if (keys := _dict.get('keys')) is not None:
+            args['keys'] = keys
+        if (user_data := _dict.get('user_data')) is not None:
+            args['user_data'] = user_data
+        if (boot_volume_attachment := _dict.get('boot_volume_attachment')) is not None:
+            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceBySourceSnapshotContext.from_dict(boot_volume_attachment)
+        else:
+            raise ValueError('Required property \'boot_volume_attachment\' not present in InstanceReinitializePrototypeInstanceReinitializeBySnapshot JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeBySnapshot object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            if isinstance(self.default_trusted_profile, dict):
+                _dict['default_trusted_profile'] = self.default_trusted_profile
+            else:
+                _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for v in self.keys:
+                if isinstance(v, dict):
+                    keys_list.append(v)
+                else:
+                    keys_list.append(v.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
+            if isinstance(self.boot_volume_attachment, dict):
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment
+            else:
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceReinitializePrototypeInstanceReinitializeBySnapshot object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeBySnapshot') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeBySnapshot') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class InstanceReinitializePrototypeInstanceReinitializeByVolume(InstanceReinitializePrototype):
+    """
+    Reinitialize an instance by using a boot volume.
+
+    :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+          (optional) The default trusted profile configuration to use for this virtual
+          server instance. If not specified, the instance will be reinitialized without a
+          default trusted profile.
+          This property's value is used when reinitializing the virtual server instance,
+          and can only be changed by reinitializing the instance. Accordingly, it is
+          reflected as an [instance
+          initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+          property.
+    :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+          reinitialized instance. The keys will be made available to the virtual server
+          instance as cloud-init vendor data. For cloud-init enabled images, the keys will
+          also be added as SSH authorized keys for the [default user]
+          (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+          For Windows images, only keys with a `type` value of `rsa` must be specified,
+          and one will be selected to encrypt [the administrator
+          password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
+          are optional for other images.
+          If no keys are specified, the instance will be reinitialized without a key.
+    :param str user_data: (optional) The [user
+          data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available when
+          setting up the virtual server instance. If not specified, the instance will be
+          reinitialized without user data.
+    :param VolumeAttachmentPrototypeInstanceByVolumeContext boot_volume_attachment:
+          The boot volume attachment for the virtual server instance.
+    """
+
+    def __init__(
+        self,
+        boot_volume_attachment: 'VolumeAttachmentPrototypeInstanceByVolumeContext',
+        *,
+        default_trusted_profile: Optional['InstanceDefaultTrustedProfilePrototype'] = None,
+        keys: Optional[List['KeyIdentity']] = None,
+        user_data: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a InstanceReinitializePrototypeInstanceReinitializeByVolume object.
+
+        :param VolumeAttachmentPrototypeInstanceByVolumeContext
+               boot_volume_attachment: The boot volume attachment for the virtual server
+               instance.
+        :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
+               (optional) The default trusted profile configuration to use for this
+               virtual server instance. If not specified, the instance will be
+               reinitialized without a default trusted profile.
+               This property's value is used when reinitializing the virtual server
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
+               initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
+               property.
+        :param List[KeyIdentity] keys: (optional) The public SSH keys for the
+               reinitialized instance. The keys will be made available to the virtual
+               server instance as cloud-init vendor data. For cloud-init enabled images,
+               the keys will also be added as SSH authorized keys for the [default user]
+               (https://cloud.ibm.com/docs/vpc?topic=vpc-vsi_is_connecting_linux#determining-default-user-account).
+               For Windows images, only keys with a `type` value of `rsa` must be
+               specified, and one will be selected to encrypt [the administrator
+               password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization).
+               Keys are optional for other images.
+               If no keys are specified, the instance will be reinitialized without a key.
+        :param str user_data: (optional) The [user
+               data](https://cloud.ibm.com/docs/vpc?topic=vpc-user-data) to make available
+               when setting up the virtual server instance. If not specified, the instance
+               will be reinitialized without user data.
+        """
+        # pylint: disable=super-init-not-called
+        self.default_trusted_profile = default_trusted_profile
+        self.keys = keys
+        self.user_data = user_data
+        self.boot_volume_attachment = boot_volume_attachment
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'InstanceReinitializePrototypeInstanceReinitializeByVolume':
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeByVolume object from a json dictionary."""
+        args = {}
+        if (default_trusted_profile := _dict.get('default_trusted_profile')) is not None:
+            args['default_trusted_profile'] = InstanceDefaultTrustedProfilePrototype.from_dict(default_trusted_profile)
+        if (keys := _dict.get('keys')) is not None:
+            args['keys'] = keys
+        if (user_data := _dict.get('user_data')) is not None:
+            args['user_data'] = user_data
+        if (boot_volume_attachment := _dict.get('boot_volume_attachment')) is not None:
+            args['boot_volume_attachment'] = VolumeAttachmentPrototypeInstanceByVolumeContext.from_dict(boot_volume_attachment)
+        else:
+            raise ValueError('Required property \'boot_volume_attachment\' not present in InstanceReinitializePrototypeInstanceReinitializeByVolume JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a InstanceReinitializePrototypeInstanceReinitializeByVolume object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'default_trusted_profile') and self.default_trusted_profile is not None:
+            if isinstance(self.default_trusted_profile, dict):
+                _dict['default_trusted_profile'] = self.default_trusted_profile
+            else:
+                _dict['default_trusted_profile'] = self.default_trusted_profile.to_dict()
+        if hasattr(self, 'keys') and self.keys is not None:
+            keys_list = []
+            for v in self.keys:
+                if isinstance(v, dict):
+                    keys_list.append(v)
+                else:
+                    keys_list.append(v.to_dict())
+            _dict['keys'] = keys_list
+        if hasattr(self, 'user_data') and self.user_data is not None:
+            _dict['user_data'] = self.user_data
+        if hasattr(self, 'boot_volume_attachment') and self.boot_volume_attachment is not None:
+            if isinstance(self.boot_volume_attachment, dict):
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment
+            else:
+                _dict['boot_volume_attachment'] = self.boot_volume_attachment.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this InstanceReinitializePrototypeInstanceReinitializeByVolume object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeByVolume') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'InstanceReinitializePrototypeInstanceReinitializeByVolume') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class InstanceTemplateIdentityByCRN(InstanceTemplateIdentity):
@@ -141653,8 +142679,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOffering(InstanceTemplat
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -141670,8 +142697,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOffering(InstanceTemplat
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -141780,8 +142808,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOffering(InstanceTemplat
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -141799,8 +142827,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOffering(InstanceTemplat
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -141895,8 +142923,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImage(InstanceTemplatePrototype
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -141912,8 +142941,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImage(InstanceTemplatePrototype
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142009,8 +143039,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImage(InstanceTemplatePrototype
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142028,8 +143058,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImage(InstanceTemplatePrototype
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142123,8 +143153,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshot(InstanceTemplate
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142140,8 +143171,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshot(InstanceTemplate
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142236,8 +143268,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshot(InstanceTemplate
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142255,8 +143287,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshot(InstanceTemplate
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142351,8 +143383,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceTemplate(InstanceTemplate
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142368,8 +143401,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceTemplate(InstanceTemplate
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142489,8 +143523,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceTemplate(InstanceTemplate
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142508,8 +143542,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceTemplate(InstanceTemplate
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -142889,8 +143923,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContext(InstanceT
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -142908,8 +143943,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContext(InstanceT
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -143031,8 +144067,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContext(InstanceT
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -143050,8 +144086,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContext(InstanceT
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -143144,8 +144180,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContext(InstanceTemplate):
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -143163,8 +144200,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContext(InstanceTemplate):
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -143273,8 +144311,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContext(InstanceTemplate):
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -143292,8 +144330,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContext(InstanceTemplate):
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -143386,8 +144424,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContext(InstanceTe
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -143405,8 +144444,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContext(InstanceTe
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -143523,8 +144563,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContext(InstanceTe
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -143542,8 +144582,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContext(InstanceTe
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -147056,6 +148096,153 @@ class LoadBalancerProfileAdvancedHealthCheckSupportedFixed(LoadBalancerProfileAd
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'LoadBalancerProfileAdvancedHealthCheckSupportedFixed') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+
+        FIXED = 'fixed'
+
+
+
+class LoadBalancerProfileAsymmetricRoutingSupportedDependent(LoadBalancerProfileAsymmetricRoutingSupported):
+    """
+    The asymmetric routing support for a load balancer with this profile depends on its
+    configuration.
+
+    :param str type: The type for this profile field.
+    """
+
+    def __init__(
+        self,
+        type: str,
+    ) -> None:
+        """
+        Initialize a LoadBalancerProfileAsymmetricRoutingSupportedDependent object.
+
+        :param str type: The type for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileAsymmetricRoutingSupportedDependent':
+        """Initialize a LoadBalancerProfileAsymmetricRoutingSupportedDependent object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileAsymmetricRoutingSupportedDependent JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileAsymmetricRoutingSupportedDependent object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileAsymmetricRoutingSupportedDependent object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileAsymmetricRoutingSupportedDependent') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileAsymmetricRoutingSupportedDependent') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The type for this profile field.
+        """
+
+        DEPENDENT = 'dependent'
+
+
+
+class LoadBalancerProfileAsymmetricRoutingSupportedFixed(LoadBalancerProfileAsymmetricRoutingSupported):
+    """
+    The asymmetric routing support for a load balancer with this profile.
+
+    :param str type: The type for this profile field.
+    :param bool value: The value for this profile field.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        value: bool,
+    ) -> None:
+        """
+        Initialize a LoadBalancerProfileAsymmetricRoutingSupportedFixed object.
+
+        :param str type: The type for this profile field.
+        :param bool value: The value for this profile field.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LoadBalancerProfileAsymmetricRoutingSupportedFixed':
+        """Initialize a LoadBalancerProfileAsymmetricRoutingSupportedFixed object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in LoadBalancerProfileAsymmetricRoutingSupportedFixed JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in LoadBalancerProfileAsymmetricRoutingSupportedFixed JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LoadBalancerProfileAsymmetricRoutingSupportedFixed object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LoadBalancerProfileAsymmetricRoutingSupportedFixed object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LoadBalancerProfileAsymmetricRoutingSupportedFixed') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LoadBalancerProfileAsymmetricRoutingSupportedFixed') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -181371,8 +182558,9 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -181388,8 +182576,9 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -181492,8 +182681,8 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -181511,8 +182700,8 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -181837,8 +183026,9 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -181854,8 +183044,9 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -181958,8 +183149,8 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -181977,8 +183168,8 @@ class InstancePrototypeInstanceByCatalogOfferingInstanceByCatalogOfferingInstanc
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -182302,8 +183493,9 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkAttachment
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -182319,8 +183511,9 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkAttachment
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -182425,8 +183618,8 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkAttachment
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -182444,8 +183637,8 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkAttachment
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -182770,8 +183963,9 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkInterface(
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -182787,8 +183981,9 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkInterface(
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -182893,8 +184088,8 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkInterface(
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -182912,8 +184107,8 @@ class InstancePrototypeInstanceByImageInstanceByImageInstanceByNetworkInterface(
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -183237,8 +184432,9 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -183254,8 +184450,9 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -183359,8 +184556,8 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -183378,8 +184575,8 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -183693,8 +184890,9 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -183710,8 +184908,9 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -183815,8 +185014,8 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -183834,8 +185033,8 @@ class InstancePrototypeInstanceBySourceSnapshotInstanceBySourceSnapshotInstanceB
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -184148,8 +185347,9 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkAttachme
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -184165,8 +185365,9 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkAttachme
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -184269,8 +185470,8 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkAttachme
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -184288,8 +185489,8 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkAttachme
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -184603,8 +185804,9 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkInterfac
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -184620,8 +185822,9 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkInterfac
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -184724,8 +185927,8 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkInterfac
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -184743,8 +185946,8 @@ class InstancePrototypeInstanceByVolumeInstanceByVolumeInstanceByNetworkInterfac
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -185057,8 +186260,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -185074,8 +186278,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -185177,8 +186382,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -185196,8 +186401,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -185521,8 +186726,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -185538,8 +186744,9 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -185641,8 +186848,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -185660,8 +186867,8 @@ class InstanceTemplatePrototypeInstanceTemplateByCatalogOfferingInstanceTemplate
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -185984,8 +187191,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -186001,8 +187209,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -186106,8 +187315,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -186125,8 +187334,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -186450,8 +187659,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -186467,8 +187677,9 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -186572,8 +187783,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -186591,8 +187802,8 @@ class InstanceTemplatePrototypeInstanceTemplateByImageInstanceTemplateByImageIns
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -186915,8 +188126,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -186932,8 +188144,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -187036,8 +188249,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -187055,8 +188268,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -187369,8 +188582,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -187386,8 +188600,9 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -187490,8 +188705,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -187509,8 +188724,8 @@ class InstanceTemplatePrototypeInstanceTemplateBySourceSnapshotInstanceTemplateB
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -187825,8 +189040,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -187844,8 +189060,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -187960,8 +189177,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -187979,8 +189196,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -188335,8 +189552,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -188354,8 +189572,9 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -188470,8 +189689,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -188489,8 +189708,8 @@ class InstanceTemplateInstanceByCatalogOfferingInstanceTemplateContextInstanceBy
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -188844,8 +190063,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -188863,8 +190083,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -188981,8 +190202,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -189000,8 +190221,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -189356,8 +190577,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -189375,8 +190597,9 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -189493,8 +190716,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -189512,8 +190735,8 @@ class InstanceTemplateInstanceByImageInstanceTemplateContextInstanceByImageInsta
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -189867,8 +191090,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -189886,8 +191110,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -190006,8 +191231,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -190025,8 +191250,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -190383,8 +191608,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
     :param InstanceDefaultTrustedProfilePrototype default_trusted_profile:
           (optional) The default trusted profile configuration to use for this virtual
           server instance
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -190402,8 +191628,9 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
           password](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization). Keys
           are optional for other images, but if no keys are specified, the instance will
           be inaccessible unless the specified image provides another means of access.
-          This property's value is used when provisioning the virtual server instance, but
-          not subsequently managed. Accordingly, it is reflected as an [instance
+          This property's value is used when provisioning the virtual server instance, and
+          can only be changed by reinitializing the instance. Accordingly, it is reflected
+          as an [instance
           initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
           property.
     :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -190525,8 +191752,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
                (optional) The default trusted profile configuration to use for this
                virtual server instance
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param bool enable_secure_boot: (optional) Indicates whether secure boot is
@@ -190544,8 +191771,8 @@ class InstanceTemplateInstanceBySourceSnapshotInstanceTemplateContextInstanceByS
                instance will be inaccessible unless the specified image provides another
                means of access.
                This property's value is used when provisioning the virtual server
-               instance, but not subsequently managed. Accordingly, it is reflected as an
-               [instance
+               instance, and can only be changed by reinitializing the instance.
+               Accordingly, it is reflected as an [instance
                initialization](https://cloud.ibm.com/apidocs/vpc#get-instance-initialization)
                property.
         :param InstanceMetadataServicePrototype metadata_service: (optional)
@@ -195879,6 +197106,80 @@ class BackupPolicyJobsPager:
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
         :return: A List[dict], where each element is a dict that represents an instance of BackupPolicyJob.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class BareMetalServerCapacitiesPager:
+    """
+    BareMetalServerCapacitiesPager can be used to simplify the use of the "list_bare_metal_server_capacities" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: VpcV1,
+        limit: int = None,
+        profile_name: str = None,
+        zone_name: str = None,
+    ) -> None:
+        """
+        Initialize a BareMetalServerCapacitiesPager object.
+        :param int limit: (optional) The number of resources to return on a page.
+        :param str profile_name: (optional) Filters the collection to resources
+               with a `profile.name` property matching the specified profile name.
+        :param str zone_name: (optional) Filters the collection to resources with a
+               `zone.name` property matching the exact specified name.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._limit = limit
+        self._profile_name = profile_name
+        self._zone_name = zone_name
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of BareMetalServerCapacity.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_bare_metal_server_capacities(
+            limit=self._limit,
+            profile_name=self._profile_name,
+            zone_name=self._zone_name,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = get_query_param(next_page_link.get('href'), 'start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('capacities')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of BareMetalServerCapacity.
         :rtype: List[dict]
         """
         results = []
