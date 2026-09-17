@@ -1,3 +1,10 @@
+## [0.35.1](https://github.com/IBM/vpc-python-sdk/compare/v0.35.0...v0.35.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* resolve npm dependency vulnerabilities ([#120](https://github.com/IBM/vpc-python-sdk/issues/120)) ([f417ade](https://github.com/IBM/vpc-python-sdk/commit/f417adef83cb3ed23de223de3311076c163593c0))
+
 # [0.35.0](https://github.com/IBM/vpc-python-sdk/compare/v0.34.0...v0.35.0) (2026-08-28)
 
 
