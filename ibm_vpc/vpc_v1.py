@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.116.0-df613dbc-20260803-154903
+# IBM OpenAPI SDK Code Generator Version: 3.117.1-c28a0a4f-20260924-094841
 
 """
 The IBM Cloud Virtual Private Cloud (VPC) API can be used to programmatically provision
 and manage virtual server instances, along with subnets, volumes, load balancers, and
 more.
 
-API Version: 2026-08-18
+API Version: 2026-10-06
 """
 
 from datetime import datetime
@@ -69,7 +69,7 @@ class VpcV1(BaseService):
     @classmethod
     def new_instance(
         cls,
-        version: Optional[str] = "2026-08-18",
+        version: Optional[str] = "2026-10-06",
         service_name: str = DEFAULT_SERVICE_NAME,
         generation: Optional[int] = 2,
     ) -> 'VpcV1':
@@ -78,8 +78,8 @@ class VpcV1(BaseService):
                external configuration.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2026-04-07` and
-               `2026-08-19`.
+               behavior documented here, specify any date between `2026-09-01` and
+               `2026-10-07`.
         """
         if version is None:
             raise ValueError('version must be provided')
@@ -109,7 +109,7 @@ class VpcV1(BaseService):
 
     def __init__(
         self,
-        version: Optional[str] = "2026-08-18",
+        version: Optional[str] = "2026-10-06",
         authenticator: Authenticator = None,
         generation: Optional[int] = 2,
     ) -> None:
@@ -117,8 +117,8 @@ class VpcV1(BaseService):
         Construct a new client for the vpc service.
 
         :param str version: The API version, in format `YYYY-MM-DD`. For the API
-               behavior documented here, specify any date between `2026-04-07` and
-               `2026-08-19`.
+               behavior documented here, specify any date between `2026-09-01` and
+               `2026-10-07`.
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
                Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
@@ -22062,6 +22062,184 @@ class VpcV1(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def list_snapshot_software_attachments(
+        self,
+        snapshot_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List snapshot software attachments associated with a snapshot.
+
+        This request lists software attachments associated with a snapshot.
+        The snapshot software attachments will be sorted by their `created_at` property
+        values, with newest snapshot software attachments first. Software attachments with
+        identical
+        `created_at` property values will in turn be sorted by ascending `name` property
+        values.
+
+        :param str snapshot_id: The snapshot identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SnapshotSoftwareAttachmentCollection` object
+        """
+
+        if not snapshot_id:
+            raise ValueError('snapshot_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_snapshot_software_attachments',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['snapshot_id']
+        path_param_values = self.encode_path_vars(snapshot_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/snapshots/{snapshot_id}/software_attachments'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_snapshot_software_attachment(
+        self,
+        snapshot_id: str,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a snapshot software attachment.
+
+        This request retrieves a single snapshot software attachment specified by
+        identifier in the URL.
+
+        :param str snapshot_id: The snapshot identifier.
+        :param str id: The snapshot software attachment identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SnapshotSoftwareAttachment` object
+        """
+
+        if not snapshot_id:
+            raise ValueError('snapshot_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_snapshot_software_attachment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['snapshot_id', 'id']
+        path_param_values = self.encode_path_vars(snapshot_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/snapshots/{snapshot_id}/software_attachments/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_snapshot_software_attachment(
+        self,
+        snapshot_id: str,
+        id: str,
+        snapshot_software_attachment_patch: 'SnapshotSoftwareAttachmentPatch',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a snapshot software attachment.
+
+        This request updates a snapshot software attachment with the information provided
+        in a snapshot software attachment patch object. The snapshot software attachment
+        patch object is structured in the same way as a retrieved snapshot software
+        attachment and needs to contain only the information to be updated.
+
+        :param str snapshot_id: The snapshot identifier.
+        :param str id: The snapshot software attachment identifier.
+        :param SnapshotSoftwareAttachmentPatch snapshot_software_attachment_patch:
+               The snapshot software attachment patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `SnapshotSoftwareAttachment` object
+        """
+
+        if not snapshot_id:
+            raise ValueError('snapshot_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        if snapshot_software_attachment_patch is None:
+            raise ValueError('snapshot_software_attachment_patch must be provided')
+        if isinstance(snapshot_software_attachment_patch, SnapshotSoftwareAttachmentPatch):
+            snapshot_software_attachment_patch = convert_model(snapshot_software_attachment_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_snapshot_software_attachment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        data = json.dumps(snapshot_software_attachment_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['snapshot_id', 'id']
+        path_param_values = self.encode_path_vars(snapshot_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/snapshots/{snapshot_id}/software_attachments/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     #########################
     # Subnets
     #########################
@@ -24847,6 +25025,183 @@ class VpcV1(BaseService):
             url=url,
             headers=headers,
             params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_volume_software_attachments(
+        self,
+        volume_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List volume software attachments associated with a volume.
+
+        This request lists software attachments associated with a volume.
+        The volume software attachments will be sorted by their `created_at` property
+        values, with newest volume software attachments first. Software attachments with
+        identical `created_at` property values will in turn be sorted by ascending `name`
+        property values.
+
+        :param str volume_id: The volume identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VolumeSoftwareAttachmentCollection` object
+        """
+
+        if not volume_id:
+            raise ValueError('volume_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_volume_software_attachments',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['volume_id']
+        path_param_values = self.encode_path_vars(volume_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{volume_id}/software_attachments'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_volume_software_attachment(
+        self,
+        volume_id: str,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a volume software attachment.
+
+        This request retrieves a single volume software attachment specified by identifier
+        in the URL.
+
+        :param str volume_id: The volume identifier.
+        :param str id: The volume software attachment identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VolumeSoftwareAttachment` object
+        """
+
+        if not volume_id:
+            raise ValueError('volume_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_volume_software_attachment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['volume_id', 'id']
+        path_param_values = self.encode_path_vars(volume_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{volume_id}/software_attachments/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_volume_software_attachment(
+        self,
+        volume_id: str,
+        id: str,
+        volume_software_attachment_patch: 'VolumeSoftwareAttachmentPatch',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a volume software attachment.
+
+        This request updates a volume software attachment with the information provided in
+        a volume software attachment patch object. The volume software attachment patch
+        object is structured in the same way as a retrieved volume software attachment and
+        needs to contain only the information to be updated.
+
+        :param str volume_id: The volume identifier.
+        :param str id: The volume software attachment identifier.
+        :param VolumeSoftwareAttachmentPatch volume_software_attachment_patch: The
+               volume software attachment patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VolumeSoftwareAttachment` object
+        """
+
+        if not volume_id:
+            raise ValueError('volume_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        if volume_software_attachment_patch is None:
+            raise ValueError('volume_software_attachment_patch must be provided')
+        if isinstance(volume_software_attachment_patch, VolumeSoftwareAttachmentPatch):
+            volume_software_attachment_patch = convert_model(volume_software_attachment_patch)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_volume_software_attachment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        data = json.dumps(volume_software_attachment_patch)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['volume_id', 'id']
+        path_param_values = self.encode_path_vars(volume_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/volumes/{volume_id}/software_attachments/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
         )
 
         response = self.send(request, **kwargs)
@@ -29305,6 +29660,185 @@ class VpcV1(BaseService):
             url=url,
             headers=headers,
             params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_vpn_gateway_members(
+        self,
+        vpn_gateway_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List members of a VPN gateway.
+
+        This request lists members of a VPN gateway.
+
+        :param str vpn_gateway_id: The VPN gateway identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNGatewayMemberCollection` object
+        """
+
+        if not vpn_gateway_id:
+            raise ValueError('vpn_gateway_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_vpn_gateway_members',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_gateway_id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/members'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_vpn_gateway_member(
+        self,
+        vpn_gateway_id: str,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a VPN gateway member.
+
+        This request retrieves a single VPN gateway member specified by the identifier in
+        the URL.
+
+        :param str vpn_gateway_id: The VPN gateway identifier.
+        :param str id: The VPN gateway member identifier.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNGatewayMember` object
+        """
+
+        if not vpn_gateway_id:
+            raise ValueError('vpn_gateway_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_vpn_gateway_member',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/members/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_vpn_gateway_member(
+        self,
+        vpn_gateway_id: str,
+        id: str,
+        private_ip: 'VPNGatewayMemberPrivateIPPrototype',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Replace a VPN gateway member.
+
+        This request sets the subnet for a VPN gateway member by moving it to a new
+        subnet.
+        The existing reserved IP for `private_ip` will be unbound and a new reserved IP
+        will be allocated from the provided subnet.
+
+        :param str vpn_gateway_id: The VPN gateway identifier.
+        :param str id: The VPN gateway member identifier.
+        :param VPNGatewayMemberPrivateIPPrototype private_ip: The identity of the
+               subnet to which the VPN Gateway member will be relocated.
+               A reserved IP will be allocated from the specified `subnet` and assigned to
+               the VPN
+               gateway member.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `VPNGatewayMember` object
+        """
+
+        if not vpn_gateway_id:
+            raise ValueError('vpn_gateway_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        if private_ip is None:
+            raise ValueError('private_ip must be provided')
+        private_ip = convert_model(private_ip)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_vpn_gateway_member',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'generation': self.generation,
+        }
+
+        data = {
+            'private_ip': private_ip,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['vpn_gateway_id', 'id']
+        path_param_values = self.encode_path_vars(vpn_gateway_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/vpn_gateways/{vpn_gateway_id}/members/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
         )
 
         response = self.send(request, **kwargs)
@@ -51163,7 +51697,7 @@ class FloatingIPPatch:
 
 class FloatingIPPrototype:
     """
-    FloatingIPPrototype.
+    The prototype object for a floating IP to be created.
 
     :param str name: (optional) The name for this floating IP. The name must not be
           used by another floating IP in the region. If unspecified, the name will be a
@@ -64995,8 +65529,6 @@ class InstanceProfile:
           future.
     :param List[ClusterNetworkProfileReference] supported_cluster_network_profiles:
           The cluster network profiles that support this instance profile.
-    :param InstanceProfileSupportedVCPUCountEnum supported_vcpu_count: The supported
-          values for vcpu count for an instance with this profile.
     :param InstanceProfileThreadsPerCoreEnum threads_per_core:
     :param InstanceProfileVolumeBandwidth total_volume_bandwidth:
     :param InstanceProfileVCPUArchitecture vcpu_architecture:
@@ -65031,7 +65563,6 @@ class InstanceProfile:
         secure_boot_modes: 'InstanceProfileSupportedSecureBootModes',
         status: str,
         supported_cluster_network_profiles: List['ClusterNetworkProfileReference'],
-        supported_vcpu_count: 'InstanceProfileSupportedVCPUCountEnum',
         threads_per_core: 'InstanceProfileThreadsPerCoreEnum',
         total_volume_bandwidth: 'InstanceProfileVolumeBandwidth',
         vcpu_architecture: 'InstanceProfileVCPUArchitecture',
@@ -65088,8 +65619,6 @@ class InstanceProfile:
         :param List[ClusterNetworkProfileReference]
                supported_cluster_network_profiles: The cluster network profiles that
                support this instance profile.
-        :param InstanceProfileSupportedVCPUCountEnum supported_vcpu_count: The
-               supported values for vcpu count for an instance with this profile.
         :param InstanceProfileThreadsPerCoreEnum threads_per_core:
         :param InstanceProfileVolumeBandwidth total_volume_bandwidth:
         :param InstanceProfileVCPUArchitecture vcpu_architecture:
@@ -65131,7 +65660,6 @@ class InstanceProfile:
         self.secure_boot_modes = secure_boot_modes
         self.status = status
         self.supported_cluster_network_profiles = supported_cluster_network_profiles
-        self.supported_vcpu_count = supported_vcpu_count
         self.threads_per_core = threads_per_core
         self.total_volume_bandwidth = total_volume_bandwidth
         self.vcpu_architecture = vcpu_architecture
@@ -65232,10 +65760,6 @@ class InstanceProfile:
             args['supported_cluster_network_profiles'] = [ClusterNetworkProfileReference.from_dict(v) for v in supported_cluster_network_profiles]
         else:
             raise ValueError('Required property \'supported_cluster_network_profiles\' not present in InstanceProfile JSON')
-        if (supported_vcpu_count := _dict.get('supported_vcpu_count')) is not None:
-            args['supported_vcpu_count'] = InstanceProfileSupportedVCPUCountEnum.from_dict(supported_vcpu_count)
-        else:
-            raise ValueError('Required property \'supported_vcpu_count\' not present in InstanceProfile JSON')
         if (threads_per_core := _dict.get('threads_per_core')) is not None:
             args['threads_per_core'] = InstanceProfileThreadsPerCoreEnum.from_dict(threads_per_core)
         else:
@@ -65393,11 +65917,6 @@ class InstanceProfile:
                 else:
                     supported_cluster_network_profiles_list.append(v.to_dict())
             _dict['supported_cluster_network_profiles'] = supported_cluster_network_profiles_list
-        if hasattr(self, 'supported_vcpu_count') and self.supported_vcpu_count is not None:
-            if isinstance(self.supported_vcpu_count, dict):
-                _dict['supported_vcpu_count'] = self.supported_vcpu_count
-            else:
-                _dict['supported_vcpu_count'] = self.supported_vcpu_count.to_dict()
         if hasattr(self, 'threads_per_core') and self.threads_per_core is not None:
             if isinstance(self.threads_per_core, dict):
                 _dict['threads_per_core'] = self.threads_per_core
@@ -66715,83 +67234,6 @@ class InstanceProfileSupportedSecureBootModes:
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'InstanceProfileSupportedSecureBootModes') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class TypeEnum(str, Enum):
-        """
-        The type for this profile field.
-        """
-
-        ENUM = 'enum'
-
-
-
-class InstanceProfileSupportedVCPUCountEnum:
-    """
-    The supported values for vcpu count for an instance with this profile.
-
-    :param str type: The type for this profile field.
-    :param List[int] values: The permitted values for this profile field.
-    """
-
-    def __init__(
-        self,
-        type: str,
-        values: List[int],
-    ) -> None:
-        """
-        Initialize a InstanceProfileSupportedVCPUCountEnum object.
-
-        :param str type: The type for this profile field.
-        :param List[int] values: The permitted values for this profile field.
-        """
-        self.type = type
-        self.values = values
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'InstanceProfileSupportedVCPUCountEnum':
-        """Initialize a InstanceProfileSupportedVCPUCountEnum object from a json dictionary."""
-        args = {}
-        if (type := _dict.get('type')) is not None:
-            args['type'] = type
-        else:
-            raise ValueError('Required property \'type\' not present in InstanceProfileSupportedVCPUCountEnum JSON')
-        if (values := _dict.get('values')) is not None:
-            args['values'] = values
-        else:
-            raise ValueError('Required property \'values\' not present in InstanceProfileSupportedVCPUCountEnum JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a InstanceProfileSupportedVCPUCountEnum object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
-        if hasattr(self, 'values') and self.values is not None:
-            _dict['values'] = self.values
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this InstanceProfileSupportedVCPUCountEnum object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'InstanceProfileSupportedVCPUCountEnum') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'InstanceProfileSupportedVCPUCountEnum') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -90967,6 +91409,152 @@ class ReservedIPReference:
 
 
 
+class ReservedIPReferenceVPNGatewayMemberContext:
+    """
+    ReservedIPReferenceVPNGatewayMemberContext.
+
+    :param str address: The IP address.
+          If the address has not yet been selected, the value will be `0.0.0.0`.
+          This property may
+          [expand](https://cloud.ibm.com/apidocs/vpc#property-value-expansion) to support
+          IPv6 addresses in the future.
+    :param Deleted deleted: (optional) If present, this property indicates the
+          referenced resource has been deleted, and provides
+          some supplementary information.
+    :param str href: The URL for this reserved IP.
+    :param str id: The unique identifier for this reserved IP.
+    :param str name: The name for this reserved IP. The name is unique across all
+          reserved IPs in a subnet.
+    :param str resource_type: The resource type.
+    :param SubnetReference subnet:
+    """
+
+    def __init__(
+        self,
+        address: str,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        subnet: 'SubnetReference',
+        *,
+        deleted: Optional['Deleted'] = None,
+    ) -> None:
+        """
+        Initialize a ReservedIPReferenceVPNGatewayMemberContext object.
+
+        :param str address: The IP address.
+               If the address has not yet been selected, the value will be `0.0.0.0`.
+               This property may
+               [expand](https://cloud.ibm.com/apidocs/vpc#property-value-expansion) to
+               support IPv6 addresses in the future.
+        :param str href: The URL for this reserved IP.
+        :param str id: The unique identifier for this reserved IP.
+        :param str name: The name for this reserved IP. The name is unique across
+               all reserved IPs in a subnet.
+        :param str resource_type: The resource type.
+        :param SubnetReference subnet:
+        :param Deleted deleted: (optional) If present, this property indicates the
+               referenced resource has been deleted, and provides
+               some supplementary information.
+        """
+        self.address = address
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+        self.subnet = subnet
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ReservedIPReferenceVPNGatewayMemberContext':
+        """Initialize a ReservedIPReferenceVPNGatewayMemberContext object from a json dictionary."""
+        args = {}
+        if (address := _dict.get('address')) is not None:
+            args['address'] = address
+        else:
+            raise ValueError('Required property \'address\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        if (deleted := _dict.get('deleted')) is not None:
+            args['deleted'] = Deleted.from_dict(deleted)
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = SubnetReference.from_dict(subnet)
+        else:
+            raise ValueError('Required property \'subnet\' not present in ReservedIPReferenceVPNGatewayMemberContext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ReservedIPReferenceVPNGatewayMemberContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'address') and self.address is not None:
+            _dict['address'] = self.address
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            if isinstance(self.deleted, dict):
+                _dict['deleted'] = self.deleted
+            else:
+                _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ReservedIPReferenceVPNGatewayMemberContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ReservedIPReferenceVPNGatewayMemberContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ReservedIPReferenceVPNGatewayMemberContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        SUBNET_RESERVED_IP = 'subnet_reserved_ip'
+
+
+
 class ReservedIPTarget:
     """
     The target this reserved IP is bound to.
@@ -100070,6 +100658,8 @@ class Snapshot:
     :param int size: The size of this snapshot rounded up to the next gigabyte.
     :param SnapshotConsistencyGroupReference snapshot_consistency_group: (optional)
           If present, the snapshot consistency group which created this snapshot.
+    :param List[SnapshotSoftwareAttachmentReference] software_attachments: The
+          software attachments for this snapshot.
     :param ImageReference source_image: (optional) If present, the image from which
           the data on this snapshot was most directly
           provisioned.
@@ -100109,6 +100699,7 @@ class Snapshot:
         resource_type: str,
         service_tags: List[str],
         size: int,
+        software_attachments: List['SnapshotSoftwareAttachmentReference'],
         source_volume: 'VolumeReference',
         storage_generation: int,
         user_tags: List[str],
@@ -100153,6 +100744,8 @@ class Snapshot:
                tags](https://cloud.ibm.com/apidocs/tagging#types-of-tags) prefixed with
                `is.snapshot:` associated with this snapshot.
         :param int size: The size of this snapshot rounded up to the next gigabyte.
+        :param List[SnapshotSoftwareAttachmentReference] software_attachments: The
+               software attachments for this snapshot.
         :param VolumeReference source_volume: The source volume this snapshot was
                created from (may be
                [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
@@ -100230,6 +100823,7 @@ class Snapshot:
         self.service_tags = service_tags
         self.size = size
         self.snapshot_consistency_group = snapshot_consistency_group
+        self.software_attachments = software_attachments
         self.source_image = source_image
         self.source_snapshot = source_snapshot
         self.source_volume = source_volume
@@ -100322,6 +100916,10 @@ class Snapshot:
             raise ValueError('Required property \'size\' not present in Snapshot JSON')
         if (snapshot_consistency_group := _dict.get('snapshot_consistency_group')) is not None:
             args['snapshot_consistency_group'] = SnapshotConsistencyGroupReference.from_dict(snapshot_consistency_group)
+        if (software_attachments := _dict.get('software_attachments')) is not None:
+            args['software_attachments'] = [SnapshotSoftwareAttachmentReference.from_dict(v) for v in software_attachments]
+        else:
+            raise ValueError('Required property \'software_attachments\' not present in Snapshot JSON')
         if (source_image := _dict.get('source_image')) is not None:
             args['source_image'] = ImageReference.from_dict(source_image)
         if (source_snapshot := _dict.get('source_snapshot')) is not None:
@@ -100429,6 +101027,14 @@ class Snapshot:
                 _dict['snapshot_consistency_group'] = self.snapshot_consistency_group
             else:
                 _dict['snapshot_consistency_group'] = self.snapshot_consistency_group.to_dict()
+        if hasattr(self, 'software_attachments') and self.software_attachments is not None:
+            software_attachments_list = []
+            for v in self.software_attachments:
+                if isinstance(v, dict):
+                    software_attachments_list.append(v)
+                else:
+                    software_attachments_list.append(v.to_dict())
+            _dict['software_attachments'] = software_attachments_list
         if hasattr(self, 'source_image') and self.source_image is not None:
             if isinstance(self.source_image, dict):
                 _dict['source_image'] = self.source_image
@@ -102636,6 +103242,681 @@ class SnapshotRemote:
     def __ne__(self, other: 'SnapshotRemote') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class SnapshotSoftwareAttachment:
+    """
+    SnapshotSoftwareAttachment.
+
+    :param SnapshotSoftwareAttachmentCatalogOffering catalog_offering: (optional)
+          The [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+          offering for this snapshot software attachment. May be absent if
+          `software_attachment.lifecycle_state` is not `stable`.
+    :param datetime created_at: The date and time that the snapshot software
+          attachment was created.
+    :param SnapshotSoftwareAttachmentEntitlement entitlement: (optional) The
+          entitlement for the snapshot software attachment's licensable software.
+    :param str href: The URL for this snapshot software attachment.
+    :param str id: The unique identifier for this snapshot software attachment.
+    :param str name: The name for this snapshot software attachment. The name is
+          unique across all software attachments for the snapshot.
+    :param str resource_type: The resource type.
+    """
+
+    def __init__(
+        self,
+        created_at: datetime,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        *,
+        catalog_offering: Optional['SnapshotSoftwareAttachmentCatalogOffering'] = None,
+        entitlement: Optional['SnapshotSoftwareAttachmentEntitlement'] = None,
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachment object.
+
+        :param datetime created_at: The date and time that the snapshot software
+               attachment was created.
+        :param str href: The URL for this snapshot software attachment.
+        :param str id: The unique identifier for this snapshot software attachment.
+        :param str name: The name for this snapshot software attachment. The name
+               is unique across all software attachments for the snapshot.
+        :param str resource_type: The resource type.
+        :param SnapshotSoftwareAttachmentCatalogOffering catalog_offering:
+               (optional) The
+               [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+               offering for this snapshot software attachment. May be absent if
+               `software_attachment.lifecycle_state` is not `stable`.
+        :param SnapshotSoftwareAttachmentEntitlement entitlement: (optional) The
+               entitlement for the snapshot software attachment's licensable software.
+        """
+        self.catalog_offering = catalog_offering
+        self.created_at = created_at
+        self.entitlement = entitlement
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachment':
+        """Initialize a SnapshotSoftwareAttachment object from a json dictionary."""
+        args = {}
+        if (catalog_offering := _dict.get('catalog_offering')) is not None:
+            args['catalog_offering'] = SnapshotSoftwareAttachmentCatalogOffering.from_dict(catalog_offering)
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        else:
+            raise ValueError('Required property \'created_at\' not present in SnapshotSoftwareAttachment JSON')
+        if (entitlement := _dict.get('entitlement')) is not None:
+            args['entitlement'] = SnapshotSoftwareAttachmentEntitlement.from_dict(entitlement)
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in SnapshotSoftwareAttachment JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in SnapshotSoftwareAttachment JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in SnapshotSoftwareAttachment JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SnapshotSoftwareAttachment JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachment object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'catalog_offering') and self.catalog_offering is not None:
+            if isinstance(self.catalog_offering, dict):
+                _dict['catalog_offering'] = self.catalog_offering
+            else:
+                _dict['catalog_offering'] = self.catalog_offering.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'entitlement') and self.entitlement is not None:
+            if isinstance(self.entitlement, dict):
+                _dict['entitlement'] = self.entitlement
+            else:
+                _dict['entitlement'] = self.entitlement.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachment object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachment') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachment') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        SNAPSHOT_SOFTWARE_ATTACHMENT = 'snapshot_software_attachment'
+
+
+
+class SnapshotSoftwareAttachmentCatalogOffering:
+    """
+    The [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+    offering for this snapshot software attachment. May be absent if
+    `software_attachment.lifecycle_state` is not `stable`.
+
+    :param CatalogOfferingVersionPlanReference plan: (optional) The billing plan for
+          the catalog offering version associated with this snapshot software
+          attachment.
+          If absent, no billing plan is associated with the catalog offering version
+          (free).
+    :param CatalogOfferingVersionReference version: The catalog offering version
+          associated with this snapshot software attachment.
+    """
+
+    def __init__(
+        self,
+        version: 'CatalogOfferingVersionReference',
+        *,
+        plan: Optional['CatalogOfferingVersionPlanReference'] = None,
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentCatalogOffering object.
+
+        :param CatalogOfferingVersionReference version: The catalog offering
+               version associated with this snapshot software attachment.
+        :param CatalogOfferingVersionPlanReference plan: (optional) The billing
+               plan for the catalog offering version associated with this snapshot
+               software
+               attachment.
+               If absent, no billing plan is associated with the catalog offering version
+               (free).
+        """
+        self.plan = plan
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentCatalogOffering':
+        """Initialize a SnapshotSoftwareAttachmentCatalogOffering object from a json dictionary."""
+        args = {}
+        if (plan := _dict.get('plan')) is not None:
+            args['plan'] = CatalogOfferingVersionPlanReference.from_dict(plan)
+        if (version := _dict.get('version')) is not None:
+            args['version'] = CatalogOfferingVersionReference.from_dict(version)
+        else:
+            raise ValueError('Required property \'version\' not present in SnapshotSoftwareAttachmentCatalogOffering JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentCatalogOffering object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'plan') and self.plan is not None:
+            if isinstance(self.plan, dict):
+                _dict['plan'] = self.plan
+            else:
+                _dict['plan'] = self.plan.to_dict()
+        if hasattr(self, 'version') and self.version is not None:
+            if isinstance(self.version, dict):
+                _dict['version'] = self.version
+            else:
+                _dict['version'] = self.version.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentCatalogOffering object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentCatalogOffering') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentCatalogOffering') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentCollection:
+    """
+    SnapshotSoftwareAttachmentCollection.
+
+    :param List[SnapshotSoftwareAttachment] software_attachments: The software
+          attachments for the snapshot.
+    """
+
+    def __init__(
+        self,
+        software_attachments: List['SnapshotSoftwareAttachment'],
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentCollection object.
+
+        :param List[SnapshotSoftwareAttachment] software_attachments: The software
+               attachments for the snapshot.
+        """
+        self.software_attachments = software_attachments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentCollection':
+        """Initialize a SnapshotSoftwareAttachmentCollection object from a json dictionary."""
+        args = {}
+        if (software_attachments := _dict.get('software_attachments')) is not None:
+            args['software_attachments'] = [SnapshotSoftwareAttachment.from_dict(v) for v in software_attachments]
+        else:
+            raise ValueError('Required property \'software_attachments\' not present in SnapshotSoftwareAttachmentCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'software_attachments') and self.software_attachments is not None:
+            software_attachments_list = []
+            for v in self.software_attachments:
+                if isinstance(v, dict):
+                    software_attachments_list.append(v)
+                else:
+                    software_attachments_list.append(v.to_dict())
+            _dict['software_attachments'] = software_attachments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentEntitlement:
+    """
+    The entitlement for the snapshot software attachment's licensable software.
+
+    :param List[SnapshotSoftwareAttachmentEntitlementLicensableSoftware]
+          licensable_software: The licensable software for this snapshot software
+          attachment entitlement. The software will be licensed when an instance is
+          provisioned from this snapshot.
+    """
+
+    def __init__(
+        self,
+        licensable_software: List['SnapshotSoftwareAttachmentEntitlementLicensableSoftware'],
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentEntitlement object.
+
+        :param List[SnapshotSoftwareAttachmentEntitlementLicensableSoftware]
+               licensable_software: The licensable software for this snapshot software
+               attachment entitlement. The software will be licensed when an instance is
+               provisioned from this snapshot.
+        """
+        self.licensable_software = licensable_software
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentEntitlement':
+        """Initialize a SnapshotSoftwareAttachmentEntitlement object from a json dictionary."""
+        args = {}
+        if (licensable_software := _dict.get('licensable_software')) is not None:
+            args['licensable_software'] = [SnapshotSoftwareAttachmentEntitlementLicensableSoftware.from_dict(v) for v in licensable_software]
+        else:
+            raise ValueError('Required property \'licensable_software\' not present in SnapshotSoftwareAttachmentEntitlement JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentEntitlement object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'licensable_software') and self.licensable_software is not None:
+            licensable_software_list = []
+            for v in self.licensable_software:
+                if isinstance(v, dict):
+                    licensable_software_list.append(v)
+                else:
+                    licensable_software_list.append(v.to_dict())
+            _dict['licensable_software'] = licensable_software_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentEntitlement object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentEntitlement') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentEntitlement') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentEntitlementLicensableSoftware:
+    """
+    The licensable software for this snapshot software attachment's entitlement.
+
+    :param str sku: The SKU for this licensable software.
+    :param SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor vendor:
+    """
+
+    def __init__(
+        self,
+        sku: str,
+        vendor: 'SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor',
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftware object.
+
+        :param str sku: The SKU for this licensable software.
+        :param SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor
+               vendor:
+        """
+        self.sku = sku
+        self.vendor = vendor
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentEntitlementLicensableSoftware':
+        """Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftware object from a json dictionary."""
+        args = {}
+        if (sku := _dict.get('sku')) is not None:
+            args['sku'] = sku
+        else:
+            raise ValueError('Required property \'sku\' not present in SnapshotSoftwareAttachmentEntitlementLicensableSoftware JSON')
+        if (vendor := _dict.get('vendor')) is not None:
+            args['vendor'] = SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor.from_dict(vendor)
+        else:
+            raise ValueError('Required property \'vendor\' not present in SnapshotSoftwareAttachmentEntitlementLicensableSoftware JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftware object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'sku') and self.sku is not None:
+            _dict['sku'] = self.sku
+        if hasattr(self, 'vendor') and self.vendor is not None:
+            if isinstance(self.vendor, dict):
+                _dict['vendor'] = self.vendor
+            else:
+                _dict['vendor'] = self.vendor.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentEntitlementLicensableSoftware object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentEntitlementLicensableSoftware') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentEntitlementLicensableSoftware') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor:
+    """
+    SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor.
+
+    :param str name: The name of the vendor providing this licensable software.
+    """
+
+    def __init__(
+        self,
+        name: str,
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor object.
+
+        :param str name: The name of the vendor providing this licensable software.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor':
+        """Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentEntitlementLicensableSoftwareVendor') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentPatch:
+    """
+    SnapshotSoftwareAttachmentPatch.
+
+    :param str name: (optional) The name for this snapshot software attachment. The
+          name must not be used by another software attachment for this snapshot.
+    """
+
+    def __init__(
+        self,
+        *,
+        name: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentPatch object.
+
+        :param str name: (optional) The name for this snapshot software attachment.
+               The name must not be used by another software attachment for this snapshot.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentPatch':
+        """Initialize a SnapshotSoftwareAttachmentPatch object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SnapshotSoftwareAttachmentReference:
+    """
+    SnapshotSoftwareAttachmentReference.
+
+    :param Deleted deleted: (optional) If present, this property indicates the
+          referenced resource has been deleted, and provides
+          some supplementary information.
+    :param str href: The URL for this snapshot software attachment.
+    :param str id: The unique identifier for this snapshot software attachment.
+    :param str name: The name for this snapshot software attachment. The name is
+          unique across all software attachments for the snapshot.
+    :param str resource_type: The resource type.
+    """
+
+    def __init__(
+        self,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        *,
+        deleted: Optional['Deleted'] = None,
+    ) -> None:
+        """
+        Initialize a SnapshotSoftwareAttachmentReference object.
+
+        :param str href: The URL for this snapshot software attachment.
+        :param str id: The unique identifier for this snapshot software attachment.
+        :param str name: The name for this snapshot software attachment. The name
+               is unique across all software attachments for the snapshot.
+        :param str resource_type: The resource type.
+        :param Deleted deleted: (optional) If present, this property indicates the
+               referenced resource has been deleted, and provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SnapshotSoftwareAttachmentReference':
+        """Initialize a SnapshotSoftwareAttachmentReference object from a json dictionary."""
+        args = {}
+        if (deleted := _dict.get('deleted')) is not None:
+            args['deleted'] = Deleted.from_dict(deleted)
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in SnapshotSoftwareAttachmentReference JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in SnapshotSoftwareAttachmentReference JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in SnapshotSoftwareAttachmentReference JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in SnapshotSoftwareAttachmentReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SnapshotSoftwareAttachmentReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            if isinstance(self.deleted, dict):
+                _dict['deleted'] = self.deleted
+            else:
+                _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SnapshotSoftwareAttachmentReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SnapshotSoftwareAttachmentReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SnapshotSoftwareAttachmentReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        SNAPSHOT_SOFTWARE_ATTACHMENT = 'snapshot_software_attachment'
+
 
 
 class SnapshotSourceSnapshot:
@@ -106043,7 +107324,7 @@ class VPNGateway:
     :param ResourceGroupReference resource_group: The resource group for this VPN
           gateway.
     :param str resource_type: The resource type.
-    :param SubnetReference subnet:
+    :param SubnetReference subnet: (optional)
     :param VPCReference vpc: The VPC this VPN gateway resides in.
     """
 
@@ -106062,8 +107343,9 @@ class VPNGateway:
         name: str,
         resource_group: 'ResourceGroupReference',
         resource_type: str,
-        subnet: 'SubnetReference',
         vpc: 'VPCReference',
+        *,
+        subnet: Optional['SubnetReference'] = None,
     ) -> None:
         """
         Initialize a VPNGateway object.
@@ -106098,11 +107380,11 @@ class VPNGateway:
         :param ResourceGroupReference resource_group: The resource group for this
                VPN gateway.
         :param str resource_type: The resource type.
-        :param SubnetReference subnet:
         :param VPCReference vpc: The VPC this VPN gateway resides in.
+        :param SubnetReference subnet: (optional)
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['VPNGatewayPolicyMode', 'VPNGatewayRouteMode'])
+            ", ".join(['VPNGatewayRegionalAvailabilityMode', 'VPNGatewayZonalAvailabilityMode'])
         )
         raise Exception(msg)
 
@@ -107558,9 +108840,13 @@ class VPNGatewayConnectionPatch:
           peer detection configuration.
     :param bool distribute_traffic: (optional) Indicates whether the traffic is
           distributed between the `up` tunnels of the VPN gateway connection when the VPC
-          route's next hop is a VPN connection. If `false`, the traffic is only routed
-          through the `up` tunnel with the lower `public_ip` address. Before enabling it
-          on VPN connections to on-prem private networks, review
+          route's next hop is a VPN connection.
+          For a `zonal` VPN gateway, if `false`, the traffic is only routed through the
+          `up` tunnel with the lower `public_ip` address.
+          For a `regional` VPN gateway, if `true`, traffic is distributed across both VPN
+          members (ECMP mode). If `false`, only the first member of the VPN gateway
+          handles all the traffic (deterministic mode).
+          Before enabling it on VPN connections to on-prem private networks, review
           [distributing traffic
           restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
           If specified, `mode` must be `route`.
@@ -107618,9 +108904,13 @@ class VPNGatewayConnectionPatch:
                dead peer detection configuration.
         :param bool distribute_traffic: (optional) Indicates whether the traffic is
                distributed between the `up` tunnels of the VPN gateway connection when the
-               VPC route's next hop is a VPN connection. If `false`, the traffic is only
-               routed through the `up` tunnel with the lower `public_ip` address. Before
-               enabling it on VPN connections to on-prem private networks, review
+               VPC route's next hop is a VPN connection.
+               For a `zonal` VPN gateway, if `false`, the traffic is only routed through
+               the `up` tunnel with the lower `public_ip` address.
+               For a `regional` VPN gateway, if `true`, traffic is distributed across both
+               VPN members (ECMP mode). If `false`, only the first member of the VPN
+               gateway handles all the traffic (deterministic mode).
+               Before enabling it on VPN connections to on-prem private networks, review
                [distributing traffic
                restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
                If specified, `mode` must be `route`.
@@ -109282,11 +110572,13 @@ class VPNGatewayMember:
           a
              health state of `inapplicable`. A `pending` resource may also have this
           state.
+    :param str href: (optional) The URL for this VPN gateway member.
+    :param str id: (optional) The unique identifier for this VPN gateway member.
     :param List[VPNGatewayMemberLifecycleReason] lifecycle_reasons: The reasons for
           the current `lifecycle_state` (if any).
     :param str lifecycle_state: The lifecycle state of the VPN gateway member.
-    :param ReservedIPReference private_ip: The reserved IP address assigned to the
-          VPN gateway member.
+    :param ReservedIPReferenceVPNGatewayMemberContext private_ip: The reserved IP
+          address assigned to the VPN gateway member.
           This property will be present only when the VPN gateway status is `available`.
     :param IP public_ip: The public IP address assigned to the VPN gateway member.
     :param str role: The high availability role assigned to the VPN gateway member.
@@ -109301,9 +110593,12 @@ class VPNGatewayMember:
         health_state: str,
         lifecycle_reasons: List['VPNGatewayMemberLifecycleReason'],
         lifecycle_state: str,
-        private_ip: 'ReservedIPReference',
+        private_ip: 'ReservedIPReferenceVPNGatewayMemberContext',
         public_ip: 'IP',
         role: str,
+        *,
+        href: Optional[str] = None,
+        id: Optional[str] = None,
     ) -> None:
         """
         Initialize a VPNGatewayMember object.
@@ -109325,8 +110620,8 @@ class VPNGatewayMember:
         :param List[VPNGatewayMemberLifecycleReason] lifecycle_reasons: The reasons
                for the current `lifecycle_state` (if any).
         :param str lifecycle_state: The lifecycle state of the VPN gateway member.
-        :param ReservedIPReference private_ip: The reserved IP address assigned to
-               the VPN gateway member.
+        :param ReservedIPReferenceVPNGatewayMemberContext private_ip: The reserved
+               IP address assigned to the VPN gateway member.
                This property will be present only when the VPN gateway status is
                `available`.
         :param IP public_ip: The public IP address assigned to the VPN gateway
@@ -109336,9 +110631,14 @@ class VPNGatewayMember:
                The enumerated values for this property may
                [expand](https://cloud.ibm.com/apidocs/vpc#property-value-expansion) in the
                future.
+        :param str href: (optional) The URL for this VPN gateway member.
+        :param str id: (optional) The unique identifier for this VPN gateway
+               member.
         """
         self.health_reasons = health_reasons
         self.health_state = health_state
+        self.href = href
+        self.id = id
         self.lifecycle_reasons = lifecycle_reasons
         self.lifecycle_state = lifecycle_state
         self.private_ip = private_ip
@@ -109357,6 +110657,10 @@ class VPNGatewayMember:
             args['health_state'] = health_state
         else:
             raise ValueError('Required property \'health_state\' not present in VPNGatewayMember JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
         if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
             args['lifecycle_reasons'] = [VPNGatewayMemberLifecycleReason.from_dict(v) for v in lifecycle_reasons]
         else:
@@ -109366,7 +110670,7 @@ class VPNGatewayMember:
         else:
             raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayMember JSON')
         if (private_ip := _dict.get('private_ip')) is not None:
-            args['private_ip'] = ReservedIPReference.from_dict(private_ip)
+            args['private_ip'] = ReservedIPReferenceVPNGatewayMemberContext.from_dict(private_ip)
         else:
             raise ValueError('Required property \'private_ip\' not present in VPNGatewayMember JSON')
         if (public_ip := _dict.get('public_ip')) is not None:
@@ -109397,6 +110701,10 @@ class VPNGatewayMember:
             _dict['health_reasons'] = health_reasons_list
         if hasattr(self, 'health_state') and self.health_state is not None:
             _dict['health_state'] = self.health_state
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
         if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
             lifecycle_reasons_list = []
             for v in self.lifecycle_reasons:
@@ -109482,6 +110790,122 @@ class VPNGatewayMember:
         ACTIVE = 'active'
         STANDBY = 'standby'
 
+
+
+class VPNGatewayMemberCollection:
+    """
+    VPNGatewayMemberCollection.
+
+    :param PageLink first: A link to the first page of resources.
+    :param int limit: The maximum number of resources that can be returned by the
+          request.
+    :param List[VPNGatewayMember] members: The members for the VPN gateway.
+    :param PageLink next: (optional) A link to the next page of resources. This
+          property is present for all pages
+          except the last page.
+    :param int total_count: The total number of resources across all pages.
+    """
+
+    def __init__(
+        self,
+        first: 'PageLink',
+        limit: int,
+        members: List['VPNGatewayMember'],
+        total_count: int,
+        *,
+        next: Optional['PageLink'] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayMemberCollection object.
+
+        :param PageLink first: A link to the first page of resources.
+        :param int limit: The maximum number of resources that can be returned by
+               the request.
+        :param List[VPNGatewayMember] members: The members for the VPN gateway.
+        :param int total_count: The total number of resources across all pages.
+        :param PageLink next: (optional) A link to the next page of resources. This
+               property is present for all pages
+               except the last page.
+        """
+        self.first = first
+        self.limit = limit
+        self.members = members
+        self.next = next
+        self.total_count = total_count
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayMemberCollection':
+        """Initialize a VPNGatewayMemberCollection object from a json dictionary."""
+        args = {}
+        if (first := _dict.get('first')) is not None:
+            args['first'] = PageLink.from_dict(first)
+        else:
+            raise ValueError('Required property \'first\' not present in VPNGatewayMemberCollection JSON')
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        else:
+            raise ValueError('Required property \'limit\' not present in VPNGatewayMemberCollection JSON')
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayMemberCollection JSON')
+        if (next := _dict.get('next')) is not None:
+            args['next'] = PageLink.from_dict(next)
+        if (total_count := _dict.get('total_count')) is not None:
+            args['total_count'] = total_count
+        else:
+            raise ValueError('Required property \'total_count\' not present in VPNGatewayMemberCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayMemberCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'total_count') and self.total_count is not None:
+            _dict['total_count'] = self.total_count
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayMemberCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayMemberCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayMemberCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class VPNGatewayMemberHealthReason:
@@ -109702,10 +111126,103 @@ class VPNGatewayMemberLifecycleReason:
 
 
 
+class VPNGatewayMemberPrivateIPPrototype:
+    """
+    VPNGatewayMemberPrivateIPPrototype.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a VPNGatewayMemberPrivateIPPrototype object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext'])
+        )
+        raise Exception(msg)
+
+
+class VPNGatewayMemberPrototype:
+    """
+    VPNGatewayMemberPrototype.
+
+    :param VPNGatewayMemberPrivateIPPrototype private_ip: The identity of the subnet
+          the VPN Gateway member will reside in.
+          A reserved IP will be allocated from the specified `subnet` and assigned to the
+          VPN
+          gateway member.
+    """
+
+    def __init__(
+        self,
+        private_ip: 'VPNGatewayMemberPrivateIPPrototype',
+    ) -> None:
+        """
+        Initialize a VPNGatewayMemberPrototype object.
+
+        :param VPNGatewayMemberPrivateIPPrototype private_ip: The identity of the
+               subnet the VPN Gateway member will reside in.
+               A reserved IP will be allocated from the specified `subnet` and assigned to
+               the VPN
+               gateway member.
+        """
+        self.private_ip = private_ip
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayMemberPrototype':
+        """Initialize a VPNGatewayMemberPrototype object from a json dictionary."""
+        args = {}
+        if (private_ip := _dict.get('private_ip')) is not None:
+            args['private_ip'] = private_ip
+        else:
+            raise ValueError('Required property \'private_ip\' not present in VPNGatewayMemberPrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayMemberPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'private_ip') and self.private_ip is not None:
+            if isinstance(self.private_ip, dict):
+                _dict['private_ip'] = self.private_ip
+            else:
+                _dict['private_ip'] = self.private_ip.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayMemberPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayMemberPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayMemberPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class VPNGatewayPatch:
     """
     VPNGatewayPatch.
 
+    :param str availability_mode: (optional) The VPN gateway availability mode.
+          Supported by route mode VPN gateways. Cannot be updated to `zonal`.
+          - `regional`: The VPN gateway will allow members in multiple zones in the
+          region.
     :param int local_asn: (optional) The local autonomous system number (ASN) for
           this VPN gateway and its connections. The ASN values in the
           [restricted ASN list](
@@ -109718,12 +111235,17 @@ class VPNGatewayPatch:
     def __init__(
         self,
         *,
+        availability_mode: Optional[str] = None,
         local_asn: Optional[int] = None,
         name: Optional[str] = None,
     ) -> None:
         """
         Initialize a VPNGatewayPatch object.
 
+        :param str availability_mode: (optional) The VPN gateway availability mode.
+               Supported by route mode VPN gateways. Cannot be updated to `zonal`.
+               - `regional`: The VPN gateway will allow members in multiple zones in the
+               region.
         :param int local_asn: (optional) The local autonomous system number (ASN)
                for this VPN gateway and its connections. The ASN values in the
                [restricted ASN list](
@@ -109732,6 +111254,7 @@ class VPNGatewayPatch:
         :param str name: (optional) The name for this VPN gateway. The name must
                not be used by another VPN gateway in the VPC.
         """
+        self.availability_mode = availability_mode
         self.local_asn = local_asn
         self.name = name
 
@@ -109739,6 +111262,8 @@ class VPNGatewayPatch:
     def from_dict(cls, _dict: Dict) -> 'VPNGatewayPatch':
         """Initialize a VPNGatewayPatch object from a json dictionary."""
         args = {}
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
         if (local_asn := _dict.get('local_asn')) is not None:
             args['local_asn'] = local_asn
         if (name := _dict.get('name')) is not None:
@@ -109753,6 +111278,8 @@ class VPNGatewayPatch:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
         if hasattr(self, 'local_asn') and self.local_asn is not None:
             _dict['local_asn'] = self.local_asn
         if hasattr(self, 'name') and self.name is not None:
@@ -109777,11 +111304,29 @@ class VPNGatewayPatch:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The VPN gateway availability mode. Supported by route mode VPN gateways. Cannot be
+        updated to `zonal`.
+        - `regional`: The VPN gateway will allow members in multiple zones in the region.
+        """
+
+        REGIONAL = 'regional'
+
+
 
 class VPNGatewayPrototype:
     """
     VPNGatewayPrototype.
 
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+          - `regional`: The VPN gateway is deployed across multiple zones in the region.
+          This mode
+            provides zone-level redundancy.
     :param str name: (optional) The name for this VPN gateway. The name must not be
           used by another VPN gateway in the VPC. If unspecified, the name will be a
           hyphenated list of randomly-selected words.
@@ -109789,20 +111334,26 @@ class VPNGatewayPrototype:
           use. If unspecified, the account's [default resource
           group](https://cloud.ibm.com/apidocs/resource-manager#introduction) will be
           used.
-    :param SubnetIdentity subnet: Identifies a subnet by a unique property.
     """
 
     def __init__(
         self,
-        subnet: 'SubnetIdentity',
         *,
+        availability_mode: Optional[str] = None,
         name: Optional[str] = None,
         resource_group: Optional['ResourceGroupIdentity'] = None,
     ) -> None:
         """
         Initialize a VPNGatewayPrototype object.
 
-        :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+               - `regional`: The VPN gateway is deployed across multiple zones in the
+               region. This mode
+                 provides zone-level redundancy.
         :param str name: (optional) The name for this VPN gateway. The name must
                not be used by another VPN gateway in the VPC. If unspecified, the name
                will be a hyphenated list of randomly-selected words.
@@ -109812,9 +111363,24 @@ class VPNGatewayPrototype:
                used.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['VPNGatewayPrototypeVPNGatewayRouteModePrototype', 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype'])
+            ", ".join(['VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMember', 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet', 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember'])
         )
         raise Exception(msg)
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        - `regional`: The VPN gateway is deployed across multiple zones in the region.
+        This mode
+          provides zone-level redundancy.
+        """
+
+        REGIONAL = 'regional'
+        ZONAL = 'zonal'
+
 
 
 class VPNGatewayServiceConnection:
@@ -113431,6 +114997,8 @@ class Volume:
     :param ResourceGroupReference resource_group: The resource group for this
           volume.
     :param str resource_type: The resource type.
+    :param List[VolumeSoftwareAttachmentReference] software_attachments: The
+          software attachments for this volume.
     :param ImageReference source_image: (optional) The image from which this volume
           was created (this may be
           [deleted](https://cloud.ibm.com/apidocs/vpc#deleted-resources)).
@@ -113479,6 +115047,7 @@ class Volume:
         profile: 'VolumeProfileReference',
         resource_group: 'ResourceGroupReference',
         resource_type: str,
+        software_attachments: List['VolumeSoftwareAttachmentReference'],
         status: str,
         status_reasons: List['VolumeStatusReason'],
         storage_generation: int,
@@ -113553,6 +115122,8 @@ class Volume:
         :param ResourceGroupReference resource_group: The resource group for this
                volume.
         :param str resource_type: The resource type.
+        :param List[VolumeSoftwareAttachmentReference] software_attachments: The
+               software attachments for this volume.
         :param str status: The status of the volume.
                The enumerated values for this property may
                [expand](https://cloud.ibm.com/apidocs/vpc#property-value-expansion) in the
@@ -113621,6 +115192,7 @@ class Volume:
         self.profile = profile
         self.resource_group = resource_group
         self.resource_type = resource_type
+        self.software_attachments = software_attachments
         self.source_image = source_image
         self.source_snapshot = source_snapshot
         self.status = status
@@ -113718,6 +115290,10 @@ class Volume:
             args['resource_type'] = resource_type
         else:
             raise ValueError('Required property \'resource_type\' not present in Volume JSON')
+        if (software_attachments := _dict.get('software_attachments')) is not None:
+            args['software_attachments'] = [VolumeSoftwareAttachmentReference.from_dict(v) for v in software_attachments]
+        else:
+            raise ValueError('Required property \'software_attachments\' not present in Volume JSON')
         if (source_image := _dict.get('source_image')) is not None:
             args['source_image'] = ImageReference.from_dict(source_image)
         if (source_snapshot := _dict.get('source_snapshot')) is not None:
@@ -113826,6 +115402,14 @@ class Volume:
                 _dict['resource_group'] = self.resource_group.to_dict()
         if hasattr(self, 'resource_type') and self.resource_type is not None:
             _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'software_attachments') and self.software_attachments is not None:
+            software_attachments_list = []
+            for v in self.software_attachments:
+                if isinstance(v, dict):
+                    software_attachments_list.append(v)
+                else:
+                    software_attachments_list.append(v.to_dict())
+            _dict['software_attachments'] = software_attachments_list
         if hasattr(self, 'source_image') and self.source_image is not None:
             if isinstance(self.source_image, dict):
                 _dict['source_image'] = self.source_image
@@ -118195,6 +119779,679 @@ class VolumeRemote:
     def __ne__(self, other: 'VolumeRemote') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+
+class VolumeSoftwareAttachment:
+    """
+    VolumeSoftwareAttachment.
+
+    :param VolumeSoftwareAttachmentCatalogOffering catalog_offering: (optional) The
+          [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+          offering for this volume software attachment. May be absent if
+          `software_attachment.lifecycle_state` is not `stable`.
+    :param datetime created_at: The date and time that the volume software
+          attachment was created.
+    :param VolumeSoftwareAttachmentEntitlement entitlement: (optional) The
+          entitlement for the volume software attachment's licensable software.
+    :param str href: The URL for this volume software attachment.
+    :param str id: The unique identifier for this volume software attachment.
+    :param str name: The name for this volume software attachment. The name is
+          unique across all software attachments for the volume.
+    :param str resource_type: The resource type.
+    """
+
+    def __init__(
+        self,
+        created_at: datetime,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        *,
+        catalog_offering: Optional['VolumeSoftwareAttachmentCatalogOffering'] = None,
+        entitlement: Optional['VolumeSoftwareAttachmentEntitlement'] = None,
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachment object.
+
+        :param datetime created_at: The date and time that the volume software
+               attachment was created.
+        :param str href: The URL for this volume software attachment.
+        :param str id: The unique identifier for this volume software attachment.
+        :param str name: The name for this volume software attachment. The name is
+               unique across all software attachments for the volume.
+        :param str resource_type: The resource type.
+        :param VolumeSoftwareAttachmentCatalogOffering catalog_offering: (optional)
+               The
+               [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+               offering for this volume software attachment. May be absent if
+               `software_attachment.lifecycle_state` is not `stable`.
+        :param VolumeSoftwareAttachmentEntitlement entitlement: (optional) The
+               entitlement for the volume software attachment's licensable software.
+        """
+        self.catalog_offering = catalog_offering
+        self.created_at = created_at
+        self.entitlement = entitlement
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachment':
+        """Initialize a VolumeSoftwareAttachment object from a json dictionary."""
+        args = {}
+        if (catalog_offering := _dict.get('catalog_offering')) is not None:
+            args['catalog_offering'] = VolumeSoftwareAttachmentCatalogOffering.from_dict(catalog_offering)
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        else:
+            raise ValueError('Required property \'created_at\' not present in VolumeSoftwareAttachment JSON')
+        if (entitlement := _dict.get('entitlement')) is not None:
+            args['entitlement'] = VolumeSoftwareAttachmentEntitlement.from_dict(entitlement)
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in VolumeSoftwareAttachment JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in VolumeSoftwareAttachment JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VolumeSoftwareAttachment JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VolumeSoftwareAttachment JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachment object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'catalog_offering') and self.catalog_offering is not None:
+            if isinstance(self.catalog_offering, dict):
+                _dict['catalog_offering'] = self.catalog_offering
+            else:
+                _dict['catalog_offering'] = self.catalog_offering.to_dict()
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'entitlement') and self.entitlement is not None:
+            if isinstance(self.entitlement, dict):
+                _dict['entitlement'] = self.entitlement
+            else:
+                _dict['entitlement'] = self.entitlement.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachment object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachment') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachment') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VOLUME_SOFTWARE_ATTACHMENT = 'volume_software_attachment'
+
+
+
+class VolumeSoftwareAttachmentCatalogOffering:
+    """
+    The [catalog](https://cloud.ibm.com/docs/account?topic=account-restrict-by-user)
+    offering for this volume software attachment. May be absent if
+    `software_attachment.lifecycle_state` is not `stable`.
+
+    :param CatalogOfferingVersionPlanReference plan: (optional) The billing plan for
+          the catalog offering version associated with this volume software
+          attachment.
+          If absent, no billing plan is associated with the catalog offering version
+          (free).
+    :param CatalogOfferingVersionReference version: The catalog offering version
+          associated with this volume software attachment.
+    """
+
+    def __init__(
+        self,
+        version: 'CatalogOfferingVersionReference',
+        *,
+        plan: Optional['CatalogOfferingVersionPlanReference'] = None,
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentCatalogOffering object.
+
+        :param CatalogOfferingVersionReference version: The catalog offering
+               version associated with this volume software attachment.
+        :param CatalogOfferingVersionPlanReference plan: (optional) The billing
+               plan for the catalog offering version associated with this volume software
+               attachment.
+               If absent, no billing plan is associated with the catalog offering version
+               (free).
+        """
+        self.plan = plan
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentCatalogOffering':
+        """Initialize a VolumeSoftwareAttachmentCatalogOffering object from a json dictionary."""
+        args = {}
+        if (plan := _dict.get('plan')) is not None:
+            args['plan'] = CatalogOfferingVersionPlanReference.from_dict(plan)
+        if (version := _dict.get('version')) is not None:
+            args['version'] = CatalogOfferingVersionReference.from_dict(version)
+        else:
+            raise ValueError('Required property \'version\' not present in VolumeSoftwareAttachmentCatalogOffering JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentCatalogOffering object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'plan') and self.plan is not None:
+            if isinstance(self.plan, dict):
+                _dict['plan'] = self.plan
+            else:
+                _dict['plan'] = self.plan.to_dict()
+        if hasattr(self, 'version') and self.version is not None:
+            if isinstance(self.version, dict):
+                _dict['version'] = self.version
+            else:
+                _dict['version'] = self.version.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentCatalogOffering object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentCatalogOffering') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentCatalogOffering') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentCollection:
+    """
+    VolumeSoftwareAttachmentCollection.
+
+    :param List[VolumeSoftwareAttachment] software_attachments: The software
+          attachments for the volume.
+    """
+
+    def __init__(
+        self,
+        software_attachments: List['VolumeSoftwareAttachment'],
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentCollection object.
+
+        :param List[VolumeSoftwareAttachment] software_attachments: The software
+               attachments for the volume.
+        """
+        self.software_attachments = software_attachments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentCollection':
+        """Initialize a VolumeSoftwareAttachmentCollection object from a json dictionary."""
+        args = {}
+        if (software_attachments := _dict.get('software_attachments')) is not None:
+            args['software_attachments'] = [VolumeSoftwareAttachment.from_dict(v) for v in software_attachments]
+        else:
+            raise ValueError('Required property \'software_attachments\' not present in VolumeSoftwareAttachmentCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'software_attachments') and self.software_attachments is not None:
+            software_attachments_list = []
+            for v in self.software_attachments:
+                if isinstance(v, dict):
+                    software_attachments_list.append(v)
+                else:
+                    software_attachments_list.append(v.to_dict())
+            _dict['software_attachments'] = software_attachments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentEntitlement:
+    """
+    The entitlement for the volume software attachment's licensable software.
+
+    :param List[VolumeSoftwareAttachmentEntitlementLicensableSoftware]
+          licensable_software: The licensable software for this volume software attachment
+          entitlement. The software will be licensed when an instance is provisioned from
+          this volume.
+    """
+
+    def __init__(
+        self,
+        licensable_software: List['VolumeSoftwareAttachmentEntitlementLicensableSoftware'],
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentEntitlement object.
+
+        :param List[VolumeSoftwareAttachmentEntitlementLicensableSoftware]
+               licensable_software: The licensable software for this volume software
+               attachment entitlement. The software will be licensed when an instance is
+               provisioned from this volume.
+        """
+        self.licensable_software = licensable_software
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentEntitlement':
+        """Initialize a VolumeSoftwareAttachmentEntitlement object from a json dictionary."""
+        args = {}
+        if (licensable_software := _dict.get('licensable_software')) is not None:
+            args['licensable_software'] = [VolumeSoftwareAttachmentEntitlementLicensableSoftware.from_dict(v) for v in licensable_software]
+        else:
+            raise ValueError('Required property \'licensable_software\' not present in VolumeSoftwareAttachmentEntitlement JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentEntitlement object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'licensable_software') and self.licensable_software is not None:
+            licensable_software_list = []
+            for v in self.licensable_software:
+                if isinstance(v, dict):
+                    licensable_software_list.append(v)
+                else:
+                    licensable_software_list.append(v.to_dict())
+            _dict['licensable_software'] = licensable_software_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentEntitlement object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentEntitlement') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentEntitlement') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentEntitlementLicensableSoftware:
+    """
+    VolumeSoftwareAttachmentEntitlementLicensableSoftware.
+
+    :param str sku: The SKU for this licensable software.
+    :param VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor vendor:
+    """
+
+    def __init__(
+        self,
+        sku: str,
+        vendor: 'VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor',
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftware object.
+
+        :param str sku: The SKU for this licensable software.
+        :param VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor vendor:
+        """
+        self.sku = sku
+        self.vendor = vendor
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentEntitlementLicensableSoftware':
+        """Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftware object from a json dictionary."""
+        args = {}
+        if (sku := _dict.get('sku')) is not None:
+            args['sku'] = sku
+        else:
+            raise ValueError('Required property \'sku\' not present in VolumeSoftwareAttachmentEntitlementLicensableSoftware JSON')
+        if (vendor := _dict.get('vendor')) is not None:
+            args['vendor'] = VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor.from_dict(vendor)
+        else:
+            raise ValueError('Required property \'vendor\' not present in VolumeSoftwareAttachmentEntitlementLicensableSoftware JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftware object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'sku') and self.sku is not None:
+            _dict['sku'] = self.sku
+        if hasattr(self, 'vendor') and self.vendor is not None:
+            if isinstance(self.vendor, dict):
+                _dict['vendor'] = self.vendor
+            else:
+                _dict['vendor'] = self.vendor.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentEntitlementLicensableSoftware object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentEntitlementLicensableSoftware') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentEntitlementLicensableSoftware') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor:
+    """
+    VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor.
+
+    :param str name: The name of the vendor providing this licensable software.
+    """
+
+    def __init__(
+        self,
+        name: str,
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor object.
+
+        :param str name: The name of the vendor providing this licensable software.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor':
+        """Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentEntitlementLicensableSoftwareVendor') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentPatch:
+    """
+    VolumeSoftwareAttachmentPatch.
+
+    :param str name: (optional) The name for this volume software attachment. The
+          name must not be used by another software attachment for this volume.
+    """
+
+    def __init__(
+        self,
+        *,
+        name: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentPatch object.
+
+        :param str name: (optional) The name for this volume software attachment.
+               The name must not be used by another software attachment for this volume.
+        """
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentPatch':
+        """Initialize a VolumeSoftwareAttachmentPatch object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VolumeSoftwareAttachmentReference:
+    """
+    VolumeSoftwareAttachmentReference.
+
+    :param Deleted deleted: (optional) If present, this property indicates the
+          referenced resource has been deleted, and provides
+          some supplementary information.
+    :param str href: The URL for this volume software attachment.
+    :param str id: The unique identifier for this volume software attachment.
+    :param str name: The name for this volume software attachment. The name is
+          unique across all software attachments for the volume.
+    :param str resource_type: The resource type.
+    """
+
+    def __init__(
+        self,
+        href: str,
+        id: str,
+        name: str,
+        resource_type: str,
+        *,
+        deleted: Optional['Deleted'] = None,
+    ) -> None:
+        """
+        Initialize a VolumeSoftwareAttachmentReference object.
+
+        :param str href: The URL for this volume software attachment.
+        :param str id: The unique identifier for this volume software attachment.
+        :param str name: The name for this volume software attachment. The name is
+               unique across all software attachments for the volume.
+        :param str resource_type: The resource type.
+        :param Deleted deleted: (optional) If present, this property indicates the
+               referenced resource has been deleted, and provides
+               some supplementary information.
+        """
+        self.deleted = deleted
+        self.href = href
+        self.id = id
+        self.name = name
+        self.resource_type = resource_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VolumeSoftwareAttachmentReference':
+        """Initialize a VolumeSoftwareAttachmentReference object from a json dictionary."""
+        args = {}
+        if (deleted := _dict.get('deleted')) is not None:
+            args['deleted'] = Deleted.from_dict(deleted)
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in VolumeSoftwareAttachmentReference JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in VolumeSoftwareAttachmentReference JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VolumeSoftwareAttachmentReference JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VolumeSoftwareAttachmentReference JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VolumeSoftwareAttachmentReference object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'deleted') and self.deleted is not None:
+            if isinstance(self.deleted, dict):
+                _dict['deleted'] = self.deleted
+            else:
+                _dict['deleted'] = self.deleted.to_dict()
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VolumeSoftwareAttachmentReference object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VolumeSoftwareAttachmentReference') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VolumeSoftwareAttachmentReference') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VOLUME_SOFTWARE_ATTACHMENT = 'volume_software_attachment'
+
 
 
 class VolumeStatusReason:
@@ -171840,9 +174097,13 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionDynamicRouteModePrototype
     :param str psk: The pre-shared key.
     :param bool distribute_traffic: (optional) Indicates whether the traffic is
           distributed between the `up` tunnels of the VPN gateway connection when the VPC
-          route's next hop is a VPN connection. If `false`, the traffic is only routed
-          through the `up` tunnel with the lower `public_ip` address. Before enabling it
-          on VPN connections to on-prem private networks, review
+          route's next hop is a VPN connection.
+          For a `zonal` VPN gateway, if `false`, the traffic is only routed through the
+          `up` tunnel with the lower `public_ip` address.
+          For a `regional` VPN gateway, if `true`, traffic is distributed across both VPN
+          members (ECMP mode). If `false`, only the first member of the VPN gateway
+          handles all the traffic (deterministic mode).
+          Before enabling it on VPN connections to on-prem private networks, review
           [distributing traffic
           restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
     :param VPNGatewayConnectionDynamicRouteModeLocalPrototype local: (optional)
@@ -171901,9 +174162,13 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionDynamicRouteModePrototype
                unspecified, the name will be a hyphenated list of randomly-selected words.
         :param bool distribute_traffic: (optional) Indicates whether the traffic is
                distributed between the `up` tunnels of the VPN gateway connection when the
-               VPC route's next hop is a VPN connection. If `false`, the traffic is only
-               routed through the `up` tunnel with the lower `public_ip` address. Before
-               enabling it on VPN connections to on-prem private networks, review
+               VPC route's next hop is a VPN connection.
+               For a `zonal` VPN gateway, if `false`, the traffic is only routed through
+               the `up` tunnel with the lower `public_ip` address.
+               For a `regional` VPN gateway, if `true`, traffic is distributed across both
+               VPN members (ECMP mode). If `false`, only the first member of the VPN
+               gateway handles all the traffic (deterministic mode).
+               Before enabling it on VPN connections to on-prem private networks, review
                [distributing traffic
                restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
         :param VPNGatewayConnectionDynamicRouteModeLocalPrototype local: (optional)
@@ -172274,9 +174539,13 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype(
     :param str psk: The pre-shared key.
     :param bool distribute_traffic: (optional) Indicates whether the traffic is
           distributed between the `up` tunnels of the VPN gateway connection when the VPC
-          route's next hop is a VPN connection. If `false`, the traffic is only routed
-          through the `up` tunnel with the lower `public_ip` address. Before enabling it
-          on VPN connections to on-prem private networks, review
+          route's next hop is a VPN connection.
+          For a `zonal` VPN gateway, if `false`, the traffic is only routed through the
+          `up` tunnel with the lower `public_ip` address.
+          For a `regional` VPN gateway, if `true`, traffic is distributed across both VPN
+          members (ECMP mode). If `false`, only the first member of the VPN gateway
+          handles all the traffic (deterministic mode).
+          Before enabling it on VPN connections to on-prem private networks, review
           [distributing traffic
           restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
     :param VPNGatewayConnectionStaticRouteModeLocalPrototype local: (optional)
@@ -172326,9 +174595,13 @@ class VPNGatewayConnectionPrototypeVPNGatewayConnectionStaticRouteModePrototype(
                unspecified, the name will be a hyphenated list of randomly-selected words.
         :param bool distribute_traffic: (optional) Indicates whether the traffic is
                distributed between the `up` tunnels of the VPN gateway connection when the
-               VPC route's next hop is a VPN connection. If `false`, the traffic is only
-               routed through the `up` tunnel with the lower `public_ip` address. Before
-               enabling it on VPN connections to on-prem private networks, review
+               VPC route's next hop is a VPN connection.
+               For a `zonal` VPN gateway, if `false`, the traffic is only routed through
+               the `up` tunnel with the lower `public_ip` address.
+               For a `regional` VPN gateway, if `true`, traffic is distributed across both
+               VPN members (ECMP mode). If `false`, only the first member of the VPN
+               gateway handles all the traffic (deterministic mode).
+               Before enabling it on VPN connections to on-prem private networks, review
                [distributing traffic
                restrictions](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-limitations#distributing-traffic-restrictions).
         :param VPNGatewayConnectionStaticRouteModeLocalPrototype local: (optional)
@@ -173030,9 +175303,242 @@ class VPNGatewayConnectionStaticRouteModePeerVPNGatewayConnectionPeerByFQDN(VPNG
 
 
 
-class VPNGatewayPolicyMode(VPNGateway):
+class VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext(VPNGatewayMemberPrivateIPPrototype):
     """
-    VPNGatewayPolicyMode.
+    VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext.
+
+    :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+    """
+
+    def __init__(
+        self,
+        subnet: 'SubnetIdentity',
+    ) -> None:
+        """
+        Initialize a VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext object.
+
+        :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+        """
+        # pylint: disable=super-init-not-called
+        self.subnet = subnet
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext':
+        """Initialize a VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext object from a json dictionary."""
+        args = {}
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = subnet
+        else:
+            raise ValueError('Required property \'subnet\' not present in VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayMemberPrivateIPPrototypeReservedIPPrototypeVPNGatewayContext') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMember(VPNGatewayPrototype):
+    """
+    VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMember.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `regional`: The VPN gateway is deployed across multiple zones in the region.
+          This mode
+            provides zone-level redundancy.
+    :param List[VPNGatewayMemberPrototype] members: The members to use for the VPN
+          gateway.
+    """
+
+    def __init__(
+        self,
+        availability_mode: str,
+        members: List['VPNGatewayMemberPrototype'],
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMember object.
+
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `regional`: The VPN gateway is deployed across multiple zones in the
+               region. This mode
+                 provides zone-level redundancy.
+        :param List[VPNGatewayMemberPrototype] members: The members to use for the
+               VPN gateway.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype'])
+        )
+        raise Exception(msg)
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `regional`: The VPN gateway is deployed across multiple zones in the region.
+        This mode
+          provides zone-level redundancy.
+        """
+
+        REGIONAL = 'regional'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember(VPNGatewayPrototype):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param List[VPNGatewayMemberPrototype] members: The members to use for the VPN
+          gateway. All members must reside in the same subnet.
+    """
+
+    def __init__(
+        self,
+        members: List['VPNGatewayMemberPrototype'],
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember object.
+
+        :param List[VPNGatewayMemberPrototype] members: The members to use for the
+               VPN gateway. All members must reside in the same subnet.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype', 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype'])
+        )
+        raise Exception(msg)
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet(VPNGatewayPrototype):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+    """
+
+    def __init__(
+        self,
+        subnet: 'SubnetIdentity',
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet object.
+
+        :param SubnetIdentity subnet: Identifies a subnet by a unique property.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype', 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype'])
+        )
+        raise Exception(msg)
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+
+class VPNGatewayRegionalAvailabilityMode(VPNGateway):
+    """
+    VPNGatewayRegionalAvailabilityMode.
 
     :param List[VPNGatewayConnectionReference] connections: The connections for this
           VPN gateway.
@@ -173062,9 +175568,12 @@ class VPNGatewayPolicyMode(VPNGateway):
     :param ResourceGroupReference resource_group: The resource group for this VPN
           gateway.
     :param str resource_type: The resource type.
-    :param SubnetReference subnet:
+    :param SubnetReference subnet: (optional)
     :param VPCReference vpc: The VPC this VPN gateway resides in.
-    :param str mode: The mode for this VPN gateway.
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `regional`: The VPN gateway is deployed across multiple zones in the region.
+          This mode
+            provides zone-level redundancy.
     """
 
     def __init__(
@@ -173082,12 +175591,13 @@ class VPNGatewayPolicyMode(VPNGateway):
         name: str,
         resource_group: 'ResourceGroupReference',
         resource_type: str,
-        subnet: 'SubnetReference',
         vpc: 'VPCReference',
-        mode: str,
+        availability_mode: str,
+        *,
+        subnet: Optional['SubnetReference'] = None,
     ) -> None:
         """
-        Initialize a VPNGatewayPolicyMode object.
+        Initialize a VPNGatewayRegionalAvailabilityMode object.
 
         :param List[VPNGatewayConnectionReference] connections: The connections for
                this VPN gateway.
@@ -173119,190 +175629,18 @@ class VPNGatewayPolicyMode(VPNGateway):
         :param ResourceGroupReference resource_group: The resource group for this
                VPN gateway.
         :param str resource_type: The resource type.
-        :param SubnetReference subnet:
         :param VPCReference vpc: The VPC this VPN gateway resides in.
-        :param str mode: The mode for this VPN gateway.
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `regional`: The VPN gateway is deployed across multiple zones in the
+               region. This mode
+                 provides zone-level redundancy.
+        :param SubnetReference subnet: (optional)
         """
         # pylint: disable=super-init-not-called
-        self.connections = connections
-        self.created_at = created_at
-        self.crn = crn
-        self.health_reasons = health_reasons
-        self.health_state = health_state
-        self.href = href
-        self.id = id
-        self.lifecycle_reasons = lifecycle_reasons
-        self.lifecycle_state = lifecycle_state
-        self.members = members
-        self.name = name
-        self.resource_group = resource_group
-        self.resource_type = resource_type
-        self.subnet = subnet
-        self.vpc = vpc
-        self.mode = mode
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPolicyMode':
-        """Initialize a VPNGatewayPolicyMode object from a json dictionary."""
-        args = {}
-        if (connections := _dict.get('connections')) is not None:
-            args['connections'] = [VPNGatewayConnectionReference.from_dict(v) for v in connections]
-        else:
-            raise ValueError('Required property \'connections\' not present in VPNGatewayPolicyMode JSON')
-        if (created_at := _dict.get('created_at')) is not None:
-            args['created_at'] = string_to_datetime(created_at)
-        else:
-            raise ValueError('Required property \'created_at\' not present in VPNGatewayPolicyMode JSON')
-        if (crn := _dict.get('crn')) is not None:
-            args['crn'] = crn
-        else:
-            raise ValueError('Required property \'crn\' not present in VPNGatewayPolicyMode JSON')
-        if (health_reasons := _dict.get('health_reasons')) is not None:
-            args['health_reasons'] = [VPNGatewayHealthReason.from_dict(v) for v in health_reasons]
-        else:
-            raise ValueError('Required property \'health_reasons\' not present in VPNGatewayPolicyMode JSON')
-        if (health_state := _dict.get('health_state')) is not None:
-            args['health_state'] = health_state
-        else:
-            raise ValueError('Required property \'health_state\' not present in VPNGatewayPolicyMode JSON')
-        if (href := _dict.get('href')) is not None:
-            args['href'] = href
-        else:
-            raise ValueError('Required property \'href\' not present in VPNGatewayPolicyMode JSON')
-        if (id := _dict.get('id')) is not None:
-            args['id'] = id
-        else:
-            raise ValueError('Required property \'id\' not present in VPNGatewayPolicyMode JSON')
-        if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
-            args['lifecycle_reasons'] = [VPNGatewayLifecycleReason.from_dict(v) for v in lifecycle_reasons]
-        else:
-            raise ValueError('Required property \'lifecycle_reasons\' not present in VPNGatewayPolicyMode JSON')
-        if (lifecycle_state := _dict.get('lifecycle_state')) is not None:
-            args['lifecycle_state'] = lifecycle_state
-        else:
-            raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayPolicyMode JSON')
-        if (members := _dict.get('members')) is not None:
-            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
-        else:
-            raise ValueError('Required property \'members\' not present in VPNGatewayPolicyMode JSON')
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
-        else:
-            raise ValueError('Required property \'name\' not present in VPNGatewayPolicyMode JSON')
-        if (resource_group := _dict.get('resource_group')) is not None:
-            args['resource_group'] = ResourceGroupReference.from_dict(resource_group)
-        else:
-            raise ValueError('Required property \'resource_group\' not present in VPNGatewayPolicyMode JSON')
-        if (resource_type := _dict.get('resource_type')) is not None:
-            args['resource_type'] = resource_type
-        else:
-            raise ValueError('Required property \'resource_type\' not present in VPNGatewayPolicyMode JSON')
-        if (subnet := _dict.get('subnet')) is not None:
-            args['subnet'] = SubnetReference.from_dict(subnet)
-        else:
-            raise ValueError('Required property \'subnet\' not present in VPNGatewayPolicyMode JSON')
-        if (vpc := _dict.get('vpc')) is not None:
-            args['vpc'] = VPCReference.from_dict(vpc)
-        else:
-            raise ValueError('Required property \'vpc\' not present in VPNGatewayPolicyMode JSON')
-        if (mode := _dict.get('mode')) is not None:
-            args['mode'] = mode
-        else:
-            raise ValueError('Required property \'mode\' not present in VPNGatewayPolicyMode JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayPolicyMode object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'connections') and self.connections is not None:
-            connections_list = []
-            for v in self.connections:
-                if isinstance(v, dict):
-                    connections_list.append(v)
-                else:
-                    connections_list.append(v.to_dict())
-            _dict['connections'] = connections_list
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'health_reasons') and self.health_reasons is not None:
-            health_reasons_list = []
-            for v in self.health_reasons:
-                if isinstance(v, dict):
-                    health_reasons_list.append(v)
-                else:
-                    health_reasons_list.append(v.to_dict())
-            _dict['health_reasons'] = health_reasons_list
-        if hasattr(self, 'health_state') and self.health_state is not None:
-            _dict['health_state'] = self.health_state
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
-            lifecycle_reasons_list = []
-            for v in self.lifecycle_reasons:
-                if isinstance(v, dict):
-                    lifecycle_reasons_list.append(v)
-                else:
-                    lifecycle_reasons_list.append(v.to_dict())
-            _dict['lifecycle_reasons'] = lifecycle_reasons_list
-        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
-            _dict['lifecycle_state'] = self.lifecycle_state
-        if hasattr(self, 'members') and self.members is not None:
-            members_list = []
-            for v in self.members:
-                if isinstance(v, dict):
-                    members_list.append(v)
-                else:
-                    members_list.append(v.to_dict())
-            _dict['members'] = members_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'subnet') and self.subnet is not None:
-            if isinstance(self.subnet, dict):
-                _dict['subnet'] = self.subnet
-            else:
-                _dict['subnet'] = self.subnet.to_dict()
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'mode') and self.mode is not None:
-            _dict['mode'] = self.mode
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayPolicyMode object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayPolicyMode') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayPolicyMode') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode'])
+        )
+        raise Exception(msg)
 
     class HealthStateEnum(str, Enum):
         """
@@ -173344,597 +175682,15 @@ class VPNGatewayPolicyMode(VPNGateway):
         VPN_GATEWAY = 'vpn_gateway'
 
 
-    class ModeEnum(str, Enum):
+    class AvailabilityModeEnum(str, Enum):
         """
-        The mode for this VPN gateway.
-        """
-
-        POLICY = 'policy'
-
-
-
-class VPNGatewayPrototypeVPNGatewayPolicyModePrototype(VPNGatewayPrototype):
-    """
-    VPNGatewayPrototypeVPNGatewayPolicyModePrototype.
-
-    :param str name: (optional) The name for this VPN gateway. The name must not be
-          used by another VPN gateway in the VPC. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
-    :param ResourceGroupIdentity resource_group: (optional)
-    :param SubnetIdentity subnet:
-    :param str mode: The mode for this VPN gateway.
-    """
-
-    def __init__(
-        self,
-        subnet: 'SubnetIdentity',
-        mode: str,
-        *,
-        name: Optional[str] = None,
-        resource_group: Optional['ResourceGroupIdentity'] = None,
-    ) -> None:
-        """
-        Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object.
-
-        :param SubnetIdentity subnet:
-        :param str mode: The mode for this VPN gateway.
-        :param str name: (optional) The name for this VPN gateway. The name must
-               not be used by another VPN gateway in the VPC. If unspecified, the name
-               will be a hyphenated list of randomly-selected words.
-        :param ResourceGroupIdentity resource_group: (optional)
-        """
-        # pylint: disable=super-init-not-called
-        self.name = name
-        self.resource_group = resource_group
-        self.subnet = subnet
-        self.mode = mode
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype':
-        """Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object from a json dictionary."""
-        args = {}
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
-        if (resource_group := _dict.get('resource_group')) is not None:
-            args['resource_group'] = resource_group
-        if (subnet := _dict.get('subnet')) is not None:
-            args['subnet'] = subnet
-        else:
-            raise ValueError('Required property \'subnet\' not present in VPNGatewayPrototypeVPNGatewayPolicyModePrototype JSON')
-        if (mode := _dict.get('mode')) is not None:
-            args['mode'] = mode
-        else:
-            raise ValueError('Required property \'mode\' not present in VPNGatewayPrototypeVPNGatewayPolicyModePrototype JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayPrototypeVPNGatewayPolicyModePrototype object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'subnet') and self.subnet is not None:
-            if isinstance(self.subnet, dict):
-                _dict['subnet'] = self.subnet
-            else:
-                _dict['subnet'] = self.subnet.to_dict()
-        if hasattr(self, 'mode') and self.mode is not None:
-            _dict['mode'] = self.mode
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayPolicyModePrototype object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayPolicyModePrototype') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class ModeEnum(str, Enum):
-        """
-        The mode for this VPN gateway.
+        The availability mode of the VPN gateway:
+        - `regional`: The VPN gateway is deployed across multiple zones in the region.
+        This mode
+          provides zone-level redundancy.
         """
 
-        POLICY = 'policy'
-
-
-
-class VPNGatewayPrototypeVPNGatewayRouteModePrototype(VPNGatewayPrototype):
-    """
-    VPNGatewayPrototypeVPNGatewayRouteModePrototype.
-
-    :param str name: (optional) The name for this VPN gateway. The name must not be
-          used by another VPN gateway in the VPC. If unspecified, the name will be a
-          hyphenated list of randomly-selected words.
-    :param ResourceGroupIdentity resource_group: (optional)
-    :param SubnetIdentity subnet:
-    :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
-          through any enabled routing protocol (for example, BGP). The routing protocol
-          will advertise routes with these CIDRs as route destinations.
-    :param int local_asn: (optional) The local autonomous system number (ASN) for
-          this VPN gateway and its connections. The ASN values in the
-          [restricted ASN list](
-          https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
-          are reserved and unavailable.
-    :param str mode: (optional) The mode for this VPN gateway.
-    """
-
-    def __init__(
-        self,
-        subnet: 'SubnetIdentity',
-        *,
-        name: Optional[str] = None,
-        resource_group: Optional['ResourceGroupIdentity'] = None,
-        advertised_cidrs: Optional[List[str]] = None,
-        local_asn: Optional[int] = None,
-        mode: Optional[str] = None,
-    ) -> None:
-        """
-        Initialize a VPNGatewayPrototypeVPNGatewayRouteModePrototype object.
-
-        :param SubnetIdentity subnet:
-        :param str name: (optional) The name for this VPN gateway. The name must
-               not be used by another VPN gateway in the VPC. If unspecified, the name
-               will be a hyphenated list of randomly-selected words.
-        :param ResourceGroupIdentity resource_group: (optional)
-        :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
-               through any enabled routing protocol (for example, BGP). The routing
-               protocol will advertise routes with these CIDRs as route destinations.
-        :param int local_asn: (optional) The local autonomous system number (ASN)
-               for this VPN gateway and its connections. The ASN values in the
-               [restricted ASN list](
-               https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
-               are reserved and unavailable.
-        :param str mode: (optional) The mode for this VPN gateway.
-        """
-        # pylint: disable=super-init-not-called
-        self.name = name
-        self.resource_group = resource_group
-        self.subnet = subnet
-        self.advertised_cidrs = advertised_cidrs
-        self.local_asn = local_asn
-        self.mode = mode
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayRouteModePrototype':
-        """Initialize a VPNGatewayPrototypeVPNGatewayRouteModePrototype object from a json dictionary."""
-        args = {}
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
-        if (resource_group := _dict.get('resource_group')) is not None:
-            args['resource_group'] = resource_group
-        if (subnet := _dict.get('subnet')) is not None:
-            args['subnet'] = subnet
-        else:
-            raise ValueError('Required property \'subnet\' not present in VPNGatewayPrototypeVPNGatewayRouteModePrototype JSON')
-        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
-            args['advertised_cidrs'] = advertised_cidrs
-        if (local_asn := _dict.get('local_asn')) is not None:
-            args['local_asn'] = local_asn
-        if (mode := _dict.get('mode')) is not None:
-            args['mode'] = mode
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayPrototypeVPNGatewayRouteModePrototype object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'subnet') and self.subnet is not None:
-            if isinstance(self.subnet, dict):
-                _dict['subnet'] = self.subnet
-            else:
-                _dict['subnet'] = self.subnet.to_dict()
-        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
-            _dict['advertised_cidrs'] = self.advertised_cidrs
-        if hasattr(self, 'local_asn') and self.local_asn is not None:
-            _dict['local_asn'] = self.local_asn
-        if hasattr(self, 'mode') and self.mode is not None:
-            _dict['mode'] = self.mode
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayRouteModePrototype object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayRouteModePrototype') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayRouteModePrototype') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class ModeEnum(str, Enum):
-        """
-        The mode for this VPN gateway.
-        """
-
-        ROUTE = 'route'
-
-
-
-class VPNGatewayRouteMode(VPNGateway):
-    """
-    VPNGatewayRouteMode.
-
-    :param List[VPNGatewayConnectionReference] connections: The connections for this
-          VPN gateway.
-    :param datetime created_at: The date and time that this VPN gateway was created.
-    :param str crn: The CRN for this VPN gateway.
-    :param List[VPNGatewayHealthReason] health_reasons: The reasons for the current
-          `health_state` (if any).
-    :param str health_state: The health of this resource:
-          - `ok`: No abnormal behavior detected
-          - `degraded`: Experiencing compromised performance, capacity, or connectivity
-          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
-          incapacitated
-          - `inapplicable`: The health state does not apply because of the current
-          lifecycle
-             state. A resource with a lifecycle state of `failed` or `deleting` will have
-          a
-             health state of `inapplicable`. A `pending` resource may also have this
-          state.
-    :param str href: The URL for this VPN gateway.
-    :param str id: The unique identifier for this VPN gateway.
-    :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for the
-          current `lifecycle_state` (if any).
-    :param str lifecycle_state: The lifecycle state of the VPN gateway.
-    :param List[VPNGatewayMember] members: The members for the VPN gateway.
-    :param str name: The name for this VPN gateway. The name is unique across all
-          VPN gateways in the VPC.
-    :param ResourceGroupReference resource_group: The resource group for this VPN
-          gateway.
-    :param str resource_type: The resource type.
-    :param SubnetReference subnet:
-    :param VPCReference vpc: The VPC this VPN gateway resides in.
-    :param List[str] advertised_cidrs: The static CIDRs advertised through any
-          enabled routing protocol (for example, BGP). The routing protocol will advertise
-          routes with these CIDRs as route destinations.
-    :param int local_asn: The local autonomous system number (ASN) for this VPN
-          gateway and its connections.
-    :param str mode: The mode for this VPN gateway.
-    """
-
-    def __init__(
-        self,
-        connections: List['VPNGatewayConnectionReference'],
-        created_at: datetime,
-        crn: str,
-        health_reasons: List['VPNGatewayHealthReason'],
-        health_state: str,
-        href: str,
-        id: str,
-        lifecycle_reasons: List['VPNGatewayLifecycleReason'],
-        lifecycle_state: str,
-        members: List['VPNGatewayMember'],
-        name: str,
-        resource_group: 'ResourceGroupReference',
-        resource_type: str,
-        subnet: 'SubnetReference',
-        vpc: 'VPCReference',
-        advertised_cidrs: List[str],
-        local_asn: int,
-        mode: str,
-    ) -> None:
-        """
-        Initialize a VPNGatewayRouteMode object.
-
-        :param List[VPNGatewayConnectionReference] connections: The connections for
-               this VPN gateway.
-        :param datetime created_at: The date and time that this VPN gateway was
-               created.
-        :param str crn: The CRN for this VPN gateway.
-        :param List[VPNGatewayHealthReason] health_reasons: The reasons for the
-               current `health_state` (if any).
-        :param str health_state: The health of this resource:
-               - `ok`: No abnormal behavior detected
-               - `degraded`: Experiencing compromised performance, capacity, or
-               connectivity
-               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
-               incapacitated
-               - `inapplicable`: The health state does not apply because of the current
-               lifecycle
-                  state. A resource with a lifecycle state of `failed` or `deleting` will
-               have a
-                  health state of `inapplicable`. A `pending` resource may also have this
-               state.
-        :param str href: The URL for this VPN gateway.
-        :param str id: The unique identifier for this VPN gateway.
-        :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for
-               the current `lifecycle_state` (if any).
-        :param str lifecycle_state: The lifecycle state of the VPN gateway.
-        :param List[VPNGatewayMember] members: The members for the VPN gateway.
-        :param str name: The name for this VPN gateway. The name is unique across
-               all VPN gateways in the VPC.
-        :param ResourceGroupReference resource_group: The resource group for this
-               VPN gateway.
-        :param str resource_type: The resource type.
-        :param SubnetReference subnet:
-        :param VPCReference vpc: The VPC this VPN gateway resides in.
-        :param List[str] advertised_cidrs: The static CIDRs advertised through any
-               enabled routing protocol (for example, BGP). The routing protocol will
-               advertise routes with these CIDRs as route destinations.
-        :param int local_asn: The local autonomous system number (ASN) for this VPN
-               gateway and its connections.
-        :param str mode: The mode for this VPN gateway.
-        """
-        # pylint: disable=super-init-not-called
-        self.connections = connections
-        self.created_at = created_at
-        self.crn = crn
-        self.health_reasons = health_reasons
-        self.health_state = health_state
-        self.href = href
-        self.id = id
-        self.lifecycle_reasons = lifecycle_reasons
-        self.lifecycle_state = lifecycle_state
-        self.members = members
-        self.name = name
-        self.resource_group = resource_group
-        self.resource_type = resource_type
-        self.subnet = subnet
-        self.vpc = vpc
-        self.advertised_cidrs = advertised_cidrs
-        self.local_asn = local_asn
-        self.mode = mode
-
-    @classmethod
-    def from_dict(cls, _dict: Dict) -> 'VPNGatewayRouteMode':
-        """Initialize a VPNGatewayRouteMode object from a json dictionary."""
-        args = {}
-        if (connections := _dict.get('connections')) is not None:
-            args['connections'] = [VPNGatewayConnectionReference.from_dict(v) for v in connections]
-        else:
-            raise ValueError('Required property \'connections\' not present in VPNGatewayRouteMode JSON')
-        if (created_at := _dict.get('created_at')) is not None:
-            args['created_at'] = string_to_datetime(created_at)
-        else:
-            raise ValueError('Required property \'created_at\' not present in VPNGatewayRouteMode JSON')
-        if (crn := _dict.get('crn')) is not None:
-            args['crn'] = crn
-        else:
-            raise ValueError('Required property \'crn\' not present in VPNGatewayRouteMode JSON')
-        if (health_reasons := _dict.get('health_reasons')) is not None:
-            args['health_reasons'] = [VPNGatewayHealthReason.from_dict(v) for v in health_reasons]
-        else:
-            raise ValueError('Required property \'health_reasons\' not present in VPNGatewayRouteMode JSON')
-        if (health_state := _dict.get('health_state')) is not None:
-            args['health_state'] = health_state
-        else:
-            raise ValueError('Required property \'health_state\' not present in VPNGatewayRouteMode JSON')
-        if (href := _dict.get('href')) is not None:
-            args['href'] = href
-        else:
-            raise ValueError('Required property \'href\' not present in VPNGatewayRouteMode JSON')
-        if (id := _dict.get('id')) is not None:
-            args['id'] = id
-        else:
-            raise ValueError('Required property \'id\' not present in VPNGatewayRouteMode JSON')
-        if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
-            args['lifecycle_reasons'] = [VPNGatewayLifecycleReason.from_dict(v) for v in lifecycle_reasons]
-        else:
-            raise ValueError('Required property \'lifecycle_reasons\' not present in VPNGatewayRouteMode JSON')
-        if (lifecycle_state := _dict.get('lifecycle_state')) is not None:
-            args['lifecycle_state'] = lifecycle_state
-        else:
-            raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayRouteMode JSON')
-        if (members := _dict.get('members')) is not None:
-            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
-        else:
-            raise ValueError('Required property \'members\' not present in VPNGatewayRouteMode JSON')
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
-        else:
-            raise ValueError('Required property \'name\' not present in VPNGatewayRouteMode JSON')
-        if (resource_group := _dict.get('resource_group')) is not None:
-            args['resource_group'] = ResourceGroupReference.from_dict(resource_group)
-        else:
-            raise ValueError('Required property \'resource_group\' not present in VPNGatewayRouteMode JSON')
-        if (resource_type := _dict.get('resource_type')) is not None:
-            args['resource_type'] = resource_type
-        else:
-            raise ValueError('Required property \'resource_type\' not present in VPNGatewayRouteMode JSON')
-        if (subnet := _dict.get('subnet')) is not None:
-            args['subnet'] = SubnetReference.from_dict(subnet)
-        else:
-            raise ValueError('Required property \'subnet\' not present in VPNGatewayRouteMode JSON')
-        if (vpc := _dict.get('vpc')) is not None:
-            args['vpc'] = VPCReference.from_dict(vpc)
-        else:
-            raise ValueError('Required property \'vpc\' not present in VPNGatewayRouteMode JSON')
-        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
-            args['advertised_cidrs'] = advertised_cidrs
-        else:
-            raise ValueError('Required property \'advertised_cidrs\' not present in VPNGatewayRouteMode JSON')
-        if (local_asn := _dict.get('local_asn')) is not None:
-            args['local_asn'] = local_asn
-        else:
-            raise ValueError('Required property \'local_asn\' not present in VPNGatewayRouteMode JSON')
-        if (mode := _dict.get('mode')) is not None:
-            args['mode'] = mode
-        else:
-            raise ValueError('Required property \'mode\' not present in VPNGatewayRouteMode JSON')
-        return cls(**args)
-
-    @classmethod
-    def _from_dict(cls, _dict):
-        """Initialize a VPNGatewayRouteMode object from a json dictionary."""
-        return cls.from_dict(_dict)
-
-    def to_dict(self) -> Dict:
-        """Return a json dictionary representing this model."""
-        _dict = {}
-        if hasattr(self, 'connections') and self.connections is not None:
-            connections_list = []
-            for v in self.connections:
-                if isinstance(v, dict):
-                    connections_list.append(v)
-                else:
-                    connections_list.append(v.to_dict())
-            _dict['connections'] = connections_list
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = datetime_to_string(self.created_at)
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'health_reasons') and self.health_reasons is not None:
-            health_reasons_list = []
-            for v in self.health_reasons:
-                if isinstance(v, dict):
-                    health_reasons_list.append(v)
-                else:
-                    health_reasons_list.append(v.to_dict())
-            _dict['health_reasons'] = health_reasons_list
-        if hasattr(self, 'health_state') and self.health_state is not None:
-            _dict['health_state'] = self.health_state
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
-        if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
-            lifecycle_reasons_list = []
-            for v in self.lifecycle_reasons:
-                if isinstance(v, dict):
-                    lifecycle_reasons_list.append(v)
-                else:
-                    lifecycle_reasons_list.append(v.to_dict())
-            _dict['lifecycle_reasons'] = lifecycle_reasons_list
-        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
-            _dict['lifecycle_state'] = self.lifecycle_state
-        if hasattr(self, 'members') and self.members is not None:
-            members_list = []
-            for v in self.members:
-                if isinstance(v, dict):
-                    members_list.append(v)
-                else:
-                    members_list.append(v.to_dict())
-            _dict['members'] = members_list
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'resource_group') and self.resource_group is not None:
-            if isinstance(self.resource_group, dict):
-                _dict['resource_group'] = self.resource_group
-            else:
-                _dict['resource_group'] = self.resource_group.to_dict()
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'subnet') and self.subnet is not None:
-            if isinstance(self.subnet, dict):
-                _dict['subnet'] = self.subnet
-            else:
-                _dict['subnet'] = self.subnet.to_dict()
-        if hasattr(self, 'vpc') and self.vpc is not None:
-            if isinstance(self.vpc, dict):
-                _dict['vpc'] = self.vpc
-            else:
-                _dict['vpc'] = self.vpc.to_dict()
-        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
-            _dict['advertised_cidrs'] = self.advertised_cidrs
-        if hasattr(self, 'local_asn') and self.local_asn is not None:
-            _dict['local_asn'] = self.local_asn
-        if hasattr(self, 'mode') and self.mode is not None:
-            _dict['mode'] = self.mode
-        return _dict
-
-    def _to_dict(self):
-        """Return a json dictionary representing this model."""
-        return self.to_dict()
-
-    def __str__(self) -> str:
-        """Return a `str` version of this VPNGatewayRouteMode object."""
-        return json.dumps(self.to_dict(), indent=2)
-
-    def __eq__(self, other: 'VPNGatewayRouteMode') -> bool:
-        """Return `true` when self and other are equal, false otherwise."""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __ne__(self, other: 'VPNGatewayRouteMode') -> bool:
-        """Return `true` when self and other are not equal, false otherwise."""
-        return not self == other
-
-    class HealthStateEnum(str, Enum):
-        """
-        The health of this resource:
-        - `ok`: No abnormal behavior detected
-        - `degraded`: Experiencing compromised performance, capacity, or connectivity
-        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
-        incapacitated
-        - `inapplicable`: The health state does not apply because of the current lifecycle
-           state. A resource with a lifecycle state of `failed` or `deleting` will have a
-           health state of `inapplicable`. A `pending` resource may also have this state.
-        """
-
-        DEGRADED = 'degraded'
-        FAULTED = 'faulted'
-        INAPPLICABLE = 'inapplicable'
-        OK = 'ok'
-
-
-    class LifecycleStateEnum(str, Enum):
-        """
-        The lifecycle state of the VPN gateway.
-        """
-
-        DELETING = 'deleting'
-        FAILED = 'failed'
-        PENDING = 'pending'
-        STABLE = 'stable'
-        SUSPENDED = 'suspended'
-        UPDATING = 'updating'
-        WAITING = 'waiting'
-
-
-    class ResourceTypeEnum(str, Enum):
-        """
-        The resource type.
-        """
-
-        VPN_GATEWAY = 'vpn_gateway'
-
-
-    class ModeEnum(str, Enum):
-        """
-        The mode for this VPN gateway.
-        """
-
-        ROUTE = 'route'
+        REGIONAL = 'regional'
 
 
 
@@ -174023,6 +175779,163 @@ class VPNGatewayServiceConnectionCreatorTransitGatewayReference(VPNGatewayServic
         """
 
         TRANSIT_GATEWAY = 'transit_gateway'
+
+
+
+class VPNGatewayZonalAvailabilityMode(VPNGateway):
+    """
+    VPNGatewayZonalAvailabilityMode.
+
+    :param List[VPNGatewayConnectionReference] connections: The connections for this
+          VPN gateway.
+    :param datetime created_at: The date and time that this VPN gateway was created.
+    :param str crn: The CRN for this VPN gateway.
+    :param List[VPNGatewayHealthReason] health_reasons: The reasons for the current
+          `health_state` (if any).
+    :param str health_state: The health of this resource:
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
+          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+          incapacitated
+          - `inapplicable`: The health state does not apply because of the current
+          lifecycle
+             state. A resource with a lifecycle state of `failed` or `deleting` will have
+          a
+             health state of `inapplicable`. A `pending` resource may also have this
+          state.
+    :param str href: The URL for this VPN gateway.
+    :param str id: The unique identifier for this VPN gateway.
+    :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for the
+          current `lifecycle_state` (if any).
+    :param str lifecycle_state: The lifecycle state of the VPN gateway.
+    :param List[VPNGatewayMember] members: The members for the VPN gateway.
+    :param str name: The name for this VPN gateway. The name is unique across all
+          VPN gateways in the VPC.
+    :param ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :param str resource_type: The resource type.
+    :param VPCReference vpc: The VPC this VPN gateway resides in.
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetReference subnet:
+    """
+
+    def __init__(
+        self,
+        connections: List['VPNGatewayConnectionReference'],
+        created_at: datetime,
+        crn: str,
+        health_reasons: List['VPNGatewayHealthReason'],
+        health_state: str,
+        href: str,
+        id: str,
+        lifecycle_reasons: List['VPNGatewayLifecycleReason'],
+        lifecycle_state: str,
+        members: List['VPNGatewayMember'],
+        name: str,
+        resource_group: 'ResourceGroupReference',
+        resource_type: str,
+        vpc: 'VPCReference',
+        availability_mode: str,
+        subnet: 'SubnetReference',
+    ) -> None:
+        """
+        Initialize a VPNGatewayZonalAvailabilityMode object.
+
+        :param List[VPNGatewayConnectionReference] connections: The connections for
+               this VPN gateway.
+        :param datetime created_at: The date and time that this VPN gateway was
+               created.
+        :param str crn: The CRN for this VPN gateway.
+        :param List[VPNGatewayHealthReason] health_reasons: The reasons for the
+               current `health_state` (if any).
+        :param str health_state: The health of this resource:
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
+               connectivity
+               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+               incapacitated
+               - `inapplicable`: The health state does not apply because of the current
+               lifecycle
+                  state. A resource with a lifecycle state of `failed` or `deleting` will
+               have a
+                  health state of `inapplicable`. A `pending` resource may also have this
+               state.
+        :param str href: The URL for this VPN gateway.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for
+               the current `lifecycle_state` (if any).
+        :param str lifecycle_state: The lifecycle state of the VPN gateway.
+        :param List[VPNGatewayMember] members: The members for the VPN gateway.
+        :param str name: The name for this VPN gateway. The name is unique across
+               all VPN gateways in the VPC.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPCReference vpc: The VPC this VPN gateway resides in.
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        :param SubnetReference subnet:
+        """
+        # pylint: disable=super-init-not-called
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode', 'VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode'])
+        )
+        raise Exception(msg)
+
+    class HealthStateEnum(str, Enum):
+        """
+        The health of this resource:
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
+        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+        incapacitated
+        - `inapplicable`: The health state does not apply because of the current lifecycle
+           state. A resource with a lifecycle state of `failed` or `deleting` will have a
+           health state of `inapplicable`. A `pending` resource may also have this state.
+        """
+
+        DEGRADED = 'degraded'
+        FAULTED = 'faulted'
+        INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN gateway.
+        """
+
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VPN_GATEWAY = 'vpn_gateway'
+
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
 
 
 
@@ -195358,8 +197271,12 @@ class VPNGatewayConnectionRouteModeVPNGatewayConnectionDynamicRouteMode(VPNGatew
           the current VPN gateway connection status (if any).
     :param bool distribute_traffic: Indicates whether the traffic is distributed
           between the `up` tunnels of the VPN gateway connection when the VPC route's next
-          hop is a VPN connection. If `false`, the traffic is only routed through the `up`
-          tunnel with the lower `public_ip` address.
+          hop is a VPN connection.
+          For a `zonal` VPN gateway, if `false`, the traffic is only routed through the
+          `up` tunnel with the lower `public_ip` address.
+          For a `regional` VPN gateway, if `true`, traffic is distributed across both VPN
+          members (ECMP mode). If `false`, only the first member of the VPN gateway
+          handles all the traffic (deterministic mode).
     :param VPNGatewayConnectionDynamicRouteModeLocal local:
     :param VPNGatewayConnectionDynamicRouteModePeer peer:
     :param str routing_protocol: The routing protocol for this VPN gateway
@@ -195430,8 +197347,12 @@ class VPNGatewayConnectionRouteModeVPNGatewayConnectionDynamicRouteMode(VPNGatew
                for the current VPN gateway connection status (if any).
         :param bool distribute_traffic: Indicates whether the traffic is
                distributed between the `up` tunnels of the VPN gateway connection when the
-               VPC route's next hop is a VPN connection. If `false`, the traffic is only
-               routed through the `up` tunnel with the lower `public_ip` address.
+               VPC route's next hop is a VPN connection.
+               For a `zonal` VPN gateway, if `false`, the traffic is only routed through
+               the `up` tunnel with the lower `public_ip` address.
+               For a `regional` VPN gateway, if `true`, traffic is distributed across both
+               VPN members (ECMP mode). If `false`, only the first member of the VPN
+               gateway handles all the traffic (deterministic mode).
         :param VPNGatewayConnectionDynamicRouteModeLocal local:
         :param VPNGatewayConnectionDynamicRouteModePeer peer:
         :param str routing_protocol: The routing protocol for this VPN gateway
@@ -195756,8 +197677,12 @@ class VPNGatewayConnectionRouteModeVPNGatewayConnectionStaticRouteMode(VPNGatewa
           the current VPN gateway connection status (if any).
     :param bool distribute_traffic: Indicates whether the traffic is distributed
           between the `up` tunnels of the VPN gateway connection when the VPC route's next
-          hop is a VPN connection. If `false`, the traffic is only routed through the `up`
-          tunnel with the lower `public_ip` address.
+          hop is a VPN connection.
+          For a `zonal` VPN gateway, if `false`, the traffic is only routed through the
+          `up` tunnel with the lower `public_ip` address.
+          For a `regional` VPN gateway, if `true`, traffic is distributed across both VPN
+          members (ECMP mode). If `false`, only the first member of the VPN gateway
+          handles all the traffic (deterministic mode).
     :param VPNGatewayConnectionStaticRouteModeLocal local:
     :param VPNGatewayConnectionStaticRouteModePeer peer:
     :param str routing_protocol: The routing protocol for this VPN gateway
@@ -195828,8 +197753,12 @@ class VPNGatewayConnectionRouteModeVPNGatewayConnectionStaticRouteMode(VPNGatewa
                for the current VPN gateway connection status (if any).
         :param bool distribute_traffic: Indicates whether the traffic is
                distributed between the `up` tunnels of the VPN gateway connection when the
-               VPC route's next hop is a VPN connection. If `false`, the traffic is only
-               routed through the `up` tunnel with the lower `public_ip` address.
+               VPC route's next hop is a VPN connection.
+               For a `zonal` VPN gateway, if `false`, the traffic is only routed through
+               the `up` tunnel with the lower `public_ip` address.
+               For a `regional` VPN gateway, if `true`, traffic is distributed across both
+               VPN members (ECMP mode). If `false`, only the first member of the VPN
+               gateway handles all the traffic (deterministic mode).
         :param VPNGatewayConnectionStaticRouteModeLocal local:
         :param VPNGatewayConnectionStaticRouteModePeer peer:
         :param str routing_protocol: The routing protocol for this VPN gateway
@@ -196107,6 +198036,1860 @@ class VPNGatewayConnectionRouteModeVPNGatewayConnectionStaticRouteMode(VPNGatewa
         """
 
         NONE = 'none'
+
+
+
+class VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype(VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMember):
+    """
+    VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `regional`: The VPN gateway is deployed across multiple zones in the region.
+          This mode
+            provides zone-level redundancy.
+    :param List[VPNGatewayMemberPrototype] members: The members to use for the VPN
+          gateway.
+    :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+          through any enabled routing protocol (for example, BGP). The routing protocol
+          will advertise routes with these CIDRs as route destinations.
+    :param int local_asn: (optional) The local autonomous system number (ASN) for
+          this VPN gateway and its connections. The ASN values in the
+          [restricted ASN list](
+          https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+          are reserved and unavailable.
+    :param str mode: (optional) The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        availability_mode: str,
+        members: List['VPNGatewayMemberPrototype'],
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        advertised_cidrs: Optional[List[str]] = None,
+        local_asn: Optional[int] = None,
+        mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype object.
+
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `regional`: The VPN gateway is deployed across multiple zones in the
+               region. This mode
+                 provides zone-level redundancy.
+        :param List[VPNGatewayMemberPrototype] members: The members to use for the
+               VPN gateway.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+               through any enabled routing protocol (for example, BGP). The routing
+               protocol will advertise routes with these CIDRs as route destinations.
+        :param int local_asn: (optional) The local autonomous system number (ASN)
+               for this VPN gateway and its connections. The ASN values in the
+               [restricted ASN list](
+               https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+               are reserved and unavailable.
+        :param str mode: (optional) The mode for this VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.availability_mode = availability_mode
+        self.members = members
+        self.advertised_cidrs = advertised_cidrs
+        self.local_asn = local_asn
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = resource_group
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        else:
+            raise ValueError('Required property \'availability_mode\' not present in VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype JSON')
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMemberPrototype.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype JSON')
+        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
+            args['advertised_cidrs'] = advertised_cidrs
+        if (local_asn := _dict.get('local_asn')) is not None:
+            args['local_asn'] = local_asn
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
+            _dict['advertised_cidrs'] = self.advertised_cidrs
+        if hasattr(self, 'local_asn') and self.local_asn is not None:
+            _dict['local_asn'] = self.local_asn
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRegionalAvailabilityModeByMemberVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `regional`: The VPN gateway is deployed across multiple zones in the region.
+        This mode
+          provides zone-level redundancy.
+        """
+
+        REGIONAL = 'regional'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        ROUTE = 'route'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype(VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param List[VPNGatewayMemberPrototype] members: The members to use for the VPN
+          gateway. All members must reside in the same subnet.
+    :param str mode: The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        members: List['VPNGatewayMemberPrototype'],
+        mode: str,
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype object.
+
+        :param List[VPNGatewayMemberPrototype] members: The members to use for the
+               VPN gateway. All members must reside in the same subnet.
+        :param str mode: The mode for this VPN gateway.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.availability_mode = availability_mode
+        self.members = members
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = resource_group
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMemberPrototype.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype JSON')
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        else:
+            raise ValueError('Required property \'mode\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        POLICY = 'policy'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype(VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMember):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param List[VPNGatewayMemberPrototype] members: The members to use for the VPN
+          gateway. All members must reside in the same subnet.
+    :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+          through any enabled routing protocol (for example, BGP). The routing protocol
+          will advertise routes with these CIDRs as route destinations.
+    :param int local_asn: (optional) The local autonomous system number (ASN) for
+          this VPN gateway and its connections. The ASN values in the
+          [restricted ASN list](
+          https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+          are reserved and unavailable.
+    :param str mode: (optional) The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        members: List['VPNGatewayMemberPrototype'],
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+        advertised_cidrs: Optional[List[str]] = None,
+        local_asn: Optional[int] = None,
+        mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype object.
+
+        :param List[VPNGatewayMemberPrototype] members: The members to use for the
+               VPN gateway. All members must reside in the same subnet.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+               through any enabled routing protocol (for example, BGP). The routing
+               protocol will advertise routes with these CIDRs as route destinations.
+        :param int local_asn: (optional) The local autonomous system number (ASN)
+               for this VPN gateway and its connections. The ASN values in the
+               [restricted ASN list](
+               https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+               are reserved and unavailable.
+        :param str mode: (optional) The mode for this VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.availability_mode = availability_mode
+        self.members = members
+        self.advertised_cidrs = advertised_cidrs
+        self.local_asn = local_asn
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = resource_group
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMemberPrototype.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype JSON')
+        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
+            args['advertised_cidrs'] = advertised_cidrs
+        if (local_asn := _dict.get('local_asn')) is not None:
+            args['local_asn'] = local_asn
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
+            _dict['advertised_cidrs'] = self.advertised_cidrs
+        if hasattr(self, 'local_asn') and self.local_asn is not None:
+            _dict['local_asn'] = self.local_asn
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeByMemberVPNGatewayZonalAvailabilityModeByMemberVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        ROUTE = 'route'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype(VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetIdentity subnet:
+    :param str mode: The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        subnet: 'SubnetIdentity',
+        mode: str,
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype object.
+
+        :param SubnetIdentity subnet:
+        :param str mode: The mode for this VPN gateway.
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.availability_mode = availability_mode
+        self.subnet = subnet
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = resource_group
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = subnet
+        else:
+            raise ValueError('Required property \'subnet\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype JSON')
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        else:
+            raise ValueError('Required property \'mode\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayPolicyModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        POLICY = 'policy'
+
+
+
+class VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype(VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnet):
+    """
+    VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype.
+
+    :param str name: (optional) The name for this VPN gateway. The name must not be
+          used by another VPN gateway in the VPC. If unspecified, the name will be a
+          hyphenated list of randomly-selected words.
+    :param ResourceGroupIdentity resource_group: (optional)
+    :param str availability_mode: (optional) The availability mode of the VPN
+          gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetIdentity subnet:
+    :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+          through any enabled routing protocol (for example, BGP). The routing protocol
+          will advertise routes with these CIDRs as route destinations.
+    :param int local_asn: (optional) The local autonomous system number (ASN) for
+          this VPN gateway and its connections. The ASN values in the
+          [restricted ASN list](
+          https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+          are reserved and unavailable.
+    :param str mode: (optional) The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        subnet: 'SubnetIdentity',
+        *,
+        name: Optional[str] = None,
+        resource_group: Optional['ResourceGroupIdentity'] = None,
+        availability_mode: Optional[str] = None,
+        advertised_cidrs: Optional[List[str]] = None,
+        local_asn: Optional[int] = None,
+        mode: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype object.
+
+        :param SubnetIdentity subnet:
+        :param str name: (optional) The name for this VPN gateway. The name must
+               not be used by another VPN gateway in the VPC. If unspecified, the name
+               will be a hyphenated list of randomly-selected words.
+        :param ResourceGroupIdentity resource_group: (optional)
+        :param str availability_mode: (optional) The availability mode of the VPN
+               gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        :param List[str] advertised_cidrs: (optional) The static CIDRs advertised
+               through any enabled routing protocol (for example, BGP). The routing
+               protocol will advertise routes with these CIDRs as route destinations.
+        :param int local_asn: (optional) The local autonomous system number (ASN)
+               for this VPN gateway and its connections. The ASN values in the
+               [restricted ASN list](
+               https://cloud.ibm.com/docs/vpc?topic=vpc-planning-considerations-vpn#dynamic-route-based-considerations)
+               are reserved and unavailable.
+        :param str mode: (optional) The mode for this VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.name = name
+        self.resource_group = resource_group
+        self.availability_mode = availability_mode
+        self.subnet = subnet
+        self.advertised_cidrs = advertised_cidrs
+        self.local_asn = local_asn
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype':
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = resource_group
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = subnet
+        else:
+            raise ValueError('Required property \'subnet\' not present in VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype JSON')
+        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
+            args['advertised_cidrs'] = advertised_cidrs
+        if (local_asn := _dict.get('local_asn')) is not None:
+            args['local_asn'] = local_asn
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
+            _dict['advertised_cidrs'] = self.advertised_cidrs
+        if hasattr(self, 'local_asn') and self.local_asn is not None:
+            _dict['local_asn'] = self.local_asn
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayPrototypeVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayZonalAvailabilityModeBySubnetVPNGatewayRouteModePrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        ROUTE = 'route'
+
+
+
+class VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode(VPNGatewayRegionalAvailabilityMode):
+    """
+    VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode.
+
+    :param List[VPNGatewayConnectionReference] connections: The connections for this
+          VPN gateway.
+    :param datetime created_at: The date and time that this VPN gateway was created.
+    :param str crn: The CRN for this VPN gateway.
+    :param List[VPNGatewayHealthReason] health_reasons: The reasons for the current
+          `health_state` (if any).
+    :param str health_state: The health of this resource:
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
+          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+          incapacitated
+          - `inapplicable`: The health state does not apply because of the current
+          lifecycle
+             state. A resource with a lifecycle state of `failed` or `deleting` will have
+          a
+             health state of `inapplicable`. A `pending` resource may also have this
+          state.
+    :param str href: The URL for this VPN gateway.
+    :param str id: The unique identifier for this VPN gateway.
+    :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for the
+          current `lifecycle_state` (if any).
+    :param str lifecycle_state: The lifecycle state of the VPN gateway.
+    :param List[VPNGatewayMember] members: The members for the VPN gateway.
+    :param str name: The name for this VPN gateway. The name is unique across all
+          VPN gateways in the VPC.
+    :param ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :param str resource_type: The resource type.
+    :param SubnetReference subnet: (optional)
+    :param VPCReference vpc: The VPC this VPN gateway resides in.
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `regional`: The VPN gateway is deployed across multiple zones in the region.
+          This mode
+            provides zone-level redundancy.
+    :param List[str] advertised_cidrs: The static CIDRs advertised through any
+          enabled routing protocol (for example, BGP). The routing protocol will advertise
+          routes with these CIDRs as route destinations.
+    :param int local_asn: The local autonomous system number (ASN) for this VPN
+          gateway and its connections.
+    :param str mode: The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        connections: List['VPNGatewayConnectionReference'],
+        created_at: datetime,
+        crn: str,
+        health_reasons: List['VPNGatewayHealthReason'],
+        health_state: str,
+        href: str,
+        id: str,
+        lifecycle_reasons: List['VPNGatewayLifecycleReason'],
+        lifecycle_state: str,
+        members: List['VPNGatewayMember'],
+        name: str,
+        resource_group: 'ResourceGroupReference',
+        resource_type: str,
+        vpc: 'VPCReference',
+        availability_mode: str,
+        advertised_cidrs: List[str],
+        local_asn: int,
+        mode: str,
+        *,
+        subnet: Optional['SubnetReference'] = None,
+    ) -> None:
+        """
+        Initialize a VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode object.
+
+        :param List[VPNGatewayConnectionReference] connections: The connections for
+               this VPN gateway.
+        :param datetime created_at: The date and time that this VPN gateway was
+               created.
+        :param str crn: The CRN for this VPN gateway.
+        :param List[VPNGatewayHealthReason] health_reasons: The reasons for the
+               current `health_state` (if any).
+        :param str health_state: The health of this resource:
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
+               connectivity
+               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+               incapacitated
+               - `inapplicable`: The health state does not apply because of the current
+               lifecycle
+                  state. A resource with a lifecycle state of `failed` or `deleting` will
+               have a
+                  health state of `inapplicable`. A `pending` resource may also have this
+               state.
+        :param str href: The URL for this VPN gateway.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for
+               the current `lifecycle_state` (if any).
+        :param str lifecycle_state: The lifecycle state of the VPN gateway.
+        :param List[VPNGatewayMember] members: The members for the VPN gateway.
+        :param str name: The name for this VPN gateway. The name is unique across
+               all VPN gateways in the VPC.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPCReference vpc: The VPC this VPN gateway resides in.
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `regional`: The VPN gateway is deployed across multiple zones in the
+               region. This mode
+                 provides zone-level redundancy.
+        :param List[str] advertised_cidrs: The static CIDRs advertised through any
+               enabled routing protocol (for example, BGP). The routing protocol will
+               advertise routes with these CIDRs as route destinations.
+        :param int local_asn: The local autonomous system number (ASN) for this VPN
+               gateway and its connections.
+        :param str mode: The mode for this VPN gateway.
+        :param SubnetReference subnet: (optional)
+        """
+        # pylint: disable=super-init-not-called
+        self.connections = connections
+        self.created_at = created_at
+        self.crn = crn
+        self.health_reasons = health_reasons
+        self.health_state = health_state
+        self.href = href
+        self.id = id
+        self.lifecycle_reasons = lifecycle_reasons
+        self.lifecycle_state = lifecycle_state
+        self.members = members
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.subnet = subnet
+        self.vpc = vpc
+        self.availability_mode = availability_mode
+        self.advertised_cidrs = advertised_cidrs
+        self.local_asn = local_asn
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode':
+        """Initialize a VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode object from a json dictionary."""
+        args = {}
+        if (connections := _dict.get('connections')) is not None:
+            args['connections'] = [VPNGatewayConnectionReference.from_dict(v) for v in connections]
+        else:
+            raise ValueError('Required property \'connections\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (crn := _dict.get('crn')) is not None:
+            args['crn'] = crn
+        else:
+            raise ValueError('Required property \'crn\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (health_reasons := _dict.get('health_reasons')) is not None:
+            args['health_reasons'] = [VPNGatewayHealthReason.from_dict(v) for v in health_reasons]
+        else:
+            raise ValueError('Required property \'health_reasons\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (health_state := _dict.get('health_state')) is not None:
+            args['health_state'] = health_state
+        else:
+            raise ValueError('Required property \'health_state\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
+            args['lifecycle_reasons'] = [VPNGatewayLifecycleReason.from_dict(v) for v in lifecycle_reasons]
+        else:
+            raise ValueError('Required property \'lifecycle_reasons\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (lifecycle_state := _dict.get('lifecycle_state')) is not None:
+            args['lifecycle_state'] = lifecycle_state
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = ResourceGroupReference.from_dict(resource_group)
+        else:
+            raise ValueError('Required property \'resource_group\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = SubnetReference.from_dict(subnet)
+        if (vpc := _dict.get('vpc')) is not None:
+            args['vpc'] = VPCReference.from_dict(vpc)
+        else:
+            raise ValueError('Required property \'vpc\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        else:
+            raise ValueError('Required property \'availability_mode\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
+            args['advertised_cidrs'] = advertised_cidrs
+        else:
+            raise ValueError('Required property \'advertised_cidrs\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (local_asn := _dict.get('local_asn')) is not None:
+            args['local_asn'] = local_asn
+        else:
+            raise ValueError('Required property \'local_asn\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        else:
+            raise ValueError('Required property \'mode\' not present in VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'connections') and self.connections is not None:
+            connections_list = []
+            for v in self.connections:
+                if isinstance(v, dict):
+                    connections_list.append(v)
+                else:
+                    connections_list.append(v.to_dict())
+            _dict['connections'] = connections_list
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'health_reasons') and self.health_reasons is not None:
+            health_reasons_list = []
+            for v in self.health_reasons:
+                if isinstance(v, dict):
+                    health_reasons_list.append(v)
+                else:
+                    health_reasons_list.append(v.to_dict())
+            _dict['health_reasons'] = health_reasons_list
+        if hasattr(self, 'health_state') and self.health_state is not None:
+            _dict['health_state'] = self.health_state
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
+            lifecycle_reasons_list = []
+            for v in self.lifecycle_reasons:
+                if isinstance(v, dict):
+                    lifecycle_reasons_list.append(v)
+                else:
+                    lifecycle_reasons_list.append(v.to_dict())
+            _dict['lifecycle_reasons'] = lifecycle_reasons_list
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            if isinstance(self.vpc, dict):
+                _dict['vpc'] = self.vpc
+            else:
+                _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
+            _dict['advertised_cidrs'] = self.advertised_cidrs
+        if hasattr(self, 'local_asn') and self.local_asn is not None:
+            _dict['local_asn'] = self.local_asn
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayRegionalAvailabilityModeVPNGatewayRouteMode') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HealthStateEnum(str, Enum):
+        """
+        The health of this resource:
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
+        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+        incapacitated
+        - `inapplicable`: The health state does not apply because of the current lifecycle
+           state. A resource with a lifecycle state of `failed` or `deleting` will have a
+           health state of `inapplicable`. A `pending` resource may also have this state.
+        """
+
+        DEGRADED = 'degraded'
+        FAULTED = 'faulted'
+        INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN gateway.
+        """
+
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VPN_GATEWAY = 'vpn_gateway'
+
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `regional`: The VPN gateway is deployed across multiple zones in the region.
+        This mode
+          provides zone-level redundancy.
+        """
+
+        REGIONAL = 'regional'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        ROUTE = 'route'
+
+
+
+class VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode(VPNGatewayZonalAvailabilityMode):
+    """
+    VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode.
+
+    :param List[VPNGatewayConnectionReference] connections: The connections for this
+          VPN gateway.
+    :param datetime created_at: The date and time that this VPN gateway was created.
+    :param str crn: The CRN for this VPN gateway.
+    :param List[VPNGatewayHealthReason] health_reasons: The reasons for the current
+          `health_state` (if any).
+    :param str health_state: The health of this resource:
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
+          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+          incapacitated
+          - `inapplicable`: The health state does not apply because of the current
+          lifecycle
+             state. A resource with a lifecycle state of `failed` or `deleting` will have
+          a
+             health state of `inapplicable`. A `pending` resource may also have this
+          state.
+    :param str href: The URL for this VPN gateway.
+    :param str id: The unique identifier for this VPN gateway.
+    :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for the
+          current `lifecycle_state` (if any).
+    :param str lifecycle_state: The lifecycle state of the VPN gateway.
+    :param List[VPNGatewayMember] members: The members for the VPN gateway.
+    :param str name: The name for this VPN gateway. The name is unique across all
+          VPN gateways in the VPC.
+    :param ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :param str resource_type: The resource type.
+    :param VPCReference vpc: The VPC this VPN gateway resides in.
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetReference subnet:
+    :param str mode: The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        connections: List['VPNGatewayConnectionReference'],
+        created_at: datetime,
+        crn: str,
+        health_reasons: List['VPNGatewayHealthReason'],
+        health_state: str,
+        href: str,
+        id: str,
+        lifecycle_reasons: List['VPNGatewayLifecycleReason'],
+        lifecycle_state: str,
+        members: List['VPNGatewayMember'],
+        name: str,
+        resource_group: 'ResourceGroupReference',
+        resource_type: str,
+        vpc: 'VPCReference',
+        availability_mode: str,
+        subnet: 'SubnetReference',
+        mode: str,
+    ) -> None:
+        """
+        Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode object.
+
+        :param List[VPNGatewayConnectionReference] connections: The connections for
+               this VPN gateway.
+        :param datetime created_at: The date and time that this VPN gateway was
+               created.
+        :param str crn: The CRN for this VPN gateway.
+        :param List[VPNGatewayHealthReason] health_reasons: The reasons for the
+               current `health_state` (if any).
+        :param str health_state: The health of this resource:
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
+               connectivity
+               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+               incapacitated
+               - `inapplicable`: The health state does not apply because of the current
+               lifecycle
+                  state. A resource with a lifecycle state of `failed` or `deleting` will
+               have a
+                  health state of `inapplicable`. A `pending` resource may also have this
+               state.
+        :param str href: The URL for this VPN gateway.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for
+               the current `lifecycle_state` (if any).
+        :param str lifecycle_state: The lifecycle state of the VPN gateway.
+        :param List[VPNGatewayMember] members: The members for the VPN gateway.
+        :param str name: The name for this VPN gateway. The name is unique across
+               all VPN gateways in the VPC.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPCReference vpc: The VPC this VPN gateway resides in.
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        :param SubnetReference subnet:
+        :param str mode: The mode for this VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.connections = connections
+        self.created_at = created_at
+        self.crn = crn
+        self.health_reasons = health_reasons
+        self.health_state = health_state
+        self.href = href
+        self.id = id
+        self.lifecycle_reasons = lifecycle_reasons
+        self.lifecycle_state = lifecycle_state
+        self.members = members
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.vpc = vpc
+        self.availability_mode = availability_mode
+        self.subnet = subnet
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode':
+        """Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode object from a json dictionary."""
+        args = {}
+        if (connections := _dict.get('connections')) is not None:
+            args['connections'] = [VPNGatewayConnectionReference.from_dict(v) for v in connections]
+        else:
+            raise ValueError('Required property \'connections\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (crn := _dict.get('crn')) is not None:
+            args['crn'] = crn
+        else:
+            raise ValueError('Required property \'crn\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (health_reasons := _dict.get('health_reasons')) is not None:
+            args['health_reasons'] = [VPNGatewayHealthReason.from_dict(v) for v in health_reasons]
+        else:
+            raise ValueError('Required property \'health_reasons\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (health_state := _dict.get('health_state')) is not None:
+            args['health_state'] = health_state
+        else:
+            raise ValueError('Required property \'health_state\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
+            args['lifecycle_reasons'] = [VPNGatewayLifecycleReason.from_dict(v) for v in lifecycle_reasons]
+        else:
+            raise ValueError('Required property \'lifecycle_reasons\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (lifecycle_state := _dict.get('lifecycle_state')) is not None:
+            args['lifecycle_state'] = lifecycle_state
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = ResourceGroupReference.from_dict(resource_group)
+        else:
+            raise ValueError('Required property \'resource_group\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (vpc := _dict.get('vpc')) is not None:
+            args['vpc'] = VPCReference.from_dict(vpc)
+        else:
+            raise ValueError('Required property \'vpc\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        else:
+            raise ValueError('Required property \'availability_mode\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = SubnetReference.from_dict(subnet)
+        else:
+            raise ValueError('Required property \'subnet\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        else:
+            raise ValueError('Required property \'mode\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'connections') and self.connections is not None:
+            connections_list = []
+            for v in self.connections:
+                if isinstance(v, dict):
+                    connections_list.append(v)
+                else:
+                    connections_list.append(v.to_dict())
+            _dict['connections'] = connections_list
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'health_reasons') and self.health_reasons is not None:
+            health_reasons_list = []
+            for v in self.health_reasons:
+                if isinstance(v, dict):
+                    health_reasons_list.append(v)
+                else:
+                    health_reasons_list.append(v.to_dict())
+            _dict['health_reasons'] = health_reasons_list
+        if hasattr(self, 'health_state') and self.health_state is not None:
+            _dict['health_state'] = self.health_state
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
+            lifecycle_reasons_list = []
+            for v in self.lifecycle_reasons:
+                if isinstance(v, dict):
+                    lifecycle_reasons_list.append(v)
+                else:
+                    lifecycle_reasons_list.append(v.to_dict())
+            _dict['lifecycle_reasons'] = lifecycle_reasons_list
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            if isinstance(self.vpc, dict):
+                _dict['vpc'] = self.vpc
+            else:
+                _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayZonalAvailabilityModeVPNGatewayPolicyMode') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HealthStateEnum(str, Enum):
+        """
+        The health of this resource:
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
+        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+        incapacitated
+        - `inapplicable`: The health state does not apply because of the current lifecycle
+           state. A resource with a lifecycle state of `failed` or `deleting` will have a
+           health state of `inapplicable`. A `pending` resource may also have this state.
+        """
+
+        DEGRADED = 'degraded'
+        FAULTED = 'faulted'
+        INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN gateway.
+        """
+
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VPN_GATEWAY = 'vpn_gateway'
+
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        POLICY = 'policy'
+
+
+
+class VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode(VPNGatewayZonalAvailabilityMode):
+    """
+    VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode.
+
+    :param List[VPNGatewayConnectionReference] connections: The connections for this
+          VPN gateway.
+    :param datetime created_at: The date and time that this VPN gateway was created.
+    :param str crn: The CRN for this VPN gateway.
+    :param List[VPNGatewayHealthReason] health_reasons: The reasons for the current
+          `health_state` (if any).
+    :param str health_state: The health of this resource:
+          - `ok`: No abnormal behavior detected
+          - `degraded`: Experiencing compromised performance, capacity, or connectivity
+          - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+          incapacitated
+          - `inapplicable`: The health state does not apply because of the current
+          lifecycle
+             state. A resource with a lifecycle state of `failed` or `deleting` will have
+          a
+             health state of `inapplicable`. A `pending` resource may also have this
+          state.
+    :param str href: The URL for this VPN gateway.
+    :param str id: The unique identifier for this VPN gateway.
+    :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for the
+          current `lifecycle_state` (if any).
+    :param str lifecycle_state: The lifecycle state of the VPN gateway.
+    :param List[VPNGatewayMember] members: The members for the VPN gateway.
+    :param str name: The name for this VPN gateway. The name is unique across all
+          VPN gateways in the VPC.
+    :param ResourceGroupReference resource_group: The resource group for this VPN
+          gateway.
+    :param str resource_type: The resource type.
+    :param VPCReference vpc: The VPC this VPN gateway resides in.
+    :param str availability_mode: The availability mode of the VPN gateway:
+          - `zonal`: The VPN gateway is deployed in a single zone in the region.
+          Availability is
+            limited to that zone.
+    :param SubnetReference subnet:
+    :param List[str] advertised_cidrs: The static CIDRs advertised through any
+          enabled routing protocol (for example, BGP). The routing protocol will advertise
+          routes with these CIDRs as route destinations.
+    :param int local_asn: The local autonomous system number (ASN) for this VPN
+          gateway and its connections.
+    :param str mode: The mode for this VPN gateway.
+    """
+
+    def __init__(
+        self,
+        connections: List['VPNGatewayConnectionReference'],
+        created_at: datetime,
+        crn: str,
+        health_reasons: List['VPNGatewayHealthReason'],
+        health_state: str,
+        href: str,
+        id: str,
+        lifecycle_reasons: List['VPNGatewayLifecycleReason'],
+        lifecycle_state: str,
+        members: List['VPNGatewayMember'],
+        name: str,
+        resource_group: 'ResourceGroupReference',
+        resource_type: str,
+        vpc: 'VPCReference',
+        availability_mode: str,
+        subnet: 'SubnetReference',
+        advertised_cidrs: List[str],
+        local_asn: int,
+        mode: str,
+    ) -> None:
+        """
+        Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode object.
+
+        :param List[VPNGatewayConnectionReference] connections: The connections for
+               this VPN gateway.
+        :param datetime created_at: The date and time that this VPN gateway was
+               created.
+        :param str crn: The CRN for this VPN gateway.
+        :param List[VPNGatewayHealthReason] health_reasons: The reasons for the
+               current `health_state` (if any).
+        :param str health_state: The health of this resource:
+               - `ok`: No abnormal behavior detected
+               - `degraded`: Experiencing compromised performance, capacity, or
+               connectivity
+               - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+               incapacitated
+               - `inapplicable`: The health state does not apply because of the current
+               lifecycle
+                  state. A resource with a lifecycle state of `failed` or `deleting` will
+               have a
+                  health state of `inapplicable`. A `pending` resource may also have this
+               state.
+        :param str href: The URL for this VPN gateway.
+        :param str id: The unique identifier for this VPN gateway.
+        :param List[VPNGatewayLifecycleReason] lifecycle_reasons: The reasons for
+               the current `lifecycle_state` (if any).
+        :param str lifecycle_state: The lifecycle state of the VPN gateway.
+        :param List[VPNGatewayMember] members: The members for the VPN gateway.
+        :param str name: The name for this VPN gateway. The name is unique across
+               all VPN gateways in the VPC.
+        :param ResourceGroupReference resource_group: The resource group for this
+               VPN gateway.
+        :param str resource_type: The resource type.
+        :param VPCReference vpc: The VPC this VPN gateway resides in.
+        :param str availability_mode: The availability mode of the VPN gateway:
+               - `zonal`: The VPN gateway is deployed in a single zone in the region.
+               Availability is
+                 limited to that zone.
+        :param SubnetReference subnet:
+        :param List[str] advertised_cidrs: The static CIDRs advertised through any
+               enabled routing protocol (for example, BGP). The routing protocol will
+               advertise routes with these CIDRs as route destinations.
+        :param int local_asn: The local autonomous system number (ASN) for this VPN
+               gateway and its connections.
+        :param str mode: The mode for this VPN gateway.
+        """
+        # pylint: disable=super-init-not-called
+        self.connections = connections
+        self.created_at = created_at
+        self.crn = crn
+        self.health_reasons = health_reasons
+        self.health_state = health_state
+        self.href = href
+        self.id = id
+        self.lifecycle_reasons = lifecycle_reasons
+        self.lifecycle_state = lifecycle_state
+        self.members = members
+        self.name = name
+        self.resource_group = resource_group
+        self.resource_type = resource_type
+        self.vpc = vpc
+        self.availability_mode = availability_mode
+        self.subnet = subnet
+        self.advertised_cidrs = advertised_cidrs
+        self.local_asn = local_asn
+        self.mode = mode
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode':
+        """Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode object from a json dictionary."""
+        args = {}
+        if (connections := _dict.get('connections')) is not None:
+            args['connections'] = [VPNGatewayConnectionReference.from_dict(v) for v in connections]
+        else:
+            raise ValueError('Required property \'connections\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        else:
+            raise ValueError('Required property \'created_at\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (crn := _dict.get('crn')) is not None:
+            args['crn'] = crn
+        else:
+            raise ValueError('Required property \'crn\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (health_reasons := _dict.get('health_reasons')) is not None:
+            args['health_reasons'] = [VPNGatewayHealthReason.from_dict(v) for v in health_reasons]
+        else:
+            raise ValueError('Required property \'health_reasons\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (health_state := _dict.get('health_state')) is not None:
+            args['health_state'] = health_state
+        else:
+            raise ValueError('Required property \'health_state\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        else:
+            raise ValueError('Required property \'href\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (lifecycle_reasons := _dict.get('lifecycle_reasons')) is not None:
+            args['lifecycle_reasons'] = [VPNGatewayLifecycleReason.from_dict(v) for v in lifecycle_reasons]
+        else:
+            raise ValueError('Required property \'lifecycle_reasons\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (lifecycle_state := _dict.get('lifecycle_state')) is not None:
+            args['lifecycle_state'] = lifecycle_state
+        else:
+            raise ValueError('Required property \'lifecycle_state\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (members := _dict.get('members')) is not None:
+            args['members'] = [VPNGatewayMember.from_dict(v) for v in members]
+        else:
+            raise ValueError('Required property \'members\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (resource_group := _dict.get('resource_group')) is not None:
+            args['resource_group'] = ResourceGroupReference.from_dict(resource_group)
+        else:
+            raise ValueError('Required property \'resource_group\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
+        else:
+            raise ValueError('Required property \'resource_type\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (vpc := _dict.get('vpc')) is not None:
+            args['vpc'] = VPCReference.from_dict(vpc)
+        else:
+            raise ValueError('Required property \'vpc\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (availability_mode := _dict.get('availability_mode')) is not None:
+            args['availability_mode'] = availability_mode
+        else:
+            raise ValueError('Required property \'availability_mode\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (subnet := _dict.get('subnet')) is not None:
+            args['subnet'] = SubnetReference.from_dict(subnet)
+        else:
+            raise ValueError('Required property \'subnet\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (advertised_cidrs := _dict.get('advertised_cidrs')) is not None:
+            args['advertised_cidrs'] = advertised_cidrs
+        else:
+            raise ValueError('Required property \'advertised_cidrs\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (local_asn := _dict.get('local_asn')) is not None:
+            args['local_asn'] = local_asn
+        else:
+            raise ValueError('Required property \'local_asn\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        if (mode := _dict.get('mode')) is not None:
+            args['mode'] = mode
+        else:
+            raise ValueError('Required property \'mode\' not present in VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'connections') and self.connections is not None:
+            connections_list = []
+            for v in self.connections:
+                if isinstance(v, dict):
+                    connections_list.append(v)
+                else:
+                    connections_list.append(v.to_dict())
+            _dict['connections'] = connections_list
+        if hasattr(self, 'created_at') and self.created_at is not None:
+            _dict['created_at'] = datetime_to_string(self.created_at)
+        if hasattr(self, 'crn') and self.crn is not None:
+            _dict['crn'] = self.crn
+        if hasattr(self, 'health_reasons') and self.health_reasons is not None:
+            health_reasons_list = []
+            for v in self.health_reasons:
+                if isinstance(v, dict):
+                    health_reasons_list.append(v)
+                else:
+                    health_reasons_list.append(v.to_dict())
+            _dict['health_reasons'] = health_reasons_list
+        if hasattr(self, 'health_state') and self.health_state is not None:
+            _dict['health_state'] = self.health_state
+        if hasattr(self, 'href') and self.href is not None:
+            _dict['href'] = self.href
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'lifecycle_reasons') and self.lifecycle_reasons is not None:
+            lifecycle_reasons_list = []
+            for v in self.lifecycle_reasons:
+                if isinstance(v, dict):
+                    lifecycle_reasons_list.append(v)
+                else:
+                    lifecycle_reasons_list.append(v.to_dict())
+            _dict['lifecycle_reasons'] = lifecycle_reasons_list
+        if hasattr(self, 'lifecycle_state') and self.lifecycle_state is not None:
+            _dict['lifecycle_state'] = self.lifecycle_state
+        if hasattr(self, 'members') and self.members is not None:
+            members_list = []
+            for v in self.members:
+                if isinstance(v, dict):
+                    members_list.append(v)
+                else:
+                    members_list.append(v.to_dict())
+            _dict['members'] = members_list
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'resource_group') and self.resource_group is not None:
+            if isinstance(self.resource_group, dict):
+                _dict['resource_group'] = self.resource_group
+            else:
+                _dict['resource_group'] = self.resource_group.to_dict()
+        if hasattr(self, 'resource_type') and self.resource_type is not None:
+            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'vpc') and self.vpc is not None:
+            if isinstance(self.vpc, dict):
+                _dict['vpc'] = self.vpc
+            else:
+                _dict['vpc'] = self.vpc.to_dict()
+        if hasattr(self, 'availability_mode') and self.availability_mode is not None:
+            _dict['availability_mode'] = self.availability_mode
+        if hasattr(self, 'subnet') and self.subnet is not None:
+            if isinstance(self.subnet, dict):
+                _dict['subnet'] = self.subnet
+            else:
+                _dict['subnet'] = self.subnet.to_dict()
+        if hasattr(self, 'advertised_cidrs') and self.advertised_cidrs is not None:
+            _dict['advertised_cidrs'] = self.advertised_cidrs
+        if hasattr(self, 'local_asn') and self.local_asn is not None:
+            _dict['local_asn'] = self.local_asn
+        if hasattr(self, 'mode') and self.mode is not None:
+            _dict['mode'] = self.mode
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'VPNGatewayZonalAvailabilityModeVPNGatewayRouteMode') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class HealthStateEnum(str, Enum):
+        """
+        The health of this resource:
+        - `ok`: No abnormal behavior detected
+        - `degraded`: Experiencing compromised performance, capacity, or connectivity
+        - `faulted`: Completely unreachable, inoperative, or otherwise entirely
+        incapacitated
+        - `inapplicable`: The health state does not apply because of the current lifecycle
+           state. A resource with a lifecycle state of `failed` or `deleting` will have a
+           health state of `inapplicable`. A `pending` resource may also have this state.
+        """
+
+        DEGRADED = 'degraded'
+        FAULTED = 'faulted'
+        INAPPLICABLE = 'inapplicable'
+        OK = 'ok'
+
+
+    class LifecycleStateEnum(str, Enum):
+        """
+        The lifecycle state of the VPN gateway.
+        """
+
+        DELETING = 'deleting'
+        FAILED = 'failed'
+        PENDING = 'pending'
+        STABLE = 'stable'
+        SUSPENDED = 'suspended'
+        UPDATING = 'updating'
+        WAITING = 'waiting'
+
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The resource type.
+        """
+
+        VPN_GATEWAY = 'vpn_gateway'
+
+
+    class AvailabilityModeEnum(str, Enum):
+        """
+        The availability mode of the VPN gateway:
+        - `zonal`: The VPN gateway is deployed in a single zone in the region.
+        Availability is
+          limited to that zone.
+        """
+
+        ZONAL = 'zonal'
+
+
+    class ModeEnum(str, Enum):
+        """
+        The mode for this VPN gateway.
+        """
+
+        ROUTE = 'route'
 
 
 
