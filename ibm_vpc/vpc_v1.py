@@ -116916,6 +116916,8 @@ class VolumeAttachmentReferenceVolumeContext:
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'VolumeAttachmentReferenceVolumeContext':
         """Initialize a VolumeAttachmentReferenceVolumeContext object from a json dictionary."""
+        if _dict.get('instance') is None and _dict.get('delete_volume_on_instance_delete') is None:
+            return cls._from_non_instance_dict(_dict)
         args = {}
         if (delete_volume_on_instance_delete := _dict.get('delete_volume_on_instance_delete')) is not None:
             args['delete_volume_on_instance_delete'] = delete_volume_on_instance_delete
@@ -116946,6 +116948,21 @@ class VolumeAttachmentReferenceVolumeContext:
         else:
             raise ValueError('Required property \'type\' not present in VolumeAttachmentReferenceVolumeContext JSON')
         return cls(**args)
+
+    @classmethod
+    def _from_non_instance_dict(cls, _dict: Dict) -> 'VolumeAttachmentReferenceVolumeContext':
+        """Initialize a VolumeAttachmentReferenceVolumeContext object for an attachment that is not an instance attachment."""
+        args = {}
+        for required in ('href', 'id', 'name', 'type'):
+            if (value := _dict.get(required)) is not None:
+                args[required] = value
+            else:
+                raise ValueError('Required property \'' + required + '\' not present in VolumeAttachmentReferenceVolumeContext JSON')
+        if (deleted := _dict.get('deleted')) is not None:
+            args['deleted'] = Deleted.from_dict(deleted)
+        if (device := _dict.get('device')) is not None:
+            args['device'] = VolumeAttachmentDevice.from_dict(device)
+        return cls(delete_volume_on_instance_delete=None, instance=None, **args)
 
     @classmethod
     def _from_dict(cls, _dict):

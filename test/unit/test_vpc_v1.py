@@ -47950,6 +47950,260 @@ class TestGetVolume:
         self.test_get_volume_value_error()
 
 
+class TestGetVolumeAttachmentVariants:
+    """
+    Test Class for get_volume / list_volumes when `volume_attachments` contains an attachment
+    that is not an instance attachment (for example, one attached to a bare metal server).
+
+    `VolumeAttachmentReferenceVolumeContext` is only guaranteed to carry `href`, `id`, `name`
+    and `type` (and optionally `deleted` / `device`). `instance` and
+    `delete_volume_on_instance_delete` are present only for an instance attachment. The
+    bare metal server attachment payload below was modelled on a live response (ca-tor,
+    `maturity=development`); the values inside `bare_metal_server` are reconstructed.
+
+    An attachment without the instance properties must unmarshal without error, with
+    `instance` and `delete_volume_on_instance_delete` set to None. The bare metal server
+    properties are intentionally not exposed by the model; they remain available in the raw
+    `get_result()` dictionary.
+    """
+
+    @staticmethod
+    def _volume_json(volume_attachments):
+        """Minimal Volume response containing every required top-level property."""
+        return {
+            'active': True,
+            'adjustable_capacity_states': ['attached'],
+            'adjustable_iops_states': ['attached'],
+            'attachment_state': 'attached',
+            'bandwidth': 1000,
+            'busy': False,
+            'capacity': 1000,
+            'created_at': '2026-01-02T03:04:05.006Z',
+            'crn': 'crn:v1:bluemix:public:is:us-south-1:a/aa2432b1fa4d4ace891e9b80fc104e34::volume:r006-1a6b7274-678d-4dfb-8981-c71dd9d4daa5',
+            'encryption': 'provider_managed',
+            'health_reasons': [],
+            'health_state': 'ok',
+            'href': 'https://us-south.iaas.cloud.ibm.com/v1/volumes/r006-1a6b7274-678d-4dfb-8981-c71dd9d4daa5',
+            'id': 'r006-1a6b7274-678d-4dfb-8981-c71dd9d4daa5',
+            'iops': 10000,
+            'name': 'my-volume',
+            'profile': {
+                'href': 'https://us-south.iaas.cloud.ibm.com/v1/volume/profiles/general-purpose',
+                'name': 'general-purpose',
+            },
+            'resource_group': {
+                'href': 'https://resource-manager.bluemix.net/v1/resource_groups/fee82deba12e4c0fb69c3b09d1f12345',
+                'id': 'fee82deba12e4c0fb69c3b09d1f12345',
+                'name': 'my-resource-group',
+            },
+            'resource_type': 'volume',
+            'software_attachments': [],
+            'status': 'available',
+            'status_reasons': [],
+            'storage_generation': 1,
+            'user_tags': [],
+            'volume_attachments': volume_attachments,
+            'zone': {
+                'href': 'https://us-south.iaas.cloud.ibm.com/v1/regions/us-south/zones/us-south-1',
+                'name': 'us-south-1',
+            },
+        }
+
+    @staticmethod
+    def _instance_attachment():
+        """Attachment payload as returned today (VolumeAttachmentReferenceVolumeContext, instance flavour)."""
+        return {
+            'delete_volume_on_instance_delete': True,
+            'device': {'id': '80b3e36e-41f4-40e9-bd56-beae81792a68'},
+            'href': 'https://us-south.iaas.cloud.ibm.com/v1/instances/0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0/volume_attachments/0717-82cbf856-9cbb-45fb-b62f-d7bcef32399a',
+            'id': '0717-82cbf856-9cbb-45fb-b62f-d7bcef32399a',
+            'instance': {
+                'crn': 'crn:v1:bluemix:public:is:us-south-1:a/aa2432b1fa4d4ace891e9b80fc104e34::instance:0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0',
+                'href': 'https://us-south.iaas.cloud.ibm.com/v1/instances/0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0',
+                'id': '0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0',
+                'name': 'my-instance',
+            },
+            'name': 'my-volume-attachment',
+            'type': 'data',
+        }
+
+    @staticmethod
+    def _bare_metal_server_attachment():
+        """Bare metal server attachment: no `instance` and no `delete_volume_on_instance_delete`."""
+        return {
+            'bare_metal_server': {
+                'crn': 'crn:v1:bluemix:public:is:ca-tor-1:a/aa2432b1fa4d4ace891e9b80fc104e34::bare-metal-server:02r7-903657cd-01b2-4a10-9c2a-c35b3eb97758',
+                'href': 'https://ca-tor.iaas.cloud.ibm.com/v1/bare_metal_servers/02r7-903657cd-01b2-4a10-9c2a-c35b3eb97758',
+                'id': '02r7-903657cd-01b2-4a10-9c2a-c35b3eb97758',
+                'name': 'my-bare-metal-server',
+                'resource_type': 'bare_metal_server',
+            },
+            'delete_volume_on_bare_metal_server_delete': False,
+            'device': {'id': '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa'},
+            'href': 'https://ca-tor.iaas.cloud.ibm.com/v1/bare_metal_servers/02r7-903657cd-01b2-4a10-9c2a-c35b3eb97758/volume_attachments/02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa',
+            'id': '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa',
+            'name': 'elusive-storm-wielding-labrador',
+            'type': 'data',
+        }
+
+    def _get_volume_result(self, volume_attachments):
+        """Invoke get_volume against a mocked endpoint and return the raw JSON result."""
+        url = preprocess_url('/volumes/testString')
+        responses.add(
+            responses.GET,
+            url,
+            body=json.dumps(self._volume_json(volume_attachments)),
+            content_type='application/json',
+            status=200,
+        )
+
+        response = _service.get_volume('testString', headers={})
+
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        return response.get_result()
+
+    @responses.activate
+    def test_get_volume_instance_attachment(self):
+        """
+        get_volume() with an instance attachment: existing behaviour, must keep working
+        """
+        result = self._get_volume_result([self._instance_attachment()])
+
+        volume = Volume.from_dict(result)
+        attachment = volume.volume_attachments[0]
+        assert isinstance(attachment, VolumeAttachmentReferenceVolumeContext)
+        assert attachment.delete_volume_on_instance_delete is True
+        assert attachment.instance.id == '0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0'
+        assert attachment.device.id == '80b3e36e-41f4-40e9-bd56-beae81792a68'
+        # Every property of the instance attachment survives a round trip.
+        assert attachment.to_dict() == self._instance_attachment()
+
+    @responses.activate
+    def test_get_volume_bare_metal_server_attachment_raw_result(self):
+        """
+        get_volume() with a bare metal server attachment: the raw result is unaffected and keeps
+        every property, including the ones the model does not expose.
+        """
+        result = self._get_volume_result([self._bare_metal_server_attachment()])
+
+        attachment = result['volume_attachments'][0]
+        assert 'instance' not in attachment
+        assert 'delete_volume_on_instance_delete' not in attachment
+        assert attachment['bare_metal_server']['id'] == '02r7-903657cd-01b2-4a10-9c2a-c35b3eb97758'
+        assert attachment['delete_volume_on_bare_metal_server_delete'] is False
+
+    @responses.activate
+    def test_get_volume_bare_metal_server_attachment_unmarshal(self):
+        """
+        get_volume() with a bare metal server attachment, unmarshalled into Volume
+        """
+        result = self._get_volume_result([self._bare_metal_server_attachment()])
+
+        volume = Volume.from_dict(result)
+
+        attachment = volume.volume_attachments[0]
+        assert isinstance(attachment, VolumeAttachmentReferenceVolumeContext)
+        assert attachment.id == '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa'
+        assert attachment.name == 'elusive-storm-wielding-labrador'
+        assert attachment.type == 'data'
+        assert attachment.href.endswith('/volume_attachments/02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa')
+        assert attachment.device.id == '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa'
+        assert attachment.instance is None
+        assert attachment.delete_volume_on_instance_delete is None
+        # Instance properties are omitted, not serialized as null.
+        attachment_dict = attachment.to_dict()
+        assert 'instance' not in attachment_dict
+        assert 'delete_volume_on_instance_delete' not in attachment_dict
+        assert attachment_dict['id'] == attachment.id
+        # The rest of the volume is unaffected.
+        assert volume.id == 'r006-1a6b7274-678d-4dfb-8981-c71dd9d4daa5'
+        assert volume.zone.name == 'us-south-1'
+
+    @responses.activate
+    def test_get_volume_bare_metal_server_attachment_optional_properties(self):
+        """
+        Optional `deleted` and `device` are parsed for an attachment without instance properties
+        """
+        attachment = self._bare_metal_server_attachment()
+        attachment['deleted'] = {'more_info': 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'}
+        del attachment['device']
+
+        volume = Volume.from_dict(self._get_volume_result([attachment]))
+
+        parsed = volume.volume_attachments[0]
+        assert parsed.deleted.more_info == 'https://cloud.ibm.com/apidocs/vpc#deleted-resources'
+        assert parsed.device is None
+
+    @responses.activate
+    def test_get_volume_mixed_attachments_unmarshal(self):
+        """
+        get_volume() with an instance attachment and a bare metal server attachment together
+        (a multi-attach volume): each attachment gets the content that matches its kind
+        """
+        result = self._get_volume_result([self._instance_attachment(), self._bare_metal_server_attachment()])
+
+        volume = Volume.from_dict(result)
+
+        assert len(volume.volume_attachments) == 2
+        assert volume.volume_attachments[0].instance.id == '0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0'
+        assert volume.volume_attachments[0].delete_volume_on_instance_delete is True
+        assert volume.volume_attachments[1].id == '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa'
+        assert volume.volume_attachments[1].instance is None
+
+    @pytest.mark.parametrize('missing', ['href', 'id', 'name', 'type'])
+    def test_attachment_without_instance_properties_requires_common_properties(self, missing):
+        """
+        The properties common to every attachment are still required
+        """
+        attachment = self._bare_metal_server_attachment()
+        del attachment[missing]
+
+        with pytest.raises(ValueError, match="Required property '" + missing + "' not present"):
+            VolumeAttachmentReferenceVolumeContext.from_dict(attachment)
+
+    def test_instance_attachment_still_requires_instance_properties(self):
+        """
+        An attachment that carries only one of the instance properties is still rejected
+        """
+        attachment = self._instance_attachment()
+        del attachment['instance']
+        with pytest.raises(ValueError, match="Required property 'instance' not present"):
+            VolumeAttachmentReferenceVolumeContext.from_dict(attachment)
+
+        attachment = self._instance_attachment()
+        del attachment['delete_volume_on_instance_delete']
+        with pytest.raises(ValueError, match="Required property 'delete_volume_on_instance_delete' not present"):
+            VolumeAttachmentReferenceVolumeContext.from_dict(attachment)
+
+    @responses.activate
+    def test_list_volumes_mixed_volumes_unmarshal(self):
+        """
+        list_volumes() page that mixes volumes attached to an instance and to a bare metal server:
+        VolumeCollection.from_dict returns every volume, each with appropriate content
+        """
+        url = preprocess_url('/volumes')
+        mock_response = {
+            'first': {'href': 'https://us-south.iaas.cloud.ibm.com/v1/volumes?limit=50'},
+            'limit': 50,
+            'total_count': 3,
+            'volumes': [
+                self._volume_json([self._instance_attachment()]),
+                self._volume_json([self._bare_metal_server_attachment()]),
+                self._volume_json([]),
+            ],
+        }
+        responses.add(responses.GET, url, body=json.dumps(mock_response), content_type='application/json', status=200)
+
+        collection = VolumeCollection.from_dict(_service.list_volumes().get_result())
+
+        assert len(collection.volumes) == 3
+        assert collection.volumes[0].volume_attachments[0].instance.id == '0717_e21b7391-2ca2-4ab5-84a8-b92157a633b0'
+        assert collection.volumes[1].volume_attachments[0].id == '02r7-7b2332e9-1196-4d07-9764-5a82918b8cfa'
+        assert collection.volumes[1].volume_attachments[0].instance is None
+        assert collection.volumes[2].volume_attachments == []
+
+
 class TestUpdateVolume:
     """
     Test Class for update_volume
