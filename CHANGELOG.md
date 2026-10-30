@@ -1,3 +1,10 @@
+## [0.36.1](https://github.com/IBM/vpc-python-sdk/compare/v0.36.0...v0.36.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* **vol-attachment:** fix forward compatibility for volume attachments response ([#127](https://github.com/IBM/vpc-python-sdk/issues/127)) ([022a22d](https://github.com/IBM/vpc-python-sdk/commit/022a22deeb0ba62ac25c526dc00d839faa15c5c8))
+
 # [0.36.0](https://github.com/IBM/vpc-python-sdk/compare/v0.35.1...v0.36.0) (2026-10-13)
 
 
