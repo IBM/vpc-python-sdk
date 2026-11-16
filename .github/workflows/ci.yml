@@ -13,7 +13,7 @@ jobs:
     environment: ci
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     steps:
     - uses: actions/checkout@v3
       with:
@@ -39,7 +39,7 @@ jobs:
       run: tox
 
     - name: Install release dependencies
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.10'
       run: |
         pip install bump-my-version build twine
         sudo npm install -g semantic-release \
@@ -49,13 +49,13 @@ jobs:
           @semantic-release/github
 
     - name: Configure Git User
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.10'
       run: |
         git config --global user.name "uibm"
         git config --global user.email "ujjwal.kumar1@ibm.com"
 
     - name: Semantic Release and Publish
-      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.9'
+      if: github.ref == 'refs/heads/master' && matrix.python-version == '3.10'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
